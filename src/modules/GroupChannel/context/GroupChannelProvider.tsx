@@ -388,7 +388,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
         isReactionEnabled,
         isMessageGroupingEnabled,
         isMultipleFilesMessageEnabled,
-        showSearchIcon: showSearchIcon ?? config.showSearchIcon,
+        showSearchIcon: showSearchIcon ?? config.groupChannelSettings.enableMessageSearch,
         replyType,
         threadReplySelectType,
         disableMarkAsRead,

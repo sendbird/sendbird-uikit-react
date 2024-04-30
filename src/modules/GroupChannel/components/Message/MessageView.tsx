@@ -152,7 +152,7 @@ const MessageView = (props: MessageViewProps) => {
   const { dateLocale, stringSet } = useLocalization();
   const globalStore = useSendbirdStateContext();
 
-  const { userId, isOnline, isMentionEnabled, userMention, logger } = globalStore.config;
+  const { userId, isOnline, userMention, logger, groupChannel } = globalStore.config;
   const maxUserMentionCount = userMention?.maxMentionCount || MAX_USER_MENTION_COUNT;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || MAX_USER_SUGGESTION_COUNT;
 
@@ -169,7 +169,7 @@ const MessageView = (props: MessageViewProps) => {
   const editMessageInputRef = useRef(null);
   const messageScrollRef = useRef(null);
 
-  const displaySuggestedMentionList = isOnline && isMentionEnabled && mentionNickname.length > 0 && !isDisabledBecauseFrozen(channel) && !isDisabledBecauseMuted(channel);
+  const displaySuggestedMentionList = isOnline && groupChannel.enableMention && mentionNickname.length > 0 && !isDisabledBecauseFrozen(channel) && !isDisabledBecauseMuted(channel);
 
   const mentionNodes = useDirtyGetMentions({ ref: editMessageInputRef }, { logger });
   const ableMention = mentionNodes?.length < maxUserMentionCount;
@@ -320,7 +320,7 @@ const MessageView = (props: MessageViewProps) => {
             disabled={editInputDisabled}
             ref={editMessageInputRef}
             mentionSelectedUser={selectedUser}
-            isMentionEnabled={isMentionEnabled}
+            isMentionEnabled={groupChannel.enableMention}
             message={message}
             onStartTyping={() => {
               channel?.startTyping?.();

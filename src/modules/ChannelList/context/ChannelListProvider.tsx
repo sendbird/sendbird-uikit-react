@@ -160,16 +160,14 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const {
     markAsDeliveredScheduler,
     disableMarkAsDelivered = false,
-    isTypingIndicatorEnabledOnChannelList = false,
-    isMessageReceiptStatusEnabledOnChannelList = false,
     isOnline,
   } = config;
   const sdk = sdkStore?.sdk;
   const { premiumFeatureList = [] } = sdk?.appInfo ?? {};
 
   // derive some variables
-  // enable if it is true atleast once(both are flase by default)
-  const userDefinedDisableUserProfile = disableUserProfile || config?.disableUserProfile;
+  // enable if it is true at least once(both are false by default)
+  const userDefinedDisableUserProfile = disableUserProfile ?? !config.common.enableUsingDefaultUserProfile;
   const userDefinedRenderProfile = config?.renderUserProfile;
   const enableEditProfile = allowProfileEdit || config?.allowProfileEdit;
 
@@ -395,17 +393,13 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         ...channelListStore,
         allChannels: sortedChannels,
         typingChannels,
-        isTypingIndicatorEnabled:
-          isTypingIndicatorEnabled !== null ? isTypingIndicatorEnabled : isTypingIndicatorEnabledOnChannelList,
-        isMessageReceiptStatusEnabled:
-          isMessageReceiptStatusEnabled !== null
-            ? isMessageReceiptStatusEnabled
-            : isMessageReceiptStatusEnabledOnChannelList,
+        isTypingIndicatorEnabled: isTypingIndicatorEnabled ?? config.groupChannelList.enableTypingIndicator,
+        isMessageReceiptStatusEnabled: isMessageReceiptStatusEnabled ?? config.groupChannelList.enableMessageReceiptStatus,
         fetchChannelList,
       }}
     >
       <UserProfileProvider
-        disableUserProfile={userDefinedDisableUserProfile ?? config?.disableUserProfile}
+        disableUserProfile={userDefinedDisableUserProfile ?? !config.common.enableUsingDefaultUserProfile}
         renderUserProfile={userDefinedRenderProfile}
         onUserProfileMessage={onUserProfileMessage}
       >

@@ -10,6 +10,7 @@ import { compareMessagesForGrouping } from '../../../../utils/messages';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { isSameDay } from 'date-fns';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
+import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
 
 export interface ThreadListProps {
   className?: string;
@@ -32,7 +33,7 @@ export default function ThreadList({
   scrollBottom,
 }: ThreadListProps): React.ReactElement {
   const { config } = useSendbirdStateContext();
-  const { replyType, userId } = config;
+  const { userId } = config;
   const {
     currentChannel,
     allThreadMessages,
@@ -70,7 +71,7 @@ export default function ThreadList({
             message as SendableMessageType,
             nextMessage as SendableMessageType,
             currentChannel,
-            replyType,
+            getCaseResolvedReplyType(config.groupChannel.replyType).upperCase,
           )
           : [false, false];
         const hasSeparator = !(prevMessage?.createdAt > 0 && (
@@ -120,7 +121,7 @@ export default function ThreadList({
             message as SendableMessageType,
             nextMessage as SendableMessageType,
             currentChannel,
-            replyType,
+            getCaseResolvedReplyType(config.groupChannel.replyType).upperCase,
           )
           : [false, false];
         const hasSeparator = !(prevMessage?.createdAt > 0 && (

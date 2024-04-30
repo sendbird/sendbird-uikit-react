@@ -55,18 +55,15 @@ export interface GroupChannelListProviderProps
 export const GroupChannelListContext = React.createContext<GroupChannelListContextType | null>(null);
 export const GroupChannelListProvider = (props: GroupChannelListProviderProps) => {
   const {
-    // Default
     children,
     className = '',
     selectedChannelUrl,
 
-    // Flags
-    allowProfileEdit = true,
     disableAutoSelect = false,
-    isTypingIndicatorEnabled = false,
-    isMessageReceiptStatusEnabled = false,
+    allowProfileEdit,
+    isTypingIndicatorEnabled,
+    isMessageReceiptStatusEnabled,
 
-    // Custom
     channelListQueryParams,
     onThemeChange,
     onChannelSelect = noop,
@@ -75,7 +72,6 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
     onBeforeCreateChannel,
     onUserProfileUpdated,
 
-    // UserProfile
     disableUserProfile,
     renderUserProfile,
     onUserProfileMessage,
@@ -83,7 +79,6 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
   const globalStore = useSendbirdStateContext();
   const { config, stores } = globalStore;
   const { sdkStore } = stores;
-  const { isTypingIndicatorEnabledOnChannelList = false, isMessageReceiptStatusEnabledOnChannelList = false } = config;
 
   const sdk = sdkStore.sdk;
   const isConnected = useOnlineStatus(sdk, config.logger);
@@ -123,25 +118,19 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
   return (
     <GroupChannelListContext.Provider
       value={{
-        // Default
         className,
         selectedChannelUrl,
-        // Flags
-        allowProfileEdit: allowProfileEdit ?? config?.allowProfileEdit,
         disableAutoSelect,
-        isTypingIndicatorEnabled: isTypingIndicatorEnabled ?? isTypingIndicatorEnabledOnChannelList,
-        isMessageReceiptStatusEnabled: isMessageReceiptStatusEnabled ?? isMessageReceiptStatusEnabledOnChannelList,
-        // Essential
+        allowProfileEdit: allowProfileEdit ?? config.allowProfileEdit ?? true,
+        isTypingIndicatorEnabled: isTypingIndicatorEnabled ?? config.groupChannelList.enableTypingIndicator ?? false,
+        isMessageReceiptStatusEnabled: isMessageReceiptStatusEnabled ?? config.groupChannelList.enableMessageReceiptStatus ?? false,
         onChannelSelect,
         onChannelCreated,
-        // Partial props
         onThemeChange,
         onCreateChannelClick,
         onBeforeCreateChannel,
         onUserProfileUpdated,
-        // Internal
         typingChannelUrls,
-        // ReturnType<UseGroupChannelList>
         refreshing,
         initialized,
         groupChannels,
@@ -150,7 +139,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
       }}
     >
       <UserProfileProvider
-        disableUserProfile={disableUserProfile ?? config?.disableUserProfile}
+        disableUserProfile={disableUserProfile ?? !config.common.enableUsingDefaultUserProfile}
         renderUserProfile={renderUserProfile ?? config?.renderUserProfile}
         onUserProfileMessage={onUserProfileMessage ?? config?.onUserProfileMessage}
       >

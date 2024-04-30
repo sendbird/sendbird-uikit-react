@@ -133,7 +133,7 @@ const ChannelSettingsProvider = ({
     >
       <UserProfileProvider
         renderUserProfile={renderUserProfile}
-        disableUserProfile={disableUserProfile ?? config?.disableUserProfile}
+        disableUserProfile={disableUserProfile ?? !config.common.enableUsingDefaultUserProfile}
         onUserProfileMessage={onUserProfileMessage}
       >
         <div className={`sendbird-channel-settings ${className}`}>{children}</div>

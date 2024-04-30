@@ -27,22 +27,14 @@ export interface AppProps {
   profileUrl?: SendbirdProviderProps['profileUrl'];
   dateLocale?: SendbirdProviderProps['dateLocale'];
   config?: SendbirdProviderProps['config'];
-  isReactionEnabled?: SendbirdProviderProps['isReactionEnabled'];
-  isMentionEnabled?: SendbirdProviderProps['isMentionEnabled'];
-  isVoiceMessageEnabled?: SendbirdProviderProps['isVoiceMessageEnabled'];
   voiceRecord?: SendbirdProviderProps['voiceRecord'];
-  replyType?: SendbirdProviderProps['replyType'];
   isMultipleFilesMessageEnabled?: SendbirdProviderProps['isMultipleFilesMessageEnabled'];
   colorSet?: SendbirdProviderProps['colorSet'];
   stringSet?: SendbirdProviderProps['stringSet'];
   allowProfileEdit?: SendbirdProviderProps['allowProfileEdit'];
-  disableUserProfile?: SendbirdProviderProps['disableUserProfile'];
   disableMarkAsDelivered?: SendbirdProviderProps['disableMarkAsDelivered'];
   renderUserProfile?: SendbirdProviderProps['renderUserProfile'];
-  showSearchIcon?: SendbirdProviderProps['showSearchIcon'];
   imageCompression?: SendbirdProviderProps['imageCompression'];
-  isTypingIndicatorEnabledOnChannelList?: SendbirdProviderProps['isTypingIndicatorEnabledOnChannelList'];
-  isMessageReceiptStatusEnabledOnChannelList?: SendbirdProviderProps['isMessageReceiptStatusEnabledOnChannelList'];
   uikitOptions?: SendbirdProviderProps['uikitOptions'];
   isUserIdUsedForNickname?: SendbirdProviderProps['isUserIdUsedForNickname'];
   sdkInitParams?: SendbirdProviderProps['sdkInitParams'];
@@ -58,6 +50,23 @@ export interface AppProps {
    * If this option is enabled, it uses legacy modules (Channel, ChannelList) that are not applied local caching.
    * */
   enableLegacyChannelModules?: boolean;
+
+  /** @deprecated Please use `uikitOptions.common.enableUsingDefaultUserProfile` instead * */
+  disableUserProfile?: SendbirdProviderProps['disableUserProfile'];
+  /** @deprecated Please use `uikitOptions.groupChannel.replyType` instead * */
+  replyType?: SendbirdProviderProps['replyType'];
+  /** @deprecated Please use `uikitOptions.groupChannel.enableReactions` instead * */
+  isReactionEnabled?: SendbirdProviderProps['isReactionEnabled'];
+  /** @deprecated Please use `uikitOptions.groupChannel.enableMention` instead * */
+  isMentionEnabled?: SendbirdProviderProps['isMentionEnabled'];
+  /** @deprecated Please use `uikitOptions.groupChannel.enableVoiceMessage` instead * */
+  isVoiceMessageEnabled?: SendbirdProviderProps['isVoiceMessageEnabled'];
+  /** @deprecated Please use `uikitOptions.groupChannelList.enableTypingIndicator` instead * */
+  isTypingIndicatorEnabledOnChannelList?: SendbirdProviderProps['isTypingIndicatorEnabledOnChannelList'];
+  /** @deprecated Please use `uikitOptions.groupChannelList.enableMessageReceiptStatus` instead * */
+  isMessageReceiptStatusEnabledOnChannelList?: SendbirdProviderProps['isMessageReceiptStatusEnabledOnChannelList'];
+  /** @deprecated Please use `uikitOptions.groupChannelSettings.enableMessageSearch` instead * */
+  showSearchIcon?: SendbirdProviderProps['showSearchIcon'];
 }
 
 export default function App(props: AppProps) {
@@ -87,6 +96,9 @@ export default function App(props: AppProps) {
     sdkInitParams,
     customExtensionParams,
     eventHandlers,
+    isMultipleFilesMessageEnabled,
+    isUserIdUsedForNickname = true,
+    enableLegacyChannelModules = false,
     uikitOptions,
     // The below configs are duplicates of the Dashboard UIKit Configs.
     // Since their default values will be set in the Sendbird component,
@@ -97,11 +109,8 @@ export default function App(props: AppProps) {
     replyType,
     disableUserProfile,
     isVoiceMessageEnabled,
-    isMultipleFilesMessageEnabled,
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
-    isUserIdUsedForNickname = true,
-    enableLegacyChannelModules = false,
   } = props;
   const [currentChannel, setCurrentChannel] = useState<GroupChannel | null>(null);
 
@@ -121,18 +130,19 @@ export default function App(props: AppProps) {
       userListQuery={userListQuery ?? undefined}
       config={config}
       colorSet={colorSet ?? undefined}
-      disableUserProfile={disableUserProfile}
       disableMarkAsDelivered={disableMarkAsDelivered}
       renderUserProfile={renderUserProfile ?? undefined}
       imageCompression={imageCompression}
-      isReactionEnabled={isReactionEnabled}
-      isMentionEnabled={isMentionEnabled}
-      isVoiceMessageEnabled={isVoiceMessageEnabled}
       isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
       voiceRecord={voiceRecord}
       onUserProfileMessage={(channel) => {
         setCurrentChannel(channel);
       }}
+      uikitOptions={uikitOptions}
+      isUserIdUsedForNickname={isUserIdUsedForNickname}
+      sdkInitParams={sdkInitParams}
+      customExtensionParams={customExtensionParams}
+      eventHandlers={eventHandlers}
       isTypingIndicatorEnabledOnChannelList={
         isTypingIndicatorEnabledOnChannelList
       }
@@ -141,16 +151,12 @@ export default function App(props: AppProps) {
       }
       replyType={replyType}
       showSearchIcon={showSearchIcon}
-      uikitOptions={uikitOptions}
-      isUserIdUsedForNickname={isUserIdUsedForNickname}
-      sdkInitParams={sdkInitParams}
-      customExtensionParams={customExtensionParams}
-      eventHandlers={eventHandlers}
+      disableUserProfile={disableUserProfile}
+      isReactionEnabled={isReactionEnabled}
+      isMentionEnabled={isMentionEnabled}
+      isVoiceMessageEnabled={isVoiceMessageEnabled}
     >
       <AppLayout
-        isReactionEnabled={isReactionEnabled}
-        replyType={replyType}
-        showSearchIcon={showSearchIcon}
         isMessageGroupingEnabled={isMessageGroupingEnabled}
         allowProfileEdit={allowProfileEdit}
         onProfileEditSuccess={onProfileEditSuccess ?? undefined}
@@ -158,6 +164,9 @@ export default function App(props: AppProps) {
         currentChannel={currentChannel ?? undefined}
         setCurrentChannel={setCurrentChannel}
         enableLegacyChannelModules={enableLegacyChannelModules}
+        isReactionEnabled={isReactionEnabled}
+        replyType={replyType}
+        showSearchIcon={showSearchIcon}
       />
     </Sendbird>
   );

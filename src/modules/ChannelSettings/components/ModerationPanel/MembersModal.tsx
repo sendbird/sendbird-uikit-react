@@ -106,7 +106,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                 user={member}
                                 disable={currentUserId === member.userId}
                                 onChange={(_, member, isOperator) => {
-                                  const newMembers = [ ...members ];
+                                  const newMembers = [...members];
                                   for (const newMember of newMembers) {
                                     if (newMember.userId === member.userId) {
                                       newMember.role = isOperator ? Role.OPERATOR : Role.NONE;
@@ -136,7 +136,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                     channel={channel}
                                     user={member}
                                     onChange={(_, member, isMuted) => {
-                                      const newMembers = [ ...members ];
+                                      const newMembers = [...members];
                                       for (const newMember of newMembers) {
                                         if (newMember.userId === member.userId) {
                                           newMember.isMuted = isMuted;

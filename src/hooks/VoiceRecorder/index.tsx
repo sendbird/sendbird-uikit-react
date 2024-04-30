@@ -37,12 +37,13 @@ const Context = createContext<VoiceRecorderContext>({
 export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactElement => {
   const { children } = props;
   const { config } = useSendbirdStateContext();
-  const { logger, isVoiceMessageEnabled } = config;
+  const { logger, groupChannel } = config;
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [isRecordable, setIsRecordable] = useState<boolean>(false);
   const [permissionWarning, setPermissionWarning] = useState<boolean>(false);
   const { stringSet } = useLocalization();
 
+  const isVoiceMessageEnabled = groupChannel.enableVoiceMessage;
   const [webAudioUtils, setWebAudioUtils] = useState<WebAudioUtils | null>(null);
 
   const browserSupportMimeType = BROWSER_SUPPORT_MIME_TYPE_LIST.find((mimeType) => MediaRecorder.isTypeSupported(mimeType)) ?? '';
