@@ -4,7 +4,6 @@ import './index.scss';
 import MessageSearch, { MessageSearchUIProps } from './components/MessageSearchUI';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../../ui/Icon';
-import IconButton from '../../ui/IconButton';
 import Loader from '../../ui/Loader';
 import { MessageSearchProvider, MessageSearchProviderProps } from './context/MessageSearchProvider';
 import Header from '../../ui/Header';
@@ -69,19 +68,12 @@ function MessageSearchPannel(props: MessageSearchPannelProps): JSX.Element {
           <Header.Title title={stringSet.SEARCH_IN_CHANNEL} />
         )}
         renderRight={() => (
-          <IconButton
+          <Header.IconButton
             className={`${COMPONENT_CLASS_NAME}__header__close-button`}
-            width="32px"
-            height="32px"
             onClick={onCloseClick}
-          >
-            <Icon
-              type={IconTypes.CLOSE}
-              fillColor={IconColors.ON_BACKGROUND_1}
-              width="22px"
-              height="22px"
-            />
-          </IconButton>
+            type={IconTypes.CLOSE}
+            color={IconColors.ON_BACKGROUND_1}
+          />
         )}
       />
       <div className={`${COMPONENT_CLASS_NAME}__input`}>

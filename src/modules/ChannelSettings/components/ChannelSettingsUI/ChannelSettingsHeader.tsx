@@ -29,7 +29,7 @@ export const ChannelSettingsHeader = ({
       ))}
       renderRight={renderRight ?? (() => (
         <div className="sendbird-channel-settings__header-icon">
-          <Header.Icon
+          <Header.IconButton
             type={IconTypes.CLOSE}
             onClick={(e) => {
               logger.info('ChannelSettings: Click close');

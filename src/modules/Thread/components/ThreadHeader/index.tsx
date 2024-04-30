@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
 import type { MouseEvent, KeyboardEvent, TouchEvent } from 'react';
 
-import IconButton from '../../../../ui/IconButton';
-import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
+import { IconTypes, IconColors } from '../../../../ui/Icon';
 
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import Header from '../../../../ui/Header';
@@ -46,18 +45,11 @@ export default function ThreadHeader({
       renderRight={() => (
         MemoizedActionIcon || (
           <div className="sendbird-thread-header__action">
-            <IconButton
-              width="32px"
-              height="32px"
+            <Header.IconButton
               onClick={(e) => onActionIconClick(e)}
-            >
-              <Icon
-                type={IconTypes.CLOSE}
-                fillColor={IconColors.ON_BACKGROUND_1}
-                width="22px"
-                height="22px"
-              />
-            </IconButton>
+              type={IconTypes.CLOSE}
+              color={IconColors.ON_BACKGROUND_1}
+            />
           </div>
         )
       )}

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { MouseEvent, KeyboardEvent, TouchEvent, ReactNode } from 'react';
+import type { MouseEvent, KeyboardEvent, TouchEvent, ReactNode, ReactElement } from 'react';
 import './index.scss';
 
 import Label, { LabelColors, LabelTypography } from '../Label';
@@ -9,6 +9,7 @@ import UIIcon from '../Icon';
 import type { Types as IconTypes } from '../Icon/type';
 import type { Colors as IconColors } from '../Icon/colors';
 import UIIconButton from '../IconButton';
+import { noop } from '../../utils/utils';
 
 export interface HeaderCustomProps {
   renderLeft?: () => ReactNode;
@@ -105,31 +106,58 @@ export const Title = ({
   );
 };
 
-export interface HeaderIconProps {
+export interface HeaderIconButtonProps {
   className?: string;
   onClick?: (e: MouseEvent) => void;
   type: IconTypes;
   color?: IconColors;
+  width?: string;
+  height?: string;
+  renderIcon?: (props: HeaderIconProps) => ReactElement;
 }
-export const Icon = ({
+export const IconButton = ({
   className,
   onClick,
   type,
   color,
-}: HeaderIconProps) => (
+  width = '32px',
+  height = '32px',
+  renderIcon = (props) => <Icon {...props} />,
+}: HeaderIconButtonProps) => (
   <UIIconButton
     className={className}
-    width="32px"
-    height="32px"
+    width={width}
+    height={height}
     onClick={onClick}
   >
-    <UIIcon
-      type={type}
-      fillColor={color}
-      width="22px"
-      height="22px"
-    />
+    {renderIcon({ type, color })}
   </UIIconButton>
 );
 
-export default Object.assign(Header, { Title, Icon });
+export interface HeaderIconProps {
+  className?: string;
+  type: IconTypes;
+  color?: IconColors;
+  width?: string;
+  height?: string;
+  onClick?: (e: MouseEvent) => void;
+}
+export const Icon = ({
+  className,
+  type,
+  color,
+  width = '22px',
+  height = '22px',
+  onClick = noop,
+}: HeaderIconProps) => (
+  <UIIcon
+    className={className}
+    type={type}
+    fillColor={color}
+    width={width}
+    height={height}
+    onClick={(e) => onClick?.(e)}
+  />
+);
+
+export default Object.assign(Header, { Title, IconButton, Icon });
