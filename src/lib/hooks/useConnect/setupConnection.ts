@@ -10,7 +10,9 @@ import { isTextuallyNull } from '../../../utils';
 import { SetupConnectionTypes } from './types';
 import { CustomExtensionParams, SendbirdChatInitParams } from '../../types';
 
-const APP_VERSION_STRING = '__react_dev_mode__';
+import pkg from '../../../../package.json';
+
+const APP_VERSION_STRING: string = pkg.version;
 
 const { INIT_SDK, SET_SDK_LOADING, RESET_SDK, SDK_ERROR } = SDK_ACTIONS;
 const { INIT_USER, UPDATE_USER_INFO, RESET_USER } = USER_ACTIONS;
