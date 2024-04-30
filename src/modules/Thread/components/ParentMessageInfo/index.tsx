@@ -28,6 +28,7 @@ import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 import MobileMenu from '../../../../ui/MobileMenu';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
+import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
 
 export interface ParentMessageInfoProps {
   className?: string;
@@ -37,14 +38,7 @@ export default function ParentMessageInfo({
   className,
 }: ParentMessageInfoProps): React.ReactElement {
   const { stores, config } = useSendbirdStateContext();
-  const {
-    isMentionEnabled,
-    isReactionEnabled,
-    replyType,
-    isOnline,
-    userMention,
-    logger,
-  } = config;
+  const { isOnline, userMention, logger, groupChannel } = config;
   const userId = stores.userStore.user?.userId ?? '';
   const { dateLocale } = useLocalization();
   const {
@@ -66,11 +60,12 @@ export default function ParentMessageInfo({
   const [showRemove, setShowRemove] = useState(false);
   const [supposedHover, setSupposedHover] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
-  const usingReaction = getIsReactionEnabled({
+  const isReactionEnabled = getIsReactionEnabled({
     channel: currentChannel,
     config,
-    moduleLevel: isReactionEnabled,
   });
+  const isMentionEnabled = groupChannel.enableMention;
+  const replyType = getCaseResolvedReplyType(groupChannel.replyType).upperCase;
   const isByMe = userId === parentMessage.sender.userId;
 
   // Mobile
@@ -275,7 +270,7 @@ export default function ParentMessageInfo({
       <div className="sendbird-parent-message-info__content">
         <div className="sendbird-parent-message-info__content__info">
           <Label
-            className={`sendbird-parent-message-info__content__info__sender-name${usingReaction ? '--use-reaction' : ''}`}
+            className={`sendbird-parent-message-info__content__info__sender-name${isReactionEnabled ? '--use-reaction' : ''}`}
             type={LabelTypography.CAPTION_2}
             color={LabelColors.ONBACKGROUND_2}
           >
@@ -302,7 +297,7 @@ export default function ParentMessageInfo({
       {/* context menu */}
       {!isMobile && (
         <MessageItemMenu
-          className={`sendbird-parent-message-info__context-menu ${usingReaction ? 'use-reaction' : ''} ${supposedHover ? 'sendbird-mouse-hover' : ''}`}
+          className={`sendbird-parent-message-info__context-menu ${isReactionEnabled ? 'use-reaction' : ''} ${supposedHover ? 'sendbird-mouse-hover' : ''}`}
           channel={currentChannel}
           message={parentMessage}
           isByMe={userId === parentMessage?.sender?.userId}
@@ -317,7 +312,7 @@ export default function ParentMessageInfo({
           deleteMessage={deleteMessage}
         />
       )}
-      {(usingReaction && !isMobile) && (
+      {(isReactionEnabled && !isMobile) && (
         <MessageItemReactionMenu
           className={`sendbird-parent-message-info__reaction-menu ${supposedHover ? 'sendbird-mouse-hover' : ''}`}
           message={parentMessage}
@@ -365,7 +360,7 @@ export default function ParentMessageInfo({
               ? 'ACTIVE'
               : 'HIDE'
           }
-          isReactionEnabled={usingReaction}
+          isReactionEnabled={isReactionEnabled}
           isByMe={isByMe}
           emojiContainer={emojiContainer}
           showEdit={setShowEditInput}

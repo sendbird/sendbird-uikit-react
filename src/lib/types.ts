@@ -57,8 +57,6 @@ export interface SBUEventHandlers {
 }
 
 export interface SendBirdStateConfig {
-  disableUserProfile: boolean;
-  disableMarkAsDelivered: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   onUserProfileMessage?: (props: GroupChannel) => void;
   allowProfileEdit: boolean;
@@ -70,13 +68,7 @@ export interface SendBirdStateConfig {
   pubSub: SBUGlobalPubSub;
   logger: Logger;
   setCurrentTheme: (theme: 'light' | 'dark') => void;
-  /** @deprecated Please use setCurrentTheme instead * */
-  setCurrenttheme: (theme: 'light' | 'dark') => void;
   userListQuery?(): UserListQuery;
-  isReactionEnabled: boolean;
-  isMentionEnabled: boolean;
-  isMultipleFilesMessageEnabled: boolean;
-  isVoiceMessageEnabled?: boolean;
   uikitUploadSizeLimit: number;
   uikitMultipleFilesMessageLimit: number;
   voiceRecord?: {
@@ -90,28 +82,56 @@ export interface SendBirdStateConfig {
   imageCompression?: ImageCompressionOptions;
   markAsReadScheduler: MarkAsReadSchedulerType;
   markAsDeliveredScheduler: MarkAsDeliveredSchedulerType;
-  isTypingIndicatorEnabledOnChannelList?: boolean;
-  isMessageReceiptStatusEnabledOnChannelList?: boolean;
-  replyType: ReplyType;
-  showSearchIcon?: boolean;
+  disableMarkAsDelivered: boolean;
+  isMultipleFilesMessageEnabled: boolean;
   // Remote configs set from dashboard by UIKit feature configuration
+  common: {
+    enableUsingDefaultUserProfile: SBUConfig['common']['enableUsingDefaultUserProfile'];
+  },
   groupChannel: {
     enableOgtag: SBUConfig['groupChannel']['channel']['enableOgtag'];
     enableTypingIndicator: SBUConfig['groupChannel']['channel']['enableTypingIndicator'];
-    enableDocument: SBUConfig['groupChannel']['channel']['input']['enableDocument'];
     enableReactions: SBUConfig['groupChannel']['channel']['enableReactions'];
     enableReactionsSupergroup: SBUConfig['groupChannel']['channel']['enableReactionsSupergroup'];
+    enableMention: SBUConfig['groupChannel']['channel']['enableMention'];
     replyType: SBUConfig['groupChannel']['channel']['replyType'];
     threadReplySelectType: SBUConfig['groupChannel']['channel']['threadReplySelectType'];
+    enableVoiceMessage: SBUConfig['groupChannel']['channel']['enableVoiceMessage'];
     typingIndicatorTypes: SBUConfig['groupChannel']['channel']['typingIndicatorTypes'];
+    enableDocument: SBUConfig['groupChannel']['channel']['input']['enableDocument'];
     enableFeedback: SBUConfig['groupChannel']['channel']['enableFeedback'];
     enableSuggestedReplies: SBUConfig['groupChannel']['channel']['enableSuggestedReplies'];
     showSuggestedRepliesFor: SBUConfig['groupChannel']['channel']['showSuggestedRepliesFor'];
+  },
+  groupChannelList: {
+    enableTypingIndicator: SBUConfig['groupChannel']['channelList']['enableTypingIndicator'];
+    enableMessageReceiptStatus: SBUConfig['groupChannel']['channelList']['enableMessageReceiptStatus'];
+  },
+  groupChannelSettings: {
+    enableMessageSearch: SBUConfig['groupChannel']['setting']['enableMessageSearch'];
   },
   openChannel: {
     enableOgtag: SBUConfig['openChannel']['channel']['enableOgtag'];
     enableDocument: SBUConfig['openChannel']['channel']['input']['enableDocument'];
   },
+  /** @deprecated Please use `common.enableUsingDefaultUserProfile` instead * */
+  disableUserProfile: boolean;
+  /** @deprecated Please use `groupChannel.enableReactions` instead * */
+  isReactionEnabled: boolean;
+  /** @deprecated Please use `groupChannel.enableMention` instead * */
+  isMentionEnabled: boolean;
+  /** @deprecated Please use `groupChannel.enableVoiceMessage` instead * */
+  isVoiceMessageEnabled?: boolean;
+  /** @deprecated Please use `groupChannel.replyType` instead * */
+  replyType: ReplyType;
+  /** @deprecated Please use `groupChannelSettings.enableMessageSearch` instead * */
+  showSearchIcon?: boolean;
+  /** @deprecated Please use `groupChannelList.enableTypingIndicator` instead * */
+  isTypingIndicatorEnabledOnChannelList?: boolean;
+  /** @deprecated Please use `groupChannelList.enableMessageReceiptStatus` instead * */
+  isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  /** @deprecated Please use setCurrentTheme instead * */
+  setCurrenttheme: (theme: 'light' | 'dark') => void;
 }
 
 export type SendbirdChatType = SendbirdChat & ModuleNamespaces<[GroupChannelModule, OpenChannelModule]>;
@@ -233,13 +253,21 @@ export interface sendbirdSelectorsInterface {
 }
 
 export interface CommonUIKitConfigProps {
-  replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
-  isMentionEnabled?: boolean;
-  isReactionEnabled?: boolean;
+  /** @deprecated Please use `uikitOptions.common.enableUsingDefaultUserProfile` instead * */
   disableUserProfile?: boolean;
+  /** @deprecated Please use `uikitOptions.groupChannel.replyType` instead * */
+  replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
+  /** @deprecated Please use `uikitOptions.groupChannel.enableReactions` instead * */
+  isReactionEnabled?: boolean;
+  /** @deprecated Please use `uikitOptions.groupChannel.enableMention` instead * */
+  isMentionEnabled?: boolean;
+  /** @deprecated Please use `uikitOptions.groupChannel.enableVoiceMessage` instead * */
   isVoiceMessageEnabled?: boolean;
+  /** @deprecated Please use `uikitOptions.groupChannelList.enableTypingIndicator` instead * */
   isTypingIndicatorEnabledOnChannelList?: boolean;
+  /** @deprecated Please use `uikitOptions.groupChannelList.enableMessageReceiptStatus` instead * */
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
+  /** @deprecated Please use `uikitOptions.groupChannelSettings.enableMessageSearch` instead * */
   showSearchIcon?: boolean;
 }
 

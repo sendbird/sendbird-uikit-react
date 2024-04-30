@@ -53,14 +53,9 @@ export default function ParentMessageInfoItem({
   showFileViewer,
   onBeforeDownloadFileMessage = null,
 }: ParentMessageInfoItemProps): ReactElement {
-  const { stores, config, eventHandlers } = useSendbirdStateContext?.() || {};
+  const { stores, config, eventHandlers } = useSendbirdStateContext();
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
-  const {
-    replyType,
-    isMentionEnabled,
-    isReactionEnabled,
-  } = config;
   const currentUserId = stores?.userStore?.user?.userId;
   const { stringSet } = useLocalization();
   const {
@@ -70,6 +65,10 @@ export default function ParentMessageInfoItem({
     toggleReaction,
   } = useThreadContext();
   const { isMobile } = useMediaQueryContext();
+
+  const isReactionEnabled = config.groupChannel.enableReactions;
+  const isMentionEnabled = config.groupChannel.enableMention;
+
   const threadMessageKindKey = useThreadMessageKindKeySelector({
     threadMessageKind: ThreadMessageKind.PARENT,
     isMobile,
@@ -82,7 +81,7 @@ export default function ParentMessageInfoItem({
 
   // Emoji reactions
   const isReactionActivated = isReactionEnabled
-    && replyType === 'THREAD'
+    && config.groupChannel.replyType === 'thread'
     && message?.reactions?.length > 0;
 
   const tokens = useMemo(() => {

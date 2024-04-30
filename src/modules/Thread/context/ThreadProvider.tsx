@@ -93,14 +93,10 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
   const { user } = userStore;
   const sdkInit = sdkStore?.initialized;
   // // config
-  const {
-    logger,
-    pubSub,
-    replyType,
-    isMentionEnabled,
-    isReactionEnabled,
-    onUserProfileMessage,
-  } = config;
+  const { logger, pubSub, onUserProfileMessage } = config;
+
+  const isMentionEnabled = config.groupChannel.enableMention;
+  const isReactionEnabled = config.groupChannel.enableReactions;
 
   // dux of Thread
   const [threadStore, threadDispatcher] = useReducer(
@@ -222,7 +218,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
 
   // memo
   const nicknamesMap: Map<string, string> = useMemo(() => (
-    (replyType && currentChannel)
+    (config.groupChannel.replyType !== 'none' && currentChannel)
       ? getNicknamesMapFromMembers(currentChannel?.members)
       : new Map()
   ), [currentChannel?.members]);
@@ -269,7 +265,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
     >
       {/* UserProfileProvider */}
       <UserProfileProvider
-        disableUserProfile={disableUserProfile ?? config.disableUserProfile}
+        disableUserProfile={disableUserProfile ?? !config.common.enableUsingDefaultUserProfile}
         renderUserProfile={renderUserProfile}
         onUserProfileMessage={onUserProfileMessage}
       >

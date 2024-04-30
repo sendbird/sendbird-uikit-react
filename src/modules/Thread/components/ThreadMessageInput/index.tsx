@@ -42,13 +42,7 @@ const ThreadMessageInput = (
   const { config } = useSendbirdStateContext();
   const { isMobile } = useMediaQueryContext();
   const { stringSet } = useLocalization();
-  const {
-    isMentionEnabled,
-    isOnline,
-    userMention,
-    isVoiceMessageEnabled,
-    logger,
-  } = config;
+  const { isOnline, userMention, logger, groupChannel } = config;
   const threadContext = useThreadContext();
   const {
     currentChannel,
@@ -63,10 +57,9 @@ const ThreadMessageInput = (
   } = threadContext;
   const messageInputRef = useRef();
 
-  const isMultipleFilesMessageEnabled = (
-    threadContext.isMultipleFilesMessageEnabled
-    ?? config.isMultipleFilesMessageEnabled
-  );
+  const isMentionEnabled = groupChannel.enableMention;
+  const isVoiceMessageEnabled = groupChannel.enableVoiceMessage;
+  const isMultipleFilesMessageEnabled = threadContext.isMultipleFilesMessageEnabled ?? config.isMultipleFilesMessageEnabled;
 
   const threadInputDisabled = props.disabled
     || !isOnline

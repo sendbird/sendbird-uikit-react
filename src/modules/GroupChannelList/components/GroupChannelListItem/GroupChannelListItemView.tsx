@@ -52,9 +52,10 @@ export const GroupChannelListItemView = ({
   renderChannelAction,
 }: GroupChannelListItemViewProps) => {
   const { config } = useSendbirdStateContext();
-  const { theme, isMentionEnabled, userId } = config;
+  const { theme, userId } = config;
   const { dateLocale, stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
+  const isMentionEnabled = config.groupChannel.enableMention;
 
   const [showMobileLeave, setShowMobileLeave] = useState(false);
   const onLongPress = useLongPress(

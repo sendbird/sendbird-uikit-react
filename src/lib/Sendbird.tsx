@@ -37,7 +37,7 @@ import { uikitConfigMapper } from './utils/uikitConfigMapper';
 import { useMarkAsReadScheduler } from './hooks/useMarkAsReadScheduler';
 import { ConfigureSessionTypes } from './hooks/useConnect/types';
 import { useMarkAsDeliveredScheduler } from './hooks/useMarkAsDeliveredScheduler';
-import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from './utils/resolvedReplyType';
+import { getCaseResolvedReplyType } from './utils/resolvedReplyType';
 import { useUnmount } from '../hooks/useUnmount';
 import { disconnectSdk } from './hooks/useConnect/disconnectSdk';
 import {
@@ -376,42 +376,43 @@ const SendbirdSDK = ({
           },
           markAsReadScheduler,
           markAsDeliveredScheduler,
-          // From UIKitConfigProvider.localConfigs
-          disableUserProfile:
-            !configs.common.enableUsingDefaultUserProfile,
-          isReactionEnabled:
-            sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactions,
-          isMentionEnabled:
-            configs.groupChannel.channel.enableMention,
-          isVoiceMessageEnabled:
-            configs.groupChannel.channel.enableVoiceMessage,
-          replyType:
-            getCaseResolvedReplyType(configs.groupChannel.channel.replyType).upperCase,
-          isTypingIndicatorEnabledOnChannelList:
-            configs.groupChannel.channelList.enableTypingIndicator,
-          isMessageReceiptStatusEnabledOnChannelList:
-            configs.groupChannel.channelList.enableMessageReceiptStatus,
-          showSearchIcon:
-            sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
           // Remote configs set from dashboard by UIKit feature configuration
+          common: configs.common,
           groupChannel: {
             enableOgtag: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableOgtag,
             enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
-            enableDocument: configs.groupChannel.channel.input.enableDocument,
             enableReactions: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactions,
             enableReactionsSupergroup: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactionsSupergroup,
+            enableMention: configs.groupChannel.channel.enableMention,
             replyType: configs.groupChannel.channel.replyType,
-            threadReplySelectType: getCaseResolvedThreadReplySelectType(configs.groupChannel.channel.threadReplySelectType).lowerCase,
+            threadReplySelectType: configs.groupChannel.channel.threadReplySelectType,
+            enableVoiceMessage: configs.groupChannel.channel.enableVoiceMessage,
+            enableDocument: configs.groupChannel.channel.input.enableDocument,
             typingIndicatorTypes: configs.groupChannel.channel.typingIndicatorTypes,
             enableFeedback: configs.groupChannel.channel.enableFeedback,
             enableSuggestedReplies: configs.groupChannel.channel.enableSuggestedReplies,
             showSuggestedRepliesFor: configs.groupChannel.channel.showSuggestedRepliesFor,
           },
+          groupChannelList: {
+            enableTypingIndicator: configs.groupChannel.channelList.enableTypingIndicator,
+            enableMessageReceiptStatus: configs.groupChannel.channelList.enableMessageReceiptStatus,
+          },
+          groupChannelSettings: {
+            enableMessageSearch: sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
+          },
           openChannel: {
-            enableOgtag:
-              sdkInitialized && configsWithAppAttr(sdk).openChannel.channel.enableOgtag,
+            enableOgtag: sdkInitialized && configsWithAppAttr(sdk).openChannel.channel.enableOgtag,
             enableDocument: configs.openChannel.channel.input.enableDocument,
           },
+          // deprecated configs
+          disableUserProfile: !configs.common.enableUsingDefaultUserProfile,
+          isReactionEnabled: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactions,
+          isMentionEnabled: configs.groupChannel.channel.enableMention,
+          isVoiceMessageEnabled: configs.groupChannel.channel.enableVoiceMessage,
+          replyType: getCaseResolvedReplyType(configs.groupChannel.channel.replyType).upperCase,
+          isTypingIndicatorEnabledOnChannelList: configs.groupChannel.channelList.enableTypingIndicator,
+          isMessageReceiptStatusEnabledOnChannelList: configs.groupChannel.channelList.enableMessageReceiptStatus,
+          showSearchIcon: sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
         },
         eventHandlers,
         emojiManager,
