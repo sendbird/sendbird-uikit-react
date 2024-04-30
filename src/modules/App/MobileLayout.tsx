@@ -7,12 +7,12 @@ import { GroupChannelHandler, GroupChannel as GroupChannelClass } from '@sendbir
 import type { MobileLayoutProps } from './types';
 
 import GroupChannel, { GroupChannelProps } from '../GroupChannel';
-import GroupChannelList from '../GroupChannelList';
+// import GroupChannelList from '../GroupChannelList';
 import Channel, { ChannelProps } from '../Channel';
-import ChannelList from '../ChannelList';
-import ChannelSettings from '../ChannelSettings';
-import MessageSearch from '../MessageSearch';
-import Thread from '../Thread';
+// import ChannelList from '../ChannelList';
+// import ChannelSettings from '../ChannelSettings';
+// import MessageSearch from '../MessageSearch';
+// import Thread from '../Thread';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import uuidv4 from '../../utils/uuid';
 import { ALL, useVoicePlayerContext } from '../../hooks/VoicePlayer';
@@ -166,17 +166,17 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
 
   return (
     <div className="sb_mobile">
-      {panel === PANELS.CHANNEL_LIST && (
+      {/* {panel === PANELS.CHANNEL_LIST && (
         <div className="sb_mobile__panelwrap">
           {enableLegacyChannelModules ? <ChannelList {...channelListProps} /> : <GroupChannelList {...channelListProps} />}
         </div>
-      )}
+      )} */}
       {panel === PANELS.CHANNEL && (
         <div className="sb_mobile__panelwrap">
           {enableLegacyChannelModules ? <Channel {...channelProps} /> : <GroupChannel {...channelProps} />}
         </div>
       )}
-      {panel === PANELS.CHANNEL_SETTINGS && (
+      {/* {panel === PANELS.CHANNEL_SETTINGS && (
         <div className="sb_mobile__panelwrap">
           <ChannelSettings
             channelUrl={currentChannel?.url || ''}
@@ -204,8 +204,8 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
             }}
           />
         </div>
-      )}
-      {panel === PANELS.THREAD && (
+      )} */}
+      {/* {panel === PANELS.THREAD && (
         <div className="sb_mobile__panelwrap">
           <Thread
             channelUrl={currentChannel?.url || ''}
@@ -223,7 +223,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
             }}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 };

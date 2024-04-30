@@ -8,9 +8,9 @@ import GroupChannelList, { GroupChannelListProps } from '../GroupChannelList';
 
 import Channel, { ChannelProps } from '../Channel';
 import ChannelList, { ChannelListProps } from '../ChannelList';
-import ChannelSettings from '../ChannelSettings';
-import MessageSearchPannel from '../MessageSearch';
-import Thread from '../Thread';
+// import ChannelSettings from '../ChannelSettings';
+// import MessageSearchPannel from '../MessageSearch';
+// import Thread from '../Thread';
 import { SendableMessageType } from '../../utils';
 import { classnames } from '../../utils/utils';
 
@@ -122,7 +122,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
       >
         {enableLegacyChannelModules ? <Channel {...channelProps} /> : <GroupChannel {...channelProps} />}
       </div>
-      {showSettings && (
+      {/* {showSettings && (
         <div className="sendbird-app__settingspanel-wrap">
           <ChannelSettings
             className="sendbird-channel-settings"
@@ -132,8 +132,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
             }}
           />
         </div>
-      )}
-      {showSearch && (
+      )} */}
+      {/* {showSearch && (
         <div className="sendbird-app__searchpanel-wrap">
           <MessageSearchPannel
             channelUrl={currentChannel?.url || ''}
@@ -153,8 +153,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
             }}
           />
         </div>
-      )}
-      {showThread && (
+      )} */}
+      {/* {showThread && (
         <Thread
           className="sendbird-app__thread"
           channelUrl={currentChannel?.url || ''}
@@ -175,7 +175,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
             }, 500);
           }}
         />
-      )}
+      )} */}
     </div>
   );
 };

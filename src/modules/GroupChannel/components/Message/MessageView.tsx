@@ -14,11 +14,11 @@ import useDidMountEffect from '../../../../utils/useDidMountEffect';
 import { CoreMessageType, getClassName, getSuggestedReplies, SendableMessageType } from '../../../../utils';
 import DateSeparator from '../../../../ui/DateSeparator';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
-import MessageInput from '../../../../ui/MessageInput';
-import { MessageInputKeys } from '../../../../ui/MessageInput/const';
+// import MessageInput from '../../../../ui/MessageInput';
+// import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 // import MessageContent, { MessageContentProps } from '../../../../ui/MessageContent';
 
-import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
+// import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
 import type { OnBeforeDownloadFileMessageType } from '../../context/GroupChannelProvider';
 import { deleteNullish } from '../../../../utils/utils';
@@ -40,7 +40,7 @@ export interface MessageProps {
   /**
    * A function that customizes the rendering of suggested replies component of messages.
    */
-  renderSuggestedReplies?: (props: SuggestedRepliesProps) => React.ReactElement;
+  // renderSuggestedReplies?: (props: SuggestedRepliesProps) => React.ReactElement;
   /**
    * A function that customizes the rendering of a separator between messages.
    */
@@ -141,8 +141,8 @@ const MessageView = (props: MessageViewProps) => {
   const {
     renderUserMentionItem,
     renderMessage,
-    // renderMessageContent = (props: MessageContentProps) => <MessageContent {...props} />,
-    renderSuggestedReplies = (props: SuggestedRepliesProps) => <SuggestedReplies {...props} />,
+    // renderMessageContent = (props) => <MessageContent {...props} />,
+    // renderSuggestedReplies = (props) => <SuggestedReplies {...props} />,
     renderCustomSeparator,
     renderEditInput,
     renderFileViewer,
@@ -287,108 +287,108 @@ const MessageView = (props: MessageViewProps) => {
           onBeforeDownloadFileMessage,
         })} */}
         { /* Suggested Replies */ }
-        {
+        {/* {
           shouldRenderSuggestedReplies && renderSuggestedReplies({
             replyOptions: getSuggestedReplies(message),
             onSendMessage: sendUserMessage,
             message,
             type: groupChannel?.suggestedRepliesDirection,
           })
-        }
+        } */}
         {/* Modal */}
-        {showRemove && renderRemoveMessageModal?.({ message, onCancel: () => setShowRemove(false) })}
-        {showFileViewer && renderFileViewer({ message: message as FileMessage, onCancel: () => setShowFileViewer(false) })}
+        {/* {showRemove && renderRemoveMessageModal({ message, onCancel: () => setShowRemove(false) })} */}
+        {/* {showFileViewer && renderFileViewer({ message: message as FileMessage, onCancel: () => setShowFileViewer(false) })} */}
       </>
     );
   };
 
-  if (showEdit && message?.isUserMessage?.()) {
-    return (
-      renderEditInput?.() || (
-        <>
-          {displaySuggestedMentionList && (
-            <SuggestedMentionListView
-              currentChannel={channel}
-              targetNickname={mentionNickname}
-              inputEvent={messageInputEvent ?? undefined}
-              renderUserMentionItem={renderUserMentionItem}
-              onUserItemClick={(user) => {
-                if (user) {
-                  setMentionedUsers([...mentionedUsers, user]);
-                }
-                setMentionNickname('');
-                setSelectedUser(user);
-                setMessageInputEvent(null);
-              }}
-              onFocusItemChange={() => {
-                setMessageInputEvent(null);
-              }}
-              onFetchUsers={(users) => {
-                setMentionSuggestedUsers(users);
-              }}
-              ableAddMention={ableMention}
-              maxMentionCount={maxUserMentionCount}
-              maxSuggestionCount={maxUserSuggestionCount}
-            />
-          )}
-          <MessageInput
-            isEdit
-            channel={channel}
-            disabled={editInputDisabled}
-            ref={editMessageInputRef}
-            mentionSelectedUser={selectedUser}
-            isMentionEnabled={groupChannel.enableMention}
-            message={message}
-            onStartTyping={() => {
-              channel?.startTyping?.();
-            }}
-            onUpdateMessage={({ messageId, message, mentionTemplate }) => {
-              updateUserMessage(messageId, {
-                message,
-                mentionedUsers,
-                mentionedMessageTemplate: mentionTemplate,
-              });
-              setShowEdit(false);
-              channel?.endTyping?.();
-            }}
-            onCancelEdit={() => {
-              setMentionNickname('');
-              setMentionedUsers([]);
-              setMentionedUserIds([]);
-              setMentionSuggestedUsers([]);
-              setShowEdit(false);
-              channel?.endTyping?.();
-            }}
-            onUserMentioned={(user) => {
-              if (selectedUser?.userId === user?.userId) {
-                setSelectedUser(null);
-                setMentionNickname('');
-              }
-            }}
-            onMentionStringChange={(mentionText) => {
-              setMentionNickname(mentionText);
-            }}
-            onMentionedUserIdsUpdated={(userIds) => {
-              setMentionedUserIds(userIds);
-            }}
-            onKeyDown={(e) => {
-              if (
-                displaySuggestedMentionList
-                && mentionSuggestedUsers?.length > 0
-                && ((e.key === MessageInputKeys.Enter && ableMention)
-                  || e.key === MessageInputKeys.ArrowUp
-                  || e.key === MessageInputKeys.ArrowDown)
-              ) {
-                setMessageInputEvent(e);
-                return true;
-              }
-              return false;
-            }}
-          />
-        </>
-      )
-    );
-  }
+  // if (showEdit && message?.isUserMessage?.()) {
+  //   return (
+  //     renderEditInput?.() || (
+  //       <>
+  //         {displaySuggestedMentionList && (
+  //           <SuggestedMentionListView
+  //             currentChannel={channel}
+  //             targetNickname={mentionNickname}
+  //             inputEvent={messageInputEvent ?? undefined}
+  //             renderUserMentionItem={renderUserMentionItem}
+  //             onUserItemClick={(user) => {
+  //               if (user) {
+  //                 setMentionedUsers([...mentionedUsers, user]);
+  //               }
+  //               setMentionNickname('');
+  //               setSelectedUser(user);
+  //               setMessageInputEvent(null);
+  //             }}
+  //             onFocusItemChange={() => {
+  //               setMessageInputEvent(null);
+  //             }}
+  //             onFetchUsers={(users) => {
+  //               setMentionSuggestedUsers(users);
+  //             }}
+  //             ableAddMention={ableMention}
+  //             maxMentionCount={maxUserMentionCount}
+  //             maxSuggestionCount={maxUserSuggestionCount}
+  //           />
+  //         )}
+  //         <MessageInput
+  //           isEdit
+  //           channel={channel}
+  //           disabled={editInputDisabled}
+  //           ref={editMessageInputRef}
+  //           mentionSelectedUser={selectedUser}
+  //           isMentionEnabled={groupChannel.enableMention}
+  //           message={message}
+  //           onStartTyping={() => {
+  //             channel?.startTyping?.();
+  //           }}
+  //           onUpdateMessage={({ messageId, message, mentionTemplate }) => {
+  //             updateUserMessage(messageId, {
+  //               message,
+  //               mentionedUsers,
+  //               mentionedMessageTemplate: mentionTemplate,
+  //             });
+  //             setShowEdit(false);
+  //             channel?.endTyping?.();
+  //           }}
+  //           onCancelEdit={() => {
+  //             setMentionNickname('');
+  //             setMentionedUsers([]);
+  //             setMentionedUserIds([]);
+  //             setMentionSuggestedUsers([]);
+  //             setShowEdit(false);
+  //             channel?.endTyping?.();
+  //           }}
+  //           onUserMentioned={(user) => {
+  //             if (selectedUser?.userId === user?.userId) {
+  //               setSelectedUser(null);
+  //               setMentionNickname('');
+  //             }
+  //           }}
+  //           onMentionStringChange={(mentionText) => {
+  //             setMentionNickname(mentionText);
+  //           }}
+  //           onMentionedUserIdsUpdated={(userIds) => {
+  //             setMentionedUserIds(userIds);
+  //           }}
+  //           onKeyDown={(e) => {
+  //             if (
+  //               displaySuggestedMentionList
+  //               && mentionSuggestedUsers?.length > 0
+  //               && ((e.key === MessageInputKeys.Enter && ableMention)
+  //                 || e.key === MessageInputKeys.ArrowUp
+  //                 || e.key === MessageInputKeys.ArrowDown)
+  //             ) {
+  //               setMessageInputEvent(e);
+  //               return true;
+  //             }
+  //             return false;
+  //           }}
+  //         />
+  //       </>
+  //     )
+  //   );
+  // }
 
   return (
     <div

@@ -563,7 +563,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
               </IconButton>
             )))}
         {/* voice message input trigger */}
-        {isVoiceMessageEnabled && !isEdit && !isInput && (
+        {/* {isVoiceMessageEnabled && !isEdit && !isInput && (
           <IconButton
             className="sendbird-message-input--voice-message"
             width="32px"
@@ -579,7 +579,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
               />
             )}
           </IconButton>
-        )}
+        )} */}
       </div>
       {/* Edit */}
       {isEdit && (
