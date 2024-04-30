@@ -83,7 +83,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         message={message as UserMessage}
         isByMe={isByMe}
         mouseHover={mouseHover}
-        isMentionEnabled={config?.groupChannel.enableMention ?? false}
+        isMentionEnabled={config.groupChannel.enableMention ?? false}
         isReactionEnabled={isReactionEnabledInChannel}
         onMessageHeightChange={onMessageHeightChange}
       />
@@ -94,7 +94,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         message={message as UserMessage}
         isByMe={isByMe}
         mouseHover={mouseHover}
-        isMentionEnabled={config?.groupChannel.enableMention ?? false}
+        isMentionEnabled={config.groupChannel.enableMention ?? false}
         isReactionEnabled={isReactionEnabledInChannel}
       />
     ))
