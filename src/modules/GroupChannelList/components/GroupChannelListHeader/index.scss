@@ -12,8 +12,10 @@
   height: 64px;
   min-height: 64px;
   width: 320px;
-  padding-left: 12px;
-  padding-right: 14px;
+
+  padding-left: 8px;
+  padding-right: 16px;
+
   box-sizing: border-box;
   @include themed() {
     border-bottom: 1px solid t(on-bg-4);

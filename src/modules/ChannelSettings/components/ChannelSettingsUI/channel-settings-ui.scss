@@ -35,6 +35,7 @@
     min-height: 64px;
     position: relative;
     padding-left: 24px;
+    // padding-right: 24px; including the Icon's padding-right
     padding-right: 20px;
     box-sizing: border-box;
     @include themed() {
