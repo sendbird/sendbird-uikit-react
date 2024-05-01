@@ -68,7 +68,7 @@ export interface SendBirdStateConfig {
   pubSub: SBUGlobalPubSub;
   logger: Logger;
   setCurrentTheme: (theme: 'light' | 'dark') => void;
-  userListQuery?(): UserListQuery;
+  userListQuery?: () => UserListQuery;
   uikitUploadSizeLimit: number;
   uikitMultipleFilesMessageLimit: number;
   voiceRecord?: {

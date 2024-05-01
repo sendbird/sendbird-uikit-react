@@ -48,10 +48,10 @@ const EmojiReactions = ({
   let showTheReactedMembers = false;
   try {
     const { config } = useSendbirdStateContext();
-    showTheReactedMembers = getIsReactionEnabled({
+    showTheReactedMembers = channel ? getIsReactionEnabled({
       channel,
       config,
-    });
+    }) : false;
   } catch (err) {
     // TODO: Handle error
   }

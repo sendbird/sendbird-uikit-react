@@ -48,7 +48,7 @@ import {
   SBUEventHandlers, SendbirdProviderUtils,
 } from './types';
 import { GlobalModalProvider, ModalRoot } from '../hooks/useModal';
-import { RenderUserProfileProps } from '../types';
+import { RenderUserProfileProps, UserListQuery } from '../types';
 import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
 import { EmojiManager } from './emojiManager';
 import { uikitConfigStorage } from './utils/uikitConfigStorage';
@@ -57,16 +57,12 @@ import { EmojiReactionListRoot, MenuRoot } from '../ui/ContextMenu';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
-export type UserListQueryType = {
-  hasNext?: boolean;
-  next: () => Promise<Array<User>>;
-  get isLoading(): boolean;
-};
-
 interface VoiceRecordOptions {
   maxRecordingTime?: number;
   minRecordingTime?: number;
 }
+
+const DEFAULT_UPLOAD_SIZE_LIMIT = 25 * 1024 * 1024;
 
 export type ImageCompressionOutputFormatType = 'preserve' | 'png' | 'jpeg';
 export interface ImageCompressionOptions {
@@ -101,7 +97,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   dateLocale?: Locale | null;
   profileUrl?: string;
   voiceRecord?: VoiceRecordOptions;
-  userListQuery?: UserListQueryType | null;
+  userListQuery?: () => UserListQuery;
   imageCompression?: ImageCompressionOptions;
   allowProfileEdit?: boolean;
   disableMarkAsDelivered?: boolean;
@@ -170,7 +166,7 @@ const SendbirdSDK = ({
   dateLocale = null,
   profileUrl = '',
   voiceRecord,
-  userListQuery = null,
+  userListQuery,
   imageCompression = {},
   allowProfileEdit = false,
   disableMarkAsDelivered = false,
@@ -356,7 +352,7 @@ const SendbirdSDK = ({
           setCurrentTheme,
           setCurrenttheme: setCurrentTheme, // deprecated: typo
           isMultipleFilesMessageEnabled,
-          uikitUploadSizeLimit,
+          uikitUploadSizeLimit: uikitUploadSizeLimit ?? DEFAULT_UPLOAD_SIZE_LIMIT,
           uikitMultipleFilesMessageLimit,
           userListQuery,
           logger,

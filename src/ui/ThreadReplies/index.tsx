@@ -19,7 +19,7 @@ export function ThreadReplies(
     threadInfo,
     onClick,
   }: ThreadRepliesProps,
-  ref?: RefObject<HTMLDivElement>,
+  ref: RefObject<HTMLDivElement>,
 ): React.ReactElement {
   const {
     mostRepliedUsers = [],
