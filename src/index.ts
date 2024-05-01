@@ -23,3 +23,5 @@ export { default as useSendbirdStateContext } from './hooks/useSendbirdStateCont
 
 // Public enum included in AppProps
 export { TypingIndicatorType } from './types';
+
+export { getIsByMe } from "./utils/messages";

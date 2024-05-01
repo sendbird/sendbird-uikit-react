@@ -266,6 +266,7 @@ export const MessageList = ({
                       currentIndex: idx,
                       currentMessage: message as CoreMessageType,
                       currentChannel,
+                      currentUserId: store.config.userId
                     });
                     const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === store.config.userId;
                     return (

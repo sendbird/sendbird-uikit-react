@@ -30,11 +30,12 @@ export const getMessagePartsInfo = ({
   currentMessage = null,
   currentChannel = null,
   replyType = '',
-}: GetMessagePartsInfoProps): OutPuts => {
+  currentUserId 
+}: GetMessagePartsInfoProps & { currentUserId?: string }): OutPuts => {
   const previousMessage = allMessages[currentIndex - 1];
   const nextMessage = allMessages[currentIndex + 1];
   const [chainTop, chainBottom] = isMessageGroupingEnabled
-    ? compareMessagesForGrouping(previousMessage, currentMessage, nextMessage, currentChannel, (replyType as ReplyType))
+    ? compareMessagesForGrouping(previousMessage, currentMessage, nextMessage, currentChannel, (replyType as ReplyType), currentUserId)
     : [false, false];
   const previousMessageCreatedAt = previousMessage?.createdAt;
   const currentCreatedAt = currentMessage.createdAt;
