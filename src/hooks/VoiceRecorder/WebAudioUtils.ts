@@ -1,8 +1,9 @@
 // Thanks to https://codesandbox.io/s/media-recorder-api-downsampling-16k-mp3-encode-using-lame-js-forked-n1pblw
 import { VOICE_RECORDER_AUDIO_SAMPLE_RATE } from '../../utils/consts';
+// @ts-ignore
 import { WavHeader, Mp3Encoder } from '../../_externals/lamejs/lame.all';
 
-function encodeMp3(arrayBuffer: ArrayBuffer): WavHeader {
+function encodeMp3(arrayBuffer: ArrayBuffer) {
   const wav = WavHeader.readHeader(new DataView(arrayBuffer));
   const dataView = new Int16Array(arrayBuffer, wav.dataOffset, wav.dataLen / 2);
   const mp3Encoder = new Mp3Encoder(wav.channels, wav.sampleRate, 128);
@@ -57,8 +58,8 @@ function downsampleToWav(file: File, callback: (buffer: ArrayBuffer) => void): v
 
       const reader = new FileReader();
       reader.onload = function () {
-        const renderCompleteHandler = (evt): void => {
-          const renderedBuffer = usingWebkit ? evt.renderedBuffer : evt;
+        const renderCompleteHandler = (evt: OfflineAudioCompletionEvent | AudioBuffer) => {
+          const renderedBuffer = usingWebkit ? (evt as OfflineAudioCompletionEvent).renderedBuffer : (evt as AudioBuffer);
           const buffer = bufferToWav(renderedBuffer, renderedBuffer.length);
           if (callback) {
             callback(buffer);
@@ -82,7 +83,7 @@ function downsampleToWav(file: File, callback: (buffer: ArrayBuffer) => void): v
   fileReader.readAsArrayBuffer(file);
 }
 
-function bufferToWav(abuffer, len) {
+function bufferToWav(abuffer: AudioBuffer, len: number) {
   const numOfChan = abuffer.numberOfChannels;
   const length = len * numOfChan * 2 + 44;
   const buffer = new ArrayBuffer(length);
@@ -126,19 +127,20 @@ function bufferToWav(abuffer, len) {
 
   return buffer;
 
-  function setUint16(data) {
+  function setUint16(data: number) {
     view.setUint16(pos, data, true);
     pos += 2;
   }
 
-  function setUint32(data) {
+  function setUint32(data: number) {
     view.setUint32(pos, data, true);
     pos += 4;
   }
 }
 
 export interface WebAudioUtils {
-  downsampleToWav,
-  encodeMp3,
+  downsampleToWav: typeof downsampleToWav;
+  encodeMp3: typeof encodeMp3;
 }
+
 export { downsampleToWav, encodeMp3 };
