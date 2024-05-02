@@ -74,13 +74,16 @@ export const VoicePlayerProvider = ({
   };
 
   const pause = (groupKey?: string) => {
-    if (currentGroupKey === groupKey && currentPlayer) {
-      logger.info('VoicePlayer: Pause playing(by group key).');
-      currentPlayer?.pause();
-    }
-    if (groupKey === ALL) {
-      logger.info('VoicePlayer: Pause playing(all).');
-      currentPlayer?.pause();
+    if (currentPlayer) {
+      if (groupKey === currentGroupKey) {
+        logger.info('VoicePlayer: Pause playing(by group key).');
+        currentPlayer.pause();
+      } else if (groupKey === ALL) {
+        logger.info('VoicePlayer: Pause playing(all).');
+        currentPlayer.pause();
+      }
+    } else {
+      logger.warning('VoicePlayer: No currentPlayer to pause.');
     }
   };
 

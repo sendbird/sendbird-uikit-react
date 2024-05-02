@@ -28,7 +28,7 @@ export const useVoicePlayer = ({
   audioFile,
   audioFileUrl = '',
 }: UseVoicePlayerProps): UseVoicePlayerContext => {
-  const [groupKey] = useState<string>(generateGroupKey(channelUrl, key));
+  const groupKey = generateGroupKey(channelUrl, key);
   const {
     play,
     pause,
