@@ -31,7 +31,7 @@ export const MemberList = (): ReactElement => {
   const {
     channel,
     setChannelUpdateId,
-  } = useChannelSettingsContext() || {};
+  } = useChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
 
   const sdk = state?.stores?.sdkStore?.sdk;

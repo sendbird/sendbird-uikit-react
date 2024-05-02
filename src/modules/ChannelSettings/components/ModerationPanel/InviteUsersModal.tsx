@@ -25,7 +25,7 @@ export default function InviteUsers({ onCancel, onSubmit }: Props) {
   const sdk = state?.stores?.sdkStore?.sdk;
   const globalUserListQuery = state?.config?.userListQuery;
 
-  const { channel, overrideInviteUser, queries } = useChannelSettingsContext() || {};
+  const { channel, overrideInviteUser, queries } = useChannelSettingsContext();
   const { stringSet } = useLocalization();
 
   const onScroll = useOnScrollPositionChangeDetector({
