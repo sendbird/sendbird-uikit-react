@@ -12,7 +12,6 @@ import { VoiceMessageInputStatus } from '../../../../ui/VoiceMessageInput/types'
 import Modal from '../../../../ui/Modal';
 import Button, { ButtonSizes, ButtonTypes } from '../../../../ui/Button';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { VOICE_RECORDER_DEFAULT_MIN } from '../../../../utils/consts';
 import { VOICE_PLAYER_STATUS } from '../../../../hooks/VoicePlayer/dux/initialState';
 import uuidv4 from '../../../../utils/uuid';
 
@@ -35,7 +34,6 @@ export const VoiceMessageInputWrapper = ({
   const [showModal, setShowModal] = useState(false);
   const { stringSet } = useLocalization();
   const { config } = useSendbirdStateContext();
-  const minRecordingTime = config?.voiceRecord?.minRecordingTime || VOICE_RECORDER_DEFAULT_MIN;
   const {
     start,
     stop,
@@ -85,7 +83,7 @@ export const VoiceMessageInputWrapper = ({
   // operate which control button should be displayed
   useEffect(() => {
     if (audioFile) {
-      if (recordingTime < minRecordingTime) {
+      if (recordingTime < config.voiceRecord.minRecordingTime) {
         setVoiceInputState(VoiceMessageInputStatus.READY_TO_RECORD);
         setAudioFile(null);
       } else if (playingStatus === VOICE_PLAYER_STATUS.PLAYING) {
@@ -125,7 +123,7 @@ export const VoiceMessageInputWrapper = ({
               break;
             }
             case VoiceMessageInputStatus.RECORDING: {
-              if (recordingTime >= minRecordingTime && !isDisabled) {
+              if (recordingTime >= config.voiceRecord.minRecordingTime && !isDisabled) {
                 stop();
               } else if (isDisabled) {
                 cancel();
@@ -158,7 +156,7 @@ export const VoiceMessageInputWrapper = ({
             }
             hideFooter
             isCloseOnClickOutside
-            onCancel={() => {
+            onClose={() => {
               setShowModal(false);
               onCancelClick?.();
             }}

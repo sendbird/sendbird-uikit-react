@@ -76,7 +76,7 @@ export interface SendBirdStateConfig {
   userListQuery?: () => UserListQuery;
   uikitUploadSizeLimit: number;
   uikitMultipleFilesMessageLimit: number;
-  voiceRecord?: {
+  voiceRecord: {
     maxRecordingTime: number;
     minRecordingTime: number;
   };

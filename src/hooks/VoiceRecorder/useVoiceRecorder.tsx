@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { VoiceRecorderEventHandler, useVoiceRecorderContext } from '.';
 import useSendbirdStateContext from '../useSendbirdStateContext';
-import { VOICE_RECORDER_DEFAULT_MAX } from '../../utils/consts';
+import { noop } from '../../utils/utils';
 
 // export interface UseVoiceRecorderProps extends VoiceRecorderEventHandler {
 //   /**
@@ -27,15 +27,13 @@ export interface UseVoiceRecorderContext {
   recordingStatus: VoiceRecorderStatus;
 }
 
-const noop = () => { /* noop */ };
-
 export const useVoiceRecorder = ({
   onRecordingStarted = noop,
   onRecordingEnded = noop,
 }: VoiceRecorderEventHandler): UseVoiceRecorderContext => {
   const { config } = useSendbirdStateContext();
   const { voiceRecord } = config;
-  const maxRecordingTime = voiceRecord?.maxRecordingTime ?? VOICE_RECORDER_DEFAULT_MAX;
+  const maxRecordingTime = voiceRecord.maxRecordingTime;
   const voiceRecorder = useVoiceRecorderContext();
   const { isRecordable } = voiceRecorder;
 
