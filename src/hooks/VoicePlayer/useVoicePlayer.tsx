@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useVoicePlayerContext } from '.';
 import { VOICE_PLAYER_AUDIO_ID } from '../../utils/consts';
 import { useVoiceRecorderContext } from '../VoiceRecorder';
