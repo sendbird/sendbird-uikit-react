@@ -214,7 +214,7 @@ const SendbirdSDK = ({
     logger,
     nickname,
     profileUrl,
-    configureSession: configureSession ?? undefined,
+    configureSession,
     customApiHost,
     customWebSocketHost,
     sdkInitParams,
