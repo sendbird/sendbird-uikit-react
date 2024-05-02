@@ -49,14 +49,14 @@ export interface GroupChannelListQueryParamsInternal {
   userIdsExactFilter?: Array<string>;
   userIdsIncludeFilter?: Array<string>;
   userIdsIncludeFilterQueryType?: QueryType;
-  nicknameContainsFilter?: string;
+  nicknameContainsFilter?: string | null;
   channelNameContainsFilter?: string;
-  customTypesFilter?: Array<string>;
-  customTypeStartsWithFilter?: string;
-  channelUrlsFilter?: Array<string>;
+  customTypesFilter?: Array<string> | null;
+  customTypeStartsWithFilter?: string | null;
+  channelUrlsFilter?: Array<string> | null;
   superChannelFilter?: SuperChannelFilter;
   publicChannelFilter?: PublicChannelFilter;
-  metadataOrderKeyFilter?: string;
+  metadataOrderKeyFilter?: string | null;
   memberStateFilter?: MyMemberStateFilter;
   hiddenChannelFilter?: HiddenChannelFilter;
   unreadChannelFilter?: UnreadChannelFilter;
@@ -76,7 +76,7 @@ type OverrideInviteUserType = {
 };
 
 export interface ChannelListProviderProps {
-  allowProfileEdit?: boolean;
+  allowProfileEdit: boolean;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   overrideInviteUser?(params: OverrideInviteUserType): void;
   onThemeChange?(theme: string): void;
@@ -100,35 +100,15 @@ export interface ChannelListProviderInterface extends ChannelListProviderProps {
   initialized: boolean;
   loading: boolean;
   allChannels: GroupChannel[];
-  currentChannel: GroupChannel;
-  channelListQuery: GroupChannelListQueryParamsInternal;
+  currentChannel: GroupChannel | null;
+  channelListQuery: GroupChannelListQueryParamsInternal | null;
   currentUserId: string;
   channelListDispatcher: React.Dispatch<ChannelListActionTypes>;
   channelSource: GroupChannelListQuerySb | null;
   fetchChannelList: () => void;
 }
 
-const ChannelListContext = React.createContext<ChannelListProviderInterface>({
-  disableUserProfile: true,
-  allowProfileEdit: true,
-  onBeforeCreateChannel: null,
-  onThemeChange: null,
-  onProfileEditSuccess: null,
-  onChannelSelect: null,
-  queries: {},
-  className: null,
-  initialized: false,
-  loading: false,
-  allChannels: [],
-  currentChannel: null,
-  channelListQuery: {},
-  currentUserId: null,
-  channelListDispatcher: null,
-  channelSource: null,
-  typingChannels: [],
-  fetchChannelList: noop,
-  reconnectOnIdle: true,
-});
+const ChannelListContext = React.createContext<ChannelListProviderInterface | null>(null);
 
 const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelListProviderProps) => {
   // destruct props
@@ -169,7 +149,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   // enable if it is true at least once(both are false by default)
   const userDefinedDisableUserProfile = disableUserProfile ?? !config.common.enableUsingDefaultUserProfile;
   const userDefinedRenderProfile = config?.renderUserProfile;
-  const enableEditProfile = allowProfileEdit || config?.allowProfileEdit;
+  const enableEditProfile = allowProfileEdit || config.allowProfileEdit;
 
   const userFilledChannelListQuery = queries?.channelListQuery;
   const userFilledApplicationUserListQuery = queries?.applicationUserListQuery;
@@ -409,8 +389,9 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   );
 };
 
-function useChannelListContext(): ChannelListProviderInterface {
-  const context: ChannelListProviderInterface = useContext(ChannelListContext);
+function useChannelListContext() {
+  const context = useContext(ChannelListContext);
+  if (!context) throw new Error('ChannelListContext not found. Use within the ChannelList module.');
   return context;
 }
 

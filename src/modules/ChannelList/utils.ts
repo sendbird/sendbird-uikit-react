@@ -124,7 +124,7 @@ const createEventHandler = ({ sdk, sdkChannelHandlerId, channelListDispatcher, l
 
 type CreateChannelListQueryParams = {
   sdk: SdkStore['sdk'];
-  userFilledChannelListQuery: GroupChannelListQueryParamsInternal;
+  userFilledChannelListQuery?: GroupChannelListQueryParamsInternal;
 };
 
 export const createChannelListQuery = ({
@@ -139,6 +139,7 @@ export const createChannelListQuery = ({
 
   if (userFilledChannelListQuery) {
     Object.keys(userFilledChannelListQuery).forEach((key) => {
+      // @ts-ignore
       params[key] = userFilledChannelListQuery[key];
     });
   }
@@ -159,7 +160,7 @@ type SetupChannelListParams = {
   onChannelSelect: (channel: ChannelListInitialStateType['currentChannel']) => void;
   userFilledChannelListQuery: GroupChannelListQueryParamsInternal;
   logger: LoggerInterface;
-  sortChannelList: (channels: GroupChannel[]) => GroupChannel[];
+  sortChannelList?: (channels: GroupChannel[]) => GroupChannel[];
   disableAutoSelect: boolean;
   markAsDeliveredScheduler: MarkAsDeliveredSchedulerType;
   disableMarkAsDelivered: boolean;
@@ -270,8 +271,7 @@ export const pubSubHandler = (pubSub: SBUGlobalPubSub, channelListDispatcher: Re
   if (!pubSub) return subscriber;
   subscriber.set(
     topics.CREATE_CHANNEL,
-    pubSub.subscribe(topics.CREATE_CHANNEL, (msg: { channel: GroupChannel }) => {
-      const { channel } = msg;
+    pubSub.subscribe(topics.CREATE_CHANNEL, ({ channel }) => {
       channelListDispatcher({
         type: channelActions.CREATE_CHANNEL,
         payload: channel,

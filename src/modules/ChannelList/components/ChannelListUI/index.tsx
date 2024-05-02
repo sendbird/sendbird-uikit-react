@@ -9,9 +9,10 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { GroupChannelListUIView } from '../../../GroupChannelList/components/GroupChannelListUI/GroupChannelListUIView';
 import AddChannel from '../AddChannel';
 import { GroupChannelListItemBasicProps } from '../../../GroupChannelList/components/GroupChannelListItem/GroupChannelListItemView';
+import { noop } from '../../../../utils/utils';
 
 interface ChannelPreviewProps extends Omit<GroupChannelListItemBasicProps, 'onLeaveChannel'> {
-  onLeaveChannel(channel?: GroupChannel, onLeaveChannelCb?: (channel: GroupChannel, error?: null) => void): Promise<void>;
+  onLeaveChannel(channel?: GroupChannel, onLeaveChannelCb?: (channel: GroupChannel, error?: unknown) => void): Promise<void>;
 }
 
 export interface ChannelListUIProps {
@@ -61,7 +62,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
           payload: channel,
         });
       },
-      async onLeaveChannel(channel?: GroupChannel, cb?: (channel: GroupChannel, error?: null) => void) {
+      async onLeaveChannel(channel?: GroupChannel, cb?: (channel: GroupChannel, error?: unknown) => void) {
         logger.info('ChannelList: Leaving channel', channel);
         if (channel) {
           try {
@@ -100,9 +101,9 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
       renderPlaceHolderError={renderPlaceHolderError}
       renderPlaceHolderLoading={renderPlaceHolderLoading}
       renderPlaceHolderEmptyList={renderPlaceHolderEmptyList}
-      onChangeTheme={onThemeChange ?? (() => {})}
-      allowProfileEdit={allowProfileEdit ?? false}
-      onUserProfileUpdated={onProfileEditSuccess ?? (() => {})}
+      onChangeTheme={onThemeChange ?? noop}
+      allowProfileEdit={allowProfileEdit}
+      onUserProfileUpdated={onProfileEditSuccess ?? noop}
       channels={allChannels}
       onLoadMore={fetchChannelList}
       initialized={initialized}
