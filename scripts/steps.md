@@ -35,7 +35,7 @@
 8. Ask EM to review the release ticket and await for `Release approved`.
 9. In the root, `yarn build` to create new build files. Once created, make sure files in `dist` is newly created/updated.
 10. Change directory to `./dist` and then publish `npm publish` (`npm publish --tag beta` for beta release).
-11. In the release branch, create a new tag `v{X.X.X}` and the push the tag `git push v{X.X.X} origin`.
+11. In the release branch, create a new tag `v{X.X.X}` and the push the tag `git push origin v{X.X.X}`.
 12. After release do the followings:
   - Update release ticket to `Released`
   - In the [releases](https://github.com/sendbird/sendbird-uikit-react/releases) draft a new release note with the new tag (write changelog in the description) and then publish release.
