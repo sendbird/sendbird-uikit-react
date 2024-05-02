@@ -14,6 +14,7 @@ import ts2 from "rollup-plugin-typescript2"
 // config from package.json
 import pkg from "./package.json" assert {type: "json"};
 import inputs from "./rollup.module-exports.mjs";
+import {readFileSync, writeFileSync} from 'fs';
 
 const APP_VERSION_STRING = "__react_dev_mode__";
 
@@ -61,6 +62,41 @@ export default {
       extract: "dist/index.css",
       extensions: [".sass", ".scss", ".css"],
     }),
+    {
+      name: 'postcss-single-file',
+      async writeBundle(outputOptions, bundle) {
+        // Path to your CSS file
+        const cssFilePath = './dist/dist/index.css';
+
+        try {
+          // Read the content of the CSS file
+          const cssContent = readFileSync(cssFilePath, 'utf-8');
+
+          // Split the content into lines
+          const lines = cssContent.split('\n');
+
+          // Find lines starting with @import
+          const importLines = [];
+          const otherLines = [];
+          lines.forEach(line => {
+            if (line.trim().startsWith('@import')) {
+              importLines.push(line);
+            } else {
+              otherLines.push(line);
+            }
+          });
+          // Combine import lines and other lines
+          const modifiedContent = importLines.join('\n') + '\n' + otherLines.join('\n');
+
+          // Write the modified content back to the file
+          writeFileSync(cssFilePath, modifiedContent);
+
+          console.log('Moved @import lines to the top of the CSS file successfully.');
+        } catch (error) {
+          console.error('Error occurred while moving @import lines to the top of the CSS file:', error);
+        }
+      },
+    },
     replace({
       preventAssignment: false,
       exclude: "node_modules/**",
