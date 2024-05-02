@@ -14,7 +14,7 @@ import ts2 from "rollup-plugin-typescript2"
 // config from package.json
 import pkg from "./package.json" assert {type: "json"};
 import inputs from "./rollup.module-exports.mjs";
-import {readFileSync, writeFileSync} from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 
 const APP_VERSION_STRING = "__react_dev_mode__";
 
