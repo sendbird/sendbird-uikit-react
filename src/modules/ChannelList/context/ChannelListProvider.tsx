@@ -76,7 +76,7 @@ type OverrideInviteUserType = {
 };
 
 export interface ChannelListProviderProps {
-  allowProfileEdit: boolean;
+  allowProfileEdit?: boolean;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   overrideInviteUser?(params: OverrideInviteUserType): void;
   onThemeChange?(theme: string): void;

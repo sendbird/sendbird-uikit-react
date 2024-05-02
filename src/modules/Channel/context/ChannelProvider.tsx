@@ -78,8 +78,8 @@ export type ChannelContextProps = {
   onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
   onSearchClick?(): void;
   onBackClick?(): void;
-  replyType: ReplyType;
-  threadReplySelectType: ThreadReplySelectType;
+  replyType?: ReplyType;
+  threadReplySelectType?: ThreadReplySelectType;
   queries?: ChannelQueries;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   filterMessageList?(messages: BaseMessage): boolean;

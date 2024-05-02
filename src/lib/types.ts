@@ -84,7 +84,7 @@ export interface SendBirdStateConfig {
     maxMentionCount: number,
     maxSuggestionCount: number,
   };
-  imageCompression?: ImageCompressionOptions;
+  imageCompression: ImageCompressionOptions;
   markAsReadScheduler: MarkAsReadSchedulerType;
   markAsDeliveredScheduler: MarkAsDeliveredSchedulerType;
   disableMarkAsDelivered: boolean;
@@ -176,7 +176,7 @@ export type SendBirdState = {
   },
   // Customer provided callbacks
   eventHandlers?: SBUEventHandlers;
-  emojiManager?: EmojiManager;
+  emojiManager: EmojiManager;
   utils: SendbirdProviderUtils;
 };
 

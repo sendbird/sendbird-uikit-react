@@ -4,10 +4,10 @@ import { GroupChannel as GroupChannelClass } from '@sendbird/chat/groupChannel';
 import type { DesktopLayoutProps } from './types';
 
 import GroupChannel, { GroupChannelProps } from '../GroupChannel';
-import GroupChannelList from '../GroupChannelList';
+import GroupChannelList, { GroupChannelListProps } from '../GroupChannelList';
 
 import Channel, { ChannelProps } from '../Channel';
-import ChannelList from '../ChannelList';
+import ChannelList, { ChannelListProps } from '../ChannelList';
 import ChannelSettings from '../ChannelSettings';
 import MessageSearchPannel from '../MessageSearch';
 import Thread from '../Thread';
@@ -46,7 +46,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
     if (channel) {
       setCurrentChannel(channel);
     } else {
-      setCurrentChannel(null);
+      setCurrentChannel(null ?? undefined);
     }
   };
 
@@ -60,7 +60,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
     }
   };
 
-  const channelListProps = {
+  const channelListProps: GroupChannelListProps & ChannelListProps = {
     allowProfileEdit,
     activeChannelUrl: currentChannel?.url,
     onProfileEditSuccess: onProfileEditSuccess,
