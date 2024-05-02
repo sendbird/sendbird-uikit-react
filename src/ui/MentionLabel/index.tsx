@@ -12,6 +12,7 @@ import ContextMenu, { MenuItems } from '../ContextMenu';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import UserProfile from '../UserProfile';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import { classnames } from '../../utils/utils';
 
 interface MentionLabelProps {
   mentionTemplate: string;
@@ -34,7 +35,7 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
   const userId = sendbirdState?.config?.userId;
   const sdk = sendbirdState?.stores?.sdkStore?.sdk;
   const amIBeingMentioned = userId === mentionedUserId;
-  const [user, setUser] = useState<User| null>();
+  const [user, setUser] = useState<User | null>();
   const fetchUser = useCallback(
     (toggleDropdown: () => void) => {
       if (user || !sdk?.createApplicationUserListQuery) {
@@ -57,10 +58,10 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
     <ContextMenu
       menuTrigger={(toggleDropdown: () => void): ReactElement => (
         <a
-          className={`
-            sendbird-word__mention
-            ${amIBeingMentioned ? 'sendbird-word__mention--me' : ''}
-          `}
+          className={classnames(
+            'sendbird-word__mention',
+            amIBeingMentioned && 'sendbird-word__mention--me',
+          )}
           onClick={() => fetchUser(toggleDropdown)}
           ref={mentionRef}
           data-userid={mentionedUserId}

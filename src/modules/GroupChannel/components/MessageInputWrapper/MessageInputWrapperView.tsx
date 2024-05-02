@@ -146,7 +146,7 @@ export const MessageInputWrapperView = React.forwardRef((
   }
   // other conditions
   return (
-    <div className={`sendbird-message-input-wrapper${showVoiceMessageInput ? '--voice-message' : ''}`}>
+    <div className={showVoiceMessageInput ? 'sendbird-message-input-wrapper--voice-message' : 'sendbird-message-input-wrapper'}>
       {showSuggestedMentionList && (
         <SuggestedMentionList
           currentChannel={currentChannel}

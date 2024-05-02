@@ -3,6 +3,7 @@ import './index.scss';
 
 import Icon, { IconTypes } from '../Icon';
 import { useAccordionGroupContext } from './AccordionGroup';
+import { classnames } from '../../utils/utils';
 
 export interface AccordionProps {
   className?: string;
@@ -34,7 +35,7 @@ export const Accordion = ({
   };
 
   return (
-    <div className={`sendbird-accordion ${className} ${isOpened ? 'sendbird-accordion--opened' : 'sendbird-accordion--closed'}`}>
+    <div className={classnames('sendbird-accordion', className, isOpened ? 'sendbird-accordion--opened' : 'sendbird-accordion--closed')}>
       <div
         className="sendbird-accordion__panel-header"
         id={id}

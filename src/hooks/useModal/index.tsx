@@ -1,7 +1,7 @@
 import React, { useState, useCallback, ReactElement, createContext, useMemo, useContext } from 'react';
 import { match } from 'ts-pattern';
 
-import { noop } from '../../utils/utils';
+import { classnames, noop } from '../../utils/utils';
 import Modal, { type ModalProps } from '../../ui/Modal';
 
 export type OpenGlobalModalProps = {
@@ -39,7 +39,7 @@ export const GlobalModalProvider = ({ children }: GlobalModalProviderProps) => {
         return (
           <Modal
             {...modalProps}
-            className={`sendbird-global-modal ${modalProps?.className}`}
+            className={classnames('sendbird-global-modal', modalProps?.className)}
             onClose={() => {
               modalProps?.onClose?.();
               closeModal();

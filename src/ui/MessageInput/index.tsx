@@ -19,7 +19,7 @@ import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
 import { TOKEN_TYPES } from '../../modules/Message/utils/tokens/types';
 import { checkIfFileUploadEnabled } from './messageInputUtils';
-import { isMobileIOS } from '../../utils/utils';
+import { classnames, isMobileIOS } from '../../utils/utils';
 
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { User } from '@sendbird/chat';
@@ -531,7 +531,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
             // renderFileUploadIcon which is set in code level
             || (isFileUploadEnabled && (
               <IconButton
-                className={`sendbird-message-input--attach ${isVoiceMessageEnabled ? 'is-voice-message-enabled' : ''}`}
+                className={classnames('sendbird-message-input--attach', isVoiceMessageEnabled && 'is-voice-message-enabled')}
                 height="32px"
                 width="32px"
                 onClick={() => {

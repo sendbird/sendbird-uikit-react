@@ -11,7 +11,7 @@ import TextFragment from '../../modules/Message/components/TextFragment';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { OG_MESSAGE_BODY_CLASSNAME } from './consts';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
-import { openURL } from '../../utils/utils';
+import { classnames, openURL } from '../../utils/utils';
 
 interface Props {
   className?: string | Array<string>;
@@ -99,7 +99,10 @@ const OGImageSection = (props: { onClick: () => void; ogImage: OGImage; onMessag
   return (
     <div
       ref={imageRef}
-      className={`sendbird-og-message-item-body__og-thumbnail ${ogImage.url ? '' : 'sendbird-og-message-item-body__og-thumbnail__empty'}`}
+      className={classnames(
+        'sendbird-og-message-item-body__og-thumbnail',
+        ogImage.url && 'sendbird-og-message-item-body__og-thumbnail__empty',
+      )}
       onClick={() => onClick()}
     >
       <ImageRenderer

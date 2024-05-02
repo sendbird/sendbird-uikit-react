@@ -43,6 +43,7 @@ import MultipleFilesMessageItemBody, { ThreadMessageKind } from '../../../../ui/
 import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/useThreadMessageKindKeySelector';
 import { useFileInfoListWithUploaded } from '../../../Channel/context/hooks/useFileInfoListWithUploaded';
 import { useThreadContext } from '../../context/ThreadProvider';
+import { classnames } from '../../../../utils/utils';
 
 export interface ThreadListItemContentProps {
   className?: string;
@@ -131,10 +132,10 @@ export default function ThreadListItemContent({
 
   return (
     <div
-      className={`sendbird-thread-list-item-content ${className} ${isByMe ? 'outgoing' : 'incoming'}`}
+      className={classnames('sendbird-thread-list-item-content', className, isByMe ? 'outgoing' : 'incoming')}
       ref={mobileMenuRef}
     >
-      <div className={`sendbird-thread-list-item-content__left ${isReactionEnabledInChannel ? 'use-reaction' : ''} ${isByMe ? 'outgoing' : 'incoming'}`}>
+      <div className={classnames('sendbird-thread-list-item-content__left', isReactionEnabledInChannel && 'use-reaction', isByMe ? 'outgoing' : 'incoming')}>
         {(!isByMe && !chainBottom) && (
           <ContextMenu
             menuTrigger={(toggleDropdown) => (
@@ -177,9 +178,12 @@ export default function ThreadListItemContent({
         )}
         {(isByMe && !isMobile) && (
           <div
-            className={`sendbird-thread-list-item-content-menu ${isReactionEnabledInChannel ? 'use-reaction' : ''
-            } ${isByMe ? 'outgoing' : 'incoming'
-            } ${supposedHoverClassName}`}
+            className={classnames(
+              'sendbird-thread-list-item-content-menu',
+              isReactionEnabledInChannel && 'use-reaction',
+              isByMe ? 'outgoing' : 'incoming',
+              supposedHoverClassName,
+            )}
           >
             <MessageItemMenu
               className="sendbird-thread-list-item-content-menu__normal-menu"
@@ -343,10 +347,7 @@ export default function ThreadListItemContent({
           )}
         </div>
       </div>
-      <div
-        className={`sendbird-thread-list-item-content__right ${chainTop ? 'chain-top' : ''
-        } ${isByMe ? 'outgoing' : 'incoming'}`}
-      >
+      <div className={classnames('sendbird-thread-list-item-content__right', chainTop && 'chain-top', isByMe ? 'outgoing' : 'incoming')}>
         {(!isByMe && !isMobile) && (
           <div className={`sendbird-thread-list-item-content-menu ${supposedHoverClassName}`}>
             {isReactionEnabledInChannel && (

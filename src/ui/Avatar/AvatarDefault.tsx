@@ -1,6 +1,7 @@
 import React from 'react';
 import pxToNumber from '../../utils/pxToNumber';
 import Icon, { IconColors, IconTypes } from '../Icon';
+import { classnames } from '../../utils/utils';
 
 interface AvatarDefaultProps {
   width: string | number,
@@ -22,7 +23,7 @@ const AvatarDefault = (props: AvatarDefaultProps) => {
 
   return (
     <div
-      className={`sendbird-avatar-img--default ${text ? 'text' : ''}`}
+      className={classnames('sendbird-avatar-img--default', text && 'text')}
       style={{ width, height }}
     >
       {
