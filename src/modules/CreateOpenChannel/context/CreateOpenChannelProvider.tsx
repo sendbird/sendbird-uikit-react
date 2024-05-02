@@ -15,12 +15,7 @@ export interface CreateOpenChannelContextInterface extends CreateOpenChannelProv
   createNewOpenChannel: (props: CreateNewOpenChannelCallbackProps) => void;
 }
 
-const CreateOpenChannelContext = React.createContext<CreateOpenChannelContextInterface>({
-  sdk: null,
-  sdkInitialized: false,
-  logger: null,
-  createNewOpenChannel: null,
-});
+const CreateOpenChannelContext = React.createContext<CreateOpenChannelContextInterface | null>(null);
 
 export interface CreateOpenChannelProviderProps {
   className?: string;
@@ -75,6 +70,8 @@ export const CreateOpenChannelProvider: React.FC<CreateOpenChannelProviderProps>
   );
 };
 
-export const useCreateOpenChannelContext = (): CreateOpenChannelContextInterface => (
-  React.useContext(CreateOpenChannelContext)
-);
+export const useCreateOpenChannelContext = () => {
+  const context = React.useContext(CreateOpenChannelContext);
+  if (!context) throw new Error('CreateOpenChannelContext not found. Use within the CreateOpenChannel module.');
+  return context;
+};
