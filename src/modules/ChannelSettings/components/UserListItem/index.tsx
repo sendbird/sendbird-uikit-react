@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, useContext } from 'react';
+import React, { ReactElement, useRef, useContext, ReactNode } from 'react';
 import { User } from '@sendbird/chat';
 import { Member } from '@sendbird/chat/groupChannel';
 
@@ -21,7 +21,7 @@ interface Props {
   user: User | Member;
   currentUser?: string;
   className?: string;
-  action?(props: ActionProps): ReactElement;
+  action?(props: ActionProps): ReactNode;
 }
 
 const UserListItem = ({

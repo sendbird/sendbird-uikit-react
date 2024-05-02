@@ -49,8 +49,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
           className="sendbird-more-members__popup-scroll"
           onScroll={useOnScrollPositionChangeDetector({
             onReachedBottom: async () => {
-              const { hasNext } = operatorQuery;
-              if (hasNext) {
+              if (operatorQuery && operatorQuery.hasNext) {
                 operatorQuery.next().then((o) => {
                   setOperators([
                     ...operators,
@@ -67,7 +66,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
               user={member}
               key={member.userId}
               action={({ parentRef, actionRef }) => (
-                member?.userId !== currentUserId ? (
+                member?.userId !== currentUserId && (
                   <ContextMenu
                     menuTrigger={(toggleDropdown) => (
                       <IconButton
@@ -107,7 +106,7 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
                       </MenuItems>
                     )}
                   />
-                ) : <></>
+                )
               )}
             />
           ))}

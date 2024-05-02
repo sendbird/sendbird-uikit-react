@@ -73,7 +73,7 @@ export const OperatorList = (): ReactElement => {
             currentUser={userId}
             action={({ actionRef }) => {
               if (operator?.userId === userId) {
-                return <></>;
+                return null;
               }
               return (
                 <ContextMenu

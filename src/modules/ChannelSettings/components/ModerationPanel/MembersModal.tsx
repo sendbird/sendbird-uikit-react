@@ -54,8 +54,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
           className="sendbird-more-members__popup-scroll"
           onScroll={useOnScrollPositionChangeDetector({
             onReachedBottom: async () => {
-              const { hasNext } = memberQuery;
-              if (hasNext) {
+              if (memberQuery && memberQuery.hasNext) {
                 memberQuery.next().then((o) => {
                   setMembers([
                     ...members,

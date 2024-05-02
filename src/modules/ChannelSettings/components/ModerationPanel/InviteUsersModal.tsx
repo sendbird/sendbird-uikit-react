@@ -60,7 +60,7 @@ export default function InviteUsers({ onCancel, onSubmit }: Props) {
 
   const membersMap = useMemo(() => {
     // UIKit policy: In a super or broadcast channel, do not check the members when inviting users.
-    if (channel?.isSuper || channel?.isBroadcast) return { [sdk.currentUser.userId]: sdk.currentUser };
+    if (channel?.isSuper || channel?.isBroadcast) return { [sdk.currentUser?.userId ?? '']: sdk.currentUser };
 
     return channel?.members.reduce((acc, cur) => {
       acc[cur.userId] = cur;

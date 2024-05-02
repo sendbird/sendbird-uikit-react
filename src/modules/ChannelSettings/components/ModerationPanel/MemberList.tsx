@@ -151,7 +151,7 @@ export const MemberList = (): ReactElement => {
                     )}
                   />
                 )
-                : null
+                : () => null
             }
           />
         ))
