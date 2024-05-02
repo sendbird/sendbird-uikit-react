@@ -59,7 +59,7 @@ export function throttle<T extends(...args: any[]) => void>(
   },
 ) {
   let timer: ReturnType<typeof setTimeout> | null = null;
-  let trailingArgs: any[] = [];
+  let trailingArgs: null | any[] = null;
 
   return ((...args: any[]) => {
     if (timer) {
@@ -76,7 +76,7 @@ export function throttle<T extends(...args: any[]) => void>(
     const invoke = () => {
       if (options.trailing && trailingArgs) {
         callback(...trailingArgs);
-        trailingArgs = [];
+        trailingArgs = null;
         timer = setTimeout(invoke, delay);
       } else {
         timer = null;
