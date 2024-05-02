@@ -6,9 +6,11 @@ export interface SuggestedRepliesProps {
   replyOptions: string[];
   onSendMessage: ({ message }: { message: string }) => void;
   message: BaseMessage;
+  type?: 'vertical' | 'horizontal';
+  gap?: number;
 }
 
-const SuggestedReplies = ({ replyOptions, onSendMessage }: SuggestedRepliesProps) => {
+const SuggestedReplies = ({ replyOptions, onSendMessage, type = 'vertical' }: SuggestedRepliesProps) => {
   const [replied, setReplied] = useState<boolean>(false);
 
   const onClickReply = (
@@ -24,22 +26,20 @@ const SuggestedReplies = ({ replyOptions, onSendMessage }: SuggestedRepliesProps
     return null;
   }
 
-  return (
-    <div className="sendbird-suggested-replies">
-      {replyOptions.map((option: string, index: number) => {
-        return (
-          <div
-            className="sendbird-suggested-replies__option"
-            id={option}
-            key={index + option}
-            onClick={(e) => onClickReply(e, option)}
-          >
-            {option}
-          </div>
-        );
-      })}
-    </div>
-  );
+  const children = replyOptions.map((option: string, index: number) => {
+    return (
+      <div
+        className="sendbird-suggested-replies__option"
+        id={option}
+        key={index + option}
+        onClick={(e) => onClickReply(e, option)}
+      >
+        {option}
+      </div>
+    );
+  });
+
+  return <div className={`sendbird-suggested-replies ${type}`}>{children}</div>;
 };
 
 export default SuggestedReplies;
