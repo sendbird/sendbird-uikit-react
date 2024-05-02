@@ -44,7 +44,7 @@ interface ChannelSettingsProviderInterface {
   onLeaveChannel?(): void;
   overrideInviteUser?(params: OverrideInviteUserType): void;
   onChannelModified?(channel: GroupChannel): void;
-  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
+  onBeforeUpdateChannel?(currentTitle: string, currentImg: File | null, data: string | undefined): GroupChannelUpdateParams;
   queries?: ChannelSettingsQueries;
   setChannelUpdateId(uniqId: string): void;
   forceUpdateUI(): void;

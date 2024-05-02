@@ -27,13 +27,13 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
     onCancel = noop,
   } = props;
 
-  const { channel, onLeaveChannel } = useChannelSettingsContext() ?? {};
+  const { channel, onLeaveChannel } = useChannelSettingsContext();
   const { stringSet } = useLocalization();
   const state = useSendbirdStateContext();
   const logger = state?.config?.logger;
   const isOnline = state?.config?.isOnline;
   const { isMobile } = useMediaQueryContext();
-  const getChannelName = (channel: GroupChannel) => {
+  const getChannelName = (channel: GroupChannel | null) => {
     if (channel?.name && channel?.name !== 'Group Channel') {
       return channel.name;
     }

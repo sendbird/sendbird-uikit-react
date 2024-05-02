@@ -12,6 +12,7 @@ import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import TextButton from '../../../../ui/TextButton';
 import ChannelAvatar from '../../../../ui/ChannelAvatar/index';
 import uuidv4 from '../../../../utils/uuid';
+import { FileCompat } from '@sendbird/chat';
 
 export type EditDetailsProps = {
   onSubmit: () => void;
@@ -29,7 +30,7 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
     onChannelModified,
     onBeforeUpdateChannel,
     setChannelUpdateId,
-  } = useChannelSettingsContext() ?? {};
+  } = useChannelSettingsContext();
   const title = channel?.name;
 
   const state = useSendbirdStateContext();
@@ -75,7 +76,7 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
         } else {
           logger.info('ChannelSettings: normal');
           channel?.updateChannel({
-            coverImage: currentImg,
+            coverImage: currentImg as FileCompat,
             name: currentTitle,
             data: channel?.data || '',
           }).then((groupChannel) => {
