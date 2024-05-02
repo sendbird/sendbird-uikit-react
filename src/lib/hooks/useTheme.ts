@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import cssVars from 'css-vars-ponyfill';
 
-const isEmpty = (obj) => {
+const isEmpty = (obj: unknown) => {
   if (obj === null || obj === undefined) {
     return true;
   }
@@ -14,7 +14,7 @@ const isEmpty = (obj) => {
   return JSON.stringify(obj) === JSON.stringify({});
 };
 
-const useTheme = (overrides?: Record<string, string> | null): void => {
+const useTheme = (overrides?: Record<string, string>): void => {
   useLayoutEffect(() => {
     if (!isEmpty(overrides)) {
       cssVars({

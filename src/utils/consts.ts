@@ -39,6 +39,7 @@ export const SLIDER_BUTTON_ICON_SIDE_LENGTH = '32px';
 
 // multiple files message file info count limit
 export const DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT = 10;
+export const DEFAULT_UPLOAD_SIZE_LIMIT = 25 * 1024 * 1024;
 
 // Local storage item key for sdk templates token
 export const CACHED_MESSAGE_TEMPLATES_TOKEN_KEY = 'sendbird_message_templates_token_key';

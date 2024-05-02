@@ -28,6 +28,7 @@ import { MediaQueryProvider, useMediaQueryContext } from './MediaQueryContext';
 import getStringSet, { StringSet } from '../ui/Label/stringSet';
 import {
   DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
+  DEFAULT_UPLOAD_SIZE_LIMIT,
   VOICE_RECORDER_DEFAULT_MAX,
   VOICE_RECORDER_DEFAULT_MIN,
 } from '../utils/consts';
@@ -44,7 +45,8 @@ import {
   CommonUIKitConfigProps,
   SendbirdChatInitParams,
   CustomExtensionParams,
-  SBUEventHandlers, SendbirdProviderUtils,
+  SBUEventHandlers,
+  SendbirdProviderUtils,
 } from './types';
 import { GlobalModalProvider, ModalRoot } from '../hooks/useModal';
 import { RenderUserProfileProps, UserListQuery } from '../types';
@@ -60,8 +62,6 @@ interface VoiceRecordOptions {
   maxRecordingTime?: number;
   minRecordingTime?: number;
 }
-
-const DEFAULT_UPLOAD_SIZE_LIMIT = 25 * 1024 * 1024;
 
 export type ImageCompressionOutputFormatType = 'preserve' | 'png' | 'jpeg';
 export interface ImageCompressionOptions {
@@ -87,13 +87,13 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   accessToken?: string;
   customApiHost?: string;
   customWebSocketHost?: string;
-  configureSession?: ConfigureSessionTypes | null;
+  configureSession?: ConfigureSessionTypes;
   theme?: 'light' | 'dark';
   config?: SendbirdConfig;
   nickname?: string;
-  colorSet?: Record<string, string> | null;
-  stringSet?: Partial<StringSet> | null;
-  dateLocale?: Locale | null;
+  colorSet?: Record<string, string>;
+  stringSet?: Partial<StringSet>;
+  dateLocale?: Locale;
   profileUrl?: string;
   voiceRecord?: VoiceRecordOptions;
   userListQuery?: () => UserListQuery;
@@ -101,8 +101,8 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   allowProfileEdit?: boolean;
   disableMarkAsDelivered?: boolean;
   breakpoint?: string | boolean;
-  renderUserProfile?: ((props: RenderUserProfileProps) => React.ReactElement) | null;
-  onUserProfileMessage?: ((channel: GroupChannel) => void) | null;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  onUserProfileMessage?: (channel: GroupChannel) => void;
   uikitOptions?: UIKitOptions;
   isUserIdUsedForNickname?: boolean;
   sdkInitParams?: SendbirdChatInitParams;
@@ -121,10 +121,8 @@ export function SendbirdProvider(props: SendbirdProviderProps) {
       isReactionEnabled: props.isReactionEnabled,
       disableUserProfile: props.disableUserProfile,
       isVoiceMessageEnabled: props.isVoiceMessageEnabled,
-      isTypingIndicatorEnabledOnChannelList:
-        props.isTypingIndicatorEnabledOnChannelList,
-      isMessageReceiptStatusEnabledOnChannelList:
-        props.isMessageReceiptStatusEnabledOnChannelList,
+      isTypingIndicatorEnabledOnChannelList: props.isTypingIndicatorEnabledOnChannelList,
+      isMessageReceiptStatusEnabledOnChannelList: props.isMessageReceiptStatusEnabledOnChannelList,
       showSearchIcon: props.showSearchIcon,
     },
     uikitOptions: props.uikitOptions,
@@ -156,21 +154,21 @@ const SendbirdSDK = ({
   accessToken,
   customApiHost,
   customWebSocketHost,
-  configureSession = null,
+  configureSession,
   theme = 'light',
   config = {},
   nickname = '',
-  colorSet = null,
-  stringSet = null,
-  dateLocale = null,
+  colorSet,
+  stringSet,
+  dateLocale,
   profileUrl = '',
   voiceRecord,
   userListQuery,
   imageCompression = {},
   allowProfileEdit = false,
   disableMarkAsDelivered = false,
-  renderUserProfile = null,
-  onUserProfileMessage = null,
+  renderUserProfile,
+  onUserProfileMessage,
   breakpoint = false,
   isUserIdUsedForNickname = true,
   sdkInitParams,
@@ -178,12 +176,7 @@ const SendbirdSDK = ({
   isMultipleFilesMessageEnabled = false,
   eventHandlers,
 }: SendbirdProviderProps): React.ReactElement => {
-  const {
-    logLevel = '',
-    userMention = {},
-    isREMUnitEnabled = false,
-    pubSub: customPubSub,
-  } = config;
+  const { logLevel = '', userMention = {}, isREMUnitEnabled = false, pubSub: customPubSub } = config;
   const { isMobile } = useMediaQueryContext();
   const [logger, setLogger] = useState(LoggerFactory(logLevel as LogLevel));
   const [pubSub] = useState(() => customPubSub ?? pubSubFactory<PUBSUB_TOPICS, SBUGlobalPubSubTopicPayloadUnion>());
@@ -194,19 +187,15 @@ const SendbirdSDK = ({
   const { configs, configsWithAppAttr, initDashboardConfigs } = useUIKitConfig();
   const sdkInitialized = sdkStore.initialized;
   const sdk = sdkStore?.sdk;
-  const {
-    uploadSizeLimit,
-    multipleFilesMessageFileCountLimit,
-  } = sdk?.appInfo ?? {};
+  const { uploadSizeLimit, multipleFilesMessageFileCountLimit } = sdk?.appInfo ?? {};
 
   useTheme(colorSet);
 
-  const {
-    getCachedTemplate,
-    updateMessageTemplatesInfo,
-    initializeMessageTemplatesInfo,
-  } = useMessageTemplateUtils({
-    sdk, logger, appInfoStore, appInfoDispatcher,
+  const { getCachedTemplate, updateMessageTemplatesInfo, initializeMessageTemplatesInfo } = useMessageTemplateUtils({
+    sdk,
+    logger,
+    appInfoStore,
+    appInfoDispatcher,
   });
 
   const utils: SendbirdProviderUtils = {
@@ -220,7 +209,8 @@ const SendbirdSDK = ({
     accessToken,
     isUserIdUsedForNickname,
     isMobile,
-  }, {
+  },
+  {
     logger,
     nickname,
     profileUrl,
@@ -236,7 +226,8 @@ const SendbirdSDK = ({
     initDashboardConfigs,
     eventHandlers,
     initializeMessageTemplatesInfo,
-  });
+  },
+  );
 
   useUnmount(() => {
     if (typeof sdk.disconnect === 'function') {
@@ -286,7 +277,7 @@ const SendbirdSDK = ({
         body?.classList.remove('sendbird-theme--light');
         body?.classList.remove('sendbird-theme--dark');
         // eslint-disable-next-line no-empty
-      } catch { }
+      } catch {}
     };
   }, [currentTheme]);
 
@@ -296,13 +287,7 @@ const SendbirdSDK = ({
   const markAsDeliveredScheduler = useMarkAsDeliveredScheduler({ isConnected: isOnline }, { logger });
 
   const localeStringSet = React.useMemo(() => {
-    if (!stringSet) {
-      return getStringSet('en');
-    }
-    return {
-      ...getStringSet('en'),
-      ...stringSet,
-    };
+    return { ...getStringSet('en'), ...stringSet };
   }, [stringSet]);
 
   /**
@@ -312,9 +297,6 @@ const SendbirdSDK = ({
   const uikitMultipleFilesMessageLimit = useMemo(() => {
     return Math.min(DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, multipleFilesMessageFileCountLimit ?? Number.MAX_SAFE_INTEGER);
   }, [multipleFilesMessageFileCountLimit]);
-  const uikitUploadSizeLimit = useMemo(() => {
-    return uploadSizeLimit;
-  }, [uploadSizeLimit]);
 
   // Emoji Manager
   const emojiManager = useMemo(() => {
@@ -340,8 +322,8 @@ const SendbirdSDK = ({
         },
         config: {
           disableMarkAsDelivered,
-          renderUserProfile: renderUserProfile ?? undefined,
-          onUserProfileMessage: onUserProfileMessage ?? undefined,
+          renderUserProfile,
+          onUserProfileMessage,
           allowProfileEdit,
           isOnline,
           userId,
@@ -351,7 +333,7 @@ const SendbirdSDK = ({
           setCurrentTheme,
           setCurrenttheme: setCurrentTheme, // deprecated: typo
           isMultipleFilesMessageEnabled,
-          uikitUploadSizeLimit: uikitUploadSizeLimit ?? DEFAULT_UPLOAD_SIZE_LIMIT,
+          uikitUploadSizeLimit: uploadSizeLimit ?? DEFAULT_UPLOAD_SIZE_LIMIT,
           uikitMultipleFilesMessageLimit,
           userListQuery,
           logger,
@@ -416,11 +398,9 @@ const SendbirdSDK = ({
       }}
     >
       <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
-        <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale ?? undefined}>
+        <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
           <VoiceMessageProvider>
-            <GlobalModalProvider>
-              {children}
-            </GlobalModalProvider>
+            <GlobalModalProvider>{children}</GlobalModalProvider>
           </VoiceMessageProvider>
         </LocalizationProvider>
       </MediaQueryProvider>
