@@ -12,7 +12,7 @@ export interface TextButtonProps {
   color?: Colors;
   disabled?: boolean;
   disableUnderline?: boolean;
-  onClick?: (e: (MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>)) => void;
+  onClick?: (e: (MouseEvent | KeyboardEvent)) => void;
   children: ReactElement;
 }
 

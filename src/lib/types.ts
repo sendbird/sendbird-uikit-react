@@ -4,11 +4,13 @@ import type { User, SendbirdChatParams, SendbirdError } from '@sendbird/chat';
 
 import type {
   GroupChannel,
-  GroupChannelCreateParams, GroupChannelModule,
+  GroupChannelCreateParams,
+  GroupChannelModule,
 } from '@sendbird/chat/groupChannel';
 import type {
   OpenChannel,
-  OpenChannelCreateParams, OpenChannelModule,
+  OpenChannelCreateParams,
+  OpenChannelModule,
 } from '@sendbird/chat/openChannel';
 import type {
   FileMessage,
@@ -53,7 +55,10 @@ export interface SBUEventHandlers {
   },
   connection?: {
     onFailed?(error: SendbirdError): void;
-  }
+  },
+  modal?: {
+    onMounted?(params: { id: string; close(): void; }): void | (() => void);
+  };
 }
 
 export interface SendBirdStateConfig {

@@ -1,9 +1,9 @@
-import React, { ReactElement, ReactNode, useContext, MouseEvent } from 'react';
+import React, { ReactElement, ReactNode, useContext, MouseEvent, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 import './index.scss';
 
-import { noop } from '../../utils/utils';
+import { classnames, noop } from '../../utils/utils';
 import { MODAL_ROOT } from '../../hooks/useModal/ModalRoot';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
@@ -12,6 +12,8 @@ import IconButton from '../IconButton';
 import Button, { ButtonTypes } from '../Button';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
+import { useSendbirdStateContext } from '../../lib/Sendbird';
+import uuidv4 from '../../utils/uuid';
 
 export interface ModalHeaderProps {
   titleText: string;
@@ -23,17 +25,8 @@ export const ModalHeader = ({ titleText, onCloseClick }: ModalHeaderProps): Reac
       {titleText}
     </Label>
     <div className="sendbird-modal__close">
-      <IconButton
-        width="32px"
-        height="32px"
-        onClick={onCloseClick}
-      >
-        <Icon
-          type={IconTypes.CLOSE}
-          fillColor={IconColors.DEFAULT}
-          width="24px"
-          height="24px"
-        />
+      <IconButton width="32px" height="32px" onClick={onCloseClick}>
+        <Icon type={IconTypes.CLOSE} fillColor={IconColors.DEFAULT} width="24px" height="24px" />
       </IconButton>
     </div>
   </div>
@@ -44,10 +37,7 @@ export interface ModalBodyProps {
 }
 export const ModalBody = ({ children }: ModalBodyProps): ReactElement => (
   <div className="sendbird-modal__body">
-    <Label
-      type={LabelTypography.SUBTITLE_1}
-      color={LabelColors.ONBACKGROUND_2}
-    >
+    <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_2}>
       {children}
     </Label>
   </div>
@@ -97,14 +87,12 @@ export interface ModalProps {
   disabled?: boolean;
   hideFooter?: boolean;
   type?: ButtonTypes;
-  /**
-   * Do not use this! We will deprecate onCancel in v4.
-   */
-  onCancel?: () => void;
   onClose?: () => void;
   onSubmit?: (...args: any[]) => void;
   renderHeader?: () => ReactElement;
   customFooter?: ReactNode;
+  /** @deprecated Please use `onClose` instead, we will remove `onCancel` in v4. * */
+  onCancel?: () => void;
 }
 export function Modal(props: ModalProps): ReactElement {
   const {
@@ -118,50 +106,34 @@ export function Modal(props: ModalProps): ReactElement {
     disabled = false,
     hideFooter = false,
     type = ButtonTypes.DANGER,
-    /**
-     * Do not use this! We will deprecate onCancel in v4.
-     */
-    onCancel = noop,
-    onClose,
-    onSubmit = noop,
     renderHeader,
+    onSubmit = noop,
+    onClose,
+    onCancel,
     customFooter,
   } = props;
-  const handleClose = onClose ?? onCancel;
+  const handleClose = onClose ?? onCancel ?? noop;
+  const { eventHandlers } = useSendbirdStateContext();
+
+  const [id] = useState(() => `sbu-modal-${uuidv4()}`);
+
+  useEffect(() => {
+    return eventHandlers?.modal?.onMounted?.({ close: handleClose, id });
+  }, []);
 
   const { isMobile } = useMediaQueryContext();
-  return createPortal((
-    <div className={`
-      sendbird-modal ${className}
-      ${(isFullScreenOnMobile && isMobile) ? 'sendbird-modal--full-mobile' : ''}
-    `}>
-      <div
-        className={[
-          'sendbird-modal__content',
-          ...(Array.isArray(contentClassName) ? contentClassName : [contentClassName]),
-        ].join(' ')}
-      >
-        {renderHeader?.() || (
-          <ModalHeader titleText={titleText ?? ''} onCloseClick={handleClose} />
-        )}
+  return createPortal(
+    <div className={classnames('sendbird-modal', className, isFullScreenOnMobile && isMobile && 'sendbird-modal--full-mobile')}>
+      <div className={classnames('sendbird-modal__content', ...(Array.isArray(contentClassName) ? contentClassName : [contentClassName]))}>
+        {renderHeader?.() || <ModalHeader titleText={titleText ?? ''} onCloseClick={handleClose} />}
         <ModalBody>{children}</ModalBody>
-        {
-          !hideFooter && (customFooter ?? (
-            <ModalFooter
-              disabled={disabled}
-              onCancel={handleClose}
-              onSubmit={onSubmit}
-              submitText={submitText ?? ''}
-              type={type}
-            />
-          ))
-        }
+        {!hideFooter
+          && (customFooter ?? (
+            <ModalFooter disabled={disabled} onCancel={handleClose} onSubmit={onSubmit} submitText={submitText ?? ''} type={type} />
+          ))}
       </div>
       <div
-        className={`
-          sendbird-modal__backdrop
-          ${isCloseOnClickOutside && 'sendbird-modal__backdrop--clickoutside'}
-        `}
+        className={classnames('sendbird-modal__backdrop', isCloseOnClickOutside && 'sendbird-modal__backdrop--clickoutside')}
         onClick={(e) => {
           e?.stopPropagation();
           if (isCloseOnClickOutside) {
@@ -169,7 +141,8 @@ export function Modal(props: ModalProps): ReactElement {
           }
         }}
       />
-    </div>
-  ), document.getElementById(MODAL_ROOT) as HTMLElement);
+    </div>,
+    document.getElementById(MODAL_ROOT) as HTMLElement,
+  );
 }
 export default Modal;

@@ -1,0 +1,76 @@
+@import '../../styles/variables';
+
+.sendbird-ui-header {
+  position: relative;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 64px;
+  min-height: 64px;
+
+  padding-left: 16px;
+  padding-right: 16px;
+
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @include themed() {
+    border-bottom: 1px solid t(on-bg-4);
+    background-color: t(bg-0);
+  }
+}
+
+.sendbird-ui-header--is-desktop {
+  max-width: 176px;
+}
+.sendbird-ui-header--is-mobile {
+  max-width: 80px;
+}
+
+.sendbird-ui-header__left {
+  position: relative;
+  left: 0px;
+
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+
+  margin-right: 8px;
+}
+
+.sendbird-ui-header__middle {
+  flex: 1;
+  display: inline-flex;
+  flex-direction: column;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sendbird-ui-header__middle__subtitle__container {
+  display: flex;
+  width: 100%;
+}
+.sendbird-ui-header__middle__title,
+.sendbird-ui-header__middle__subtitle {
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.sendbird-ui-header__right {
+  position: relative;
+  right: 0px;
+
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+
+  margin-left: 8px;
+}

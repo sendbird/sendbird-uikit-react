@@ -34,6 +34,11 @@ export function openURL(url?: string | null) {
   }
 }
 
+type Falsy = undefined | null | false | 0 | '';
+export function classnames(...args: (string | Falsy)[]) {
+  return args.filter(Boolean).join(' ');
+}
+
 export default {
   getSenderName,
   getSenderProfileUrl,

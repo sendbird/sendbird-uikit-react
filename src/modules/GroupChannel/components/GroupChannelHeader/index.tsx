@@ -1,18 +1,20 @@
 import React from 'react';
+
+import type { HeaderCustomProps } from '../../../../ui/Header';
 import GroupChannelHeaderView from './GroupChannelHeaderView';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 
-export interface GroupChannelHeaderProps {
+export interface GroupChannelHeaderProps extends HeaderCustomProps {
   className?: string;
 }
 
-export const GroupChannelHeader = ({ className }: GroupChannelHeaderProps) => {
+export const GroupChannelHeader = (props: GroupChannelHeaderProps) => {
   const context = useGroupChannelContext();
 
   return (
     <GroupChannelHeaderView
+      {...props}
       {...context}
-      className={className}
       currentChannel={context.currentChannel}
     />
   );

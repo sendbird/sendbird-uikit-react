@@ -182,6 +182,7 @@ export default {
   'ui/EmojiReactions': 'src/ui/EmojiReactions/index.tsx',
   'ui/FileMessageItemBody': 'src/ui/FileMessageItemBody/index.tsx',
   'ui/FileViewer': 'src/ui/FileViewer/index.tsx',
+  'ui/Header': 'src/ui/Header/index.tsx',
   'ui/Icon': 'src/ui/Icon/index.tsx',
   'ui/IconButton': 'src/ui/IconButton/index.tsx',
   'ui/ImageRenderer': 'src/ui/ImageRenderer/index.tsx',
