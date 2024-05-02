@@ -23,7 +23,7 @@ const kFormatter = (num: number): string|number => {
 const UserPanel: React.FC = () => {
   const { stringSet } = useContext(LocalizationContext);
   const [showAccordion, setShowAccordion] = useState(false);
-  const channel = useChannelSettingsContext()?.channel;
+  const { channel } = useChannelSettingsContext();
   return (
     <div className='sendbird-channel-settings__user-panel'>
       <div

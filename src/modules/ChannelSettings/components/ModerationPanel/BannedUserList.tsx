@@ -28,7 +28,7 @@ export const BannedMemberList = (): ReactElement => {
   const [showModal, setShowModal] = useState(false);
 
   const { stringSet } = useContext(LocalizationContext);
-  const channel = useChannelSettingsContext()?.channel;
+  const { channel } = useChannelSettingsContext();
 
   const bannedUserListQueryParams: BannedUserListQueryParams = { limit: 10 };
   useEffect(() => {

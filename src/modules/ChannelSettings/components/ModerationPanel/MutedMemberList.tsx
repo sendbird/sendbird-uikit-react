@@ -27,7 +27,7 @@ export const MutedMemberList = (): ReactElement => {
   const [showModal, setShowModal] = useState(false);
   const { stringSet } = useLocalization();
 
-  const channel = useChannelSettingsContext()?.channel;
+  const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
   const currentUser = state?.config?.userId;
 

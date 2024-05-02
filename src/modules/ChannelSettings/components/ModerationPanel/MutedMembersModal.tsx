@@ -26,7 +26,7 @@ export default function MutedMembersModal({
   const [members, setMembers] = useState<Member[]>([]);
   const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
 
-  const channel = useChannelSettingsContext()?.channel;
+  const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
   const currentUser = state?.config?.userId;
   const { stringSet } = useLocalization();

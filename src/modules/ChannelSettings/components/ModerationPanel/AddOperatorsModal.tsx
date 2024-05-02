@@ -31,7 +31,7 @@ export default function AddOperatorsModal({
   const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
   const { stringSet } = useContext(LocalizationContext);
 
-  const channel = useChannelSettingsContext()?.channel;
+  const { channel } = useChannelSettingsContext();
 
   useEffect(() => {
     const memberListQuery = channel?.createMemberListQuery({

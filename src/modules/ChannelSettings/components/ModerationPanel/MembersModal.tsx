@@ -27,7 +27,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
   const [members, setMembers] = useState<Member[]>([]);
   const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
 
-  const channel = useChannelSettingsContext()?.channel;
+  const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
   const currentUserId = state?.config?.userId;
   const { stringSet } = useContext(LocalizationContext);

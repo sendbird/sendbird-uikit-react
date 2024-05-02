@@ -25,7 +25,7 @@ export default function BannedUsersModal({
 }: Props): ReactElement {
   const [members, setMembers] = useState<RestrictedUser[]>([]);
   const [memberQuery, setMemberQuery] = useState<BannedUserListQuery | null>(null);
-  const channel = useChannelSettingsContext()?.channel;
+  const { channel } = useChannelSettingsContext();
   const { stringSet } = useLocalization();
 
   useEffect(() => {

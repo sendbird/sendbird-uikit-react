@@ -34,7 +34,7 @@ export default function ModerationPanel(): ReactElement {
   const [frozen, setFrozen] = useState(false);
 
   const { stringSet } = useContext(LocalizationContext);
-  const channel = useChannelSettingsContext()?.channel;
+  const { channel } = useChannelSettingsContext();
 
   // work around for
   // https://sendbird.slack.com/archives/G01290GCDCN/p1595922832000900
