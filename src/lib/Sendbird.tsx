@@ -2,7 +2,6 @@ import './index.scss';
 import './__experimental__typography.scss';
 
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
-import { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { UIKitConfigProvider, useUIKitConfig } from '@sendbird/uikit-tools';
 

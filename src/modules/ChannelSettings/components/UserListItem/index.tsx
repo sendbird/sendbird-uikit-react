@@ -1,5 +1,6 @@
 import React, { ReactElement, useRef, useContext } from 'react';
 import { User } from '@sendbird/chat';
+import { Member } from '@sendbird/chat/groupChannel';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
@@ -16,13 +17,8 @@ interface ActionProps {
   parentRef: React.RefObject<HTMLInputElement>;
 }
 
-type CustomUser = User & {
-  isMuted: boolean;
-  role: string;
-};
-
 interface Props {
-  user: CustomUser;
+  user: User | Member;
   currentUser?: string;
   className?: string;
   action?(props: ActionProps): ReactElement;
@@ -30,7 +26,7 @@ interface Props {
 
 const UserListItem = ({
   user,
-  className,
+  className = '',
   currentUser,
   action,
 }: Props): ReactElement => {
@@ -63,7 +59,7 @@ const UserListItem = ({
               height={24}
             />
             {
-              user.isMuted && (
+              user instanceof Member && user.isMuted && (
                 <MutedAvatarOverlay />
               )
             }
@@ -125,7 +121,7 @@ const UserListItem = ({
         )
       }
       {
-        user.role === 'operator' && (
+        user instanceof Member && user.role === 'operator' && (
           <Label
             className="sendbird-user-list-item--small__operator"
             type={LabelTypography.SUBTITLE_2}

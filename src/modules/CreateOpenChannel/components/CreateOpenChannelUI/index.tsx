@@ -25,8 +25,8 @@ function CreateOpenChannelUI({
   const [newFile, setNewFile] = useState(null);
   const [currentImage, setCurrentImg] = useState<string | null>(null);
   const inputFormRef = useRef(null);
-  const inputFileRef = useRef<string | null>(null);
-  const inputTextRef = useRef<HTMLInputElement>(null);
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
+  const inputTextRef = useRef<HTMLInputElement | null>(null);
   const { stringSet } = useContext(LocalizationContext);
   const {
     logger,

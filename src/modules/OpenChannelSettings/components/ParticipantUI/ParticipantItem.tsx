@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import type { Participant, User } from '@sendbird/chat';
+import { Participant, type User } from '@sendbird/chat';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
@@ -27,7 +27,7 @@ interface ActionProps {
   actionRef: React.RefObject<HTMLInputElement>;
 }
 interface UserListItemProps {
-  user: Participant;
+  user: User | Participant;
   currentUser?: string;
   isOperator?: boolean;
   action?(props: ActionProps): ReactElement;
@@ -61,7 +61,7 @@ export const UserListItem: React.FC<UserListItemProps> = ({
                 width={24}
                 height={24}
               />
-              {user?.isMuted ? (<MutedAvatarOverlay />) : ''}
+              {user instanceof Participant && user.isMuted ? (<MutedAvatarOverlay />) : ''}
             </>
           )}
           menuItems={(closeDropdown) => (
