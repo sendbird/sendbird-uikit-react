@@ -6,9 +6,9 @@ import { GroupChannelHandler, GroupChannel as GroupChannelClass } from '@sendbir
 
 import type { MobileLayoutProps } from './types';
 
-import GroupChannel from '../GroupChannel';
+import GroupChannel, { GroupChannelProps } from '../GroupChannel';
 import GroupChannelList from '../GroupChannelList';
-import Channel from '../Channel';
+import Channel, { ChannelProps } from '../Channel';
 import ChannelList from '../ChannelList';
 import ChannelSettings from '../ChannelSettings';
 import MessageSearch from '../MessageSearch';
@@ -121,7 +121,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
     onUserProfileUpdated: onProfileEditSuccess,
   };
 
-  const channelProps = {
+  const channelProps: ChannelProps & GroupChannelProps = {
     channelUrl: currentChannel?.url || '',
     onChatHeaderActionClick: () => {
       setPanel(PANELS.CHANNEL_SETTINGS);
@@ -149,7 +149,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
     animatedMessage: highlightedMessage,
     onMessageAnimated: () => setHighlightedMessage?.(null),
     showSearchIcon,
-    startingPoint,
+    startingPoint: startingPoint ?? undefined,
     isReactionEnabled,
     replyType,
     isMessageGroupingEnabled,
@@ -173,7 +173,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
       )}
       {panel === PANELS.CHANNEL && (
         <div className="sb_mobile__panelwrap">
-          {enableLegacyChannelModules ? <Channel {...channelProps} /> : <GroupChannel {...channelProps} startingPoint={channelProps.startingPoint ?? undefined}/>}
+          {enableLegacyChannelModules ? <Channel {...channelProps} /> : <GroupChannel {...channelProps} />}
         </div>
       )}
       {panel === PANELS.CHANNEL_SETTINGS && (

@@ -3,10 +3,10 @@ import { GroupChannel as GroupChannelClass } from '@sendbird/chat/groupChannel';
 
 import type { DesktopLayoutProps } from './types';
 
-import GroupChannel from '../GroupChannel';
+import GroupChannel, { GroupChannelProps } from '../GroupChannel';
 import GroupChannelList from '../GroupChannelList';
 
-import Channel from '../Channel';
+import Channel, { ChannelProps } from '../Channel';
 import ChannelList from '../ChannelList';
 import ChannelSettings from '../ChannelSettings';
 import MessageSearchPannel from '../MessageSearch';
@@ -72,7 +72,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
     onUserProfileUpdated: onProfileEditSuccess,
   };
 
-  const channelProps = {
+  const channelProps: ChannelProps & GroupChannelProps = {
     channelUrl: currentChannel?.url || '',
     onChatHeaderActionClick: () => {
       setShowSearch(false);
@@ -97,7 +97,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
     animatedMessage: highlightedMessage,
     onMessageAnimated: () => setHighlightedMessage?.(null),
     showSearchIcon: showSearchIcon,
-    startingPoint: startingPoint,
+    startingPoint: startingPoint ?? undefined,
     isReactionEnabled: isReactionEnabled,
     replyType: replyType,
     isMessageGroupingEnabled: isMessageGroupingEnabled,
@@ -119,7 +119,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
           sendbird-app__conversation-wrap
         `}
       >
-        {enableLegacyChannelModules ? <Channel {...channelProps} /> : <GroupChannel {...channelProps} startingPoint={channelProps.startingPoint ?? undefined}/>}
+        {enableLegacyChannelModules ? <Channel {...channelProps} /> : <GroupChannel {...channelProps} />}
       </div>
       {showSettings && (
         <div className="sendbird-app__settingspanel-wrap">
