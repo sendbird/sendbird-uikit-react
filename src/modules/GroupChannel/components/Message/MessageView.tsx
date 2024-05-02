@@ -62,17 +62,17 @@ export interface MessageViewProps extends MessageProps {
 
   editInputDisabled: boolean;
   shouldRenderSuggestedReplies: boolean;
-  isReactionEnabled: boolean;
+  isReactionEnabled?: boolean;
   replyType: ReplyType;
   threadReplySelectType: ThreadReplySelectType;
   nicknamesMap: Map<string, string>;
 
-  renderUserMentionItem: (props: { user: User }) => React.ReactElement;
+  renderUserMentionItem?: (props: { user: User }) => React.ReactElement;
   scrollToMessage: (createdAt: number, messageId: number) => void;
   toggleReaction: (message: SendableMessageType, emojiKey: string, isReacted: boolean) => void;
-  setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType>>;
-  onQuoteMessageClick: (params: { message: SendableMessageType }) => void;
-  onReplyInThreadClick: (params: { message: SendableMessageType }) => void;
+  setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
+  onQuoteMessageClick?: (params: { message: SendableMessageType }) => void;
+  onReplyInThreadClick?: (params: { message: SendableMessageType }) => void;
 
   sendUserMessage: (params: UserMessageCreateParams) => void;
   updateUserMessage: (messageId: number, params: UserMessageUpdateParams) => void;
@@ -87,13 +87,13 @@ export interface MessageViewProps extends MessageProps {
    */
   onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 
-  animatedMessageId: number;
-  setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
+  animatedMessageId: number | null;
+  setAnimatedMessageId: React.Dispatch<React.SetStateAction<number | null>>;
   onMessageAnimated?: () => void;
   /** @deprecated * */
-  highLightedMessageId?: number;
+  highLightedMessageId?: number | null;
   /** @deprecated * */
-  setHighLightedMessageId?: React.Dispatch<React.SetStateAction<number>>;
+  setHighLightedMessageId?: React.Dispatch<React.SetStateAction<number | null>>;
   /** @deprecated * */
   onMessageHighlighted?: () => void;
   usedInLegacy?: boolean;
@@ -141,8 +141,8 @@ const MessageView = (props: MessageViewProps) => {
   const {
     renderUserMentionItem,
     renderMessage,
-    renderMessageContent = (props) => <MessageContent {...props} />,
-    renderSuggestedReplies = (props) => <SuggestedReplies {...props} />,
+    renderMessageContent = (props: MessageContentProps) => <MessageContent {...props} />,
+    renderSuggestedReplies = (props: SuggestedRepliesProps) => <SuggestedReplies {...props} />,
     renderCustomSeparator,
     renderEditInput,
     renderFileViewer,

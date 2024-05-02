@@ -85,15 +85,15 @@ export interface GroupChannelContextType extends ContextBaseType, MessageListDat
   fetchChannelError: SendbirdError | null;
   nicknamesMap: Map<string, string>;
 
-  scrollRef: React.MutableRefObject<HTMLDivElement>;
+  scrollRef: React.RefObject<HTMLDivElement>;
   scrollDistanceFromBottomRef: React.MutableRefObject<number>;
   scrollPubSub: PubSubTypes<ScrollTopics, ScrollTopicUnion>;
-  messageInputRef: React.MutableRefObject<HTMLDivElement>;
+  messageInputRef: React.RefObject<HTMLDivElement>;
 
   quoteMessage: SendableMessageType | null;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
-  animatedMessageId: number;
-  setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
+  animatedMessageId: number | null;
+  setAnimatedMessageId: React.Dispatch<React.SetStateAction<number | null>>;
   isScrollBottomReached: boolean;
   setIsScrollBottomReached: React.Dispatch<React.SetStateAction<boolean>>;
 
@@ -175,10 +175,10 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   );
 
   const preventDuplicateRequest = usePreventDuplicateRequest();
-  const messageDataSource = useGroupChannelMessages(sdkStore.sdk, currentChannel, {
+  const messageDataSource = useGroupChannelMessages(sdkStore.sdk, currentChannel!, {
     startingPoint,
     replyType: chatReplyType,
-    collectionCreator: getCollectionCreator(currentChannel, messageListQueryParams),
+    collectionCreator: getCollectionCreator(currentChannel!, messageListQueryParams),
     shouldCountNewMessages: () => !isScrollBottomReached,
     markAsRead: (channels) => {
       // isScrollBottomReached is a state that is updated after the render is completed.
@@ -201,7 +201,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       setFetchChannelError(null);
     },
     onChannelUpdated: (channel) => setCurrentChannel(channel),
-    logger,
+    logger: logger as any,
   });
 
   useOnScrollPositionChangeDetectorWithRef(scrollRef, {
@@ -220,7 +220,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
           if (prevViewInfo.scrollHeight && nextViewInfo.scrollHeight) {
             const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
             if (viewUpdated) {
-              const bottomOffset = prevViewInfo.scrollHeight - prevViewInfo.scrollTop;
+              const bottomOffset = prevViewInfo.scrollHeight - (prevViewInfo.scrollTop ?? 0);
               scrollPubSub.publish('scroll', { top: nextViewInfo.scrollHeight - bottomOffset, lazy: false, animated: false });
             }
           }
@@ -267,7 +267,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
         setFetchChannelError(null);
       } catch (error) {
         setCurrentChannel(null);
-        setFetchChannelError(error);
+        setFetchChannelError(error as SendbirdError);
         logger?.error?.('GroupChannelProvider: error when fetching channel', error);
       } finally {
         // Reset states when channel changes
@@ -457,7 +457,7 @@ export const useGroupChannelContext = () => {
 };
 
 function getCollectionCreator(groupChannel: GroupChannel, messageListQueryParams?: MessageListQueryParamsType) {
-  return (defaultParams: MessageListQueryParamsType) => {
+  return (defaultParams?: MessageListQueryParamsType) => {
     const params = { ...defaultParams, prevResultLimit: 30, nextResultLimit: 30, ...messageListQueryParams };
     return groupChannel.createMessageCollection({
       ...params,

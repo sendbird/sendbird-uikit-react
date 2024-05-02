@@ -4,7 +4,7 @@ import type { Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
 import { CoreMessageType, isSendableMessage } from '../../../../utils';
-import { EveryMessage, TypingIndicatorType } from '../../../../types';
+import { EveryMessage, RenderMessageParamsType, TypingIndicatorType } from '../../../../types';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
@@ -56,7 +56,7 @@ export interface GroupChannelMessageListProps {
 export const MessageList = (props: GroupChannelMessageListProps) => {
   const { className = '' } = props;
   const {
-    renderMessage = (props) => <Message {...props} />,
+    renderMessage = (props:RenderMessageParamsType) => <Message {...props} />,
     renderMessageContent,
     renderSuggestedReplies,
     renderCustomSeparator,
@@ -167,7 +167,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
                 isMessageGroupingEnabled: isMessageGroupingEnabled ?? false,
                 currentIndex: idx,
                 currentMessage: message as CoreMessageType,
-                currentChannel,
+                currentChannel: currentChannel!,
               });
               const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === store.config.userId;
               return (

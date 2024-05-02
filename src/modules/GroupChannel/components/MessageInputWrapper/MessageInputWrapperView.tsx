@@ -37,7 +37,7 @@ export interface MessageInputWrapperViewProps {
   loading: boolean;
   quoteMessage: SendableMessageType | null;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
-  messageInputRef: React.MutableRefObject<HTMLDivElement>;
+  messageInputRef: React.RefObject<HTMLDivElement>;
   sendUserMessage: (params: UserMessageCreateParams) => Promise<UserMessage> | void;
   sendFileMessage: (params: FileMessageCreateParams) => Promise<FileMessage>;
   sendVoiceMessage: (params: FileMessageCreateParams, duration: number) => Promise<FileMessage>;
@@ -52,7 +52,7 @@ export interface MessageInputWrapperViewProps {
 
 export const MessageInputWrapperView = React.forwardRef((
   props: MessageInputWrapperViewProps,
-  ref: React.MutableRefObject<any>,
+  ref: React.ForwardedRef<HTMLDivElement>,
 ) => {
   // Props
   const {
@@ -106,7 +106,7 @@ export const MessageInputWrapperView = React.forwardRef((
     && isMentionEnabled
     && mentionNickname.length > 0
     && !isBroadcast;
-  const mentionNodes = useDirtyGetMentions({ ref: ref || messageInputRef }, { logger });
+  const mentionNodes = useDirtyGetMentions({ ref: (ref || messageInputRef) as any }, { logger });
   const ableMention = mentionNodes?.length < maxMentionCount;
 
   // Operate states
@@ -192,7 +192,7 @@ export const MessageInputWrapperView = React.forwardRef((
       ) : (
         <MessageInput
           className="sendbird-message-input-wrapper__message-input"
-          channel={currentChannel}
+          channel={currentChannel as GroupChannel}
           channelUrl={currentChannel?.url}
           isMobile={isMobile}
           acceptableMimeTypes={acceptableMimeTypes}
@@ -206,11 +206,11 @@ export const MessageInputWrapperView = React.forwardRef((
           setMentionedUsers={setMentionedUsers}
           placeholder={
             (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
-            || ((disabled || isDisabledBecauseFrozen(currentChannel ?? undefined)) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
-            || (isDisabledBecauseMuted(currentChannel ?? undefined)
-              && (isMobile ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT : stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED))
+            || ((disabled || isDisabledBecauseFrozen(currentChannel)) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
+            || (isDisabledBecauseMuted(currentChannel) && (isMobile ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT : stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED))
+            || undefined
           }
-          ref={ref || messageInputRef}
+          ref={(ref || messageInputRef) as any}
           disabled={isMessageInputDisabled}
           renderFileUploadIcon={renderFileUploadIcon}
           renderSendMessageIcon={renderSendMessageIcon}

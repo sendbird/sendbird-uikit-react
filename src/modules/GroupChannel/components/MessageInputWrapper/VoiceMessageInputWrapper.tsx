@@ -52,7 +52,7 @@ export const VoiceMessageInputWrapper = ({
   const voicePlayer = useVoicePlayer({
     channelUrl: channel?.url,
     key: uuid,
-    audioFile: audioFile,
+    audioFile: audioFile ?? undefined,
   });
   const {
     play,
