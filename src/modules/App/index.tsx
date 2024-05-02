@@ -76,21 +76,21 @@ export default function App(props: AppProps) {
     accessToken = '',
     customApiHost = '',
     customWebSocketHost = '',
-    breakpoint = null,
+    breakpoint,
     theme = 'light',
-    userListQuery = null,
+    userListQuery,
     nickname = '',
     profileUrl = '',
-    dateLocale = null,
+    dateLocale,
     config = {},
     voiceRecord,
     isMessageGroupingEnabled = true,
-    colorSet = null,
-    stringSet = null,
+    colorSet,
+    stringSet,
     allowProfileEdit = false,
     disableMarkAsDelivered = false,
-    renderUserProfile = null,
-    onProfileEditSuccess = null,
+    renderUserProfile,
+    onProfileEditSuccess,
     imageCompression = {},
     disableAutoSelect = false,
     sdkInitParams,
@@ -112,26 +112,26 @@ export default function App(props: AppProps) {
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
   } = props;
-  const [currentChannel, setCurrentChannel] = useState<GroupChannel | null>(null);
+  const [currentChannel, setCurrentChannel] = useState<GroupChannel>();
 
   return (
     <Sendbird
-      stringSet={stringSet ?? undefined}
+      stringSet={stringSet}
       appId={appId}
       userId={userId}
       accessToken={accessToken}
       customApiHost={customApiHost}
       customWebSocketHost={customWebSocketHost}
-      breakpoint={breakpoint ?? undefined}
+      breakpoint={breakpoint}
       theme={theme}
       nickname={nickname}
       profileUrl={profileUrl}
-      dateLocale={dateLocale ?? undefined}
-      userListQuery={userListQuery ?? undefined}
+      dateLocale={dateLocale }
+      userListQuery={userListQuery}
       config={config}
-      colorSet={colorSet ?? undefined}
+      colorSet={colorSet }
       disableMarkAsDelivered={disableMarkAsDelivered}
-      renderUserProfile={renderUserProfile ?? undefined}
+      renderUserProfile={renderUserProfile}
       imageCompression={imageCompression}
       isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
       voiceRecord={voiceRecord}
@@ -159,9 +159,9 @@ export default function App(props: AppProps) {
       <AppLayout
         isMessageGroupingEnabled={isMessageGroupingEnabled}
         allowProfileEdit={allowProfileEdit}
-        onProfileEditSuccess={onProfileEditSuccess ?? undefined}
+        onProfileEditSuccess={onProfileEditSuccess}
         disableAutoSelect={disableAutoSelect}
-        currentChannel={currentChannel ?? undefined}
+        currentChannel={currentChannel}
         setCurrentChannel={setCurrentChannel}
         enableLegacyChannelModules={enableLegacyChannelModules}
         isReactionEnabled={isReactionEnabled}
