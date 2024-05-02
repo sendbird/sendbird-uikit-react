@@ -429,21 +429,21 @@ export class UikitMessageHandler<T extends SendableMessage = SendableMessage> {
     this._onSucceeded(message);
   }
 
-  public onPending(handler: MessageHandler<T>): UikitMessageHandler {
+  public onPending(handler: MessageHandler<T>): UikitMessageHandler<T> {
     if (typeof handler === 'function') {
       this._onPending = handler;
     }
     return this;
   }
 
-  public onFailed(handler: FailedMessageHandler<T>): UikitMessageHandler {
+  public onFailed(handler: FailedMessageHandler<T>): UikitMessageHandler<T> {
     if (typeof handler === 'function') {
       this._onFailed = handler;
     }
     return this;
   }
 
-  public onSucceeded(handler: MessageHandler<T>): UikitMessageHandler {
+  public onSucceeded(handler: MessageHandler<T>): UikitMessageHandler<T> {
     if (typeof handler === 'function') {
       this._onSucceeded = handler;
     }
