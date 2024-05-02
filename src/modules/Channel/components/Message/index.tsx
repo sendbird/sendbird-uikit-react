@@ -8,7 +8,7 @@ import MessageView, { MessageProps } from '../../../GroupChannel/components/Mess
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
 
-const Message = (props: MessageProps): React.ReactElement => {
+const Message = (props: MessageProps) => {
   const { config } = useSendbirdStateContext();
   const {
     initialized,
@@ -36,13 +36,15 @@ const Message = (props: MessageProps): React.ReactElement => {
 
   const { message } = props;
 
+  if (!currentGroupChannel) return null;
+
   return (
     <MessageView
       {...props}
       channel={currentGroupChannel}
       emojiContainer={emojiContainer}
       editInputDisabled={
-        !initialized || isDisabledBecauseFrozen(currentGroupChannel ?? undefined) || isDisabledBecauseMuted(currentGroupChannel ?? undefined) || !config.isOnline
+        !initialized || isDisabledBecauseFrozen(currentGroupChannel) || isDisabledBecauseMuted(currentGroupChannel) || !config.isOnline
       }
       shouldRenderSuggestedReplies={
         config?.groupChannel?.enableSuggestedReplies
@@ -55,8 +57,8 @@ const Message = (props: MessageProps): React.ReactElement => {
         && localMessages?.length === 0
         && getSuggestedReplies(message).length > 0
       }
-      isReactionEnabled={isReactionEnabled ?? false}
-      replyType={replyType ?? 'NONE'}
+      isReactionEnabled={isReactionEnabled}
+      replyType={replyType}
       threadReplySelectType={threadReplySelectType}
       nicknamesMap={nicknamesMap}
       renderUserMentionItem={renderUserMentionItem}

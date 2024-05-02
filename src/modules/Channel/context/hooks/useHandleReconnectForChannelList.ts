@@ -17,16 +17,16 @@ import { DELIVERY_RECEIPT } from '../../../../utils/consts';
 interface UseHandleReconnectForChannelListProps {
   // Dynamic props
   isOnline: boolean;
-  reconnectOnIdle: boolean;
+  reconnectOnIdle?: boolean;
 
   // Static props
   logger: Logger;
   sdk: SdkStore['sdk'];
-  currentGroupChannel: GroupChannel;
+  currentGroupChannel: GroupChannel | null;
   channelListDispatcher: React.Dispatch<ChannelListActionTypes>
   setChannelSource: (query: GroupChannelListQuery) => void;
-  userFilledChannelListQuery: GroupChannelListQueryParamsInternal;
-  sortChannelList: (channels: GroupChannel[]) => GroupChannel[];
+  userFilledChannelListQuery?: GroupChannelListQueryParamsInternal;
+  sortChannelList?: (channels: GroupChannel[]) => GroupChannel[];
   disableAutoSelect: boolean;
   markAsDeliveredScheduler: MarkAsDeliveredSchedulerType;
   disableMarkAsDelivered: boolean;

@@ -7,15 +7,15 @@ import { CoreMessageType, SendableMessageType } from '../../../utils';
 import { BaseMessage, SendingStatus } from '@sendbird/chat/message';
 
 export const scrollToRenderedMessage = (
-  scrollRef: React.MutableRefObject<HTMLElement>,
+  scrollRef: React.RefObject<HTMLElement>,
   initialTimeStamp: number,
   setIsScrolled?: (val: boolean) => void,
 ) => {
   try {
     const container = scrollRef.current;
     // scroll into the message with initialTimeStamp
-    const element = container.querySelectorAll(`[data-sb-created-at="${initialTimeStamp}"]`)?.[0];
-    if (element instanceof HTMLElement) {
+    const element = container?.querySelectorAll(`[data-sb-created-at="${initialTimeStamp}"]`)?.[0];
+    if (container && element instanceof HTMLElement) {
       // Set the scroll position of the container to bring the element to the top
       container.scrollTop = element.offsetTop;
     }
@@ -29,7 +29,7 @@ export const scrollToRenderedMessage = (
 /* eslint-disable default-param-last */
 export const scrollIntoLast = (
   initialTry = 0,
-  scrollRef: React.MutableRefObject<HTMLElement>,
+  scrollRef: React.RefObject<HTMLElement>,
   setIsScrolled?: (val: boolean) => void,
 ) => {
   const MAX_TRIES = 10;
@@ -40,7 +40,7 @@ export const scrollIntoLast = (
   }
   try {
     const scrollDOM = scrollRef?.current || document.querySelector('.sendbird-conversation__messages-padding');
-    scrollDOM.scrollTop = scrollDOM.scrollHeight;
+    if (scrollDOM) scrollDOM.scrollTop = scrollDOM.scrollHeight;
     setIsScrolled?.(true);
   } catch (error) {
     setTimeout(() => {
@@ -54,12 +54,12 @@ export const isOperator = (groupChannel?: GroupChannel) => {
   return myRole === 'operator';
 };
 
-export const isDisabledBecauseFrozen = (groupChannel?: GroupChannel) => {
+export const isDisabledBecauseFrozen = (groupChannel?: GroupChannel | null) => {
   const isFrozen = groupChannel?.isFrozen;
   return isFrozen && !isOperator(groupChannel);
 };
 
-export const isDisabledBecauseMuted = (groupChannel?: GroupChannel) => {
+export const isDisabledBecauseMuted = (groupChannel?: GroupChannel | null) => {
   const myMutedState = groupChannel?.myMutedState;
   return myMutedState === 'muted';
 };

@@ -12,9 +12,9 @@ import { CoreMessageType } from '../../../../utils';
 import { SdkStore } from '../../../../lib/types';
 
 type UseScrollCallbackOptions = {
-  currentGroupChannel: GroupChannel;
+  currentGroupChannel: GroupChannel | null;
   oldestMessageTimeStamp: number;
-  userFilledMessageListQuery: MessageListParamsInternal;
+  userFilledMessageListQuery?: MessageListParamsInternal;
   replyType: ReplyTypeInternal;
 };
 
@@ -49,6 +49,7 @@ function useScrollCallback(
 
     if (userFilledMessageListQuery) {
       Object.keys(userFilledMessageListQuery).forEach((key) => {
+        // @ts-ignore
         messageListParams[key] = userFilledMessageListQuery[key];
       });
     }
@@ -58,8 +59,7 @@ function useScrollCallback(
       userFilledMessageListQuery,
     });
 
-    currentGroupChannel
-      .getMessagesByTimestamp(oldestMessageTimeStamp || new Date().getTime(), messageListParams as MessageListParams)
+    currentGroupChannel?.getMessagesByTimestamp(oldestMessageTimeStamp || new Date().getTime(), messageListParams as MessageListParams)
       .then((messages) => {
         messagesDispatcher({
           type: messageActionTypes.FETCH_PREV_MESSAGES_SUCCESS,

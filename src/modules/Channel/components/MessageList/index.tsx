@@ -72,7 +72,7 @@ export const MessageList = (props: MessageListProps) => {
   } = useChannelContext();
 
   const store = useSendbirdStateContext();
-  const allMessagesFiltered = typeof filterMessageList === 'function' ? allMessages.filter(filterMessageList as (message: EveryMessage) => boolean) : allMessages;
+  const allMessagesFiltered = typeof filterMessageList === 'function' ? allMessages.filter(filterMessageList) : allMessages;
   const markAsReadScheduler = store.config.markAsReadScheduler;
 
   const [isScrollBottom, setIsScrollBottom] = useState(false);

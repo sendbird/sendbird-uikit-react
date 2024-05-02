@@ -1,12 +1,12 @@
 import type { BaseMessage } from '@sendbird/chat/message';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 
 import { scrollToRenderedMessage } from '../utils';
 import { LoggerInterface } from '../../../../lib/Logger';
 
 interface DynamicParams {
-  setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
-  setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
+  setInitialTimeStamp: React.Dispatch<React.SetStateAction<number | null | undefined>>;
+  setAnimatedMessageId: React.Dispatch<React.SetStateAction<number | null>>;
   allMessages: BaseMessage[];
   scrollRef: React.RefObject<HTMLDivElement>;
 }
