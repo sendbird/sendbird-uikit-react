@@ -7,8 +7,8 @@ import { AudioUnitDefaultValue, VoicePlayerStatusType } from './dux/initialState
 import { generateGroupKey } from './utils';
 
 export interface UseVoicePlayerProps {
-  key: string;
-  channelUrl: string;
+  key?: string;
+  channelUrl?: string;
   audioFile?: File;
   audioFileUrl?: string;
 }
