@@ -56,10 +56,12 @@ export function useOnScrollPositionChangeDetectorWithRef(
             distanceFromBottom: scrollHeight - scrollTop - clientHeight,
           };
 
-          if (_params.current.onReachedTop && isAboutSame(scrollTop, 0, SCROLL_BUFFER)) {
-            _params.current.onReachedTop(event);
-          } else if (_params.current.onReachedBottom && isAboutSame(scrollHeight, clientHeight + scrollTop, SCROLL_BUFFER)) {
+          const reachedTop = _params.current.onReachedTop && isAboutSame(scrollTop, 0, SCROLL_BUFFER);
+          const reachedBottom = _params.current.onReachedBottom && isAboutSame(scrollHeight, clientHeight + scrollTop, SCROLL_BUFFER);
+          if (reachedBottom) {
             _params.current.onReachedBottom(event);
+          } else if (reachedTop) {
+            _params.current.onReachedTop(event);
           } else if (_params.current.onInBetween) {
             _params.current.onInBetween(event);
           }
