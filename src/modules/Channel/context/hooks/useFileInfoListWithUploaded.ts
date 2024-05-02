@@ -33,6 +33,8 @@ export const useFileInfoListWithUploaded = (message: CoreMessageType): UploadedF
       ...it,
       url: it.url,
       isUploaded: true,
+      mimeType: it.mimeType ?? undefined,
+      fileName: it.fileName ?? undefined,
     }));
   } else {
     return message?.messageParams?.fileInfoList.map((it, index) => ({
