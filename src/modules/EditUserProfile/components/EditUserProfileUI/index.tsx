@@ -22,7 +22,7 @@ interface HandleUpdateUserInfoParams {
   globalContext: SendBirdState;
   formRef: MutableRefObject<any>;
   inputRef: MutableRefObject<any>;
-  profileImage: File;
+  profileImage: File | null;
   onEditProfile?: (user: User) => void;
 }
 const handleUpdateUserInfo = ({
@@ -43,7 +43,7 @@ const handleUpdateUserInfo = ({
   }
   sdk?.updateCurrentUserInfo({
     nickname: inputRef?.current?.value,
-    profileImage: profileImage,
+    profileImage: profileImage ?? undefined,
   }).then((updatedUser) => {
     userDispatcher({ type: USER_ACTIONS.UPDATE_USER_INFO, payload: updatedUser });
     onEditProfile?.(updatedUser);
@@ -51,7 +51,7 @@ const handleUpdateUserInfo = ({
 };
 
 export interface UseEditUserProfileUIStateParams {
-  onEditProfile: (user: User) => void;
+  onEditProfile?: (user: User) => void;
 }
 export const useEditUserProfileUISates = ({
   onEditProfile,
@@ -94,7 +94,7 @@ export const EditUserProfileUI = () => {
     inputRef,
     updateUserInfo,
     setProfileImage,
-  } = useEditUserProfileUISates({ onEditProfile: onEditProfile ?? (() => {}) });
+  } = useEditUserProfileUISates({ onEditProfile });
   return (
     <Modal
       titleText={stringSet.EDIT_PROFILE__TITLE}
@@ -108,7 +108,7 @@ export const EditUserProfileUI = () => {
         formRef={formRef}
         inputRef={inputRef}
         setProfileImage={setProfileImage}
-        onThemeChange={onThemeChange ?? (() => {})}
+        onThemeChange={onThemeChange}
       />
     </Modal>
   );

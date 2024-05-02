@@ -11,8 +11,8 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 export interface EditUserProfileUIViewProps {
   formRef: MutableRefObject<any>;
   inputRef: MutableRefObject<any>;
-  onThemeChange: (theme: string) => void;
   setProfileImage: Dispatch<File | null>;
+  onThemeChange?: (theme: string) => void;
 }
 export const EditUserProfileUIView = ({
   formRef,
