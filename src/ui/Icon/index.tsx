@@ -137,7 +137,7 @@ function changeTypeToIconComponent(type: Types) {
   }
 }
 
-type IconProps = {
+export interface IconProps {
   className?: string | string[];
   /** Type: Use strings from below list */
   type: Types;
@@ -147,7 +147,7 @@ type IconProps = {
   height?: string | number;
   onClick?: React.MouseEventHandler<HTMLDivElement> & React.KeyboardEventHandler<HTMLDivElement>;
   children?: React.ReactNode;
-};
+}
 export default function Icon({
   className = '',
   type,

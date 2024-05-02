@@ -1,15 +1,12 @@
 import React, { useMemo } from 'react';
+import type { MouseEvent, KeyboardEvent, TouchEvent } from 'react';
 
-import './index.scss';
-
-import IconButton from '../../../../ui/IconButton';
-import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
-import TextButton from '../../../../ui/TextButton';
+import { IconTypes, IconColors } from '../../../../ui/Icon';
 
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import Header from '../../../../ui/Header';
 
-type EventType = React.MouseEvent<HTMLDivElement | HTMLButtonElement> | React.KeyboardEvent<HTMLDivElement>;
+type EventType = MouseEvent | KeyboardEvent | TouchEvent;
 
 export interface ThreadHeaderProps {
   className?: string;
@@ -34,45 +31,28 @@ export default function ThreadHeader({
     }
     return null;
   }, [renderActionIcon]);
+
   return (
-    <div className={`sendbird-thread-header ${className}`}>
-      <Label
-        className="sendbird-thread-header__title"
-        type={LabelTypography.H_2}
-        color={LabelColors.ONBACKGROUND_1}
-      >
-        {stringSet.THREAD__HEADER_TITLE}
-      </Label>
-      <TextButton
-        onClick={(e) => onChannelNameClick?.(e)}
-        disableUnderline
-      >
-        <Label
-          className="sendbird-thread-header__channel-name"
-          type={LabelTypography.CAPTION_3}
-          color={LabelColors.ONBACKGROUND_2}
-        >
-          {channelName}
-        </Label>
-      </TextButton>
-      {
+    <Header
+      className={`sendbird-thread-header ${className}`}
+      renderMiddle={() => (
+        <Header.Title
+          title={stringSet.THREAD__HEADER_TITLE}
+          subtitle={channelName}
+          onClickSubtitle={onChannelNameClick}
+        />
+      )}
+      renderRight={() => (
         MemoizedActionIcon || (
           <div className="sendbird-thread-header__action">
-            <IconButton
-              width="32px"
-              height="32px"
+            <Header.IconButton
               onClick={(e) => onActionIconClick(e)}
-            >
-              <Icon
-                type={IconTypes.CLOSE}
-                fillColor={IconColors.ON_BACKGROUND_1}
-                width="22px"
-                height="22px"
-              />
-            </IconButton>
+              type={IconTypes.CLOSE}
+              color={IconColors.ON_BACKGROUND_1}
+            />
           </div>
         )
-      }
-    </div>
+      )}
+    />
   );
 }

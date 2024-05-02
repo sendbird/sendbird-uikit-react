@@ -17,7 +17,7 @@
 }
 
 .sendbird-thread-ui__header {
-  width: 100%;
+  width: 320px;
   @include themed() {
     border-top: 1px solid t(on-bg-4);
   }
