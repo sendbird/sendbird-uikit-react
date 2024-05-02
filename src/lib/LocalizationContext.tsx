@@ -18,21 +18,8 @@ interface LocalizationProviderProps {
 
 const LocalizationProvider = (props: LocalizationProviderProps): React.ReactElement => {
   const { children } = props;
-  return (
-    <LocalizationContext.Provider value={{
-      ...LocalizationContextDefault,
-      ...props,
-    }}>
-      {children}
-    </LocalizationContext.Provider>
-  );
+  return <LocalizationContext.Provider value={{ ...LocalizationContextDefault, ...props }}>{children}</LocalizationContext.Provider>;
 };
 
-export type UseLocalizationType = () => {
-  stringSet: StringSet;
-  dateLocale: Locale;
-};
-
-const useLocalization: UseLocalizationType = () => React.useContext(LocalizationContext);
-
+const useLocalization = () => React.useContext(LocalizationContext);
 export { LocalizationContext, LocalizationProvider, useLocalization };
