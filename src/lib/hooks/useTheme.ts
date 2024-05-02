@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import cssVars from 'css-vars-ponyfill';
 
-const isEmpty = (obj: unknown) => {
+const isEmpty = (obj?: null | Record<string, unknown>) => {
   if (obj === null || obj === undefined) {
     return true;
   }
