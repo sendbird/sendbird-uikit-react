@@ -1,5 +1,28 @@
 # Changelog - v3
 
+## [v3.14.4] (May 02, 2024)
+### Features
+* Added `suggestedRepliesDirection` global option which serves as vertical/horizontal scroll option for `SuggestedReplies`
+  * How to use?
+  ```tsx
+  <App
+    appId={appId}
+    userId={userId}
+    uikitOptions={{
+      groupChannel: {
+        // Below turns on the `SuggestedReplies` feature (see v3.8.0 release changelog). Default value is false.
+        enableSuggestedReplies: true,
+        // Below changes scroll direction from horizontal to vertical.
+        suggestedRepliesDirection: 'vertical'
+      }
+    }}
+  />
+  ```
+* Added a new ui component `Header` (`import Header from '@sendbird/uikit-react/ui/Header'`) which replaced all existing header components
+### Fixes
+* Fixed a bug where suggested replies are incorrectly displayed when `showSuggestedRepliesFor` is set to 'last_message_only'
+
+
 ## [v3.14.3] (Apr 19, 2024)
 ### Features
 * Add outputFormat to the image compression options
