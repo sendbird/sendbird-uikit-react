@@ -58,7 +58,7 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with four element
         style="width: 100%; min-width: min(400px, 56px); max-width: 400px;"
       >
         <div
-          class="sendbird-avatar-img--default "
+          class="sendbird-avatar-img--default"
           style="width: 56px; height: 56px;"
         >
           <div
@@ -221,7 +221,7 @@ exports[`ui/Avatar should render default image if src is empty 1`] = `
       style="width: 100%; min-width: min(400px, 56px); max-width: 400px;"
     >
       <div
-        class="sendbird-avatar-img--default "
+        class="sendbird-avatar-img--default"
         style="width: 56px; height: 56px;"
       >
         <div

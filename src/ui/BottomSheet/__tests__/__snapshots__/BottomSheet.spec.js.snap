@@ -14,9 +14,7 @@ exports[`ui/BottomSheet should do a snapshot test of the default Button DOM 1`] 
       role="dialog"
     />
     <div
-      class="
-          sendbird-bottomsheet__backdrop
-        "
+      class="sendbird-bottomsheet__backdrop"
     />
   </div>
 </div>

@@ -15,7 +15,7 @@ exports[`ui/OGMessageItemBody should do a snapshot test of the OGMessageItemBody
       </div>
     </span>
     <div
-      class="sendbird-og-message-item-body__og-thumbnail "
+      class="sendbird-og-message-item-body__og-thumbnail"
     >
       <div
         class="sendbird-og-message-item-body__og-thumbnail__image sendbird-image-renderer"

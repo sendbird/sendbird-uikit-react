@@ -101,7 +101,7 @@ const OGImageSection = (props: { onClick: () => void; ogImage: OGImage; onMessag
       ref={imageRef}
       className={classnames(
         'sendbird-og-message-item-body__og-thumbnail',
-        ogImage.url && 'sendbird-og-message-item-body__og-thumbnail__empty',
+        !ogImage.url && 'sendbird-og-message-item-body__og-thumbnail__empty',
       )}
       onClick={() => onClick()}
     >

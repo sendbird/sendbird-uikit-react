@@ -13,7 +13,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
         style="display: inline;"
       >
         <div
-          class="sendbird-message-content__left__avatar  sendbird-avatar"
+          class="sendbird-message-content__left__avatar sendbird-avatar"
           role="button"
           style="height: 28px; width: 28px; z-index: 0; bottom: 2px;"
           tabindex="0"
@@ -23,7 +23,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
             style="width: 100%; min-width: min(400px, 28px); max-width: 400px;"
           >
             <div
-              class="sendbird-avatar-img--default "
+              class="sendbird-avatar-img--default"
               style="width: 28px; height: 28px;"
             >
               <div
