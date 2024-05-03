@@ -1,3 +1,4 @@
+import type { SendbirdConfig } from '../../../../src/lib/Sendbird.tsx';
 import { UIKitOptions } from '../../../../src/lib/types.ts';
 import { useSearchParams } from 'react-router-dom';
 
@@ -6,6 +7,7 @@ export interface InitialParams {
   userId?: string;
   nickname?: string;
   accessToken?: string;
+  config?: SendbirdConfig;
 }
 
 interface ParamsAsProps {
