@@ -31,6 +31,7 @@ export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
     allowProfileEdit: parseValue(searchParams.get('enableProfileEdit')) ?? true,
     isMultipleFilesMessageEnabled: parseValue(searchParams.get('enableMultipleFilesMessage')) ?? true,
     uikitOptions: {},
+    config: initParams.config,
   } as ParamsAsProps;
 
   if (!response.appId) throw new Error(`Invalid app id: ${response.appId}`);
