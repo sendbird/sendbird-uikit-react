@@ -10,12 +10,11 @@ const defaultProps: InitialParams = {
   appId: import.meta.env.VITE_APP_ID,
   userId: import.meta.env.VITE_USER_ID ?? 'test',
   accessToken: import.meta.env.VITE_ACCESS_TOKEN,
-  config: { logLevel: 'all' },
 };
 
 function GroupChannelPage() {
   const props = useConfigParams(defaultProps);
-  return <GroupChannelApp {...props} breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)} />;
+  return <GroupChannelApp {...props} breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)} config={{ logLevel: 'all' }} />;
 }
 
 function OpenChannelPage() {
