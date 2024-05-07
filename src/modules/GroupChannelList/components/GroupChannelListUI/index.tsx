@@ -9,6 +9,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { GroupChannelListItem } from '../GroupChannelListItem';
 import AddGroupChannel from '../AddGroupChannel';
 import { GroupChannelListItemBasicProps } from '../GroupChannelListItem/GroupChannelListItemView';
+import { noop } from '../../../../utils/utils';
 
 interface GroupChannelItemProps extends GroupChannelListItemBasicProps {}
 
@@ -81,9 +82,9 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
       renderPlaceHolderError={renderPlaceHolderError}
       renderPlaceHolderLoading={renderPlaceHolderLoading}
       renderPlaceHolderEmptyList={renderPlaceHolderEmptyList}
-      onChangeTheme={onThemeChange ?? (() => {})}
+      onChangeTheme={onThemeChange ?? noop}
       allowProfileEdit={allowProfileEdit}
-      onUserProfileUpdated={onUserProfileUpdated ?? (() => {})}
+      onUserProfileUpdated={onUserProfileUpdated ?? noop}
       channels={groupChannels}
       onLoadMore={loadMore}
       initialized={initialized}

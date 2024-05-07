@@ -20,13 +20,14 @@ import useScrollCallback, {
   CallbackReturn as UseScrollCallbackType,
 } from './hooks/useScrollCallback';
 import useSearchStringEffect from './hooks/useSearchStringEffect';
+import { CoreMessageType } from '../../../utils';
 
 export interface MessageSearchProviderProps {
   channelUrl: string;
   children?: React.ReactElement;
   searchString?: string;
   messageSearchQuery?: MessageSearchQueryParams;
-  onResultLoaded?(messages?: Array<ClientSentMessages>, error?: SendbirdError): void;
+  onResultLoaded?(messages?: Array<CoreMessageType> | null, error?: SendbirdError | null): void;
   onResultClick?(message: ClientSentMessages): void;
 }
 
@@ -37,7 +38,7 @@ interface MessageSearchProviderInterface extends MessageSearchProviderProps {
   selectedMessageId: number;
   setSelectedMessageId: React.Dispatch<React.SetStateAction<number>>;
   messageSearchDispatcher: (props: { type: string, payload: any }) => void;
-  scrollRef: React.MutableRefObject<HTMLDivElement>;
+  scrollRef: React.RefObject<HTMLDivElement>;
   allMessages: MessageSearchReducerState['allMessages'];
   loading: boolean;
   isInvalid: boolean;
@@ -79,7 +80,7 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: Mess
   const logger = globalState?.config?.logger;
   const sdk = globalState?.stores?.sdkStore?.sdk;
   const sdkInit = globalState?.stores?.sdkStore?.initialized;
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const handleOnScroll = (e: React.BaseSyntheticEvent) => {
     const scrollElement = e.target as HTMLDivElement;
     const {
@@ -147,8 +148,11 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: Mess
   );
 };
 
-export type UseMessageSearchType = () => MessageSearchProviderInterface;
-const useMessageSearchContext: UseMessageSearchType = () => React.useContext(MessageSearchContext);
+const useMessageSearchContext = () => {
+  const context = React.useContext(MessageSearchContext);
+  if (!context) throw new Error('MessageSearchContext not found. Use within the MessageSearch module.');
+  return context;
+};
 
 export {
   MessageSearchProvider,

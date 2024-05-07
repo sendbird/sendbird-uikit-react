@@ -1,16 +1,14 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, ChangeEventHandler } from 'react';
 import './index.scss';
 
 import MessageSearch, { MessageSearchUIProps } from './components/MessageSearchUI';
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import Icon, { IconTypes, IconColors } from '../../ui/Icon';
+import Icon, { IconTypes, IconColors, IconProps } from '../../ui/Icon';
 import Loader from '../../ui/Loader';
 import { MessageSearchProvider, MessageSearchProviderProps } from './context/MessageSearchProvider';
 import Header from '../../ui/Header';
 
-export interface MessageSearchPannelProps extends
-  MessageSearchUIProps, MessageSearchProviderProps {
-  onResultClick?: (message) => void;
+export interface MessageSearchPannelProps extends MessageSearchUIProps, MessageSearchProviderProps {
   onCloseClick?: () => void;
 }
 
@@ -46,7 +44,7 @@ function MessageSearchPannel(props: MessageSearchPannelProps): JSX.Element {
     }, 500);
   }, [inputString]);
 
-  const handleOnChangeInputString = (e) => {
+  const handleOnChangeInputString: ChangeEventHandler<HTMLInputElement> = (e) => {
     setInputString(e.target.value);
   };
 
@@ -54,7 +52,7 @@ function MessageSearchPannel(props: MessageSearchPannelProps): JSX.Element {
     setLoading(false);
   };
 
-  const handleOnClickResetStringButton = (e) => {
+  const handleOnClickResetStringButton: IconProps['onClick'] = (e) => {
     e.stopPropagation();
     setInputString('');
     setSearchString('');
