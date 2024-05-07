@@ -9,7 +9,7 @@ import { SdkStore } from '../../../../lib/types';
 interface DynamicParams {
   sdk: SdkStore['sdk'];
   sdkInitialized: boolean;
-  openChannelListQuery: UserFilledOpenChannelListQuery;
+  openChannelListQuery?: UserFilledOpenChannelListQuery;
 }
 interface StaticParams {
   logger: Logger;
