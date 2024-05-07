@@ -1,5 +1,9 @@
 # Changelog - v3
 
+## [v3.14.5] (May 04, 2024)
+### Fixes
+* Fixed a bug where channel scroll to bottom is not called internally when last message is updated with suggested replies
+
 ## [v3.14.4] (May 02, 2024)
 ### Features
 * Added `suggestedRepliesDirection` global option which serves as vertical/horizontal scroll option for `SuggestedReplies`
