@@ -23,7 +23,7 @@ export type OpenChannelMessageListProps = {
 /** @deprecated * */
 export type OpenchannelMessageListProps = OpenChannelMessageListProps;
 
-function OpenChannelMessageList(props: OpenChannelMessageListProps, ref: React.RefObject<HTMLDivElement>): ReactElement {
+function OpenChannelMessageList(props: OpenChannelMessageListProps, ref: React.ForwardedRef<HTMLDivElement>): ReactElement {
   const {
     isMessageGroupingEnabled = true,
     allMessages,
@@ -32,11 +32,12 @@ function OpenChannelMessageList(props: OpenChannelMessageListProps, ref: React.R
   } = useOpenChannelContext();
   const store = useSendbirdStateContext();
   const userId = store.config.userId;
-  const scrollRef = ref || useRef(null);
+  const localRef = useRef<HTMLDivElement>(null);
+  const scrollRef = ref || localRef;
   const [showScrollDownButton, setShowScrollDownButton] = useState(false);
 
   const scrollToBottom = () => {
-    if (scrollRef && scrollRef.current) {
+    if (scrollRef && 'current' in scrollRef && scrollRef.current) {
       scrollRef.current.scrollTo(0, scrollRef.current.scrollHeight);
       setShowScrollDownButton(false);
     }
@@ -46,7 +47,7 @@ function OpenChannelMessageList(props: OpenChannelMessageListProps, ref: React.R
     setShowScrollDownButton,
     hasMore,
     onScroll,
-    scrollRef,
+    scrollRef: scrollRef as any,
   });
 
   const memoizedMessageList = useMemo(() => {

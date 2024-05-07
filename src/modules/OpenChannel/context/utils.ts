@@ -8,17 +8,12 @@ import { SendableMessageType } from '../../../utils';
 
 export const getMessageCreatedAt = (message: SendableMessageType): string => format(message.createdAt, 'p');
 
-export const shouldFetchMore = (messageLength: number, maxMessages: number): boolean => {
+export const shouldFetchMore = (messageLength: number, maxMessages?: number): boolean => {
   if (typeof maxMessages !== 'number') {
     return true;
   }
 
-  if (typeof maxMessages === 'number'
-    && maxMessages > messageLength
-  ) {
-    return true;
-  }
-  return false;
+  return maxMessages > messageLength;
 };
 
 /* eslint-disable default-param-last */
@@ -90,17 +85,4 @@ export const fetchWithListQuery = (
   };
   logger.info('OpenChannel | FetchUserList start', listQuery);
   fetchList(listQuery);
-};
-
-export const pxToNumber = (px: string | number): number | void => {
-  if (typeof px === 'number') {
-    return px;
-  }
-  if (typeof px === 'string') {
-    const parsed = Number.parseFloat(px);
-    if (!Number.isNaN(parsed)) {
-      return parsed;
-    }
-  }
-  return null;
 };
