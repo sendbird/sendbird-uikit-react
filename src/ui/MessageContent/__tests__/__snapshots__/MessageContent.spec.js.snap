@@ -6,7 +6,8 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
     class="classname-for-snapshot sendbird-message-content incoming "
   >
     <div
-      class="sendbird-message-content__left  incoming "
+      class="sendbird-message-content__left incoming"
+      data-testid="sendbird-message-content__left"
     >
       <div
         class="sendbird-context-menu"
@@ -40,7 +41,8 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
       </div>
     </div>
     <div
-      class="sendbird-message-content__middle  "
+      class="sendbird-message-content__middle"
+      data-testid="sendbird-message-content__middle"
     >
       <span
         class="sendbird-message-content__middle__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
@@ -48,7 +50,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
         Mathew
       </span>
       <div
-        class="sendbird-message-content__middle__body-container "
+        class="sendbird-message-content__middle__body-container"
       >
         <span
           class="sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
@@ -60,7 +62,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
           </div>
         </span>
         <span
-          class="sendbird-message-content__middle__body-container__created-at right   sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+          class="sendbird-message-content__middle__body-container__created-at right sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
         >
           mock-date
         </span>
@@ -68,10 +70,11 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
       0
     </div>
     <div
-      class="sendbird-message-content__right   "
+      class="sendbird-message-content__right"
+      data-testid="sendbird-message-content__right"
     >
       <div
-        class="sendbird-message-content-menu   incoming"
+        class="sendbird-message-content-menu incoming"
       >
         <div
           class="sendbird-message-content-menu__normal-menu sendbird-message-item-menu"

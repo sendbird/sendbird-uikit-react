@@ -159,6 +159,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
           <div
             ref={scrollRef}
             className="sendbird-conversation__messages-padding"
+            data-testid="sendbird-message-list-container"
           >
             {messages.map((message, idx) => {
               const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
