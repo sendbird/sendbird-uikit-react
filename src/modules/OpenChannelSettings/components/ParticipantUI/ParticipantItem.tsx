@@ -196,7 +196,7 @@ export default function ParticipantsAccordion(props: ParticipantsAccordionProps)
             {
               participants.slice(0, maxMembers).map((p) => (
                 <UserListItem
-                  user={p as Participant}
+                  user={p}
                   currentUser={currentUserId}
                   key={p.userId}
                 />

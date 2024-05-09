@@ -38,7 +38,7 @@ export default function AddOperatorsModal({
       limit: 20,
     });
     if (participantListQuery) {
-      participantListQuery?.next().then((users) => {
+      participantListQuery.next().then((users) => {
         setParticipants(users);
       });
       setParticipantQuery(participantListQuery);

@@ -115,10 +115,9 @@ export default function ParentMessageInfo({
     }));
   }, [mentionedUserIds]);
 
-  const handleOnDownloadClick = async (e) => {
-    if (!onBeforeDownloadFileMessage) {
-      return null;
-    }
+  const handleOnDownloadClick = async (e: React.MouseEvent) => {
+    if (!onBeforeDownloadFileMessage) return;
+
     try {
       const allowDownload = await onBeforeDownloadFileMessage({ message: parentMessage as FileMessage });
       if (!allowDownload) {
