@@ -1,8 +1,9 @@
 // Thanks to https://codesandbox.io/s/media-recorder-api-downsampling-16k-mp3-encode-using-lame-js-forked-n1pblw
 import { VOICE_RECORDER_AUDIO_SAMPLE_RATE } from '../../utils/consts';
+// @ts-ignore
 import { WavHeader, Mp3Encoder } from '../../_externals/lamejs/lame.all';
 
-function encodeMp3(arrayBuffer: ArrayBuffer): WavHeader {
+function encodeMp3(arrayBuffer: ArrayBuffer) {
   const wav = WavHeader.readHeader(new DataView(arrayBuffer));
   const dataView = new Int16Array(arrayBuffer, wav.dataOffset, wav.dataLen / 2);
   const mp3Encoder = new Mp3Encoder(wav.channels, wav.sampleRate, 128);
@@ -14,11 +15,13 @@ function encodeMp3(arrayBuffer: ArrayBuffer): WavHeader {
   if (wav.channels > 1) {
     for (let j = 0; j < samplesLeft.length; j++) {
       samplesLeft[j] = dataView[j * 2];
-      samplesRight[j] = dataView[j * 2 + 1];
+      if (samplesRight) {
+        samplesRight[j] = dataView[j * 2 + 1];
+      }
     }
   }
 
-  const dataBuffer = [];
+  const dataBuffer: Int8Array[] = [];
   let remaining = samplesLeft.length;
   for (let i = 0; remaining >= maxSamples; i += maxSamples) {
     const left = samplesLeft.subarray(i, i + maxSamples);
@@ -44,7 +47,7 @@ function downsampleToWav(file: File, callback: (buffer: ArrayBuffer) => void): v
   const fileReader = new FileReader();
   fileReader.onload = function (ev) {
     // Decode audio
-    audioCtx.decodeAudioData(ev.target.result as ArrayBuffer, (buffer) => {
+    audioCtx.decodeAudioData(ev.target?.result as ArrayBuffer, (buffer) => {
       // this is where you down sample the audio, usually is 44100 samples per second
       const usingWebkit = !window.OfflineAudioContext;
       const offlineAudioCtx = new OfflineAudioContext(1, 16000 * buffer.duration, 16000);
@@ -55,8 +58,8 @@ function downsampleToWav(file: File, callback: (buffer: ArrayBuffer) => void): v
 
       const reader = new FileReader();
       reader.onload = function () {
-        const renderCompleteHandler = (evt): void => {
-          const renderedBuffer = usingWebkit ? evt.renderedBuffer : evt;
+        const renderCompleteHandler = (evt: OfflineAudioCompletionEvent | AudioBuffer) => {
+          const renderedBuffer = usingWebkit ? (evt as OfflineAudioCompletionEvent).renderedBuffer : (evt as AudioBuffer);
           const buffer = bufferToWav(renderedBuffer, renderedBuffer.length);
           if (callback) {
             callback(buffer);
@@ -80,12 +83,12 @@ function downsampleToWav(file: File, callback: (buffer: ArrayBuffer) => void): v
   fileReader.readAsArrayBuffer(file);
 }
 
-function bufferToWav(abuffer, len) {
+function bufferToWav(abuffer: AudioBuffer, len: number) {
   const numOfChan = abuffer.numberOfChannels;
   const length = len * numOfChan * 2 + 44;
   const buffer = new ArrayBuffer(length);
   const view = new DataView(buffer);
-  const channels = [];
+  const channels: any[] = [];
   let i = 0;
   let sample;
   let offset = 0;
@@ -105,9 +108,11 @@ function bufferToWav(abuffer, len) {
   setUint16(16); // 16-bit (hardcoded in this demo)
   setUint32(0x61746164); // "data" - chunk
   setUint32(length - pos - 4); // chunk length
+
   // write interleaved data
-  for (i = 0; i < abuffer.numberOfChannels; i++)
+  for (i = 0; i < abuffer.numberOfChannels; i++) {
     channels.push(abuffer.getChannelData(i));
+  }
 
   while (pos < length) {
     for (i = 0; i < numOfChan; i++) {
@@ -122,15 +127,20 @@ function bufferToWav(abuffer, len) {
 
   return buffer;
 
-  function setUint16(data) {
+  function setUint16(data: number) {
     view.setUint16(pos, data, true);
     pos += 2;
   }
 
-  function setUint32(data) {
+  function setUint32(data: number) {
     view.setUint32(pos, data, true);
     pos += 4;
   }
+}
+
+export interface WebAudioUtils {
+  downsampleToWav: typeof downsampleToWav;
+  encodeMp3: typeof encodeMp3;
 }
 
 export { downsampleToWav, encodeMp3 };

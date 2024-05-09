@@ -44,7 +44,7 @@ export default function MessageSearchFileItem(props: Props): ReactElement {
       ].join(' ')}
       onClick={(e) => {
         e.stopPropagation();
-        onClick(message);
+        onClick?.(message);
       }}
     >
       <div className="sendbird-message-search-file-item__left">

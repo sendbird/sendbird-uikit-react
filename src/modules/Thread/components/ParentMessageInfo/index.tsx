@@ -28,6 +28,7 @@ import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 import MobileMenu from '../../../../ui/MobileMenu';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
+import { User } from '@sendbird/chat';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
 
 export interface ParentMessageInfoProps {
@@ -88,11 +89,11 @@ export default function ParentMessageInfo({
   // Mention
   const editMessageInputRef = useRef(null);
   const [mentionNickname, setMentionNickname] = useState('');
-  const [mentionedUsers, setMentionedUsers] = useState([]);
-  const [mentionedUserIds, setMentionedUserIds] = useState([]);
-  const [messageInputEvent, setMessageInputEvent] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
+  const [mentionedUsers, setMentionedUsers] = useState<User[]>([]);
+  const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
+  const [messageInputEvent, setMessageInputEvent] = useState<React.KeyboardEvent<HTMLDivElement> | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState<User[]>([]);
   const displaySuggestedMentionList = isOnline
     && isMentionEnabled
     && mentionNickname.length > 0
@@ -114,10 +115,9 @@ export default function ParentMessageInfo({
     }));
   }, [mentionedUserIds]);
 
-  const handleOnDownloadClick = async (e) => {
-    if (!onBeforeDownloadFileMessage) {
-      return null;
-    }
+  const handleOnDownloadClick = async (e: React.MouseEvent) => {
+    if (!onBeforeDownloadFileMessage) return;
+
     try {
       const allowDownload = await onBeforeDownloadFileMessage({ message: parentMessage as FileMessage });
       if (!allowDownload) {
@@ -141,7 +141,7 @@ export default function ParentMessageInfo({
             <SuggestedMentionList
               className="parent-message-info--suggested-mention-list"
               targetNickname={mentionNickname}
-              inputEvent={messageInputEvent}
+              inputEvent={messageInputEvent ?? undefined}
               // renderUserMentionItem={renderUserMentionItem}
               onUserItemClick={(user) => {
                 if (user) {
@@ -307,7 +307,7 @@ export default function ParentMessageInfo({
           showRemove={setShowRemove}
           setSupposedHover={setSupposedHover}
           onMoveToParentMessage={() => {
-            onMoveToParentMessage({ message: parentMessage, channel: currentChannel });
+            onMoveToParentMessage?.({ message: parentMessage, channel: currentChannel });
           }}
           deleteMessage={deleteMessage}
         />

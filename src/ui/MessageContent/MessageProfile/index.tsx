@@ -19,7 +19,7 @@ export interface MessageProfileProps extends MessageContentProps {
 
 export default function MessageProfile(
   props: MessageProfileProps,
-): ReactElement {
+): ReactElement | null {
   const {
     message,
     channel,

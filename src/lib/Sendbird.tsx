@@ -2,7 +2,6 @@ import './index.scss';
 import './__experimental__typography.scss';
 
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
-import { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { UIKitConfigProvider, useUIKitConfig } from '@sendbird/uikit-tools';
 
@@ -29,6 +28,7 @@ import { MediaQueryProvider, useMediaQueryContext } from './MediaQueryContext';
 import getStringSet, { StringSet } from '../ui/Label/stringSet';
 import {
   DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
+  DEFAULT_UPLOAD_SIZE_LIMIT,
   VOICE_RECORDER_DEFAULT_MAX,
   VOICE_RECORDER_DEFAULT_MIN,
 } from '../utils/consts';
@@ -45,10 +45,11 @@ import {
   CommonUIKitConfigProps,
   SendbirdChatInitParams,
   CustomExtensionParams,
-  SBUEventHandlers, SendbirdProviderUtils,
+  SBUEventHandlers,
+  SendbirdProviderUtils,
 } from './types';
 import { GlobalModalProvider, ModalRoot } from '../hooks/useModal';
-import { RenderUserProfileProps } from '../types';
+import { RenderUserProfileProps, UserListQuery } from '../types';
 import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
 import { EmojiManager } from './emojiManager';
 import { uikitConfigStorage } from './utils/uikitConfigStorage';
@@ -56,12 +57,6 @@ import useMessageTemplateUtils from './hooks/useMessageTemplateUtils';
 import { EmojiReactionListRoot, MenuRoot } from '../ui/ContextMenu';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
-
-export type UserListQueryType = {
-  hasNext?: boolean;
-  next: () => Promise<Array<User>>;
-  get isLoading(): boolean;
-};
 
 interface VoiceRecordOptions {
   maxRecordingTime?: number;
@@ -101,7 +96,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   dateLocale?: Locale;
   profileUrl?: string;
   voiceRecord?: VoiceRecordOptions;
-  userListQuery?(): UserListQueryType;
+  userListQuery?: () => UserListQuery;
   imageCompression?: ImageCompressionOptions;
   allowProfileEdit?: boolean;
   disableMarkAsDelivered?: boolean;
@@ -126,10 +121,8 @@ export function SendbirdProvider(props: SendbirdProviderProps) {
       isReactionEnabled: props.isReactionEnabled,
       disableUserProfile: props.disableUserProfile,
       isVoiceMessageEnabled: props.isVoiceMessageEnabled,
-      isTypingIndicatorEnabledOnChannelList:
-        props.isTypingIndicatorEnabledOnChannelList,
-      isMessageReceiptStatusEnabledOnChannelList:
-        props.isMessageReceiptStatusEnabledOnChannelList,
+      isTypingIndicatorEnabledOnChannelList: props.isTypingIndicatorEnabledOnChannelList,
+      isMessageReceiptStatusEnabledOnChannelList: props.isMessageReceiptStatusEnabledOnChannelList,
       showSearchIcon: props.showSearchIcon,
     },
     uikitOptions: props.uikitOptions,
@@ -161,21 +154,21 @@ const SendbirdSDK = ({
   accessToken,
   customApiHost,
   customWebSocketHost,
-  configureSession = null,
+  configureSession,
   theme = 'light',
   config = {},
   nickname = '',
-  colorSet = null,
-  stringSet = null,
-  dateLocale = null,
+  colorSet,
+  stringSet,
+  dateLocale,
   profileUrl = '',
   voiceRecord,
-  userListQuery = null,
+  userListQuery,
   imageCompression = {},
   allowProfileEdit = false,
   disableMarkAsDelivered = false,
-  renderUserProfile = null,
-  onUserProfileMessage = null,
+  renderUserProfile,
+  onUserProfileMessage,
   breakpoint = false,
   isUserIdUsedForNickname = true,
   sdkInitParams,
@@ -183,12 +176,7 @@ const SendbirdSDK = ({
   isMultipleFilesMessageEnabled = false,
   eventHandlers,
 }: SendbirdProviderProps): React.ReactElement => {
-  const {
-    logLevel = '',
-    userMention = {},
-    isREMUnitEnabled = false,
-    pubSub: customPubSub,
-  } = config;
+  const { logLevel = '', userMention = {}, isREMUnitEnabled = false, pubSub: customPubSub } = config;
   const { isMobile } = useMediaQueryContext();
   const [logger, setLogger] = useState(LoggerFactory(logLevel as LogLevel));
   const [pubSub] = useState(() => customPubSub ?? pubSubFactory<PUBSUB_TOPICS, SBUGlobalPubSubTopicPayloadUnion>());
@@ -199,19 +187,15 @@ const SendbirdSDK = ({
   const { configs, configsWithAppAttr, initDashboardConfigs } = useUIKitConfig();
   const sdkInitialized = sdkStore.initialized;
   const sdk = sdkStore?.sdk;
-  const {
-    uploadSizeLimit,
-    multipleFilesMessageFileCountLimit,
-  } = sdk?.appInfo ?? {};
+  const { uploadSizeLimit, multipleFilesMessageFileCountLimit } = sdk?.appInfo ?? {};
 
   useTheme(colorSet);
 
-  const {
-    getCachedTemplate,
-    updateMessageTemplatesInfo,
-    initializeMessageTemplatesInfo,
-  } = useMessageTemplateUtils({
-    sdk, logger, appInfoStore, appInfoDispatcher,
+  const { getCachedTemplate, updateMessageTemplatesInfo, initializeMessageTemplatesInfo } = useMessageTemplateUtils({
+    sdk,
+    logger,
+    appInfoStore,
+    appInfoDispatcher,
   });
 
   const utils: SendbirdProviderUtils = {
@@ -225,7 +209,8 @@ const SendbirdSDK = ({
     accessToken,
     isUserIdUsedForNickname,
     isMobile,
-  }, {
+  },
+  {
     logger,
     nickname,
     profileUrl,
@@ -241,7 +226,8 @@ const SendbirdSDK = ({
     initDashboardConfigs,
     eventHandlers,
     initializeMessageTemplatesInfo,
-  });
+  },
+  );
 
   useUnmount(() => {
     if (typeof sdk.disconnect === 'function') {
@@ -267,9 +253,9 @@ const SendbirdSDK = ({
 
   useEffect(() => {
     const body = document.querySelector('body');
-    body.classList.remove('sendbird-experimental__rem__units');
+    body?.classList.remove('sendbird-experimental__rem__units');
     if (isREMUnitEnabled) {
-      body.classList.add('sendbird-experimental__rem__units');
+      body?.classList.add('sendbird-experimental__rem__units');
     }
   }, [isREMUnitEnabled]);
   // add-remove theme from body
@@ -277,9 +263,9 @@ const SendbirdSDK = ({
     logger.info('Setup theme', `Theme: ${currentTheme}`);
     try {
       const body = document.querySelector('body');
-      body.classList.remove('sendbird-theme--light');
-      body.classList.remove('sendbird-theme--dark');
-      body.classList.add(`sendbird-theme--${currentTheme || 'light'}`);
+      body?.classList.remove('sendbird-theme--light');
+      body?.classList.remove('sendbird-theme--dark');
+      body?.classList.add(`sendbird-theme--${currentTheme || 'light'}`);
       logger.info('Finish setup theme');
       // eslint-disable-next-line no-empty
     } catch (e) {
@@ -288,10 +274,10 @@ const SendbirdSDK = ({
     return () => {
       try {
         const body = document.querySelector('body');
-        body.classList.remove('sendbird-theme--light');
-        body.classList.remove('sendbird-theme--dark');
+        body?.classList.remove('sendbird-theme--light');
+        body?.classList.remove('sendbird-theme--dark');
         // eslint-disable-next-line no-empty
-      } catch { }
+      } catch {}
     };
   }, [currentTheme]);
 
@@ -301,13 +287,7 @@ const SendbirdSDK = ({
   const markAsDeliveredScheduler = useMarkAsDeliveredScheduler({ isConnected: isOnline }, { logger });
 
   const localeStringSet = React.useMemo(() => {
-    if (!stringSet) {
-      return getStringSet('en');
-    }
-    return {
-      ...getStringSet('en'),
-      ...stringSet,
-    };
+    return { ...getStringSet('en'), ...stringSet };
   }, [stringSet]);
 
   /**
@@ -317,9 +297,6 @@ const SendbirdSDK = ({
   const uikitMultipleFilesMessageLimit = useMemo(() => {
     return Math.min(DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, multipleFilesMessageFileCountLimit ?? Number.MAX_SAFE_INTEGER);
   }, [multipleFilesMessageFileCountLimit]);
-  const uikitUploadSizeLimit = useMemo(() => {
-    return uploadSizeLimit;
-  }, [uploadSizeLimit]);
 
   // Emoji Manager
   const emojiManager = useMemo(() => {
@@ -356,7 +333,7 @@ const SendbirdSDK = ({
           setCurrentTheme,
           setCurrenttheme: setCurrentTheme, // deprecated: typo
           isMultipleFilesMessageEnabled,
-          uikitUploadSizeLimit,
+          uikitUploadSizeLimit: uploadSizeLimit ?? DEFAULT_UPLOAD_SIZE_LIMIT,
           uikitMultipleFilesMessageLimit,
           userListQuery,
           logger,
@@ -423,9 +400,7 @@ const SendbirdSDK = ({
       <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
         <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
           <VoiceMessageProvider>
-            <GlobalModalProvider>
-              {children}
-            </GlobalModalProvider>
+            <GlobalModalProvider>{children}</GlobalModalProvider>
           </VoiceMessageProvider>
         </LocalizationProvider>
       </MediaQueryProvider>

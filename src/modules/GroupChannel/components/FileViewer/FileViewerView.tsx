@@ -39,10 +39,10 @@ export const FileViewerView = ({
       onCancel={onCancel}
       onDelete={() => deleteMessage(message).then(() => onCancel())}
       isByMe={config.userId === userId}
-      disableDelete={threadInfo?.replyCount > 0}
+      disableDelete={threadInfo?.replyCount ? threadInfo.replyCount > 0 : false}
       onDownloadClick={onDownloadClick}
     />,
-    document.getElementById(MODAL_ROOT),
+    document.getElementById(MODAL_ROOT) as Element,
   );
 };
 

@@ -58,19 +58,21 @@ export default function ParticipantList({
     <div
       className="sendbird-openchannel-settings__participant-list"
       onScroll={(e) => {
-        const { hasNext } = participantListQuery;
-        const target = e.target as HTMLTextAreaElement;
-        const fetchMore = (
-          target.clientHeight + target.scrollTop === target.scrollHeight
-        );
+        if (participantListQuery) {
+          const { hasNext } = participantListQuery;
+          const target = e.target as HTMLTextAreaElement;
+          const fetchMore = (
+            target.clientHeight + target.scrollTop === target.scrollHeight
+          );
 
-        if (hasNext && fetchMore) {
-          participantListQuery.next().then((fetchedParticipants) => {
-            setParticipants([
-              ...participants,
-              ...fetchedParticipants,
-            ]);
-          });
+          if (hasNext && fetchMore) {
+            participantListQuery.next().then((fetchedParticipants) => {
+              setParticipants([
+                ...(participants ?? []),
+                ...fetchedParticipants,
+              ]);
+            });
+          }
         }
       }}
     >

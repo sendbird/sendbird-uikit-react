@@ -28,7 +28,7 @@ function useResendMessageCallback(
         // userMessage
         if (failedMessage.isUserMessage()) {
           currentGroupChannel
-            .resendMessage(failedMessage)
+            ?.resendMessage(failedMessage)
             .onPending((message) => {
               logger.info('Channel: Resending message start!', message);
               messagesDispatcher({
@@ -52,7 +52,7 @@ function useResendMessageCallback(
             });
         } else if (failedMessage.isFileMessage()) {
           currentGroupChannel
-            .resendMessage(failedMessage)
+            ?.resendMessage(failedMessage)
             .onPending((message) => {
               logger.info('Channel: Resending file message start!', message);
               messagesDispatcher({
@@ -76,7 +76,7 @@ function useResendMessageCallback(
             });
         } else if (failedMessage.isMultipleFilesMessage()) {
           currentGroupChannel
-            .resendMessage(failedMessage)
+            ?.resendMessage(failedMessage)
             .onPending((message) => {
               logger.info('Channel: Resending multiple files message start!', message);
               messagesDispatcher({
@@ -93,7 +93,7 @@ function useResendMessageCallback(
               });
               pubSub.publish(topics.ON_FILE_INFO_UPLOADED, {
                 response: {
-                  channelUrl: currentGroupChannel.url,
+                  channelUrl: currentGroupChannel?.url ?? '',
                   requestId,
                   index,
                   uploadableFileInfo,

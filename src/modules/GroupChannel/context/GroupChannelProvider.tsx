@@ -85,15 +85,15 @@ export interface GroupChannelContextType extends ContextBaseType, MessageListDat
   fetchChannelError: SendbirdError | null;
   nicknamesMap: Map<string, string>;
 
-  scrollRef: React.MutableRefObject<HTMLDivElement>;
+  scrollRef: React.RefObject<HTMLDivElement>;
   scrollDistanceFromBottomRef: React.MutableRefObject<number>;
   scrollPubSub: PubSubTypes<ScrollTopics, ScrollTopicUnion>;
-  messageInputRef: React.MutableRefObject<HTMLDivElement>;
+  messageInputRef: React.RefObject<HTMLDivElement>;
 
   quoteMessage: SendableMessageType | null;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
-  animatedMessageId: number;
-  setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
+  animatedMessageId: number | null;
+  setAnimatedMessageId: React.Dispatch<React.SetStateAction<number | null>>;
   isScrollBottomReached: boolean;
   setIsScrollBottomReached: React.Dispatch<React.SetStateAction<boolean>>;
 
@@ -108,7 +108,7 @@ export interface GroupChannelProviderProps
   children?: React.ReactNode;
 }
 
-export const GroupChannelContext = React.createContext<GroupChannelContextType>(null);
+export const GroupChannelContext = React.createContext<GroupChannelContextType | null>(null);
 export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const {
     channelUrl,
@@ -146,10 +146,10 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const { markAsReadScheduler, logger } = config;
 
   // State
-  const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
+  const [quoteMessage, setQuoteMessage] = useState<SendableMessageType | null>(null);
   const [animatedMessageId, setAnimatedMessageId] = useState<number | null>(null);
   const [currentChannel, setCurrentChannel] = useState<GroupChannel | null>(null);
-  const [fetchChannelError, setFetchChannelError] = useState<SendbirdError>(null);
+  const [fetchChannelError, setFetchChannelError] = useState<SendbirdError | null>(null);
 
   // Ref
   const { scrollRef, scrollPubSub, scrollDistanceFromBottomRef, isScrollBottomReached, setIsScrollBottomReached } = useMessageListScroll(scrollBehavior);
@@ -175,10 +175,10 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   );
 
   const preventDuplicateRequest = usePreventDuplicateRequest();
-  const messageDataSource = useGroupChannelMessages(sdkStore.sdk, currentChannel, {
+  const messageDataSource = useGroupChannelMessages(sdkStore.sdk, currentChannel!, {
     startingPoint,
     replyType: chatReplyType,
-    collectionCreator: getCollectionCreator(currentChannel, messageListQueryParams),
+    collectionCreator: getCollectionCreator(currentChannel!, messageListQueryParams),
     shouldCountNewMessages: () => !isScrollBottomReached,
     markAsRead: (channels) => {
       // isScrollBottomReached is a state that is updated after the render is completed.
@@ -201,7 +201,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       setFetchChannelError(null);
     },
     onChannelUpdated: (channel) => setCurrentChannel(channel),
-    logger,
+    logger: logger as any,
   });
 
   useOnScrollPositionChangeDetectorWithRef(scrollRef, {
@@ -211,17 +211,18 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       await preventDuplicateRequest.run(async () => {
         if (!messageDataSource.hasPrevious()) return;
 
-        const prevViewInfo = { scrollTop: scrollRef.current.scrollTop, scrollHeight: scrollRef.current.scrollHeight };
+        const prevViewInfo = { scrollTop: scrollRef.current?.scrollTop, scrollHeight: scrollRef.current?.scrollHeight };
         await messageDataSource.loadPrevious();
 
         // FIXME: We need a good way to detect right after the rendering of the screen instead of using setTimeout.
         setTimeout(() => {
-          const nextViewInfo = { scrollHeight: scrollRef.current.scrollHeight };
-          const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
-
-          if (viewUpdated) {
-            const bottomOffset = prevViewInfo.scrollHeight - prevViewInfo.scrollTop;
-            scrollPubSub.publish('scroll', { top: nextViewInfo.scrollHeight - bottomOffset, lazy: false, animated: false });
+          const nextViewInfo = { scrollHeight: scrollRef.current?.scrollHeight };
+          if (prevViewInfo.scrollHeight && nextViewInfo.scrollHeight) {
+            const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
+            if (viewUpdated) {
+              const bottomOffset = prevViewInfo.scrollHeight - (prevViewInfo.scrollTop ?? 0);
+              scrollPubSub.publish('scroll', { top: nextViewInfo.scrollHeight - bottomOffset, lazy: false, animated: false });
+            }
           }
         });
       });
@@ -234,15 +235,16 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       await preventDuplicateRequest.run(async () => {
         if (!messageDataSource.hasNext()) return;
 
-        const prevViewInfo = { scrollTop: scrollRef.current.scrollTop, scrollHeight: scrollRef.current.scrollHeight };
+        const prevViewInfo = { scrollTop: scrollRef.current?.scrollTop, scrollHeight: scrollRef.current?.scrollHeight };
         await messageDataSource.loadNext();
 
         setTimeout(() => {
-          const nextViewInfo = { scrollHeight: scrollRef.current.scrollHeight };
-          const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
-
-          if (viewUpdated) {
-            scrollPubSub.publish('scroll', { top: prevViewInfo.scrollTop, lazy: false, animated: false });
+          const nextViewInfo = { scrollHeight: scrollRef.current?.scrollHeight };
+          if (prevViewInfo.scrollHeight && nextViewInfo.scrollHeight) {
+            const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
+            if (viewUpdated) {
+              scrollPubSub.publish('scroll', { top: prevViewInfo.scrollTop, lazy: false, animated: false });
+            }
           }
         });
       });
@@ -265,7 +267,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
         setFetchChannelError(null);
       } catch (error) {
         setCurrentChannel(null);
-        setFetchChannelError(error);
+        setFetchChannelError(error as SendbirdError);
         logger?.error?.('GroupChannelProvider: error when fetching channel', error);
       } finally {
         // Reset states when channel changes
@@ -455,7 +457,7 @@ export const useGroupChannelContext = () => {
 };
 
 function getCollectionCreator(groupChannel: GroupChannel, messageListQueryParams?: MessageListQueryParamsType) {
-  return (defaultParams: MessageListQueryParamsType) => {
+  return (defaultParams?: MessageListQueryParamsType) => {
     const params = { ...defaultParams, prevResultLimit: 30, nextResultLimit: 30, ...messageListQueryParams };
     return groupChannel.createMessageCollection({
       ...params,

@@ -86,8 +86,8 @@ export const compressImages = async ({
   imageCompression,
 }: CompressImagesParams) => {
   const { compressionRate, outputFormat = 'preserve' } = imageCompression;
-  const resizingWidth = pxToNumber(imageCompression.resizingWidth);
-  const resizingHeight = pxToNumber(imageCompression.resizingHeight);
+  const resizingWidth = imageCompression.resizingWidth ? pxToNumber(imageCompression.resizingWidth) : undefined;
+  const resizingHeight = imageCompression.resizingHeight ? pxToNumber(imageCompression.resizingHeight) : undefined;
 
   const result = {
     failedIndexes: [] as number[],
@@ -98,7 +98,7 @@ export const compressImages = async ({
     logger?.warning('utils - compressImages: There are no files.', files);
     return result;
   }
-  if (compressionRate < 0 || 1 < compressionRate) {
+  if (!compressionRate || compressionRate < 0 || 1 < compressionRate) {
     logger?.warning('utils - compressImages: The compressionRate is not acceptable.', compressionRate);
     return result;
   }

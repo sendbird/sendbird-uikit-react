@@ -73,20 +73,23 @@ export const VoicePlayerProvider = ({
     }
   };
 
-  const pause = (groupKey: string | null) => {
-    if (currentGroupKey === groupKey && currentPlayer !== null) {
-      logger.info('VoicePlayer: Pause playing(by group key).');
-      currentPlayer?.pause();
-    }
-    if (groupKey === ALL) {
-      logger.info('VoicePlayer: Pause playing(all).');
-      currentPlayer?.pause();
+  const pause = (groupKey?: string) => {
+    if (currentPlayer) {
+      if (groupKey === currentGroupKey) {
+        logger.info('VoicePlayer: Pause playing(by group key).');
+        currentPlayer.pause();
+      } else if (groupKey === ALL) {
+        logger.info('VoicePlayer: Pause playing(all).');
+        currentPlayer.pause();
+      }
+    } else {
+      logger.warning('VoicePlayer: No currentPlayer to pause.');
     }
   };
 
   const play = ({
     groupKey,
-    audioFile = null,
+    audioFile,
     audioFileUrl = '',
   }: VoicePlayerPlayProps): void => {
     if (groupKey !== currentGroupKey) {
@@ -96,7 +99,7 @@ export const VoicePlayerProvider = ({
     // Clear the previous AudioPlayer element
     const voicePlayerRoot = document.getElementById(VOICE_PLAYER_ROOT_ID);
     const voicePlayerAudioElement = document.getElementById(VOICE_PLAYER_AUDIO_ID);
-    if (voicePlayerAudioElement) {
+    if (voicePlayerRoot && voicePlayerAudioElement) {
       voicePlayerRoot.removeChild(voicePlayerAudioElement);
     }
 

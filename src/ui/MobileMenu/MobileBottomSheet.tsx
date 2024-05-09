@@ -37,7 +37,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     resendMessage,
     deleteMessage,
     toggleReaction,
-    isReactionEnabled,
+    isReactionEnabled = false,
     showEdit,
     showRemove,
     deleteMenuState,
@@ -81,12 +81,12 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
   const fileMessage = message as FileMessage;
   const maxEmojisPerRow = Math.floor(window.innerWidth / EMOJI_SIZE) - 1;
   const [showEmojisOnly, setShowEmojisOnly] = useState<boolean>(false);
-  const emojis = getEmojiListAll(emojiContainer);
+  const emojis = emojiContainer && getEmojiListAll(emojiContainer);
   // calculate max emojis that can be shown in screen
   const visibleEmojis = showEmojisOnly
     ? emojis
     : emojis?.slice(0, maxEmojisPerRow);
-  const canShowMoreEmojis = emojis.length > maxEmojisPerRow;
+  const canShowMoreEmojis = emojis && emojis.length > maxEmojisPerRow;
   return (
     <BottomSheet onBackdropClick={hideMenu}>
       <div className='sendbird-message__bottomsheet'>
@@ -115,7 +115,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                         selected={isReacted}
                         onClick={(): void => {
                           hideMenu();
-                          toggleReaction(message, emoji.key, isReacted);
+                          toggleReaction?.(message, emoji.key, isReacted);
                         }}
                         dataSbId={`ui_mobile_emoji_reactions_menu_${emoji.key}`}
                       >
@@ -199,7 +199,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                     className='sendbird-message__bottomsheet--action'
                     onClick={() => {
                       hideMenu();
-                      showEdit(true);
+                      showEdit?.(true);
                     }}
                   >
                     <Icon
@@ -220,7 +220,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                     className='sendbird-message__bottomsheet--action'
                     onClick={() => {
                       hideMenu();
-                      resendMessage(message);
+                      resendMessage?.(message);
                     }}
                   >
                     <Icon
@@ -246,7 +246,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                     onClick={() => {
                       if (!disableReaction) {
                         hideMenu();
-                        setQuoteMessage(message);
+                        setQuoteMessage?.(message);
                       }
                     }}
                   >

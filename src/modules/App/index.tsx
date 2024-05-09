@@ -12,6 +12,7 @@ import { AppLayout } from './AppLayout';
 import './index.scss';
 
 import { AppLayoutProps } from './types';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 export interface AppProps {
   appId: SendbirdProviderProps['appId'];
@@ -75,21 +76,21 @@ export default function App(props: AppProps) {
     accessToken = '',
     customApiHost = '',
     customWebSocketHost = '',
-    breakpoint = null,
+    breakpoint,
     theme = 'light',
-    userListQuery = null,
+    userListQuery,
     nickname = '',
     profileUrl = '',
-    dateLocale = null,
+    dateLocale,
     config = {},
     voiceRecord,
     isMessageGroupingEnabled = true,
-    colorSet = null,
-    stringSet = null,
+    colorSet,
+    stringSet,
     allowProfileEdit = false,
     disableMarkAsDelivered = false,
-    renderUserProfile = null,
-    onProfileEditSuccess = null,
+    renderUserProfile,
+    onProfileEditSuccess,
     imageCompression = {},
     disableAutoSelect = false,
     sdkInitParams,
@@ -111,7 +112,7 @@ export default function App(props: AppProps) {
     isTypingIndicatorEnabledOnChannelList,
     isMessageReceiptStatusEnabledOnChannelList,
   } = props;
-  const [currentChannel, setCurrentChannel] = useState(null);
+  const [currentChannel, setCurrentChannel] = useState<GroupChannel>();
 
   return (
     <Sendbird
@@ -125,10 +126,10 @@ export default function App(props: AppProps) {
       theme={theme}
       nickname={nickname}
       profileUrl={profileUrl}
-      dateLocale={dateLocale}
+      dateLocale={dateLocale }
       userListQuery={userListQuery}
       config={config}
-      colorSet={colorSet}
+      colorSet={colorSet }
       disableMarkAsDelivered={disableMarkAsDelivered}
       renderUserProfile={renderUserProfile}
       imageCompression={imageCompression}

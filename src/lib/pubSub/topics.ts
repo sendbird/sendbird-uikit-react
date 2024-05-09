@@ -86,13 +86,13 @@ export type SBUGlobalPubSubTopicPayloadUnion =
   | {
       topic: PUBSUB_TOPICS.LEAVE_CHANNEL;
       payload: {
-        channel: GroupChannel | OpenChannel;
+        channel: GroupChannel;
       };
     }
   | {
       topic: PUBSUB_TOPICS.CREATE_CHANNEL;
       payload: {
-        channel: GroupChannel | OpenChannel;
+        channel: GroupChannel;
       };
     }
   | {

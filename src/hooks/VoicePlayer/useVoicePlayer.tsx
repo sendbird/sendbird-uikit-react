@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useVoicePlayerContext } from '.';
 import { VOICE_PLAYER_AUDIO_ID } from '../../utils/consts';
 import { useVoiceRecorderContext } from '../VoiceRecorder';
@@ -7,8 +7,8 @@ import { AudioUnitDefaultValue, VoicePlayerStatusType } from './dux/initialState
 import { generateGroupKey } from './utils';
 
 export interface UseVoicePlayerProps {
-  key: string;
-  channelUrl: string;
+  key?: string;
+  channelUrl?: string;
   audioFile?: File;
   audioFileUrl?: string;
 }
@@ -25,10 +25,10 @@ export interface UseVoicePlayerContext {
 export const useVoicePlayer = ({
   key = '',
   channelUrl = '',
-  audioFile = null,
+  audioFile,
   audioFileUrl = '',
 }: UseVoicePlayerProps): UseVoicePlayerContext => {
-  const [groupKey] = useState<string>(generateGroupKey(channelUrl, key));
+  const groupKey = generateGroupKey(channelUrl, key);
   const {
     play,
     pause,

@@ -36,11 +36,11 @@ export default function OGMessageItemBody({
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
 
-  const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers?.length > 0;
+  const isMessageMentioned = isMentionEnabled && message?.mentionedMessageTemplate?.length > 0 && message?.mentionedUsers && message?.mentionedUsers?.length > 0;
   const tokens = useMemo(() => {
     if (isMessageMentioned) {
       return tokenizeMessage({
-        mentionedUsers: message?.mentionedUsers,
+        mentionedUsers: message?.mentionedUsers ?? undefined,
         messageText: message?.mentionedMessageTemplate,
       });
     }
@@ -54,7 +54,7 @@ export default function OGMessageItemBody({
   return (
     <div
       className={getClassName([
-        className,
+        className ?? '',
         'sendbird-og-message-item-body',
         isByMe ? 'outgoing' : 'incoming',
         mouseHover ? 'mouse-hover' : '',
@@ -105,7 +105,7 @@ const OGImageSection = (props: { onClick: () => void; ogImage: OGImage; onMessag
       <ImageRenderer
         className="sendbird-og-message-item-body__og-thumbnail__image"
         url={ogImage.url || ''}
-        alt={ogImage.alt}
+        alt={ogImage.alt || ''}
         width="100%"
         height={isMobile ? '136px' : '240px'}
         onLoad={onMessageHeightChange}

@@ -44,7 +44,7 @@ interface ChannelSettingsProviderInterface {
   onLeaveChannel?(): void;
   overrideInviteUser?(params: OverrideInviteUserType): void;
   onChannelModified?(channel: GroupChannel): void;
-  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
+  onBeforeUpdateChannel?(currentTitle: string, currentImg: File | null, data: string | undefined): GroupChannelUpdateParams;
   queries?: ChannelSettingsQueries;
   setChannelUpdateId(uniqId: string): void;
   forceUpdateUI(): void;
@@ -99,7 +99,7 @@ const ChannelSettingsProvider = ({
       try {
         return await sdkStore.sdk.groupChannel.getChannel(channelUrl);
       } catch (error) {
-        logger.error('ChannelSettings: fetching channel error:', error.message);
+        logger.error('ChannelSettings: fetching channel error:', error);
         throw error;
       }
     },
@@ -142,5 +142,10 @@ const ChannelSettingsProvider = ({
   );
 };
 
-const useChannelSettingsContext = () => React.useContext(ChannelSettingsContext);
+const useChannelSettingsContext = () => {
+  const context = React.useContext(ChannelSettingsContext);
+  if (!context) throw new Error('ChannelSettingsContext not found. Use within the ChannelSettings module');
+
+  return context;
+};
 export { ChannelSettingsProvider, useChannelSettingsContext };

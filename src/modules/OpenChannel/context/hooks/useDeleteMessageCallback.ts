@@ -6,7 +6,7 @@ import { SendableMessageType } from '../../../../utils';
 import { Logger } from '../../../../lib/SendbirdState';
 
 interface DynamicParams {
-  currentOpenChannel: OpenChannel;
+  currentOpenChannel: OpenChannel | null;
 }
 
 type MessagesDispatcherType = {
@@ -46,7 +46,7 @@ function useDeleteMessageCallback(
         return;
       }
       const messageToDelete = message as UserMessage;
-      currentOpenChannel.deleteMessage(messageToDelete).then(() => {
+      currentOpenChannel?.deleteMessage(messageToDelete).then(() => {
         logger.info('OpenChannel | useDeleteMessageCallback: Deleting message on server', sendingStatus);
         if (callback) {
           callback();

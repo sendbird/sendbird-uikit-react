@@ -13,6 +13,7 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import { BannedUserListQuery, RestrictedUser } from '@sendbird/chat';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
 interface Props {
@@ -22,17 +23,19 @@ interface Props {
 export default function BannedUsersModal({
   onCancel,
 }: Props): ReactElement {
-  const [members, setMembers] = useState([]);
-  const [memberQuery, setMemberQuery] = useState(null);
+  const [members, setMembers] = useState<RestrictedUser[]>([]);
+  const [memberQuery, setMemberQuery] = useState<BannedUserListQuery | null>(null);
   const { channel } = useChannelSettingsContext();
   const { stringSet } = useLocalization();
 
   useEffect(() => {
     const bannedUserListQuery = channel?.createBannedUserListQuery();
-    bannedUserListQuery.next().then((users) => {
-      setMembers(users);
-    });
-    setMemberQuery(bannedUserListQuery);
+    if (bannedUserListQuery) {
+      bannedUserListQuery.next().then((users) => {
+        setMembers(users);
+      });
+      setMemberQuery(bannedUserListQuery);
+    }
   }, []);
   return (
     <div>
@@ -47,6 +50,7 @@ export default function BannedUsersModal({
           className="sendbird-more-members__popup-scroll"
           onScroll={useOnScrollPositionChangeDetector({
             onReachedBottom: async () => {
+              if (!memberQuery) return;
               const { hasNext } = memberQuery;
               if (hasNext) {
                 memberQuery.next().then((o) => {

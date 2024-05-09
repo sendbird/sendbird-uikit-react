@@ -177,7 +177,7 @@ export default function FileViewer({
             return {
               name: fileInfo.fileName || '',
               type: fileInfo.mimeType || '',
-              url: fileInfo.url,
+              url: fileInfo.url || '',
             };
           })
         }

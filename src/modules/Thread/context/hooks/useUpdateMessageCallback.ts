@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { UserMessage, UserMessageUpdateParams } from '@sendbird/chat/message';
 
@@ -9,7 +10,7 @@ import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { PublishingModuleType } from '../../../internalInterfaces';
 
 interface DynamicProps {
-  currentChannel: GroupChannel;
+  currentChannel: GroupChannel | null;
   isMentionEnabled?: boolean;
 }
 interface StaticProps {
@@ -17,6 +18,13 @@ interface StaticProps {
   pubSub: SBUGlobalPubSub;
   threadDispatcher: CustomUseReducerDispatcher;
 }
+
+type CallbackParams = {
+  messageId: number;
+  message: string;
+  mentionedUsers?: User[];
+  mentionTemplate?: string;
+};
 
 export default function useUpdateMessageCallback({
   currentChannel,
@@ -27,7 +35,7 @@ export default function useUpdateMessageCallback({
   threadDispatcher,
 }: StaticProps) {
   // TODO: add type
-  return useCallback((props) => {
+  return useCallback((props: CallbackParams) => {
     const {
       messageId,
       message,
@@ -37,7 +45,7 @@ export default function useUpdateMessageCallback({
     const createParamsDefault = () => {
       const params = {} as UserMessageUpdateParams;
       params.message = message;
-      if (isMentionEnabled && mentionedUsers?.length > 0) {
+      if (isMentionEnabled && mentionedUsers && mentionedUsers?.length > 0) {
         params.mentionedUsers = mentionedUsers;
       }
       if (isMentionEnabled && mentionTemplate) {

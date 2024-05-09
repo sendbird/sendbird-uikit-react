@@ -17,6 +17,7 @@ import { Role } from '../../../../lib/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { useHandleUploadFiles } from '../../../Channel/context/hooks/useHandleUploadFiles';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channel/context/utils';
+import { User } from '@sendbird/chat';
 
 export interface ThreadMessageInputProps {
   className?: string;
@@ -77,11 +78,11 @@ const ThreadMessageInput = (
 
   // mention
   const [mentionNickname, setMentionNickname] = useState('');
-  const [mentionedUsers, setMentionedUsers] = useState([]);
-  const [mentionedUserIds, setMentionedUserIds] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
-  const [messageInputEvent, setMessageInputEvent] = useState(null);
+  const [mentionedUsers, setMentionedUsers] = useState<User[]>([]);
+  const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User|null>(null);
+  const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState<User[]>([]);
+  const [messageInputEvent, setMessageInputEvent] = useState<React.KeyboardEvent<HTMLDivElement> | null>(null);
   const [showVoiceMessageInput, setShowVoiceMessageInput] = useState(false);
   const displaySuggestedMentionList = isOnline
     && isMentionEnabled
@@ -111,7 +112,7 @@ const ThreadMessageInput = (
   }, [mentionedUserIds]);
 
   if (currentChannel?.isBroadcast && currentChannel?.myRole !== Role.OPERATOR) {
-    return null;
+    return <></>;
   }
 
   return (
@@ -120,7 +121,7 @@ const ThreadMessageInput = (
         displaySuggestedMentionList && (
           <SuggestedMentionList
             targetNickname={mentionNickname}
-            inputEvent={messageInputEvent}
+            inputEvent={messageInputEvent ?? undefined}
             // renderUserMentionItem={renderUserMentionItem}
             onUserItemClick={(user) => {
               if (user) {

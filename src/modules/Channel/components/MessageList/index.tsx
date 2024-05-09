@@ -72,7 +72,7 @@ export const MessageList = (props: MessageListProps) => {
   } = useChannelContext();
 
   const store = useSendbirdStateContext();
-  const allMessagesFiltered = typeof filterMessageList === 'function' ? allMessages.filter(filterMessageList as (message: EveryMessage) => boolean) : allMessages;
+  const allMessagesFiltered = typeof filterMessageList === 'function' ? allMessages.filter(filterMessageList) : allMessages;
   const markAsReadScheduler = store.config.markAsReadScheduler;
 
   const [isScrollBottom, setIsScrollBottom] = useState(false);
@@ -111,8 +111,8 @@ export const MessageList = (props: MessageListProps) => {
     setInitialTimeStamp?.(null);
     setAnimatedMessageId?.(null);
     setHighLightedMessageId?.(null);
-    if (scrollRef?.current?.scrollTop > -1) {
-      scrollRef.current.scrollTop = (scrollRef?.current?.scrollHeight ?? 0) - (scrollRef?.current?.offsetHeight ?? 0);
+    if (scrollRef.current && scrollRef.current.scrollTop > -1) {
+      scrollRef.current.scrollTop = (scrollRef.current.scrollHeight ?? 0) - (scrollRef.current.offsetHeight ?? 0);
     }
   };
 

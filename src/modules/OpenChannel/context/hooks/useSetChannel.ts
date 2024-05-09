@@ -10,7 +10,7 @@ interface DynamicParams {
   sdkInit: boolean;
   fetchingParticipants: boolean;
   userId: string;
-  currentOpenChannel: OpenChannel;
+  currentOpenChannel: OpenChannel | null;
 }
 interface StaticParams {
   sdk: SdkStore['sdk'];

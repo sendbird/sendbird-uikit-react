@@ -34,7 +34,7 @@ type MessageActions = {
 
 interface Params extends GroupChannelProviderProps, MessageListDataSource {
   scrollToBottom(animated?: boolean): Promise<void>;
-  quoteMessage?: SendableMessageType;
+  quoteMessage?: SendableMessageType | null;
   replyType: ReplyType;
 }
 
@@ -67,7 +67,7 @@ export function useMessageActions(params: Params): MessageActions {
 
       if (params.quoteMessage && replyType !== 'NONE') {
         messageParams.isReplyToChannel = true;
-        messageParams.parentMessageId = quoteMessage.messageId;
+        messageParams.parentMessageId = quoteMessage?.messageId;
       }
 
       return messageParams;

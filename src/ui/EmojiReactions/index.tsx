@@ -26,7 +26,7 @@ export interface EmojiReactionsProps {
   message: SendableMessageType;
   channel: Nullable<GroupChannel>;
   emojiContainer: EmojiContainer;
-  memberNicknamesMap: Map<string, string>;
+  memberNicknamesMap: Map<string, string> ;
   spaceFromTrigger?: SpaceFromTriggerType;
   isByMe?: boolean;
   toggleReaction?: (message: SendableMessageType, key: string, byMe: boolean) => void;
@@ -48,10 +48,10 @@ const EmojiReactions = ({
   let showTheReactedMembers = false;
   try {
     const { config } = useSendbirdStateContext();
-    showTheReactedMembers = getIsReactionEnabled({
+    showTheReactedMembers = channel ? getIsReactionEnabled({
       channel,
       config,
-    });
+    }) : false;
   } catch (err) {
     // TODO: Handle error
   }

@@ -9,6 +9,8 @@ import {
   VOICE_RECORDER_AUDIO_BIT_RATE,
 } from '../../utils/consts';
 import useSendbirdStateContext from '../useSendbirdStateContext';
+import { type WebAudioUtils } from './WebAudioUtils';
+import { noop } from '../../utils/utils';
 
 // Input props of VoiceRecorder
 export interface VoiceRecorderProps {
@@ -22,11 +24,11 @@ export interface VoiceRecorderEventHandler {
 
 // Output of VoiceRecorder
 export interface VoiceRecorderContext {
-  start: (eventHandler?: VoiceRecorderEventHandler) => void,
-  stop: () => void,
+  start: (eventHandler?: VoiceRecorderEventHandler) => void;
+  stop: () => void;
   isRecordable: boolean;
 }
-const noop = () => { /* noop */ };
+
 const Context = createContext<VoiceRecorderContext>({
   start: noop,
   stop: noop,
@@ -37,13 +39,13 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
   const { children } = props;
   const { config } = useSendbirdStateContext();
   const { logger, groupChannel } = config;
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>(null);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [isRecordable, setIsRecordable] = useState<boolean>(false);
   const [permissionWarning, setPermissionWarning] = useState<boolean>(false);
   const { stringSet } = useLocalization();
 
   const isVoiceMessageEnabled = groupChannel.enableVoiceMessage;
-  const [webAudioUtils, setWebAudioUtils] = useState(null);
+  const [webAudioUtils, setWebAudioUtils] = useState<WebAudioUtils | null>(null);
 
   const browserSupportMimeType = BROWSER_SUPPORT_MIME_TYPE_LIST.find((mimeType) => MediaRecorder.isTypeSupported(mimeType)) ?? '';
   if (isVoiceMessageEnabled && !browserSupportMimeType) {
@@ -52,13 +54,11 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
 
   useEffect(() => {
     if (isVoiceMessageEnabled && !webAudioUtils) {
-      import('./WebAudioUtils').then((data) => {
-        setWebAudioUtils(data);
-      });
+      import('./WebAudioUtils').then((module) => setWebAudioUtils(module));
     }
   }, [isVoiceMessageEnabled, webAudioUtils]);
 
-  const start = useCallback((eventHandler: VoiceRecorderEventHandler): void => {
+  const start = useCallback((eventHandler?: VoiceRecorderEventHandler): void => {
     if (isVoiceMessageEnabled && !webAudioUtils) {
       logger.error('VoiceRecorder: Recording audio processor is being loaded.');
       return;
@@ -95,7 +95,8 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
           mimeType: browserSupportMimeType,
           audioBitsPerSecond: VOICE_RECORDER_AUDIO_BIT_RATE,
         });
-        mediaRecorder.ondataavailable = (e) => { // when recording stops
+        // when recording stops
+        mediaRecorder.ondataavailable = (e) => {
           logger.info('VoiceRecorder: Succeeded getting an available data.', e.data);
           const audioFile = new File([e.data], VOICE_MESSAGE_FILE_NAME, {
             lastModified: new Date().getTime(),
@@ -108,10 +109,11 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
               lastModified: new Date().getTime(),
               type: VOICE_MESSAGE_MIME_TYPE,
             });
-            eventHandler?.onRecordingEnded(convertedAudioFile);
+            eventHandler?.onRecordingEnded?.(convertedAudioFile);
             logger.info('VoiceRecorder: Succeeded converting audio file.', convertedAudioFile);
           });
-          stream?.getAudioTracks?.().forEach?.(track => track?.stop());
+          const tracks = stream.getAudioTracks();
+          tracks.forEach((track) => track.stop());
           setIsRecordable(false);
         };
         mediaRecorder.onstart = eventHandler?.onRecordingStarted ?? noop;
@@ -133,22 +135,13 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
   }, [mediaRecorder]);
 
   return (
-    <Context.Provider value={{
-      start,
-      stop,
-      isRecordable,
-    }}>
+    <Context.Provider value={{ start, stop, isRecordable }}>
       {children}
-      {
-        permissionWarning && (
-          <Modal
-            hideFooter
-            onCancel={() => setPermissionWarning(false)}
-          >
-            <>{stringSet.VOICE_RECORDING_PERMISSION_DENIED}</>
-          </Modal>
-        )
-      }
+      {permissionWarning && (
+        <Modal hideFooter onClose={() => setPermissionWarning(false)}>
+          <>{stringSet.VOICE_RECORDING_PERMISSION_DENIED}</>
+        </Modal>
+      )}
     </Context.Provider>
   );
 };

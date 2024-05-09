@@ -10,6 +10,7 @@ import { Colors } from '../../utils/color';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/GroupChannelProvider';
+import { LoggerInterface } from '../../lib/Logger';
 import { openURL } from '../../utils/utils';
 
 interface Props {
@@ -23,22 +24,22 @@ interface Props {
 }
 
 export default function FileMessageItemBody({
-  className,
+  className = '',
   message,
   isByMe = false,
   mouseHover = false,
   isReactionEnabled = false,
-  truncateLimit = null,
-  onBeforeDownloadFileMessage = null,
+  truncateLimit,
+  onBeforeDownloadFileMessage,
 }: Props): ReactElement {
-  let logger = null;
+  let logger: LoggerInterface | null = null;
   try {
     logger = useSendbirdStateContext()?.config?.logger;
   } catch (err) {
     // TODO: Handle error
   }
   const { isMobile } = useMediaQueryContext();
-  const truncateMaxNum = truncateLimit || (isMobile ? 20 : null);
+  const truncateMaxNum = truncateLimit ?? (isMobile ? 20 : undefined);
 
   const downloadFileWithUrl = () => openURL(message?.url);
   const handleOnClickTextButton = onBeforeDownloadFileMessage

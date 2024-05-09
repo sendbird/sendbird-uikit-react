@@ -50,7 +50,7 @@ export default function OpenChannelMessage(
   const currentUserId = globalState?.config?.userId;
   const isOgMessageEnabledInOpenChannel = globalState.config.openChannel.enableOgtag;
 
-  let sender: User = null;
+  let sender: User | undefined;
   if (message?.messageType !== 'admin') {
     sender = (message as SendableMessageType)?.sender;
   }

@@ -8,17 +8,12 @@ import { SendableMessageType } from '../../../utils';
 
 export const getMessageCreatedAt = (message: SendableMessageType): string => format(message.createdAt, 'p');
 
-export const shouldFetchMore = (messageLength: number, maxMessages: number): boolean => {
+export const shouldFetchMore = (messageLength: number, maxMessages?: number): boolean => {
   if (typeof maxMessages !== 'number') {
     return true;
   }
 
-  if (typeof maxMessages === 'number'
-    && maxMessages > messageLength
-  ) {
-    return true;
-  }
-  return false;
+  return maxMessages > messageLength;
 };
 
 /* eslint-disable default-param-last */
@@ -31,7 +26,9 @@ export const scrollIntoLast = (initialTry = 0, scrollRef: React.RefObject<HTMLEl
   try {
     const scrollDOM = scrollRef?.current || document.querySelector('.sendbird-openchannel-conversation-scroll__container__item-container');
     // eslint-disable-next-line no-multi-assign
-    scrollDOM.scrollTop = scrollDOM.scrollHeight;
+    if (scrollDOM) {
+      scrollDOM.scrollTop = scrollDOM.scrollHeight;
+    }
   } catch (error) {
     setTimeout(() => {
       scrollIntoLast(currentTry + 1, scrollRef);
@@ -59,8 +56,9 @@ export const isOperator = (openChannel: OpenChannel, userId: string): boolean =>
   return true;
 };
 
-export const isDisabledBecauseFrozen = (openChannel: OpenChannel, userId: string): boolean => {
-  const isFrozen = openChannel?.isFrozen;
+export const isDisabledBecauseFrozen = (openChannel: OpenChannel | null, userId: string): boolean => {
+  if (!openChannel) return false;
+  const isFrozen = openChannel.isFrozen;
   return isFrozen && !isOperator(openChannel, userId);
 };
 
@@ -88,17 +86,4 @@ export const fetchWithListQuery = (
   };
   logger.info('OpenChannel | FetchUserList start', listQuery);
   fetchList(listQuery);
-};
-
-export const pxToNumber = (px: string | number): number | void => {
-  if (typeof px === 'number') {
-    return px;
-  }
-  if (typeof px === 'string') {
-    const parsed = Number.parseFloat(px);
-    if (!Number.isNaN(parsed)) {
-      return parsed;
-    }
-  }
-  return null;
 };

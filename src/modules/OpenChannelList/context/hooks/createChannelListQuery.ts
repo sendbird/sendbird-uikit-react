@@ -7,7 +7,7 @@ import { SdkStore } from '../../../../lib/types';
 interface createChannelListQueryProps {
   sdk: SdkStore['sdk'];
   logMessage: string;
-  openChannelListQuery: UserFilledOpenChannelListQuery;
+  openChannelListQuery?: UserFilledOpenChannelListQuery;
   logger: Logger;
   openChannelListDispatcher: OpenChannelListDispatcherType;
 }
@@ -24,6 +24,7 @@ function createChannelListQuery({
   params.includeFrozen = true;
   if (openChannelListQuery) {
     Object.keys(openChannelListQuery).forEach((key) => {
+      // @ts-ignore
       params[key] = openChannelListQuery[key];
     });
   }

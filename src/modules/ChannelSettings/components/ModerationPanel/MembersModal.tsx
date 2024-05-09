@@ -4,8 +4,8 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import type { Member } from '@sendbird/chat/groupChannel';
 import { Role } from '@sendbird/chat';
+import { type Member, MemberListQuery } from '@sendbird/chat/groupChannel';
 
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
@@ -24,8 +24,8 @@ interface Props {
 }
 
 export default function MembersModal({ onCancel }: Props): ReactElement {
-  const [members, setMembers] = useState([]);
-  const [memberQuery, setMemberQuery] = useState(null);
+  const [members, setMembers] = useState<Member[]>([]);
+  const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
 
   const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
@@ -36,10 +36,10 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
     const memberListQuery = channel?.createMemberListQuery({
       limit: 20,
     });
-    memberListQuery.next().then((members) => {
+    memberListQuery?.next().then((members) => {
       setMembers(members);
     });
-    setMemberQuery(memberListQuery);
+    setMemberQuery(memberListQuery ?? null);
   }, []);
   return (
     <div>
@@ -54,8 +54,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
           className="sendbird-more-members__popup-scroll"
           onScroll={useOnScrollPositionChangeDetector({
             onReachedBottom: async () => {
-              const { hasNext } = memberQuery;
-              if (hasNext) {
+              if (memberQuery && memberQuery.hasNext) {
                 memberQuery.next().then((o) => {
                   setMembers([
                     ...members,
@@ -106,15 +105,13 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                 user={member}
                                 disable={currentUserId === member.userId}
                                 onChange={(_, member, isOperator) => {
-                                  setMembers(members.map(m => {
-                                    if (m.userId === member.userId) {
-                                      return {
-                                        ...member,
-                                        role: isOperator ? Role.OPERATOR : Role.NONE,
-                                      };
+                                  const newMembers = [...members];
+                                  for (const newMember of newMembers) {
+                                    if (newMember.userId === member.userId) {
+                                      newMember.role = isOperator ? Role.OPERATOR : Role.NONE;
                                     }
-                                    return m;
-                                  }));
+                                  }
+                                  setMembers(newMembers);
                                   closeDropdown();
                                 }}
                                 onError={() => {
@@ -138,15 +135,13 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                     channel={channel}
                                     user={member}
                                     onChange={(_, member, isMuted) => {
-                                      setMembers(members.map(m => {
-                                        if (m.userId === member.userId) {
-                                          return {
-                                            ...member,
-                                            isMuted,
-                                          };
+                                      const newMembers = [...members];
+                                      for (const newMember of newMembers) {
+                                        if (newMember.userId === member.userId) {
+                                          newMember.isMuted = isMuted;
                                         }
-                                        return m;
-                                      }));
+                                      }
+                                      setMembers(newMembers);
                                       closeDropdown();
                                     }}
                                     onError={() => {

@@ -26,12 +26,12 @@ export function getMessageTopOffset(messageCreatedAt: number): number | null {
   return null;
 }
 
-export const isDisabledBecauseFrozen = (groupChannel?: GroupChannel) => {
+export const isDisabledBecauseFrozen = (groupChannel?: GroupChannel | null) => {
   if (!groupChannel) return false;
   return groupChannel.isFrozen && groupChannel.myRole !== 'operator';
 };
 
-export const isDisabledBecauseMuted = (groupChannel?: GroupChannel) => {
+export const isDisabledBecauseMuted = (groupChannel?: GroupChannel | null) => {
   if (!groupChannel) return false;
   return groupChannel.myMutedState === 'muted';
 };

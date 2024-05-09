@@ -84,7 +84,7 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto') {
 
           if (scrollRef.current.scroll) {
             scrollRef.current.scroll({ top, behavior: getScrollBehavior(behavior, animated) });
-          } else {
+          } else if (typeof top === 'number') {
             scrollRef.current.scrollTop = top;
           }
 

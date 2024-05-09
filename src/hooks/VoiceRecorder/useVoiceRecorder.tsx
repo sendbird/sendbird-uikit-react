@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { VoiceRecorderEventHandler, useVoiceRecorderContext } from '.';
 import useSendbirdStateContext from '../useSendbirdStateContext';
+import { noop } from '../../utils/utils';
 
 // export interface UseVoiceRecorderProps extends VoiceRecorderEventHandler {
 //   /**
@@ -22,11 +23,9 @@ export interface UseVoiceRecorderContext {
   cancel: () => void;
   recordingLimit: number;
   recordingTime: number;
-  recordedFile: File;
+  recordedFile: File | null;
   recordingStatus: VoiceRecorderStatus;
 }
-
-const noop = () => { /* noop */ };
 
 export const useVoiceRecorder = ({
   onRecordingStarted = noop,
@@ -34,11 +33,11 @@ export const useVoiceRecorder = ({
 }: VoiceRecorderEventHandler): UseVoiceRecorderContext => {
   const { config } = useSendbirdStateContext();
   const { voiceRecord } = config;
-  const { maxRecordingTime } = voiceRecord;
+  const maxRecordingTime = voiceRecord.maxRecordingTime;
   const voiceRecorder = useVoiceRecorderContext();
   const { isRecordable } = voiceRecorder;
 
-  const [recordedFile, setRecordedFile] = useState<File>(null);
+  const [recordedFile, setRecordedFile] = useState<File | null>(null);
   const [recordingStatus, setRecordingStatus] = useState<VoiceRecorderStatus>(VoiceRecorderStatus.PREPARING);
   useEffect(() => {
     if (isRecordable && recordingStatus === VoiceRecorderStatus.PREPARING) {
@@ -72,11 +71,12 @@ export const useVoiceRecorder = ({
 
   // Timer
   const [recordingTime, setRecordingTime] = useState<number>(0);
-  let timer: ReturnType<typeof setInterval> = null;
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
   function startTimer() {
     stopTimer();
     setRecordingTime(0);
-    const interval = setInterval(() => {
+
+    timer.current = setInterval(() => {
       setRecordingTime(prevTime => {
         const newTime = prevTime + 100;
         if (newTime > maxRecordingTime) {
@@ -85,11 +85,12 @@ export const useVoiceRecorder = ({
         return newTime;
       });
     }, 100);
-    timer = interval;
   }
   function stopTimer() {
-    clearInterval(timer);
-    timer = null;
+    if (timer.current) {
+      clearInterval(timer.current);
+      timer.current = null;
+    }
   }
   useEffect(() => {
     if (recordingTime > maxRecordingTime) {

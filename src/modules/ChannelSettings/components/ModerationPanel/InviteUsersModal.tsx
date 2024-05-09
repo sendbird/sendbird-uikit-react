@@ -17,8 +17,8 @@ interface Props {
 }
 
 export default function InviteUsers({ onCancel, onSubmit }: Props) {
-  const [users, setUsers] = useState([]);
-  const [userListQuery, setUserListQuery] = useState(null);
+  const [users, setUsers] = useState<User[]>([]);
+  const [userListQuery, setUserListQuery] = useState<UserListQuery | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<Record<UserId, User>>({});
 
   const state = useSendbirdStateContext();
@@ -39,7 +39,7 @@ export default function InviteUsers({ onCancel, onSubmit }: Props) {
 
   const onInviteUsers = async () => {
     const userIdsToInvite = Object.keys(selectedUsers);
-    if (typeof overrideInviteUser === 'function') {
+    if (channel && typeof overrideInviteUser === 'function') {
       overrideInviteUser({ users: userIdsToInvite, onClose: onCancel, channel });
     } else {
       await channel?.inviteWithUserIds(userIdsToInvite);
@@ -60,7 +60,7 @@ export default function InviteUsers({ onCancel, onSubmit }: Props) {
 
   const membersMap = useMemo(() => {
     // UIKit policy: In a super or broadcast channel, do not check the members when inviting users.
-    if (channel?.isSuper || channel?.isBroadcast) return { [sdk.currentUser.userId]: sdk.currentUser };
+    if (channel?.isSuper || channel?.isBroadcast) return { [sdk.currentUser?.userId ?? '']: sdk.currentUser };
 
     return channel?.members.reduce((acc, cur) => {
       acc[cur.userId] = cur;
@@ -95,7 +95,7 @@ export default function InviteUsers({ onCancel, onSubmit }: Props) {
         <div className="sendbird-more-members__popup-scroll" onScroll={onScroll}>
           <div className="sendbird-more-members__popup-scroll__inner">
             {users.map((user) => {
-              const isMember = Boolean(membersMap[user.userId]);
+              const isMember = Boolean(membersMap ? membersMap[user.userId] : false);
               const isSelected = Boolean(selectedUsers[user.userId]);
               return (
                 <UserListItem

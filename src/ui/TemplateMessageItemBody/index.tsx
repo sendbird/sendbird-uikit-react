@@ -129,9 +129,11 @@ export function TemplateMessageItemBody({
         throw new Error('TemplateMessageItemBody | simple template keys are not found in view_variables.');
       }
       const simpleCachedTemplate = getCachedTemplate(simpleTemplateKey);
-      cachedSimpleTemplates.push(simpleCachedTemplate);
-      simpleTemplatesVariables.push(simpleTemplateData.variables);
-      maxVersion = Math.max(maxVersion, simpleCachedTemplate.version);
+      if (simpleCachedTemplate) {
+        cachedSimpleTemplates.push(simpleCachedTemplate);
+        simpleTemplatesVariables.push(simpleTemplateData.variables);
+        maxVersion = Math.max(maxVersion, simpleCachedTemplate.version);
+      }
     });
     const filledMessageTemplateItemsList: MessageTemplateItem[][] = cachedSimpleTemplates
       .map((cachedSimpleTemplate, index) => {
@@ -193,7 +195,7 @@ export function TemplateMessageItemBody({
     if (!cachedTemplate) {
       nonCachedTemplateKeys.push(templateKey);
     }
-    if (templateData.view_variables) {
+    if (templateData?.view_variables) {
       try {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         Object.entries(templateData.view_variables).forEach(([_, simpleTemplateDataList]) => {
@@ -217,7 +219,7 @@ export function TemplateMessageItemBody({
     try {
       if (nonCachedTemplateKeys.length > 0) {
         tryFetchTemplateByKey(nonCachedTemplateKeys);
-      } else {
+      } else if (cachedTemplate) {
         const parsedUiTemplate: MessageTemplateItem[] = JSON.parse(cachedTemplate.uiTemplate);
         if (!Array.isArray(parsedUiTemplate) || parsedUiTemplate.length === 0) {
           logger.error('TemplateMessageItemBody | parsed template is missing ui_template: ', parsedUiTemplate);
@@ -237,7 +239,7 @@ export function TemplateMessageItemBody({
               logger.error('TemplateMessageItemBody | composite template with reservation key must follow the following string format "{@your-reservation-key}": ', templateKey, carouselItem);
               throw new Error('TemplateMessageItemBody | composite template with reservation key must follow the following string format "{@your-reservation-key}". See error log in console for details');
             }
-            if (!templateData.view_variables) {
+            if (!templateData?.view_variables) {
               logger.error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables: ', templateKey, templateData);
               throw new Error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables. See error log in console for details');
             }
@@ -363,7 +365,7 @@ export function TemplateMessageItemBody({
       >
         <MessageTemplateWrapper
           message={message}
-          templateVersion={renderData.templateVersion}
+          templateVersion={renderData.templateVersion ?? 0}
           templateItems={
             renderData.filledMessageTemplateItemsList as MessageTemplateItem[]
           }

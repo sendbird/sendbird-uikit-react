@@ -13,6 +13,7 @@ import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import { Member, MemberListQuery } from '@sendbird/chat/groupChannel';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
 interface Props {
@@ -22,8 +23,8 @@ interface Props {
 export default function MutedMembersModal({
   onCancel,
 }: Props): ReactElement {
-  const [members, setMembers] = useState([]);
-  const [memberQuery, setMemberQuery] = useState(null);
+  const [members, setMembers] = useState<Member[]>([]);
+  const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
 
   const { channel } = useChannelSettingsContext();
   const state = useSendbirdStateContext();
@@ -36,10 +37,10 @@ export default function MutedMembersModal({
       // @ts-ignore
       mutedMemberFilter: 'muted',
     });
-    memberUserListQuery.next().then((members) => {
+    memberUserListQuery?.next().then((members) => {
       setMembers(members);
     });
-    setMemberQuery(memberUserListQuery);
+    setMemberQuery(memberUserListQuery ?? null);
   }, []);
   return (
     <div>

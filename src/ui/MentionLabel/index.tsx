@@ -28,7 +28,7 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
     isByMe,
   } = props;
 
-  const mentionRef = useRef();
+  const mentionRef = useRef<HTMLAnchorElement>();
 
   const sendbirdState = useSendbirdStateContext();
   const userId = sendbirdState?.config?.userId;
@@ -36,7 +36,7 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
   const amIBeingMentioned = userId === mentionedUserId;
   const [user, setUser] = useState<User| null>();
   const fetchUser = useCallback(
-    (toggleDropdown) => {
+    (toggleDropdown: () => void) => {
       if (user || !sdk?.createApplicationUserListQuery) {
         toggleDropdown();
         return;

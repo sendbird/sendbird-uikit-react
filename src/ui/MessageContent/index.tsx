@@ -132,9 +132,9 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const contentRef = useRef(null);
-  const timestampRef = useRef(null);
-  const threadRepliesRef = useRef(null);
-  const feedbackButtonsRef = useRef(null);
+  const timestampRef = useRef<HTMLDivElement>();
+  const threadRepliesRef = useRef<HTMLDivElement>();
+  const feedbackButtonsRef = useRef<HTMLDivElement>();
   const { isMobile } = useMediaQueryContext();
   const [showMenu, setShowMenu] = useState(false);
 
@@ -177,13 +177,15 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const useReplyingClassName = useReplying ? 'use-quote' : '';
 
   // Thread replies
-  const displayThreadReplies = message?.threadInfo?.replyCount > 0 && replyType === 'THREAD';
+  const displayThreadReplies = message?.threadInfo?.replyCount
+    && message.threadInfo.replyCount > 0
+    && replyType === 'THREAD';
 
   // Feedback buttons
   const isFeedbackMessage = !isByMe
-    && message?.myFeedbackStatus
+    && !!message?.myFeedbackStatus
     && message.myFeedbackStatus !== SbFeedbackStatus.NOT_APPLICABLE;
-  const isFeedbackEnabled = config?.groupChannel?.enableFeedback && isFeedbackMessage;
+  const isFeedbackEnabled = !!config?.groupChannel?.enableFeedback && isFeedbackMessage;
 
   /**
    * For TemplateMessage, do not display:
@@ -254,7 +256,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   return (
     <div
       className={getClassName([
-        className,
+        className ?? '',
         'sendbird-message-content',
         isByMeClassName,
         uiContainerType,
@@ -288,9 +290,9 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               setSupposedHover,
               onReplyInThread: ({ message }) => {
                 if (threadReplySelectType === ThreadReplySelectType.THREAD) {
-                  onReplyInThread({ message });
+                  onReplyInThread?.({ message });
                 } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
-                  scrollToMessage(message.parentMessage?.createdAt, message.parentMessageId);
+                  scrollToMessage?.(message.parentMessage?.createdAt ?? 0, message.parentMessageId);
                 }
               },
               deleteMessage,
@@ -339,7 +341,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                   (replyType === 'QUOTE_REPLY' || (replyType === 'THREAD' && threadReplySelectType === ThreadReplySelectType.PARENT))
                   && message?.parentMessage?.createdAt && message?.parentMessageId
                 ) {
-                  scrollToMessage(message.parentMessage.createdAt, message.parentMessageId);
+                  scrollToMessage?.(message.parentMessage.createdAt, message.parentMessageId);
                 }
               }}
             />
@@ -403,8 +405,8 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                   message,
                   channel,
                   isByMe,
-                  emojiContainer,
-                  memberNicknamesMap: nicknamesMap,
+                  emojiContainer: emojiContainer ?? new EmojiContainer(),
+                  memberNicknamesMap: nicknamesMap ?? new Map(),
                   toggleReaction,
                   onPressUserProfile: onPressUserProfileHandler,
                 })
@@ -439,7 +441,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           }}
         />}
         {/* thread replies */}
-        {showThreadReplies && (
+        {showThreadReplies && message?.threadInfo && (
           <ThreadReplies
             className="sendbird-message-content__middle__thread-replies"
             threadInfo={message?.threadInfo}
@@ -470,7 +472,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                   openFeedbackFormOrMenu();
                 }
               }}
-              disabled={message?.myFeedback && message.myFeedback.rating !== FeedbackRating.GOOD}
+              disabled={!!message?.myFeedback && message.myFeedback.rating !== FeedbackRating.GOOD}
             >
               <Icon
                 type={IconTypes.FEEDBACK_LIKE}
@@ -495,7 +497,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                   openFeedbackFormOrMenu();
                 }
               }}
-              disabled={message?.myFeedback && message.myFeedback.rating !== FeedbackRating.BAD}
+              disabled={!!message?.myFeedback && message.myFeedback.rating !== FeedbackRating.BAD}
             >
               <Icon
                 type={IconTypes.FEEDBACK_DISLIKE}
@@ -535,9 +537,9 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               setSupposedHover,
               onReplyInThread: ({ message }) => {
                 if (threadReplySelectType === ThreadReplySelectType.THREAD) {
-                  onReplyInThread({ message });
+                  onReplyInThread?.({ message });
                 } else if (threadReplySelectType === ThreadReplySelectType.PARENT) {
-                  scrollToMessage(message.parentMessage?.createdAt, message.parentMessageId);
+                  scrollToMessage?.(message.parentMessage?.createdAt ?? 0, message.parentMessageId);
                 }
               },
               deleteMessage,
@@ -547,7 +549,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       )}
 
       {
-        showMenu && isSendableMessage(message) && renderMobileMenuOnLongPress({
+        showMenu && isSendableMessage(message) && channel && renderMobileMenuOnLongPress({
           parentRef: contentRef,
           channel,
           hideMenu: () => { setShowMenu(false); },
@@ -573,7 +575,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           },
           onDownloadClick: async (e) => {
             if (!onBeforeDownloadFileMessage) {
-              return null;
+              return;
             }
             try {
               const allowDownload = await onBeforeDownloadFileMessage({ message });
@@ -599,7 +601,9 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             }}
             onRemoveFeedback={async () => {
               try {
-                await message.deleteFeedback(message.myFeedback.id);
+                if (message.myFeedback !== null) {
+                  await message.deleteFeedback(message.myFeedback.id);
+                }
               } catch (error) {
                 config?.logger?.error?.('Channel: Delete feedback failed.', error);
                 setFeedbackFailedText(stringSet.FEEDBACK_FAILED_DELETE);
@@ -616,23 +620,27 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             selectedFeedback={message.myFeedback.rating}
             message={message}
             onUpdate={async (selectedFeedback: FeedbackRating, comment: string) => {
-              const newFeedback: Feedback = new Feedback({
-                id: message.myFeedback.id,
-                rating: selectedFeedback,
-                comment,
-              });
-              try {
-                await message.updateFeedback(newFeedback);
-              } catch (error) {
-                config?.logger?.error?.('Channel: Update feedback failed.', error);
-                setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SAVE);
+              if (message.myFeedback !== null) {
+                const newFeedback: Feedback = new Feedback({
+                  id: message.myFeedback.id,
+                  rating: selectedFeedback,
+                  comment,
+                });
+                try {
+                  await message.updateFeedback(newFeedback);
+                } catch (error) {
+                  config?.logger?.error?.('Channel: Update feedback failed.', error);
+                  setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SAVE);
+                }
               }
               onCloseFeedbackForm();
             }}
             onClose={onCloseFeedbackForm}
             onRemove={async () => {
               try {
-                await message.deleteFeedback(message.myFeedback.id);
+                if (message.myFeedback !== null) {
+                  await message.deleteFeedback(message.myFeedback.id);
+                }
               } catch (error) {
                 config?.logger?.error?.('Channel: Delete feedback failed.', error);
                 setFeedbackFailedText(stringSet.FEEDBACK_FAILED_DELETE);

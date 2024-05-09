@@ -16,7 +16,7 @@ export default function TooltipWrapper({
   // clickTooltip can be added later
 }: TooltipWrapperProps): ReactElement {
   const [showHoverTooltip, setShowHoverTooltip] = useState(false);
-  const childrenRef = useRef(null);
+  const childrenRef = useRef<HTMLDivElement>();
 
   return (
     <div
@@ -44,7 +44,7 @@ export default function TooltipWrapper({
             <div className="sendbird-tooltip-wrapper__hover-tooltip__inner">
               <div
                 className="sendbird-tooltip-wrapper__hover-tooltip__inner__tooltip-container"
-                style={{ left: childrenRef.current && `calc(${childrenRef.current.offsetWidth / 2}px - 50%)` }}
+                style={{ left: childrenRef.current ? `calc(${childrenRef.current.offsetWidth / 2}px - 50%)` : undefined }}
               >
                 {hoverTooltip}
               </div>

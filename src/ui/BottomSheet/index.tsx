@@ -20,7 +20,7 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
   const logger = useSendbirdStateContext()?.config?.logger;
 
   // https://github.com/testing-library/react-testing-library/issues/62#issuecomment-438653348
-  const portalRoot = useRef<HTMLElement>();
+  const portalRoot = useRef<HTMLElement| null>();
   portalRoot.current = document.getElementById(MODAL_ROOT);
   if (!portalRoot.current) {
     portalRoot.current = document.createElement('div');
@@ -46,7 +46,7 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
         `}
         onClick={(e) => {
           e?.stopPropagation();
-          onBackdropClick();
+          onBackdropClick?.();
         }}
       />
     </div>,

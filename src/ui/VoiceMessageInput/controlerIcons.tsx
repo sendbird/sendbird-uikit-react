@@ -41,7 +41,7 @@ export const ControlerIcon = ({
       );
     }
     default:
-      return null;
+      return <></>;
   }
 };
 

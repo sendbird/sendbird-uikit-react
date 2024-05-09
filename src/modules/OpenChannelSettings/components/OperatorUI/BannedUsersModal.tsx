@@ -15,6 +15,7 @@ import { noop } from '../../../../utils/utils';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { BannedUserListQuery, RestrictedUser } from '@sendbird/chat';
 
 interface Props {
   onCancel(): void;
@@ -23,8 +24,8 @@ interface Props {
 export default function BannedUsersModal({
   onCancel,
 }: Props): ReactElement {
-  const [bannedUsers, setBannedUsers] = useState([]);
-  const [userListQuery, setUserListQuery] = useState(null);
+  const [bannedUsers, setBannedUsers] = useState<RestrictedUser[]>([]);
+  const [userListQuery, setUserListQuery] = useState<BannedUserListQuery | null>(null);
   const { channel } = useOpenChannelSettingsContext();
   const state = useSendbirdStateContext();
   const { stringSet } = useContext(LocalizationContext);
@@ -32,10 +33,10 @@ export default function BannedUsersModal({
 
   useEffect(() => {
     const bannedUserListQuery = channel?.createBannedUserListQuery();
-    bannedUserListQuery.next().then((users) => {
+    bannedUserListQuery?.next().then((users) => {
       setBannedUsers(users);
     });
-    setUserListQuery(bannedUserListQuery);
+    setUserListQuery(bannedUserListQuery ?? null);
   }, []);
   return (
     <div>
@@ -49,7 +50,7 @@ export default function BannedUsersModal({
         <div
           className="sendbird-more-members__popup-scroll"
           onScroll={(e) => {
-            const { hasNext } = userListQuery;
+            const hasNext = userListQuery?.hasNext;
             const target = e.target as HTMLTextAreaElement;
             const fetchMore = (
               target.clientHeight + target.scrollTop === target.scrollHeight
@@ -111,7 +112,7 @@ export default function BannedUsersModal({
                           </MenuItems>
                         )}
                       />
-                    ) : null
+                    ) : <></>
                 )
                 }
               />

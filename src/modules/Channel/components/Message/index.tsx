@@ -8,7 +8,7 @@ import MessageView, { MessageProps } from '../../../GroupChannel/components/Mess
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
 
-const Message = (props: MessageProps): React.ReactElement => {
+const Message = (props: MessageProps) => {
   const { config } = useSendbirdStateContext();
   const {
     initialized,
@@ -35,6 +35,8 @@ const Message = (props: MessageProps): React.ReactElement => {
   } = useChannelContext();
 
   const { message } = props;
+
+  if (!currentGroupChannel) return null;
 
   return (
     <MessageView
@@ -75,7 +77,7 @@ const Message = (props: MessageProps): React.ReactElement => {
       updateUserMessage={(messageId, params) => {
         updateMessage({
           messageId,
-          message: params.message,
+          message: params.message ?? '',
           mentionedUsers: params.mentionedUsers,
           mentionTemplate: params.mentionedMessageTemplate,
         });

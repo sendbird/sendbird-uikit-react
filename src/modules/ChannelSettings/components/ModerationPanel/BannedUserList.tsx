@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
-import { BannedUserListQueryParams } from '@sendbird/chat';
+import { BannedUserListQueryParams, RestrictedUser } from '@sendbird/chat';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import
@@ -23,7 +23,7 @@ import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 export const BannedMemberList = (): ReactElement => {
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useState<RestrictedUser[]>([]);
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -54,6 +54,7 @@ export const BannedMemberList = (): ReactElement => {
       setHasNext(bannedUserListQuery.hasNext);
     });
   }, [channel]);
+
   return (
     <>
       {

@@ -54,24 +54,26 @@ export default function ParticipantsModal({
         <div
           className="sendbird-more-members__popup-scroll"
           onScroll={(e) => {
-            const { hasNext } = participantListQuery;
-            const target = e.target as HTMLTextAreaElement;
-            const fetchMore = (
-              target.clientHeight + target.scrollTop === target.scrollHeight
-            );
+            if (participantListQuery) {
+              const { hasNext } = participantListQuery;
+              const target = e.target as HTMLTextAreaElement;
+              const fetchMore = (
+                target.clientHeight + target.scrollTop === target.scrollHeight
+              );
 
-            if (hasNext && fetchMore) {
-              participantListQuery.next().then((fetchedParticipants) => {
-                setParticipants([
-                  ...participants,
-                  ...fetchedParticipants,
-                ]);
-              });
+              if (hasNext && fetchMore) {
+                participantListQuery.next().then((fetchedParticipants) => {
+                  setParticipants([
+                    ...(participants ?? []),
+                    ...fetchedParticipants,
+                  ]);
+                });
+              }
             }
           }}
         >
           {
-            participants.map((p: Participant) => {
+            participants?.map((p: Participant) => {
               const isOperator = channel?.isOperator(p.userId);
               return (
                 <UserListItem
@@ -153,7 +155,7 @@ export default function ParticipantsModal({
                           )}
                         />
                       )
-                      : null
+                      : () => <></>
                   }
                 />
               );

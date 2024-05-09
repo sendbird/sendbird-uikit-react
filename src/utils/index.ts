@@ -15,6 +15,7 @@ import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
 import { MessageContentMiddleContainerType, Nullable } from '../types';
 import { match } from 'ts-pattern';
+import { SendableMessage } from '@sendbird/chat/lib/__definition';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 export const SUPPORTED_MIMES = {
@@ -247,15 +248,15 @@ export const isUserMessage = (message: CoreMessageType): message is UserMessage 
       : message?.messageType === 'user'
   )
 );
-export const isFileMessage = (message: CoreMessageType): message is FileMessage => (
-  message && (
+export const isFileMessage = (message?: CoreMessageType): message is FileMessage => (
+  !!message && (
     message['isFileMessage'] && typeof message.isFileMessage === 'function'
       ? message.isFileMessage()
       : message?.messageType === 'file'
   )
 );
 export const isMultipleFilesMessage = (
-  message: CoreMessageType,
+  message?: CoreMessageType,
 ): message is MultipleFilesMessage => (
   message && (
     message['isMultipleFilesMessage'] && typeof message.isMultipleFilesMessage === 'function'
@@ -304,7 +305,7 @@ export const getMessageContentMiddleClassNameByContainerType = ({
 export const isOGMessage = (message: CoreMessageType): message is UserMessage => {
   if (!message || !isUserMessage(message)) return false;
   return (
-    message.ogMetaData
+    !!message.ogMetaData
       && !!(message.ogMetaData.url || message.ogMetaData.title || message.ogMetaData.description || message.ogMetaData.defaultImage)
   );
 };
@@ -340,7 +341,7 @@ export const isAudioMessage = (message: CoreMessageType): message is FileMessage
 
 export const isImageFileInfo = (fileInfo: UploadedFileInfo): boolean => {
   if (!fileInfo) return false;
-  return (isImage(fileInfo.mimeType) || isGif(fileInfo.mimeType));
+  return !!fileInfo.mimeType && (isImage(fileInfo.mimeType) || isGif(fileInfo.mimeType));
 };
 
 export const isAudioMessageMimeType = (type: string): boolean => (/^audio\//.test(type));
@@ -470,7 +471,7 @@ export const getUseReaction = (store: UIKitStore, channel: GroupChannel | OpenCh
 };
 
 export function getSuggestedReplies(message?: BaseMessage): string[] {
-  if (Array.isArray(message?.extendedMessagePayload?.suggested_replies)) {
+  if (message?.extendedMessagePayload && Array.isArray(message?.extendedMessagePayload?.suggested_replies)) {
     return message.extendedMessagePayload.suggested_replies;
   } else {
     return [];
@@ -849,7 +850,7 @@ export const getChannelsWithUpsertedChannel = (
   } else {
     channels.push(channel);
   }
-  return sortChannelList(channels, order);
+  return sortChannelList(channels, order ?? GroupChannelListOrder.LATEST_LAST_MESSAGE);
 };
 
 export const getMatchedUserIds = (word: string, users: Array<User>, _template?: string): boolean => {
@@ -936,5 +937,5 @@ export const arrayEqual = (array1: Array<unknown>, array2: Array<unknown>): bool
 };
 
 export const isSendableMessage = (message?: BaseMessage | null): message is SendableMessageType => {
-  return Boolean(message) && 'sender' in message;
+  return Boolean(message) && 'sender' in (message as SendableMessage);
 };

@@ -137,7 +137,7 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
                     key={message.messageId}
                     selected={(selectedMessageId === message.messageId)}
                     onClick={() => {
-                      onResultClick(message);
+                      onResultClick?.(message);
                       setSelectedMessageId(message.messageId);
                     }}
                   />
@@ -150,7 +150,7 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
                   key={message.messageId}
                   selected={(selectedMessageId === message.messageId)}
                   onClick={() => {
-                    onResultClick(message);
+                    onResultClick?.(message);
                     setSelectedMessageId(message.messageId);
                   }}
                 />

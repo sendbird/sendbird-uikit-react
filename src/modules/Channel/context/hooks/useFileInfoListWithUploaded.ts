@@ -33,12 +33,14 @@ export const useFileInfoListWithUploaded = (message: CoreMessageType): UploadedF
       ...it,
       url: it.url,
       isUploaded: true,
+      mimeType: it.mimeType ?? undefined,
+      fileName: it.fileName ?? undefined,
     }));
   } else {
-    return message.messageParams.fileInfoList.map((it, index) => ({
+    return message?.messageParams?.fileInfoList.map((it, index) => ({
       ...it,
       url: getObjectURL(index) ?? it.fileUrl ?? (it.file instanceof Blob ? getObjectURL(index, it.file) : undefined),
       isUploaded: !it.file && typeof it.fileUrl === 'string' && it.fileUrl.length > 0,
-    }));
+    })) ?? [];
   }
 };

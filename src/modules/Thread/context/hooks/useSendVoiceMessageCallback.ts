@@ -17,7 +17,7 @@ import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';
 
 interface DynamicParams {
-  currentChannel: GroupChannel;
+  currentChannel: GroupChannel | null;
   onBeforeSendVoiceMessage?: (file: File, quoteMessage?: SendableMessageType) => FileMessageCreateParams;
 }
 interface StaticParams {

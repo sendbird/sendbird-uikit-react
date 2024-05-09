@@ -58,14 +58,14 @@ export const VoiceMessageInput = ({
   const handleOnCancelClick = () => {
     const currentTime = Date.now();
     if (currentTime - lastClickTime > VOICE_RECORDER_CLICK_BUFFER_TIME) {
-      onCancelClick();
+      onCancelClick?.();
       setLastClickTime(currentTime);
     }
   };
   const handleOnControlClick = useCallback(() => {
     const currentTime = Date.now();
     if (currentTime - lastClickTime > VOICE_RECORDER_CLICK_BUFFER_TIME) {
-      onControlClick(currentType);
+      onControlClick?.(currentType);
       setLastClickTime(currentTime);
     }
   }, [currentType]);
@@ -73,7 +73,7 @@ export const VoiceMessageInput = ({
     const currentTime = Date.now();
     if (currentTime - lastClickTime > VOICE_RECORDER_CLICK_BUFFER_TIME) {
       if (!isSendButtonDisabled) {
-        onSubmitClick();
+        onSubmitClick?.();
       }
       setLastClickTime(currentTime);
     }

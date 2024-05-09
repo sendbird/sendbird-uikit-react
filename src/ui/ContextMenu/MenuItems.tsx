@@ -6,12 +6,12 @@ interface MenuItemsProps {
   style?: Record<string, string>;
   openLeft?: boolean;
   children: React.ReactElement | Array<React.ReactElement> | React.ReactNode;
-  parentRef: React.RefObject<HTMLElement>;
+  parentRef?: React.RefObject<HTMLElement>;
   parentContainRef?: React.RefObject<HTMLElement>;
   closeDropdown: () => void;
 }
 
-type MenuStyleType = { top?: number, left?: number };
+type MenuStyleType = { top: number, left: number };
 interface MenuItemsState {
   menuStyle: MenuStyleType;
   handleClickOutside: (e: MouseEvent) => void;
@@ -24,7 +24,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
   constructor(props: MenuItemsProps) {
     super(props);
     this.state = {
-      menuStyle: {},
+      menuStyle: { top: 0, left: 0 },
       handleClickOutside: () => { /* noop */ },
     };
   }
@@ -43,7 +43,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
   setupEvents = (): void => {
     const { closeDropdown } = this.props;
     const { menuRef } = this;
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: any) => {
       if (menuRef?.current && !menuRef?.current?.contains?.(event.target)) {
         closeDropdown?.();
       }
@@ -101,8 +101,13 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
   };
 
   render(): ReactElement {
+    const portalElement = document.getElementById('sendbird-dropdown-portal');
+    if (!portalElement)
+      return <></>;
+
     const { menuStyle } = this.state;
     const { children, style, className = '' } = this.props;
+
     return (
       createPortal(
         (
@@ -123,7 +128,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
             </ul>
           </div>
         ),
-        document.getElementById('sendbird-dropdown-portal'),
+        portalElement,
       )
     );
   }

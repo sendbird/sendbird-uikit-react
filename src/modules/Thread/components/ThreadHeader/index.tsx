@@ -26,7 +26,7 @@ export default function ThreadHeader({
   const { stringSet } = useLocalization();
 
   const MemoizedActionIcon = useMemo(() => {
-    if (typeof renderActionIcon === 'function') {
+    if (typeof renderActionIcon === 'function' && onActionIconClick) {
       return renderActionIcon({ onActionIconClick });
     }
     return null;

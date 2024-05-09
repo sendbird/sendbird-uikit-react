@@ -8,9 +8,11 @@ type ContextAwareComponentType = {
 
 export const SendbirdSdkContext = React.createContext<SendBirdState | null>(null);
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+/**
+ * @deprecated This function is deprecated. Use `useSendbirdStateContext` instead.
+ * */
 const withSendbirdContext = (OriginalComponent: any, mapStoreToProps: Record<string, any>): ContextAwareComponentType => {
-  const ContextAwareComponent = (props) => (
+  const ContextAwareComponent = (props: any) => (
     <SendbirdSdkContext.Consumer>
       {(context) => {
         if (mapStoreToProps && typeof mapStoreToProps !== 'function') {
@@ -20,7 +22,6 @@ const withSendbirdContext = (OriginalComponent: any, mapStoreToProps: Record<str
         const mergedProps = (mapStoreToProps && typeof mapStoreToProps === 'function')
           ? { ...mapStoreToProps(context), ...props }
           : { ...context, ...props };
-        // eslint-disable-next-line react/jsx-props-no-spreading
         return <OriginalComponent {...mergedProps} />;
       }}
     </SendbirdSdkContext.Consumer>

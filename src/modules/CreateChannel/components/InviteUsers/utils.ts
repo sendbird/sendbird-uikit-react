@@ -28,13 +28,12 @@ type CreateDefaultUserListQueryType = {
 export const createDefaultUserListQuery = (
   { sdk, userFilledApplicationUserListQuery }: CreateDefaultUserListQueryType,
 ): ApplicationUserListQuery => {
-  if (sdk?.createApplicationUserListQuery) {
-    const params = sdk?.createApplicationUserListQuery();
-    if (userFilledApplicationUserListQuery) {
-      Object.keys(userFilledApplicationUserListQuery).forEach((key) => {
-        params[key] = userFilledApplicationUserListQuery[key];
-      });
-    }
-    return params;
+  const params = sdk.createApplicationUserListQuery();
+  if (userFilledApplicationUserListQuery) {
+    Object.keys(userFilledApplicationUserListQuery).forEach((key) => {
+      // @ts-ignore
+      params[key] = userFilledApplicationUserListQuery[key];
+    });
   }
+  return params;
 };

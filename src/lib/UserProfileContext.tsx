@@ -16,8 +16,6 @@ interface UserProfileContextInterface {
 const UserProfileContext = React.createContext<UserProfileContextInterface>({
   disableUserProfile: true,
   isOpenChannel: false,
-  renderUserProfile: null,
-  onUserProfileMessage: null,
 });
 
 export type UserProfileProviderProps = React.PropsWithChildren<{
@@ -30,8 +28,8 @@ export type UserProfileProviderProps = React.PropsWithChildren<{
 const UserProfileProvider = ({
   isOpenChannel = false,
   disableUserProfile = false,
-  renderUserProfile = null,
-  onUserProfileMessage = null,
+  renderUserProfile,
+  onUserProfileMessage,
   children,
 }: UserProfileProviderProps) => {
   return (

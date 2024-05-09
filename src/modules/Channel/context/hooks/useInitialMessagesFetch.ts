@@ -13,9 +13,9 @@ import { ChannelActionTypes } from '../dux/actionTypes';
 import { SCROLL_BOTTOM_DELAY_FOR_FETCH } from '../../../../utils/consts';
 
 type UseInitialMessagesFetchOptions = {
-  currentGroupChannel: GroupChannel;
-  initialTimeStamp: number;
-  userFilledMessageListQuery: MessageListParamsInternal;
+  currentGroupChannel: GroupChannel | null;
+  initialTimeStamp: number | null | undefined;
+  userFilledMessageListQuery?: MessageListParamsInternal;
   replyType: ReplyTypeInternal;
   setIsScrolled: (val: boolean) => void;
 };
@@ -70,6 +70,7 @@ function useInitialMessagesFetch(
       }
       if (userFilledMessageListQuery) {
         Object.keys(userFilledMessageListQuery).forEach((key) => {
+          // @ts-ignore
           messageListParams[key] = userFilledMessageListQuery[key];
         });
       }

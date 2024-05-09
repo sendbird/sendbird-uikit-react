@@ -19,7 +19,7 @@ export function ThreadReplies(
     threadInfo,
     onClick,
   }: ThreadRepliesProps,
-  ref?: RefObject<HTMLDivElement>,
+  ref: RefObject<HTMLDivElement>,
 ): React.ReactElement {
   const {
     mostRepliedUsers = [],
@@ -31,11 +31,11 @@ export function ThreadReplies(
       className={`sendbird-ui-thread-replies ${className}`}
       role="button"
       onClick={(e) => {
-        onClick(e);
+        onClick?.(e);
         e?.stopPropagation();
       }}
       onKeyDown={(e) => {
-        onClick(e);
+        onClick?.(e);
         e?.stopPropagation();
       }}
       ref={ref}
