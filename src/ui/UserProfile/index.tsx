@@ -16,7 +16,7 @@ interface Logger {
 }
 
 interface Props {
-  user: User | undefined | null;
+  user?: User | null;
   currentUserId?: string;
   logger?: Logger;
   disableMessaging?: boolean;

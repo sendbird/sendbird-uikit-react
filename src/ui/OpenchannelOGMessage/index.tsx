@@ -79,10 +79,10 @@ export default function OpenChannelOGMessage({
     delay: 300,
   });
 
-  const messageComponentRef = useRef<HTMLDivElement>(null);
-  const contextMenuRef = useRef(null);
-  const mobileMenuRef = useRef(null);
-  const avatarRef = useRef(null);
+  const messageComponentRef = useRef<HTMLDivElement>();
+  const contextMenuRef = useRef<HTMLDivElement>();
+  const mobileMenuRef = useRef<HTMLDivElement>();
+  const avatarRef = useRef<HTMLDivElement>();
 
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
@@ -328,7 +328,7 @@ export default function OpenChannelOGMessage({
         <div className="sendbird-openchannel-og-message__bottom">
           <div className="sendbird-openchannel-og-message__bottom__og-tag" ref={mobileMenuRef}>
             {
-              ogMetaData && ogMetaData.url && (
+              ogMetaData?.url && (
                 <Label
                   className="sendbird-openchannel-og-message__bottom__og-tag__url"
                   type={LabelTypography.CAPTION_3}
@@ -339,7 +339,7 @@ export default function OpenChannelOGMessage({
               )
             }
             {
-              ogMetaData && ogMetaData.title && (
+              ogMetaData?.title && (
                 <LinkLabel
                   className="sendbird-openchannel-og-message__bottom__og-tag__title"
                   src={ogMetaData.url ?? ''}
@@ -353,7 +353,7 @@ export default function OpenChannelOGMessage({
               )
             }
             {
-              ogMetaData && ogMetaData.description && (
+              ogMetaData?.description && (
                 <Label
                   className="sendbird-openchannel-og-message__bottom__og-tag__description"
                   type={LabelTypography.BODY_2}
@@ -364,7 +364,7 @@ export default function OpenChannelOGMessage({
               )
             }
             {
-              ogMetaData && ogMetaData.url && (
+              ogMetaData?.url && (
                 <div
                   className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail"
                   role="button"

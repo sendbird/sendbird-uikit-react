@@ -28,9 +28,10 @@ export default function TextMessageItemBody({
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const isMessageMentioned = isMentionEnabled
-    && message?.mentionedMessageTemplate?.length > 0
+    && message?.mentionedMessageTemplate
+    && message.mentionedMessageTemplate.length > 0
     && message?.mentionedUsers
-    && message?.mentionedUsers?.length > 0;
+    && message.mentionedUsers.length > 0;
   const tokens = useMemo(() => {
     if (isMessageMentioned) {
       return tokenizeMessage({

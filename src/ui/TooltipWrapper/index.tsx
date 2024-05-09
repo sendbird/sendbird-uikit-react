@@ -16,7 +16,7 @@ export default function TooltipWrapper({
   // clickTooltip can be added later
 }: TooltipWrapperProps): ReactElement {
   const [showHoverTooltip, setShowHoverTooltip] = useState(false);
-  const childrenRef = useRef<HTMLDivElement>(null);
+  const childrenRef = useRef<HTMLDivElement>();
 
   return (
     <div

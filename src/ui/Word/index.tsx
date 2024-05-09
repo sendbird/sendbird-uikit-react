@@ -34,7 +34,7 @@ export default function Word(props: WordProps): JSX.Element | null {
   return (
     <span className="sendbird-word">
       {
-        message?.mentionedUsers && convertWordToStringObj(word, message?.mentionedUsers).map((stringObj, index) => {
+        message?.mentionedUsers && convertWordToStringObj(word, message.mentionedUsers).map((stringObj, index) => {
           const type = stringObj?.type || '';
           const value = stringObj?.value || '';
           const userId = stringObj?.userId || '';
