@@ -196,17 +196,25 @@ const MessageView = (props: MessageViewProps) => {
     );
   }, [mentionedUserIds]);
 
-  /**
-   * Move the message list scroll
-   * when the message's height is changed by `showEdit` OR `message.reactions`
-   */
+  // Side effect: scroll position update when showEdit is toggled or reactions updated
   useDidMountEffect(() => {
     handleScroll?.();
   }, [showEdit, message?.reactions?.length]);
 
+  // Side effect: scroll position update when message updated
   useDidMountEffect(() => {
     handleScroll?.(true);
   }, [message?.updatedAt, (message as UserMessage)?.message]);
+
+  // Side effect: scroll position update when suggested replies are rendered or hidden
+  const prevShouldRenderSuggestedReplies = useRef(shouldRenderSuggestedReplies);
+  useEffect(() => {
+    if (prevShouldRenderSuggestedReplies.current !== shouldRenderSuggestedReplies) {
+      handleScroll?.();
+    } else {
+      prevShouldRenderSuggestedReplies.current = shouldRenderSuggestedReplies;
+    }
+  }, [shouldRenderSuggestedReplies]);
 
   useLayoutEffect(() => {
     // Keep the scrollBottom value after fetching new message list (but GroupChannel module is not needed.)
