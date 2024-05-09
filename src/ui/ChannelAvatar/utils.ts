@@ -3,14 +3,14 @@ import type { OpenChannel } from '@sendbird/chat/openChannel';
 
 export const DEFAULT_URL_PREFIX = 'https://static.sendbird.com/sample/cover/cover_';
 
-export const getOpenChannelAvatar = (channel: OpenChannel): string | undefined => {
+export const getOpenChannelAvatar = (channel?: OpenChannel | null): string | undefined => {
   if (channel?.coverUrl) {
     return channel.coverUrl;
   }
   return undefined;
 };
 
-export const getChannelAvatarSource = (channel: GroupChannel, currentUserId: string): string | Array<string> => {
+export const getChannelAvatarSource = (channel: GroupChannel | null, currentUserId: string): string | Array<string> => {
   if (channel?.coverUrl) {
     if (!(new RegExp(`^${DEFAULT_URL_PREFIX}`).test(channel.coverUrl))) {
       return channel.coverUrl;
@@ -21,7 +21,7 @@ export const getChannelAvatarSource = (channel: GroupChannel, currentUserId: str
     .map(({ profileUrl }) => profileUrl);
 };
 
-export const generateDefaultAvatar = (channel: GroupChannel): boolean => {
+export const generateDefaultAvatar = (channel: GroupChannel | null): boolean => {
   if (channel?.coverUrl) {
     if (new RegExp(`^${DEFAULT_URL_PREFIX}`).test(channel.coverUrl)) {
       return true;

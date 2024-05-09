@@ -8,13 +8,13 @@ import { SdkStore } from '../../../../lib/types';
 interface DynamicProps {
   channelUrl: string;
   sdkInit: boolean;
-  message: SendableMessageType;
+  message: SendableMessageType | null;
 }
 
 interface StaticProps {
   sdk: SdkStore['sdk'];
   logger: Logger;
-  threadDispatcher: (props: { type: string, payload?: any }) => void;
+  threadDispatcher: (props: { type: string, payload: any }) => void;
 }
 
 export default function useGetChannel({

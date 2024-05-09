@@ -263,9 +263,8 @@ export default function ThreadListItem({
             setShowFileViewer(false);
           }}
           onDownloadClick={async (e) => {
-            if (!onBeforeDownloadFileMessage) {
-              return null;
-            }
+            if (!onBeforeDownloadFileMessage) return;
+
             try {
               const allowDownload = await onBeforeDownloadFileMessage({ message: message as FileMessage | MultipleFilesMessage });
               if (!allowDownload) {

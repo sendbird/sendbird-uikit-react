@@ -10,7 +10,7 @@ import { ThreadListStateTypes } from '../../types';
 
 type Params = {
   anchorMessage?: SendableMessageType;
-  parentMessage: SendableMessageType;
+  parentMessage: SendableMessageType | null;
   isReactionEnabled?: boolean;
   threadDispatcher: CustomUseReducerDispatcher;
   logger: LoggerInterface;

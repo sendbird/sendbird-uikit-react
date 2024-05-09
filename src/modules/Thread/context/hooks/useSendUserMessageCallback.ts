@@ -12,7 +12,7 @@ import { PublishingModuleType } from '../../../internalInterfaces';
 export type OnBeforeSendUserMessageType = (message: string, quoteMessage?: SendableMessageType) => UserMessageCreateParams;
 interface DynamicProps {
   isMentionEnabled: boolean;
-  currentChannel: GroupChannel;
+  currentChannel: GroupChannel | null;
   onBeforeSendUserMessage?: OnBeforeSendUserMessageType;
 }
 interface StaticProps {

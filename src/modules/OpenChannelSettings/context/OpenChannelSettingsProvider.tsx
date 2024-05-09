@@ -22,9 +22,9 @@ export interface OpenChannelSettingsContextProps {
 
 interface OpenChannelSettingsContextType {
   channelUrl: string;
-  channel?: OpenChannel;
+  channel?: OpenChannel | null;
   isChannelInitialized: boolean;
-  setChannel?: React.Dispatch<React.SetStateAction<OpenChannel>>;
+  setChannel?: React.Dispatch<React.SetStateAction<OpenChannel | null>>;
   onCloseClick?(): void;
   onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): OpenChannelUpdateParams;
   onChannelModified?(channel: OpenChannel): void;
@@ -163,8 +163,11 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
   );
 };
 
-type useOpenChannelSettingsType = () => OpenChannelSettingsContextType;
-const useOpenChannelSettingsContext: useOpenChannelSettingsType = () => React.useContext(OpenChannelSettingsContext);
+const useOpenChannelSettingsContext = () => {
+  const context = React.useContext(OpenChannelSettingsContext);
+  if (!context) throw new Error('OpenChannelSettingsContext not found. Use within the OpenChannelSettings module.');
+  return context;
+};
 
 export {
   OpenChannelSettingsProvider,

@@ -172,7 +172,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
   );
 
   const fetchMore: boolean = utils.shouldFetchMore(allMessages?.length, messageLimit);
-  // donot fetch more for streaming
+  // do not fetch more for streaming
   const onScroll = useScrollCallback(
     { currentOpenChannel, lastMessageTimestamp, fetchMore },
     { sdk, logger, messagesDispatcher, hasMore, userFilledMessageListParams },

@@ -14,7 +14,7 @@ export const compareMessagesForGrouping = (
   prevMessage: CoreMessageType,
   currMessage: CoreMessageType,
   nextMessage: CoreMessageType,
-  currentChannel?: GroupChannel,
+  currentChannel?: GroupChannel | null,
   replyType?: ReplyType,
 ) => {
   if (!currentChannel || (currentChannel as GroupChannel).channelType !== 'group') {

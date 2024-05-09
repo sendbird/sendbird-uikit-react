@@ -10,8 +10,8 @@ import { shouldPubSubPublishToThread } from '../../../internalInterfaces';
 
 interface DynamicProps {
   sdkInit: boolean;
-  currentChannel: GroupChannel;
-  parentMessage: SendableMessageType
+  currentChannel: GroupChannel | null;
+  parentMessage: SendableMessageType | null;
 }
 interface StaticProps {
   logger: Logger;

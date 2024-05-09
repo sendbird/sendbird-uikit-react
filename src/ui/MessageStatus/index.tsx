@@ -23,6 +23,23 @@ interface MessageStatusProps {
   isDateSeparatorConsidered?: boolean;
 }
 
+const iconType = {
+  [OutgoingMessageStates.SENT]: IconTypes.DONE,
+  [OutgoingMessageStates.DELIVERED]: IconTypes.DONE_ALL,
+  [OutgoingMessageStates.READ]: IconTypes.DONE_ALL,
+  [OutgoingMessageStates.FAILED]: IconTypes.ERROR,
+  [OutgoingMessageStates.PENDING]: undefined,
+  [OutgoingMessageStates.NONE]: undefined,
+};
+const iconColor = {
+  [OutgoingMessageStates.SENT]: IconColors.SENT,
+  [OutgoingMessageStates.DELIVERED]: IconColors.SENT,
+  [OutgoingMessageStates.READ]: IconColors.READ,
+  [OutgoingMessageStates.FAILED]: IconColors.ERROR,
+  [OutgoingMessageStates.PENDING]: undefined,
+  [OutgoingMessageStates.NONE]: undefined,
+};
+
 export default function MessageStatus({
   className,
   message,
@@ -35,18 +52,6 @@ export default function MessageStatus({
     (channel.isSuper || channel.isPublic || channel.isBroadcast)
     && !(status === OutgoingMessageStates.PENDING || status === OutgoingMessageStates.FAILED)
   );
-  const iconType = {
-    [OutgoingMessageStates.SENT]: IconTypes.DONE,
-    [OutgoingMessageStates.DELIVERED]: IconTypes.DONE_ALL,
-    [OutgoingMessageStates.READ]: IconTypes.DONE_ALL,
-    [OutgoingMessageStates.FAILED]: IconTypes.ERROR,
-  };
-  const iconColor = {
-    [OutgoingMessageStates.SENT]: IconColors.SENT,
-    [OutgoingMessageStates.DELIVERED]: IconColors.SENT,
-    [OutgoingMessageStates.READ]: IconColors.READ,
-    [OutgoingMessageStates.FAILED]: IconColors.ERROR,
-  };
 
   return (
     <div
@@ -72,7 +77,7 @@ export default function MessageStatus({
         <Icon
           className={`sendbird-message-status__icon ${hideMessageStatusIcon ? 'hide-icon' : ''} ${status === OutgoingMessageStates.FAILED ? '' : 'sendbird-message-status--sent'
           }`}
-          type={iconType[status] || IconTypes.ERROR}
+          type={iconType[status] ?? IconTypes.ERROR}
           fillColor={iconColor[status]}
           width="16px"
           height="16px"

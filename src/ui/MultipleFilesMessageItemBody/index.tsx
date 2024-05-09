@@ -66,9 +66,8 @@ export default function MultipleFilesMessageItemBody({
             onClickRight={onClickRight}
             onClose={onClose}
             onDownloadClick={async (e) => {
-              if (!onBeforeDownloadFileMessage) {
-                return null;
-              }
+              if (!onBeforeDownloadFileMessage) return;
+
               try {
                 const allowDownload = await onBeforeDownloadFileMessage({ message, index: currentFileViewerIndex });
                 if (!allowDownload) {

@@ -12,7 +12,7 @@ export const AddChannel = () => {
       onChangeCreateChannelVisible={setShowModal}
       onCreateChannelClick={overrideInviteUser}
       onBeforeCreateChannel={onBeforeCreateChannel}
-      onChannelCreated={onChannelSelect}
+      onChannelCreated={it => onChannelSelect?.(it)}
     />
   );
 };

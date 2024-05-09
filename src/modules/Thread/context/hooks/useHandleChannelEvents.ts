@@ -9,7 +9,7 @@ import * as messageActions from '../../../Channel/context/dux/actionTypes';
 
 interface DynamicProps {
   sdk: SdkStore['sdk'];
-  currentChannel: GroupChannel;
+  currentChannel: GroupChannel | null;
 }
 interface StaticProps {
   logger: Logger;

@@ -9,7 +9,7 @@ import { SdkStore } from '../../../../lib/types';
 import { SendableMessage } from '@sendbird/chat/lib/__definition';
 
 interface DynamicParams {
-  currentOpenChannel: OpenChannel;
+  currentOpenChannel: OpenChannel | null;
   onBeforeSendUserMessage?: (text: string) => UserMessageCreateParams;
   checkScrollBottom: () => boolean;
   messageInputRef: React.RefObject<HTMLInputElement>;
@@ -43,7 +43,7 @@ function useSendMessageCallback(
       logger.info('OpenChannel | useSendMessageCallback: Sending message has started', params);
 
       let pendingMsg: SendableMessage | undefined;
-      currentOpenChannel.sendUserMessage(params)
+      currentOpenChannel?.sendUserMessage(params)
         .onPending((pendingMessage) => {
           messagesDispatcher({
             type: messageActionTypes.SENDING_MESSAGE_START,
