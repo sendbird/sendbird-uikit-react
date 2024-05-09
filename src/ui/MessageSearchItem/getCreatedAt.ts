@@ -16,7 +16,7 @@ export default function ({
   locale,
   stringSet,
 }: GetCreatedAtProps): string {
-  const optionalParam = locale ? { locale } : {};
+  const optionalParam = { locale };
   if (!createdAt) {
     return '';
   }

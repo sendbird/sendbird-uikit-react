@@ -44,12 +44,8 @@ const displayCaret = (element: HTMLInputElement, position: number) => {
 };
 
 const resetInput = (ref: MutableRefObject<HTMLInputElement | null> | null) => {
-  try {
-    if (ref && ref.current) {
-      ref.current.innerHTML = '';
-    }
-  } catch {
-    //
+  if (ref && ref.current) {
+    ref.current.innerHTML = '';
   }
 };
 
@@ -147,7 +143,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     config,
   });
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>();
   const [isInput, setIsInput] = useState(false);
   const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
   const [targetStringInfo, setTargetStringInfo] = useState({ ...initialTargetStringInfo });
@@ -206,7 +202,11 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     if (isEdit && message?.messageId) {
       // const textField = document.getElementById(textFieldId);
       const textField = internalRef?.current;
-      if (isMentionEnabled && message?.mentionedUsers && message?.mentionedUsers?.length > 0 && message?.mentionedMessageTemplate?.length > 0) {
+      if (isMentionEnabled
+        && message?.mentionedUsers
+        && message.mentionedUsers.length > 0
+        && message?.mentionedMessageTemplate
+        && message.mentionedMessageTemplate.length > 0) {
         /* mention enabled */
         const { mentionedUsers = [] } = message;
         const tokens = tokenizeMessage({
@@ -344,7 +344,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
             if (currentNode === selection.anchorNode) {
               return currentNode?.textContent ? currentNode?.textContent.slice(0, selection.anchorOffset) : '';
             }
-            return currentNode?.textContent || '';
+            return currentNode?.textContent ?? '';
           })();
           if (textStack.length > 0) {
             textStack += textContent;
@@ -450,7 +450,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
                 && e.key === MessageInputKeys.Enter
                 && !isMobile
                 && internalRef?.current?.textContent
-                && internalRef?.current?.textContent?.trim().length > 0
+                && internalRef.current.textContent.trim().length > 0
                 && e?.nativeEvent?.isComposing !== true
                 /**
                  * NOTE: What isComposing does?
@@ -474,10 +474,10 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
               if (
                 e.key === MessageInputKeys.Backspace
                 && internalRef?.current?.childNodes?.length === 2
-                && !internalRef?.current?.childNodes?.[0]?.textContent
-                && internalRef?.current.childNodes?.[1]?.nodeType === NodeTypes.ElementNode
+                && !internalRef.current.childNodes[0].textContent
+                && internalRef.current.childNodes[1].nodeType === NodeTypes.ElementNode
               ) {
-                internalRef?.current.removeChild(internalRef?.current.childNodes[1]);
+                internalRef.current.removeChild(internalRef.current.childNodes[1]);
               }
             }
           }}
@@ -495,7 +495,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           onInput={() => {
             setHeight();
             onStartTyping();
-            setIsInput(internalRef?.current?.textContent ? internalRef?.current?.textContent?.trim().length > 0 : false);
+            setIsInput(internalRef?.current?.textContent ? internalRef.current.textContent.trim().length > 0 : false);
             useMentionedLabelDetection();
           }}
           onPaste={onPaste}

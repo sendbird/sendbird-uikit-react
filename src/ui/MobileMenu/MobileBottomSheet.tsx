@@ -37,7 +37,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     resendMessage,
     deleteMessage,
     toggleReaction,
-    isReactionEnabled,
+    isReactionEnabled = false,
     showEdit,
     showRemove,
     deleteMenuState,
@@ -66,7 +66,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
   );
 
   const showMenuItemDownload: boolean = isSentMessage(message) && isFileMessage(message) && !isVoiceMessage(message);
-  const showReaction: boolean | undefined = !isFailedMessage(message) && !isPendingMessage(message) && isReactionEnabled;
+  const showReaction: boolean = !isFailedMessage(message) && !isPendingMessage(message) && isReactionEnabled;
   const showMenuItemReply: boolean = (replyType === 'QUOTE_REPLY')
     && !isFailedMessage(message)
     && !isPendingMessage(message)
@@ -102,7 +102,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                     ${showEmojisOnly ? 'sendbird-message__bottomsheet-reaction-bar__all' : ''}
                   `}
                 >
-                  {visibleEmojis?.map((emoji: Emoji): React.ReactElement => {
+                  {visibleEmojis.map((emoji: Emoji): React.ReactElement => {
                     const isReacted: boolean = message?.reactions
                       ?.filter((reaction: Reaction): boolean => reaction.key === emoji.key)[0]
                       ?.userIds

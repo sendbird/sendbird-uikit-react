@@ -82,7 +82,7 @@ export function EditUserProfile({
             accept="image/gif, image/jpeg, image/png"
             style={{ display: 'none' }}
             onChange={(e) => {
-              if (e.target.files && 0 < e.target.files?.length) {
+              if (e.target.files && 0 < e.target.files.length) {
                 setCurrentImg(URL.createObjectURL(e.target.files[0]));
                 setNewFile(e.target.files[0]);
                 if (hiddenInputRef.current) { hiddenInputRef.current.value = ''; }

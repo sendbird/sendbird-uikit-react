@@ -49,8 +49,8 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
     }
   };
 
-  const modalRef = useRef(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>();
+  const inputRef = useRef<HTMLInputElement>();
 
   const onKeyDown = useKeyDown(modalRef, {
     Enter: () => onSubmitWrapper(),

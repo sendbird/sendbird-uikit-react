@@ -132,9 +132,9 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const contentRef = useRef(null);
-  const timestampRef = useRef<HTMLDivElement | null>(null);
-  const threadRepliesRef = useRef<HTMLDivElement | null>(null);
-  const feedbackButtonsRef = useRef<HTMLDivElement | null>(null);
+  const timestampRef = useRef<HTMLDivElement>();
+  const threadRepliesRef = useRef<HTMLDivElement>();
+  const feedbackButtonsRef = useRef<HTMLDivElement>();
   const { isMobile } = useMediaQueryContext();
   const [showMenu, setShowMenu] = useState(false);
 
@@ -177,13 +177,15 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const useReplyingClassName = useReplying ? 'use-quote' : '';
 
   // Thread replies
-  const displayThreadReplies = (message?.threadInfo?.replyCount !== undefined) && (message?.threadInfo?.replyCount) > 0 && replyType === 'THREAD';
+  const displayThreadReplies = message?.threadInfo?.replyCount
+    && message.threadInfo.replyCount > 0
+    && replyType === 'THREAD';
 
   // Feedback buttons
   const isFeedbackMessage = !isByMe
-    && message?.myFeedbackStatus
+    && !!message?.myFeedbackStatus
     && message.myFeedbackStatus !== SbFeedbackStatus.NOT_APPLICABLE;
-  const isFeedbackEnabled = config?.groupChannel?.enableFeedback && isFeedbackMessage;
+  const isFeedbackEnabled = !!config?.groupChannel?.enableFeedback && isFeedbackMessage;
 
   /**
    * For TemplateMessage, do not display:
