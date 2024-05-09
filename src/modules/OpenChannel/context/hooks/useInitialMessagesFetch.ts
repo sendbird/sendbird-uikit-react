@@ -7,7 +7,7 @@ import * as messageActionTypes from '../dux/actionTypes';
 import { scrollIntoLast } from '../utils';
 
 interface DynamicParams {
-  currentOpenChannel: OpenChannel;
+  currentOpenChannel: OpenChannel | null;
   /* eslint-disable @typescript-eslint/no-explicit-any */
   userFilledMessageListParams?: Record<string, any>;
 }
@@ -37,6 +37,7 @@ function useInitialMessagesFetch(
       };
       if (userFilledMessageListParams) {
         Object.keys(userFilledMessageListParams).forEach((key) => {
+          // @ts-ignore
           messageListParams[key] = userFilledMessageListParams[key];
         });
         logger.info('OpenChannel | useInitialMessagesFetch: Used customizedMessageListParams');

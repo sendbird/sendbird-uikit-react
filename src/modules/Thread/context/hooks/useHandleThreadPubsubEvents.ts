@@ -10,8 +10,8 @@ import { shouldPubSubPublishToThread } from '../../../internalInterfaces';
 
 interface DynamicProps {
   sdkInit: boolean;
-  currentChannel: GroupChannel;
-  parentMessage: SendableMessageType
+  currentChannel: GroupChannel | null;
+  parentMessage: SendableMessageType | null;
 }
 interface StaticProps {
   logger: Logger;
@@ -40,7 +40,7 @@ export default function useHandleThreadPubsubEvents({
             pendingMessage.fileInfoList = message?.messageParams?.fileInfoList.map((fileInfo) => ({
               ...fileInfo,
               url: URL.createObjectURL(fileInfo.file as File),
-            }));
+            })) ?? [];
           }
           threadDispatcher({
             type: ThreadContextActionTypes.SEND_MESSAGE_START,

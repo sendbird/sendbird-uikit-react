@@ -6,7 +6,7 @@ import { CoreMessageType } from '../../../../utils';
 import { LoggerInterface } from '../../../../lib/Logger';
 
 interface MainProps {
-  currentMessageSearchQuery: MessageSearchQuery;
+  currentMessageSearchQuery: MessageSearchQuery | null;
   hasMoreResult: boolean;
   onResultLoaded?: (messages?: Array<CoreMessageType> | null, error?: SendbirdError | null) => void;
 }

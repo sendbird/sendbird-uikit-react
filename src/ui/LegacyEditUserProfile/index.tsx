@@ -163,7 +163,7 @@ export function EditUserProfile({
   );
 }
 
-const mapStoreToProps = (store) => {
+const mapStoreToProps = (store: any) => {
   return {
     theme: store.config.theme,
     changeTheme: store.config.setCurrentTheme,

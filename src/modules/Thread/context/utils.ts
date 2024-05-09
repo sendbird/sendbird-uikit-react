@@ -1,6 +1,5 @@
 import format from 'date-fns/format';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
-import { BaseMessage } from '@sendbird/chat/message';
 import { getOutgoingMessageState, OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessageState';
 import { SendableMessageType } from '../../../utils';
 
@@ -13,7 +12,7 @@ export const getNicknamesMapFromMembers = (members: Member[] = []): Map<string, 
   return nicknamesMap;
 };
 
-export const getParentMessageFrom = (message: SendableMessageType | null): SendableMessageType | BaseMessage => {
+export const getParentMessageFrom = (message: SendableMessageType | null) => {
   if (!message) {
     return null;
   }

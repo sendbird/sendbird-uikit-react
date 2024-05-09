@@ -31,10 +31,12 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
     const operatorListQuery = channel?.createOperatorListQuery({
       limit: 20,
     });
-    operatorListQuery?.next().then((participants) => {
-      setUsers(participants);
-    });
-    setOperatorQuery(operatorListQuery ?? null);
+    if (operatorListQuery) {
+      operatorListQuery.next().then((participants) => {
+        setUsers(participants);
+      });
+      setOperatorQuery(operatorListQuery);
+    }
   }, []);
   return (
     <div>

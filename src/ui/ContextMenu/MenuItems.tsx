@@ -43,7 +43,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
   setupEvents = (): void => {
     const { closeDropdown } = this.props;
     const { menuRef } = this;
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: any) => {
       if (menuRef?.current && !menuRef?.current?.contains?.(event.target)) {
         closeDropdown?.();
       }

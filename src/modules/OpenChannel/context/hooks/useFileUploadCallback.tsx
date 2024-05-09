@@ -16,7 +16,7 @@ import { ModalFooter } from '../../../../ui/Modal';
 import { ButtonTypes } from '../../../../ui/Button';
 
 interface DynamicParams {
-  currentOpenChannel: OpenChannel;
+  currentOpenChannel: OpenChannel | null;
   onBeforeSendFileMessage?: (file: File) => FileMessageCreateParams;
   checkScrollBottom: () => boolean;
   imageCompression?: ImageCompressionOptions;
@@ -96,7 +96,7 @@ function useFileUploadCallback({
       const params = onBeforeSendFileMessage ? onBeforeSendFileMessage(compressedFile) : createParamsDefault(compressedFile);
       logger.info('OpenChannel | useFileUploadCallback: Uploading file message start', params);
 
-      currentOpenChannel.sendFileMessage(params)
+      currentOpenChannel?.sendFileMessage(params)
         .onPending((pendingMessage) => {
           messagesDispatcher({
             type: messageActionTypes.SENDING_MESSAGE_START,

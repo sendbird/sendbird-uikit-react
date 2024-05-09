@@ -1,10 +1,10 @@
 import './index.scss';
-import React, { MouseEvent, ReactElement, useContext, useRef } from 'react';
+import React, { ReactElement, useContext, useRef } from 'react';
 import type { UserMessage } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 
-import ContextMenu, { MenuItems, MenuItem } from '../ContextMenu';
+import ContextMenu, { MenuItems, MenuItem, MenuItemProps } from '../ContextMenu';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import IconButton from '../IconButton';
 import {
@@ -21,11 +21,8 @@ import { Role } from '../../lib/types';
 import { ReplyType } from '../../types';
 import { deleteNullish } from '../../utils/utils';
 
-export interface MessageMenuRenderMenuItemProps {
+export interface MessageMenuRenderMenuItemProps extends Omit<MenuItemProps, 'children' | 'className'> {
   className?: string;
-  onClick?: (e: MouseEvent) => void;
-  dataSbId?: string;
-  disable?: boolean;
   text: string;
 }
 export interface MessageMenuProps {

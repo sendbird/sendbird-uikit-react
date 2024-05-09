@@ -54,13 +54,13 @@ export interface ThreadProviderInterface extends ThreadProviderProps, ThreadCont
   // hooks for fetching threads
   fetchPrevThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
   fetchNextThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
-  toggleReaction: (message, key, isReacted) => void;
+  toggleReaction: ReturnType<typeof useToggleReactionCallback>;
   sendMessage: (props: SendMessageParams) => void;
   sendFileMessage: (file: File, quoteMessage?: SendableMessageType) => Promise<FileMessage>;
-  sendVoiceMessage: (file: File, duration: number, quoteMessage?: SendableMessageType) => void;
+  sendVoiceMessage: ReturnType<typeof useSendVoiceMessageCallback>;
   sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => Promise<MultipleFilesMessage>,
   resendMessage: (failedMessage: SendableMessageType) => void;
-  updateMessage: (props, callback?: () => void) => void;
+  updateMessage: ReturnType<typeof useUpdateMessageCallback>;
   deleteMessage: (message: SendableMessageType) => Promise<void>;
   nicknamesMap: Map<string, string>;
 }
@@ -275,5 +275,8 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
   );
 };
 
-export type UseThreadContextType = () => ThreadProviderInterface;
-export const useThreadContext: UseThreadContextType = () => React.useContext(ThreadContext);
+export const useThreadContext = () => {
+  const context = React.useContext(ThreadContext);
+  if (!context) throw new Error('ThreadContext not found. Use within the Thread module');
+  return context;
+};

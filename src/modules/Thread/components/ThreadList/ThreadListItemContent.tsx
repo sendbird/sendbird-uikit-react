@@ -394,9 +394,8 @@ export default function ThreadListItemContent({
           isOpenedFromThread
           deleteMessage={deleteMessage}
           onDownloadClick={async (e) => {
-            if (!onBeforeDownloadFileMessage) {
-              return null;
-            }
+            if (!onBeforeDownloadFileMessage) return;
+
             try {
               const allowDownload = await onBeforeDownloadFileMessage({ message: message as FileMessage });
               if (!allowDownload) {

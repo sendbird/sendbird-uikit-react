@@ -56,8 +56,9 @@ export const isOperator = (openChannel: OpenChannel, userId: string): boolean =>
   return true;
 };
 
-export const isDisabledBecauseFrozen = (openChannel: OpenChannel, userId: string): boolean => {
-  const isFrozen = openChannel?.isFrozen;
+export const isDisabledBecauseFrozen = (openChannel: OpenChannel | null, userId: string): boolean => {
+  if (!openChannel) return false;
+  const isFrozen = openChannel.isFrozen;
   return isFrozen && !isOperator(openChannel, userId);
 };
 

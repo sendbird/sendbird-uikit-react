@@ -27,7 +27,7 @@ export default function AddOperatorsModal({
   onSubmit,
 }: Props): ReactElement {
   const [participants, setParticipants] = useState<User[]>([]);
-  const [selectedUsers, setSelectedUsers] = useState({});
+  const [selectedUsers, setSelectedUsers] = useState<Record<string, boolean>>({});
   const [participantQuery, setParticipantQuery] = useState<ParticipantListQuery | null>(null);
   const { stringSet } = useContext(LocalizationContext);
 
@@ -37,10 +37,12 @@ export default function AddOperatorsModal({
     const participantListQuery = channel?.createParticipantListQuery({
       limit: 20,
     });
-    participantListQuery?.next().then((users) => {
-      setParticipants(users);
-    });
-    if (participantListQuery) { setParticipantQuery(participantListQuery); }
+    if (participantListQuery) {
+      participantListQuery.next().then((users) => {
+        setParticipants(users);
+      });
+      setParticipantQuery(participantListQuery);
+    }
   }, []);
 
   const selectedCount = Object.keys(selectedUsers).filter((m) => selectedUsers[m]).length;

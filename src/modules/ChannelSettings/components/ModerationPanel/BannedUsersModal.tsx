@@ -30,10 +30,12 @@ export default function BannedUsersModal({
 
   useEffect(() => {
     const bannedUserListQuery = channel?.createBannedUserListQuery();
-    bannedUserListQuery?.next().then((users) => {
-      setMembers(users);
-    });
-    setMemberQuery(bannedUserListQuery ?? null);
+    if (bannedUserListQuery) {
+      bannedUserListQuery.next().then((users) => {
+        setMembers(users);
+      });
+      setMemberQuery(bannedUserListQuery);
+    }
   }, []);
   return (
     <div>
@@ -48,6 +50,7 @@ export default function BannedUsersModal({
           className="sendbird-more-members__popup-scroll"
           onScroll={useOnScrollPositionChangeDetector({
             onReachedBottom: async () => {
+              if (!memberQuery) return;
               const { hasNext } = memberQuery;
               if (hasNext) {
                 memberQuery.next().then((o) => {

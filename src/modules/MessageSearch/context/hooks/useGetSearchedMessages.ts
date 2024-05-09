@@ -16,7 +16,7 @@ enum MessageSearchOrder {
 }
 
 interface MainProps {
-  currentChannel: GroupChannel;
+  currentChannel: GroupChannel | null;
   channelUrl: string;
   requestString?: string;
   messageSearchQuery?: MessageSearchQueryParams;
