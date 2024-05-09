@@ -65,6 +65,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
           mock-date
         </span>
       </div>
+      0
     </div>
     <div
       class="sendbird-message-content__right   "
