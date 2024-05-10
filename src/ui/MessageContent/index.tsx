@@ -399,8 +399,8 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           {(isReactionEnabledInChannel && message?.reactions?.length > 0) && (
             <div className={classnames(
               'sendbird-message-content-reactions',
-              isMultipleFilesMessage(message) ? 'image-grid' :
-                (isByMe && !isThumbnailMessage(message) && !isOGMessage(message)) && 'primary',
+              isMultipleFilesMessage(message) ? 'image-grid'
+                : (isByMe && !isThumbnailMessage(message) && !isOGMessage(message)) && 'primary',
               mouseHover && 'mouse-hover',
             )}>
               {

@@ -13,7 +13,7 @@ import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 import { extractTextAndMentions, isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
-import { arrayEqual, getClassName, getMimeTypesUIKitAccepts } from '../../utils';
+import { arrayEqual, getMimeTypesUIKitAccepts } from '../../utils';
 import usePaste from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
@@ -420,7 +420,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   });
 
   return (
-    <form className={classnames( className, isEdit && 'sendbird-message-input__edit', disabled && 'sendbird-message-input-form__disabled')}>
+    <form className={classnames(className, isEdit && 'sendbird-message-input__edit', disabled && 'sendbird-message-input-form__disabled')}>
       <div className={classnames('sendbird-message-input', disabled && 'sendbird-message-input__disabled')} data-testid="sendbird-message-input">
         <div
           id={`${textFieldId}${isEdit ? message?.messageId : ''}`}
