@@ -14,7 +14,7 @@ const defaultProps: InitialParams = {
 
 function GroupChannelPage() {
   const props = useConfigParams(defaultProps);
-  return <GroupChannelApp {...props} breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)} />;
+  return <GroupChannelApp {...props} breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)} config={{ logLevel: 'all' }} />;
 }
 
 function OpenChannelPage() {
