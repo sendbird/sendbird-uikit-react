@@ -58,7 +58,7 @@ export default {
           resolvecss({ code: result.css.toString() });
         }),
       plugins: [autoprefixer],
-      sourceMap: true,
+      sourceMap: false,
       extract: "dist/index.css",
       extensions: [".sass", ".scss", ".css"],
     }),
