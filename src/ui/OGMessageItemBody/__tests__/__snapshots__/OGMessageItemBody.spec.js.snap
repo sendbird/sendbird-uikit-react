@@ -7,6 +7,7 @@ exports[`ui/OGMessageItemBody should do a snapshot test of the OGMessageItemBody
   >
     <span
       class="sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
+      data-testid=""
     >
       <div
         class="sendbird-og-message-item-body__text-bubble"
@@ -37,16 +38,19 @@ exports[`ui/OGMessageItemBody should do a snapshot test of the OGMessageItemBody
     >
       <span
         class="sendbird-og-message-item-body__description__title sendbird-label sendbird-label--subtitle-2 sendbird-label--color-onbackground-1"
+        data-testid=""
       >
         example-text
       </span>
       <span
         class="sendbird-og-message-item-body__description__description sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-1"
+        data-testid=""
       >
         example-text
       </span>
       <span
         class="sendbird-og-message-item-body__description__url sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+        data-testid=""
       >
         example-text
       </span>

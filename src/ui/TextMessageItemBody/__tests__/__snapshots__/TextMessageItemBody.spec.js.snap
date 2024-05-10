@@ -4,6 +4,7 @@ exports[`ui/TextMessageItemBody should do a snapshot test of the TextMessageItem
 <DocumentFragment>
   <span
     class="sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"
+    data-testid=""
   >
     <div
       class="class-name-for-snapshot sendbird-text-message-item-body outgoing mouse-hover "
@@ -11,6 +12,7 @@ exports[`ui/TextMessageItemBody should do a snapshot test of the TextMessageItem
       First second third fourth fifth
       <span
         class="sendbird-text-message-item-body__message edited sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-2"
+        data-testid=""
       >
          (edited) 
       </span>

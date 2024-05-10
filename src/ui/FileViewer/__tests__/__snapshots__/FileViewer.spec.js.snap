@@ -4,6 +4,7 @@ exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
 <DocumentFragment>
   <div
     class="sendbird-fileviewer"
+    data-testid="sendbird-fileviewer"
     tabindex="1"
   >
     <div
@@ -39,11 +40,13 @@ exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
         </div>
         <span
           class="sendbird-fileviewer__header__left__filename sendbird-label sendbird-label--h-2 sendbird-label--color-onbackground-1"
+          data-testid=""
         >
           sent-mail (1).png
         </span>
         <span
           class="sendbird-fileviewer__header__left__sender-name sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-2"
+          data-testid=""
         >
           hoon102
         </span>
@@ -62,6 +65,7 @@ exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
           >
             <div
               class=" sendbird-icon sendbird-icon-down-load sendbird-icon-color--on-background-1"
+              data-testid=""
               role="button"
               style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
               tabindex="0"
@@ -75,6 +79,7 @@ exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
         >
           <div
             class=" sendbird-icon sendbird-icon-close sendbird-icon-color--on-background-1"
+            data-testid=""
             role="button"
             style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
             tabindex="0"

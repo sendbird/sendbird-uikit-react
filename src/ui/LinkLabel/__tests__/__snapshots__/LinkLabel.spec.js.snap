@@ -10,6 +10,7 @@ exports[`ui/LinkLabel should do a snapshot test of the LinkLabel DOM 1`] = `
   >
     <span
       class="sendbird-link-label__label sendbird-label sendbird-label--body-1 sendbird-label--color-primary"
+      data-testid="sendbird-link-label__label"
     >
       example-text
     </span>

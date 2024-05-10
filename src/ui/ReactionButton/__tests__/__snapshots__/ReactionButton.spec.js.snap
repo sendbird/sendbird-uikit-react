@@ -15,6 +15,7 @@ exports[`ui/ReactionButton should do a snapshot test of the ReactionButton DOM 1
     >
       <div
         class=" sendbird-icon sendbird-icon-create "
+        data-testid=""
         role="button"
         style="width: 28px; min-width: 28px; height: 28px; min-height: 28px;"
         tabindex="0"

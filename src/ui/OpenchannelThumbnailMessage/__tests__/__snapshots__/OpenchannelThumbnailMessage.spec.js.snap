@@ -43,11 +43,13 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
       >
         <span
           class="sendbird-openchannel-thumbnail-message__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
+          data-testid=""
         >
           hoon102
         </span>
         <span
           class="sendbird-openchannel-thumbnail-message__right__title__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
+          data-testid=""
         >
           mock-date
         </span>
@@ -72,6 +74,7 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
             >
               <div
                 class=" sendbird-icon sendbird-icon-photo sendbird-icon-color--on-background-2"
+                data-testid=""
                 role="button"
                 style="width: 56px; min-width: 56px; height: 56px; min-height: 56px;"
                 tabindex="0"
@@ -109,6 +112,7 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
           >
             <div
               class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
+              data-testid=""
               role="button"
               style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
               tabindex="0"

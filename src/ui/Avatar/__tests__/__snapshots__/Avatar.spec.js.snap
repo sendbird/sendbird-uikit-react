@@ -63,6 +63,7 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with four element
         >
           <div
             class=" sendbird-icon sendbird-icon-user sendbird-icon-color--content"
+            data-testid=""
             role="button"
             style="width: 32.199999999999996px; min-width: 32.199999999999996px; height: 32.199999999999996px; min-height: 32.199999999999996px;"
             tabindex="0"
@@ -226,6 +227,7 @@ exports[`ui/Avatar should render default image if src is empty 1`] = `
       >
         <div
           class=" sendbird-icon sendbird-icon-user sendbird-icon-color--content"
+          data-testid=""
           role="button"
           style="width: 32.199999999999996px; min-width: 32.199999999999996px; height: 32.199999999999996px; min-height: 32.199999999999996px;"
           tabindex="0"
