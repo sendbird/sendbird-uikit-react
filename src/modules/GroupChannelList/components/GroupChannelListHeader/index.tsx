@@ -6,6 +6,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import Avatar from '../../../../ui/Avatar';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import Header, { HeaderCustomProps } from '../../../../ui/Header';
+import { classnames } from '../../../../utils/utils';
 
 export interface GroupChannelListHeaderProps extends HeaderCustomProps {
   /** @deprecated Use the props `renderMiddle` instead */
@@ -33,7 +34,7 @@ export const GroupChannelListHeader = ({
 
   return (
     <Header
-      className={`sendbird-channel-header ${allowProfileEdit ? 'sendbird-channel-header--allow-edit' : ''}`}
+      className={classnames('sendbird-channel-header', allowProfileEdit && 'sendbird-channel-header--allow-edit')}
       renderLeft={renderLeft}
       renderMiddle={() => (
         renderProfile?.() ?? (

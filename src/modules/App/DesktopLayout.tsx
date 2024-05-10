@@ -12,6 +12,7 @@ import ChannelSettings from '../ChannelSettings';
 import MessageSearchPannel from '../MessageSearch';
 import Thread from '../Thread';
 import { SendableMessageType } from '../../utils';
+import { classnames } from '../../utils/utils';
 
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayoutProps) => {
   const {
@@ -113,11 +114,11 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
         {enableLegacyChannelModules ? <ChannelList {...channelListProps} /> : <GroupChannelList {...channelListProps} />}
       </div>
       <div
-        className={`
-          ${showSettings ? 'sendbird-app__conversation--settings-open' : ''}
-          ${showSearch ? 'sendbird-app__conversation--search-open' : ''}
-          sendbird-app__conversation-wrap
-        `}
+        className={classnames(
+          'sendbird-app__conversation-wrap',
+          showSettings && 'sendbird-app__conversation--settings-open',
+          showSearch && 'sendbird-app__conversation--search-open',
+        )}
       >
         {enableLegacyChannelModules ? <Channel {...channelProps} /> : <GroupChannel {...channelProps} />}
       </div>

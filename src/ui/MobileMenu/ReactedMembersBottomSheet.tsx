@@ -11,6 +11,7 @@ import ImageRenderer from '../ImageRenderer';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import UserListItem from '../UserListItem';
+import { classnames } from '../../utils/utils';
 
 export interface ReactedMembersBottomSheetProps {
   message: SendableMessageType;
@@ -48,10 +49,10 @@ export const ReactedMembersBottomSheet = ({
             return (
               <div
                 key={reaction.key}
-                className={`
-                  sendbird-message__bottomsheet__reacted-members__item
-                  ${selectedEmoji === reaction.key ? 'sendbird-message__bottomsheet__reacted-members__item__selected' : ''}
-                `}
+                className={classnames(
+                  'sendbird-message__bottomsheet__reacted-members__item',
+                  selectedEmoji === reaction.key && 'sendbird-message__bottomsheet__reacted-members__item__selected',
+                )}
                 onClick={() => {
                   setSelectedEmoji(reaction.key);
                 }}

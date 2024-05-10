@@ -13,6 +13,7 @@ import {
 import { getLastMessageCreatedAt } from '../../modules/ChannelList/components/ChannelPreview/utils';
 import { useLocalization } from '../../lib/LocalizationContext';
 import { Nullable } from '../../types';
+import { classnames } from '../../utils/utils';
 
 export const MessageStatusTypes = OutgoingMessageStates;
 
@@ -75,9 +76,8 @@ export default function MessageStatus({
         </Loader>
       ) : (
         <Icon
-          className={`sendbird-message-status__icon ${hideMessageStatusIcon ? 'hide-icon' : ''} ${status === OutgoingMessageStates.FAILED ? '' : 'sendbird-message-status--sent'
-          }`}
-          type={iconType[status] ?? IconTypes.ERROR}
+          className={classnames('sendbird-message-status__icon', hideMessageStatusIcon && 'hide-icon', status !== OutgoingMessageStates.FAILED && 'sendbird-message-status--sent')}
+          type={iconType[status] || IconTypes.ERROR}
           fillColor={iconColor[status]}
           width="16px"
           height="16px"

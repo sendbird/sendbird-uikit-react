@@ -7,6 +7,7 @@ import { Freeze } from '../assets/Icons';
 import Avatar from '../../../ui/Avatar';
 import Icon, { IconTypes, IconColors } from '../../../ui/Icon';
 import { OpenChannel } from '@sendbird/chat/openChannel';
+import { classnames } from '../../../utils/utils';
 
 interface Props {
   channel: OpenChannel;
@@ -42,11 +43,7 @@ export default function OpenChannelPreview({
   }, [isStreaming]);
   return (
     <div
-      className={`
-        channel-preview
-        ${selected ? 'channel-preview--selected' : null}
-        ${isStreaming ? 'channel-preview--streaming' : null}
-      `}
+      className={classnames('channel-preview', selected && 'channel-preview--selected', isStreaming && 'channel-preview--streaming')}
       onClick={onClick}
     >
       <div className="channel-preview__selection" />

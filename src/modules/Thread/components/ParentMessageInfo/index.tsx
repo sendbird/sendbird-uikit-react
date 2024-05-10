@@ -30,6 +30,7 @@ import MobileMenu from '../../../../ui/MobileMenu';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { User } from '@sendbird/chat';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
+import { classnames } from '../../../../utils/utils';
 
 export interface ParentMessageInfoProps {
   className?: string;
@@ -270,7 +271,11 @@ export default function ParentMessageInfo({
       <div className="sendbird-parent-message-info__content">
         <div className="sendbird-parent-message-info__content__info">
           <Label
-            className={`sendbird-parent-message-info__content__info__sender-name${isReactionEnabled ? '--use-reaction' : ''}`}
+            className={
+              isReactionEnabled
+                ? 'sendbird-parent-message-info__content__info__sender-name--use-reaction'
+                : 'sendbird-parent-message-info__content__info__sender-name'
+            }
             type={LabelTypography.CAPTION_2}
             color={LabelColors.ONBACKGROUND_2}
           >
@@ -297,7 +302,7 @@ export default function ParentMessageInfo({
       {/* context menu */}
       {!isMobile && (
         <MessageItemMenu
-          className={`sendbird-parent-message-info__context-menu ${isReactionEnabled ? 'use-reaction' : ''} ${supposedHover ? 'sendbird-mouse-hover' : ''}`}
+          className={classnames('sendbird-parent-message-info__context-menu', isReactionEnabled && 'use-reaction', supposedHover && 'sendbird-mouse-hover')}
           channel={currentChannel}
           message={parentMessage}
           isByMe={userId === parentMessage?.sender?.userId}
@@ -314,7 +319,7 @@ export default function ParentMessageInfo({
       )}
       {(isReactionEnabled && !isMobile) && (
         <MessageItemReactionMenu
-          className={`sendbird-parent-message-info__reaction-menu ${supposedHover ? 'sendbird-mouse-hover' : ''}`}
+          className={classnames('sendbird-parent-message-info__reaction-menu', supposedHover && 'sendbird-mouse-hover')}
           message={parentMessage}
           userId={userId}
           emojiContainer={emojiContainer}

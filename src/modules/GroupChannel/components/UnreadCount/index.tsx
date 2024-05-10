@@ -5,6 +5,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import format from 'date-fns/format';
+import { classnames } from '../../../../utils/utils';
 
 export interface UnreadCountProps {
   className?: string;
@@ -37,7 +38,7 @@ export const UnreadCount: React.FC<UnreadCountProps> = ({
 
   return (
     <div
-      className={`sendbird-notification${count < 1 ? '--hide' : ''} ${className}`}
+      className={classnames(count < 1 ? 'sendbird-notification--hide' : 'sendbird-notification', className)}
       onClick={onClick}
     >
       <Label className="sendbird-notification__text" color={LabelColors.ONCONTENT_1} type={LabelTypography.CAPTION_2}>

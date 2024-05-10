@@ -18,6 +18,7 @@ import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions'
 import { useHandleUploadFiles } from '../../../Channel/context/hooks/useHandleUploadFiles';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channel/context/utils';
 import { User } from '@sendbird/chat';
+import { classnames } from '../../../../utils/utils';
 
 export interface ThreadMessageInputProps {
   className?: string;
@@ -116,7 +117,7 @@ const ThreadMessageInput = (
   }
 
   return (
-    <div className={`sendbird-thread-message-input${showVoiceMessageInput ? '--voice-message' : ''} ${className}`}>
+    <div className={classnames(showVoiceMessageInput ? 'sendbird-thread-message-input--voice-message' : 'sendbird-thread-message-input', className)}>
       {
         displaySuggestedMentionList && (
           <SuggestedMentionList

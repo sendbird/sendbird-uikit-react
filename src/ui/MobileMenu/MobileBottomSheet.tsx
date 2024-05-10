@@ -23,6 +23,7 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import { classnames } from '../../utils/utils';
 
 const EMOJI_SIZE = 38;
 
@@ -96,12 +97,10 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
               <ul
                 className="sendbird-message__bottomsheet-reaction-bar"
               >
-                <div
-                  className={`
-                    sendbird-message__bottomsheet-reaction-bar__row
-                    ${showEmojisOnly ? 'sendbird-message__bottomsheet-reaction-bar__all' : ''}
-                  `}
-                >
+                <div className={classnames(
+                  'sendbird-message__bottomsheet-reaction-bar__row',
+                  showEmojisOnly && 'sendbird-message__bottomsheet-reaction-bar__all',
+                )}>
                   {visibleEmojis.map((emoji: Emoji): React.ReactElement => {
                     const isReacted: boolean = message?.reactions
                       ?.filter((reaction: Reaction): boolean => reaction.key === emoji.key)[0]
@@ -238,9 +237,10 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
               {
                 showMenuItemReply && (
                   <div
-                    className={`sendbird-message__bottomsheet--action
-                      ${disableReaction ? 'sendbird-message__bottomsheet--action-disabled' : ''}
-                    `}
+                    className={classnames(
+                      'sendbird-message__bottomsheet--action',
+                      disableReaction && 'sendbird-message__bottomsheet--action-disabled',
+                    )}
                     role="menuitem"
                     aria-disabled={disableReaction ? true : false}
                     onClick={() => {

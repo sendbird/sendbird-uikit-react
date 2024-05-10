@@ -33,7 +33,7 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
       className={`${className} sendbird-bottomsheet`}
     >
       <div
-        className={'sendbird-bottomsheet__content'}
+        className="sendbird-bottomsheet__content"
         role='dialog'
         aria-modal='true'
         aria-expanded='true'
@@ -41,9 +41,7 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
         {children}
       </div>
       <div
-        className={`
-          sendbird-bottomsheet__backdrop
-        `}
+        className="sendbird-bottomsheet__backdrop"
         onClick={(e) => {
           e?.stopPropagation();
           onBackdropClick?.();
