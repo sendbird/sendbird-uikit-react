@@ -73,7 +73,7 @@ export default function OpenChannelMessage(
 
   if (renderMessage) {
     return (
-      <div className="sendbird-msg-hoc sendbird-msg--scroll-ref">
+      <div className="sendbird-msg-hoc sendbird-msg--scroll-ref" data-testid="sendbird-message-hoc">
         {renderMessage({ message, chainTop, chainBottom })}
       </div>
     );
@@ -99,7 +99,7 @@ export default function OpenChannelMessage(
   }
 
   return (
-    <div className="sendbird-msg-hoc sendbird-msg--scroll-ref">
+    <div className="sendbird-msg-hoc sendbird-msg--scroll-ref" data-testid="sendbird-message-hoc">
       <>
         {/* date-separator */}
         {hasSeparator && message?.createdAt && (

@@ -21,7 +21,7 @@ import MessageContent, { MessageContentProps } from '../../../../ui/MessageConte
 import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
 import type { OnBeforeDownloadFileMessageType } from '../../context/GroupChannelProvider';
-import { deleteNullish } from '../../../../utils/utils';
+import { classnames, deleteNullish } from '../../../../utils/utils';
 
 export interface MessageProps {
   message: EveryMessage;
@@ -392,10 +392,11 @@ const MessageView = (props: MessageViewProps) => {
 
   return (
     <div
-      className={getClassName([
+      className={classnames(
         'sendbird-msg-hoc sendbird-msg--scroll-ref',
-        isAnimated ? 'sendbird-msg-hoc__animated' : '',
-      ])}
+        isAnimated && 'sendbird-msg-hoc__animated',
+      )}
+      data-testid="sendbird-message-hoc"
       style={children || renderMessage ? undefined : { marginBottom: '2px' }}
       data-sb-message-id={message.messageId}
       data-sb-created-at={message.createdAt}

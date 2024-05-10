@@ -69,7 +69,7 @@ type MessageInputProps = {
   channel: GroupChannel | OpenChannel;
   message?: UserMessage;
   value?: null | string;
-  className?: string | string[];
+  className?: string;
   messageFieldId?: string;
   isEdit?: boolean;
   isMobile?: boolean;
@@ -420,14 +420,8 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   });
 
   return (
-    <form
-      className={getClassName([
-        className,
-        isEdit ? 'sendbird-message-input__edit' : '',
-        disabled ? 'sendbird-message-input-form__disabled' : '',
-      ])}
-    >
-      <div className={getClassName(['sendbird-message-input', disabled ? 'sendbird-message-input__disabled' : ''])}>
+    <form className={classnames( className, isEdit && 'sendbird-message-input__edit', disabled && 'sendbird-message-input-form__disabled')}>
+      <div className={classnames('sendbird-message-input', disabled && 'sendbird-message-input__disabled')} data-testid="sendbird-message-input">
         <div
           id={`${textFieldId}${isEdit ? message?.messageId : ''}`}
           className={`sendbird-message-input--textarea ${textFieldId}`}
@@ -510,7 +504,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         )}
         {/* send icon */}
         {!isEdit && isInput && (
-          <IconButton className="sendbird-message-input--send" height="32px" width="32px" onClick={() => sendMessage()}>
+          <IconButton className="sendbird-message-input--send" height="32px" width="32px" onClick={() => sendMessage()} testID="sendbird-message-input-send-button">
             {renderSendMessageIcon?.() || (
               <Icon
                 type={IconTypes.SEND}
@@ -581,7 +575,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
       </div>
       {/* Edit */}
       {isEdit && (
-        <div className="sendbird-message-input--edit-action">
+        <div className="sendbird-message-input--edit-action" data-testid="sendbird-message-input--edit-action">
           <Button
             className="sendbird-message-input--edit-action__cancel"
             type={ButtonTypes.SECONDARY}

@@ -12,6 +12,7 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 
 export interface ReactionBadgeProps {
   className?: string | Array<string>;
+  testID?: string;
   children: ReactElement;
   count?: number | string;
   isAdd?: boolean;
@@ -23,6 +24,7 @@ export interface ReactionBadgeProps {
 const ReactionBadge = React.forwardRef((props: ReactionBadgeProps, ref: RefObject<HTMLDivElement>): ReactElement => {
   const {
     className = '',
+    testID = '',
     children,
     count = '',
     isAdd = false,
@@ -46,6 +48,7 @@ const ReactionBadge = React.forwardRef((props: ReactionBadgeProps, ref: RefObjec
         ...(Array.isArray(className) ? className : [className]),
         `sendbird-reaction-badge${getClassNameTail()}`,
       ].join(' ')}
+      data-testid={testID}
       role="button"
       ref={ref}
       onClick={onClick}

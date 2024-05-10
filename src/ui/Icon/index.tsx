@@ -147,6 +147,7 @@ export interface IconProps {
   height?: string | number;
   onClick?: React.MouseEventHandler<HTMLDivElement> & React.KeyboardEventHandler<HTMLDivElement>;
   children?: React.ReactNode;
+  testID?: string;
 }
 export default function Icon({
   className = '',
@@ -156,6 +157,7 @@ export default function Icon({
   height = 26,
   onClick = noop,
   children = null,
+  testID = '',
 }: IconProps) {
   const iconStyle = {
     width: typeof width === 'string' ? width : `${width}px`,
@@ -171,6 +173,7 @@ export default function Icon({
         changeTypeToIconClassName(type),
         changeColorToClassName(fillColor),
       ].join(' ')}
+      data-testid={testID}
       role={'button'}
       onClick={onClick}
       onKeyDown={onClick}

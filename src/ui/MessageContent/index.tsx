@@ -330,7 +330,9 @@ export default function MessageContent(props: MessageContentProps): ReactElement
         {/* quote message */}
         {(useReplying) ? (
           <div
-            className={classnames('sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming', useReplyingClassName)}>
+            className={classnames('sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming', useReplyingClassName)}
+            data-testid="sendbird-message-content__middle__quote-message"
+          >
             <QuoteMessage
               className="sendbird-message-content__middle__quote-message__quote"
               message={message}

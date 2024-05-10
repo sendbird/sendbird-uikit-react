@@ -90,6 +90,7 @@ const EmojiReactions = ({
           menuTrigger={(toggleDropdown: () => void): ReactElement => (
             <ReactionBadge
               className="sendbird-emoji-reactions__add-reaction-badge"
+              testID="sendbird-emoji-reactions__add-reaction-badge"
               ref={addReactionRef}
               isAdd
               onClick={(e) => {

@@ -49,6 +49,7 @@ export function ToggleUI(props: ToggleUIProps): React.ReactElement {
         disabled ? 'sendbird-input-toggle-button--disabled' : [],
         reversed ? 'sendbird-input-toggle-button--reversed' : [],
       ].flat().join(' ')}
+      data-testid="sendbird-input-toggle-button"
       style={{
         width: `${toggleWidth}px`,
         height: `${toggleHeight}px`,

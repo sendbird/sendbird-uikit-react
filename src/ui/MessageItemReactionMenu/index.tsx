@@ -59,6 +59,7 @@ export function MessageEmojiMenu({
           >
             <Icon
               className="sendbird-message-item-reaction-menu__trigger__icon"
+              testID="sendbird-message-item-reaction-menu__trigger__icon"
               type={IconTypes.EMOJI_MORE}
               fillColor={IconColors.CONTENT_INVERSE}
               width="24px"

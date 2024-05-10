@@ -64,6 +64,7 @@ export default function MessageStatus({
       {(status === OutgoingMessageStates.PENDING) ? (
         <Loader
           className="sendbird-message-status__icon"
+          testID="sendbird-message-status-icon"
           width="16px"
           height="16px"
         >
@@ -77,6 +78,7 @@ export default function MessageStatus({
       ) : (
         <Icon
           className={classnames('sendbird-message-status__icon', hideMessageStatusIcon && 'hide-icon', status !== OutgoingMessageStates.FAILED && 'sendbird-message-status--sent')}
+          testID="sendbird-message-status-icon"
           type={iconType[status] || IconTypes.ERROR}
           fillColor={iconColor[status]}
           width="16px"
@@ -86,6 +88,7 @@ export default function MessageStatus({
       {isSentStatus(status) && (
         <Label
           className="sendbird-message-status__text"
+          testID="sendbird-message-status-text"
           type={LabelTypography.CAPTION_3}
           color={LabelColors.ONBACKGROUND_2}
         >
