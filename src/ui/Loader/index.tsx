@@ -17,7 +17,7 @@ export default function Loader({
   width = '26px',
   height = '26px',
   children,
-  testID = '',
+  testID,
 }: LoaderProps): ReactElement {
   return (
     <div

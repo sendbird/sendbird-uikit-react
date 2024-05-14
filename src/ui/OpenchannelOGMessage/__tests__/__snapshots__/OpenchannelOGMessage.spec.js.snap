@@ -46,13 +46,11 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
         >
           <span
             class="sendbird-openchannel-og-message__top__right__title__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
-            data-testid=""
           >
             Hoon Baek
           </span>
           <span
             class="sendbird-openchannel-og-message__top__right__title__sent-at sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-3"
-            data-testid=""
           >
             mock-date
           </span>
@@ -62,7 +60,6 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
         >
           <span
             class="sendbird-openchannel-og-message__top__right__description__message sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-            data-testid=""
           >
             I am the Message
           </span>
@@ -86,7 +83,6 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
             >
               <div
                 class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
-                data-testid=""
                 role="button"
                 style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
                 tabindex="0"
@@ -106,7 +102,6 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
       >
         <span
           class="sendbird-openchannel-og-message__bottom__og-tag__url sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
-          data-testid=""
         >
           https://sendbird.com/
         </span>
@@ -125,7 +120,6 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
         </a>
         <span
           class="sendbird-openchannel-og-message__bottom__og-tag__description sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-1"
-          data-testid=""
         >
           I am description I am who has much string in this og meta data
         </span>

@@ -19,7 +19,7 @@ export const Label = forwardRef(({
   type,
   color,
   children = null,
-  testID = '',
+  testID,
 }: LabelProps, ref?: RefObject<HTMLDivElement>) => {
   return (
     // Donot make this into div

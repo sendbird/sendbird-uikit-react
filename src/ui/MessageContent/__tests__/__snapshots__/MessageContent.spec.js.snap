@@ -29,7 +29,6 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
             >
               <div
                 class=" sendbird-icon sendbird-icon-user sendbird-icon-color--content"
-                data-testid=""
                 role="button"
                 style="width: 16.099999999999998px; min-width: 16.099999999999998px; height: 16.099999999999998px; min-height: 16.099999999999998px;"
                 tabindex="0"
@@ -47,7 +46,6 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
     >
       <span
         class="sendbird-message-content__middle__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
-        data-testid=""
       >
         Mathew
       </span>
@@ -56,7 +54,6 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
       >
         <span
           class="sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
-          data-testid=""
         >
           <div
             class="sendbird-message-content__middle__message-item-body sendbird-text-message-item-body incoming  "
@@ -66,7 +63,6 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
         </span>
         <span
           class="sendbird-message-content__middle__body-container__created-at right sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
-          data-testid=""
         >
           mock-date
         </span>

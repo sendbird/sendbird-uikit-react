@@ -24,7 +24,7 @@ export interface ReactionBadgeProps {
 const ReactionBadge = React.forwardRef((props: ReactionBadgeProps, ref: RefObject<HTMLDivElement>): ReactElement => {
   const {
     className = '',
-    testID = '',
+    testID,
     children,
     count = '',
     isAdd = false,

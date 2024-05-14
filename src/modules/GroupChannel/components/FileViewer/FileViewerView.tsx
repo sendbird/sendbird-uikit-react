@@ -77,7 +77,7 @@ export const FileViewerComponent = ({
   disableDelete,
   onDownloadClick,
 }: FileViewerUIProps) => (
-  <div className="sendbird-fileviewer" data-tsetid="sendbird-fileviewer">
+  <div className="sendbird-fileviewer" data-testid="sendbird-fileviewer">
     <div className="sendbird-fileviewer__header">
       <div className="sendbird-fileviewer__header__left">
         <div className="sendbird-fileviewer__header__left__avatar">

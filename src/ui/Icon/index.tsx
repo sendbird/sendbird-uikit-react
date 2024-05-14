@@ -157,7 +157,7 @@ export default function Icon({
   height = 26,
   onClick = noop,
   children = null,
-  testID = '',
+  testID,
 }: IconProps) {
   const iconStyle = {
     width: typeof width === 'string' ? width : `${width}px`,

@@ -107,7 +107,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
       return <></>;
 
     const { menuStyle } = this.state;
-    const { children, style, className = '', testID = '' } = this.props;
+    const { children, style, className = '', testID } = this.props;
     return (
       createPortal(
         (
