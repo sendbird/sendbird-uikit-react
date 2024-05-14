@@ -53,7 +53,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
     <MessageView
       {...props}
       channel={currentChannel!}
-      emojiContainer={emojiManager.emojiContainer}
+      // emojiContainer={emojiManager.emojiContainer}
       editInputDisabled={
         !initialized
         || isDisabledBecauseFrozen(currentChannel ?? undefined)
