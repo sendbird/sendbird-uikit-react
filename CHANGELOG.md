@@ -1,5 +1,9 @@
 # Changelog - v3
 
+## [v3.14.6] (May 10, 2024)
+### Fixes
+* Fixed a bug where import statements are not located at the top of the extracted index.css file
+
 ## [v3.14.5] (May 04, 2024)
 ### Fixes
 * Fixed a bug where channel scroll to bottom is not called internally when last message is updated with suggested replies
