@@ -19,7 +19,6 @@ import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/dux/
 import FallbackTemplateMessageItemBody from './FallbackTemplateMessageItemBody';
 import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
 import MessageTemplateErrorBoundary from '../MessageTemplate/messageTemplateErrorBoundary';
-import { RenderedTemplateBodyType } from '../MessageContent/MessageBody';
 import { CompositeComponentType } from '@sendbird/uikit-message-template';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update

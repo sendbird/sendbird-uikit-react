@@ -37,10 +37,11 @@ module.exports = {
     'no-await-in-loop': 'off',
     // Not to make ESLint complains a type is only being used as type but recognized as a unused variable
     // https://stackoverflow.com/questions/57802057/eslint-configuring-no-unused-vars-for-typescript
-    'no-unused-vars': 'off', // or '@typescript-eslint/no-unused-vars': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
     'unused-imports/no-unused-imports': 'error',
     'unused-imports/no-unused-vars': [
-      'warn',
+      'off',
       {
         vars: 'all',
         varsIgnorePattern: '^_',

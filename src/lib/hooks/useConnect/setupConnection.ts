@@ -1,5 +1,4 @@
 import SendbirdChat, { DeviceOsPlatform, SendbirdError, SendbirdPlatform, SendbirdProduct, User } from '@sendbird/chat';
-import { OpenChannelModule } from '@sendbird/chat/openChannel';
 import { GroupChannelModule } from '@sendbird/chat/groupChannel';
 
 import { SDK_ACTIONS } from '../../dux/sdk/actionTypes';

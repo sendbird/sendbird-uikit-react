@@ -38,7 +38,6 @@ import { UserActionTypes } from './dux/user/actionTypes';
 import { SdkActionTypes } from './dux/sdk/actionTypes';
 import { ReconnectType } from './hooks/useConnect/types';
 import { SBUGlobalPubSub } from './pubSub/topics';
-import { EmojiManager } from './emojiManager';
 import { MessageTemplatesInfo, ProcessedMessageTemplate, WaitingTemplateKeyData } from './dux/appInfo/initialState';
 import { AppInfoActionTypes } from './dux/appInfo/actionTypes';
 
