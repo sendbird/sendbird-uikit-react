@@ -105,6 +105,7 @@
     height: calc(100% - 72px);
     margin-top: 4px;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     display: flex;
     align-items: center;
     justify-content: center;

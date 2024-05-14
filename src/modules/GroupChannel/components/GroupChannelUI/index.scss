@@ -49,6 +49,7 @@
   display: flex;
   height: 100%;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
   flex-direction: column;
   .sendbird-conversation__padding {

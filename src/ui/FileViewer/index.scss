@@ -93,6 +93,7 @@ $file-viewer-img-max-width: calc(100% - #{$file-viewer-slide-buttons-side-length
     height: calc(100% - 72px);
     margin-top: 4px;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     display: flex;
     align-items: center;
     justify-content: center;

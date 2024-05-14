@@ -49,6 +49,7 @@
     flex-direction: column;
     height: calc(100% - 64px);
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .sendbird-channel-settings__panel-item {

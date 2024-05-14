@@ -12,6 +12,7 @@
 
   .sendbird-openchannel-conversation-scroll {
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     flex: 1 1 0;
     width: 100%;
   }
@@ -24,6 +25,7 @@
     display: flex;
     height: 100%;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     overflow-x: hidden;
     flex-direction: column;
 
