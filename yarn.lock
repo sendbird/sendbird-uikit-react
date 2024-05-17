@@ -2710,8 +2710,8 @@ __metadata:
     jsdom: ^20.0.0
     plop: ^2.5.3
     postcss: ^8.3.5
-    react: ^18.2.0
-    react-dom: ^18.2.0
+    react: ^18.3.1
+    react-dom: ^18.3.1
     rollup: ^4.9.2
     rollup-plugin-analyzer: ^4.0.0
     rollup-plugin-copy: ^3.5.0
@@ -13354,6 +13354,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-dom@npm:^18.3.1":
+  version: 18.3.1
+  resolution: "react-dom@npm:18.3.1"
+  dependencies:
+    loose-envify: ^1.1.0
+    scheduler: ^0.23.2
+  peerDependencies:
+    react: ^18.3.1
+  checksum: 298954ecd8f78288dcaece05e88b570014d8f6dce5db6f66e6ee91448debeb59dcd31561dddb354eee47e6c1bb234669459060deb238ed0213497146e555a0b9
+  languageName: node
+  linkType: hard
+
 "react-element-to-jsx-string@npm:^15.0.0":
   version: 15.0.0
   resolution: "react-element-to-jsx-string@npm:15.0.0"
@@ -13433,6 +13445,15 @@ __metadata:
   dependencies:
     loose-envify: ^1.1.0
   checksum: f1389bf7f9cc9295fded895635e54c4bf73626a8ea51afaa2da4988f89e71b68f249c1782f832d5912ba7d437da9292fc44ecf7c3dff072879253df93d703a10
+  languageName: node
+  linkType: hard
+
+"react@npm:^18.3.1":
+  version: 18.3.1
+  resolution: "react@npm:18.3.1"
+  dependencies:
+    loose-envify: ^1.1.0
+  checksum: a27bcfa8ff7c15a1e50244ad0d0c1cb2ad4375eeffefd266a64889beea6f6b64c4966c9b37d14ee32d6c9fcd5aa6ba183b6988167ab4d127d13e7cb5b386a376
   languageName: node
   linkType: hard
 
@@ -14156,6 +14177,15 @@ __metadata:
   dependencies:
     loose-envify: ^1.1.0
   checksum: 8a5d140ee7e1f0927b64883544794043ebcaf57fe3f3541040535d1cb841640c389674838d3a25050227c20f8606cdeb1172c83e711523c689d428146ed8efcb
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.23.2":
+  version: 0.23.2
+  resolution: "scheduler@npm:0.23.2"
+  dependencies:
+    loose-envify: ^1.1.0
+  checksum: 3e82d1f419e240ef6219d794ff29c7ee415fbdc19e038f680a10c067108e06284f1847450a210b29bbaf97b9d8a97ced5f624c31c681248ac84c80d56ad5a2c4
   languageName: node
   linkType: hard
 
