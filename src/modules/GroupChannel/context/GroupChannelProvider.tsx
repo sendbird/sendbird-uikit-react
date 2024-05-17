@@ -7,7 +7,7 @@ import {
   UserMessageCreateParams,
   UserMessageUpdateParams,
   type FileMessage,
-  type MultipleFilesMessage, type BaseMessage,
+  type MultipleFilesMessage,
 } from '@sendbird/chat/message';
 import type { GroupChannel, MessageCollectionParams, MessageFilterParams } from '@sendbird/chat/groupChannel';
 import { MessageFilter } from '@sendbird/chat/groupChannel';
