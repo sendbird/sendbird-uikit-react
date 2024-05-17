@@ -14,8 +14,11 @@ import type { GroupChannelMessageListProps } from '../MessageList';
 import type { MessageContentProps } from '../../../../ui/MessageContent';
 import { SuggestedRepliesProps } from '../SuggestedReplies';
 import { deleteNullish } from '../../../../utils/utils';
+import type {BaseMessage} from '@sendbird/chat/message';
 
 export interface GroupChannelUIBasicProps {
+  filterMessageList?: (message: BaseMessage) => boolean;
+
   // Components
   /**
    * A function that customizes the rendering of a loading placeholder component.
@@ -64,6 +67,10 @@ export interface GroupChannelUIBasicProps {
    * A function that customizes the rendering of a frozen notification component when the channel is frozen.
    */
   renderFrozenNotification?: () => React.ReactElement;
+  /**
+   * A function that renders the given component in message list before all messages.
+   */
+  renderWelcomeMessage?: () => React.ReactElement;
 
   // MessageInput
   /**
@@ -85,9 +92,9 @@ export interface GroupChannelUIBasicProps {
 }
 
 export interface GroupChannelUIViewProps extends GroupChannelUIBasicProps {
+  channelUrl: string;
   isLoading?: boolean;
   isInvalid: boolean;
-  channelUrl: string;
   renderChannelHeader: GroupChannelUIBasicProps['renderChannelHeader'];
   renderMessageList: GroupChannelUIBasicProps['renderMessageList'];
   renderMessageInput: GroupChannelUIBasicProps['renderMessageInput'];

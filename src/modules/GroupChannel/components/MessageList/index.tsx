@@ -20,9 +20,12 @@ import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { getComponentKeyFromMessage } from '../../context/utils';
 import { GroupChannelUIBasicProps } from '../GroupChannelUI/GroupChannelUIView';
 import { deleteNullish } from '../../../../utils/utils';
+import type { BaseMessage } from '@sendbird/chat/message';
 
 export interface GroupChannelMessageListProps {
   className?: string;
+  filterMessageList?: (message: BaseMessage) => boolean;
+
   /**
    * A function that customizes the rendering of each message component in the message list component.
    */
@@ -51,10 +54,17 @@ export interface GroupChannelMessageListProps {
    * A function that customizes the rendering of a suggested replies component.
    */
   renderSuggestedReplies?: GroupChannelUIBasicProps['renderSuggestedReplies'];
+  /**
+   * A function that renders the given component in message list before all messages.
+   */
+  renderWelcomeMessage?: GroupChannelUIBasicProps['renderWelcomeMessage'];
 }
 
 export const MessageList = (props: GroupChannelMessageListProps) => {
-  const { className = '' } = props;
+  const {
+    className = '',
+    filterMessageList,
+  } = props;
   const {
     renderMessage = (props:RenderMessageParamsType) => <Message {...props} />,
     renderMessageContent,
@@ -63,6 +73,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
     renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
     renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
+    renderWelcomeMessage,
   } = deleteNullish(props);
 
   const {
@@ -80,6 +91,9 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     replyType,
     scrollPubSub,
   } = useGroupChannelContext();
+
+  const allMessagesFiltered = typeof filterMessageList === 'function' ? messages.filter(filterMessageList as (message: EveryMessage) => boolean) : messages;
+
   const store = useSendbirdStateContext();
 
   const [unreadSinceDate, setUnreadSinceDate] = useState<Date>();
@@ -147,7 +161,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     return renderPlaceholderLoader();
   }
 
-  if (messages.length === 0) {
+  if (allMessagesFiltered.length === 0 && !renderWelcomeMessage) {
     return renderPlaceholderEmpty();
   }
 
@@ -160,9 +174,12 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
             ref={scrollRef}
             className="sendbird-conversation__messages-padding"
           >
-            {messages.map((message, idx) => {
+            {
+              renderWelcomeMessage?.()
+            }
+            {allMessagesFiltered.map((message, idx) => {
               const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
-                allMessages: messages as CoreMessageType[],
+                allMessages: allMessagesFiltered as CoreMessageType[],
                 replyType: replyType ?? 'NONE',
                 isMessageGroupingEnabled: isMessageGroupingEnabled ?? false,
                 currentIndex: idx,

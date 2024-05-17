@@ -2,7 +2,7 @@
 import '../../../GroupChannel/components/MessageList/index.scss';
 
 import React, { useState } from 'react';
-import type { UserMessage } from '@sendbird/chat/message';
+import type {BaseMessage, UserMessage} from '@sendbird/chat/message';
 
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -44,6 +44,7 @@ export const MessageList = (props: MessageListProps) => {
     renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
     renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
     renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
+    renderWelcomeMessage,
   } = deleteNullish(props);
 
   const {
@@ -187,6 +188,9 @@ export const MessageList = (props: MessageListProps) => {
               onScrollReachedEndDetector(e);
             }}
           >
+            {
+              renderWelcomeMessage?.()
+            }
             {allMessagesFiltered.map((m, idx) => {
               const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
                 allMessages: allMessagesFiltered,
