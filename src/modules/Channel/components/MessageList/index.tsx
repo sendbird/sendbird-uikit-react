@@ -2,7 +2,7 @@
 import '../../../GroupChannel/components/MessageList/index.scss';
 
 import React, { useState } from 'react';
-import type {BaseMessage, UserMessage} from '@sendbird/chat/message';
+import type { BaseMessage, UserMessage } from '@sendbird/chat/message';
 
 import { useChannelContext } from '../../context/ChannelProvider';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
