@@ -14,7 +14,7 @@ import type { GroupChannelMessageListProps } from '../MessageList';
 import type { MessageContentProps } from '../../../../ui/MessageContent';
 import { SuggestedRepliesProps } from '../SuggestedReplies';
 import { deleteNullish } from '../../../../utils/utils';
-import type {BaseMessage} from '@sendbird/chat/message';
+import type { BaseMessage } from '@sendbird/chat/message';
 
 export interface GroupChannelUIBasicProps {
   filterMessageList?: (message: BaseMessage) => boolean;
