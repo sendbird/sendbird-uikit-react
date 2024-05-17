@@ -20,12 +20,9 @@ import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { getComponentKeyFromMessage } from '../../context/utils';
 import { GroupChannelUIBasicProps } from '../GroupChannelUI/GroupChannelUIView';
 import { deleteNullish } from '../../../../utils/utils';
-import type { BaseMessage } from '@sendbird/chat/message';
 
 export interface GroupChannelMessageListProps {
   className?: string;
-  filterMessageList?: (message: BaseMessage) => boolean;
-
   /**
    * A function that customizes the rendering of each message component in the message list component.
    */
@@ -63,7 +60,6 @@ export interface GroupChannelMessageListProps {
 export const MessageList = (props: GroupChannelMessageListProps) => {
   const {
     className = '',
-    filterMessageList,
   } = props;
   const {
     renderMessage = (props:RenderMessageParamsType) => <Message {...props} />,
@@ -91,8 +87,6 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     replyType,
     scrollPubSub,
   } = useGroupChannelContext();
-
-  const allMessagesFiltered = typeof filterMessageList === 'function' ? messages.filter(filterMessageList as (message: EveryMessage) => boolean) : messages;
 
   const store = useSendbirdStateContext();
 
@@ -161,7 +155,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     return renderPlaceholderLoader();
   }
 
-  if (allMessagesFiltered.length === 0 && !renderWelcomeMessage) {
+  if (messages.length === 0 && !renderWelcomeMessage) {
     return renderPlaceholderEmpty();
   }
 
@@ -177,9 +171,9 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
             {
               renderWelcomeMessage?.()
             }
-            {allMessagesFiltered.map((message, idx) => {
+            {messages.map((message, idx) => {
               const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
-                allMessages: allMessagesFiltered as CoreMessageType[],
+                allMessages: messages as CoreMessageType[],
                 replyType: replyType ?? 'NONE',
                 isMessageGroupingEnabled: isMessageGroupingEnabled ?? false,
                 currentIndex: idx,
