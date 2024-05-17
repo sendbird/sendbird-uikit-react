@@ -92,9 +92,9 @@ export interface GroupChannelUIBasicProps {
 }
 
 export interface GroupChannelUIViewProps extends GroupChannelUIBasicProps {
-  channelUrl: string;
   isLoading?: boolean;
   isInvalid: boolean;
+  channelUrl: string;
   renderChannelHeader: GroupChannelUIBasicProps['renderChannelHeader'];
   renderMessageList: GroupChannelUIBasicProps['renderMessageList'];
   renderMessageInput: GroupChannelUIBasicProps['renderMessageInput'];
