@@ -267,15 +267,15 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     if (isMentionEnabled && mentionSelectedUser) {
       const { targetString, startNodeIndex, startOffsetIndex, endNodeIndex, endOffsetIndex } = targetStringInfo;
       const textField = internalRef?.current;
-      if (targetString && startNodeIndex && startOffsetIndex && textField && endNodeIndex) {
+      if (targetString && startNodeIndex !== null && startOffsetIndex !== null && endOffsetIndex !== null && textField) {
         // const textField = document.getElementById(textFieldId);
         const childNodes = nodeListToArray(textField?.childNodes);
         const startNodeTextContent: string = childNodes[startNodeIndex]?.textContent ?? '';
-        const frontTextNode = document?.createTextNode(
+        const frontTextNode = document.createTextNode(
           startNodeTextContent.slice(0, startOffsetIndex),
         );
         const endNodeTextContent: string = childNodes[endNodeIndex]?.textContent ?? '';
-        const backTextNode = endOffsetIndex && document?.createTextNode(
+        const backTextNode = endOffsetIndex && document.createTextNode(
           `\u00A0${endNodeTextContent.slice(endOffsetIndex)}`,
         );
         const mentionLabel = renderMentionLabelToString({
@@ -374,7 +374,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
            * targetString could be ''
            * startNodeIndex and startOffsetIndex could be null
            */
-          const targetString = textStack && startOffsetIndex ? textStack.slice(startOffsetIndex) : ''; // include template character
+          const targetString = textStack && startOffsetIndex !== null ? textStack.slice(startOffsetIndex) : ''; // include template character
           setTargetStringInfo({
             targetString,
             startNodeIndex,
