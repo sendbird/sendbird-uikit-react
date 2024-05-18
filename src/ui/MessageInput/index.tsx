@@ -218,9 +218,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
             .map((token) => {
               if (token.type === TOKEN_TYPES.mention) {
                 const mentionedUser = mentionedUsers.find((user) => user.userId === token.userId);
-                const nickname = `${USER_MENTION_PREFIX}${
-                  mentionedUser?.nickname || token.value || stringSet.MENTION_NAME__NO_NAME
-                }`;
+                const nickname = `${USER_MENTION_PREFIX}${mentionedUser?.nickname || token.value || stringSet.MENTION_NAME__NO_NAME}`;
                 return renderMentionLabelToString({
                   userId: token.userId,
                   nickname,
@@ -228,7 +226,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
               }
               return sanitizeString(token.value);
             })
-            .join(' ');
+            .join('');
         }
       } else {
         /* mention disabled */
