@@ -265,7 +265,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     if (isMentionEnabled && mentionSelectedUser) {
       const { targetString, startNodeIndex, startOffsetIndex, endNodeIndex, endOffsetIndex } = targetStringInfo;
       const textField = internalRef?.current;
-      if (targetString && startNodeIndex !== null && startOffsetIndex !== null && endOffsetIndex !== null && textField) {
+      if (targetString && startNodeIndex !== null && startOffsetIndex !== null && endOffsetIndex !== null && endNodeIndex !== null && textField) {
         // const textField = document.getElementById(textFieldId);
         const childNodes = nodeListToArray(textField?.childNodes);
         const startNodeTextContent: string = childNodes[startNodeIndex]?.textContent ?? '';
