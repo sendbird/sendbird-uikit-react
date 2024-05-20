@@ -58,9 +58,7 @@ export interface GroupChannelMessageListProps {
 }
 
 export const MessageList = (props: GroupChannelMessageListProps) => {
-  const {
-    className = '',
-  } = props;
+  const { className = '' } = props;
   const {
     renderMessage = (props:RenderMessageParamsType) => <Message {...props} />,
     renderMessageContent,
@@ -87,7 +85,6 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     replyType,
     scrollPubSub,
   } = useGroupChannelContext();
-
   const store = useSendbirdStateContext();
 
   const [unreadSinceDate, setUnreadSinceDate] = useState<Date>();
