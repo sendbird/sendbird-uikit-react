@@ -161,7 +161,6 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   if (messages.length === 0 && !renderWelcomeMessage) {
     return renderPlaceholderEmpty();
   }
-
   return (
     <>
       <div className={`sendbird-conversation__messages ${className}`}>
