@@ -195,8 +195,6 @@ describe('useConnect/setupConnection/setUpParams', () => {
       modules: [
         // @ts-ignore
         new (require('@sendbird/chat/groupChannel').GroupChannelModule)(),
-        // @ts-ignore
-        new (require('@sendbird/chat/openChannel').OpenChannelModule)(),
       ],
     });
     expect(newSdk).toEqual(mockSdk);
@@ -214,8 +212,6 @@ describe('useConnect/setupConnection/setUpParams', () => {
       modules: [
         // @ts-ignore
         new (require('@sendbird/chat/groupChannel').GroupChannelModule)(),
-        // @ts-ignore
-        new (require('@sendbird/chat/openChannel').OpenChannelModule)(),
       ],
       customApiHost,
       customWebSocketHost,
@@ -228,15 +224,14 @@ describe('useConnect/setupConnection/setUpParams', () => {
     const { appId, sdkInitParams } = setUpConnectionProps;
     const newSdk = setUpParams({ appId, sdkInitParams });
     // @ts-ignore
-    expect(require('@sendbird/chat').init).toBeCalledWith({
+    const init = require('@sendbird/chat').init;
+    expect(init).toBeCalledWith({
       appId,
       newInstance: false,
       localCacheEnabled: true,
       modules: [
         // @ts-ignore
         new (require('@sendbird/chat/groupChannel').GroupChannelModule)(),
-        // @ts-ignore
-        new (require('@sendbird/chat/openChannel').OpenChannelModule)(),
       ],
       sdkInitParams,
     });
@@ -255,8 +250,6 @@ describe('useConnect/setupConnection/setUpParams', () => {
       modules: [
         // @ts-ignore
         new (require('@sendbird/chat/groupChannel').GroupChannelModule)(),
-        // @ts-ignore
-        new (require('@sendbird/chat/openChannel').OpenChannelModule)(),
       ],
       customExtensionParams,
     });

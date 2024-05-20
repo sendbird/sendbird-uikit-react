@@ -51,6 +51,10 @@ export interface GroupChannelMessageListProps {
    * A function that customizes the rendering of a suggested replies component.
    */
   renderSuggestedReplies?: GroupChannelUIBasicProps['renderSuggestedReplies'];
+  /**
+   * A function that renders the given component in message list before all messages.
+   */
+  renderWelcomeMessage?: GroupChannelUIBasicProps['renderWelcomeMessage'];
 }
 
 export const MessageList = (props: GroupChannelMessageListProps) => {
@@ -63,6 +67,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
     renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
     renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
+    renderWelcomeMessage,
   } = deleteNullish(props);
 
   const {
@@ -147,7 +152,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     return renderPlaceholderLoader();
   }
 
-  if (messages.length === 0) {
+  if (messages.length === 0 && !renderWelcomeMessage) {
     return renderPlaceholderEmpty();
   }
 
@@ -160,6 +165,9 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
             ref={scrollRef}
             className="sendbird-conversation__messages-padding"
           >
+            {
+              renderWelcomeMessage?.()
+            }
             {messages.map((message, idx) => {
               const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
                 allMessages: messages as CoreMessageType[],

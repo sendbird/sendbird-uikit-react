@@ -64,6 +64,10 @@ export interface GroupChannelUIBasicProps {
    * A function that customizes the rendering of a frozen notification component when the channel is frozen.
    */
   renderFrozenNotification?: () => React.ReactElement;
+  /**
+   * A function that renders the given component in message list before all messages.
+   */
+  renderWelcomeMessage?: () => React.ReactElement;
 
   // MessageInput
   /**
