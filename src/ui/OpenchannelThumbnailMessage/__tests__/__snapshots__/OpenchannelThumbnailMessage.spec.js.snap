@@ -76,7 +76,7 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
                 style="width: 56px; min-width: 56px; height: 56px; min-height: 56px;"
                 tabindex="0"
               >
-                <test-file-stub />
+                icon
               </div>
             </div>
             <div

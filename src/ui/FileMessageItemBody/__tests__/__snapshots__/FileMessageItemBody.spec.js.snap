@@ -14,7 +14,7 @@ exports[`ui/FileMessageItemBody should do a snapshot test of the FileMessageItem
         style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
         tabindex="0"
       >
-        <test-file-stub />
+        icon
       </div>
     </div>
     <div

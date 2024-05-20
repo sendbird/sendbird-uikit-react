@@ -3,7 +3,7 @@
 exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1`] = `
 <DocumentFragment>
   <div
-    class="classname-for-snapshot sendbird-message-content incoming "
+    class="classname-for-snapshot sendbird-message-content incoming"
   >
     <div
       class="sendbird-message-content__left  incoming "
@@ -60,7 +60,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
           </div>
         </span>
         <span
-          class="sendbird-message-content__middle__body-container__created-at right   sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+          class="sendbird-message-content__middle__body-container__created-at right  sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
         >
           mock-date
         </span>

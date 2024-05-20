@@ -61,7 +61,7 @@ exports[`ui/OpenchannelFileMessage should do a snapshot test of the OpenchannelF
           style="width: 48px; min-width: 48px; height: 48px; min-height: 48px;"
           tabindex="0"
         >
-          <test-file-stub />
+          icon
         </div>
         <div
           class="sendbird-openchannel-file-message__right__body__file-name sendbird-color--onbackground-1 sendbird-textbutton "

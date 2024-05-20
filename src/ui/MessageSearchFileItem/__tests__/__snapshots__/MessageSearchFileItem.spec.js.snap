@@ -50,7 +50,7 @@ exports[`ui/MessageSearchFileItem should do a snapshot test of the MessageSearch
             style="width: 18px; min-width: 18px; height: 18px; min-height: 18px;"
             tabindex="0"
           >
-            <test-file-stub />
+            icon
           </div>
         </div>
         <span
