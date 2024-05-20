@@ -7,6 +7,7 @@ import { noop } from '../../../../utils/utils';
 type Props = {
   messages: BaseMessage[];
   renderMessage: (props: { message: BaseMessage; index: number }) => React.ReactNode;
+  renderWelcomeMessage?: () => React.ReactElement;
 
   scrollPositionRef: React.MutableRefObject<number>;
   scrollDistanceFromBottomRef: React.MutableRefObject<number>;
@@ -26,6 +27,7 @@ export const InfiniteList = forwardRef((props: Props, listRef: React.RefObject<H
   const {
     messages,
     renderMessage,
+    renderWelcomeMessage,
 
     scrollPositionRef,
     scrollDistanceFromBottomRef,

@@ -173,6 +173,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
           onLoadPrevious={loadPrevious}
           onScrollPosition={(it) => setIsScrollBottomReached(it === 'bottom')}
           messages={messages}
+          renderWelcomeMessage={renderWelcomeMessage}
           renderMessage={({ message, index }) => {
             const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
               allMessages: messages as CoreMessageType[],
