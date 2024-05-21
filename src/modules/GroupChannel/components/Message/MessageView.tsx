@@ -396,7 +396,7 @@ const MessageView = (props: MessageViewProps) => {
         'sendbird-msg-hoc sendbird-msg--scroll-ref',
         isAnimated && 'sendbird-msg-hoc__animated',
       )}
-      data-testid="sendbird-message-hoc"
+      data-testid="sendbird-message-view"
       style={children || renderMessage ? undefined : { marginBottom: '2px' }}
       data-sb-message-id={message.messageId}
       data-sb-created-at={message.createdAt}

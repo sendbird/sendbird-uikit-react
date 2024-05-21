@@ -63,7 +63,7 @@ export const OperatorMenuItem = ({
     <MenuItem
       className={className}
       disable={disable}
-      dataSbId={dataSbId}
+      testID={dataSbId}
       onClick={onClickHandler}
     >
       {children}

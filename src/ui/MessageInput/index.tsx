@@ -57,7 +57,7 @@ interface TargetStringInfo {
   endOffsetIndex: number | null;
 }
 
-const initialTargetStringInfo : TargetStringInfo = {
+const initialTargetStringInfo: TargetStringInfo = {
   targetString: '',
   startNodeIndex: null,
   startOffsetIndex: null,
@@ -69,7 +69,7 @@ type MessageInputProps = {
   channel: GroupChannel | OpenChannel;
   message?: UserMessage;
   value?: null | string;
-  className?: string;
+  className?: string | string[];
   messageFieldId?: string;
   isEdit?: boolean;
   isMobile?: boolean;
@@ -420,7 +420,11 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   });
 
   return (
-    <form className={classnames(className, isEdit && 'sendbird-message-input__edit', disabled && 'sendbird-message-input-form__disabled')}>
+    <form className={classnames(
+      ...(Array.isArray(className) ? className : [className]),
+      isEdit && 'sendbird-message-input__edit',
+      disabled && 'sendbird-message-input-form__disabled',
+    )}>
       <div className={classnames('sendbird-message-input', disabled && 'sendbird-message-input__disabled')} data-testid="sendbird-message-input">
         <div
           id={`${textFieldId}${isEdit ? message?.messageId : ''}`}

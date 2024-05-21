@@ -114,7 +114,7 @@ export default function ParticipantsModal({
                                   // FIXME: handle error later
                                   closeDropdown();
                                 }}
-                                dataSbId={`open_channel_setting_participant_context_menu_${(
+                                testID={`open_channel_setting_participant_context_menu_${(
                                   isOperator) ? 'unregister_operator' : 'register_as_operator'}`
                                 }
                               >
@@ -132,7 +132,7 @@ export default function ParticipantsModal({
                                   // FIXME: handle error later
                                   closeDropdown();
                                 }}
-                                dataSbId={`open_channel_setting_participant_context_menu_${p.isMuted ? 'unmute' : 'mute'}`
+                                testID={`open_channel_setting_participant_context_menu_${p.isMuted ? 'unmute' : 'mute'}`
                                 }
                               >
                                 {
@@ -147,7 +147,7 @@ export default function ParticipantsModal({
                                     closeDropdown();
                                   });
                                 }}
-                                dataSbId="open_channel_setting_participant_context_menu_ban"
+                                testID="open_channel_setting_participant_context_menu_ban"
                               >
                                 {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
                               </MenuItem>

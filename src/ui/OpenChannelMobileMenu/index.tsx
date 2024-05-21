@@ -58,7 +58,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
                 onClick={() => {
                   copyToClipboard?.();
                 }}
-                dataSbId="open_channel_mobile_context_menu_copy"
+                testID="open_channel_mobile_context_menu_copy"
               >
                 <>{stringSet.CONTEXT_MENU_DROPDOWN__COPY}</>
               </MenuItem>
@@ -71,7 +71,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
                 onClick={() => {
                   showEdit?.();
                 }}
-                dataSbId="open_channel_mobile_context_menu_edit"
+                testID="open_channel_mobile_context_menu_edit"
               >
                 <>{stringSet.CONTEXT_MENU_DROPDOWN__EDIT}</>
               </MenuItem>
@@ -83,7 +83,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
                 onClick={() => {
                   resendMessage?.();
                 }}
-                dataSbId="open_channel_mobile_context_menu_resend"
+                testID="open_channel_mobile_context_menu_resend"
               >
                 <>{stringSet.CONTEXT_MENU_DROPDOWN__RESEND}</>
               </MenuItem>
@@ -95,7 +95,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
                 onClick={() => {
                   showRemove?.();
                 }}
-                dataSbId="open_channel_mobile_context_menu_delete"
+                testID="open_channel_mobile_context_menu_delete"
               >
                 <>{stringSet.CONTEXT_MENU_DROPDOWN__DELETE}</>
               </MenuItem>
@@ -107,7 +107,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
                   onClick={() => {
                     hideMenu();
                   }}
-                  dataSbId="open_channel_mobile_context_menu_download_file"
+                  testID="open_channel_mobile_context_menu_download_file"
                 >
                   <a
                     className="sendbird-openchannel__mobile-menu-hyperlink"
