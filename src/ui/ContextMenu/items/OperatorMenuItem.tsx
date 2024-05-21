@@ -10,7 +10,11 @@ export interface OperatorMenuItemProps {
   className?: string | Array<string>;
   children: ReactElement | ReactElement[] | ReactNode;
   disable?: boolean;
+  /**
+   * @deprecated Please use the testID instead
+   */
   dataSbId?: string;
+  testID?: string;
   onChange?: (channel: BaseChannel, user: User, isOperator: boolean) => void;
   onError?: (reason: any) => void;
 }
@@ -22,6 +26,7 @@ export const OperatorMenuItem = ({
   children,
   disable = false,
   dataSbId = '',
+  testID,
   onChange = () => {},
   onError = () => {},
 }: OperatorMenuItemProps): ReactElement => {
@@ -63,7 +68,7 @@ export const OperatorMenuItem = ({
     <MenuItem
       className={className}
       disable={disable}
-      testID={dataSbId}
+      testID={testID ?? dataSbId}
       onClick={onClickHandler}
     >
       {children}

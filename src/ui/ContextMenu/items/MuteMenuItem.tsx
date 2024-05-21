@@ -8,7 +8,11 @@ export interface MuteMenuItemProps {
   className?: string | Array<string>;
   children: ReactElement | ReactElement[] | ReactNode;
   disable?: boolean;
+  /**
+   * @deprecated Please use the testID instead
+   */
   dataSbId?: string;
+  testID?: string;
   onChange?: (channel: BaseChannel, user: User, isMuted: boolean) => void;
   onError?: (reason: any) => void;
 }
@@ -20,6 +24,7 @@ export const MuteMenuItem = ({
   children,
   disable = false,
   dataSbId = '',
+  testID,
   onChange = () => {},
   onError = () => {},
 }: MuteMenuItemProps): ReactElement => {
@@ -59,7 +64,7 @@ export const MuteMenuItem = ({
     <MenuItem
       className={className}
       disable={disable}
-      testID={dataSbId}
+      testID={testID ?? dataSbId}
       onClick={onClickHandler}
     >
       {children}
