@@ -1,5 +1,5 @@
 import React, { forwardRef, UIEventHandler, useLayoutEffect, useRef } from 'react';
-import { BaseMessage } from '@sendbird/chat/message';
+import type { BaseMessage } from '@sendbird/chat/message';
 import { isAboutSame } from '../../../Channel/context/utils';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
 import { noop } from '../../../../utils/utils';
