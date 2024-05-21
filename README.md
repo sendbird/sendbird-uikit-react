@@ -1,4 +1,4 @@
-# sendbird-uikit
+# @sendbird/uikit-react
 
 [![Platform React](https://img.shields.io/badge/Platform-React-orange.svg)](https://reactjs.org)
 [![Language TypeScript](https://img.shields.io/badge/Language-TypeScript-orange.svg)](https://www.typescriptlang.org/)
@@ -41,35 +41,31 @@ You need to install:
 * [nodejs](https://nodejs.org/en/download/) 18>=
 * npm 9>= or yarn 3>=
 
-### Development
+
+## Development
  
-We use storybook for development and rollup for building the npm distribution(bundled JS file)
-Make sure you have nodejs and yarn(or npm) installed and run
+We use vite app for development and rollup for building the npm distribution(bundled JS file)
+Make sure you have nodejs and yarn installed and run
 
-> Make a copy of .env.example and save it as .env 
-> Set your appId `STORYBOOK_APP_ID`
+> Make a copy of `apps/testing/.env.example` and save it as `apps/testing/.env` 
+> Set your appId to `VITE_APP_ID`
 
-```
+```shell
 yarn install
+yarn dev
+```
+
+* By default, vite app opens in http://localhost:5173/
+* Please refer to the following link for more details: [Link](apps/testing/README.md)
+
+### Storybook
+
+We provide a Storybook to easily view and understand the components.
+<br/>https://sendbird.github.io/sendbird-uikit-react/
+
+```shell
 yarn storybook
 ```
-or
-```
-npm install
-npm run storybook
-```
-
-* By default, storybook opens in http://localhost:6006/
-* Smart Components such as ChannelList, Channel, ChannelSetting, App can be found under `OTHERS`
-* Dumb components such as inputs, buttons etc can be found under `OTHERS/UI Components` in storybook sidebar
-* Overridden storybook configs can be found in: `./storybook`
-
-### Husky
-
-We use Husky for githooks
-
-To enable Husky in local, run:
-`yarn husky install` or `npx husky install`
 
 ### Build
 
@@ -80,27 +76,19 @@ We have both `ESM` and `CJS` output
 ```
 yarn build
 ```
-or
-```
-npm run build
-```
 
 The bundled JS code can be found in `./dist`
 The CSS is in `./dist/dist/index.css`
 
 **Caveats**
- - We tried development on Mac OS / Linux systems. You might encounter problems in running `yarn build` or `npm run build` in Windows machines
+ - We tried development on Mac OS / Linux systems. You might encounter problems in running `yarn build`  in Windows machines
 
-## Running the tests
+### Tests
 
 We have implemented tests for dumb ui components only. Technologies used: Jest and testing-library
 
 ```
 yarn test
-```
-or
-```
-npm run test
 ```
 
 ### Lint
@@ -108,41 +96,11 @@ npm run test
 ```
 yarn lint
 ```
-or
-```
-npm run lint
-```
-
-* .eslintrc.json lints ts files and .eslintrc.js lints js files
-
-### Webpack 5
-
-Webpack 5 removes stream and buffer componets from default polyfill
-To enable these, install buffer and stream and then add the following to webpack.cofig.js
-```javascript
-module.exports = {
-  //...
-  resolve: {
-    fallback: {
-      buffer: require.resolve('buffer'),
-      stream: require.resolve('stream-browserify'),
-    },
-  },
-};
-
-```
-To read more: https://webpack.js.org/configuration/resolve/#resolvefallback
 
 ### Creating/Exporting New Components
 
 1. Define your component inside `./src`.
-2. ~~Add the following line to `./src/index.ts`:~~
-    ```
-    export { default as NewComponent } from './src/location/of/NewComponent';
-    ```
-    - Will be imported as: `import { NewComponent } from '@sendbird/uikit-react';`
-    - We don't do this anymore for new components; we prefer fine-grained exports (as in step 3).
-3. Add the following line to `./rollup.module-exports.js`:
+2. Add the following line to `./rollup.module-exports.js`:
     ```
     'NewComponent/SubComponent': 'location/of/NewComponent/SubComponent',
     ```

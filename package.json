@@ -33,6 +33,7 @@
     "node": ">=18"
   },
   "scripts": {
+    "dev": "yarn start:apps:testing",
     "test": "jest",
     "test-update-snapshot": "jest -u",
     "test:coverage": "yarn test --coverage",

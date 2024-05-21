@@ -1,30 +1,14 @@
-# React + TypeScript + Vite
+## Development App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This app is used for development purposes, and when a PR is created, the preview of this app is provided via Netlify.
 
-Currently, two official plugins are available:
+### Page Structure
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- `/`: This is the main page. Feel free to develop on the PlaygroundPage.
+- `/group_channel`: This is the group channel page. It's used for QA or testing purposes, so please modify only if necessary.
+- `/open_channel`: This is the open channel page. It's used for QA or testing purposes, so please modify only if necessary.
+- `/url-builder`: You can dynamically set the app ID or enable/disable specific features by extracting URL parameters.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### App settings
+- All app pages can change the app's settings through query params in the URL. (Easily extractable from the url-builder page)
+- To add specific features via query params, modify the `utils/paramsBuilder.ts` file.
