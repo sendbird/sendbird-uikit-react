@@ -105,4 +105,5 @@ export default {
   compareMessagesForGrouping,
   getMessageCreatedAt,
   isSameGroup,
+  getIsByMe
 };
