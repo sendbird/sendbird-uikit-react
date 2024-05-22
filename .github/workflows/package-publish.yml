@@ -1,0 +1,81 @@
+name: Package build and publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'version'
+        required: true
+        type: string
+      npm_tag:
+        description: 'release tag'
+        required: false
+        type: string
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: 'recursive'
+          fetch-depth: 0
+      - name: Enable corepack
+        run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'yarn'
+      - name: Check if the release branch exists
+        run: |
+          set -x
+          branch_name="release/v${{ github.event.inputs.version }}"
+          if ! git ls-remote --exit-code --heads origin "$branch_name" > /dev/null; then
+            echo "Branch $branch_name does not exist. Make sure to create the branch and create a Jira ticket with pr-comment-bot."
+            exit 1
+          fi
+      - name: Setup jq
+        if: ${{ github.event.inputs.npm_tag }}
+        uses: dcarbone/install-jq-action@v2
+      - name: Update version in package.json if npm_tag is provided
+        if: ${{ github.event.inputs.npm_tag }}
+        run: |
+          npm_version="${{ github.event.inputs.version }}-${{ github.event.inputs.npm_tag }}"
+          jq --arg npm_version "$npm_version" '.version = $npm_version' package.json > package.json.tmp && mv package.json.tmp package.json
+      - name: Set environments
+        run: |
+          git config --global user.name "sendbird-sdk-deployment"
+          git config --global user.email "sha.sdk_deployment@sendbird.com"
+      - name: Install and Build
+        run: |
+          yarn install --immutable --immutable-cache
+          touch .env.production
+          echo "VITE_CHAT_AI_WIDGET_KEY=${{ secrets.chat_ai_widget_key }}" >> .env.production && \
+          yarn build:npm
+      - name: Publish to npm
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.npm_token }}" >> .npmrc
+          if [ -z "${{ github.event.inputs.npm_tag }}" ]; then
+            npm publish --access=public
+          else
+            npm publish --tag ${{ github.event.inputs.npm_tag }} --access=public
+            echo "npm_tag is provided; Skipping the rest of the steps."
+            exit 1
+          fi
+
+      - name: Update installed chat-ai-widget version to latest under packages/*
+        run: |
+          packages=( "self-service" )
+          for package in "${packages[@]}"; do
+            cd ./packages/$package
+            yarn add @sendbird/chat-ai-widget@${{ github.event.inputs.version }}
+            cd -
+          done
+          git add .
+          git commit -m "chore: update chat-ai-widget version to v${{ github.event.inputs.version }}"
+          git push origin release/v${{ github.event.inputs.version }}
+      - name: Tag new target and push to origin
+        run: |
+          git tag v${{ github.event.inputs.version }}
+          git push origin v${{ github.event.inputs.version }}
