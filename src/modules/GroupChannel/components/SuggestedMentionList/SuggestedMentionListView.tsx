@@ -12,6 +12,7 @@ import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, USER_MENTION_TEMP_CH
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import uuidv4 from '../../../../utils/uuid';
 import { fetchMembersFromChannel, fetchMembersFromQuery } from './utils';
+import { classnames } from '../../../../utils/utils';
 
 export interface SuggestedMentionListViewProps {
   className?: string;
@@ -133,7 +134,12 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
   }
 
   return (
-    <div className={`sendbird-mention-suggest-list ${className}`} key="sendbird-mention-suggest-list" ref={scrollRef}>
+    <div
+      className={classnames('sendbird-mention-suggest-list', className)}
+      data-testid="sendbird-mention-suggest-list"
+      key="sendbird-mention-suggest-list"
+      ref={scrollRef}
+    >
       {ableAddMention
         && currentMemberList?.map((member) => (
           <SuggestedUserMentionItem

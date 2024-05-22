@@ -20,6 +20,7 @@ import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 import { SendableMessageType } from '../../../../utils';
 import { User } from '@sendbird/chat';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
+import { classnames } from '../../../../utils/utils';
 
 export interface ThreadListItemProps {
   className?: string;
@@ -213,7 +214,8 @@ export default function ThreadListItem({
   return (
     <div
       ref={messageScrollRef}
-      className={`sendbird-thread-list-item ${className}`}
+      className={classnames('sendbird-thread-list-item', className)}
+      data-testid="sendbird-thread-list-item"
     >
       {/* date separator */}
       {

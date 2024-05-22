@@ -13,7 +13,7 @@ import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 import { extractTextAndMentions, isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
-import { arrayEqual, getClassName, getMimeTypesUIKitAccepts } from '../../utils';
+import { arrayEqual, getMimeTypesUIKitAccepts } from '../../utils';
 import usePaste from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
@@ -57,7 +57,7 @@ interface TargetStringInfo {
   endOffsetIndex: number | null;
 }
 
-const initialTargetStringInfo : TargetStringInfo = {
+const initialTargetStringInfo: TargetStringInfo = {
   targetString: '',
   startNodeIndex: null,
   startOffsetIndex: null,
@@ -420,14 +420,12 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   });
 
   return (
-    <form
-      className={getClassName([
-        className,
-        isEdit ? 'sendbird-message-input__edit' : '',
-        disabled ? 'sendbird-message-input-form__disabled' : '',
-      ])}
-    >
-      <div className={getClassName(['sendbird-message-input', disabled ? 'sendbird-message-input__disabled' : ''])}>
+    <form className={classnames(
+      ...(Array.isArray(className) ? className : [className]),
+      isEdit && 'sendbird-message-input__edit',
+      disabled && 'sendbird-message-input-form__disabled',
+    )}>
+      <div className={classnames('sendbird-message-input', disabled && 'sendbird-message-input__disabled')} data-testid="sendbird-message-input">
         <div
           id={`${textFieldId}${isEdit ? message?.messageId : ''}`}
           className={`sendbird-message-input--textarea ${textFieldId}`}
@@ -510,7 +508,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         )}
         {/* send icon */}
         {!isEdit && isInput && (
-          <IconButton className="sendbird-message-input--send" height="32px" width="32px" onClick={() => sendMessage()}>
+          <IconButton className="sendbird-message-input--send" height="32px" width="32px" onClick={() => sendMessage()} testID="sendbird-message-input-send-button">
             {renderSendMessageIcon?.() || (
               <Icon
                 type={IconTypes.SEND}
@@ -581,7 +579,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
       </div>
       {/* Edit */}
       {isEdit && (
-        <div className="sendbird-message-input--edit-action">
+        <div className="sendbird-message-input--edit-action" data-testid="sendbird-message-input--edit-action">
           <Button
             className="sendbird-message-input--edit-action__cancel"
             type={ButtonTypes.SECONDARY}

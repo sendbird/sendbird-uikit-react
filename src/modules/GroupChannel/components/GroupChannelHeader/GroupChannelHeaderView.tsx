@@ -9,6 +9,7 @@ import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import Header, { type HeaderCustomProps } from '../../../../ui/Header';
+import { classnames } from '../../../../utils/utils';
 
 export interface GroupChannelHeaderViewProps extends HeaderCustomProps {
   className?: string;
@@ -42,7 +43,7 @@ export const GroupChannelHeaderView = ({
 
   return (
     <Header
-      className={`sendbird-chat-header ${className}`}
+      className={classnames('sendbird-chat-header', className)}
       renderLeft={renderLeft ?? (() => (
         <>
           {isMobile && (

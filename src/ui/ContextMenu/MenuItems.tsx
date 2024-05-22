@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 
 interface MenuItemsProps {
   className?: string;
+  testID?: string;
   style?: Record<string, string>;
   openLeft?: boolean;
   children: React.ReactElement | Array<React.ReactElement> | React.ReactNode;
@@ -106,12 +107,11 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
       return <></>;
 
     const { menuStyle } = this.state;
-    const { children, style, className = '' } = this.props;
-
+    const { children, style, className = '', testID } = this.props;
     return (
       createPortal(
         (
-          <div className={this.props?.className}>
+          <div className={className} data-testid={testID}>
             <div className="sendbird-dropdown__menu-backdrop" />
             <ul
               className={`${className} sendbird-dropdown__menu`}
@@ -123,6 +123,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
                 top: `${Math.round(menuStyle.top)}px`,
                 ...style,
               }}
+              data-testid="sendbird-dropdown-menu"
             >
               {children}
             </ul>

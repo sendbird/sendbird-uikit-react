@@ -43,7 +43,7 @@ export function GroupChannelPreviewAction({ channel, disabled = false, onLeaveCh
                 setShowModal(true);
                 closeDropdown();
               }}
-              dataSbId="channel_list_item_context_menu_leave_channel"
+              testID="channel_list_item_context_menu_leave_channel"
             >
               {stringSet.CHANNEL_SETTING__LEAVE_CHANNEL__TITLE}
             </MenuItem>

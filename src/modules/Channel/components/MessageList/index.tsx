@@ -180,6 +180,7 @@ export const MessageList = (props: MessageListProps) => {
           <div className="sendbird-conversation__padding" />
           <div
             className="sendbird-conversation__messages-padding"
+            data-testid="sendbird-message-list-container"
             ref={scrollRef}
             onScroll={(e) => {
               handleOnScroll();

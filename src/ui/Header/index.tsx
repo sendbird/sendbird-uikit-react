@@ -34,10 +34,16 @@ export const Header = ({
   }
 
   return (
-    <div className={`sendbird-ui-header ${className}`}>
+    <div
+      className={classnames('sendbird-ui-header', className)}
+      data-testid="sendbird-ui-header"
+    >
       {
         renderLeft ? (
-          <div className={classnames('sendbird-ui-header__left', isMobile ? 'sendbird-ui-header--is-mobile' : 'sendbird-ui-header--is-desktop')}>
+          <div className={classnames(
+            'sendbird-ui-header__left',
+            isMobile ? 'sendbird-ui-header--is-mobile' : 'sendbird-ui-header--is-desktop',
+          )}>
             {renderLeft?.()}
           </div>
         ) : null
@@ -47,7 +53,10 @@ export const Header = ({
       </div>
       {
         renderRight ? (
-          <div className={classnames('sendbird-ui-header__right', isMobile ? 'sendbird-ui-header--is-mobile' : 'sendbird-ui-header--is-desktop')}>
+          <div className={classnames(
+            'sendbird-ui-header__right',
+            isMobile ? 'sendbird-ui-header--is-mobile' : 'sendbird-ui-header--is-desktop',
+          )}>
             {renderRight?.()}
           </div>
         ) : null

@@ -87,6 +87,7 @@ export default function FileMessageItemBody({
       >
         <Label
           className="sendbird-file-message-item-body__file-name__text"
+          testID="sendbird-file-message-item-body__file-name__text"
           type={LabelTypography.BODY_1}
           color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
         >
