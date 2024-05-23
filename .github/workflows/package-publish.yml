@@ -11,6 +11,10 @@ on:
         description: 'release tag'
         required: false
         type: string
+      tag_suffix:
+        description: 'tag suffix'
+        required: false
+        type: string
 
 jobs:
   publish:
@@ -38,7 +42,11 @@ jobs:
       - name: Update version in package.json if npm_tag is provided
         if: ${{ github.event.inputs.npm_tag }}
         run: |
-          npm_version="${{ github.event.inputs.version }}-${{ github.event.inputs.npm_tag }}"
+          if [ -z "${{ github.event.inputs.tag_suffix }}" ]; then
+            npm_version="${{ github.event.inputs.version }}-${{ github.event.inputs.npm_tag }}"
+          else
+            npm_version="${{ github.event.inputs.version }}-${{ github.event.inputs.npm_tag }}-${{ github.event.inputs.tag_suffix }}"
+          fi
           jq --arg npm_version "$npm_version" '.version = $npm_version' package.json > package.json.tmp && mv package.json.tmp package.json
       - name: Set environments
         run: |
@@ -46,7 +54,7 @@ jobs:
           git config --global user.email "sha.sdk_deployment@sendbird.com"
       - name: Install and Build
         run: |
-          yarn install --immutable --immutable-cache
+          yarn install
           yarn build
       - name: Publish to npm
         run: |
