@@ -1,5 +1,22 @@
 # Changelog - v3
 
+## [v3.14.7] (May 23, 2024)
+### Fixes
+* Fixed issue where files that failed to compress were not being sent
+* Cleaned up the props of the `ChannelSettings` component to ensure all missed props are applied
+* Exported the `ChannelSettingsHeader` component as default
+  ```
+  import ChannelSettingsHeader from '@sendbird/uikit-react/ChannelSettings/components/ChannelSettingsHeader'
+  ```
+* Fixed the issue where the mention feature did not work properly in the input component
+* Fixed the issue where unnecessary spaces were added between mention texts when editing an already mentioned message
+* Improved the scroll position flickering issue when loading previous messages
+* Implemented an attempt to load based on screen size threshold
+* Added `data-testid` to the UI components for making it easily to select them in the QE test
+
+### Features
+* Added `MESSAGE_INPUT__PLACE_HOLDER__FROZEN` to StringSet: `'Chat is unavailable in this channel'`
+
 ## [v3.14.6] (May 10, 2024)
 ### Fixes
 * Fixed a bug where import statements are not located at the top of the extracted index.css file
