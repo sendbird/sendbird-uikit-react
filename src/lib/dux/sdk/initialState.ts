@@ -3,14 +3,14 @@ import { SdkStore } from '../../types';
 export interface SdkStoreStateType {
   initialized: SdkStore['initialized']
   loading: SdkStore['loading']
-  sdk: SdkStore['sdk'] | null,
+  sdk: SdkStore['sdk'],
   error: SdkStore['error'];
 }
 
 const initialState: SdkStoreStateType = {
   initialized: false,
   loading: false,
-  sdk: null,
+  sdk: {} as SdkStore['sdk'],
   error: false,
 };
 
