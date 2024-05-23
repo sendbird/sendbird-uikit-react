@@ -92,7 +92,7 @@ export const InfiniteList = forwardRef((props: Props, listRef: React.RefObject<H
         data-testid="sendbird-message-list-container"
         onScroll={handleScroll}
       >
-        {welcomeMesages}
+        {welcomeMessages}
         {messages.map((message, index) => renderMessage({ message, index }))}
         {typingIndicator}
       </div>
