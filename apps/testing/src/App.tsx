@@ -1,31 +1,13 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
-import GroupChannelApp from '../../../src/modules/App';
-import OpenChannelApp from '../../../src/modules/OpenChannelApp';
-
-import { InitialParams, useConfigParams } from './utils/paramsBuilder.ts';
-import { URLBuilder } from './URLBuilder.tsx';
-
-const defaultProps: InitialParams = {
-  appId: import.meta.env.VITE_APP_ID,
-  userId: import.meta.env.VITE_USER_ID ?? 'test',
-  accessToken: import.meta.env.VITE_ACCESS_TOKEN,
-};
-
-function GroupChannelPage() {
-  const props = useConfigParams(defaultProps);
-  return <GroupChannelApp {...props} breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)} config={{ logLevel: 'all' }} />;
-}
-
-function OpenChannelPage() {
-  const props = useConfigParams(defaultProps);
-  return <OpenChannelApp {...props} />;
-}
+import { URLBuilderPage } from './pages/URLBuilderPage.tsx';
+import { GroupChannelPage } from './pages/GroupChannelPage.tsx';
+import { OpenChannelPage } from './pages/OpenChannelPage.tsx';
+import { PlaygroundPage } from './pages/PlaygroundPage.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <GroupChannelPage />,
+    element: <PlaygroundPage />,
   },
   {
     path: '/group_channel',
@@ -37,7 +19,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/url-builder',
-    element: <URLBuilder />,
+    element: <URLBuilderPage />,
   },
 ]);
 

@@ -121,6 +121,7 @@ export function MessageMenu(props: MessageMenuProps): ReactElement | null {
           >
             <Icon
               className="sendbird-message-item-menu__trigger__icon"
+              testID="sendbird-message-item-menu__trigger__icon"
               type={IconTypes.MORE}
               fillColor={IconColors.CONTENT_INVERSE}
               width="24px"
@@ -136,6 +137,7 @@ export function MessageMenu(props: MessageMenuProps): ReactElement | null {
           return (
             <MenuItems
               className="sendbird-message-item-menu__list"
+              testID="sendbird-message-item-menu__list"
               parentRef={triggerRef}
               parentContainRef={containerRef}
               closeDropdown={closeDropdown}

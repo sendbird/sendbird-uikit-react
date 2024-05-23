@@ -94,7 +94,7 @@ export const BannedMemberList = (): ReactElement => {
                             refreshList();
                           });
                         }}
-                        dataSbId="channel_setting_banned_user_context_menu_unban"
+                        testID="channel_setting_banned_user_context_menu_unban"
                       >
                         {stringSet.CHANNEL_SETTING__MODERATION__UNBAN}
                       </MenuItem>

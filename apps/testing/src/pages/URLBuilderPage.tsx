@@ -1,10 +1,10 @@
-import { paramKeys } from './utils/paramsBuilder.ts';
+import { paramKeys } from '../utils/paramsBuilder.ts';
 import React, { useEffect } from 'react';
 
 const appConfigs = ['appId', 'userId', 'nickname', 'enableProfileEdit', 'enableMultipleFilesMessage'];
 const uikitConfigs = [...paramKeys];
 
-export function URLBuilder() {
+export function URLBuilderPage() {
   useEffect(() => {
     uikitConfigs.forEach((label) => {
       const elem = document.getElementsByName(label)[0];

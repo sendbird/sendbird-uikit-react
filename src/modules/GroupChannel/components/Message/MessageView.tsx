@@ -11,7 +11,7 @@ import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, ThreadReplySelectTyp
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import useDidMountEffect from '../../../../utils/useDidMountEffect';
-import { CoreMessageType, getClassName, SendableMessageType } from '../../../../utils';
+import { CoreMessageType, SendableMessageType } from '../../../../utils';
 import DateSeparator from '../../../../ui/DateSeparator';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 // import MessageInput from '../../../../ui/MessageInput';
@@ -20,7 +20,7 @@ import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 
 // import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
 import type { OnBeforeDownloadFileMessageType } from '../../context/GroupChannelProvider';
-import { deleteNullish } from '../../../../utils/utils';
+import { classnames, deleteNullish } from '../../../../utils/utils';
 
 export interface MessageProps {
   message: EveryMessage;
@@ -391,10 +391,11 @@ const MessageView = (props: MessageViewProps) => {
 
   return (
     <div
-      className={getClassName([
+      className={classnames(
         'sendbird-msg-hoc sendbird-msg--scroll-ref',
-        isAnimated ? 'sendbird-msg-hoc__animated' : '',
-      ])}
+        isAnimated && 'sendbird-msg-hoc__animated',
+      )}
+      data-testid="sendbird-message-view"
       style={children || renderMessage ? undefined : { marginBottom: '2px' }}
       data-sb-message-id={message.messageId}
       data-sb-created-at={message.createdAt}

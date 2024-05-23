@@ -22,10 +22,14 @@ type PayloadByTopic<T extends keyof any, U> = U extends {
   ? P
   : never;
 
+type Options = {
+  publishSynchronous?: boolean;
+};
+
 const pubSubFactory = <
   T extends keyof any = keyof any,
   U extends { topic: T; payload: any } = any
->(): PubSubTypes<T, U> => {
+>(opts?: Options): PubSubTypes<T, U> => {
   const topics = {} as Record<T, Set<(data: any) => void>>;
 
   return {
@@ -42,7 +46,11 @@ const pubSubFactory = <
     publish: (topic, info) => {
       if (topics[topic]) {
         topics[topic].forEach((fn) => {
-          setTimeout(() => fn(info !== undefined ? info : {}), 0);
+          if (opts?.publishSynchronous) {
+            fn(info !== undefined ? info : {});
+          } else {
+            setTimeout(() => fn(info !== undefined ? info : {}), 0);
+          }
         });
       }
     },

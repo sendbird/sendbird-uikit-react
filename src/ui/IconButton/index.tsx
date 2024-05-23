@@ -19,6 +19,7 @@ export interface IconButtonProps {
   style?: { [key: string]: string };
   onBlur?: (e: FocusEvent<HTMLButtonElement>) => void;
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+  testID?: string;
 }
 
 const IconButton = React.forwardRef((
@@ -35,10 +36,12 @@ const IconButton = React.forwardRef((
     style = {},
     onBlur = () => { /* noop */ },
     onClick = () => { /* noop */ },
+    testID,
   } = props;
   const [isPressed, setIsPressed] = useState(false);
   return (
     <button
+      data-testid={testID}
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-iconbutton',

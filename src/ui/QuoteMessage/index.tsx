@@ -79,6 +79,7 @@ export default function QuoteMessage({
         />
         <Label
           className="sendbird-quote-message__replied-to__text"
+          testID="sendbird-quote-message__replied-to__text"
           type={LabelTypography.CAPTION_2}
           color={LabelColors.ONBACKGROUND_3}
         >
@@ -92,6 +93,7 @@ export default function QuoteMessage({
           <div className="sendbird-quote-message__replied-message__text-message">
             <Label
               className="sendbird-quote-message__replied-message__text-message__word"
+              testID="sendbird-quote-message__replied-message__text-message__word"
               type={LabelTypography.BODY_2}
               color={LabelColors.ONBACKGROUND_1}
             >
@@ -104,6 +106,7 @@ export default function QuoteMessage({
           <div className="sendbird-quote-message__replied-message__text-message">
             <Label
               className="sendbird-quote-message__replied-message__text-message__word"
+              testID="sendbird-quote-message__replied-message__text-message__word"
               type={LabelTypography.BODY_2}
               color={LabelColors.ONBACKGROUND_1}
             >
@@ -116,6 +119,7 @@ export default function QuoteMessage({
           <div className="sendbird-quote-message__replied-message__text-message">
             <Label
               className="sendbird-quote-message__replied-message__text-message__word"
+              testID="sendbird-quote-message__replied-message__text-message__word"
               type={LabelTypography.BODY_2}
               color={LabelColors.ONBACKGROUND_1}
             >

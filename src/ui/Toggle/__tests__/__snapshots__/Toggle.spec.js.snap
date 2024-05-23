@@ -7,6 +7,7 @@ exports[`Toggle should do a snapshot test of the Toggle DOM 1`] = `
   >
     <label
       class="sendbird-input-toggle-button  sendbird-input-toggle-button--unchecked"
+      data-testid="sendbird-input-toggle-button"
       style="width: 40px; height: 20px; border-radius: 12px;"
     >
       <div
@@ -32,6 +33,7 @@ exports[`Toggle should do a snapshot test of the Toggle DOM with props 1`] = `
   >
     <label
       class="sendbird-input-toggle-button  sendbird-input-toggle-button--checked sendbird-input-toggle-button--disabled sendbird-input-toggle-button--reversed"
+      data-testid="sendbird-input-toggle-button"
       style="width: 80px; height: 40px; border-radius: 24px; border: 1px solid red;"
     >
       <div

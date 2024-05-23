@@ -364,7 +364,7 @@ export default function OpenchannelThumbnailMessage({
                                 resendMessage(message);
                                 closeDropdown();
                               }}
-                              dataSbId="open_channel_thumbnail_message_menu_resend"
+                              testID="open_channel_thumbnail_message_menu_resend"
                             >
                               {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
                             </MenuItem>
@@ -380,7 +380,7 @@ export default function OpenchannelThumbnailMessage({
                                 showRemove(true);
                                 closeDropdown();
                               }}
-                              dataSbId="open_channel_thumbnail_message_menu_delete"
+                              testID="open_channel_thumbnail_message_menu_delete"
                             >
                               {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
                             </MenuItem>

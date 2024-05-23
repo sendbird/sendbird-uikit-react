@@ -94,6 +94,7 @@ export const EmojiListItems = ({
           <div className="sendbird-dropdown__menu-backdrop" />
           <ul
             className="sendbird-dropdown__reaction-bar"
+            data-testid="sendbird-dropdown__reaction-bar"
             ref={reactionRef}
             style={{
               display: 'inline-block',

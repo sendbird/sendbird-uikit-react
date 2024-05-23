@@ -59,6 +59,7 @@ export function MessageEmojiMenu({
           >
             <Icon
               className="sendbird-message-item-reaction-menu__trigger__icon"
+              testID="sendbird-message-item-reaction-menu__trigger__icon"
               type={IconTypes.EMOJI_MORE}
               fillColor={IconColors.CONTENT_INVERSE}
               width="24px"
@@ -93,7 +94,7 @@ export function MessageEmojiMenu({
                       closeDropdown();
                       toggleReaction?.(message, emoji.key, isReacted);
                     }}
-                    dataSbId={`ui_emoji_reactions_menu_${emoji.key}`}
+                    testID={`ui_emoji_reactions_menu_${emoji.key}`}
                   >
                     <ImageRenderer
                       url={emoji.url}

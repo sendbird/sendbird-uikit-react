@@ -31,7 +31,7 @@ interface RenderData {
 }
 
 interface TemplateMessageItemBodyProps {
-  className?: string | Array<string>;
+  className?: string;
   message: BaseMessage;
   isByMe?: boolean;
   theme?: SendbirdTheme;

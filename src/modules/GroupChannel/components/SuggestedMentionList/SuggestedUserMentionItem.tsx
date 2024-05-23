@@ -81,6 +81,7 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
       />
       <Label
         className="sendbird-mention-suggest-list__user-item__nickname"
+        testID="sendbird-mention-suggest-list__user-item__nickname"
         type={LabelTypography.SUBTITLE_2}
         color={member?.nickname ? LabelColors.ONBACKGROUND_1 : LabelColors.ONBACKGROUND_3}
       >
@@ -88,6 +89,7 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
       </Label>
       <Label
         className="sendbird-mention-suggest-list__user-item__user-id"
+        testID="sendbird-mention-suggest-list__user-item__user-id"
         type={LabelTypography.SUBTITLE_2}
         color={LabelColors.ONBACKGROUND_2}
       >

@@ -36,7 +36,7 @@ export default function LinkLabel({ className = '', src, type, color, children }
         openURL(url);
       }}
     >
-      <Label className="sendbird-link-label__label" type={type} color={color}>
+      <Label className="sendbird-link-label__label" testID="sendbird-link-label__label" type={type} color={color}>
         {children}
       </Label>
     </a>

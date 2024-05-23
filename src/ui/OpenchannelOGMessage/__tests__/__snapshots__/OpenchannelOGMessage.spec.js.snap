@@ -113,6 +113,7 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
         >
           <span
             class="sendbird-link-label__label sendbird-label sendbird-label--subtitle-2 sendbird-label--color-primary"
+            data-testid="sendbird-link-label__label"
           >
             This is the TITLE
           </span>

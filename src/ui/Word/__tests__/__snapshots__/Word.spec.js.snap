@@ -4,6 +4,7 @@ exports[`ui/Word should do a snapshot test of the Word DOM 1`] = `
 <DocumentFragment>
   <span
     class="sendbird-word"
+    data-testid="sendbird-ui-word"
   >
     hello
     <div

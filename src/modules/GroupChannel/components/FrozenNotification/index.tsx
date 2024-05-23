@@ -14,9 +14,13 @@ export const FrozenNotification = ({
 }: FrozenNotificationProps): React.ReactElement => {
   const { stringSet } = useContext(LocalizationContext);
   return (
-    <div className={classnames('sendbird-notification', 'sendbird-notification--frozen', className)}>
+    <div
+      className={classnames('sendbird-notification', 'sendbird-notification--frozen', className)}
+      data-testid="sendbird-notification"
+    >
       <Label
         className="sendbird-notification__text"
+        testID="sendbird-notification__text"
         type={LabelTypography.CAPTION_2}
       >
         {stringSet.CHANNEL_FROZEN}

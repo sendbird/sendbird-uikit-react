@@ -101,6 +101,7 @@ export const GroupChannelListItemView = ({
               )}
               <Label
                 className="sendbird-channel-preview__content__upper__header__channel-name"
+                testID="sendbird-channel-preview__content__upper__header__channel-name"
                 type={LabelTypography.SUBTITLE_2}
                 color={LabelColors.ONBACKGROUND_1}
               >

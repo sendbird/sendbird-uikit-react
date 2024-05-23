@@ -13,7 +13,7 @@ import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 import { extractTextAndMentions, isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
-import { arrayEqual, getClassName, getMimeTypesUIKitAccepts } from '../../utils';
+import { arrayEqual, getMimeTypesUIKitAccepts } from '../../utils';
 import usePaste from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
@@ -57,7 +57,7 @@ interface TargetStringInfo {
   endOffsetIndex: number | null;
 }
 
-const initialTargetStringInfo : TargetStringInfo = {
+const initialTargetStringInfo: TargetStringInfo = {
   targetString: '',
   startNodeIndex: null,
   startOffsetIndex: null,
@@ -218,9 +218,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
             .map((token) => {
               if (token.type === TOKEN_TYPES.mention) {
                 const mentionedUser = mentionedUsers.find((user) => user.userId === token.userId);
-                const nickname = `${USER_MENTION_PREFIX}${
-                  mentionedUser?.nickname || token.value || stringSet.MENTION_NAME__NO_NAME
-                }`;
+                const nickname = `${USER_MENTION_PREFIX}${mentionedUser?.nickname || token.value || stringSet.MENTION_NAME__NO_NAME}`;
                 return renderMentionLabelToString({
                   userId: token.userId,
                   nickname,
@@ -228,7 +226,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
               }
               return sanitizeString(token.value);
             })
-            .join(' ');
+            .join('');
         }
       } else {
         /* mention disabled */
@@ -267,15 +265,15 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     if (isMentionEnabled && mentionSelectedUser) {
       const { targetString, startNodeIndex, startOffsetIndex, endNodeIndex, endOffsetIndex } = targetStringInfo;
       const textField = internalRef?.current;
-      if (targetString && startNodeIndex && startOffsetIndex && textField && endNodeIndex) {
+      if (targetString && startNodeIndex !== null && startOffsetIndex !== null && endOffsetIndex !== null && endNodeIndex !== null && textField) {
         // const textField = document.getElementById(textFieldId);
         const childNodes = nodeListToArray(textField?.childNodes);
         const startNodeTextContent: string = childNodes[startNodeIndex]?.textContent ?? '';
-        const frontTextNode = document?.createTextNode(
+        const frontTextNode = document.createTextNode(
           startNodeTextContent.slice(0, startOffsetIndex),
         );
         const endNodeTextContent: string = childNodes[endNodeIndex]?.textContent ?? '';
-        const backTextNode = endOffsetIndex && document?.createTextNode(
+        const backTextNode = endOffsetIndex && document.createTextNode(
           `\u00A0${endNodeTextContent.slice(endOffsetIndex)}`,
         );
         const mentionLabel = renderMentionLabelToString({
@@ -374,7 +372,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
            * targetString could be ''
            * startNodeIndex and startOffsetIndex could be null
            */
-          const targetString = textStack && startOffsetIndex ? textStack.slice(startOffsetIndex) : ''; // include template character
+          const targetString = textStack && startOffsetIndex !== null ? textStack.slice(startOffsetIndex) : ''; // include template character
           setTargetStringInfo({
             targetString,
             startNodeIndex,
@@ -422,14 +420,12 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   });
 
   return (
-    <form
-      className={getClassName([
-        className,
-        isEdit ? 'sendbird-message-input__edit' : '',
-        disabled ? 'sendbird-message-input-form__disabled' : '',
-      ])}
-    >
-      <div className={getClassName(['sendbird-message-input', disabled ? 'sendbird-message-input__disabled' : ''])}>
+    <form className={classnames(
+      ...(Array.isArray(className) ? className : [className]),
+      isEdit && 'sendbird-message-input__edit',
+      disabled && 'sendbird-message-input-form__disabled',
+    )}>
+      <div className={classnames('sendbird-message-input', disabled && 'sendbird-message-input__disabled')} data-testid="sendbird-message-input">
         <div
           id={`${textFieldId}${isEdit ? message?.messageId : ''}`}
           className={`sendbird-message-input--textarea ${textFieldId}`}
@@ -512,7 +508,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         )}
         {/* send icon */}
         {!isEdit && isInput && (
-          <IconButton className="sendbird-message-input--send" height="32px" width="32px" onClick={() => sendMessage()}>
+          <IconButton className="sendbird-message-input--send" height="32px" width="32px" onClick={() => sendMessage()} testID="sendbird-message-input-send-button">
             {renderSendMessageIcon?.() || (
               <Icon
                 type={IconTypes.SEND}
@@ -583,7 +579,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
       </div>
       {/* Edit */}
       {isEdit && (
-        <div className="sendbird-message-input--edit-action">
+        <div className="sendbird-message-input--edit-action" data-testid="sendbird-message-input--edit-action">
           <Button
             className="sendbird-message-input--edit-action__cancel"
             type={ButtonTypes.SECONDARY}

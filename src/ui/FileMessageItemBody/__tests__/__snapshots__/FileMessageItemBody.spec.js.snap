@@ -24,6 +24,7 @@ exports[`ui/FileMessageItemBody should do a snapshot test of the FileMessageItem
     >
       <span
         class="sendbird-file-message-item-body__file-name__text sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"
+        data-testid="sendbird-file-message-item-body__file-name__text"
       >
         My name is name
       </span>

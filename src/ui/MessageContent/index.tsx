@@ -35,7 +35,7 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import ThreadReplies from '../ThreadReplies';
 import { ThreadReplySelectType } from '../../modules/Channel/context/const';
 import { Nullable, ReplyType } from '../../types';
-import { deleteNullish, noop } from '../../utils/utils';
+import { classnames, deleteNullish, noop } from '../../utils/utils';
 import MessageProfile, { MessageProfileProps } from './MessageProfile';
 import MessageBody, { MessageBodyProps } from './MessageBody';
 import MessageHeader, { MessageHeaderProps } from './MessageHeader';
@@ -265,7 +265,10 @@ export default function MessageContent(props: MessageContentProps): ReactElement
       onMouseLeave={() => setMouseHover(false)}
     >
       {/* left */}
-      {<div className={getClassName(['sendbird-message-content__left', isReactionEnabledClassName, isByMeClassName, useReplyingClassName])}>
+      {<div
+        className={classnames('sendbird-message-content__left', isReactionEnabledClassName, isByMeClassName, useReplyingClassName)}
+        data-testid="sendbird-message-content__left"
+      >
         {
           renderSenderProfile({
             ...props,
@@ -276,7 +279,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
         }
         {/* outgoing menu */}
         {showOutgoingMenu && (
-          <div className={getClassName(['sendbird-message-content-menu', isReactionEnabledClassName, supposedHoverClassName, isByMeClassName])}>
+          <div className={classnames('sendbird-message-content-menu', isReactionEnabledClassName, supposedHoverClassName, isByMeClassName)}>
             {renderMessageMenu({
               channel,
               message,
@@ -312,21 +315,24 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
       {/* middle */}
       <div
-        className={getClassName([
+        className={classnames(
           'sendbird-message-content__middle',
-          isTemplateMessage(message) ? 'sendbird-message-content__middle__for_template_message' : '',
+          isTemplateMessage(message) && 'sendbird-message-content__middle__for_template_message',
           uiContainerType,
-        ])}
+        )}
+        data-testid="sendbird-message-content__middle"
         {...(isMobile ? { ...longPress } : {})}
         ref={contentRef}
-        >
+      >
         {
           !isByMe && !chainTop && !useReplying && renderMessageHeader(props)
         }
         {/* quote message */}
         {(useReplying) ? (
           <div
-            className={getClassName(['sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming', useReplyingClassName])}>
+            className={classnames('sendbird-message-content__middle__quote-message', isByMe ? 'outgoing' : 'incoming', useReplyingClassName)}
+            data-testid="sendbird-message-content__middle__quote-message"
+          >
             <QuoteMessage
               className="sendbird-message-content__middle__quote-message__quote"
               message={message}
@@ -350,20 +356,20 @@ export default function MessageContent(props: MessageContentProps): ReactElement
         {/* container: message item body + emoji reactions */}
 
         <div
-          className={getClassName([
+          className={classnames(
             'sendbird-message-content__middle__body-container',
-            isTemplateMessage(message) ? 'sendbird-message-content__middle__for_template_message' : '',
-          ])}
+            isTemplateMessage(message) && 'sendbird-message-content__middle__for_template_message',
+          )}
         >
           {/* message status component when sent by me */}
           {(isByMe && !chainBottom) && (
             <div
-              className={getClassName([
+              className={classnames(
                 'sendbird-message-content__middle__body-container__created-at',
                 'left',
                 supposedHoverClassName,
                 uiContainerType,
-              ])}
+              )}
               ref={timestampRef}
             >
               <div className="sendbird-message-content__middle__body-container__created-at__component-container">
@@ -391,14 +397,12 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           }
           {/* reactions */}
           {(isReactionEnabledInChannel && message?.reactions?.length > 0) && (
-            <div className={getClassName([
+            <div className={classnames(
               'sendbird-message-content-reactions',
-              isMultipleFilesMessage(message)
-                ? 'image-grid'
-                : (!isByMe || isThumbnailMessage(message) || isOGMessage(message))
-                  ? '' : 'primary',
-              mouseHover ? 'mouse-hover' : '',
-            ])}>
+              isMultipleFilesMessage(message) ? 'image-grid'
+                : (isByMe && !isThumbnailMessage(message) && !isOGMessage(message)) && 'primary',
+              mouseHover && 'mouse-hover',
+            )}>
               {
                 renderEmojiReactions({
                   userId,
@@ -416,12 +420,12 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           {/* message timestamp when sent by others */}
           {(!isByMe && !chainBottom) && (
             <Label
-              className={getClassName([
+              className={classnames(
                 'sendbird-message-content__middle__body-container__created-at',
                 'right',
                 supposedHoverClassName,
                 // uiContainerType,
-              ])}
+              )}
               type={LabelTypography.CAPTION_3}
               color={LabelColors.ONBACKGROUND_2}
               ref={timestampRef}
@@ -511,9 +515,11 @@ export default function MessageContent(props: MessageContentProps): ReactElement
 
       {/* right */}
       {showRightContent && (
-      <div
-        className={getClassName(['sendbird-message-content__right', chainTopClassName, isReactionEnabledClassName, useReplyingClassName])}>
-          <div className={getClassName(['sendbird-message-content-menu', chainTopClassName, supposedHoverClassName, isByMeClassName])}>
+        <div
+          className={classnames('sendbird-message-content__right', chainTopClassName, isReactionEnabledClassName, useReplyingClassName)}
+          data-testid="sendbird-message-content__right"
+        >
+          <div className={classnames('sendbird-message-content-menu', chainTopClassName, supposedHoverClassName, isByMeClassName)}>
             {isReactionEnabledInChannel && (
               renderEmojiMenu({
                 className: 'sendbird-message-content-menu__reaction-menu',
@@ -545,7 +551,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               deleteMessage,
             })}
           </div>
-      </div>
+        </div>
       )}
 
       {

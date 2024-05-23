@@ -118,7 +118,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                   // FIXME: handle error later
                                   closeDropdown();
                                 }}
-                                dataSbId={`channel_setting_member_context_menu_${(
+                                testID={`channel_setting_member_context_menu_${(
                                   member.role !== 'operator'
                                 ) ? 'register_as_operator' : 'unregister_operator'}`}
                               >
@@ -148,7 +148,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                       // FIXME: handle error later
                                       closeDropdown();
                                     }}
-                                    dataSbId={`channel_setting_member_context_menu_${(
+                                    testID={`channel_setting_member_context_menu_${(
                                       member.isMuted) ? 'unmute' : 'mute'}`
                                     }
                                   >
@@ -168,7 +168,7 @@ export default function MembersModal({ onCancel }: Props): ReactElement {
                                     }));
                                   });
                                 }}
-                                dataSbId="channel_setting_member_context_menu_ban"
+                                testID="channel_setting_member_context_menu_ban"
                               >
                                 {stringSet.CHANNEL_SETTING__MODERATION__BAN}
                               </MenuItem>
