@@ -206,8 +206,9 @@ export const MessageInputWrapperView = React.forwardRef((
           setMentionedUsers={setMentionedUsers}
           placeholder={
             (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
-            || ((disabled || isDisabledBecauseFrozen(currentChannel)) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
+            || (isDisabledBecauseFrozen(currentChannel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__FROZEN)
             || (isDisabledBecauseMuted(currentChannel) && (isMobile ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT : stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED))
+            || (disabled && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
             || undefined
           }
           ref={(ref || messageInputRef) as any}
