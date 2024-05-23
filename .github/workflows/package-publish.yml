@@ -51,6 +51,7 @@ jobs:
       - name: Publish to npm
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.npm_token }}" >> .npmrc
+          cd dist
           if [ -z "${{ github.event.inputs.npm_tag }}" ]; then
             yarn npm publish --access=public
           else
