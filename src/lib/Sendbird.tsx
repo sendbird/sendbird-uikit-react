@@ -242,7 +242,7 @@ const SendbirdSDK = ({
   });
 
   useUnmount(() => {
-    if (typeof sdk?.disconnect === 'function') {
+    if (typeof sdk.disconnect === 'function') {
       disconnectSdk({
         logger,
         sdkDispatcher,
@@ -250,7 +250,7 @@ const SendbirdSDK = ({
         sdk,
       });
     }
-  }, [sdk?.disconnect]);
+  }, [sdk.disconnect]);
 
   // to create a pubsub to communicate between parent and child
   useEffect(() => {
