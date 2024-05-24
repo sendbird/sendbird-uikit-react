@@ -162,6 +162,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       <div className={`sendbird-conversation__messages ${className}`}>
         <InfiniteList
           ref={scrollRef}
+          initDeps={[channelUrl]}
           scrollPositionRef={scrollPositionRef}
           scrollDistanceFromBottomRef={scrollDistanceFromBottomRef}
           onLoadNext={loadNext}

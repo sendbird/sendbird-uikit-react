@@ -1,4 +1,4 @@
-import React, { forwardRef, UIEventHandler, useLayoutEffect, useRef } from 'react';
+import React, { DependencyList, forwardRef, UIEventHandler, useLayoutEffect, useRef } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
 import { isAboutSame } from '../../../Channel/context/utils';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
@@ -17,6 +17,7 @@ type Props = {
 
   typingIndicator?: React.ReactNode;
   onScrollPosition?: (position: 'top' | 'bottom' | 'middle') => void;
+  initDeps?: DependencyList;
 };
 
 export const InfiniteList = forwardRef((props: Props, listRef: React.RefObject<HTMLDivElement>) => {
@@ -33,11 +34,19 @@ export const InfiniteList = forwardRef((props: Props, listRef: React.RefObject<H
 
     typingIndicator,
     onScrollPosition = noop,
+    initDeps,
   } = props;
 
   const isFetching = React.useRef(false);
   const direction = React.useRef<'top' | 'bottom'>();
   const oldScrollTop = useRef(0);
+
+  // SideEffect: scroll to bottom on initialized
+  useLayoutEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
+  }, initDeps);
 
   // SideEffect: keep scroll position
   useLayoutEffect(() => {
