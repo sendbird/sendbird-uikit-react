@@ -20,7 +20,7 @@ export interface AppLayoutProps {
   onProfileEditSuccess?(user: User): void; // TODO: Unused props, deprecate it
   disableAutoSelect?: boolean;
   currentChannel?: GroupChannel;
-  setCurrentChannel: React.Dispatch<GroupChannel | null>;
+  setCurrentChannel: React.Dispatch<GroupChannel | undefined>;
   enableLegacyChannelModules: boolean;
 }
 

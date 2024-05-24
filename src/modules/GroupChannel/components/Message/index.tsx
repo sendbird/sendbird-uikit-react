@@ -8,6 +8,7 @@ import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import MessageView, { MessageProps } from './MessageView';
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
+import { ThreadReplySelectType } from '../../context/const';
 
 export const Message = (props: MessageProps): React.ReactElement => {
   const { config, emojiManager } = useSendbirdStateContext();
@@ -51,15 +52,18 @@ export const Message = (props: MessageProps): React.ReactElement => {
   return (
     <MessageView
       {...props}
-      channel={currentChannel}
+      channel={currentChannel!}
       emojiContainer={emojiManager.emojiContainer}
       editInputDisabled={
-        !initialized || isDisabledBecauseFrozen(currentChannel) || isDisabledBecauseMuted(currentChannel) || !config.isOnline
+        !initialized
+        || isDisabledBecauseFrozen(currentChannel ?? undefined)
+        || isDisabledBecauseMuted(currentChannel ?? undefined)
+        || !config.isOnline
       }
       shouldRenderSuggestedReplies={shouldRenderSuggestedReplies}
-      isReactionEnabled={isReactionEnabled}
-      replyType={replyType}
-      threadReplySelectType={threadReplySelectType}
+      isReactionEnabled={isReactionEnabled ?? false}
+      replyType={replyType ?? 'NONE'}
+      threadReplySelectType={threadReplySelectType ?? ThreadReplySelectType.PARENT}
       nicknamesMap={nicknamesMap}
       renderUserMentionItem={renderUserMentionItem}
       scrollToMessage={scrollToMessage}
@@ -70,7 +74,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
       sendUserMessage={sendUserMessage}
       updateUserMessage={updateUserMessage}
       resendMessage={resendMessage}
-      deleteMessage={deleteMessage}
+      deleteMessage={deleteMessage as any}
       animatedMessageId={animatedMessageId}
       setAnimatedMessageId={setAnimatedMessageId}
       onMessageAnimated={onMessageAnimated}

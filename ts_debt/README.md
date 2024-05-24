@@ -1,8 +1,6 @@
 This directory has a list of remaining files to be migrated:
 They are split into three categories:
 
-* Source files (high priority)
-* Story files (medium priority)
 * Test files (low priority)
 
 See the list in respective .yml files.

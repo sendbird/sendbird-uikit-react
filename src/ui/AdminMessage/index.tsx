@@ -12,7 +12,7 @@ interface AdminMessageProps {
 export default function AdminMessage({
   className = '',
   message,
-}: AdminMessageProps): ReactElement {
+}: AdminMessageProps): ReactElement | null {
   if (!(message?.isAdminMessage || message?.messageType) || !message?.isAdminMessage?.() || message?.messageType !== 'admin') {
     return null;
   }

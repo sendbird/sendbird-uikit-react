@@ -1,6 +1,6 @@
 import './index.scss';
 import React, { ReactElement, useContext, useState } from 'react';
-import type { FileMessage, UserMessage } from '@sendbird/chat/message';
+import type { BaseMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
@@ -43,7 +43,7 @@ export default function QuoteMessage({
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
 
-  const { parentMessage } = message;
+  const { parentMessage } = message as BaseMessage;
   const parentMessageSender = (parentMessage as SendableMessageType)?.sender;
   const parentMessageSenderNickname = (userId === parentMessageSender?.userId) ? stringSet.QUOTED_MESSAGE__CURRENT_USER : parentMessageSender?.nickname;
   const parentMessageUrl = getMessageFirstFileUrl(parentMessage as CoreMessageType);
@@ -79,6 +79,7 @@ export default function QuoteMessage({
         />
         <Label
           className="sendbird-quote-message__replied-to__text"
+          testID="sendbird-quote-message__replied-to__text"
           type={LabelTypography.CAPTION_2}
           color={LabelColors.ONBACKGROUND_3}
         >
@@ -92,6 +93,7 @@ export default function QuoteMessage({
           <div className="sendbird-quote-message__replied-message__text-message">
             <Label
               className="sendbird-quote-message__replied-message__text-message__word"
+              testID="sendbird-quote-message__replied-message__text-message__word"
               type={LabelTypography.BODY_2}
               color={LabelColors.ONBACKGROUND_1}
             >
@@ -104,6 +106,7 @@ export default function QuoteMessage({
           <div className="sendbird-quote-message__replied-message__text-message">
             <Label
               className="sendbird-quote-message__replied-message__text-message__word"
+              testID="sendbird-quote-message__replied-message__text-message__word"
               type={LabelTypography.BODY_2}
               color={LabelColors.ONBACKGROUND_1}
             >
@@ -116,6 +119,7 @@ export default function QuoteMessage({
           <div className="sendbird-quote-message__replied-message__text-message">
             <Label
               className="sendbird-quote-message__replied-message__text-message__word"
+              testID="sendbird-quote-message__replied-message__text-message__word"
               type={LabelTypography.BODY_2}
               color={LabelColors.ONBACKGROUND_1}
             >

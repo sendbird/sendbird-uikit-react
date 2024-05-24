@@ -2,7 +2,8 @@ import { State as initialStateInterface } from './initialState';
 import * as actionTypes from './actionTypes';
 
 import compareIds from '../../../../utils/compareIds';
-import { SendableMessageType } from '../../../../utils';
+import { CoreMessageType, SendableMessageType } from '../../../../utils';
+import { User } from '@sendbird/chat';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // @ts-ignore: Unreachable code error
@@ -74,12 +75,12 @@ export default function reducer(
         lastMessageTimestamp,
       } = action.payload;
       const actionChannelUrl = currentOpenChannel.url;
-      const receivedMessages = isFailed ? [] : messages;
+      const receivedMessages = (isFailed ? [] : messages) as CoreMessageType[];
       const _hasMore = isFailed ? false : hasMore;
       const _lastMessageTimestamp = isFailed ? 0 : lastMessageTimestamp;
 
       const stateChannel = state.currentOpenChannel;
-      const stateChannelUrl = stateChannel.url;
+      const stateChannelUrl = stateChannel?.url;
 
       if (actionChannelUrl !== stateChannelUrl) {
         return state;
@@ -105,7 +106,7 @@ export default function reducer(
         message,
         channel,
       } = action.payload;
-      if (channel?.url !== state.currentOpenChannel.url
+      if (channel?.url !== state.currentOpenChannel?.url
         || state.allMessages.some((m) => (m as SendableMessageType).reqId === message.reqId)
         // Handing failed first than sending start issue
       ) {
@@ -168,7 +169,7 @@ export default function reducer(
     case actionTypes.RESENDING_MESSAGE_START: {
       const eventedChannel = action.payload.channel;
       const resentMessage = action.payload.message;
-      if (eventedChannel.url !== state.currentOpenChannel.url) {
+      if (eventedChannel.url !== state.currentOpenChannel?.url) {
         return state;
       }
       return {
@@ -181,7 +182,7 @@ export default function reducer(
     case actionTypes.FETCH_PARTICIPANT_LIST: {
       const eventedChannel = action.payload.channel;
       const fetchedParticipantList = action.payload.users;
-      if (eventedChannel.url !== state.currentOpenChannel.url) {
+      if (eventedChannel.url !== state.currentOpenChannel?.url) {
         return state;
       }
       return {
@@ -192,9 +193,9 @@ export default function reducer(
     }
     case actionTypes.FETCH_BANNED_USER_LIST: {
       const eventedChannel = action.payload.channel;
-      const fetchedBannedUserList = action.payload.users;
+      const fetchedBannedUserList = action.payload.users as User[];
       if (
-        (eventedChannel.url !== state.currentOpenChannel.url)
+        (eventedChannel.url !== state.currentOpenChannel?.url)
         || !(fetchedBannedUserList.every(user => typeof user.userId === 'string'))
       ) {
         return state;
@@ -210,9 +211,9 @@ export default function reducer(
     }
     case actionTypes.FETCH_MUTED_USER_LIST: {
       const eventedChannel = action.payload.channel;
-      const fetchedMutedUserList = action.payload.users;
+      const fetchedMutedUserList = action.payload.users as User[];
       if (
-        (eventedChannel.url !== state.currentOpenChannel.url)
+        (eventedChannel.url !== state.currentOpenChannel?.url)
         || !(fetchedMutedUserList.every(user => typeof user.userId === 'string'))
       ) {
         return state;
@@ -236,7 +237,7 @@ export default function reducer(
       } = state;
 
       if (
-        !compareIds(eventedChannel.url, currentOpenChannel.url)
+        !compareIds(eventedChannel.url, currentOpenChannel?.url)
         || (
           !(state.allMessages.map(
             (message) => message.messageId).indexOf(receivedMessage.messageId) < 0

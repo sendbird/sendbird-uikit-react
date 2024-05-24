@@ -46,12 +46,12 @@ function CommunityChannelList({
   channels,
   setChannels,
 }: Props): ReactElement {
-  const [channelSource, setChannelSource] = useState<OpenChannelListQuery>(null);
+  const [channelSource, setChannelSource] = useState<OpenChannelListQuery | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [currentImage, setCurrentImage] = useState(null);
-  const [currentFile, setCurrentFile] = useState(null);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [currentChannelName, setCurrentChannelName] = useState('');
-  const hiddenInputRef = useRef(null);
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
   const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
@@ -101,7 +101,7 @@ function CommunityChannelList({
             onSubmit={() => {
               const params: OpenChannelCreateParams = {
                 name: currentChannelName,
-                coverUrlOrImage: currentFile,
+                coverUrlOrImage: currentFile ?? undefined,
                 customType: SB_COMMUNITY_TYPE,
                 operatorUserIds: [user.userId],
               };
@@ -143,22 +143,27 @@ function CommunityChannelList({
                   Channel image
                 </Label>
                 <div className="community-channel__add-channel__image-box__body">
-                  <Avatar src={currentImage} width="80px" height="80px" />
+                  <Avatar src={currentImage ?? undefined} width="80px" height="80px" />
                   <input
                     ref={hiddenInputRef}
                     type="file"
                     accept="image/gif, image/jpeg, image/png"
                     style={{ display: 'none' }}
                     onChange={(e) => {
-                      setCurrentImage(URL.createObjectURL(e.target.files[0]));
-                      setCurrentFile(e.target.files[0]);
-                      hiddenInputRef.current.value = '';
+                      if (e.target.files) {
+                        setCurrentImage(URL.createObjectURL(e.target.files[0]));
+                        setCurrentFile(e.target.files[0]);
+                      }
+
+                      if (hiddenInputRef.current) {
+                        hiddenInputRef.current.value = '';
+                      }
                     }}
                   />
                   <TextButton
                     className="community-channel__add-channel__image-box__body__upload"
                     disableUnderline
-                    onClick={() => hiddenInputRef.current.click()}
+                    onClick={() => hiddenInputRef.current?.click()}
                   >
                     <Label
                       type={LabelTypography.BUTTON_1}
@@ -194,7 +199,7 @@ function CommunityChannelList({
         onScroll={(e: React.FormEvent<HTMLDivElement>) => {
           const target = e.target as HTMLDivElement;
           const fetchMore = target.clientHeight + target.scrollTop === target.scrollHeight;
-          if (fetchMore && channelSource.hasNext) {
+          if (fetchMore && channelSource?.hasNext) {
             channelSource.next().then((openChannels) => {
               setChannels([...channels, ...openChannels]);
             });

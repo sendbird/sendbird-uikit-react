@@ -17,9 +17,10 @@ import { UserListItem } from '../ParticipantUI/ParticipantItem';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { RestrictedUser } from '@sendbird/chat';
 
 export const BannedUserList = (): ReactElement => {
-  const [bannedUsers, setBannedUsers] = useState([]);
+  const [bannedUsers, setBannedUsers] = useState<RestrictedUser[]>([]);
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -91,14 +92,14 @@ export const BannedUserList = (): ReactElement => {
                               refreshList();
                             });
                           }}
-                          dataSbId="open_channel_setting_banned_user_context_menu_unban"
+                          testID="open_channel_setting_banned_user_context_menu_unban"
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNBAN}
                         </MenuItem>
                       </MenuItems>
                     )}
                   />
-                ) : null
+                ) : <></>
             )}
           />
         ))

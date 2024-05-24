@@ -16,7 +16,7 @@ export default function restoreNumbersFromMessageTemplateObject(value: unknown, 
   if (Array.isArray(value)) {
     return value.map((item) => restoreNumbersFromMessageTemplateObject(item));
   }
-  if (typeof value === 'object') {
+  if (value && typeof value === 'object') {
     return Object.keys(value).reduce((acc, key) => {
       acc[key] = restoreNumbersFromMessageTemplateObject(value[key], key);
       return acc;

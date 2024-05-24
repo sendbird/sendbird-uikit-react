@@ -26,7 +26,7 @@ export interface EmojiReactionsProps {
   message: SendableMessageType;
   channel: Nullable<GroupChannel>;
   emojiContainer: EmojiContainer;
-  memberNicknamesMap: Map<string, string>;
+  memberNicknamesMap: Map<string, string> ;
   spaceFromTrigger?: SpaceFromTriggerType;
   isByMe?: boolean;
   toggleReaction?: (message: SendableMessageType, key: string, byMe: boolean) => void;
@@ -48,10 +48,10 @@ const EmojiReactions = ({
   let showTheReactedMembers = false;
   try {
     const { config } = useSendbirdStateContext();
-    showTheReactedMembers = getIsReactionEnabled({
+    showTheReactedMembers = channel ? getIsReactionEnabled({
       channel,
       config,
-    });
+    }) : false;
   } catch (err) {
     // TODO: Handle error
   }
@@ -90,6 +90,7 @@ const EmojiReactions = ({
           menuTrigger={(toggleDropdown: () => void): ReactElement => (
             <ReactionBadge
               className="sendbird-emoji-reactions__add-reaction-badge"
+              testID="sendbird-emoji-reactions__add-reaction-badge"
               ref={addReactionRef}
               isAdd
               onClick={(e) => {
@@ -127,7 +128,7 @@ const EmojiReactions = ({
                       toggleReaction?.(message, emoji.key, isReacted);
                       e?.stopPropagation();
                     }}
-                    dataSbId={`ui_emoji_reactions_menu_${emoji.key}`}
+                    testID={`ui_emoji_reactions_menu_${emoji.key}`}
                   >
                     <ImageRenderer
                       url={emoji?.url || ''}

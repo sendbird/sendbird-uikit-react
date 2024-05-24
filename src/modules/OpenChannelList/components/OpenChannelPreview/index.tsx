@@ -5,6 +5,7 @@ import { OpenChannel } from '@sendbird/chat/openChannel';
 import Avatar from '../../../../ui/Avatar';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
+import { classnames } from '../../../../utils/utils';
 
 interface OpenChannelPreviewProps {
   className?: string;
@@ -21,7 +22,7 @@ function OpenChannelPreview({
 }: OpenChannelPreviewProps): React.ReactElement {
   return (
     <div
-      className={`sendbird-open-channel-preview ${isSelected ? 'selected' : ''} ${className}`}
+      className={classnames('sendbird-open-channel-preview', isSelected && 'selected', className)}
       onClick={onClick}
     >
       <div className="sendbird-open-channel-preview__cover-image">
@@ -46,7 +47,7 @@ function OpenChannelPreview({
       <div className="sendbird-open-channel-preview__context">
         <div className="sendbird-open-channel-preview__context__title">
           <Label
-            className={`sendbird-open-channel-preview__context__title__channel-name ${channel?.isFrozen ? 'frozen' : ''}`}
+            className={classnames('sendbird-open-channel-preview__context__title__channel-name', channel?.isFrozen && 'frozen')}
             type={LabelTypography.SUBTITLE_2}
             color={isSelected ? LabelColors.PRIMARY : LabelColors.ONBACKGROUND_1}
           >

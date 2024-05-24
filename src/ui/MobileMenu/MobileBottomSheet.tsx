@@ -23,6 +23,7 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import { classnames } from '../../utils/utils';
 
 const EMOJI_SIZE = 38;
 
@@ -37,7 +38,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     resendMessage,
     deleteMessage,
     toggleReaction,
-    isReactionEnabled,
+    isReactionEnabled = false,
     showEdit,
     showRemove,
     deleteMenuState,
@@ -81,12 +82,12 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
   const fileMessage = message as FileMessage;
   const maxEmojisPerRow = Math.floor(window.innerWidth / EMOJI_SIZE) - 1;
   const [showEmojisOnly, setShowEmojisOnly] = useState<boolean>(false);
-  const emojis = getEmojiListAll(emojiContainer);
+  const emojis = emojiContainer && getEmojiListAll(emojiContainer);
   // calculate max emojis that can be shown in screen
   const visibleEmojis = showEmojisOnly
     ? emojis
     : emojis?.slice(0, maxEmojisPerRow);
-  const canShowMoreEmojis = emojis.length > maxEmojisPerRow;
+  const canShowMoreEmojis = emojis && emojis.length > maxEmojisPerRow;
   return (
     <BottomSheet onBackdropClick={hideMenu}>
       <div className='sendbird-message__bottomsheet'>
@@ -96,12 +97,10 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
               <ul
                 className="sendbird-message__bottomsheet-reaction-bar"
               >
-                <div
-                  className={`
-                    sendbird-message__bottomsheet-reaction-bar__row
-                    ${showEmojisOnly ? 'sendbird-message__bottomsheet-reaction-bar__all' : ''}
-                  `}
-                >
+                <div className={classnames(
+                  'sendbird-message__bottomsheet-reaction-bar__row',
+                  showEmojisOnly && 'sendbird-message__bottomsheet-reaction-bar__all',
+                )}>
                   {visibleEmojis.map((emoji: Emoji): React.ReactElement => {
                     const isReacted: boolean = message?.reactions
                       ?.filter((reaction: Reaction): boolean => reaction.key === emoji.key)[0]
@@ -115,9 +114,9 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                         selected={isReacted}
                         onClick={(): void => {
                           hideMenu();
-                          toggleReaction(message, emoji.key, isReacted);
+                          toggleReaction?.(message, emoji.key, isReacted);
                         }}
-                        dataSbId={`ui_mobile_emoji_reactions_menu_${emoji.key}`}
+                        testID={`ui_mobile_emoji_reactions_menu_${emoji.key}`}
                       >
                         <ImageRenderer
                           url={emoji?.url || ''}
@@ -146,7 +145,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                         onClick={(): void => {
                           setShowEmojisOnly(true);
                         }}
-                        dataSbId="ui_mobile_emoji_reactions_menu_emojiadd"
+                        testID="ui_mobile_emoji_reactions_menu_emojiadd"
                       >
                         <ImageRenderer
                           url={''}
@@ -199,7 +198,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                     className='sendbird-message__bottomsheet--action'
                     onClick={() => {
                       hideMenu();
-                      showEdit(true);
+                      showEdit?.(true);
                     }}
                   >
                     <Icon
@@ -220,7 +219,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                     className='sendbird-message__bottomsheet--action'
                     onClick={() => {
                       hideMenu();
-                      resendMessage(message);
+                      resendMessage?.(message);
                     }}
                   >
                     <Icon
@@ -238,15 +237,16 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
               {
                 showMenuItemReply && (
                   <div
-                    className={`sendbird-message__bottomsheet--action
-                      ${disableReaction ? 'sendbird-message__bottomsheet--action-disabled' : ''}
-                    `}
+                    className={classnames(
+                      'sendbird-message__bottomsheet--action',
+                      disableReaction && 'sendbird-message__bottomsheet--action-disabled',
+                    )}
                     role="menuitem"
                     aria-disabled={disableReaction ? true : false}
                     onClick={() => {
                       if (!disableReaction) {
                         hideMenu();
-                        setQuoteMessage(message);
+                        setQuoteMessage?.(message);
                       }
                     }}
                   >

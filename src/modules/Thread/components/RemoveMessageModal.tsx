@@ -26,7 +26,7 @@ const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) 
   return (
     <Modal
       type={ButtonTypes.DANGER}
-      disabled={message?.threadInfo?.replyCount > 0}
+      disabled={(message.threadInfo?.replyCount ?? 0) > 0}
       onCancel={onCancel}
       onSubmit={() => {
         deleteMessage(message).then(() => {

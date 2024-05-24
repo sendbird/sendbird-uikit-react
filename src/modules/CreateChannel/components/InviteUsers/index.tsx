@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import type { User } from '@sendbird/chat';
 import type { GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
 
@@ -8,18 +8,11 @@ import { useCreateChannelContext } from '../../context/CreateChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import Modal from '../../../../ui/Modal';
-import Label, {
-  LabelColors,
-  LabelTypography,
-} from '../../../../ui/Label';
+import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem from '../../../../ui/UserListItem';
 
-import {
-  filterUser,
-  setChannelType,
-  createDefaultUserListQuery,
-} from './utils';
+import { createDefaultUserListQuery, filterUser, setChannelType } from './utils';
 import { noop } from '../../../../utils/utils';
 import { UserListQuery } from '../../../../types';
 
@@ -49,7 +42,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const sdk = globalStore?.stores?.sdkStore?.sdk;
   const idsToFilter = [userId];
   const [users, setUsers] = useState<User[]>([]);
-  const [selectedUsers, setSelectedUsers] = useState({});
+  const [selectedUsers, setSelectedUsers] = useState<Record<string, boolean>>({});
   const { stringSet } = useContext(LocalizationContext);
   const [usersDataSource, setUsersDataSource] = useState<UserListQuery | null>(null);
   const selectedCount = Object.keys(selectedUsers).length;
@@ -58,15 +51,12 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const { isMobile } = useMediaQueryContext();
   const [scrollableAreaHeight, setScrollableAreaHeight] = useState<number>(window.innerHeight);
 
-  const userQueryCreator = userListQuery ? userListQuery() : createDefaultUserListQuery({ sdk });
-
   useEffect(() => {
-    const applicationUserListQuery = userQueryCreator;
+    const applicationUserListQuery = userListQuery ? userListQuery() : createDefaultUserListQuery({ sdk });
     setUsersDataSource(applicationUserListQuery);
-    // @ts-ignore
     if (!applicationUserListQuery?.isLoading) {
-      applicationUserListQuery.next().then((users_) => {
-        setUsers(users_);
+      applicationUserListQuery.next().then((it) => {
+        setUsers(it);
       });
     }
   }, []);

@@ -56,9 +56,9 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
               <MenuItem
                 className="sendbird-openchannel-og-message__top__context-menu__copy"
                 onClick={() => {
-                  copyToClipboard();
+                  copyToClipboard?.();
                 }}
-                dataSbId="open_channel_mobile_context_menu_copy"
+                testID="open_channel_mobile_context_menu_copy"
               >
                 <>{stringSet.CONTEXT_MENU_DROPDOWN__COPY}</>
               </MenuItem>
@@ -69,9 +69,9 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
               <MenuItem
                 className="sendbird-openchannel-og-message__top__context-menu__edit"
                 onClick={() => {
-                  showEdit();
+                  showEdit?.();
                 }}
-                dataSbId="open_channel_mobile_context_menu_edit"
+                testID="open_channel_mobile_context_menu_edit"
               >
                 <>{stringSet.CONTEXT_MENU_DROPDOWN__EDIT}</>
               </MenuItem>
@@ -81,9 +81,9 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
             isFineResend({ message, userId, status }) && (
               <MenuItem
                 onClick={() => {
-                  resendMessage();
+                  resendMessage?.();
                 }}
-                dataSbId="open_channel_mobile_context_menu_resend"
+                testID="open_channel_mobile_context_menu_resend"
               >
                 <>{stringSet.CONTEXT_MENU_DROPDOWN__RESEND}</>
               </MenuItem>
@@ -93,9 +93,9 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
             (!isEphemeral && isFineDelete({ message, userId, status })) && (
               <MenuItem
                 onClick={() => {
-                  showRemove();
+                  showRemove?.();
                 }}
-                dataSbId="open_channel_mobile_context_menu_delete"
+                testID="open_channel_mobile_context_menu_delete"
               >
                 <>{stringSet.CONTEXT_MENU_DROPDOWN__DELETE}</>
               </MenuItem>
@@ -107,7 +107,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
                   onClick={() => {
                     hideMenu();
                   }}
-                  dataSbId="open_channel_mobile_context_menu_download_file"
+                  testID="open_channel_mobile_context_menu_download_file"
                 >
                   <a
                     className="sendbird-openchannel__mobile-menu-hyperlink"

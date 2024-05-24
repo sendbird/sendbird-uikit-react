@@ -20,7 +20,7 @@ export default function SortByRow({
   children,
 }: SortByRowProps): ReactElement {
   if (Array.isArray(children) && children.length > maxItemCount) {
-    const result = [];
+    const result: ReactElement[] = [];
 
     for (let i = 0; i < children.length; i += maxItemCount) {
       result.push(

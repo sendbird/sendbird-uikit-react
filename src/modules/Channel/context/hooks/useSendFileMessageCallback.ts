@@ -14,7 +14,7 @@ import { SCROLL_BOTTOM_DELAY_FOR_SEND } from '../../../../utils/consts';
 
 type UseSendFileMessageCallbackOptions = {
   currentGroupChannel: null | GroupChannel;
-  onBeforeSendFileMessage?: (file: File, quoteMessage: SendableMessageType | null) => FileMessageCreateParams;
+  onBeforeSendFileMessage?: (file: File, quoteMessage?: SendableMessageType) => FileMessageCreateParams;
   imageCompression?: SendBirdState['config']['imageCompression'];
 };
 type UseSendFileMessageCallbackParams = {
@@ -28,9 +28,9 @@ export default function useSendFileMessageCallback(
   { logger, pubSub, scrollRef, messagesDispatcher }: UseSendFileMessageCallbackParams,
 ) {
   const sendMessage = useCallback(
-    (compressedFile: File, quoteMessage = null) => new Promise<FileMessage>((resolve, reject) => {
+    (compressedFile: File, quoteMessage?: SendableMessageType) => new Promise<FileMessage>((resolve, reject) => {
       // Create FileMessageParams
-      let params: FileMessageCreateParams = onBeforeSendFileMessage?.(compressedFile, quoteMessage);
+      let params = onBeforeSendFileMessage?.(compressedFile, quoteMessage);
       if (!params) {
         params = { file: compressedFile };
         if (quoteMessage) {
@@ -41,8 +41,7 @@ export default function useSendFileMessageCallback(
 
       // Send FileMessage
       logger.info('Channel: Uploading file message start!', params);
-      currentGroupChannel
-        .sendFileMessage(params)
+      currentGroupChannel?.sendFileMessage(params)
         .onPending((pendingMessage) => {
           pubSub.publish(topics.SEND_MESSAGE_START, {
             /* pubSub is used instead of messagesDispatcher

@@ -12,8 +12,8 @@ export function useThrottleCallback<T extends(...args: any[]) => void>(
     trailing: false,
   },
 ) {
-  const timer = useRef(null);
-  const trailingArgs = useRef(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const trailingArgs = useRef<any[] | null>(null);
 
   useEffect(() => {
     return () => {
@@ -58,8 +58,8 @@ export function throttle<T extends(...args: any[]) => void>(
     trailing: false,
   },
 ) {
-  let timer = null;
-  let trailingArgs = null;
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  let trailingArgs: null | any[] = null;
 
   return ((...args: any[]) => {
     if (timer) {

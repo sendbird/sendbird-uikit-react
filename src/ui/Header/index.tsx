@@ -9,7 +9,7 @@ import UIIcon from '../Icon';
 import type { Types as IconTypes } from '../Icon/type';
 import type { Colors as IconColors } from '../Icon/colors';
 import UIIconButton from '../IconButton';
-import { noop } from '../../utils/utils';
+import { classnames, noop } from '../../utils/utils';
 
 export interface HeaderCustomProps {
   renderLeft?: () => ReactNode;
@@ -34,10 +34,16 @@ export const Header = ({
   }
 
   return (
-    <div className={`sendbird-ui-header ${className}`}>
+    <div
+      className={classnames('sendbird-ui-header', className)}
+      data-testid="sendbird-ui-header"
+    >
       {
         renderLeft ? (
-          <div className={`sendbird-ui-header__left sendbird-ui-header--is-${isMobile ? 'mobile' : 'desktop'}`}>
+          <div className={classnames(
+            'sendbird-ui-header__left',
+            isMobile ? 'sendbird-ui-header--is-mobile' : 'sendbird-ui-header--is-desktop',
+          )}>
             {renderLeft?.()}
           </div>
         ) : null
@@ -47,7 +53,10 @@ export const Header = ({
       </div>
       {
         renderRight ? (
-          <div className={`sendbird-ui-header__right sendbird-ui-header--is-${isMobile ? 'mobile' : 'desktop'}`}>
+          <div className={classnames(
+            'sendbird-ui-header__right',
+            isMobile ? 'sendbird-ui-header--is-mobile' : 'sendbird-ui-header--is-desktop',
+          )}>
             {renderRight?.()}
           </div>
         ) : null

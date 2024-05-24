@@ -3,8 +3,8 @@ import React from 'react';
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { GroupChannelUIBasicProps, GroupChannelUIView } from './GroupChannelUIView';
 
-import GroupChannelHeader from '../GroupChannelHeader';
-import MessageList from '../MessageList';
+import GroupChannelHeader, { GroupChannelHeaderProps } from '../GroupChannelHeader';
+import MessageList, { GroupChannelMessageListProps } from '../MessageList';
 import MessageInputWrapper from '../MessageInputWrapper';
 import { deleteNullish } from '../../../../utils/utils';
 
@@ -16,8 +16,8 @@ export const GroupChannelUI = (props: GroupChannelUIProps) => {
 
   // Inject components to presentation layer
   const {
-    renderChannelHeader = (props) => <GroupChannelHeader {...props} />,
-    renderMessageList = (props) => <MessageList {...props} className="sendbird-conversation__message-list" />,
+    renderChannelHeader = (props: GroupChannelHeaderProps) => <GroupChannelHeader {...props} />,
+    renderMessageList = (props: GroupChannelMessageListProps) => <MessageList {...props} className="sendbird-conversation__message-list" />,
     renderMessageInput = () => <MessageInputWrapper {...props} />,
   } = deleteNullish(props);
 

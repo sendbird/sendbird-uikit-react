@@ -10,9 +10,7 @@ import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { SendableMessageType } from '../../utils';
 import { getCaseResolvedReplyType } from '../../lib/utils/resolvedReplyType';
 
-export const AppLayout: React.FC<AppLayoutProps> = (
-  props: AppLayoutProps,
-) => {
+export const AppLayout = (props: AppLayoutProps) => {
   const {
     isMessageGroupingEnabled,
     allowProfileEdit,

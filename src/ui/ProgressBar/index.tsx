@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import './index.scss';
+import { classnames } from '../../utils/utils';
 
 /* eslint-disable no-redeclare */
 export const ProgressBarColorTypes = {
@@ -27,7 +28,7 @@ export const ProgressBar = ({
     return `${currentSize / maxSize * 100}%`;
   }, [currentSize, maxSize]);
   return (
-    <div className={`sendbird-progress-bar ${className} ${colorType} ${disabled ? 'progress-bar--disabled' : ''}`}>
+    <div className={classnames('sendbird-progress-bar', className, colorType, disabled && 'progress-bar--disabled')}>
       <div className="sendbird-progress-bar__fill" style={{ width }} />
     </div>
   );

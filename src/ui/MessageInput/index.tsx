@@ -13,13 +13,13 @@ import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 import { extractTextAndMentions, isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
-import { arrayEqual, getClassName, getMimeTypesUIKitAccepts } from '../../utils';
+import { arrayEqual, getMimeTypesUIKitAccepts } from '../../utils';
 import usePaste from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
 import { TOKEN_TYPES } from '../../modules/Message/utils/tokens/types';
 import { checkIfFileUploadEnabled } from './messageInputUtils';
-import { isMobileIOS } from '../../utils/utils';
+import { classnames, isMobileIOS } from '../../utils/utils';
 
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { User } from '@sendbird/chat';
@@ -38,20 +38,26 @@ const displayCaret = (element: HTMLInputElement, position: number) => {
   const sel = window.getSelection();
   range.setStart(element.childNodes[0], position);
   range.collapse(true);
-  sel.removeAllRanges();
-  sel.addRange(range);
+  sel?.removeAllRanges();
+  sel?.addRange(range);
   element.focus();
 };
 
-const resetInput = (ref: MutableRefObject<HTMLElement>) => {
-  try {
+const resetInput = (ref: MutableRefObject<HTMLInputElement | null> | null) => {
+  if (ref && ref.current) {
     ref.current.innerHTML = '';
-  } catch {
-    //
   }
 };
 
-const initialTargetStringInfo = {
+interface TargetStringInfo {
+  targetString: string;
+  startNodeIndex: number | null;
+  startOffsetIndex: number | null;
+  endNodeIndex: number | null;
+  endOffsetIndex: number | null;
+}
+
+const initialTargetStringInfo: TargetStringInfo = {
   targetString: '',
   startNodeIndex: null,
   startOffsetIndex: null,
@@ -137,7 +143,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     config,
   });
 
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>();
   const [isInput, setIsInput] = useState(false);
   const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
   const [targetStringInfo, setTargetStringInfo] = useState({ ...initialTargetStringInfo });
@@ -154,11 +160,8 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
             elem.style.height = 'auto';
             elem.style.height = `${MAX_HEIGHT}px`;
           } else {
-            elem.style.height = 'auto';
-            elem.style.height = `${elem.scrollHeight}px`;
+            elem.style.height = '';
           }
-        } else {
-          elem.style.height = '';
         }
       } catch (error) {
         // error
@@ -174,13 +177,15 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   useEffect(() => {
     const textField = internalRef?.current;
     try {
-      textField.innerHTML = initialValue;
-      displayCaret(textField, initialValue?.length);
+      if (textField && initialValue) {
+        textField.innerHTML = initialValue;
+        displayCaret(textField, initialValue?.length);
+      }
     } catch {
       //
     }
     setMentionedUserIds([]);
-    setIsInput(textField?.textContent?.trim().length > 0);
+    setIsInput(textField?.textContent ? textField.textContent.trim().length > 0 : false);
     setHeight();
   }, [initialValue]);
 
@@ -197,38 +202,44 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     if (isEdit && message?.messageId) {
       // const textField = document.getElementById(textFieldId);
       const textField = internalRef?.current;
-      if (isMentionEnabled && message?.mentionedUsers?.length > 0 && message?.mentionedMessageTemplate?.length > 0) {
+      if (isMentionEnabled
+        && message?.mentionedUsers
+        && message.mentionedUsers.length > 0
+        && message?.mentionedMessageTemplate
+        && message.mentionedMessageTemplate.length > 0) {
         /* mention enabled */
         const { mentionedUsers = [] } = message;
         const tokens = tokenizeMessage({
           messageText: message?.mentionedMessageTemplate,
           mentionedUsers,
         });
-        textField.innerHTML = tokens
-          .map((token) => {
-            if (token.type === TOKEN_TYPES.mention) {
-              const mentionedUser = mentionedUsers.find((user) => user.userId === token.userId);
-              const nickname = `${USER_MENTION_PREFIX}${
-                mentionedUser?.nickname || token.value || stringSet.MENTION_NAME__NO_NAME
-              }`;
-              return renderMentionLabelToString({
-                userId: token.userId,
-                nickname,
-              });
-            }
-            return sanitizeString(token.value);
-          })
-          .join(' ');
+        if (textField) {
+          textField.innerHTML = tokens
+            .map((token) => {
+              if (token.type === TOKEN_TYPES.mention) {
+                const mentionedUser = mentionedUsers.find((user) => user.userId === token.userId);
+                const nickname = `${USER_MENTION_PREFIX}${mentionedUser?.nickname || token.value || stringSet.MENTION_NAME__NO_NAME}`;
+                return renderMentionLabelToString({
+                  userId: token.userId,
+                  nickname,
+                });
+              }
+              return sanitizeString(token.value);
+            })
+            .join('');
+        }
       } else {
         /* mention disabled */
         try {
-          textField.innerHTML = sanitizeString(message?.message);
+          if (textField) {
+            textField.innerHTML = sanitizeString(message?.message) ?? '';
+          }
         } catch {
           //
         }
         setMentionedUserIds([]);
       }
-      setIsInput(textField?.textContent?.trim().length > 0);
+      setIsInput(textField?.textContent ? textField?.textContent?.trim().length > 0 : false);
       setHeight();
     }
   }, [isEdit, message]);
@@ -236,7 +247,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   // #Mention | Detect MentionedLabel modified
   const useMentionedLabelDetection = useCallback(() => {
     const textField = internalRef?.current;
-    if (isMentionEnabled) {
+    if (isMentionEnabled && textField) {
       const newMentionedUserIds = Array.from(textField.getElementsByClassName('sendbird-mention-user-label')).map(
         // @ts-ignore
         (node) => node?.dataset?.userid,
@@ -246,22 +257,24 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         setMentionedUserIds(newMentionedUserIds);
       }
     }
-    setIsInput(textField.textContent?.trim().length > 0);
+    setIsInput(textField?.textContent ? textField.textContent?.trim().length > 0 : false);
   }, [targetStringInfo, isMentionEnabled]);
 
   // #Mention | Replace selected user nickname to the MentionedUserLabel
   useEffect(() => {
     if (isMentionEnabled && mentionSelectedUser) {
       const { targetString, startNodeIndex, startOffsetIndex, endNodeIndex, endOffsetIndex } = targetStringInfo;
-      if (targetString && startNodeIndex !== null && startOffsetIndex !== null) {
+      const textField = internalRef?.current;
+      if (targetString && startNodeIndex !== null && startOffsetIndex !== null && endOffsetIndex !== null && endNodeIndex !== null && textField) {
         // const textField = document.getElementById(textFieldId);
-        const textField = internalRef?.current;
         const childNodes = nodeListToArray(textField?.childNodes);
-        const frontTextNode = document?.createTextNode(
-          childNodes[startNodeIndex]?.textContent.slice(0, startOffsetIndex),
+        const startNodeTextContent: string = childNodes[startNodeIndex]?.textContent ?? '';
+        const frontTextNode = document.createTextNode(
+          startNodeTextContent.slice(0, startOffsetIndex),
         );
-        const backTextNode = document?.createTextNode(
-          `\u00A0${childNodes[endNodeIndex]?.textContent.slice(endOffsetIndex)}`,
+        const endNodeTextContent: string = childNodes[endNodeIndex]?.textContent ?? '';
+        const backTextNode = endOffsetIndex && document.createTextNode(
+          `\u00A0${endNodeTextContent.slice(endOffsetIndex)}`,
         );
         const mentionLabel = renderMentionLabelToString({
           userId: mentionSelectedUser?.userId,
@@ -276,21 +289,25 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           backTextNode,
           ...childNodes.slice(endNodeIndex + 1),
         ];
-        textField.innerHTML = '';
-        newNodes.forEach((newNode) => {
-          textField.appendChild(newNode);
-        });
+        if (textField) {
+          textField.innerHTML = '';
+          newNodes.forEach((newNode) => {
+            if (newNode) {
+              textField.appendChild(newNode);
+            }
+          });
+        }
         onUserMentioned(mentionSelectedUser);
         if (window.getSelection || document.getSelection) {
           // set caret postion
           const selection = window.getSelection() || document.getSelection();
-          selection.removeAllRanges();
+          selection?.removeAllRanges();
           const range = new Range();
           range.selectNodeContents(textField);
           range.setStart(textField.childNodes[startNodeIndex + 2], 1);
           range.setEnd(textField.childNodes[startNodeIndex + 2], 1);
           range.collapse(false);
-          selection.addRange(range);
+          selection?.addRange(range);
           textField.focus();
         }
         setTargetStringInfo({ ...initialTargetStringInfo });
@@ -304,25 +321,29 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   const useMentionInputDetection = useCallback(() => {
     const selection = window?.getSelection?.() || document?.getSelection?.();
     const textField = internalRef?.current;
-    if (selection.anchorNode === textField) {
+    if (selection?.anchorNode === textField) {
       onMentionStringChange('');
     }
     if (
       isMentionEnabled
+      && textField
       && selection
       && selection.anchorNode === selection.focusNode
       && selection.anchorOffset === selection.focusOffset
     ) {
       let textStack = '';
-      let startNodeIndex = null;
-      let startOffsetIndex = null;
+      let startNodeIndex: number | null = null;
+      let startOffsetIndex: number | null = null;
       for (let index = 0; index < textField.childNodes.length; index += 1) {
         const currentNode = textField.childNodes[index];
         if (currentNode.nodeType === NodeTypes.TextNode) {
           /* text node */
-          const textContent = currentNode === selection.anchorNode
-            ? currentNode?.textContent.slice(0, selection.anchorOffset) || ''
-            : currentNode?.textContent || '';
+          const textContent: string = ((): string => {
+            if (currentNode === selection.anchorNode) {
+              return currentNode?.textContent ? currentNode?.textContent.slice(0, selection.anchorOffset) : '';
+            }
+            return currentNode?.textContent ?? '';
+          })();
           if (textStack.length > 0) {
             textStack += textContent;
           } else {
@@ -351,7 +372,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
            * targetString could be ''
            * startNodeIndex and startOffsetIndex could be null
            */
-          const targetString = textStack ? textStack.slice(startOffsetIndex) : ''; // include template character
+          const targetString = textStack && startOffsetIndex !== null ? textStack.slice(startOffsetIndex) : ''; // include template character
           setTargetStringInfo({
             targetString,
             startNodeIndex,
@@ -383,7 +404,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   const editMessage = () => {
     const textField = internalRef?.current;
     const messageId = message?.messageId;
-    if (isEdit && messageId) {
+    if (isEdit && messageId && textField) {
       const { messageText, mentionTemplate } = extractTextAndMentions(textField.childNodes);
       const params = { messageId, message: messageText, mentionTemplate };
       onUpdateMessage(params);
@@ -399,14 +420,12 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   });
 
   return (
-    <form
-      className={getClassName([
-        className,
-        isEdit ? 'sendbird-message-input__edit' : '',
-        disabled ? 'sendbird-message-input-form__disabled' : '',
-      ])}
-    >
-      <div className={getClassName(['sendbird-message-input', disabled ? 'sendbird-message-input__disabled' : ''])}>
+    <form className={classnames(
+      ...(Array.isArray(className) ? className : [className]),
+      isEdit && 'sendbird-message-input__edit',
+      disabled && 'sendbird-message-input-form__disabled',
+    )}>
+      <div className={classnames('sendbird-message-input', disabled && 'sendbird-message-input__disabled')} data-testid="sendbird-message-input">
         <div
           id={`${textFieldId}${isEdit ? message?.messageId : ''}`}
           className={`sendbird-message-input--textarea ${textFieldId}`}
@@ -426,7 +445,8 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
                 !e.shiftKey
                 && e.key === MessageInputKeys.Enter
                 && !isMobile
-                && internalRef?.current?.textContent?.trim().length > 0
+                && internalRef?.current?.textContent
+                && internalRef.current.textContent.trim().length > 0
                 && e?.nativeEvent?.isComposing !== true
                 /**
                  * NOTE: What isComposing does?
@@ -450,10 +470,10 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
               if (
                 e.key === MessageInputKeys.Backspace
                 && internalRef?.current?.childNodes?.length === 2
-                && !internalRef?.current?.childNodes?.[0]?.textContent
-                && internalRef?.current.childNodes?.[1]?.nodeType === NodeTypes.ElementNode
+                && !internalRef.current.childNodes[0].textContent
+                && internalRef.current.childNodes[1].nodeType === NodeTypes.ElementNode
               ) {
-                internalRef?.current.removeChild(internalRef?.current.childNodes[1]);
+                internalRef.current.removeChild(internalRef.current.childNodes[1]);
               }
             }
           }}
@@ -471,7 +491,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           onInput={() => {
             setHeight();
             onStartTyping();
-            setIsInput(internalRef?.current?.textContent?.trim().length > 0);
+            setIsInput(internalRef?.current?.textContent ? internalRef.current.textContent.trim().length > 0 : false);
             useMentionedLabelDetection();
           }}
           onPaste={onPaste}
@@ -488,7 +508,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         )}
         {/* send icon */}
         {!isEdit && isInput && (
-          <IconButton className="sendbird-message-input--send" height="32px" width="32px" onClick={() => sendMessage()}>
+          <IconButton className="sendbird-message-input--send" height="32px" width="32px" onClick={() => sendMessage()} testID="sendbird-message-input-send-button">
             {renderSendMessageIcon?.() || (
               <Icon
                 type={IconTypes.SEND}
@@ -507,7 +527,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
             // renderFileUploadIcon which is set in code level
             || (isFileUploadEnabled && (
               <IconButton
-                className={`sendbird-message-input--attach ${isVoiceMessageEnabled ? 'is-voice-message-enabled' : ''}`}
+                className={classnames('sendbird-message-input--attach', isVoiceMessageEnabled && 'is-voice-message-enabled')}
                 height="32px"
                 width="32px"
                 onClick={() => {
@@ -528,7 +548,9 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
                   // It will affect to <Channel /> and <Thread />
                   onChange={(event) => {
                     const { files } = event.currentTarget;
-                    onFileUpload(files && files.length === 1 ? [files[0]] : Array.from(files));
+                    if (files) {
+                      onFileUpload(files && files.length === 1 ? [files[0]] : Array.from(files));
+                    }
                     event.target.value = '';
                   }}
                   accept={getMimeTypesUIKitAccepts(acceptableMimeTypes)}
@@ -557,7 +579,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
       </div>
       {/* Edit */}
       {isEdit && (
-        <div className="sendbird-message-input--edit-action">
+        <div className="sendbird-message-input--edit-action" data-testid="sendbird-message-input--edit-action">
           <Button
             className="sendbird-message-input--edit-action__cancel"
             type={ButtonTypes.SECONDARY}

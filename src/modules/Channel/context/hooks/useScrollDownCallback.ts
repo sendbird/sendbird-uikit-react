@@ -14,7 +14,7 @@ import { CoreMessageType } from '../../../../utils';
 type UseScrollDownCallbackOptions = {
   currentGroupChannel: null | GroupChannel;
   latestMessageTimeStamp: number;
-  userFilledMessageListQuery: MessageListParamsInternal;
+  userFilledMessageListQuery?: MessageListParamsInternal;
   hasMoreNext: boolean;
   replyType: ReplyTypeInternal;
 };
@@ -53,13 +53,13 @@ function useScrollDownCallback(
       }
       if (userFilledMessageListQuery) {
         Object.keys(userFilledMessageListQuery).forEach((key) => {
+          // @ts-ignore
           messageListParams[key] = userFilledMessageListQuery[key];
         });
       }
       logger.info('Channel: Fetching later messages', { currentGroupChannel, userFilledMessageListQuery });
 
-      currentGroupChannel
-        .getMessagesByTimestamp(latestMessageTimeStamp || new Date().getTime(), messageListParams as MessageListParams)
+      currentGroupChannel?.getMessagesByTimestamp(latestMessageTimeStamp || new Date().getTime(), messageListParams as MessageListParams)
         .then((messages) => {
           messagesDispatcher({
             type: messageActionTypes.FETCH_NEXT_MESSAGES_SUCCESS,

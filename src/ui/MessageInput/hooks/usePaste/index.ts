@@ -37,27 +37,30 @@ export function usePaste({
     const purifier = DOMPurify(window);
     const clean = purifier.sanitize(html);
     const pasteNode = createPasteNode();
-    pasteNode.innerHTML = clean;
-    // does not have mention, continue as normal
-    if (!hasMention(pasteNode)) {
-      // to preserve space between words
-      const text = extractTextFromNodes(Array.from(pasteNode.children) as HTMLSpanElement[]);
-      document.execCommand('insertHTML', false, sanitizeString(text));
+    if (pasteNode) {
+      pasteNode.innerHTML = clean;
+      // does not have mention, continue as normal
+      if (!hasMention(pasteNode)) {
+        // to preserve space between words
+        const text = extractTextFromNodes(Array.from(pasteNode.children) as HTMLSpanElement[]);
+        document.execCommand('insertHTML', false, sanitizeString(text));
+        pasteNode.remove();
+        setIsInput(true);
+        setHeight();
+        return;
+      }
+
+      // has mention, collect leaf nodes and parse words
+      const leafNodes = getLeafNodes(pasteNode);
+      const words = domToMessageTemplate(leafNodes);
+      const mentionedUsers = channel.isGroupChannel() ? getUsersFromWords(words, channel) : [];
+
+      // side effects
+      setMentionedUsers(mentionedUsers);
+      inserTemplateToDOM(words);
       pasteNode.remove();
-      setIsInput(true);
-      setHeight();
-      return;
     }
 
-    // has mention, collect leaf nodes and parse words
-    const leafNodes = getLeafNodes(pasteNode);
-    const words = domToMessageTemplate(leafNodes);
-    const mentionedUsers = channel.isGroupChannel() ? getUsersFromWords(words, channel) : [];
-
-    // side effects
-    setMentionedUsers(mentionedUsers);
-    inserTemplateToDOM(words);
-    pasteNode.remove();
     setIsInput(true);
     setHeight();
   }, [ref, setIsInput, setHeight, channel, setMentionedUsers]);

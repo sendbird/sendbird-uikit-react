@@ -40,6 +40,7 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
   return (
     <div
       className="sendbird-fileviewer"
+      data-testid="sendbird-fileviewer"
       onKeyDown={onKeyDown}
       // to focus
       tabIndex={1}
@@ -177,7 +178,7 @@ export default function FileViewer({
             return {
               name: fileInfo.fileName || '',
               type: fileInfo.mimeType || '',
-              url: fileInfo.url,
+              url: fileInfo.url || '',
             };
           })
         }

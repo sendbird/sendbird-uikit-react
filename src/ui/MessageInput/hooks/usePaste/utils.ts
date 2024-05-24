@@ -83,7 +83,7 @@ export function domToMessageTemplate(nodeArray: ChildNode[]): Word[] {
     // if text node, set text
     if (currentValue instanceof Text) {
       mentionNode = false;
-      text = currentValue.textContent;
+      text = currentValue.textContent ?? '';
     }
 
     if (currentValue instanceof HTMLElement) {

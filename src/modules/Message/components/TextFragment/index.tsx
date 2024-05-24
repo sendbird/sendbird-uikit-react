@@ -30,7 +30,7 @@ export default function TextFragment({
         const key = keyGenerator(createdAt, updatedAt, idx);
         return match(token.type)
           .with(TOKEN_TYPES.mention, () => (
-            <span className="sendbird-word" key={key}>
+            <span className="sendbird-word" key={key} data-testid="sendbird-ui-word">
               <MentionLabel
                 mentionTemplate={USER_MENTION_PREFIX}
                 // @ts-ignore
@@ -41,7 +41,7 @@ export default function TextFragment({
             </span>
           ))
           .with(TOKEN_TYPES.url, () => (
-            <span className="sendbird-word" key={key}>
+            <span className="sendbird-word" key={key} data-testid="sendbird-ui-word">
               <LinkLabel
                 className="sendbird-word__url"
                 src={token.value}

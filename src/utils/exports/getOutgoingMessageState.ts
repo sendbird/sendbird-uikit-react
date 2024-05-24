@@ -14,8 +14,8 @@ export enum OutgoingMessageStates {
 
 export const getOutgoingMessageState = (
   channel: Nullable<GroupChannel | OpenChannel>,
-  message: CoreMessageType,
-): string => {
+  message: CoreMessageType | undefined | null,
+) => {
   if (!message || !('sendingStatus' in message)) return OutgoingMessageStates.NONE;
 
   if (message.sendingStatus === 'pending') {

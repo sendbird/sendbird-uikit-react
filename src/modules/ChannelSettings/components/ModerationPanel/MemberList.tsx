@@ -19,6 +19,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { noop } from '../../../../utils/utils';
+import uuidv4 from '../../../../utils/uuid';
 
 export const MemberList = (): ReactElement => {
   const [members, setMembers] = useState<Array<Member>>([]);
@@ -29,6 +30,7 @@ export const MemberList = (): ReactElement => {
   const state = useSendbirdStateContext();
   const {
     channel,
+    setChannelUpdateId,
   } = useChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
 
@@ -57,6 +59,7 @@ export const MemberList = (): ReactElement => {
     memberUserListQuery.next().then((members) => {
       setMembers(members);
       setHasNext(memberUserListQuery.hasNext);
+      setChannelUpdateId?.(uuidv4());
     });
   }, [channel]);
 
@@ -67,7 +70,7 @@ export const MemberList = (): ReactElement => {
           <UserListItem
             key={member.userId}
             user={member}
-            currentUser={sdk.currentUser.userId}
+            currentUser={sdk?.currentUser?.userId}
             action={
               (channel?.myRole === 'operator' && userId !== member.userId)
                 ? ({ actionRef, parentRef }) => (
@@ -102,7 +105,7 @@ export const MemberList = (): ReactElement => {
                             closeDropdown();
                           }}
                           onError={noop} // TODO: We will handle error
-                          dataSbId={`channel_setting_member_context_menu_${(
+                          testID={`channel_setting_member_context_menu_${(
                             member.role !== 'operator'
                           ) ? 'register_as_operator' : 'unregister_operator'}`}
                         >
@@ -123,7 +126,7 @@ export const MemberList = (): ReactElement => {
                                 closeDropdown();
                               }}
                               onError={noop} // TODO: We will handle error
-                              dataSbId={`channel_setting_member_context_menu_${member.isMuted ? 'unmute' : 'mute'}`}
+                              testID={`channel_setting_member_context_menu_${member.isMuted ? 'unmute' : 'mute'}`}
                             >
                               {
                                 member.isMuted
@@ -140,7 +143,7 @@ export const MemberList = (): ReactElement => {
                               closeDropdown();
                             });
                           }}
-                          dataSbId="channel_setting_member_context_menu_ban"
+                          testID="channel_setting_member_context_menu_ban"
                         >
                           {stringSet.CHANNEL_SETTING__MODERATION__BAN}
                         </MenuItem>
@@ -148,7 +151,7 @@ export const MemberList = (): ReactElement => {
                     )}
                   />
                 )
-                : null
+                : () => null
             }
           />
         ))

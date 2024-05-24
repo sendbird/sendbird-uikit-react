@@ -4,6 +4,7 @@ exports[`ui/FileViewer should do a snapshot test of the FileViewer DOM 1`] = `
 <DocumentFragment>
   <div
     class="sendbird-fileviewer"
+    data-testid="sendbird-fileviewer"
     tabindex="1"
   >
     <div

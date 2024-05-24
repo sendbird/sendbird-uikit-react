@@ -10,8 +10,8 @@ import { shouldPubSubPublishToThread } from '../../../internalInterfaces';
 
 interface DynamicProps {
   sdkInit: boolean;
-  currentChannel: GroupChannel;
-  parentMessage: SendableMessageType
+  currentChannel: GroupChannel | null;
+  parentMessage: SendableMessageType | null;
 }
 interface StaticProps {
   logger: Logger;
@@ -37,10 +37,10 @@ export default function useHandleThreadPubsubEvents({
           // TODO: const clonedMessage = cloneMessage(message);
           const pendingMessage: Record<string, any> = { ...message };
           if (message.isMultipleFilesMessage()) {
-            pendingMessage.fileInfoList = message.messageParams.fileInfoList.map((fileInfo) => ({
+            pendingMessage.fileInfoList = message?.messageParams?.fileInfoList.map((fileInfo) => ({
               ...fileInfo,
               url: URL.createObjectURL(fileInfo.file as File),
-            }));
+            })) ?? [];
           }
           threadDispatcher({
             type: ThreadContextActionTypes.SEND_MESSAGE_START,

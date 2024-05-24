@@ -9,7 +9,7 @@ import { SdkStore } from '../../../../lib/types';
 interface DynamicProps {
   channelUrl: string;
   sdkInit: boolean;
-  parentMessage?: BaseMessage;
+  parentMessage?: BaseMessage | null;
 }
 
 interface StaticProps {
@@ -29,7 +29,7 @@ export default function useGetParentMessage({
 }: StaticProps): void {
   useEffect(() => {
     // validation check
-    if (sdkInit && sdk?.message?.getMessage) {
+    if (sdkInit && sdk?.message?.getMessage && parentMessage) {
       threadDispatcher({
         type: ThreadContextActionTypes.GET_PARENT_MESSAGE_START,
         payload: null,
@@ -37,18 +37,14 @@ export default function useGetParentMessage({
       const params: MessageRetrievalParams = {
         channelUrl,
         channelType: ChannelType.GROUP,
-        messageId: parentMessage?.messageId,
+        messageId: parentMessage.messageId,
         includeMetaArray: true,
         includeReactions: true,
         includeThreadInfo: true,
         includeParentMessageInfo: true,
       };
       logger.info('Thread | useGetParentMessage: Get parent message start.', params);
-      const fetchParentMessage = async () => {
-        const data = await sdk.message.getMessage?.(params);
-        return data;
-      };
-      fetchParentMessage()
+      sdk.message.getMessage?.(params)
         .then((parentMsg) => {
           logger.info('Thread | useGetParentMessage: Get parent message succeeded.', parentMessage);
           // @ts-ignore

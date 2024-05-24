@@ -41,3 +41,5 @@ export const ChannelSettingsHeader = ({
     />
   );
 };
+
+export default ChannelSettingsHeader;

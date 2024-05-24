@@ -15,12 +15,7 @@ export interface CreateOpenChannelContextInterface extends CreateOpenChannelProv
   createNewOpenChannel: (props: CreateNewOpenChannelCallbackProps) => void;
 }
 
-const CreateOpenChannelContext = React.createContext<CreateOpenChannelContextInterface>({
-  sdk: null,
-  sdkInitialized: false,
-  logger: null,
-  createNewOpenChannel: null,
-});
+const CreateOpenChannelContext = React.createContext<CreateOpenChannelContextInterface | null>(null);
 
 export interface CreateOpenChannelProviderProps {
   className?: string;
@@ -44,13 +39,13 @@ export const CreateOpenChannelProvider: React.FC<CreateOpenChannelProviderProps>
     const { name, coverUrlOrImage } = params;
     if (sdkInitialized) {
       const params = {} as OpenChannelCreateParams;
-      params.operatorUserIds = [sdk?.currentUser?.userId];
+      params.operatorUserIds = sdk?.currentUser?.userId ? [sdk.currentUser.userId] : [];
       params.name = name;
       params.coverUrlOrImage = coverUrlOrImage;
       sdk.openChannel.createChannel(onBeforeCreateChannel?.(params) || params)
         .then((openChannel) => {
           logger.info('CreateOpenChannel: Succeeded creating openChannel', openChannel);
-          onCreateChannel(openChannel);
+          onCreateChannel?.(openChannel);
         })
         .catch((err) => {
           logger.warning('CreateOpenChannel: Failed creating openChannel', err);
@@ -75,6 +70,8 @@ export const CreateOpenChannelProvider: React.FC<CreateOpenChannelProviderProps>
   );
 };
 
-export const useCreateOpenChannelContext = (): CreateOpenChannelContextInterface => (
-  React.useContext(CreateOpenChannelContext)
-);
+export const useCreateOpenChannelContext = () => {
+  const context = React.useContext(CreateOpenChannelContext);
+  if (!context) throw new Error('CreateOpenChannelContext not found. Use within the CreateOpenChannel module.');
+  return context;
+};

@@ -6,6 +6,7 @@ import Avatar from '../../../../ui/Avatar';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import uuidv4 from '../../../../utils/uuid';
+import { classnames } from '../../../../utils/utils';
 
 type MentionItemUIEvent = {
   event: any,
@@ -64,7 +65,7 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
   }
   return (
     <div
-      className={`sendbird-mention-suggest-list__user-item ${isFocused ? 'focused' : ''}`}
+      className={classnames('sendbird-mention-suggest-list__user-item', isFocused && 'focused')}
       onClick={(event) => onClick?.({ event, member: (member as Member), itemRef: scrollRef })}
       onMouseOver={(event) => onMouseOver?.({ event, member: (member as Member), itemRef: scrollRef })}
       onMouseMove={(event) => onMouseMove?.({ event, member: (member as Member), itemRef: scrollRef })}
@@ -80,6 +81,7 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
       />
       <Label
         className="sendbird-mention-suggest-list__user-item__nickname"
+        testID="sendbird-mention-suggest-list__user-item__nickname"
         type={LabelTypography.SUBTITLE_2}
         color={member?.nickname ? LabelColors.ONBACKGROUND_1 : LabelColors.ONBACKGROUND_3}
       >
@@ -87,6 +89,7 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
       </Label>
       <Label
         className="sendbird-mention-suggest-list__user-item__user-id"
+        testID="sendbird-mention-suggest-list__user-item__user-id"
         type={LabelTypography.SUBTITLE_2}
         color={LabelColors.ONBACKGROUND_2}
       >

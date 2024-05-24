@@ -23,14 +23,14 @@ import { SdkStore } from '../../../../lib/types';
 interface DynamicParams {
   sdkInit: boolean;
   currentUserId: string;
-  currentGroupChannel: GroupChannel;
+  currentGroupChannel: GroupChannel | null;
   disableMarkAsRead: boolean;
 }
 interface StaticParams {
   sdk: SdkStore['sdk'];
   logger: LoggerInterface;
   scrollRef: React.RefObject<HTMLDivElement>;
-  setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType>>;
+  setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
   messagesDispatcher: React.Dispatch<ChannelActionTypes>;
 }
 
@@ -66,7 +66,9 @@ function useHandleChannelEvents({
             let scrollToEnd = false;
             try {
               const { current } = scrollRef;
-              scrollToEnd = current.offsetHeight + current.scrollTop >= current.scrollHeight - 10;
+              if (current) {
+                scrollToEnd = current.offsetHeight + current.scrollTop >= current.scrollHeight - 10;
+              }
               // 10 is a buffer
             } catch (error) {
               //
@@ -193,8 +195,8 @@ function useHandleChannelEvents({
             });
           }
         },
-        onUserBanned: (channel: GroupChannel, user) => {
-          if (compareIds(channel?.url, channelUrl)) {
+        onUserBanned: (channel, user) => {
+          if (compareIds(channel?.url, channelUrl) && channel.isGroupChannel()) {
             logger.info('Channel | useHandleChannelEvents: onUserBanned', { channel, user });
             const isByMe = user?.userId === sdk?.currentUser?.userId;
             messagesDispatcher({

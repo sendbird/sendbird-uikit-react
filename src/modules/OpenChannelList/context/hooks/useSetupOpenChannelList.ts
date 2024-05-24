@@ -9,7 +9,7 @@ import { SdkStore } from '../../../../lib/types';
 interface DynamicParams {
   sdk: SdkStore['sdk'];
   sdkInitialized: boolean;
-  openChannelListQuery: UserFilledOpenChannelListQuery;
+  openChannelListQuery?: UserFilledOpenChannelListQuery;
 }
 interface StaticParams {
   logger: Logger;
@@ -30,42 +30,38 @@ function useSetupOpenChannelList(
   useEffect(() => {
     if (sdkInitialized) {
       if (sdk?.openChannel) {
-        if (sdk?.openChannel?.createOpenChannelListQuery) {
-          logger.info('OpenChannelList|useSetupOpenChannelList: Setup OpenChannelList', { sdkInitialized });
-          const channelListQuery = createChannelListQuery({
-            sdk,
-            logger,
-            openChannelListQuery,
-            openChannelListDispatcher,
-            logMessage: 'OpenChannelList|useSetupOpenChannelList: Succeeded create channelListQuery',
-          });
+        logger.info('OpenChannelList|useSetupOpenChannelList: Setup OpenChannelList', { sdkInitialized });
+        const channelListQuery = createChannelListQuery({
+          sdk,
+          logger,
+          openChannelListQuery,
+          openChannelListDispatcher,
+          logMessage: 'OpenChannelList|useSetupOpenChannelList: Succeeded create channelListQuery',
+        });
 
-          if (channelListQuery?.hasNext) {
-            logger.info('OpenChannelList|useSetupOpenChannelList: Fetch channels');
-            openChannelListDispatcher({
-              type: OpenChannelListActionTypes.INIT_OPEN_CHANNEL_LIST_START,
-              payload: null,
-            });
-            channelListQuery.next()
-              .then((channelList) => {
-                logger.info('OpenChannelList|useSetupOpenChannelList: Succeeded fetching channels', channelList);
-                openChannelListDispatcher({
-                  type: OpenChannelListActionTypes.INIT_OPEN_CHANNEL_LIST_SUCCESS,
-                  payload: channelList,
-                });
-              })
-              .catch((err) => {
-                logger.error('OpenChannelList|useSetupOpenChannelList: Failed fetching channels', err);
-                openChannelListDispatcher({
-                  type: OpenChannelListActionTypes.INIT_OPEN_CHANNEL_LIST_FAILURE,
-                  payload: null,
-                });
+        if (channelListQuery?.hasNext) {
+          logger.info('OpenChannelList|useSetupOpenChannelList: Fetch channels');
+          openChannelListDispatcher({
+            type: OpenChannelListActionTypes.INIT_OPEN_CHANNEL_LIST_START,
+            payload: null,
+          });
+          channelListQuery.next()
+            .then((channelList) => {
+              logger.info('OpenChannelList|useSetupOpenChannelList: Succeeded fetching channels', channelList);
+              openChannelListDispatcher({
+                type: OpenChannelListActionTypes.INIT_OPEN_CHANNEL_LIST_SUCCESS,
+                payload: channelList,
               });
-          } else {
-            logger.info('OpenChannelList|useSetupOpenChannelList: There is no more channels');
-          }
+            })
+            .catch((err) => {
+              logger.error('OpenChannelList|useSetupOpenChannelList: Failed fetching channels', err);
+              openChannelListDispatcher({
+                type: OpenChannelListActionTypes.INIT_OPEN_CHANNEL_LIST_FAILURE,
+                payload: null,
+              });
+            });
         } else {
-          logger.warning('OpenChannelList|useSetupOpenChannelList: createOpenChannelListQuery is not included in the openChannel', sdk.openChannel);
+          logger.info('OpenChannelList|useSetupOpenChannelList: There is no more channels');
         }
       } else {
         logger.warning('OpenChannelList|useSetupOpenChannelList: openChannel is not included in the Chat SDK', sdk);

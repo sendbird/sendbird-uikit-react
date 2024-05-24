@@ -82,7 +82,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 hideMenu();
                 copyToClipboard((message as UserMessage)?.message);
               }}
-              dataSbId="ui_mobile_message_item_menu_copy"
+              testID="ui_mobile_message_item_menu_copy"
             >
               <Label
                 type={LabelTypography.SUBTITLE_1}
@@ -103,10 +103,10 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               className="sendbird-message__mobile-context-menu-item menu-item-reply"
               onClick={() => {
                 hideMenu();
-                setQuoteMessage(message);
+                setQuoteMessage?.(message);
               }}
               disable={(message?.parentMessageId ?? 0) > 0}
-              dataSbId="ui_mobile_message_item_menu_reply"
+              testID="ui_mobile_message_item_menu_reply"
             >
               <Label
                 type={LabelTypography.SUBTITLE_1}
@@ -137,7 +137,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 hideMenu();
                 onReplyInThread?.({ message });
               }}
-              dataSbId="ui_mobile_message_item_menu_thread"
+              testID="ui_mobile_message_item_menu_thread"
             >
               <Label
                 type={LabelTypography.SUBTITLE_1}
@@ -158,9 +158,9 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               className="sendbird-message__mobile-context-menu-item menu-item-edit"
               onClick={() => {
                 hideMenu();
-                showEdit(true);
+                showEdit?.(true);
               }}
-              dataSbId="ui_mobile_message_item_menu_edit"
+              testID="ui_mobile_message_item_menu_edit"
             >
               <Label
                 type={LabelTypography.SUBTITLE_1}
@@ -181,9 +181,9 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               className="sendbird-message__mobile-context-menu-item menu-item-resend"
               onClick={() => {
                 hideMenu();
-                resendMessage(message);
+                resendMessage?.(message);
               }}
-              dataSbId="ui_mobile_message_item_menu_resend"
+              testID="ui_mobile_message_item_menu_resend"
             >
               <Label
                 type={LabelTypography.SUBTITLE_1}
@@ -212,7 +212,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
                 }
               }}
               disable={disableDelete}
-              dataSbId="ui_mobile_message_item_menu_delete"
+              testID="ui_mobile_message_item_menu_delete"
             >
               <Label
                 type={LabelTypography.SUBTITLE_1}
@@ -242,7 +242,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               onClick={() => {
                 hideMenu();
               }}
-              dataSbId="ui_mobile_message_item_menu_download_file"
+              testID="ui_mobile_message_item_menu_download_file"
             >
               <a
                 className="sendbird-message__contextmenu--hyperlink"

@@ -7,7 +7,7 @@ import * as messageActionTypes from '../dux/actionTypes';
 import { SdkStore } from '../../../../lib/types';
 
 interface DynamicParams {
-  currentOpenChannel: OpenChannel;
+  currentOpenChannel: OpenChannel | null;
   lastMessageTimestamp: number;
   fetchMore?: boolean;
 }
@@ -36,6 +36,7 @@ function useScrollCallback(
 
       if (userFilledMessageListParams) {
         Object.keys(userFilledMessageListParams).forEach((key) => {
+          // @ts-ignore
           messageListParams[key] = userFilledMessageListParams[key];
         });
         logger.info('OpenChannel | useScrollCallback: Used userFilledMessageListParams', userFilledMessageListParams);
@@ -43,7 +44,7 @@ function useScrollCallback(
 
       logger.info('OpenChannel | useScrollCallback: Fetching messages', { currentOpenChannel, messageListParams });
 
-      currentOpenChannel.getMessagesByTimestamp(lastMessageTimestamp || new Date().getTime(), messageListParams).then((messages) => {
+      currentOpenChannel?.getMessagesByTimestamp(lastMessageTimestamp || new Date().getTime(), messageListParams).then((messages) => {
         logger.info('OpenChannel | useScrollCallback: Fetching messages succeeded', messages);
         const hasMore = (messages && messages.length > 0);
         const lastMessageTimestamp = hasMore ? messages[0].createdAt : null;

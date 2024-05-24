@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
-function useReconnectOnIdle(isOnline: boolean, currentGroupChannel: GroupChannel, reconnectOnIdle = true)
-  :{ shouldReconnect: boolean }
-{
+function useReconnectOnIdle(
+  isOnline: boolean,
+  currentGroupChannel: GroupChannel | null,
+  reconnectOnIdle = true,
+): { shouldReconnect: boolean } {
   const [isTabHidden, setIsTabHidden] = useState<boolean>(false);
   const wasOffline = !isOnline;
 
@@ -20,7 +22,7 @@ function useReconnectOnIdle(isOnline: boolean, currentGroupChannel: GroupChannel
     };
   }, [reconnectOnIdle, document.hidden]);
 
-  const shouldReconnect = wasOffline && currentGroupChannel?.url != null && !isTabHidden;
+  const shouldReconnect = wasOffline && !!currentGroupChannel && !isTabHidden;
   return { shouldReconnect };
 }
 

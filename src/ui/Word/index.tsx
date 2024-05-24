@@ -20,7 +20,7 @@ interface WordProps {
 }
 
 // Word and StringObj will include types: normal, mention, url
-export default function Word(props: WordProps): JSX.Element {
+export default function Word(props: WordProps): JSX.Element | null {
   const {
     word,
     message,
@@ -32,9 +32,9 @@ export default function Word(props: WordProps): JSX.Element {
     return null;
   }
   return (
-    <span className="sendbird-word">
+    <span className="sendbird-word" data-testid="sendbird-ui-word">
       {
-        convertWordToStringObj(word, message?.mentionedUsers).map((stringObj, index) => {
+        message?.mentionedUsers && convertWordToStringObj(word, message.mentionedUsers).map((stringObj, index) => {
           const type = stringObj?.type || '';
           const value = stringObj?.value || '';
           const userId = stringObj?.userId || '';

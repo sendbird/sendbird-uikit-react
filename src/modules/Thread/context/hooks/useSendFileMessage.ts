@@ -11,7 +11,7 @@ import { PublishingModuleType } from './useSendMultipleFilesMessage';
 import { SCROLL_BOTTOM_DELAY_FOR_SEND } from '../../../../utils/consts';
 
 interface DynamicProps {
-  currentChannel: GroupChannel;
+  currentChannel: GroupChannel | null;
   onBeforeSendFileMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
 }
 interface StaticProps {
@@ -35,7 +35,7 @@ export default function useSendFileMessageCallback({
   pubSub,
   threadDispatcher,
 }: StaticProps): SendFileMessageFunctionType {
-  const sendMessage = useCallback((file, quoteMessage): Promise<FileMessage> => {
+  return useCallback((file, quoteMessage): Promise<FileMessage> => {
     return new Promise((resolve, reject) => {
       const createParamsDefault = () => {
         const params = {} as FileMessageCreateParams;
@@ -55,7 +55,7 @@ export default function useSendFileMessageCallback({
             type: ThreadContextActionTypes.SEND_MESSAGE_START,
             payload: {
               /* pubSub is used instead of messagesDispatcher
-              to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
+                to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
               // TODO: remove data pollution
               message: {
                 ...pendingMessage,
@@ -81,16 +81,17 @@ export default function useSendFileMessageCallback({
           });
           reject(error);
         })
-        .onSucceeded((message: FileMessage) => {
+        .onSucceeded((message) => {
           logger.info('Thread | useSendFileMessageCallback: Sending file message succeeded.', message);
           pubSub.publish(topics.SEND_FILE_MESSAGE, {
             channel: currentChannel,
-            message: message,
+            message: message as FileMessage,
             publishingModules: [PublishingModuleType.THREAD],
           });
-          resolve(message);
+          resolve(message as FileMessage);
         });
     });
-  }, [currentChannel]);
-  return sendMessage;
+  },
+  [currentChannel],
+  );
 }

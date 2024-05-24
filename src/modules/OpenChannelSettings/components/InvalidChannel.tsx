@@ -27,7 +27,7 @@ export default function InvalidChannel({
           height="24px"
           width="24px"
           onClick={() => {
-            onCloseClick();
+            onCloseClick?.();
           }}
         />
       </div>

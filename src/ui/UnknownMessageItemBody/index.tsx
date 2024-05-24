@@ -24,7 +24,7 @@ export default function UnknownMessageItemBody({
   const { stringSet } = useContext(LocalizationContext);
   return (
     <div className={getClassName([
-      className,
+      className ?? '',
       'sendbird-unknown-message-item-body',
       isByMe ? 'outgoing' : 'incoming',
       mouseHover ? 'mouse-hover' : '',

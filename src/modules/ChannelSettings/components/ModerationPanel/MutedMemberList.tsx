@@ -19,9 +19,10 @@ import MutedMembersModal from './MutedMembersModal';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import { Member } from '@sendbird/chat/groupChannel';
 
 export const MutedMemberList = (): ReactElement => {
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { stringSet } = useLocalization();
@@ -108,7 +109,7 @@ export const MutedMemberList = (): ReactElement => {
                             closeDropdown();
                           });
                         }}
-                        dataSbId="channel_setting_muted_member_context_menu_unmute"
+                        testID="channel_setting_muted_member_context_menu_unmute"
                       >
                         {/* @ts-ignore */}
                         {stringSet?.CHANNEL_SETTING__UNMUTE || stringSet.CHANNEL_SETTING__MODERATION__UNMUTE}

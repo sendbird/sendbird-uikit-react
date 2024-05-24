@@ -145,6 +145,7 @@ export const Default = (args): ReactElement => {
       <App
         {...args}
         breakpoint={args.breakpoint === 'Use user agent' ? /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) : args.breakpoint}
+        config={{ logLevel: 'all' }}
       />
     </div>
   );

@@ -20,7 +20,7 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
   const logger = useSendbirdStateContext()?.config?.logger;
 
   // https://github.com/testing-library/react-testing-library/issues/62#issuecomment-438653348
-  const portalRoot = useRef<HTMLElement>();
+  const portalRoot = useRef<HTMLElement| null>();
   portalRoot.current = document.getElementById(MODAL_ROOT);
   if (!portalRoot.current) {
     portalRoot.current = document.createElement('div');
@@ -33,7 +33,7 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
       className={`${className} sendbird-bottomsheet`}
     >
       <div
-        className={'sendbird-bottomsheet__content'}
+        className="sendbird-bottomsheet__content"
         role='dialog'
         aria-modal='true'
         aria-expanded='true'
@@ -41,12 +41,10 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
         {children}
       </div>
       <div
-        className={`
-          sendbird-bottomsheet__backdrop
-        `}
+        className="sendbird-bottomsheet__backdrop"
         onClick={(e) => {
           e?.stopPropagation();
-          onBackdropClick();
+          onBackdropClick?.();
         }}
       />
     </div>,

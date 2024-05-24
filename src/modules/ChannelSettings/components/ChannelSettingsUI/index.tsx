@@ -28,7 +28,7 @@ export interface ChannelSettingsUIProps {
 
 const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
   const {
-    renderHeader = (p) => <ChannelSettingsHeader {...p} />,
+    renderHeader = (p: ChannelSettingsHeaderProps) => <ChannelSettingsHeader {...p} />,
     renderLeaveChannel,
     renderChannelProfile,
     renderModerationPanel,
@@ -37,10 +37,11 @@ const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
   } = deleteNullish(props);
 
   const state = useSendbirdStateContext();
-  const isOnline = state?.config?.isOnline;
-  const { stringSet } = useContext(LocalizationContext);
   const { channel, invalidChannel, onCloseClick, loading } = useChannelSettingsContext();
   const [showLeaveChannelModal, setShowLeaveChannelModal] = useState(false);
+
+  const isOnline = state?.config?.isOnline;
+  const { stringSet } = useContext(LocalizationContext);
 
   if (loading) {
     if (renderPlaceholderLoading) return renderPlaceholderLoading();

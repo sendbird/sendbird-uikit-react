@@ -14,12 +14,13 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import { OperatorListQuery, User } from '@sendbird/chat';
 
 interface Props { onCancel?(): void }
 
 export default function OperatorListModal({ onCancel }: Props): ReactElement {
-  const [users, setUsers] = useState([]);
-  const [operatorQuery, setOperatorQuery] = useState(null);
+  const [users, setUsers] = useState<User[]>([]);
+  const [operatorQuery, setOperatorQuery] = useState<OperatorListQuery | null>(null);
 
   const { channel } = useOpenChannelSettingsContext();
   const state = useSendbirdStateContext();
@@ -30,10 +31,12 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
     const operatorListQuery = channel?.createOperatorListQuery({
       limit: 20,
     });
-    operatorListQuery.next().then((participants) => {
-      setUsers(participants);
-    });
-    setOperatorQuery(operatorListQuery);
+    if (operatorListQuery) {
+      operatorListQuery.next().then((participants) => {
+        setUsers(participants);
+      });
+      setOperatorQuery(operatorListQuery);
+    }
   }, []);
   return (
     <div>
@@ -46,7 +49,7 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
         <div
           className="sendbird-more-users__popup-scroll"
           onScroll={(e) => {
-            const { hasNext } = operatorQuery;
+            const hasNext = operatorQuery?.hasNext;
             const target = e.target as HTMLTextAreaElement;
             const fetchMore = (
               target.clientHeight + target.scrollTop === target.scrollHeight
@@ -103,14 +106,14 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
                                 });
                                 closeDropdown();
                               }}
-                              dataSbId="open_channel_setting_operator_context_menu_unregister_operator"
+                              testID="open_channel_setting_operator_context_menu_unregister_operator"
                             >
                               {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
                             </MenuItem>
                           </MenuItems>
                         )}
                       />
-                    ) : null
+                    ) : <></>
                 )}
               />
             ))

@@ -38,7 +38,7 @@ const CreateChannel: React.FC<CreateChannelUIProps> = (props: CreateChannelUIPro
             userListQuery={userListQuery}
             onCancel={() => {
               setStep(0);
-              onCancel();
+              onCancel?.();
             }}
           />
         )

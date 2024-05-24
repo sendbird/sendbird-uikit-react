@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { getDynamicMinLengthInPx } from './utils';
 
 interface DynamicSideLengthProps {
-  width: string | number;
-  height: string | number;
+  width: string | number | null;
+  height: string | number | null;
   maxSideLength: string | null;
   defaultMinLength: string
 }

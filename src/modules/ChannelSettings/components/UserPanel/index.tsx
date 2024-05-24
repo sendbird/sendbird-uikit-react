@@ -51,7 +51,7 @@ const UserPanel: React.FC = () => {
           {stringSet.CHANNEL_SETTING__MEMBERS__TITLE}
           <Badge
             className={'sendbird-channel-settings__badge'}
-            count={kFormatter(channel?.memberCount)}
+            count={channel ? kFormatter(channel?.memberCount) : ''}
           />
         </Label>
         <Icon

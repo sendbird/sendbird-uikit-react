@@ -42,7 +42,7 @@ function useUpdateMessageCallback(
         const params: UserMessageUpdateParams = {
           message,
         };
-        if (isMentionEnabled && mentionedUsers?.length > 0) {
+        if (isMentionEnabled && mentionedUsers && mentionedUsers.length > 0) {
           params.mentionedUsers = mentionedUsers;
         }
         if (isMentionEnabled && mentionTemplate) {
@@ -63,7 +63,7 @@ function useUpdateMessageCallback(
 
       logger.info('Channel: Updating message!', params);
       currentGroupChannel
-        .updateUserMessage(messageId, params)
+        ?.updateUserMessage(messageId, params)
         .then((msg) => {
           if (callback) {
             callback(null, msg);

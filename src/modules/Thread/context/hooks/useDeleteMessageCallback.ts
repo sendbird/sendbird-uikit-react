@@ -5,7 +5,7 @@ import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
-  currentChannel: GroupChannel;
+  currentChannel: GroupChannel | null;
   threadDispatcher: CustomUseReducerDispatcher;
 }
 interface StaticProps {

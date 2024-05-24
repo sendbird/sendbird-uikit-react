@@ -6,14 +6,15 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
     class="classname-for-snapshot sendbird-message-content incoming "
   >
     <div
-      class="sendbird-message-content__left  incoming "
+      class="sendbird-message-content__left incoming"
+      data-testid="sendbird-message-content__left"
     >
       <div
         class="sendbird-context-menu"
         style="display: inline;"
       >
         <div
-          class="sendbird-message-content__left__avatar  sendbird-avatar"
+          class="sendbird-message-content__left__avatar sendbird-avatar"
           role="button"
           style="height: 28px; width: 28px; z-index: 0; bottom: 2px;"
           tabindex="0"
@@ -23,7 +24,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
             style="width: 100%; min-width: min(400px, 28px); max-width: 400px;"
           >
             <div
-              class="sendbird-avatar-img--default "
+              class="sendbird-avatar-img--default"
               style="width: 28px; height: 28px;"
             >
               <div
@@ -40,7 +41,8 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
       </div>
     </div>
     <div
-      class="sendbird-message-content__middle  "
+      class="sendbird-message-content__middle"
+      data-testid="sendbird-message-content__middle"
     >
       <span
         class="sendbird-message-content__middle__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2"
@@ -48,7 +50,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
         Mathew
       </span>
       <div
-        class="sendbird-message-content__middle__body-container "
+        class="sendbird-message-content__middle__body-container"
       >
         <span
           class="sendbird-label sendbird-label--body-1 sendbird-label--color-onbackground-1"
@@ -60,17 +62,19 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
           </div>
         </span>
         <span
-          class="sendbird-message-content__middle__body-container__created-at right   sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+          class="sendbird-message-content__middle__body-container__created-at right sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
         >
           mock-date
         </span>
       </div>
+      0
     </div>
     <div
-      class="sendbird-message-content__right   "
+      class="sendbird-message-content__right"
+      data-testid="sendbird-message-content__right"
     >
       <div
-        class="sendbird-message-content-menu   incoming"
+        class="sendbird-message-content-menu incoming"
       >
         <div
           class="sendbird-message-content-menu__normal-menu sendbird-message-item-menu"
@@ -89,6 +93,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
               >
                 <div
                   class="sendbird-message-item-menu__trigger__icon sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
+                  data-testid="sendbird-message-item-menu__trigger__icon"
                   role="button"
                   style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
                   tabindex="0"

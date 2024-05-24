@@ -39,10 +39,10 @@ export const FileViewerView = ({
       onCancel={onCancel}
       onDelete={() => deleteMessage(message).then(() => onCancel())}
       isByMe={config.userId === userId}
-      disableDelete={threadInfo?.replyCount > 0}
+      disableDelete={threadInfo?.replyCount ? threadInfo.replyCount > 0 : false}
       onDownloadClick={onDownloadClick}
     />,
-    document.getElementById(MODAL_ROOT),
+    document.getElementById(MODAL_ROOT) as Element,
   );
 };
 
@@ -77,7 +77,7 @@ export const FileViewerComponent = ({
   disableDelete,
   onDownloadClick,
 }: FileViewerUIProps) => (
-  <div className="sendbird-fileviewer">
+  <div className="sendbird-fileviewer" data-testid="sendbird-fileviewer">
     <div className="sendbird-fileviewer__header">
       <div className="sendbird-fileviewer__header__left">
         <div className="sendbird-fileviewer__header__left__avatar">

@@ -3,7 +3,7 @@
 exports[`ui/MentionUserLabel should do a snapshot test of the MentionUserLabel DOM 1`] = `
 <DocumentFragment>
   <span
-    class="sendbird-mention-user-label   undefined"
+    class="sendbird-mention-user-label"
     contenteditable="false"
     data-sb-mention="true"
   />

@@ -23,7 +23,7 @@ export interface EmojiManagerParams {
 }
 
 export class EmojiManager {
-  private _emojiContainer: EmojiContainer;
+  private _emojiContainer!: EmojiContainer;
 
   constructor(props: EmojiManagerParams) {
     const { sdk, logger } = props;
@@ -58,7 +58,7 @@ export class EmojiManager {
   }
 
   public getEmojiUrl(reactionKey: Reaction['key']) {
-    return this.AllEmojisAsArray.find((emoji) => emoji.key === reactionKey).url ?? '';
+    return this.AllEmojisAsArray.find((emoji) => emoji.key === reactionKey)?.url ?? '';
   }
 
   public get emojiContainer() {

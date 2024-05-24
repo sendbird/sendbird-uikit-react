@@ -52,7 +52,7 @@ export interface GroupChannelListProviderProps
   children?: React.ReactNode;
 }
 
-export const GroupChannelListContext = React.createContext<GroupChannelListContextType>(null);
+export const GroupChannelListContext = React.createContext<GroupChannelListContextType | null>(null);
 export const GroupChannelListProvider = (props: GroupChannelListProviderProps) => {
   const {
     children,

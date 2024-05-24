@@ -54,24 +54,26 @@ export default function ParticipantsModal({
         <div
           className="sendbird-more-members__popup-scroll"
           onScroll={(e) => {
-            const { hasNext } = participantListQuery;
-            const target = e.target as HTMLTextAreaElement;
-            const fetchMore = (
-              target.clientHeight + target.scrollTop === target.scrollHeight
-            );
+            if (participantListQuery) {
+              const { hasNext } = participantListQuery;
+              const target = e.target as HTMLTextAreaElement;
+              const fetchMore = (
+                target.clientHeight + target.scrollTop === target.scrollHeight
+              );
 
-            if (hasNext && fetchMore) {
-              participantListQuery.next().then((fetchedParticipants) => {
-                setParticipants([
-                  ...participants,
-                  ...fetchedParticipants,
-                ]);
-              });
+              if (hasNext && fetchMore) {
+                participantListQuery.next().then((fetchedParticipants) => {
+                  setParticipants([
+                    ...(participants ?? []),
+                    ...fetchedParticipants,
+                  ]);
+                });
+              }
             }
           }}
         >
           {
-            participants.map((p: Participant) => {
+            participants?.map((p: Participant) => {
               const isOperator = channel?.isOperator(p.userId);
               return (
                 <UserListItem
@@ -112,7 +114,7 @@ export default function ParticipantsModal({
                                   // FIXME: handle error later
                                   closeDropdown();
                                 }}
-                                dataSbId={`open_channel_setting_participant_context_menu_${(
+                                testID={`open_channel_setting_participant_context_menu_${(
                                   isOperator) ? 'unregister_operator' : 'register_as_operator'}`
                                 }
                               >
@@ -130,7 +132,7 @@ export default function ParticipantsModal({
                                   // FIXME: handle error later
                                   closeDropdown();
                                 }}
-                                dataSbId={`open_channel_setting_participant_context_menu_${p.isMuted ? 'unmute' : 'mute'}`
+                                testID={`open_channel_setting_participant_context_menu_${p.isMuted ? 'unmute' : 'mute'}`
                                 }
                               >
                                 {
@@ -145,7 +147,7 @@ export default function ParticipantsModal({
                                     closeDropdown();
                                   });
                                 }}
-                                dataSbId="open_channel_setting_participant_context_menu_ban"
+                                testID="open_channel_setting_participant_context_menu_ban"
                               >
                                 {stringSet.OPEN_CHANNEL_SETTING__MODERATION__BAN}
                               </MenuItem>
@@ -153,7 +155,7 @@ export default function ParticipantsModal({
                           )}
                         />
                       )
-                      : null
+                      : () => <></>
                   }
                 />
               );

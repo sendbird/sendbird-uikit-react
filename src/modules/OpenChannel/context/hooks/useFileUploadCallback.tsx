@@ -16,8 +16,8 @@ import { ModalFooter } from '../../../../ui/Modal';
 import { ButtonTypes } from '../../../../ui/Button';
 
 interface DynamicParams {
-  currentOpenChannel: OpenChannel;
-  onBeforeSendFileMessage: (file: File) => FileMessageCreateParams;
+  currentOpenChannel: OpenChannel | null;
+  onBeforeSendFileMessage?: (file: File) => FileMessageCreateParams;
   checkScrollBottom: () => boolean;
   imageCompression?: ImageCompressionOptions;
 }
@@ -25,7 +25,7 @@ interface StaticParams {
   sdk: SdkStore['sdk'];
   logger: Logger;
   messagesDispatcher: (props: { type: string, payload: any }) => void;
-  scrollRef: React.MutableRefObject<HTMLElement>;
+  scrollRef: React.RefObject<HTMLElement>;
 }
 
 type CallbackReturn = (files: Array<File> | File) => void;
@@ -51,9 +51,9 @@ function useFileUploadCallback({
       const file = Array.isArray(files) ? files[0] : files;
       const createCustomParams = onBeforeSendFileMessage && typeof onBeforeSendFileMessage === 'function';
 
-      const createParamsDefault = (file_): FileMessageCreateParams => {
+      const createParamsDefault = (file: File): FileMessageCreateParams => {
         const params: FileMessageCreateParams = {};
-        params.file = file_;
+        params.file = file;
         return params;
       };
 
@@ -96,7 +96,7 @@ function useFileUploadCallback({
       const params = onBeforeSendFileMessage ? onBeforeSendFileMessage(compressedFile) : createParamsDefault(compressedFile);
       logger.info('OpenChannel | useFileUploadCallback: Uploading file message start', params);
 
-      currentOpenChannel.sendFileMessage(params)
+      currentOpenChannel?.sendFileMessage(params)
         .onPending((pendingMessage) => {
           messagesDispatcher({
             type: messageActionTypes.SENDING_MESSAGE_START,

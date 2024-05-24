@@ -11,7 +11,7 @@ type MessagesDispatcherType = {
   type: string, payload: any,
 };
 interface DynamicParams {
-  currentOpenChannel: OpenChannel;
+  currentOpenChannel: OpenChannel | null;
   checkScrollBottom: () => boolean;
 }
 interface StaticParams {

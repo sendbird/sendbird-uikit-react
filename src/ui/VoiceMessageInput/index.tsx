@@ -10,6 +10,7 @@ import { useLocalization } from '../../lib/LocalizationContext';
 import ControlerIcon from './controlerIcons';
 import { VOICE_RECORDER_CLICK_BUFFER_TIME, VOICE_RECORDER_DEFAULT_MIN } from '../../utils/consts';
 import { VoiceMessageInputStatus } from './types';
+import { classnames } from '../../utils/utils';
 
 export interface VoiceMessageInputProps {
   minRecordTime?: number;
@@ -58,14 +59,14 @@ export const VoiceMessageInput = ({
   const handleOnCancelClick = () => {
     const currentTime = Date.now();
     if (currentTime - lastClickTime > VOICE_RECORDER_CLICK_BUFFER_TIME) {
-      onCancelClick();
+      onCancelClick?.();
       setLastClickTime(currentTime);
     }
   };
   const handleOnControlClick = useCallback(() => {
     const currentTime = Date.now();
     if (currentTime - lastClickTime > VOICE_RECORDER_CLICK_BUFFER_TIME) {
-      onControlClick(currentType);
+      onControlClick?.(currentType);
       setLastClickTime(currentTime);
     }
   }, [currentType]);
@@ -73,7 +74,7 @@ export const VoiceMessageInput = ({
     const currentTime = Date.now();
     if (currentTime - lastClickTime > VOICE_RECORDER_CLICK_BUFFER_TIME) {
       if (!isSendButtonDisabled) {
-        onSubmitClick();
+        onSubmitClick?.();
       }
       setLastClickTime(currentTime);
     }
@@ -127,7 +128,7 @@ export const VoiceMessageInput = ({
         {
           renderSubmitButton?.() || (
             <div
-              className={`sendbird-voice-message-input__controler__submit ${isSendButtonDisabled ? 'voice-message--disabled' : ''}`}
+              className={classnames('sendbird-voice-message-input__controler__submit', isSendButtonDisabled && 'voice-message--disabled')}
               onClick={handleOnSubmitClick}
             >
               <Icon

@@ -6,10 +6,11 @@ import type { Logger } from '../../../../lib/SendbirdState';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
 import { SdkStore } from '../../../../lib/types';
+import { SendableMessage } from '@sendbird/chat/lib/__definition';
 
 interface DynamicParams {
-  currentOpenChannel: OpenChannel;
-  onBeforeSendUserMessage: (text: string) => UserMessageCreateParams;
+  currentOpenChannel: OpenChannel | null;
+  onBeforeSendUserMessage?: (text: string) => UserMessageCreateParams;
   checkScrollBottom: () => boolean;
   messageInputRef: React.RefObject<HTMLInputElement>;
 }
@@ -26,7 +27,7 @@ function useSendMessageCallback(
 ): () => void {
   return useCallback(() => {
     if (sdk) {
-      const text = messageInputRef.current.innerText;
+      const text = messageInputRef.current?.innerText;
       const createParamsDefault = (txt: string | number): UserMessageCreateParams => {
         const message = txt as string;
         const params: UserMessageCreateParams = {
@@ -38,11 +39,11 @@ function useSendMessageCallback(
       if (createCustomParams) {
         logger.info('OpenChannel | useSendMessageCallback: Creating params using onBeforeSendUserMessage', onBeforeSendUserMessage);
       }
-      const params = onBeforeSendUserMessage ? onBeforeSendUserMessage(text) : createParamsDefault(text);
+      const params = onBeforeSendUserMessage ? onBeforeSendUserMessage(text ?? '') : createParamsDefault(text ?? '');
       logger.info('OpenChannel | useSendMessageCallback: Sending message has started', params);
 
-      let pendingMsg = null;
-      currentOpenChannel.sendUserMessage(params)
+      let pendingMsg: SendableMessage | undefined;
+      currentOpenChannel?.sendUserMessage(params)
         .onPending((pendingMessage) => {
           messagesDispatcher({
             type: messageActionTypes.SENDING_MESSAGE_START,

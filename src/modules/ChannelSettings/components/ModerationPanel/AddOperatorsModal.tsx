@@ -4,7 +4,6 @@ import React, {
   useState,
   useContext,
 } from 'react';
-import { OperatorFilter } from '@sendbird/chat/groupChannel';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Modal from '../../../../ui/Modal';
@@ -15,6 +14,7 @@ import Label, {
 import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem from '../../../../ui/UserListItem';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
+import { Member, MemberListQuery, OperatorFilter } from '@sendbird/chat/groupChannel';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
 interface Props {
@@ -26,9 +26,9 @@ export default function AddOperatorsModal({
   onCancel,
   onSubmit,
 }: Props): ReactElement {
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [selectedMembers, setSelectedMembers] = useState({});
-  const [memberQuery, setMemberQuery] = useState(null);
+  const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
   const { stringSet } = useContext(LocalizationContext);
 
   const { channel } = useChannelSettingsContext();
@@ -38,10 +38,10 @@ export default function AddOperatorsModal({
       operatorFilter: OperatorFilter.NONOPERATOR,
       limit: 20,
     });
-    memberListQuery.next().then((members) => {
+    memberListQuery?.next().then((members) => {
       setMembers(members);
     });
-    setMemberQuery(memberListQuery);
+    setMemberQuery(memberListQuery ?? null);
   }, []);
 
   const selectedCount = Object.keys(selectedMembers).filter((m) => selectedMembers[m]).length;

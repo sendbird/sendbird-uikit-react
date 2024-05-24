@@ -6,7 +6,8 @@ exports[`ui/MessageStatus should do a snapshot test of the MessageStatus DOM 1`]
     class="example-text sendbird-message-status"
   >
     <div
-      class="sendbird-message-status__icon  sendbird-message-status--sent sendbird-icon sendbird-icon-done sendbird-icon-color--sent"
+      class="sendbird-message-status__icon sendbird-message-status--sent sendbird-icon sendbird-icon-done sendbird-icon-color--sent"
+      data-testid="sendbird-message-status-icon"
       role="button"
       style="width: 16px; min-width: 16px; height: 16px; min-height: 16px;"
       tabindex="0"
@@ -15,6 +16,7 @@ exports[`ui/MessageStatus should do a snapshot test of the MessageStatus DOM 1`]
     </div>
     <span
       class="sendbird-message-status__text sendbird-label sendbird-label--caption-3 sendbird-label--color-onbackground-2"
+      data-testid="sendbird-message-status-text"
     >
       mock-date
     </span>
@@ -28,7 +30,8 @@ exports[`ui/MessageStatus should do a snapshot test of the failed MessageStatus 
     class="example-text sendbird-message-status"
   >
     <div
-      class="sendbird-message-status__icon   sendbird-icon sendbird-icon-error sendbird-icon-color--error"
+      class="sendbird-message-status__icon sendbird-icon sendbird-icon-error sendbird-icon-color--error"
+      data-testid="sendbird-message-status-icon"
       role="button"
       style="width: 16px; min-width: 16px; height: 16px; min-height: 16px;"
       tabindex="0"
@@ -45,7 +48,8 @@ exports[`ui/MessageStatus should do a snapshot test of the failed MessageStatus 
     class="example-text sendbird-message-status"
   >
     <div
-      class="sendbird-message-status__icon   sendbird-icon sendbird-icon-error sendbird-icon-color--error"
+      class="sendbird-message-status__icon sendbird-icon sendbird-icon-error sendbird-icon-color--error"
+      data-testid="sendbird-message-status-icon"
       role="button"
       style="width: 16px; min-width: 16px; height: 16px; min-height: 16px;"
       tabindex="0"

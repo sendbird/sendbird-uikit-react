@@ -3,14 +3,14 @@ import { User } from '@sendbird/chat';
 import type {
   GroupChannel,
   GroupChannelCreateParams,
-  SendbirdGroupChat,
 } from '@sendbird/chat/groupChannel';
 
 import { getCreateGroupChannel } from '../../../lib/selectors';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CHANNEL_TYPE } from '../types';
+import { SendbirdChatType } from '../../../lib/types';
 
-const CreateChannelContext = React.createContext(undefined);
+const CreateChannelContext = React.createContext<CreateChannelContextInterface | null>(null);
 
 export interface UserListQuery {
   hasNext?: boolean;
@@ -57,7 +57,7 @@ export interface CreateChannelProviderProps {
 type CreateChannel = (channelParams: GroupChannelCreateParams) => Promise<GroupChannel>;
 
 export interface CreateChannelContextInterface {
-  sdk: SendbirdGroupChat;
+  sdk: SendbirdChatType;
   createChannel: CreateChannel;
   userListQuery?(): UserListQuery;
 
@@ -110,6 +110,7 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
 
   return (
     <CreateChannelContext.Provider value={{
+      sdk: store.stores.sdkStore.sdk,
       createChannel: getCreateGroupChannel(store),
       onCreateChannelClick,
       onBeforeCreateChannel,
@@ -127,9 +128,11 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
   );
 };
 
-const useCreateChannelContext = (): CreateChannelContextInterface => (
-  React.useContext(CreateChannelContext)
-);
+const useCreateChannelContext = () => {
+  const context = React.useContext(CreateChannelContext);
+  if (!context) throw new Error('CreateChannelContext not found. Use within the CreateChannel module.');
+  return context;
+};
 
 export {
   CreateChannelProvider,

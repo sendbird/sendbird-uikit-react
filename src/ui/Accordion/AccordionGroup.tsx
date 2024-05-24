@@ -29,7 +29,7 @@ export const AccordionGroupProvider = ({
   children,
   allowMultipleOpen = false,
 }: AccordionGroupProps) => {
-  const [openedListKeys, setOpenedListKeys] = useState([]);
+  const [openedListKeys, setOpenedListKeys] = useState<string[]>([]);
 
   const addOpenedListKey: AGCType['addOpenedListKey'] = (key) => {
     setOpenedListKeys((prevList) => {

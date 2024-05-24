@@ -1,7 +1,7 @@
 import type { User } from '@sendbird/chat';
-import React, { useMemo } from 'react';
+import React from 'react';
 
-const EditUserProfileProviderContext = React.createContext(undefined);
+const EditUserProfileProviderContext = React.createContext<EditUserProfileProviderInterface | null>(null);
 
 export interface EditUserProfileProps {
   children?: React.ReactElement;
@@ -16,32 +16,15 @@ export interface EditUserProfileProviderInterface {
   onEditProfile?(updatedUser: User): void;
 }
 
-const EditUserProfileProvider: React.FC<EditUserProfileProps> = (props: EditUserProfileProps) => {
-  const {
-    children,
-    onEditProfile,
-    onCancel,
-    onThemeChange,
-  } = props;
-
-  const value = useMemo(() => {
-    return {
-      onEditProfile,
-      onCancel,
-      onThemeChange,
-    };
-  }, []);
-
-  return (
-    <EditUserProfileProviderContext.Provider value={value}>
-      {children}
-    </EditUserProfileProviderContext.Provider>
-  );
+const EditUserProfileProvider = ({ children, ...props }: EditUserProfileProps) => {
+  return <EditUserProfileProviderContext.Provider value={props}>{children}</EditUserProfileProviderContext.Provider>;
 };
 
-const useEditUserProfileContext = (): EditUserProfileProviderInterface => (
-  React.useContext(EditUserProfileProviderContext)
-);
+const useEditUserProfileContext = () => {
+  const context = React.useContext(EditUserProfileProviderContext);
+  if (!context) throw new Error('EditUserProfileContext not found. Use within the EditUserProfile module.');
+  return context;
+};
 
 export {
   EditUserProfileProvider,

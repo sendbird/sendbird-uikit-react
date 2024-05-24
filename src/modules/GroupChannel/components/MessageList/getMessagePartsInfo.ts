@@ -7,11 +7,11 @@ import { CoreMessageType } from '../../../../utils';
 
 export interface GetMessagePartsInfoProps {
   allMessages: Array<CoreMessageType>;
-  isMessageGroupingEnabled: boolean;
+  isMessageGroupingEnabled?: boolean;
   currentIndex: number;
   currentMessage: CoreMessageType;
-  currentChannel: GroupChannel;
-  replyType: string;
+  currentChannel?: GroupChannel | null;
+  replyType?: string;
 }
 
 interface OutPuts {
@@ -27,7 +27,7 @@ export const getMessagePartsInfo = ({
   allMessages = [],
   isMessageGroupingEnabled = true,
   currentIndex = 0,
-  currentMessage = null,
+  currentMessage,
   currentChannel = null,
   replyType = '',
 }: GetMessagePartsInfoProps): OutPuts => {

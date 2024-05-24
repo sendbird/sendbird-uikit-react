@@ -16,9 +16,10 @@ import MutedParticipantsModal from './MutedParticipantsModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import { RestrictedUser } from '@sendbird/chat';
 
 export const MutedParticipantList = (): ReactElement => {
-  const [mutedUsers, setMutedUsers] = useState([]);
+  const [mutedUsers, setMutedUsers] = useState<RestrictedUser[]>([]);
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -96,14 +97,14 @@ export const MutedParticipantList = (): ReactElement => {
                               closeDropdown();
                             });
                           }}
-                          dataSbId="open_channel_setting_muted_member_context_menu_unmute"
+                          testID="open_channel_setting_muted_member_context_menu_unmute"
                         >
                           {stringSet.OPEN_CHANNEL_SETTING__MODERATION__UNMUTE}
                         </MenuItem>
                       </MenuItems>
                     )}
                   />
-                ) : null
+                ) : <></>
             )}
           />
         ))

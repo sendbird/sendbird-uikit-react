@@ -24,7 +24,7 @@ export default function Community({
   nickname,
 }: Props): ReactElement {
   const [showSettings, setShowSettings] = useState(false);
-  const [currentChannel, setCurrentChannel] = useState<OpenChannel>(null);
+  const [currentChannel, setCurrentChannel] = useState<OpenChannel | null>(null);
   // const [channels, setChannels] = useState<Array<OpenChannel>>([]);
   return (
     <Sendbird
@@ -44,7 +44,7 @@ export default function Community({
         </div>
         <div className="community-open-channel">
           <OpenChannelConversation
-            channelUrl={currentChannel?.url}
+            channelUrl={currentChannel?.url ?? ''}
             onChatHeaderActionClick={() => {
               setShowSettings(true);
             }}
@@ -53,7 +53,7 @@ export default function Community({
         {
           showSettings && (
             <OpenChannelSettings
-              channelUrl={currentChannel?.url}
+              channelUrl={currentChannel?.url ?? ''}
               onCloseClick={() => {
                 setShowSettings(false);
               }}

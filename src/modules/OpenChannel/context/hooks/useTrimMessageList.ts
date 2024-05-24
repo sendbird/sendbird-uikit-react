@@ -4,7 +4,7 @@ import { LoggerInterface } from '../../../../lib/Logger';
 
 interface DynamicParams {
   messagesLength: number;
-  messageLimit: number;
+  messageLimit?: number;
 }
 
 type MessagesDispatcherType = {
@@ -32,7 +32,7 @@ function useTrimMessageList(
     if (inProgress) {
       return;
     }
-    if (typeof messagesLength === 'number' && messagesLength > messageLimit) {
+    if (typeof messagesLength === 'number' && typeof messageLimit === 'number' && messagesLength > messageLimit) {
       logger.info('Trimming MessageList');
       messagesDispatcher({
         type: messageActionTypes.TRIM_MESSAGE_LIST,

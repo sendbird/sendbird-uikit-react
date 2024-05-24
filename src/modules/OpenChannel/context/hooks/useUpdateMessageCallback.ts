@@ -6,25 +6,24 @@ import { useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 
 interface DynamicParams {
-  currentOpenChannel: OpenChannel;
-  onBeforeSendUserMessage?: (text) => UserMessageUpdateParams;
+  currentOpenChannel: OpenChannel | null;
+  onBeforeSendUserMessage?: (text: string) => UserMessageUpdateParams;
 }
 interface StaticParams {
   logger: Logger;
   messagesDispatcher: (props: { type: string, payload :any }) => void;
 }
-type CallbackReturn = (messageId, text, callback) => void;
+type CallbackReturn = (messageId: number, text: string, callback: () => void) => void;
 
 function useUpdateMessageCallback(
   { currentOpenChannel, onBeforeSendUserMessage }: DynamicParams,
   { logger, messagesDispatcher }: StaticParams,
 ): CallbackReturn {
   return useCallback((messageId, text, callback) => {
-    const createParamsDefault = (txt) => {
-      const params = {
+    const createParamsDefault = (txt: string) => {
+      return {
         message: txt,
       };
-      return params;
     };
 
     if (onBeforeSendUserMessage && typeof onBeforeSendUserMessage === 'function') {

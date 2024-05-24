@@ -19,9 +19,8 @@ export const FileViewer = (props: FileViewerProps) => {
       {...props}
       deleteMessage={deleteMessage}
       onDownloadClick={async (e) => {
-        if (!onBeforeDownloadFileMessage) {
-          return null;
-        }
+        if (!onBeforeDownloadFileMessage) return;
+
         try {
           const allowDownload = await onBeforeDownloadFileMessage({ message: props.message });
           if (!allowDownload) {

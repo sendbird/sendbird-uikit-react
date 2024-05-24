@@ -68,15 +68,15 @@ export interface SendBirdStateConfig {
   isOnline: boolean;
   userId: string;
   appId: string;
-  accessToken: string;
+  accessToken?: string;
   theme: string;
   pubSub: SBUGlobalPubSub;
   logger: Logger;
   setCurrentTheme: (theme: 'light' | 'dark') => void;
-  userListQuery?(): UserListQuery;
+  userListQuery?: () => UserListQuery;
   uikitUploadSizeLimit: number;
   uikitMultipleFilesMessageLimit: number;
-  voiceRecord?: {
+  voiceRecord: {
     maxRecordingTime: number;
     minRecordingTime: number;
   };
@@ -84,7 +84,7 @@ export interface SendBirdStateConfig {
     maxMentionCount: number,
     maxSuggestionCount: number,
   };
-  imageCompression?: ImageCompressionOptions;
+  imageCompression: ImageCompressionOptions;
   markAsReadScheduler: MarkAsReadSchedulerType;
   markAsDeliveredScheduler: MarkAsDeliveredSchedulerType;
   disableMarkAsDelivered: boolean;
@@ -176,7 +176,7 @@ export type SendBirdState = {
   },
   // Customer provided callbacks
   eventHandlers?: SBUEventHandlers;
-  emojiManager?: EmojiManager;
+  emojiManager: EmojiManager;
   utils: SendbirdProviderUtils;
 };
 

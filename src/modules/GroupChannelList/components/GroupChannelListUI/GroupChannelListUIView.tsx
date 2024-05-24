@@ -126,7 +126,7 @@ const ChannelListComponent = <T, >(props: {
   const { data, renderItem, onLoadMore, placeholderLoading, placeholderError, placeholderEmpty } = props;
 
   const onScroll = useOnScrollPositionChangeDetector({
-    onReachedBottom: () => onLoadMore(),
+    onReachedBottom: () => onLoadMore?.(),
   });
 
   return (

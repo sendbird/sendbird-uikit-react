@@ -1,10 +1,10 @@
 import './index.scss';
-import React, { MouseEvent, ReactElement, useContext, useRef } from 'react';
+import React, { ReactElement, useContext, useRef } from 'react';
 import type { UserMessage } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 
-import ContextMenu, { MenuItems, MenuItem } from '../ContextMenu';
+import ContextMenu, { MenuItems, MenuItem, MenuItemProps } from '../ContextMenu';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import IconButton from '../IconButton';
 import {
@@ -21,17 +21,14 @@ import { Role } from '../../lib/types';
 import { ReplyType } from '../../types';
 import { deleteNullish } from '../../utils/utils';
 
-export interface MessageMenuRenderMenuItemProps {
+export interface MessageMenuRenderMenuItemProps extends Omit<MenuItemProps, 'children' | 'className'> {
   className?: string;
-  onClick?: (e: MouseEvent) => void;
-  dataSbId?: string;
-  disable?: boolean;
   text: string;
 }
 export interface MessageMenuProps {
   className?: string | Array<string>;
   message: SendableMessageType;
-  channel: GroupChannel | OpenChannel;
+  channel: GroupChannel | OpenChannel | null;
   isByMe?: boolean;
   disabled?: boolean;
   replyType?: ReplyType;
@@ -47,7 +44,7 @@ export interface MessageMenuProps {
   renderMenuItem?: (props: MessageMenuRenderMenuItemProps) => ReactElement;
 }
 
-export function MessageMenu(props: MessageMenuProps): ReactElement {
+export function MessageMenu(props: MessageMenuProps): ReactElement | null {
   const {
     className,
     message,
@@ -104,7 +101,7 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
   }
   return (
     <div
-      className={getClassName([className, 'sendbird-message-item-menu'])}
+      className={getClassName([className ?? '', 'sendbird-message-item-menu'])}
       ref={containerRef}
     >
       <ContextMenu
@@ -116,14 +113,15 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
             height="32px"
             onClick={(): void => {
               toggleDropdown();
-              setSupposedHover(true);
+              setSupposedHover?.(true);
             }}
             onBlur={(): void => {
-              setSupposedHover(false);
+              setSupposedHover?.(false);
             }}
           >
             <Icon
               className="sendbird-message-item-menu__trigger__icon"
+              testID="sendbird-message-item-menu__trigger__icon"
               type={IconTypes.MORE}
               fillColor={IconColors.CONTENT_INVERSE}
               width="24px"
@@ -134,11 +132,12 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
         menuItems={(close: () => void): ReactElement => {
           const closeDropdown = (): void => {
             close();
-            setSupposedHover(false);
+            setSupposedHover?.(false);
           };
           return (
             <MenuItems
               className="sendbird-message-item-menu__list"
+              testID="sendbird-message-item-menu__list"
               parentRef={triggerRef}
               parentContainRef={containerRef}
               closeDropdown={closeDropdown}
@@ -159,7 +158,7 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
                 renderMenuItem({
                   className: 'sendbird-message-item-menu__list__menu-item menu-item-reply',
                   onClick: () => {
-                    setQuoteMessage(message);
+                    setQuoteMessage?.(message);
                     closeDropdown();
                   },
                   disable: message?.parentMessageId > 0,
@@ -194,7 +193,7 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
                   className: 'sendbird-message-item-menu__list__menu-item menu-item-edit',
                   onClick: () => {
                     if (!disabled) {
-                      showEdit(true);
+                      showEdit?.(true);
                       closeDropdown();
                     }
                   },
@@ -207,7 +206,7 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
                   className: 'sendbird-message-item-menu__list__menu-item menu-item-resend',
                   onClick: () => {
                     if (!disabled) {
-                      resendMessage(message);
+                      resendMessage?.(message);
                       closeDropdown();
                     }
                   },
@@ -222,14 +221,14 @@ export function MessageMenu(props: MessageMenuProps): ReactElement {
                     if (isFailedMessage(message)) {
                       deleteMessage?.(message);
                     } else if (!disabled) {
-                      showRemove(true);
+                      showRemove?.(true);
                       closeDropdown();
                     }
                   },
                   disable: (
                     typeof disableDeleteMessage === 'boolean'
                       ? disableDeleteMessage
-                      : message?.threadInfo?.replyCount > 0
+                      : (message?.threadInfo?.replyCount ?? 0) > 0
                   ),
                   dataSbId: 'ui_message_item_menu_delete',
                   text: stringSet.MESSAGE_MENU__DELETE,

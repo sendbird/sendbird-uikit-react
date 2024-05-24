@@ -66,7 +66,7 @@ export const OperatorUI: React.FC<OperatorUIProps> = ({
           height="24px"
           width="24px"
           onClick={() => {
-            onCloseClick();
+            onCloseClick?.();
           }}
         />
       </div>
@@ -84,7 +84,7 @@ export const OperatorUI: React.FC<OperatorUIProps> = ({
           height="22px"
           width="22px"
           onClick={() => {
-            copyToClipboard(channel?.url);
+            copyToClipboard(channel?.url ?? '');
           }}
         />
         <Label

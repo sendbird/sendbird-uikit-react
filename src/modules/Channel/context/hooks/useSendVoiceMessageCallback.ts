@@ -30,7 +30,7 @@ interface StaticParams {
   scrollRef: React.RefObject<HTMLDivElement>;
   messagesDispatcher: React.Dispatch<ChannelActionTypes>;
 }
-type FuncType = (file: File, duration: number, quoteMessage: SendableMessageType) => Promise<FileMessage>;
+type FuncType = (file: File, duration: number, quoteMessage?: SendableMessageType) => Promise<FileMessage>;
 
 export const useSendVoiceMessageCallback = ({
   currentGroupChannel,
@@ -42,14 +42,11 @@ export const useSendVoiceMessageCallback = ({
   scrollRef,
   messagesDispatcher,
 }: StaticParams): Array<FuncType> => {
-  const sendMessage = useCallback((file: File, duration: number, quoteMessage: SendableMessageType): Promise<FileMessage> => new Promise((resolve, reject) => {
+  const sendMessage = useCallback((file: File, duration: number, quoteMessage?: SendableMessageType): Promise<FileMessage> => new Promise<FileMessage>((resolve, reject) => {
     if (!currentGroupChannel) {
       return;
     }
-    const messageParams: FileMessageCreateParams = (
-      onBeforeSendVoiceMessage
-      && typeof onBeforeSendVoiceMessage === 'function'
-    )
+    const messageParams: FileMessageCreateParams = (onBeforeSendVoiceMessage && typeof onBeforeSendVoiceMessage === 'function')
       ? onBeforeSendVoiceMessage(file, quoteMessage)
       : {
         file,
@@ -90,13 +87,13 @@ export const useSendVoiceMessageCallback = ({
         });
         reject(err);
       })
-      .onSucceeded((succeededMessage: FileMessage) => {
+      .onSucceeded((succeededMessage) => {
         logger.info('Channel: Sending voice message success!', succeededMessage);
         messagesDispatcher({
           type: messageActionTypes.SEND_MESSAGE_SUCCESS,
           payload: succeededMessage as SendableMessageType,
         });
-        resolve(succeededMessage);
+        resolve(succeededMessage as FileMessage);
       });
   }), [
     currentGroupChannel,

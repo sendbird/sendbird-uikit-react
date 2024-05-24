@@ -1,6 +1,5 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { DependencyList, useLayoutEffect, useRef, useState } from 'react';
 import pubSubFactory from '../../../../lib/pubSub';
-import { useOnScrollPositionChangeDetectorWithRef } from '../../../../hooks/useOnScrollReachedEndDetector';
 
 /**
  * You can pass the resolve function to scrollPubSub, if you want to catch when the scroll is finished.
@@ -25,33 +24,21 @@ export type ScrollTopicUnion =
       };
     };
 
-function runCallback(callback: () => void, lazy = true) {
-  if (lazy) {
-    setTimeout(() => {
-      callback();
-    });
-  } else {
-    callback();
-  }
-}
-
-function getScrollBehavior(behavior: 'smooth' | 'auto', animated?: boolean) {
-  if (typeof animated === 'boolean') return animated ? 'smooth' : 'auto';
-  return behavior;
-}
-
-export function useMessageListScroll(behavior: 'smooth' | 'auto') {
+export function useMessageListScroll(behavior: 'smooth' | 'auto', deps: DependencyList = []) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollPositionRef = useRef(0);
   const scrollDistanceFromBottomRef = useRef(0);
 
-  const [scrollPubSub] = useState(() => pubSubFactory<ScrollTopics, ScrollTopicUnion>());
-  const [isScrollBottomReached, setIsScrollBottomReached] = useState(false);
+  const [scrollPubSub] = useState(() => pubSubFactory<ScrollTopics, ScrollTopicUnion>({ publishSynchronous: true }));
+  const [isScrollBottomReached, setIsScrollBottomReached] = useState(true);
 
-  // If there is no area to scroll, it is considered as scroll bottom reached.
-  if (isScrollBottomReached === false && scrollRef.current && scrollRef.current.scrollHeight <= scrollRef.current.clientHeight) {
+  // SideEffect: Reset scroll state
+  useLayoutEffect(() => {
+    scrollPositionRef.current = 0;
     scrollDistanceFromBottomRef.current = 0;
     setIsScrollBottomReached(true);
-  }
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, deps);
 
   useLayoutEffect(() => {
     const unsubscribes: { remove(): void }[] = [];
@@ -59,7 +46,10 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto') {
     unsubscribes.push(
       scrollPubSub.subscribe('scrollToBottom', ({ resolve, animated }) => {
         runCallback(() => {
-          if (!scrollRef.current) return;
+          if (!scrollRef.current) {
+            if (resolve) resolve();
+            return;
+          }
 
           if (scrollRef.current.scroll) {
             scrollRef.current.scroll({ top: scrollRef.current.scrollHeight, behavior: getScrollBehavior(behavior, animated) });
@@ -84,7 +74,7 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto') {
 
           if (scrollRef.current.scroll) {
             scrollRef.current.scroll({ top, behavior: getScrollBehavior(behavior, animated) });
-          } else {
+          } else if (typeof top === 'number') {
             scrollRef.current.scrollTop = top;
           }
 
@@ -102,27 +92,27 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto') {
     };
   }, [behavior]);
 
-  // Update data by scroll events
-  useOnScrollPositionChangeDetectorWithRef(scrollRef, {
-    onReachedTop({ distanceFromBottom }) {
-      setIsScrollBottomReached(false);
-      scrollDistanceFromBottomRef.current = distanceFromBottom;
-    },
-    onInBetween({ distanceFromBottom }) {
-      setIsScrollBottomReached(false);
-      scrollDistanceFromBottomRef.current = distanceFromBottom;
-    },
-    onReachedBottom({ distanceFromBottom }) {
-      setIsScrollBottomReached(true);
-      scrollDistanceFromBottomRef.current = distanceFromBottom;
-    },
-  });
-
   return {
     scrollRef,
     scrollPubSub,
     isScrollBottomReached,
     setIsScrollBottomReached,
     scrollDistanceFromBottomRef,
+    scrollPositionRef,
   };
+}
+
+function runCallback(callback: () => void, lazy = true) {
+  if (lazy) {
+    setTimeout(() => {
+      callback();
+    });
+  } else {
+    callback();
+  }
+}
+
+function getScrollBehavior(behavior: 'smooth' | 'auto', animated?: boolean) {
+  if (typeof animated === 'boolean') return animated ? 'smooth' : 'auto';
+  return behavior;
 }

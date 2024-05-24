@@ -28,7 +28,7 @@ export default function DummyStream({
   currentChannel,
 }: Props): ReactElement {
   const streamInfo = useMemo(() => {
-    let channelMeta: ChannelMeta;
+    let channelMeta: ChannelMeta | null;
     try {
       channelMeta = JSON.parse(currentChannel.data);
     } catch (error) {

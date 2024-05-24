@@ -27,7 +27,7 @@ const colorLog = (level: LogLevel): string => {
 
 interface PrintLogProps {
   level: LogLevel;
-  title: string;
+  title?: string;
   description?: string;
   payload?: unknown[];
 }

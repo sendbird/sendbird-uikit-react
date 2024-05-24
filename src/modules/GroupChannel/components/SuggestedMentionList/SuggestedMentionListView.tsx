@@ -12,6 +12,7 @@ import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, USER_MENTION_TEMP_CH
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import uuidv4 from '../../../../utils/uuid';
 import { fetchMembersFromChannel, fetchMembersFromQuery } from './utils';
+import { classnames } from '../../../../utils/utils';
 
 export interface SuggestedMentionListViewProps {
   className?: string;
@@ -50,14 +51,14 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
   const currentUserId = stores?.sdkStore?.sdk?.currentUser?.userId || '';
   const scrollRef = useRef(null);
   const { stringSet } = useLocalization();
-  const [timer, setTimer] = useState(null);
-  const [searchString, setSearchString] = useState('');
+  const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+  const [searchString, setSearchString] = useState<string>('');
   const [lastSearchString, setLastSearchString] = useState('');
-  const [currentFocusedMember, setCurrentFocusedMember] = useState<User>(null);
+  const [currentFocusedMember, setCurrentFocusedMember] = useState<User | null>(null);
   const [currentMemberList, setCurrentMemberList] = useState<Member[]>([]);
 
   useEffect(() => {
-    clearTimeout(timer);
+    clearTimeout(timer ?? undefined);
     setTimer(
       setTimeout(() => {
         setSearchString(targetNickname);
@@ -67,22 +68,22 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
 
   useEffect(() => {
     if (inputEvent?.key === MessageInputKeys.Enter) {
-      if (currentMemberList.length > 0) {
-        onUserItemClick(currentFocusedMember);
+      if (currentFocusedMember && currentMemberList.length > 0) {
+        onUserItemClick?.(currentFocusedMember);
       }
     }
     if (inputEvent?.key === MessageInputKeys.ArrowUp) {
       const currentUserIndex = currentMemberList.findIndex((member) => member?.userId === currentFocusedMember?.userId);
       if (0 < currentUserIndex) {
         setCurrentFocusedMember(currentMemberList[currentUserIndex - 1]);
-        onFocusItemChange(currentMemberList[currentUserIndex - 1]);
+        onFocusItemChange?.(currentMemberList[currentUserIndex - 1]);
       }
     }
     if (inputEvent?.key === MessageInputKeys.ArrowDown) {
       const currentUserIndex = currentMemberList.findIndex((member) => member?.userId === currentFocusedMember?.userId);
       if (currentUserIndex < currentMemberList.length - 1) {
         setCurrentFocusedMember(currentMemberList[currentUserIndex + 1]);
-        onFocusItemChange(currentMemberList[currentUserIndex + 1]);
+        onFocusItemChange?.(currentMemberList[currentUserIndex + 1]);
       }
     }
   }, [inputEvent]);
@@ -108,7 +109,7 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
           setCurrentFocusedMember(suggestingMembers[0]);
         }
         setLastSearchString(searchString);
-        onFetchUsers(suggestingMembers);
+        onFetchUsers?.(suggestingMembers);
         setCurrentMemberList(suggestingMembers);
       })
       .catch((error) => {
@@ -133,7 +134,12 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
   }
 
   return (
-    <div className={`sendbird-mention-suggest-list ${className}`} key="sendbird-mention-suggest-list" ref={scrollRef}>
+    <div
+      className={classnames('sendbird-mention-suggest-list', className)}
+      data-testid="sendbird-mention-suggest-list"
+      key="sendbird-mention-suggest-list"
+      ref={scrollRef}
+    >
       {ableAddMention
         && currentMemberList?.map((member) => (
           <SuggestedUserMentionItem
@@ -142,7 +148,7 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
             isFocused={member?.userId === currentFocusedMember?.userId}
             parentScrollRef={scrollRef}
             onClick={({ member }) => {
-              onUserItemClick(member);
+              onUserItemClick?.(member);
             }}
             onMouseOver={({ member }) => {
               setCurrentFocusedMember(member);

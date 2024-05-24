@@ -68,7 +68,7 @@ describe('Global-utils: verify message type util functions', () => {
     expect(isAdminMessage({ isAdminMessage: () => true } as AdminMessage)).toBe(true);
     expect(isAdminMessage({ messageType: 'admin' } as AdminMessage)).toBe(true);
     expect(isMultipleFilesMessage({ isMultipleFilesMessage: () => true } as MultipleFilesMessage)).toBe(true);
-    expect(isMultipleFilesMessage({ messageType: 'file', fileInfoList: [] } as MultipleFilesMessage)).toBe(true);
+    expect(isMultipleFilesMessage({ messageType: 'file', fileInfoList: [] } as unknown as MultipleFilesMessage)).toBe(true);
   });
 
   it('should refer to the method first rather than messageType', () => {

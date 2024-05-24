@@ -59,7 +59,7 @@ export default function Streaming({
 }: Props): ReactElement {
   const [showSettings, setShowSettings] = useState(false);
   const [showPanel, setShowPanel] = useState(true);
-  const [currentChannel, setCurrentChannel] = useState<OpenChannel>(null);
+  const [currentChannel, setCurrentChannel] = useState<OpenChannel | null>(null);
   const currentChannelUrl = currentChannel ? currentChannel.url : '';
   return (
     <Sendbird

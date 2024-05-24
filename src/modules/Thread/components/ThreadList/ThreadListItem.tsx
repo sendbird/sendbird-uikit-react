@@ -18,7 +18,9 @@ import { Role } from '../../../../lib/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 import { SendableMessageType } from '../../../../utils';
+import { User } from '@sendbird/chat';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
+import { classnames } from '../../../../utils/utils';
 
 export interface ThreadListItemProps {
   className?: string;
@@ -70,7 +72,7 @@ export default function ThreadListItem({
   const replyType = getCaseResolvedReplyType(groupChannel.replyType).upperCase;
 
   // Move to message
-  const messageScrollRef = useRef(null);
+  const messageScrollRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     if (openingMessage?.messageId === message?.messageId && messageScrollRef?.current) {
       messageScrollRef.current?.scrollIntoView({ block: 'center', inline: 'center' });
@@ -85,11 +87,11 @@ export default function ThreadListItem({
   // mention
   const editMessageInputRef = useRef(null);
   const [mentionNickname, setMentionNickname] = useState('');
-  const [mentionedUsers, setMentionedUsers] = useState([]);
-  const [mentionedUserIds, setMentionedUserIds] = useState([]);
-  const [messageInputEvent, setMessageInputEvent] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState([]);
+  const [mentionedUsers, setMentionedUsers] = useState<User[]>([]);
+  const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
+  const [messageInputEvent, setMessageInputEvent] = useState<React.KeyboardEvent<HTMLDivElement> | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [mentionSuggestedUsers, setMentionSuggestedUsers] = useState<User[]>([]);
   const displaySuggestedMentionList = isOnline
     && isMentionEnabled
     && mentionNickname.length > 0
@@ -132,7 +134,7 @@ export default function ThreadListItem({
           displaySuggestedMentionList && (
             <SuggestedMentionList
               targetNickname={mentionNickname}
-              inputEvent={messageInputEvent}
+              inputEvent={messageInputEvent ?? undefined}
               // renderUserMentionItem={renderUserMentionItem}
               onUserItemClick={(user) => {
                 if (user) {
@@ -212,7 +214,8 @@ export default function ThreadListItem({
   return (
     <div
       ref={messageScrollRef}
-      className={`sendbird-thread-list-item ${className}`}
+      className={classnames('sendbird-thread-list-item', className)}
+      data-testid="sendbird-thread-list-item"
     >
       {/* date separator */}
       {
@@ -262,9 +265,8 @@ export default function ThreadListItem({
             setShowFileViewer(false);
           }}
           onDownloadClick={async (e) => {
-            if (!onBeforeDownloadFileMessage) {
-              return null;
-            }
+            if (!onBeforeDownloadFileMessage) return;
+
             try {
               const allowDownload = await onBeforeDownloadFileMessage({ message: message as FileMessage | MultipleFilesMessage });
               if (!allowDownload) {

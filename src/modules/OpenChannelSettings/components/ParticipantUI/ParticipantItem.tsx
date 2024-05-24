@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import type { Participant } from '@sendbird/chat';
+import { Participant, type User } from '@sendbird/chat';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
@@ -27,7 +27,7 @@ interface ActionProps {
   actionRef: React.RefObject<HTMLInputElement>;
 }
 interface UserListItemProps {
-  user: Participant;
+  user: User | Participant;
   currentUser?: string;
   isOperator?: boolean;
   action?(props: ActionProps): ReactElement;
@@ -61,14 +61,14 @@ export const UserListItem: React.FC<UserListItemProps> = ({
                 width={24}
                 height={24}
               />
-              {user?.isMuted ? (<MutedAvatarOverlay />) : ''}
+              {user instanceof Participant && user.isMuted ? (<MutedAvatarOverlay />) : ''}
             </>
           )}
           menuItems={(closeDropdown) => (
             renderUserProfile
               ? renderUserProfile({
                 user: user,
-                currentUserId: currentUser,
+                currentUserId: currentUser ?? '',
                 close: closeDropdown,
                 avatarRef,
               })
@@ -155,7 +155,7 @@ export default function ParticipantsAccordion(props: ParticipantsAccordionProps)
   const { channel } = useOpenChannelSettingsContext();
   const globalState = useSendbirdStateContext();
   const currentUserId = globalState?.config?.userId;
-  const [participants, setParticipants] = useState([]);
+  const [participants, setParticipants] = useState<User[]>([]);
   const [showMoreModal, setShowMoreModal] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
 

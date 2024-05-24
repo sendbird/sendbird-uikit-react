@@ -4,6 +4,7 @@ exports[`ui/Word should do a snapshot test of the Word DOM 1`] = `
 <DocumentFragment>
   <span
     class="sendbird-word"
+    data-testid="sendbird-ui-word"
   >
     hello
     <div
@@ -11,10 +12,7 @@ exports[`ui/Word should do a snapshot test of the Word DOM 1`] = `
       style="display: inline;"
     >
       <a
-        class="
-            sendbird-word__mention
-            
-          "
+        class="sendbird-word__mention"
         data-nickname="Hoon Baek"
         data-sb-mention="true"
         data-userid="hoon"

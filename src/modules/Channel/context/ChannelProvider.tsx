@@ -129,25 +129,25 @@ export type SendMessageType = (params: SendMessageParams) => void;
 export type UpdateMessageType = (props: UpdateMessageParams, callback?: (err: SendbirdError, message: UserMessage) => void) => void;
 
 export interface ChannelProviderInterface extends ChannelContextProps, MessageStoreInterface {
-  scrollToMessage?(createdAt: number, messageId: number): void;
+  scrollToMessage(createdAt: number, messageId: number): void;
   isScrolled?: boolean;
   setIsScrolled?: React.Dispatch<React.SetStateAction<boolean>>;
   messageActionTypes: typeof channelActions;
   messagesDispatcher: React.Dispatch<ChannelActionTypes>;
   quoteMessage: SendableMessageType | null;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
-  initialTimeStamp: number;
-  setInitialTimeStamp: React.Dispatch<React.SetStateAction<number>>;
-  animatedMessageId: number;
-  highLightedMessageId: number;
+  initialTimeStamp: number | null | undefined;
+  setInitialTimeStamp: React.Dispatch<React.SetStateAction<number | null | undefined>>;
+  animatedMessageId: number | null;
+  highLightedMessageId: number | null | undefined;
   nicknamesMap: Map<string, string>;
   emojiAllMap: any;
   onScrollCallback: (callback: () => void) => void;
   onScrollDownCallback: (callback: (param: [BaseMessage[], null] | [null, unknown]) => void) => void;
-  scrollRef: React.MutableRefObject<HTMLDivElement>;
-  setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
-  setHighLightedMessageId: React.Dispatch<React.SetStateAction<number>>;
-  messageInputRef: React.MutableRefObject<HTMLInputElement>,
+  scrollRef: React.RefObject<HTMLDivElement>;
+  setAnimatedMessageId: React.Dispatch<React.SetStateAction<number | null>>;
+  setHighLightedMessageId: React.Dispatch<React.SetStateAction<number | null | undefined>>;
+  messageInputRef: React.RefObject<HTMLInputElement>,
   deleteMessage(message: CoreMessageType): Promise<void>,
   updateMessage: UpdateMessageType,
   resendMessage(failedMessage: SendableMessageType): void,
@@ -160,9 +160,9 @@ export interface ChannelProviderInterface extends ChannelContextProps, MessageSt
   renderUserMentionItem?: (props: { user: User }) => JSX.Element;
 }
 
-const ChannelContext = React.createContext<ChannelProviderInterface | null>(undefined);
+const ChannelContext = React.createContext<ChannelProviderInterface | null>(null);
 
-const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextProps) => {
+const ChannelProvider = (props: ChannelContextProps) => {
   const {
     channelUrl,
     children,
@@ -220,11 +220,11 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
     setHighLightedMessageId(highlightedMessage);
   }, [highlightedMessage]);
   const userFilledMessageListQuery = queries?.messageListParams;
-  const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
+  const [quoteMessage, setQuoteMessage] = useState<SendableMessageType | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const [messagesStore, messagesDispatcher] = useReducer(messagesReducer, messagesInitialState);
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const isMentionEnabled = groupChannel.enableMention;
 
@@ -519,8 +519,11 @@ const ChannelProvider: React.FC<ChannelContextProps> = (props: ChannelContextPro
   );
 };
 
-export type UseChannelType = () => ChannelProviderInterface;
-const useChannelContext: UseChannelType = () => React.useContext(ChannelContext);
+const useChannelContext = () => {
+  const context = React.useContext(ChannelContext);
+  if (!context) throw new Error('ChannelContext not found. Use within the Channel module.');
+  return context;
+};
 
 export {
   ChannelProvider,

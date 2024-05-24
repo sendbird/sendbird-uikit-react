@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { SendbirdError, User } from '@sendbird/chat';
 import {
+  type FileMessage,
   FileMessageCreateParams,
+  type MultipleFilesMessage,
   MultipleFilesMessageCreateParams,
   ReplyType as ChatReplyType,
   UserMessageCreateParams,
   UserMessageUpdateParams,
-  type FileMessage,
-  type MultipleFilesMessage,
 } from '@sendbird/chat/message';
 import type { GroupChannel, MessageCollectionParams, MessageFilterParams } from '@sendbird/chat/groupChannel';
 import { MessageFilter } from '@sendbird/chat/groupChannel';
@@ -21,20 +21,17 @@ import { RenderUserProfileProps, ReplyType } from '../../../types';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
 import { getMessageTopOffset, isContextMenuClosed } from './utils';
-import { useOnScrollPositionChangeDetectorWithRef } from '../../../hooks/useOnScrollReachedEndDetector';
 import { ScrollTopics, ScrollTopicUnion, useMessageListScroll } from './hooks/useMessageListScroll';
 import PUBSUB_TOPICS, { PubSubSendMessagePayload } from '../../../lib/pubSub/topics';
 import { PubSubTypes } from '../../../lib/pubSub';
 import { useMessageActions } from './hooks/useMessageActions';
-import { usePreventDuplicateRequest } from './hooks/usePreventDuplicateRequest';
 import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
-import { SCROLL_BUFFER } from '../../../utils/consts';
 
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
 type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
 type MessageActions = ReturnType<typeof useMessageActions>;
 type MessageListDataSourceWithoutActions = Omit<ReturnType<typeof useGroupChannelMessages>, keyof MessageActions | `_dangerous_${string}`>;
-export type OnBeforeDownloadFileMessageType = (params: { message: FileMessage | MultipleFilesMessage, index?: number }) => Promise<boolean>;
+export type OnBeforeDownloadFileMessageType = (params: { message: FileMessage | MultipleFilesMessage; index?: number }) => Promise<boolean>;
 
 interface ContextBaseType {
   // Required
@@ -85,15 +82,16 @@ export interface GroupChannelContextType extends ContextBaseType, MessageListDat
   fetchChannelError: SendbirdError | null;
   nicknamesMap: Map<string, string>;
 
-  scrollRef: React.MutableRefObject<HTMLDivElement>;
+  scrollRef: React.RefObject<HTMLDivElement>;
   scrollDistanceFromBottomRef: React.MutableRefObject<number>;
+  scrollPositionRef: React.MutableRefObject<number>;
   scrollPubSub: PubSubTypes<ScrollTopics, ScrollTopicUnion>;
-  messageInputRef: React.MutableRefObject<HTMLDivElement>;
+  messageInputRef: React.RefObject<HTMLDivElement>;
 
   quoteMessage: SendableMessageType | null;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
-  animatedMessageId: number;
-  setAnimatedMessageId: React.Dispatch<React.SetStateAction<number>>;
+  animatedMessageId: number | null;
+  setAnimatedMessageId: React.Dispatch<React.SetStateAction<number | null>>;
   isScrollBottomReached: boolean;
   setIsScrollBottomReached: React.Dispatch<React.SetStateAction<boolean>>;
 
@@ -108,7 +106,7 @@ export interface GroupChannelProviderProps
   children?: React.ReactNode;
 }
 
-export const GroupChannelContext = React.createContext<GroupChannelContextType>(null);
+export const GroupChannelContext = React.createContext<GroupChannelContextType | null>(null);
 export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const {
     channelUrl,
@@ -146,13 +144,13 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const { markAsReadScheduler, logger } = config;
 
   // State
-  const [quoteMessage, setQuoteMessage] = useState<SendableMessageType>(null);
+  const [quoteMessage, setQuoteMessage] = useState<SendableMessageType | null>(null);
   const [animatedMessageId, setAnimatedMessageId] = useState<number | null>(null);
   const [currentChannel, setCurrentChannel] = useState<GroupChannel | null>(null);
-  const [fetchChannelError, setFetchChannelError] = useState<SendbirdError>(null);
+  const [fetchChannelError, setFetchChannelError] = useState<SendbirdError | null>(null);
 
   // Ref
-  const { scrollRef, scrollPubSub, scrollDistanceFromBottomRef, isScrollBottomReached, setIsScrollBottomReached } = useMessageListScroll(scrollBehavior);
+  const { scrollRef, scrollPubSub, scrollDistanceFromBottomRef, isScrollBottomReached, setIsScrollBottomReached, scrollPositionRef } = useMessageListScroll(scrollBehavior, [currentChannel?.url]);
   const messageInputRef = useRef(null);
 
   const toggleReaction = useToggleReactionCallback(currentChannel, logger);
@@ -174,20 +172,18 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     [currentChannel?.members],
   );
 
-  const preventDuplicateRequest = usePreventDuplicateRequest();
-  const messageDataSource = useGroupChannelMessages(sdkStore.sdk, currentChannel, {
+  const messageDataSource = useGroupChannelMessages(sdkStore.sdk, currentChannel!, {
     startingPoint,
     replyType: chatReplyType,
-    collectionCreator: getCollectionCreator(currentChannel, messageListQueryParams),
+    collectionCreator: getCollectionCreator(currentChannel!, messageListQueryParams),
     shouldCountNewMessages: () => !isScrollBottomReached,
     markAsRead: (channels) => {
-      // isScrollBottomReached is a state that is updated after the render is completed.
-      // So, we use scrollDistanceFromBottomRef to check quickly if the scroll is at the bottom.
-      if (!disableMarkAsRead && scrollDistanceFromBottomRef.current <= SCROLL_BUFFER) {
+      if (isScrollBottomReached && !disableMarkAsRead) {
         channels.forEach((it) => markAsReadScheduler.push(it));
       }
     },
     onMessagesReceived: () => {
+      // FIXME: onMessagesReceived called with onApiResult
       if (isScrollBottomReached && isContextMenuClosed()) {
         scrollPubSub.publish('scrollToBottom', {});
       }
@@ -201,59 +197,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
       setFetchChannelError(null);
     },
     onChannelUpdated: (channel) => setCurrentChannel(channel),
-    logger,
-  });
-
-  useOnScrollPositionChangeDetectorWithRef(scrollRef, {
-    async onReachedTop() {
-      preventDuplicateRequest.lock();
-
-      await preventDuplicateRequest.run(async () => {
-        if (!messageDataSource.hasPrevious()) return;
-
-        const prevViewInfo = { scrollTop: scrollRef.current.scrollTop, scrollHeight: scrollRef.current.scrollHeight };
-        await messageDataSource.loadPrevious();
-
-        // FIXME: We need a good way to detect right after the rendering of the screen instead of using setTimeout.
-        setTimeout(() => {
-          const nextViewInfo = { scrollHeight: scrollRef.current.scrollHeight };
-          const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
-
-          if (viewUpdated) {
-            const bottomOffset = prevViewInfo.scrollHeight - prevViewInfo.scrollTop;
-            scrollPubSub.publish('scroll', { top: nextViewInfo.scrollHeight - bottomOffset, lazy: false, animated: false });
-          }
-        });
-      });
-
-      preventDuplicateRequest.release();
-    },
-    async onReachedBottom() {
-      preventDuplicateRequest.lock();
-
-      await preventDuplicateRequest.run(async () => {
-        if (!messageDataSource.hasNext()) return;
-
-        const prevViewInfo = { scrollTop: scrollRef.current.scrollTop, scrollHeight: scrollRef.current.scrollHeight };
-        await messageDataSource.loadNext();
-
-        setTimeout(() => {
-          const nextViewInfo = { scrollHeight: scrollRef.current.scrollHeight };
-          const viewUpdated = prevViewInfo.scrollHeight < nextViewInfo.scrollHeight;
-
-          if (viewUpdated) {
-            scrollPubSub.publish('scroll', { top: prevViewInfo.scrollTop, lazy: false, animated: false });
-          }
-        });
-      });
-
-      preventDuplicateRequest.release();
-
-      if (currentChannel && !messageDataSource.hasNext()) {
-        messageDataSource.resetNewMessages();
-        if (!disableMarkAsRead) markAsReadScheduler.push(currentChannel);
-      }
-    },
+    logger: logger as any,
   });
 
   // SideEffect: Fetch and set to current channel by channelUrl prop.
@@ -265,7 +209,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
         setFetchChannelError(null);
       } catch (error) {
         setCurrentChannel(null);
-        setFetchChannelError(error);
+        setFetchChannelError(error as SendbirdError);
         logger?.error?.('GroupChannelProvider: error when fetching channel', error);
       } finally {
         // Reset states when channel changes
@@ -280,18 +224,11 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   //  - On messages sent from the thread
   useAsyncLayoutEffect(async () => {
     if (messageDataSource.initialized) {
-      // it prevents message load from previous/next before scroll to bottom finished.
-      preventDuplicateRequest.lock();
-      await preventDuplicateRequest.run(() => {
-        return new Promise<void>((resolve) => {
-          scrollPubSub.publish('scrollToBottom', { resolve, animated: false });
-        });
-      });
-      preventDuplicateRequest.release();
+      scrollPubSub.publish('scrollToBottom', {});
     }
 
     const onSentMessageFromOtherModule = (data: PubSubSendMessagePayload) => {
-      if (data.channel.url === channelUrl) scrollPubSub.publish('scrollToBottom', {});
+      if (data.channel.url === currentChannel?.url) scrollPubSub.publish('scrollToBottom', {});
     };
     const subscribes = [
       config.pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, onSentMessageFromOtherModule),
@@ -299,9 +236,8 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     ];
     return () => {
       subscribes.forEach((subscribe) => subscribe.remove());
-      scrollPubSub.publish('scrollToBottom', { animated: false });
     };
-  }, [messageDataSource.initialized, channelUrl]);
+  }, [messageDataSource.initialized, currentChannel?.url]);
 
   // SideEffect: Reset MessageCollection with startingPoint prop.
   useEffect(() => {
@@ -419,6 +355,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
 
         scrollRef,
         scrollDistanceFromBottomRef,
+        scrollPositionRef,
         scrollPubSub,
         messageInputRef,
 
@@ -455,7 +392,7 @@ export const useGroupChannelContext = () => {
 };
 
 function getCollectionCreator(groupChannel: GroupChannel, messageListQueryParams?: MessageListQueryParamsType) {
-  return (defaultParams: MessageListQueryParamsType) => {
+  return (defaultParams?: MessageListQueryParamsType) => {
     const params = { ...defaultParams, prevResultLimit: 30, nextResultLimit: 30, ...messageListQueryParams };
     return groupChannel.createMessageCollection({
       ...params,

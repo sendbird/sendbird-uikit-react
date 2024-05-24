@@ -8,7 +8,7 @@ export function changeTypeToClassName(type: ButtonTypes): string {
     case ButtonTypes.DISABLED: return 'sendbird-button--disabled';
     case ButtonTypes.WARNING: return 'sendbird-button--warning';
 
-    default: return null;
+    default: return '';
   }
 }
 
@@ -16,6 +16,6 @@ export function changeSizeToClassName(size: ButtonSizes): string {
   switch (size) {
     case ButtonSizes.BIG: return 'sendbird-button--big';
     case ButtonSizes.SMALL: return 'sendbird-button--small';
-    default: return null;
+    default: return '';
   }
 }

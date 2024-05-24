@@ -25,6 +25,7 @@ export const AddReactionBadgeItem = ({
   return (
     <div
       className="sendbird-emoji-reactions__add-reaction-badge"
+      data-testid="sendbird-emoji-reactions__add-reaction-badge"
       {...onlyClick}
     >
       <ReactionBadge

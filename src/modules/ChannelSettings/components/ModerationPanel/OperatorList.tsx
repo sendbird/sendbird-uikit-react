@@ -17,9 +17,10 @@ import OperatorsModal from './OperatorsModal';
 import AddOperatorsModal from './AddOperatorsModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
+import { User } from '@sendbird/chat';
 
 export const OperatorList = (): ReactElement => {
-  const [operators, setOperators] = useState([]);
+  const [operators, setOperators] = useState<User[]>([]);
   const [showMore, setShowMore] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [hasNext, setHasNext] = useState(false);
@@ -109,7 +110,7 @@ export const OperatorList = (): ReactElement => {
                           });
                           closeDropdown();
                         }}
-                        dataSbId="channel_setting_operator_context_menu_unregister_operator"
+                        testID="channel_setting_operator_context_menu_unregister_operator"
                       >
                         {stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
                       </MenuItem>

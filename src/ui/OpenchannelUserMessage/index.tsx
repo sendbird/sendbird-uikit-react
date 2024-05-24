@@ -65,10 +65,10 @@ export default function OpenchannelUserMessage({
   // hooks
   const { stringSet, dateLocale } = useLocalization();
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
-  const messageRef = useRef(null);
-  const avatarRef = useRef(null);
-  const contextMenuRef = useRef(null);
-  const mobileMenuRef = useRef(null);
+  const messageRef = useRef<HTMLDivElement>();
+  const avatarRef = useRef<HTMLDivElement>();
+  const contextMenuRef = useRef<HTMLDivElement>();
+  const mobileMenuRef = useRef<HTMLDivElement>();
   const [contextStyle, setContextStyle] = useState({});
   const [contextMenu, setContextMenu] = useState(false);
 
@@ -80,7 +80,7 @@ export default function OpenchannelUserMessage({
 
   // place context menu top depending clientHeight of message component
   useEffect(() => {
-    if (messageRef?.current?.clientHeight > 36) {
+    if (messageRef?.current?.clientHeight && messageRef.current.clientHeight > 36) {
       setContextStyle({ top: '8px ' });
     } else {
       setContextStyle({ top: '2px' });
@@ -284,7 +284,7 @@ export default function OpenchannelUserMessage({
                             copyToClipboard(message.message);
                             closeDropdown();
                           }}
-                          dataSbId="open_channel_user_message_menu_copy"
+                          testID="open_channel_user_message_menu_copy"
                         >
                           {stringSet.CONTEXT_MENU_DROPDOWN__COPY}
                         </MenuItem>
@@ -301,7 +301,7 @@ export default function OpenchannelUserMessage({
                             showEdit(true);
                             closeDropdown();
                           }}
-                          dataSbId="open_channel_user_message_menu_edit"
+                          testID="open_channel_user_message_menu_edit"
                         >
                           {stringSet.CONTEXT_MENU_DROPDOWN__EDIT}
                         </MenuItem>
@@ -315,7 +315,7 @@ export default function OpenchannelUserMessage({
                             resendMessage(message);
                             closeDropdown();
                           }}
-                          dataSbId="open_channel_user_message_menu_resend"
+                          testID="open_channel_user_message_menu_resend"
                         >
                           {stringSet.CONTEXT_MENU_DROPDOWN__RESEND}
                         </MenuItem>
@@ -332,7 +332,7 @@ export default function OpenchannelUserMessage({
                             showRemove(true);
                             closeDropdown();
                           }}
-                          dataSbId="open_channel_user_message_menu_delete"
+                          testID="open_channel_user_message_menu_delete"
                         >
                           {stringSet.CONTEXT_MENU_DROPDOWN__DELETE}
                         </MenuItem>

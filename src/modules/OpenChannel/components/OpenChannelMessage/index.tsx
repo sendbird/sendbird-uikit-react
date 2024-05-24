@@ -50,7 +50,7 @@ export default function OpenChannelMessage(
   const currentUserId = globalState?.config?.userId;
   const isOgMessageEnabledInOpenChannel = globalState.config.openChannel.enableOgtag;
 
-  let sender: User = null;
+  let sender: User | undefined;
   if (message?.messageType !== 'admin') {
     sender = (message as SendableMessageType)?.sender;
   }
@@ -73,7 +73,7 @@ export default function OpenChannelMessage(
 
   if (renderMessage) {
     return (
-      <div className="sendbird-msg-hoc sendbird-msg--scroll-ref">
+      <div className="sendbird-msg-hoc sendbird-msg--scroll-ref" data-testid="sendbird-message-hoc">
         {renderMessage({ message, chainTop, chainBottom })}
       </div>
     );
@@ -99,7 +99,7 @@ export default function OpenChannelMessage(
   }
 
   return (
-    <div className="sendbird-msg-hoc sendbird-msg--scroll-ref">
+    <div className="sendbird-msg-hoc sendbird-msg--scroll-ref" data-testid="sendbird-message-hoc">
       <>
         {/* date-separator */}
         {hasSeparator && message?.createdAt && (

@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react';
-import { getClassName } from '../../utils';
 import Loader from '../Loader';
 import Icon, { IconColors, IconTypes } from '../Icon';
+import { classnames } from '../../utils/utils';
 
 const TEMPLATE_LOADING_SPINNER_SIZE = '40px';
 
 export interface LoadingTemplateMessageItemBodyProps {
-  className?: string | Array<string>;
+  className?: string;
   isByMe?: boolean;
 }
 export function LoadingTemplateMessageItemBody({
@@ -14,15 +14,10 @@ export function LoadingTemplateMessageItemBody({
   isByMe,
 }: LoadingTemplateMessageItemBodyProps): ReactElement {
   return (
-    <div
-      className={getClassName([
-        className,
-        isByMe ? 'outgoing' : 'incoming',
-        'sendbird-template-loading-message-item-body',
-      ])}
-    >
+    <div className={classnames(className, isByMe ? 'outgoing' : 'incoming', 'sendbird-template-loading-message-item-body')}>
       <Loader
         className="sendbird-message-status__icon"
+        testID="sendbird-message-status-icon"
         width={TEMPLATE_LOADING_SPINNER_SIZE}
         height={TEMPLATE_LOADING_SPINNER_SIZE}
       >

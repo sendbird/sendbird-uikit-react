@@ -65,7 +65,7 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
                 height="24px"
                 width="24px"
                 onClick={() => {
-                  onCloseClick();
+                  onCloseClick?.();
                 }}
               />
             </div>

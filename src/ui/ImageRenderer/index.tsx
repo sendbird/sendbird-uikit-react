@@ -6,7 +6,7 @@ import { useDynamicSideLength } from './useDynamicSideLength';
 import { useLazyImageLoader } from '../../modules/Channel/components/Message/hooks/useLazyImageLoader';
 import { noop } from '../../utils/utils';
 
-export function getBorderRadiusForImageRenderer(circle = false, borderRadius: string | number = null): string {
+export function getBorderRadiusForImageRenderer(circle = false, borderRadius: string | number | null = null): string | undefined {
   return circle ? '50%' : numberToPx(borderRadius);
 }
 
@@ -24,14 +24,14 @@ export interface ImageRendererProps {
   className?: string | Array<string>;
   url: string;
   alt?: string;
-  width?: string | number;
-  maxSideLength?: string;
-  height?: string | number;
+  width?: string | number | null;
+  maxSideLength?: string | null;
+  height?: string | number | null;
   circle?: boolean;
   fixedSize?: boolean;
-  placeHolder?: ((props: { style: Record<string, string | number> }) => ReactElement) | ReactElement;
-  defaultComponent?: (() => ReactElement) | ReactElement;
-  borderRadius?: string | number;
+  placeHolder?: ((props: { style: Record<string, string | number> }) => ReactElement) | ReactElement | null;
+  defaultComponent?: (() => ReactElement) | ReactElement | null;
+  borderRadius?: string | number | null;
   onLoad?: () => void;
   onError?: () => void;
   shadeOnHover?: boolean;
@@ -164,8 +164,7 @@ const ImageRenderer = ({
           }}
         />}
       </div>
-    )
-  );
+    )) as React.ReactElement;
 };
 
 // Image is loaded as a background-image, but this component serves as a hidden component to receive events indicating whether the image has actually been loaded.

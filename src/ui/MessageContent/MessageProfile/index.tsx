@@ -10,6 +10,7 @@ import Avatar from '../../Avatar';
 import UserProfile from '../../UserProfile';
 import { MessageContentProps } from '../index';
 import { UserProfileContext } from '../../../lib/UserProfileContext';
+import { classnames } from '../../../utils/utils';
 
 export interface MessageProfileProps extends MessageContentProps {
   isByMe?: boolean;
@@ -19,7 +20,7 @@ export interface MessageProfileProps extends MessageContentProps {
 
 export default function MessageProfile(
   props: MessageProfileProps,
-): ReactElement {
+): ReactElement | null {
   const {
     message,
     channel,
@@ -41,8 +42,7 @@ export default function MessageProfile(
     <ContextMenu
       menuTrigger={(toggleDropdown: () => void): ReactElement => (
         <Avatar
-          className={`sendbird-message-content__left__avatar ${displayThreadReplies ? 'use-thread-replies' : ''
-          }`} // @ts-ignore
+          className={classnames('sendbird-message-content__left__avatar', displayThreadReplies && 'use-thread-replies')}
           src={
             channel?.members?.find(
               (member) => member?.userId === message.sender.userId,

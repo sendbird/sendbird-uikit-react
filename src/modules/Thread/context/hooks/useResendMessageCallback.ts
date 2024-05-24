@@ -15,7 +15,7 @@ import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';
 
 interface DynamicProps {
-  currentChannel: GroupChannel;
+  currentChannel: GroupChannel | null;
 }
 interface StaticProps {
   logger: Logger;
@@ -149,7 +149,7 @@ export default function useResendMessageCallback({
                 publishingModules: [PublishingModuleType.THREAD],
               });
             })
-            .onFailed((error: Error, message: MultipleFilesMessage) => {
+            .onFailed((error, message) => {
               logger.warning('Thread | useResendMessageCallback: Resending MFM failed.', error);
               threadDispatcher({
                 type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,

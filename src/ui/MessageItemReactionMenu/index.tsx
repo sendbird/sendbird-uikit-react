@@ -29,7 +29,7 @@ export function MessageEmojiMenu({
   emojiContainer,
   toggleReaction,
   setSupposedHover,
-}: MessageEmojiMenuProps): ReactElement {
+}: MessageEmojiMenuProps): ReactElement | null {
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -39,7 +39,7 @@ export function MessageEmojiMenu({
 
   return (
     <div
-      className={getClassName([className, 'sendbird-message-item-reaction-menu'])}
+      className={getClassName([className ?? '', 'sendbird-message-item-reaction-menu'])}
       ref={containerRef}
     >
       <ContextMenu
@@ -51,14 +51,15 @@ export function MessageEmojiMenu({
             height="32px"
             onClick={(): void => {
               toggleDropdown();
-              setSupposedHover(true);
+              setSupposedHover?.(true);
             }}
             onBlur={(): void => {
-              setSupposedHover(false);
+              setSupposedHover?.(false);
             }}
           >
             <Icon
               className="sendbird-message-item-reaction-menu__trigger__icon"
+              testID="sendbird-message-item-reaction-menu__trigger__icon"
               type={IconTypes.EMOJI_MORE}
               fillColor={IconColors.CONTENT_INVERSE}
               width="24px"
@@ -69,7 +70,7 @@ export function MessageEmojiMenu({
         menuItems={(close: () => void): ReactElement => {
           const closeDropdown = (): void => {
             close();
-            setSupposedHover(false);
+            setSupposedHover?.(false);
           };
           return (
             <EmojiListItems
@@ -78,7 +79,7 @@ export function MessageEmojiMenu({
               closeDropdown={closeDropdown}
               spaceFromTrigger={spaceFromTrigger}
             >
-              {getEmojiListAll(emojiContainer).map((emoji: Emoji): ReactElement => {
+              {emojiContainer && getEmojiListAll(emojiContainer).map((emoji: Emoji): ReactElement => {
                 const isReacted: boolean = message?.reactions
                   ?.find((reaction: Reaction) => reaction.key === emoji.key)
                   ?.userIds
@@ -91,9 +92,9 @@ export function MessageEmojiMenu({
                     selected={isReacted}
                     onClick={() => {
                       closeDropdown();
-                      toggleReaction(message, emoji.key, isReacted);
+                      toggleReaction?.(message, emoji.key, isReacted);
                     }}
-                    dataSbId={`ui_emoji_reactions_menu_${emoji.key}`}
+                    testID={`ui_emoji_reactions_menu_${emoji.key}`}
                   >
                     <ImageRenderer
                       url={emoji.url}

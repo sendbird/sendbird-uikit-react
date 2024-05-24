@@ -19,7 +19,7 @@ export default function ImageGrid({
   return (
     <div className='sendbird-image-grid-wrap'>
       <div className={getClassName([
-        className,
+        className ?? '',
         'sendbird-image-grid',
         (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
       ])}>
