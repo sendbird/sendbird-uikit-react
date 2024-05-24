@@ -31,6 +31,7 @@ export const mockSdk = {
   updateCurrentUserInfo: jest.fn().mockImplementation((user) => Promise.resolve(user)),
   setSessionHandler: jest.fn(),
   addExtension: jest.fn(),
+  addSendbirdExtensions: jest.fn(),
   getUIKitConfiguration: jest.fn().mockImplementation(() => Promise.resolve({})),
 } as unknown as ConnectTypes['sdk'];
 

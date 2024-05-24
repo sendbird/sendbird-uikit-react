@@ -51,10 +51,8 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
       if (typeof breakpoint === 'boolean') {
         setIsMobile(breakpoint);
         if (breakpoint) {
-          logger?.info?.('MediaQueryProvider: isMobile: true');
           addClassNameToBody();
         } else {
-          logger?.info?.('MediaQueryProvider: isMobile: false');
           removeClassNameFromBody();
         }
       } else {
@@ -63,11 +61,9 @@ const MediaQueryProvider = (props: MediaQueryProviderProps): React.ReactElement 
         if (mq.matches) {
           setIsMobile(true);
           addClassNameToBody();
-          logger?.info?.('MediaQueryProvider: isMobile: true');
         } else {
           setIsMobile(false);
           removeClassNameFromBody();
-          logger?.info?.('MediaQueryProvider: isMobile: false');
         }
       }
     };
