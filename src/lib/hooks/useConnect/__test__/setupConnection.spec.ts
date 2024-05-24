@@ -185,7 +185,7 @@ describe('useConnect/setupConnection', () => {
   });
 });
 
-describe('useConnect/setupConnection/setUpParams', () => {
+describe('useConnect/setupConnection/initSDK', () => {
   it('should call init with correct appId', async () => {
     const setUpConnectionProps = generateSetUpConnectionParams();
     const { appId, customApiHost, customWebSocketHost } = setUpConnectionProps;
