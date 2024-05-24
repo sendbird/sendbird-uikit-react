@@ -80,11 +80,6 @@ export async function setUpConnection({
         .connect(userId, accessToken)
         .then((user) => onConnected(user))
         .catch(async (error) => {
-          if (sdk.isCacheEnabled && shouldClearCache(error)) {
-            logger.error?.(`SendbirdProvider | useConnect/setupConnection/connect clear cache [${error.code}/${error.message}]`);
-            await sdk.clearCachedData();
-          }
-
           // NOTE: The part that connects via the SDK must be callable directly by the customer.
           //  we should refactor this in next major version.
           if (shouldRetryWithValidSessionToken(error) && sessionHandler) {
@@ -98,7 +93,12 @@ export async function setUpConnection({
                 return onConnected(user);
               }
             } catch (error) {
-              return onConnectFailed(error);
+              // NOTE: Filter out the error from `onSessionTokenRequired`.
+              if (error instanceof SendbirdError) {
+                // connect in offline mode
+                // if (sdk.isCacheEnabled && sdk.currentUser) return onConnected(sdk.currentUser);
+                return onConnectFailed(error);
+              }
             }
           }
 
@@ -147,7 +147,12 @@ export async function setUpConnection({
         eventHandlers?.connection?.onConnected?.(user);
       };
 
-      const onConnectFailed = (e: SendbirdError) => {
+      const onConnectFailed = async (e: SendbirdError) => {
+        if (sdk.isCacheEnabled && shouldClearCache(e)) {
+          logger.error?.(`SendbirdProvider | useConnect/setupConnection/connect clear cache [${e.code}/${e.message}]`);
+          await sdk.clearCachedData();
+        }
+
         const errorMessage = getConnectSbError(e);
         logger.error?.(errorMessage, { e, appId, userId });
         userDispatcher({ type: RESET_USER });
