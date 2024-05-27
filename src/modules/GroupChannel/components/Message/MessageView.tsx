@@ -142,7 +142,11 @@ const MessageView = (props: MessageViewProps) => {
     renderUserMentionItem,
     renderMessage,
     renderMessageContent = (props: MessageContentProps) => <MessageContent {...props} />,
-    renderSuggestedReplies = (props: SuggestedRepliesProps) => <SuggestedReplies {...props} />,
+    renderSuggestedReplies = (props: SuggestedRepliesProps) => <SuggestedReplies
+      replyOptions={props.replyOptions}
+      onSendMessage={props.onSendMessage}
+      type={props.type}
+    />,
     renderCustomSeparator,
     renderEditInput,
     renderFileViewer,
