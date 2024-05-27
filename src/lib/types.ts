@@ -54,6 +54,7 @@ export interface SBUEventHandlers {
     onPressUserProfile?(member: User): void;
   },
   connection?: {
+    onConnected?(user: User): void;
     onFailed?(error: SendbirdError): void;
   },
   modal?: {
