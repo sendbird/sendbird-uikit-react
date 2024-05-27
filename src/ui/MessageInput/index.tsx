@@ -133,6 +133,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   } = props;
 
   const internalRef = (externalRef && 'current' in externalRef) ? externalRef : null;
+  const ghostInputRef = useRef<HTMLInputElement>(null);
 
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useLocalization();
@@ -404,8 +405,19 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
       const params = { message: messageText, mentionTemplate };
       onSendMessage(params);
       resetInput(internalRef);
-      // important: keeps the keyboard open -> must add test on refactor
-      textField.focus();
+
+      /**
+       * Note: contentEditable does not work as expected in mobile WebKit (Safari).
+       * @see https://github.com/sendbird/sendbird-uikit-react/pull/1108
+       */
+      if (isMobileIOS(navigator.userAgent)) {
+        if (ghostInputRef.current) ghostInputRef.current.focus();
+        requestAnimationFrame(() => textField.focus());
+      } else {
+        // important: keeps the keyboard open -> must add test on refactor
+        textField.focus();
+      }
+
       setIsInput(false);
       setHeight();
     }
@@ -436,6 +448,14 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
       disabled && 'sendbird-message-input-form__disabled',
     )}>
       <div className={classnames('sendbird-message-input', disabled && 'sendbird-message-input__disabled')} data-testid="sendbird-message-input">
+        {isMobileIOS(navigator.userAgent) && (
+          <input
+            id={'ghost-input-reset-ime-cjk'}
+            ref={ghostInputRef}
+            style={{ opacity: 0, padding: 0, margin: 0, height: 0, border: 'none', position: 'absolute', top: -9999 }}
+            defaultValue={'_'}
+          />
+        )}
         <div
           id={`${textFieldId}${isEdit ? message?.messageId : ''}`}
           className={`sendbird-message-input--textarea ${textFieldId}`}
@@ -465,16 +485,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
                  * Prevents executing the code while the user is still composing characters.
                  */
               ) {
-                /**
-                 * NOTE: contentEditable does not work as expected in mobile WebKit(Safari).
-                 * Events and properties related to composing, necessary for combining characters like Hangul, also seem to be not handled properly.
-                 * When calling e.preventDefault(), it appears that string composition-related behaviors, in addition to the default actions, are also prevented. (maybe)
-                 *
-                 * Due to this issue, even though reset the input with innerHTML, incomplete text compositions from the previous input are displayed in the next input.
-                 * */
-                if (!isMobileIOS(navigator.userAgent)) {
-                  e.preventDefault();
-                }
+                e.preventDefault();
                 sendMessage();
               }
               if (

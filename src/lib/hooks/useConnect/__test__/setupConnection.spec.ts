@@ -2,23 +2,19 @@
 /* eslint-disable global-require */
 import { SDK_ACTIONS } from '../../../dux/sdk/actionTypes';
 import { USER_ACTIONS } from '../../../dux/user/actionTypes';
-import { getMissingParamError, setUpConnection, setUpParams } from '../setupConnection';
+import { getMissingParamError, setUpConnection, initSDK, getConnectSbError } from '../setupConnection';
 import { SetupConnectionTypes } from '../types';
 import { generateSetUpConnectionParams, mockSdk, mockUser, mockUser2 } from './data.mocks';
-
 import { SendbirdError } from '@sendbird/chat';
 
 // todo: combine after mock-sdk is implemented
-jest.mock('@sendbird/chat', () => ({
-  init: jest.fn().mockImplementation(() => mockSdk),
-  SendbirdError: jest.fn(),
-}));
-jest.mock('@sendbird/chat/openChannel', () => ({
-  OpenChannelModule: jest.fn(),
-}));
-jest.mock('@sendbird/chat/groupChannel', () => ({
-  GroupChannelModule: jest.fn(),
-}));
+jest.mock('@sendbird/chat', () => {
+  const originalModule = jest.requireActual('@sendbird/chat');
+  return {
+    init: jest.fn(() => mockSdk),
+    ...originalModule,
+  };
+});
 
 describe('useConnect/setupConnection', () => {
   it('should call SDK_ERROR when there is no appId', async () => {
@@ -26,8 +22,7 @@ describe('useConnect/setupConnection', () => {
     const params = { ...setUpConnectionProps, appId: undefined };
     const errorMessage = getMissingParamError({ userId: params.userId, appId: params.appId });
 
-    await expect(setUpConnection((params as unknown as SetupConnectionTypes)))
-      .rejects.toMatch(errorMessage);
+    await expect(setUpConnection(params as unknown as SetupConnectionTypes)).rejects.toMatch(errorMessage);
 
     expect(mockSdk.connect).not.toBeCalledWith({ type: SDK_ACTIONS.SET_SDK_LOADING, payload: true });
     expect(setUpConnectionProps.sdkDispatcher).toBeCalledWith({ type: SDK_ACTIONS.SDK_ERROR });
@@ -38,8 +33,7 @@ describe('useConnect/setupConnection', () => {
     const params = { ...setUpConnectionProps, userId: undefined };
     const errorMessage = getMissingParamError({ userId: params.userId, appId: params.appId });
 
-    await expect(setUpConnection((params as unknown as SetupConnectionTypes)))
-      .rejects.toMatch(errorMessage);
+    await expect(setUpConnection(params as unknown as SetupConnectionTypes)).rejects.toMatch(errorMessage);
 
     expect(setUpConnectionProps.sdkDispatcher).toHaveBeenCalledWith({ type: SDK_ACTIONS.SET_SDK_LOADING, payload: true });
     expect(mockSdk.connect).not.toBeCalledWith({ type: SDK_ACTIONS.SET_SDK_LOADING, payload: true });
@@ -137,8 +131,7 @@ describe('useConnect/setupConnection', () => {
       nickname: newNickname,
       profileUrl: newprofileUrl,
     });
-    expect(mockSdk.updateCurrentUserInfo)
-      .toHaveBeenCalledWith({ nickname: 'newNickname', profileUrl: 'newprofileUrl' });
+    expect(mockSdk.updateCurrentUserInfo).toHaveBeenCalledWith({ nickname: 'newNickname', profileUrl: 'newprofileUrl' });
     expect(setUpConnectionProps.userDispatcher).toHaveBeenCalledWith({
       type: USER_ACTIONS.INIT_USER,
       payload: {
@@ -157,8 +150,7 @@ describe('useConnect/setupConnection', () => {
       appId: setUpConnectionProps.appId,
     });
 
-    await expect(setUpConnection(setUpConnectionProps))
-      .rejects.toMatch(errorMessage);
+    await expect(setUpConnection(setUpConnectionProps)).rejects.toMatch(errorMessage);
 
     expect(setUpConnectionProps.sdkDispatcher).toHaveBeenCalledWith({
       type: SDK_ACTIONS.SDK_ERROR,
@@ -170,23 +162,34 @@ describe('useConnect/setupConnection', () => {
     const setUpConnectionProps = generateSetUpConnectionParams();
     setUpConnectionProps.eventHandlers = { connection: { onFailed: onConnectionFailed } };
 
-    // Force a connection failure by providing an invalid userId
-    const params = { ...setUpConnectionProps, userId: undefined };
-    const expectedErrorMessage = getMissingParamError({ userId: undefined, appId: params.appId });
-
+    const error = new Error('test-error');
+    // @ts-expect-error
+    mockSdk.connect.mockRejectedValueOnce(error);
+    const expected = getConnectSbError(error as SendbirdError);
     // // Ensure that the onConnectionFailed callback is called with the correct error message
-    await expect(setUpConnection((params as unknown as SetupConnectionTypes)))
-      .rejects.toBe(expectedErrorMessage);
+    await expect(setUpConnection(setUpConnectionProps)).rejects.toStrictEqual(expected);
     // Ensure that onConnectionFailed callback is called with the expected error object
-    expect(onConnectionFailed).toHaveBeenCalledWith({ message: expectedErrorMessage } as SendbirdError);
+    expect(onConnectionFailed).toHaveBeenCalledWith(error);
+  });
+
+  it('should call onConnected callback when connection succeeded', async () => {
+    const setUpConnectionProps = generateSetUpConnectionParams();
+    setUpConnectionProps.eventHandlers = { connection: { onConnected: jest.fn() } };
+
+    const user = { userId: 'test-user-id', nickname: 'test-nickname', profileUrl: 'test-profile-url' };
+    // @ts-expect-error
+    mockSdk.connect.mockResolvedValueOnce(user);
+
+    await expect(setUpConnection(setUpConnectionProps)).resolves.toStrictEqual(undefined);
+    expect(setUpConnectionProps.eventHandlers.connection.onConnected).toHaveBeenCalledWith(user);
   });
 });
 
-describe('useConnect/setupConnection/setUpParams', () => {
+describe('useConnect/setupConnection/initSDK', () => {
   it('should call init with correct appId', async () => {
     const setUpConnectionProps = generateSetUpConnectionParams();
     const { appId, customApiHost, customWebSocketHost } = setUpConnectionProps;
-    const newSdk = setUpParams({ appId, customApiHost, customWebSocketHost });
+    const newSdk = initSDK({ appId, customApiHost, customWebSocketHost });
     // @ts-ignore
     expect(require('@sendbird/chat').init).toBeCalledWith({
       appId,
@@ -203,7 +206,7 @@ describe('useConnect/setupConnection/setUpParams', () => {
   it('should call init with correct customApiHost & customWebSocketHost', async () => {
     const setUpConnectionProps = generateSetUpConnectionParams();
     const { appId, customApiHost, customWebSocketHost } = setUpConnectionProps;
-    const newSdk = setUpParams({ appId, customApiHost, customWebSocketHost });
+    const newSdk = initSDK({ appId, customApiHost, customWebSocketHost });
     // @ts-ignore
     expect(require('@sendbird/chat').init).toBeCalledWith({
       appId,
@@ -222,7 +225,7 @@ describe('useConnect/setupConnection/setUpParams', () => {
   it('should call init with sdkInitParams', async () => {
     const setUpConnectionProps = generateSetUpConnectionParams();
     const { appId, sdkInitParams } = setUpConnectionProps;
-    const newSdk = setUpParams({ appId, sdkInitParams });
+    const newSdk = initSDK({ appId, sdkInitParams });
     // @ts-ignore
     const init = require('@sendbird/chat').init;
     expect(init).toBeCalledWith({
@@ -241,7 +244,7 @@ describe('useConnect/setupConnection/setUpParams', () => {
   it('should call init with customExtensionParams', async () => {
     const setUpConnectionProps = generateSetUpConnectionParams();
     const { appId, customExtensionParams } = setUpConnectionProps;
-    const newSdk = setUpParams({ appId, customExtensionParams });
+    const newSdk = initSDK({ appId, customExtensionParams });
     // @ts-ignore
     expect(require('@sendbird/chat').init).toBeCalledWith({
       appId,

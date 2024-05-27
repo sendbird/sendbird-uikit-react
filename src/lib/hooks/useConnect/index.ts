@@ -22,7 +22,6 @@ export default function useConnect(triggerTypes: TriggerTypes, staticTypes: Stat
     eventHandlers,
     initializeMessageTemplatesInfo,
   } = staticTypes;
-  logger?.info?.('SendbirdProvider | useConnect', { ...triggerTypes, ...staticTypes });
 
   // Note: This is a workaround to prevent the creation of multiple SDK instances when React strict mode is enabled.
   const connectDeps = useRef<{ appId: string, userId: string }>({
