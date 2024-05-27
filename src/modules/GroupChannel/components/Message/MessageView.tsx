@@ -291,7 +291,6 @@ const MessageView = (props: MessageViewProps) => {
           shouldRenderSuggestedReplies && renderSuggestedReplies({
             replyOptions: getSuggestedReplies(message),
             onSendMessage: sendUserMessage,
-            message,
             type: groupChannel?.suggestedRepliesDirection,
           })
         }
