@@ -1,14 +1,32 @@
 import './index.scss';
 import React, { useState } from 'react';
-import { BaseMessage } from '@sendbird/chat/message';
 
 export interface SuggestedRepliesProps {
   replyOptions: string[];
   onSendMessage: ({ message }: { message: string }) => void;
-  message: BaseMessage;
   type?: 'vertical' | 'horizontal';
   gap?: number;
 }
+
+export interface ReplyItemProps {
+  value: string;
+  onClickReply: (event: React.MouseEvent<HTMLDivElement>, option: string) => void;
+}
+
+export const ReplyItem = ({
+  value,
+  onClickReply,
+}: ReplyItemProps) => {
+  return (
+    <div
+      className="sendbird-suggested-replies__option"
+      id={value}
+      onClick={(e) => onClickReply(e, value)}
+    >
+      {value}
+    </div>
+  );
+};
 
 const SuggestedReplies = ({ replyOptions, onSendMessage, type = 'vertical' }: SuggestedRepliesProps) => {
   const [replied, setReplied] = useState<boolean>(false);
@@ -28,14 +46,7 @@ const SuggestedReplies = ({ replyOptions, onSendMessage, type = 'vertical' }: Su
 
   const children = replyOptions.map((option: string, index: number) => {
     return (
-      <div
-        className="sendbird-suggested-replies__option"
-        id={option}
-        key={index + option}
-        onClick={(e) => onClickReply(e, option)}
-      >
-        {option}
-      </div>
+      <ReplyItem key={index} value={option} onClickReply={onClickReply}/>
     );
   });
 
