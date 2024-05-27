@@ -32,18 +32,6 @@ export function getConnectSbError(error?: SendbirdError): string {
   return `SendbirdProvider | useConnect/setupConnection/Connection failed. ${error?.code || ''} ${error?.message || ''}`;
 }
 
-// Steps
-// 1. Check if minimum userID/appID is provided
-//  1.a. If not, throw error > !reject
-//  1.b. If yes, continue
-// 2. Set up params with custom host if provided
-// 3. Set up session handler if provided
-// 4. Set up version
-// 5. Connect to Sendbird -> either using user ID or (user ID + access token)
-// 6. If connected, connectCbSucess
-//  6.a check if nickname is to be updated -> no > !resolve immediately
-//  6.b check if nickname is to be updated -> yes > update nickname > !resolve
-// 7. If not connected, connectCbError > !reject
 export async function setUpConnection({
   logger,
   sdkDispatcher,
@@ -65,111 +53,106 @@ export async function setUpConnection({
   eventHandlers,
   initializeMessageTemplatesInfo,
 }: SetupConnectionTypes): Promise<void> {
+  logger.info?.('SendbirdProvider | useConnect/setupConnection/init', { userId, appId });
+  sdkDispatcher({ type: SET_SDK_LOADING, payload: true });
+
+  if (!userId || !appId) {
+    const errorMessage = getMissingParamError({ userId, appId });
+    logger.error?.(errorMessage);
+    sdkDispatcher({ type: SDK_ERROR });
+    return Promise.reject(errorMessage);
+  }
+
   return new Promise((resolve, reject) => {
-    logger.info?.('SendbirdProvider | useConnect/setupConnection/init', { userId, appId });
-    sdkDispatcher({ type: SET_SDK_LOADING, payload: true });
+    logger.info?.(`SendbirdProvider | useConnect/setupConnection/connect connecting using ${accessToken ?? userId}`);
 
-    if (userId && appId) {
-      logger.info?.(`SendbirdProvider | useConnect/setupConnection/connect connecting using ${accessToken ?? userId}`);
+    const sdk = initSDK({ appId, customApiHost, customWebSocketHost, isNewApp, sdkInitParams });
+    const sessionHandler = typeof configureSession === 'function' ? configureSession(sdk) : undefined;
+    setupSDK(sdk, { logger, sessionHandler, customExtensionParams, isMobile });
 
-      const sdk = initSDK({ appId, customApiHost, customWebSocketHost, isNewApp, sdkInitParams });
-      const sessionHandler = typeof configureSession === 'function' ? configureSession(sdk) : undefined;
-      setupSDK(sdk, { logger, sessionHandler, customExtensionParams, isMobile });
-
-      sdk
-        .connect(userId, accessToken)
-        .then((user) => onConnected(user))
-        .catch(async (error) => {
-          // NOTE: The part that connects via the SDK must be callable directly by the customer.
-          //  we should refactor this in next major version.
-          if (shouldRetryWithValidSessionToken(error) && sessionHandler) {
-            try {
-              const sessionToken = await new Promise(sessionHandler.onSessionTokenRequired);
-              if (sessionToken) {
-                logger.info?.(
-                  `SendbirdProvider | useConnect/setupConnection/connect retry connect with valid session token: ${sessionToken.slice(0, 10) + '...'}`,
-                );
-                const user = await sdk.connect(userId, sessionToken);
-                return onConnected(user);
-              }
-            } catch (error) {
-              // NOTE: Filter out the error from `onSessionTokenRequired`.
-              if (error instanceof SendbirdError) {
-                // connect in offline mode
-                // if (sdk.isCacheEnabled && sdk.currentUser) return onConnected(sdk.currentUser);
-                return onConnectFailed(error);
-              }
+    sdk
+      .connect(userId, accessToken)
+      .then((user) => onConnected(user))
+      .catch(async (error) => {
+        // NOTE: The part that connects via the SDK must be callable directly by the customer.
+        //  we should refactor this in next major version.
+        if (shouldRetryWithValidSessionToken(error) && sessionHandler) {
+          try {
+            const sessionToken = await new Promise(sessionHandler.onSessionTokenRequired);
+            if (sessionToken) {
+              logger.info?.(
+                `SendbirdProvider | useConnect/setupConnection/connect retry connect with valid session token: ${sessionToken.slice(0, 10) + '...'}`,
+              );
+              const user = await sdk.connect(userId, sessionToken);
+              return onConnected(user);
+            }
+          } catch (error) {
+            // NOTE: Filter out the error from `onSessionTokenRequired`.
+            if (error instanceof SendbirdError) {
+              // connect in offline mode
+              // if (sdk.isCacheEnabled && sdk.currentUser) return onConnected(sdk.currentUser);
+              return onConnectFailed(error);
             }
           }
-
-          return onConnectFailed(error);
-        });
-
-      const onConnected = async (user: User) => {
-        logger.info?.('SendbirdProvider | useConnect/setupConnection/onConnected', user);
-        sdkDispatcher({ type: INIT_SDK, payload: sdk });
-        userDispatcher({ type: INIT_USER, payload: user });
-
-        try {
-          await initializeMessageTemplatesInfo(sdk);
-        } catch (error) {
-          logger.error?.('SendbirdProvider | useConnect/setupConnection/upsertMessageTemplateListInLocalStorage failed', { error });
         }
 
-        try {
-          await initDashboardConfigs(sdk);
-          logger.info?.('SendbirdProvider | useConnect/setupConnection/getUIKitConfiguration success');
-        } catch (error) {
-          logger.error?.('SendbirdProvider | useConnect/setupConnection/getUIKitConfiguration failed', { error });
+        return onConnectFailed(error);
+      });
+
+    const onConnected = async (user: User) => {
+      logger.info?.('SendbirdProvider | useConnect/setupConnection/onConnected', user);
+      sdkDispatcher({ type: INIT_SDK, payload: sdk });
+      userDispatcher({ type: INIT_USER, payload: user });
+
+      try {
+        await initializeMessageTemplatesInfo(sdk);
+      } catch (error) {
+        logger.error?.('SendbirdProvider | useConnect/setupConnection/upsertMessageTemplateListInLocalStorage failed', { error });
+      }
+
+      try {
+        await initDashboardConfigs(sdk);
+        logger.info?.('SendbirdProvider | useConnect/setupConnection/getUIKitConfiguration success');
+      } catch (error) {
+        logger.error?.('SendbirdProvider | useConnect/setupConnection/getUIKitConfiguration failed', { error });
+      }
+
+      try {
+        // use nickname/profileUrl if provided or set userID as nickname
+        if ((nickname !== user.nickname || profileUrl !== user.profileUrl) && !(isTextuallyNull(nickname) && isTextuallyNull(profileUrl))) {
+          logger.info?.('SendbirdProvider | useConnect/setupConnection/updateCurrentUserInfo', { nickname, profileUrl });
+          const updateParams = {
+            nickname: nickname || user.nickname || (isUserIdUsedForNickname ? user.userId : ''),
+            profileUrl: profileUrl || user.profileUrl,
+          };
+
+          const updatedUser = await sdk.updateCurrentUserInfo(updateParams);
+          logger.info?.('SendbirdProvider | useConnect/setupConnection/updateCurrentUserInfo success', updateParams);
+          userDispatcher({ type: UPDATE_USER_INFO, payload: updatedUser });
         }
+      } catch {
+        // NO-OP
+      }
 
-        try {
-          // use nickname/profileUrl if provided or set userID as nickname
-          if (
-            (nickname !== user.nickname || profileUrl !== user.profileUrl)
-            && !(isTextuallyNull(nickname) && isTextuallyNull(profileUrl))
-          ) {
-            logger.info?.('SendbirdProvider | useConnect/setupConnection/updateCurrentUserInfo', { nickname, profileUrl });
-            const updateParams = {
-              nickname: nickname || user.nickname || (isUserIdUsedForNickname ? user.userId : ''),
-              profileUrl: profileUrl || user.profileUrl,
-            };
+      resolve();
+      eventHandlers?.connection?.onConnected?.(user);
+    };
 
-            const updatedUser = await sdk.updateCurrentUserInfo(updateParams);
-            logger.info?.('SendbirdProvider | useConnect/setupConnection/updateCurrentUserInfo success', updateParams);
-            userDispatcher({ type: UPDATE_USER_INFO, payload: updatedUser });
-          }
-        } catch {
-          // NO-OP
-        }
+    const onConnectFailed = async (e: SendbirdError) => {
+      if (sdk.isCacheEnabled && shouldClearCache(e)) {
+        logger.error?.(`SendbirdProvider | useConnect/setupConnection/connect clear cache [${e.code}/${e.message}]`);
+        await sdk.clearCachedData();
+      }
 
-        resolve();
-        eventHandlers?.connection?.onConnected?.(user);
-      };
-
-      const onConnectFailed = async (e: SendbirdError) => {
-        if (sdk.isCacheEnabled && shouldClearCache(e)) {
-          logger.error?.(`SendbirdProvider | useConnect/setupConnection/connect clear cache [${e.code}/${e.message}]`);
-          await sdk.clearCachedData();
-        }
-
-        const errorMessage = getConnectSbError(e);
-        logger.error?.(errorMessage, { e, appId, userId });
-        userDispatcher({ type: RESET_USER });
-        sdkDispatcher({ type: RESET_SDK });
-        sdkDispatcher({ type: SDK_ERROR });
-
-        reject(errorMessage);
-        eventHandlers?.connection?.onFailed?.(e);
-      };
-    } else {
-      const errorMessage = getMissingParamError({ userId, appId });
-      const error = new Error(errorMessage);
-      logger.error?.(error.message);
+      const errorMessage = getConnectSbError(e);
+      logger.error?.(errorMessage, { e, appId, userId });
+      userDispatcher({ type: RESET_USER });
+      sdkDispatcher({ type: RESET_SDK });
       sdkDispatcher({ type: SDK_ERROR });
 
       reject(errorMessage);
-    }
+      eventHandlers?.connection?.onFailed?.(e);
+    };
   });
 }
 
