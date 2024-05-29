@@ -4,7 +4,7 @@ import type { Meta } from '@storybook/react';
 import SendbirdProvider from '../../lib/Sendbird';
 import MessageSearch from '../../modules/MessageSearch';
 import { STORYBOOK_APP_ID, STORYBOOK_USER_ID } from '../common/const';
-import { getSampleChannel } from '../common/getSampleChannel';
+import { useSampleChannel } from '../common/useSampleChannel';
 
 const meta: Meta<typeof MessageSearch> = {
   title: '1.Module/MessageSearch',
@@ -62,7 +62,7 @@ const meta: Meta<typeof MessageSearch> = {
 export default meta;
 
 export const Default = (): React.ReactElement => {
-  const channel = getSampleChannel({ appId: STORYBOOK_APP_ID, userId: STORYBOOK_USER_ID });
+  const channel = useSampleChannel({ appId: STORYBOOK_APP_ID, userId: STORYBOOK_USER_ID });
 
   return (
     <div style={{ height: 520 }}>

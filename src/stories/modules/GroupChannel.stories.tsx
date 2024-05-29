@@ -4,7 +4,7 @@ import type { Meta } from '@storybook/react';
 import SendbirdProvider from '../../lib/Sendbird';
 import GroupChannel from '../../modules/GroupChannel';
 import { STORYBOOK_APP_ID, STORYBOOK_USER_ID, STORYBOOK_NICKNAME } from '../common/const';
-import { getSampleChannel } from '../common/getSampleChannel';
+import { useSampleChannel } from '../common/useSampleChannel';
 
 const meta: Meta<typeof GroupChannel> = { 
   title: '1.Module/GroupChannel',
@@ -104,7 +104,7 @@ const meta: Meta<typeof GroupChannel> = {
 export default meta;
 
 export const Default = (): React.ReactElement => {
-  const channel = getSampleChannel({ appId: STORYBOOK_APP_ID, userId: STORYBOOK_USER_ID });
+  const channel = useSampleChannel({ appId: STORYBOOK_APP_ID, userId: STORYBOOK_USER_ID });
 
   return (
     <div style={{ height: 500 }}>

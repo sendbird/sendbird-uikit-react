@@ -4,14 +4,14 @@ import { GroupChannel, GroupChannelListOrder, GroupChannelModule } from "@sendbi
 import { OpenChannelModule } from "@sendbird/chat/openChannel";
 import { useAsyncEffect } from "@sendbird/uikit-tools";
 
-interface GetSampleChannelParams {
+interface UseSampleChannelParams {
   appId: string;
   userId: string;
 }
-export const getSampleChannel = ({
+export const useSampleChannel = ({
   appId,
   userId,
-}: GetSampleChannelParams): GroupChannel | null => {
+}: UseSampleChannelParams): GroupChannel | null => {
   const [channel, setChannel] = useState<GroupChannel | null>(null);
   useAsyncEffect(async () => {
     try {
@@ -33,7 +33,7 @@ export const getSampleChannel = ({
         setChannel(newChannel);
       }
     } catch (err) {
-      console.warn('Sendbird storybook - getSampleChannel: ', err);
+      console.warn('Sendbird storybook - useSampleChannel: ', err);
     }
   }, []);
   return channel;
