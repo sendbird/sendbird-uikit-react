@@ -3,6 +3,7 @@ import type { Meta } from '@storybook/react';
 
 import SendbirdProvider from '../../lib/Sendbird';
 import GroupChannelList from '../../modules/GroupChannelList';
+import { STORYBOOK_APP_ID, STORYBOOK_USER_ID } from '../common/const';
 
 const meta: Meta<typeof GroupChannelList> = {
   title: '1.Module/GroupChannelList',
@@ -89,8 +90,8 @@ export const Default = (args): React.ReactElement => {
   return (
     <div style={{ height: 520 }}>
       <SendbirdProvider
-        appId="FEA2129A-EA73-4EB9-9E0B-EC738E7EB768"
-        userId="hoon20230802"
+        appId={STORYBOOK_APP_ID}
+        userId={STORYBOOK_USER_ID}
         breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
       >
         <GroupChannelList {...args} />

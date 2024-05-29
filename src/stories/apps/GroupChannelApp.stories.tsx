@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react';
 import type { Meta } from '@storybook/react';
 
 import App from '../../modules/App';
+import { STORYBOOK_APP_ID, STORYBOOK_NICKNAME, STORYBOOK_USER_ID } from '../common/const';
 
 const meta: Meta<typeof App> = {
   title: '0.Get Started/Group Channel App',
@@ -151,9 +152,9 @@ export const Default = (args): ReactElement => {
   );
 };
 Default.args = {
-  appId: 'FEA2129A-EA73-4EB9-9E0B-EC738E7EB768',
-  userId: 'hoon20230802',
-  nickname: 'hoon hi',
+  appId: STORYBOOK_APP_ID,
+  userId: STORYBOOK_USER_ID,
+  nickname: STORYBOOK_NICKNAME,
   breakpoint: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent),
   theme: 'light',
   isReactionEnabled: true,
