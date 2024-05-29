@@ -129,7 +129,7 @@ export default function App(props: AppProps) {
       dateLocale={dateLocale }
       userListQuery={userListQuery}
       config={config}
-      colorSet={colorSet }
+      colorSet={colorSet}
       disableMarkAsDelivered={disableMarkAsDelivered}
       renderUserProfile={renderUserProfile}
       imageCompression={imageCompression}
