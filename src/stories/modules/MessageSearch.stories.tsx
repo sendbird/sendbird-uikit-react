@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { Meta } from '@storybook/react';
 
 import SendbirdProvider from '../../lib/Sendbird';
 import MessageSearch from '../../modules/MessageSearch';
 import { STORYBOOK_APP_ID, STORYBOOK_USER_ID } from '../common/const';
 import { getSampleChannel } from '../common/getSampleChannel';
+import { useAsyncEffect } from '@sendbird/uikit-tools';
 
 const meta: Meta<typeof MessageSearch> = {
   title: '1.Module/MessageSearch',
@@ -61,7 +62,13 @@ const meta: Meta<typeof MessageSearch> = {
 };
 export default meta;
 
-export const Default = (args): React.ReactElement => {
+export const Default = (): React.ReactElement => {
+  const [channelUrl, setChannelUrl] = useState('');
+  useAsyncEffect(async () => {
+    const channel = await getSampleChannel({ appId: STORYBOOK_APP_ID, userId: STORYBOOK_USER_ID });
+    setChannelUrl(channel.url);
+  }, []);
+
   return (
     <div style={{ height: 520 }}>
       <SendbirdProvider
@@ -69,12 +76,8 @@ export const Default = (args): React.ReactElement => {
         userId={STORYBOOK_USER_ID}
         breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
       >
-        <MessageSearch {...args} />
+        <MessageSearch channelUrl={channelUrl} />
       </SendbirdProvider>
     </div>
   );
-};
-const channel = await getSampleChannel({ appId: STORYBOOK_APP_ID, userId: STORYBOOK_USER_ID });
-Default.args = {
-  channelUrl: channel.url,
 };
