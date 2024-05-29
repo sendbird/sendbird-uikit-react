@@ -3,15 +3,16 @@ import SendbirdChat from "@sendbird/chat";
 import { GroupChannel, GroupChannelListOrder, GroupChannelModule } from "@sendbird/chat/groupChannel";
 import { OpenChannelModule } from "@sendbird/chat/openChannel";
 import { useAsyncEffect } from "@sendbird/uikit-tools";
+import { STORYBOOK_APP_ID, STORYBOOK_USER_ID } from '../common/const';
 
-interface UseSampleChannelParams {
-  appId: string;
-  userId: string;
+type UseSampleChannelParams = {
+  appId?: string;
+  userId?: string;
 }
 export const useSampleChannel = ({
-  appId,
-  userId,
-}: UseSampleChannelParams): GroupChannel | null => {
+  appId = STORYBOOK_APP_ID,
+  userId = STORYBOOK_USER_ID,
+}: UseSampleChannelParams = {}): GroupChannel | null => {
   const [channel, setChannel] = useState<GroupChannel | null>(null);
   useAsyncEffect(async () => {
     try {

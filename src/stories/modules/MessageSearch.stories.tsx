@@ -62,7 +62,7 @@ const meta: Meta<typeof MessageSearch> = {
 export default meta;
 
 export const Default = (): React.ReactElement => {
-  const channel = useSampleChannel({ appId: STORYBOOK_APP_ID, userId: STORYBOOK_USER_ID });
+  const channel = useSampleChannel();
 
   return (
     <div style={{ height: 520 }}>
