@@ -1,6 +1,5 @@
 import { FileMessage } from '@sendbird/chat/message';
-import { isImage, isVideo } from '../../../../ui/FileViewer/types';
-import { CoreMessageType } from '../../../../utils';
+import { CoreMessageType, isImage, isVideo } from '../../../../utils';
 
 export const MessageTypes = {
   ADMIN: 'ADMIN',

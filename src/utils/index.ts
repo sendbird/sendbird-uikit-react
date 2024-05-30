@@ -11,11 +11,12 @@ import {
   UserMessage,
 } from '@sendbird/chat/message';
 import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
+import { SendableMessage } from '@sendbird/chat/lib/__definition';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
 import { MessageContentMiddleContainerType, Nullable } from '../types';
+import { isSafari } from './browser';
 import { match } from 'ts-pattern';
-import { SendableMessage } from '@sendbird/chat/lib/__definition';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 export const SUPPORTED_MIMES = {
@@ -190,8 +191,15 @@ export const isTextuallyNull = (text: string): boolean => {
   return false;
 };
 
+export const isMOVType = (type: string): boolean => type === 'video/quicktime';
+/**
+ * @link: https://sendbird.atlassian.net/browse/SBISSUE-16031?focusedCommentId=270601
+ * We limitedly support .mov file type for ThumbnailMessage only in Safari browser.
+ * */
+export const isSupportedVideoFileTypeInSafari = (type: string): boolean => isSafari(navigator.userAgent) && isMOVType(type);
 export const isImage = (type: string): boolean => SUPPORTED_MIMES.IMAGE.indexOf(type) >= 0;
-export const isVideo = (type: string): boolean => SUPPORTED_MIMES.VIDEO.indexOf(type) >= 0;
+export const isVideo = (type: string): boolean => SUPPORTED_MIMES.VIDEO.indexOf(type) >= 0
+  || isSupportedVideoFileTypeInSafari(type);
 export const isGif = (type: string): boolean => type === 'image/gif';
 export const isSupportedFileView = (type: string): boolean => isImage(type) || isVideo(type);
 export const isAudio = (type: string): boolean => SUPPORTED_MIMES.AUDIO.indexOf(type) >= 0;

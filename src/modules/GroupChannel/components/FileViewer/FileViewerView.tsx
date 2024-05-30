@@ -7,7 +7,7 @@ import type { FileViewerProps } from '.';
 import type { CoreMessageType, SendableMessageType } from '../../../../utils';
 import Avatar from '../../../../ui/Avatar';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
-import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
+import Label, { LabelColors, LabelTypography, LabelStringSet } from '../../../../ui/Label';
 import { isImage, isSupportedFileView, isVideo } from '../../../../utils';
 import { MODAL_ROOT } from '../../../../hooks/useModal';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
@@ -135,7 +135,7 @@ export const FileViewerComponent = ({
       {!isSupportedFileView(type) && (
         <div className="sendbird-fileviewer__content__unsupported">
           <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>
-            Unsupoprted message
+            {LabelStringSet.UI__FILE_VIEWER__UNSUPPORT}
           </Label>
         </div>
       )}
