@@ -47,14 +47,14 @@
 }
 
 .sendbird-suggested-replies__option {
-  white-space: nowrap;
-  height: 32px;
+  white-space: pre-wrap;
   font-size: 12px;
-  padding: 0 14px;
+  padding: 8px 14px;
   display: flex;
   align-items: center;
   border-radius: 18px;
   cursor: pointer;
+  word-break: break-word;
   @include themed() {
     color: t(primary--3-2);
     border: 1px solid t(primary--3-2);
@@ -70,5 +70,11 @@
       background-color: t(primary--3-2);
       color: t(bg-0);
     }
+  }
+  &.horizontal {
+    white-space: nowrap;
+  }
+  &.vertical {
+    white-space: pre-wrap;
   }
 }
