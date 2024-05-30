@@ -76,5 +76,6 @@
   }
   &.vertical {
     white-space: pre-wrap;
+    max-width: calc(100% - 70px);
   }
 }
