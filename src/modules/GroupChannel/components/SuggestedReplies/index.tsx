@@ -11,20 +11,24 @@ export interface SuggestedRepliesProps {
 export interface ReplyItemProps {
   value: string;
   onClickReply: (event: React.MouseEvent<HTMLDivElement>, option: string) => void;
+  type?: 'vertical' | 'horizontal';
 }
 
 export const ReplyItem = ({
   value,
   onClickReply,
+  type = 'vertical',
 }: ReplyItemProps) => {
   return (
-    <div
-      className="sendbird-suggested-replies__option"
-      id={value}
-      onClick={(e) => onClickReply(e, value)}
-    >
-      {value}
-    </div>
+    <>
+      <div
+        className={`sendbird-suggested-replies__option ${type}`}
+        id={value}
+        onClick={(e) => onClickReply(e, value)}
+      >
+        {value}
+      </div>
+    </>
   );
 };
 
@@ -46,7 +50,7 @@ const SuggestedReplies = ({ replyOptions, onSendMessage, type = 'vertical' }: Su
 
   const children = replyOptions.map((option: string, index: number) => {
     return (
-      <ReplyItem key={index} value={option} onClickReply={onClickReply}/>
+      <ReplyItem key={index} value={option} onClickReply={onClickReply} type={type} />
     );
   });
 
