@@ -14,7 +14,7 @@
   - Added missing margin
 
 ### Features
-- Added support for rendering .mov file type only in Safari browser
+- Added support for rendering `.mov` file type only in Safari browser
 
 
 ## [v3.14.7] (May 23, 2024)
