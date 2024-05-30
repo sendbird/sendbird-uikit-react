@@ -20,15 +20,13 @@ export const ReplyItem = ({
   type = 'vertical',
 }: ReplyItemProps) => {
   return (
-    <>
-      <div
-        className={`sendbird-suggested-replies__option ${type}`}
-        id={value}
-        onClick={(e) => onClickReply(e, value)}
-      >
-        {value}
-      </div>
-    </>
+    <div
+      className={`sendbird-suggested-replies__option ${type}`}
+      id={value}
+      onClick={(e) => onClickReply(e, value)}
+    >
+      {value}
+    </div>
   );
 };
 
