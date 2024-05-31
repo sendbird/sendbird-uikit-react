@@ -2,7 +2,7 @@ import React from 'react';
 import { UserMessage } from '@sendbird/chat/message';
 import { match } from 'ts-pattern';
 
-import { TOKEN_TYPES, Token } from '../../utils/tokens/types';
+import { TOKEN_TYPES, Token, MarkdownToken } from '../../utils/tokens/types';
 import { useMessageContext } from '../../context/MessageProvider';
 import { keyGenerator } from '../../utils/tokens/keyGenerator';
 import MentionLabel from '../../../../ui/MentionLabel';
@@ -29,6 +29,29 @@ export default function TextFragment({
       {tokens?.map((token, idx) => {
         const key = keyGenerator(createdAt, updatedAt, idx);
         return match(token.type)
+          .with(TOKEN_TYPES.markdown, () => {
+            const markdownToken = token as MarkdownToken;
+            const groups = markdownToken.groups;
+            return <span className="sendbird-word" key={key} data-testid="sendbird-ui-word">
+              {
+                match(markdownToken.markdownType)
+                  .with('bold', () => (
+                    <strong>{groups[1]}</strong>
+                  ))
+                  .with('url', () => (
+                    <a
+                      className="sendbird-word__url"
+                      href={groups[2]}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {groups[1]}
+                    </a>
+                  ))
+                  .otherwise(() => <></>)
+              }
+          </span>;
+          })
           .with(TOKEN_TYPES.mention, () => (
             <span className="sendbird-word" key={key} data-testid="sendbird-ui-word">
               <MentionLabel
