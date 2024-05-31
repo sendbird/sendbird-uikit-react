@@ -25,7 +25,7 @@ function useActiveChannelUrl({
 }: StaticProps): void {
   return useEffect(() => {
     if (activeChannelUrl) {
-      logger.info('ChannelListProvider: looking for active channel', { activeChannelUrl });
+      logger.info('ChannelListProvider: looking for active channel', activeChannelUrl);
       const activeChannel = channels?.find(channel => channel.url === activeChannelUrl);
       if (activeChannel) {
         channelListDispatcher({
@@ -33,7 +33,7 @@ function useActiveChannelUrl({
           payload: activeChannel,
         });
       } else {
-        logger.info('ChannelListProvider: searching backend for active channel', { activeChannelUrl });
+        logger.info('ChannelListProvider: searching backend for active channel', activeChannelUrl);
         sdk?.groupChannel?.getChannel(activeChannelUrl)
           .then((channel) => {
             channelListDispatcher({
