@@ -193,9 +193,8 @@ export function tokenizeMessage({
     templatePrefix,
   });
   const partialsWithUrlsAndMentions = identifyUrlsAndStrings(partialWithMentions);
-  const partialsWithMarkdowns = splitTokensWithMarkdowns(partialsWithUrlsAndMentions);
-  const result = combineNearbyStrings(partialsWithMarkdowns);
-
+  const partialsWithCombinedNearbyStrings = combineNearbyStrings(partialsWithUrlsAndMentions);
+  const result = splitTokensWithMarkdowns(partialsWithCombinedNearbyStrings);
   return result;
 }
 
