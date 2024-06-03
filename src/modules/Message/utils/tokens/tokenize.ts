@@ -115,7 +115,7 @@ export function splitTokensWithMarkdowns(tokens: Token[]): Token[] {
     const prevTokens = newTokens;
     newTokens = [];
     prevTokens.forEach((token) => {
-      if (token.type !== TOKEN_TYPES.string) {
+      if (token.type === TOKEN_TYPES.mention || token.type === TOKEN_TYPES.markdown) {
         newTokens.push(token);
         return;
       }
@@ -131,8 +131,8 @@ export function splitTokensWithMarkdowns(tokens: Token[]): Token[] {
       let restText = rawStr;
       let cursor = 0;
       allMatches.forEach(({ text, start, end, groups }) => {
-        const left: StringToken = {
-          type: TOKEN_TYPES.string,
+        const left: Token = {
+          type: TOKEN_TYPES.undetermined,
           value: restText.slice(0, start - cursor),
         };
         newTokens.push(left);
@@ -147,8 +147,8 @@ export function splitTokensWithMarkdowns(tokens: Token[]): Token[] {
         cursor = end;
       });
       if (restText) {
-        const right: StringToken = {
-          type: TOKEN_TYPES.string,
+        const right: Token = {
+          type: TOKEN_TYPES.undetermined,
           value: restText,
         };
         newTokens.push(right);
@@ -192,9 +192,10 @@ export function tokenizeMessage({
     mentionedUsers,
     templatePrefix,
   });
-  const partialsWithUrlsAndMentions = identifyUrlsAndStrings(partialWithMentions);
-  const partialsWithCombinedNearbyStrings = combineNearbyStrings(partialsWithUrlsAndMentions);
-  const result = splitTokensWithMarkdowns(partialsWithCombinedNearbyStrings);
+
+  const partialsWithMarkdowns = splitTokensWithMarkdowns(partialWithMentions);
+  const partialsWithUrlsAndMentions = identifyUrlsAndStrings(partialsWithMarkdowns);
+  const result = combineNearbyStrings(partialsWithUrlsAndMentions);
   return result;
 }
 
