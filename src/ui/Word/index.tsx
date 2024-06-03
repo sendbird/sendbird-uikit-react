@@ -10,6 +10,7 @@ import { LabelTypography } from '../Label';
 import LinkLabel from '../LinkLabel';
 import { convertWordToStringObj, StringObjType, StringObj } from '../../utils';
 import MentionLabel from '../MentionLabel';
+import { Colors } from '../Label/types';
 
 interface WordProps {
   word: string;
@@ -59,6 +60,7 @@ export default function Word(props: WordProps): JSX.Element | null {
                 className="sendbird-word__url"
                 src={word}
                 type={LabelTypography.BODY_1}
+                color={Colors.ONCONTENT_1}
               >
                 {value}
               </LinkLabel>

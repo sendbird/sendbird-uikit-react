@@ -63,3 +63,9 @@
     color: t(secondary-3);
   }
 }
+
+.sendbird-word__url {
+  display: inline;
+  color: inherit;
+  word-break: break-all;
+}
