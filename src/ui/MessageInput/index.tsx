@@ -172,16 +172,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     [],
   );
 
-  /**
-   * Whenever user given disabled is set to false, set focus.
-   */
-  useEffect(() => {
-    const textField = internalRef?.current;
-    if (textField && !disabled) {
-      textField.focus();
-    }
-  }, [disabled]);
-
   // #Edit mode
   // for easilly initialize input value from outside, but
   // useEffect(_, [channelUrl]) erase it
