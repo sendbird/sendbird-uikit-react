@@ -14,6 +14,7 @@ function useOnlineStatus(sdk: SendbirdChat, logger: LoggerInterface) {
   );
 
   useEffect(() => {
+    setIsOnline(typeof window !== 'undefined' ? (window?.navigator?.onLine ?? true) : true);
     const uniqueHandlerId = uuidv4();
     try {
       logger.warning('sdk changed', uniqueHandlerId);

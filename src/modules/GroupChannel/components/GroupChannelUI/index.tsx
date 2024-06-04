@@ -1,4 +1,5 @@
 import React from 'react';
+import { SendbirdError, SendbirdErrorCode } from '@sendbird/chat';
 
 import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { GroupChannelUIBasicProps, GroupChannelUIView } from './GroupChannelUIView';
@@ -8,7 +9,9 @@ import MessageList, { GroupChannelMessageListProps } from '../MessageList';
 import MessageInputWrapper from '../MessageInputWrapper';
 import { deleteNullish } from '../../../../utils/utils';
 
-export interface GroupChannelUIProps extends GroupChannelUIBasicProps {}
+export interface GroupChannelUIProps extends GroupChannelUIBasicProps {
+  onChannelFetchFailed?: (error: SendbirdError) => void;
+}
 
 export const GroupChannelUI = (props: GroupChannelUIProps) => {
   const context = useGroupChannelContext();
@@ -20,6 +23,12 @@ export const GroupChannelUI = (props: GroupChannelUIProps) => {
     renderMessageList = (props: GroupChannelMessageListProps) => <MessageList {...props} className="sendbird-conversation__message-list" />,
     renderMessageInput = () => <MessageInputWrapper {...props} />,
   } = deleteNullish(props);
+
+  React.useEffect(() => {
+    if (fetchChannelError && fetchChannelError.code === SendbirdErrorCode.NOT_FOUND_IN_DATABASE) {
+      props.onChannelFetchFailed?.(fetchChannelError);
+    }
+  }, [fetchChannelError]);
 
   return (
     <GroupChannelUIView
