@@ -21,6 +21,7 @@ import {
   VOICE_PLAYER_ROOT_ID,
 } from '../../utils/consts';
 import useSendbirdStateContext from '../useSendbirdStateContext';
+import { getParsedMimeType } from './utils';
 
 // VoicePlayerProvider interface
 export interface VoicePlayerProps {
@@ -30,6 +31,7 @@ export interface VoicePlayerPlayProps {
   groupKey: string;
   audioFile?: File;
   audioFileUrl?: string;
+  audioFileMimeType?: string;
 }
 export interface VoicePlayerContext {
   play: (props: VoicePlayerPlayProps) => void;
@@ -91,6 +93,7 @@ export const VoicePlayerProvider = ({
     groupKey,
     audioFile,
     audioFileUrl = '',
+    audioFileMimeType = VOICE_MESSAGE_MIME_TYPE,
   }: VoicePlayerPlayProps): void => {
     if (groupKey !== currentGroupKey) {
       pause(currentGroupKey);
@@ -128,7 +131,7 @@ export const VoicePlayerProvider = ({
         .then((blob) => {
           const audioFile = new File([blob], VOICE_MESSAGE_FILE_NAME, {
             lastModified: new Date().getTime(),
-            type: VOICE_MESSAGE_MIME_TYPE,
+            type: getParsedMimeType(audioFileMimeType),
           });
           resolve(audioFile);
           logger.info('VoicePlayer: Get the audioFile from URL.');
