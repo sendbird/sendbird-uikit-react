@@ -1,5 +1,5 @@
 import { match, P } from 'ts-pattern';
-import { filterChannelListParams, getChannelsWithUpsertedChannel } from '../../../utils';
+import { filterChannelListParams, getChannelsWithUpsertedChannel, isChannelJustCreated } from '../../../utils';
 import * as channelListActions from './actionTypes';
 import { ChannelListActionTypes } from './actionTypes';
 import { getNextChannel } from './getNextChannel';
@@ -183,6 +183,11 @@ export default function channelListReducer(
                 ...state,
                 allChannels: getChannelsWithUpsertedChannel(allChannels, channel, state.channelListQuery?.order),
               };
+            }
+            // If the channel is just created and the current user is the only member,
+            // don't add to the ChannelList but keep the currentChannel
+            if (isChannelJustCreated(channel)) {
+              return state;
             }
             // Filter the channel from the ChannelList
             // Replace the currentChannel if it's filtered channel

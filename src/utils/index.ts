@@ -17,6 +17,7 @@ import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOut
 import { MessageContentMiddleContainerType, Nullable } from '../types';
 import { isSafari } from './browser';
 import { match } from 'ts-pattern';
+import isSameSecond from 'date-fns/isSameSecond';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 export const SUPPORTED_MIMES = {
@@ -946,4 +947,11 @@ export const arrayEqual = (array1: Array<unknown>, array2: Array<unknown>): bool
 
 export const isSendableMessage = (message?: BaseMessage | null): message is SendableMessageType => {
   return Boolean(message) && 'sender' in (message as SendableMessage);
+};
+
+/**
+ * If the channel is just created, the channel's createdAt and currentUser's invitedAt are the same.
+ */
+export const isChannelJustCreated = (channel: GroupChannel): boolean => {
+  return isSameSecond(channel.createdAt, channel.invitedAt);
 };
