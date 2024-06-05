@@ -109,6 +109,7 @@ export interface SendBirdStateConfig {
     enableSuggestedReplies: SBUConfig['groupChannel']['channel']['enableSuggestedReplies'];
     showSuggestedRepliesFor: SBUConfig['groupChannel']['channel']['showSuggestedRepliesFor'];
     suggestedRepliesDirection: SBUConfig['groupChannel']['channel']['suggestedRepliesDirection'];
+    enableMarkdownForUserMessage: SBUConfig['groupChannel']['channel']['enableMarkdownForUserMessage'];
   },
   groupChannelList: {
     enableTypingIndicator: SBUConfig['groupChannel']['channelList']['enableTypingIndicator'];

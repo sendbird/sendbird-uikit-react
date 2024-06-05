@@ -370,6 +370,7 @@ const SendbirdSDK = ({
             enableSuggestedReplies: configs.groupChannel.channel.enableSuggestedReplies,
             showSuggestedRepliesFor: configs.groupChannel.channel.showSuggestedRepliesFor,
             suggestedRepliesDirection: configs.groupChannel.channel.suggestedRepliesDirection,
+            enableMarkdownForUserMessage: configs.groupChannel.channel.enableMarkdownForUserMessage,
           },
           groupChannelList: {
             enableTypingIndicator: configs.groupChannel.channelList.enableTypingIndicator,

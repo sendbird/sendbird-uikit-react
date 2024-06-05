@@ -28,7 +28,11 @@ export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
     accessToken: searchParams.get('accessToken') || initParams.accessToken,
     allowProfileEdit: parseValue(searchParams.get('enableProfileEdit')) ?? true,
     isMultipleFilesMessageEnabled: parseValue(searchParams.get('enableMultipleFilesMessage')) ?? true,
-    uikitOptions: {},
+    uikitOptions: {
+      groupChannel: {
+        enableMarkdownForUserMessage: true,
+      }
+    },
   } as ParamsAsProps;
 
   if (!response.appId) throw new Error(`Invalid app id: ${response.appId}`);

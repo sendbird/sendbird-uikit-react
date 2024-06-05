@@ -3,12 +3,13 @@ import { USER_MENTION_PREFIX } from '../../consts';
 import {
   IdentifyMentionsType,
   MarkdownToken,
-  MentionToken, StringToken,
+  MentionToken,
   Token,
   TOKEN_TYPES,
   TokenParams,
   UndeterminedToken,
 } from './types';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 const RegexDataList: { type: 'url' | 'bold'; regex: RegExp }[] = [{
   type: 'url',
@@ -178,6 +179,7 @@ export function tokenizeMessage({
   mentionedUsers = [],
   templatePrefix = USER_MENTION_PREFIX,
 }: TokenParams): Token[] {
+  const { config } = useSendbirdStateContext();
   // mention can be squeezed-in(no-space-between) with other mentions and urls
   // if no users are mentioned, return the messageText as a single token
   const partialResult = [{
@@ -192,9 +194,11 @@ export function tokenizeMessage({
     mentionedUsers,
     templatePrefix,
   });
-
-  const partialsWithMarkdowns = splitTokensWithMarkdowns(partialWithMentions);
-  const partialsWithUrlsAndMentions = identifyUrlsAndStrings(partialsWithMarkdowns);
+  const partialsWithUrlsAndMentions = identifyUrlsAndStrings(
+    config?.groupChannel?.enableMarkdownForUserMessage
+      ? splitTokensWithMarkdowns(partialWithMentions)
+      : partialWithMentions,
+  );
   const result = combineNearbyStrings(partialsWithUrlsAndMentions);
   return result;
 }

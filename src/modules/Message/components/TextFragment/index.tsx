@@ -39,14 +39,13 @@ export default function TextFragment({
                     <strong>{groups[1]}</strong>
                   ))
                   .with('url', () => (
-                    <a
+                    <LinkLabel
                       className="sendbird-word__url"
-                      href={groups[2]}
-                      target="_blank"
-                      rel="noreferrer"
+                      src={groups[2]}
+                      type={LabelTypography.BODY_1}
                     >
                       {groups[1]}
-                    </a>
+                    </LinkLabel>
                   ))
                   .otherwise(() => <></>)
               }
