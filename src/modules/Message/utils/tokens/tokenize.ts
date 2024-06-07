@@ -12,7 +12,7 @@ import {
 
 const RegexDataList: { type: 'url' | 'bold'; regex: RegExp }[] = [{
   type: 'url',
-  regex: /\[(.*?)\]\((.*?)\)/g,
+  regex: /\[[^\]]*\]\([^\)]*\)/g,
 }, {
   type: 'bold',
   regex: /\*\*(.*?)\*\*/g,
@@ -143,7 +143,7 @@ export function splitTokensWithMarkdowns(tokens: Token[]): Token[] {
           groups,
         };
         newTokens.push(mid);
-        restText = restText.slice(end);
+        restText = rawStr.slice(end);
         cursor = end;
       });
       if (restText) {

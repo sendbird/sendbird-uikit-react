@@ -56,9 +56,47 @@ describe('tokenizeMessage', () => {
     }]);
   });
 
-  it('should tokenize a string with mention, markdown strings, and a string', () => {
+  it('should tokenize a string markdown strings', () => {
     const tokens = tokenizeMessage({
-      // messageText: 'This is a test for **tokenizeMessage**.',
+      messageText: '**bold**  https://www.naver.com  ** https://www.naver.com ** [bold] **text** **text**',
+      includeMarkdown: true,
+    });
+    expect(tokens).toEqual([
+      { value: '', type: 'string' },
+      {
+        type: 'markdown',
+        markdownType: 'bold',
+        value: '**bold**',
+        groups: ['**bold**', 'bold'],
+      },
+      { value: '  ', type: 'string' },
+      { value: 'https://www.naver.com', type: 'url' },
+      { value: '  ', type: 'string' },
+      {
+        type: 'markdown',
+        markdownType: 'bold',
+        value: '** https://www.naver.com **',
+        groups: ['** https://www.naver.com **', ' https://www.naver.com '],
+      },
+      { value: ' [bold] ', type: 'string' },
+      {
+        type: 'markdown',
+        markdownType: 'bold',
+        value: '**text**',
+        groups: ['**text**', 'text'],
+      },
+      { value: ' ', type: 'string' },
+      {
+        type: 'markdown',
+        markdownType: 'bold',
+        value: '**text**',
+        groups: ['**text**', 'text'],
+      },
+    ]);
+  });
+
+  it('should tokenize a string with mention, markdown strings', () => {
+    const tokens = tokenizeMessage({
       messageText: 'Hello @{userA}! This is a test for **tokenizeMessage**. Followings are urls with different syntaxes: https://example.com, and [here](https://example.com).',
       mentionedUsers: [
         ({ userId: 'userA', nickname: 'User A' } as User),
@@ -85,7 +123,7 @@ describe('tokenizeMessage', () => {
         type: 'markdown',
         markdownType: 'url',
         value: '[here](https://example.com)',
-        groups: ['[here](https://example.com)', 'here', 'https://example.com'],
+        groups: ['[here](https://example.com)'],
       },
       { value: '.', type: 'string' },
     ]);
