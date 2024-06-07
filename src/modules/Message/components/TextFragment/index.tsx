@@ -8,7 +8,7 @@ import { keyGenerator } from '../../utils/tokens/keyGenerator';
 import MentionLabel from '../../../../ui/MentionLabel';
 import { USER_MENTION_PREFIX } from '../../consts';
 import LinkLabel from '../../../../ui/LinkLabel';
-import { LabelTypography } from '../../../../ui/Label';
+import { LabelColors, LabelTypography } from '../../../../ui/Label';
 import { getWhiteSpacePreservedText } from '../../utils/tokens/tokenize';
 
 export type TextFragmentProps = {
@@ -40,9 +40,9 @@ export default function TextFragment({
                   ))
                   .with('url', () => (
                     <LinkLabel
-                      className="sendbird-word__url"
                       src={groups[2]}
                       type={LabelTypography.BODY_1}
+                      color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
                     >
                       {groups[1]}
                     </LinkLabel>
@@ -65,9 +65,9 @@ export default function TextFragment({
           .with(TOKEN_TYPES.url, () => (
             <span className="sendbird-word" key={key} data-testid="sendbird-ui-word">
               <LinkLabel
-                className="sendbird-word__url"
                 src={token.value}
                 type={LabelTypography.BODY_1}
+                color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
               >
                 {token.value}
               </LinkLabel>

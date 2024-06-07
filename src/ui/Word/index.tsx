@@ -6,11 +6,10 @@ import './index.scss';
 import React from 'react';
 import type { UserMessage } from '@sendbird/chat/message';
 
-import { LabelTypography } from '../Label';
+import { LabelColors, LabelTypography } from '../Label';
 import LinkLabel from '../LinkLabel';
 import { convertWordToStringObj, StringObjType, StringObj } from '../../utils';
 import MentionLabel from '../MentionLabel';
-import { Colors } from '../Label/types';
 
 interface WordProps {
   word: string;
@@ -57,10 +56,9 @@ export default function Word(props: WordProps): JSX.Element | null {
             return (
               <LinkLabel
                 key={key}
-                className="sendbird-word__url"
                 src={word}
                 type={LabelTypography.BODY_1}
-                color={Colors.ONCONTENT_1}
+                color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
               >
                 {value}
               </LinkLabel>
