@@ -7,16 +7,6 @@ import { getNextChannel } from '../getNextChannel';
 
 const [user1, user2, user3] = users;
 
-jest.mock('../../../../utils', () => ({
-  isChannelJustCreated: jest.fn(),
-  filterChannelListParams: jest.fn(),
-}));
-
-jest.mock('../getNextChannel', () => ({
-  getNextChannel: jest.fn(),
-}));
-
-
 describe('Channels-Reducers', () => {
   it('should set channels on INIT_CHANNELS_SUCCESS', () => {
     const nextState = reducers(initialState, {
@@ -919,8 +909,19 @@ describe('Channels-Reducers', () => {
       expect(hideWithPreventAutoOnPreventAutoState.allChannels.length).toEqual(preventAutoUnhideParamsState.allChannels.length + 1);
     });
   });
-  describe.only('isChannelJustCreated', () => {
-    const prevState = { ...mockData, channelListQuery: { includeEmpty: false } };
+  describe('isChannelJustCreated', () => {
+    let isChannelJustCreatedSpy;
+    let getNextChannelSpy;
+
+    beforeEach(() => {
+      isChannelJustCreatedSpy = jest.spyOn(require('../../../../utils'), 'isChannelJustCreated');
+      getNextChannelSpy = jest.spyOn(require('../getNextChannel'), 'getNextChannel');
+    });
+
+    afterEach(() => {
+      isChannelJustCreatedSpy.mockRestore();
+      getNextChannelSpy.mockRestore();
+    });
 
     it('should not add a newly created channel to the ChannelList if it is just created and the current user is the only member', () => {
       const newChannel = {
@@ -930,7 +931,8 @@ describe('Channels-Reducers', () => {
         invitedAt: new Date(),
         lastMessage: null,
       };
-      (isChannelJustCreated).mockReturnValue(true);
+      isChannelJustCreated.mockReturnValue(true);
+      const prevState = { ...mockData, channelListQuery: { includeEmpty: false } };
 
       const nextState = reducers(prevState, {
         type: actionTypes.ON_USER_JOINED,
@@ -940,7 +942,8 @@ describe('Channels-Reducers', () => {
       expect(isChannelJustCreated).toHaveBeenCalledWith(newChannel);
       expect(nextState.allChannels.find(channel => channel.url === newChannel.url)).toBeUndefined();
       expect(nextState.currentChannel).toEqual(mockData.currentChannel);
-      expect(nextState).toEqual(prevState); // Check if nextState and prevState are deeply equal
+       // Check if nextState and prevState are deeply equal
+      expect(nextState).toEqual(prevState);
     });
 
     it('should add a newly created channel to the ChannelList if it is not just created', () => {
@@ -951,8 +954,9 @@ describe('Channels-Reducers', () => {
         invitedAt: 129999967,
         lastMessage: null,
       };
-      (isChannelJustCreated).mockReturnValue(false);
-      (getNextChannel).mockReturnValue(newChannel);
+      isChannelJustCreated.mockReturnValue(false);
+      getNextChannel.mockReturnValue(newChannel);
+      const prevState = { ...mockData, channelListQuery: { includeEmpty: false } };
 
       const nextState = reducers(prevState, {
         type: actionTypes.ON_USER_JOINED,
@@ -963,7 +967,8 @@ describe('Channels-Reducers', () => {
       // Should be undefind since the newly created channel won't be added to the allChannels state
       expect(nextState.allChannels.find(channel => channel.url === newChannel.url)).toBeUndefined();
       expect(getNextChannel).toHaveBeenCalled();
-      expect(nextState).not.toEqual(prevState);  // Ensure state has changed
+      // Ensure state has changed
+      expect(nextState).not.toEqual(prevState);
     });
   });
 });
