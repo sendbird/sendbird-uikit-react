@@ -214,7 +214,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         const tokens = tokenizeMessage({
           messageText: message?.mentionedMessageTemplate,
           mentionedUsers,
-          includeMarkdown: config.groupChannel.enableMarkdownForUserMessage,
+          includeMarkdown: channel.isGroupChannel() && config.groupChannel.enableMarkdownForUserMessage,
         });
         if (textField) {
           textField.innerHTML = tokens
