@@ -126,7 +126,7 @@ export function splitTokensWithMarkdowns(tokens: Token[]): Token[] {
         const text = value[0];
         const start = value.index ?? 0;
         const end = start + text.length;
-        return { text, start, end, groups: value };
+        return { text, start, end, groups: value.filter((val: any) => typeof val === 'string') };
       });
       let restText = rawStr;
       let cursor = 0;

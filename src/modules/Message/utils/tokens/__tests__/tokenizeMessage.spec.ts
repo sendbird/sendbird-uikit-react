@@ -55,4 +55,39 @@ describe('tokenizeMessage', () => {
       type: 'url',
     }]);
   });
+
+  it('should tokenize a string with mention, markdown strings, and a string', () => {
+    const tokens = tokenizeMessage({
+      // messageText: 'This is a test for **tokenizeMessage**.',
+      messageText: 'Hello @{userA}! This is a test for **tokenizeMessage**. Followings are urls with different syntaxes: https://example.com, and [here](https://example.com).',
+      mentionedUsers: [
+        ({ userId: 'userA', nickname: 'User A' } as User),
+      ],
+      includeMarkdown: true,
+    });
+    expect(tokens).toEqual([
+      { value: 'Hello ', type: 'string' },
+      { value: 'User A', type: 'mention', userId: 'userA' },
+      { value: '! This is a test for ', type: 'string' },
+      {
+        type: 'markdown',
+        markdownType: 'bold',
+        value: '**tokenizeMessage**',
+        groups: ['**tokenizeMessage**', 'tokenizeMessage'],
+      },
+      {
+        value: '. Followings are urls with different syntaxes: ',
+        type: 'string',
+      },
+      { value: 'https://example.com', type: 'url' },
+      { value: ', and ', type: 'string' },
+      {
+        type: 'markdown',
+        markdownType: 'url',
+        value: '[here](https://example.com)',
+        groups: ['[here](https://example.com)', 'here', 'https://example.com'],
+      },
+      { value: '.', type: 'string' },
+    ]);
+  });
 });
