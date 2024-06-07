@@ -1,5 +1,14 @@
 # Changelog - v3
 
+## [v3.14.9] (June 7, 2024)
+### Fixes
+- Resolved an issue where M4A format audio files were not playing in Safari. M4A files are now parsed as `audio/x-m4a` to ensure proper playback.
+- Prevented the newly created channels from being filtered out from the ChannelList.
+
+### Features
+- Added a modal to the `FileViewer` components for utilizing the `onMounted` event handler.
+
+
 ## [v3.14.8] (May 30, 2024)
 ### Fixes
 - Resolved the issue of storybook user leaving the channel
