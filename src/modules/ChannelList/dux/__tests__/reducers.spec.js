@@ -2,7 +2,20 @@ import mockData, { channel1, channel0, users, creatingChannel } from '../data.mo
 import * as actionTypes from '../actionTypes';
 import reducers from '../reducers';
 import initialState from '../initialState';
+import { isChannelJustCreated } from '../../../../utils';
+import { getNextChannel } from '../getNextChannel';
+
 const [user1, user2, user3] = users;
+
+jest.mock('../../../../utils', () => ({
+  isChannelJustCreated: jest.fn(),
+  filterChannelListParams: jest.fn(),
+}));
+
+jest.mock('../getNextChannel', () => ({
+  getNextChannel: jest.fn(),
+}));
+
 
 describe('Channels-Reducers', () => {
   it('should set channels on INIT_CHANNELS_SUCCESS', () => {
@@ -904,6 +917,53 @@ describe('Channels-Reducers', () => {
       );
       expect(hideWithPreventAutoOnPreventAutoState.allChannels[0].url).toEqual(newChannel.url);
       expect(hideWithPreventAutoOnPreventAutoState.allChannels.length).toEqual(preventAutoUnhideParamsState.allChannels.length + 1);
+    });
+  });
+  describe.only('isChannelJustCreated', () => {
+    const prevState = { ...mockData, channelListQuery: { includeEmpty: false } };
+
+    it('should not add a newly created channel to the ChannelList if it is just created and the current user is the only member', () => {
+      const newChannel = {
+        ...creatingChannel,
+        members: [user1],
+        createdAt: new Date(),
+        invitedAt: new Date(),
+        lastMessage: null,
+      };
+      (isChannelJustCreated).mockReturnValue(true);
+
+      const nextState = reducers(prevState, {
+        type: actionTypes.ON_USER_JOINED,
+        payload: newChannel,
+      });
+
+      expect(isChannelJustCreated).toHaveBeenCalledWith(newChannel);
+      expect(nextState.allChannels.find(channel => channel.url === newChannel.url)).toBeUndefined();
+      expect(nextState.currentChannel).toEqual(mockData.currentChannel);
+      expect(nextState).toEqual(prevState); // Check if nextState and prevState are deeply equal
+    });
+
+    it('should add a newly created channel to the ChannelList if it is not just created', () => {
+      const newChannel = {
+        ...creatingChannel,
+        members: [user1, user2],
+        createdAt: 123456789,
+        invitedAt: 129999967,
+        lastMessage: null,
+      };
+      (isChannelJustCreated).mockReturnValue(false);
+      (getNextChannel).mockReturnValue(newChannel);
+
+      const nextState = reducers(prevState, {
+        type: actionTypes.ON_USER_JOINED,
+        payload: newChannel,
+      });
+
+      expect(isChannelJustCreated).toHaveBeenCalledWith(newChannel);
+      // Should be undefind since the newly created channel won't be added to the allChannels state
+      expect(nextState.allChannels.find(channel => channel.url === newChannel.url)).toBeUndefined();
+      expect(getNextChannel).toHaveBeenCalled();
+      expect(nextState).not.toEqual(prevState);  // Ensure state has changed
     });
   });
 });
