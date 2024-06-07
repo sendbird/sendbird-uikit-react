@@ -12,7 +12,7 @@ import {
 
 const RegexDataList: { type: 'url' | 'bold'; regex: RegExp }[] = [{
   type: 'url',
-  regex: /\[[^\]]*\]\([^\)]*\)/g,
+  regex: /\[(.*?)\]\((.*?)\)/g,
 }, {
   type: 'bold',
   regex: /\*\*(.*?)\*\*/g,
