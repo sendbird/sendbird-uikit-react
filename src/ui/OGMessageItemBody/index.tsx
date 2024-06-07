@@ -20,6 +20,7 @@ interface Props {
   mouseHover?: boolean;
   isMentionEnabled?: boolean;
   isReactionEnabled?: boolean;
+  isMarkdownEnabled?: boolean;
   onMessageHeightChange?: () => void;
 }
 
@@ -30,6 +31,7 @@ export default function OGMessageItemBody({
   mouseHover = false,
   isMentionEnabled = false,
   isReactionEnabled = false,
+  isMarkdownEnabled = false,
   onMessageHeightChange = () => {
     /* noop */
   },
@@ -42,10 +44,12 @@ export default function OGMessageItemBody({
       return tokenizeMessage({
         mentionedUsers: message?.mentionedUsers ?? undefined,
         messageText: message?.mentionedMessageTemplate,
+        includeMarkdown: isMarkdownEnabled,
       });
     }
     return tokenizeMessage({
       messageText: message?.message,
+      includeMarkdown: isMarkdownEnabled,
     });
   }, [message?.updatedAt, message?.message]);
 

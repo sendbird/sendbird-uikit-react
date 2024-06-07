@@ -90,10 +90,12 @@ export default function ParentMessageInfoItem({
       return tokenizeMessage({
         mentionedUsers: message?.mentionedUsers ?? undefined,
         messageText: message?.mentionedMessageTemplate,
+        includeMarkdown: config.groupChannel.enableMarkdownForUserMessage,
       });
     }
     return tokenizeMessage({
       messageText: (message as UserMessage)?.message,
+      includeMarkdown: config.groupChannel.enableMarkdownForUserMessage,
     });
   }, [message?.updatedAt, (message as UserMessage)?.message]);
 

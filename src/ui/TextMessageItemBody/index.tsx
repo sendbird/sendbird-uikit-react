@@ -16,6 +16,7 @@ interface Props {
   mouseHover?: boolean;
   isMentionEnabled?: boolean;
   isReactionEnabled?: boolean;
+  isMarkdownEnabled?: boolean;
 }
 
 export default function TextMessageItemBody({
@@ -25,6 +26,7 @@ export default function TextMessageItemBody({
   mouseHover = false,
   isMentionEnabled = false,
   isReactionEnabled = false,
+  isMarkdownEnabled = false,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
   const isMessageMentioned = isMentionEnabled
@@ -37,10 +39,12 @@ export default function TextMessageItemBody({
       return tokenizeMessage({
         mentionedUsers: message?.mentionedUsers ?? undefined,
         messageText: message?.mentionedMessageTemplate,
+        includeMarkdown: isMarkdownEnabled,
       });
     }
     return tokenizeMessage({
       messageText: message?.message,
+      includeMarkdown: isMarkdownEnabled,
     });
   }, [message?.updatedAt, message?.message]);
   return (

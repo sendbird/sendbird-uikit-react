@@ -249,6 +249,7 @@ export default function ThreadListItemContent({
               isByMe={isByMe}
               isMentionEnabled={isMentionEnabled}
               isReactionEnabled={isReactionEnabledInChannel}
+              isMarkdownEnabled={config.groupChannel.enableMarkdownForUserMessage}
             />
             ) : isTextMessage(message as UserMessage) && (
               <TextMessageItemBody
@@ -257,6 +258,7 @@ export default function ThreadListItemContent({
                 isByMe={isByMe}
                 isMentionEnabled={isMentionEnabled}
                 isReactionEnabled={isReactionEnabledInChannel}
+                isMarkdownEnabled={config.groupChannel.enableMarkdownForUserMessage}
               />
             )}
           {isVoiceMessage(message as FileMessage) && (

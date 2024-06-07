@@ -9,7 +9,6 @@ import {
   TokenParams,
   UndeterminedToken,
 } from './types';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 const RegexDataList: { type: 'url' | 'bold'; regex: RegExp }[] = [{
   type: 'url',
@@ -178,8 +177,8 @@ export function tokenizeMessage({
   messageText,
   mentionedUsers = [],
   templatePrefix = USER_MENTION_PREFIX,
+  includeMarkdown = false,
 }: TokenParams): Token[] {
-  const { config } = useSendbirdStateContext();
   // mention can be squeezed-in(no-space-between) with other mentions and urls
   // if no users are mentioned, return the messageText as a single token
   const partialResult = [{
@@ -195,7 +194,7 @@ export function tokenizeMessage({
     templatePrefix,
   });
   const partialsWithUrlsAndMentions = identifyUrlsAndStrings(
-    config?.groupChannel?.enableMarkdownForUserMessage
+    includeMarkdown
       ? splitTokensWithMarkdowns(partialWithMentions)
       : partialWithMentions,
   );

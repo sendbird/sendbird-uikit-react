@@ -45,6 +45,7 @@ export type TokenParams = {
   messageText: string;
   mentionedUsers?: User[];
   templatePrefix?: string;
+  includeMarkdown?: boolean;
 };
 
 export type IdentifyMentionsType = {
