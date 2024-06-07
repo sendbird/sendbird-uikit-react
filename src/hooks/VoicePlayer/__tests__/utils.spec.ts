@@ -1,11 +1,13 @@
 import {
+  VOICE_MESSAGE_FILE_NAME,
+  VOICE_MESSAGE_FILE_NAME__XM4A,
   VOICE_MESSAGE_MIME_TYPE,
-  VOICE_MESSAGE_MIME_TYPE__M4A,
+  VOICE_MESSAGE_MIME_TYPE__XM4A,
 } from '../../../utils/consts';
 import { isSafari } from '../../../utils/browser';
-import { getParsedMimeType } from '../utils';
+import { getParsedVoiceAudioFileInfo } from '../utils';
 
-describe('getParsedMimeType', () => {
+describe('getParsedVoiceAudioFileInfo', () => {
   const originalUserAgent = navigator.userAgent;
 
   afterEach(() => {
@@ -15,7 +17,7 @@ describe('getParsedMimeType', () => {
     });
   });
 
-  it('should return VOICE_MESSAGE_MIME_TYPE__M4A for Safari and m4a MIME type', () => {
+  it('should return VOICE_MESSAGE_MIME_TYPE__XM4A for Safari and m4a MIME type', () => {
     const safariUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15';
 
     Object.defineProperty(navigator, 'userAgent', {
@@ -24,8 +26,10 @@ describe('getParsedMimeType', () => {
     });
 
     expect(isSafari(safariUserAgent)).toBe(true);
-    expect(getParsedMimeType('audio/mp3')).toBe(VOICE_MESSAGE_MIME_TYPE);
-    expect(getParsedMimeType('audio/m4a')).toBe(VOICE_MESSAGE_MIME_TYPE__M4A);
+    expect(getParsedVoiceAudioFileInfo('audio/mp3').mimeType).toBe(VOICE_MESSAGE_MIME_TYPE);
+    expect(getParsedVoiceAudioFileInfo('audio/m4a').mimeType).toBe(VOICE_MESSAGE_MIME_TYPE__XM4A);
+    expect(getParsedVoiceAudioFileInfo('audio/mp3').name).toBe(VOICE_MESSAGE_FILE_NAME);
+    expect(getParsedVoiceAudioFileInfo('audio/m4a').name).toBe(VOICE_MESSAGE_FILE_NAME__XM4A);
   });
 
   it('should return VOICE_MESSAGE_MIME_TYPE for non-Safari browser and m4a MIME type', () => {
@@ -36,7 +40,9 @@ describe('getParsedMimeType', () => {
     });
 
     expect(isSafari(chromeUserAgent)).toBe(false);
-    expect(getParsedMimeType('audio/mp3')).toBe(VOICE_MESSAGE_MIME_TYPE);
-    expect(getParsedMimeType('audio/m4a')).toBe(VOICE_MESSAGE_MIME_TYPE);
+    expect(getParsedVoiceAudioFileInfo('audio/mp3').mimeType).toBe(VOICE_MESSAGE_MIME_TYPE);
+    expect(getParsedVoiceAudioFileInfo('audio/m4a').mimeType).toBe(VOICE_MESSAGE_MIME_TYPE);
+    expect(getParsedVoiceAudioFileInfo('audio/mp3').name).toBe(VOICE_MESSAGE_FILE_NAME);
+    expect(getParsedVoiceAudioFileInfo('audio/m4a').name).toBe(VOICE_MESSAGE_FILE_NAME);
   });
 });

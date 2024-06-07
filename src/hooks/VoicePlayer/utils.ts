@@ -1,7 +1,9 @@
 import { isSafari } from '../../utils/browser';
 import {
   VOICE_MESSAGE_MIME_TYPE,
-  VOICE_MESSAGE_MIME_TYPE__M4A,
+  VOICE_MESSAGE_MIME_TYPE__XM4A,
+  VOICE_MESSAGE_FILE_NAME,
+  VOICE_MESSAGE_FILE_NAME__XM4A,
 } from '../../utils/consts';
 
 export type GroupKey = string;
@@ -15,11 +17,20 @@ export const generateGroupKey = (channelUrl = '', key = ''): GroupKey => (`${cha
  * @link: https://sendbird.atlassian.net/browse/CLNP-2997
  *
  * @param mimeType - The original MIME type.
- * @returns The parsed MIME type.
+ * @returns Converted file name and MIME type.
  */
-export const getParsedMimeType = (mimeType: string): string => {
+export const getParsedVoiceAudioFileInfo = (mimeType: string): {
+  name: string,
+  mimeType: string,
+} => {
   if (isSafari(navigator.userAgent) && mimeType.includes('m4a')) {
-    return VOICE_MESSAGE_MIME_TYPE__M4A;
+    return {
+      name: VOICE_MESSAGE_FILE_NAME__XM4A,
+      mimeType: VOICE_MESSAGE_MIME_TYPE__XM4A,
+    };
   }
-  return VOICE_MESSAGE_MIME_TYPE;
+  return {
+    name: VOICE_MESSAGE_FILE_NAME,
+    mimeType: VOICE_MESSAGE_MIME_TYPE,
+  };
 };

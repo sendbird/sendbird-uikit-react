@@ -15,13 +15,12 @@ import {
   SET_CURRENT_PLAYER,
 } from './dux/actionTypes';
 import {
-  VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
   VOICE_PLAYER_AUDIO_ID,
   VOICE_PLAYER_ROOT_ID,
 } from '../../utils/consts';
 import useSendbirdStateContext from '../useSendbirdStateContext';
-import { getParsedMimeType } from './utils';
+import { getParsedVoiceAudioFileInfo } from './utils';
 
 // VoicePlayerProvider interface
 export interface VoicePlayerProps {
@@ -129,9 +128,9 @@ export const VoicePlayerProvider = ({
       fetch(audioFileUrl)
         .then((res) => res.blob())
         .then((blob) => {
-          const audioFile = new File([blob], VOICE_MESSAGE_FILE_NAME, {
+          const audioFile = new File([blob], getParsedVoiceAudioFileInfo(audioFileMimeType).name, {
             lastModified: new Date().getTime(),
-            type: getParsedMimeType(audioFileMimeType),
+            type: getParsedVoiceAudioFileInfo(audioFileMimeType).mimeType,
           });
           resolve(audioFile);
           logger.info('VoicePlayer: Get the audioFile from URL.');
