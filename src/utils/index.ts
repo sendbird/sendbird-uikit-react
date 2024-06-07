@@ -953,5 +953,5 @@ export const isSendableMessage = (message?: BaseMessage | null): message is Send
  * If the channel is just created, the channel's createdAt and currentUser's invitedAt are the same.
  */
 export const isChannelJustCreated = (channel: GroupChannel): boolean => {
-  return isSameSecond(channel.createdAt, channel.invitedAt);
+  return isSameSecond(channel.createdAt, channel.invitedAt) && !channel.lastMessage;
 };
