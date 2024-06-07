@@ -41,6 +41,7 @@ export const VoiceMessageItemBody = ({
     channelUrl,
     key: `${message?.messageId}`,
     audioFileUrl: message?.url,
+    audioFileMimeType: message?.type,
   });
 
   useEffect(() => {
