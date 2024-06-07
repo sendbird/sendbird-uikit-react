@@ -3,9 +3,25 @@ import { render, screen } from '@testing-library/react';
 
 import { FileViewerComponent as FileViewer } from "../index";
 import { msg0, msg1 } from '../data.mock';
+import { SendbirdSdkContext } from '../../../lib/SendbirdSdkContext';
+import { MODAL_ROOT } from '../../../hooks/useModal';
 
 describe('ui/FileViewer', () => {
-  it('should display image', function() {
+  let modalRoot;
+
+  beforeAll(() => {
+    // Create a modal root element and append it to the body
+    modalRoot = document.createElement('div');
+    modalRoot.setAttribute('id', MODAL_ROOT);
+    document.body.appendChild(modalRoot);
+  });
+
+  afterAll(() => {
+    // Remove the modal root element after tests
+    document.body.removeChild(modalRoot);
+  });
+
+  it('should display image', function () {
     const {
       sender,
       type,
@@ -14,15 +30,17 @@ describe('ui/FileViewer', () => {
     } = msg0;
     const { profileUrl, nickname = '' } = sender;
     render(
-      <FileViewer
-        profileUrl={profileUrl}
-        nickname={nickname}
-        type={type}
-        url={url}
-        name={name}
-        onClose={() => {}}
-        onDelete={() => {}}
+      <SendbirdSdkContext.Provider value={{}}>
+        <FileViewer
+          profileUrl={profileUrl}
+          nickname={nickname}
+          type={type}
+          url={url}
+          name={name}
+          onClose={() => { }}
+          onDelete={() => { }}
         />
+      </SendbirdSdkContext.Provider>
     );
     expect(
       screen.getByAltText(msg0.name).className
@@ -35,7 +53,7 @@ describe('ui/FileViewer', () => {
     ).toEqual(msg0.url);
   });
 
-  it('should display video', function() {
+  it('should display video', function () {
     const {
       sender,
       type,
@@ -44,28 +62,33 @@ describe('ui/FileViewer', () => {
     } = msg1;
     const { profileUrl, nickname = '' } = sender;
     const { container } = render(
-      <FileViewer
-        profileUrl={profileUrl}
-        nickname={nickname}
-        type={type}
-        url={url}
-        name={name}
-        onClose={() => {}}
-        onDelete={() => {}}
-      />
+      <SendbirdSdkContext.Provider value={{}}>
+        <FileViewer
+          profileUrl={profileUrl}
+          nickname={nickname}
+          type={type}
+          url={url}
+          name={name}
+          onClose={() => { }}
+          onDelete={() => { }}
+        />
+      </SendbirdSdkContext.Provider>
     );
-    expect(
-      container.getElementsByClassName('sendbird-fileviewer__content__video')[0].className
-    ).not.toContain('sendbird-fileviewer__content__img');
-    expect(
-      container.getElementsByClassName('sendbird-fileviewer__content__video')[0].className
-    ).toBe('sendbird-fileviewer__content__video');
-    expect(
-      container.getElementsByClassName('sendbird-fileviewer__content__video')[0].children[0].src
-    ).toEqual(url);
+
+    // Use document to search for the element inside the modal root
+    const videoElement = document.querySelector(`#${MODAL_ROOT} .sendbird-fileviewer__content__video`);
+    if (!videoElement) {
+      throw new Error('Video element not found');
+    }
+
+    expect(videoElement.className).not.toContain('sendbird-fileviewer__content__img');
+    expect(videoElement.className).toBe('sendbird-fileviewer__content__video');
+
+    const videoChild = videoElement.children[0];
+    expect(videoChild.src).toEqual(url);
   });
 
-  it('should handle unsupported msg', function() {
+  it('should handle unsupported msg', function () {
     const unsupportedMsg = { sender: {} };
     const profileUrl = '';
     const nickname = '';
@@ -75,25 +98,37 @@ describe('ui/FileViewer', () => {
       name = '',
     } = unsupportedMsg;
     const { container } = render(
-      <FileViewer
-        profileUrl={profileUrl}
-        nickname={nickname}
-        type={type}
-        url={url}
-        name={name}
-        onClose={() => {}}
-        onDelete={() => {}}
-      />
+      <SendbirdSdkContext.Provider value={{}}>
+        <FileViewer
+          profileUrl={profileUrl}
+          nickname={nickname}
+          type={type}
+          url={url}
+          name={name}
+          onClose={() => { }}
+          onDelete={() => { }}
+        />
+      </SendbirdSdkContext.Provider>
     );
-    expect(
-      container.getElementsByClassName('sendbird-fileviewer__content__unsupported')[0].className
-    ).toBe('sendbird-fileviewer__content__unsupported');
-    expect(
-      container.getElementsByClassName('sendbird-fileviewer__header__right')[0].children[0].className
-    ).not.toBe('sendbird-fileviewer__header__right__actions');
+
+    // Use document to search for the element inside the modal root
+    const unsupportedElement = document.querySelector(`#${MODAL_ROOT} .sendbird-fileviewer__content__unsupported`);
+    if (!unsupportedElement) {
+      throw new Error('Unsupported element not found');
+    }
+
+    expect(unsupportedElement.className).toBe('sendbird-fileviewer__content__unsupported');
+
+    const headerRightElement = document.querySelector(`#${MODAL_ROOT} .sendbird-fileviewer__header__right`);
+    if (!headerRightElement) {
+      throw new Error('Header right element not found');
+    }
+
+    const headerRightActionElement = headerRightElement.children[0];
+    expect(headerRightActionElement.className).not.toBe('sendbird-fileviewer__header__right__actions');
   });
 
-  it('should do a snapshot test of the FileViewer DOM', function() {
+  it('should do a snapshot test of the FileViewer DOM', function () {
     const {
       sender,
       type,
@@ -102,16 +137,18 @@ describe('ui/FileViewer', () => {
     } = msg0;
     const { profileUrl, nickname = '' } = sender;
     const { asFragment } = render(
-      <FileViewer
-        profileUrl={profileUrl}
-        nickname={nickname}
-        type={type}
-        url={url}
-        name={name}
-        onClose={() => {}}
-        onDelete={() => {}}
-        message={msg0}
-      />
+      <SendbirdSdkContext.Provider value={{}}>
+        <FileViewer
+          profileUrl={profileUrl}
+          nickname={nickname}
+          type={type}
+          url={url}
+          name={name}
+          onClose={() => { }}
+          onDelete={() => { }}
+          message={msg0}
+        />
+      </SendbirdSdkContext.Provider>
     );
     expect(asFragment()).toMatchSnapshot();
   });
