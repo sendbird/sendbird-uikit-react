@@ -28,11 +28,7 @@ export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
     accessToken: searchParams.get('accessToken') || initParams.accessToken,
     allowProfileEdit: parseValue(searchParams.get('enableProfileEdit')) ?? true,
     isMultipleFilesMessageEnabled: parseValue(searchParams.get('enableMultipleFilesMessage')) ?? true,
-    uikitOptions: {
-      groupChannel: {
-        enableMarkdownForUserMessage: true,
-      }
-    },
+    uikitOptions: {},
   } as ParamsAsProps;
 
   if (!response.appId) throw new Error(`Invalid app id: ${response.appId}`);
@@ -97,6 +93,7 @@ export const paramKeys = [
   'groupChannel_enableFeedback',
   'groupChannel_enableSuggestedReplies',
   'groupChannel_showSuggestedRepliesFor',
+  'groupChannel_enableMarkdownForUserMessage',
   'groupChannelList_enableTypingIndicator',
   'groupChannelList_enableMessageReceiptStatus',
   'groupChannelSettings_enableMessageSearch',
