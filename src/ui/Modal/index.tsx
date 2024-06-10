@@ -87,7 +87,7 @@ export interface ModalProps {
   disabled?: boolean;
   hideFooter?: boolean;
   type?: ButtonTypes;
-  onClose?: (() => void) | ((e: MouseEvent | KeyboardEvent) => void);
+  onClose?: (e?: MouseEvent | KeyboardEvent) => void;
   onSubmit?: (...args: any[]) => void;
   renderHeader?: () => ReactElement;
   customFooter?: ReactNode;
