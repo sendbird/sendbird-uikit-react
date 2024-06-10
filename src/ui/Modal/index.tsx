@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useContext, MouseEvent, useState, useEffect } from 'react';
+import React, { ReactElement, ReactNode, useContext, MouseEvent, useState, useEffect, KeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
 
 import './index.scss';
@@ -87,7 +87,7 @@ export interface ModalProps {
   disabled?: boolean;
   hideFooter?: boolean;
   type?: ButtonTypes;
-  onClose?: () => void;
+  onClose?: (() => void) | ((e: MouseEvent | KeyboardEvent) => void);
   onSubmit?: (...args: any[]) => void;
   renderHeader?: () => ReactElement;
   customFooter?: ReactNode;
