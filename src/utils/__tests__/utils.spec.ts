@@ -6,7 +6,8 @@ import {
   isMultipleFilesMessage,
 } from '../index';
 import { AdminMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
-import { deleteNullish, isMobileIOS } from '../utils';
+import { deleteNullish } from '../utils';
+import { isMobileIOS } from '../browser';
 
 describe('Global-utils: verify message type util functions', () => {
   it('should return true for each message', () => {

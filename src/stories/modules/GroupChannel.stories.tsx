@@ -3,6 +3,8 @@ import type { Meta } from '@storybook/react';
 
 import SendbirdProvider from '../../lib/Sendbird';
 import GroupChannel from '../../modules/GroupChannel';
+import { STORYBOOK_APP_ID, STORYBOOK_USER_ID, STORYBOOK_NICKNAME } from '../common/const';
+import { useSampleChannel } from '../common/useSampleChannel';
 
 const meta: Meta<typeof GroupChannel> = { 
   title: '1.Module/GroupChannel',
@@ -101,29 +103,29 @@ const meta: Meta<typeof GroupChannel> = {
 };
 export default meta;
 
-export const Default = (args): React.ReactElement => {
+export const Default = (): React.ReactElement => {
+  const channel = useSampleChannel();
+
   return (
     <div style={{ height: 500 }}>
       <SendbirdProvider
-        appId="FEA2129A-EA73-4EB9-9E0B-EC738E7EB768"
-        // appId="2D7B4CDB-932F-4082-9B09-A1153792DC8D"
-        userId="hoon20230802"
+        appId={STORYBOOK_APP_ID}
+        userId={STORYBOOK_USER_ID}
+        nickname={STORYBOOK_NICKNAME}
         breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
       >
         <GroupChannel
-          {...args}
+          {...{
+            channelUrl: channel?.url ?? '',
+            isReactionEnabled: true,
+            isMessageGroupingEnabled: true,
+            showSearchIcon: true,
+            replyType: 'THREAD',
+            isMultipleFilesMessageEnabled: true,
+            disableUserProfile: false,
+          }}
         />
       </SendbirdProvider>
     </div>
   );
-};
-Default.args = {
-  channelUrl: "sendbird_group_channel_316207824_6a62239b0cb650a6feae8466701ffdd9890989f5",
-  isReactionEnabled: true,
-  isMessageGroupingEnabled: true,
-  showSearchIcon: true,
-  replyType: 'THREAD',
-  threadReplySelectType: 'THREAD',
-  isMultipleFilesMessageEnabled: true,
-  disableUserProfile: false,
 };

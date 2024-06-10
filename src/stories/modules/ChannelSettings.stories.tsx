@@ -3,6 +3,8 @@ import type { Meta } from '@storybook/react';
 
 import SendbirdProvider from '../../lib/Sendbird';
 import ChannelSettings from '../../modules/ChannelSettings';
+import { STORYBOOK_APP_ID, STORYBOOK_USER_ID, STORYBOOK_NICKNAME } from '../common/const';
+import { useSampleChannel } from '../common/useSampleChannel';
 
 const meta: Meta<typeof ChannelSettings> = {
   title: '1.Module/ChannelSettings',
@@ -72,22 +74,22 @@ const meta: Meta<typeof ChannelSettings> = {
 };
 export default meta;
 
-export const Default = (args): React.ReactElement => {
+export const Default = (): React.ReactElement => {
+  const channel = useSampleChannel();
+
   return (
     <div style={{ height: 500 }}>
       <SendbirdProvider
-        appId="FEA2129A-EA73-4EB9-9E0B-EC738E7EB768"
-        userId="hoon20230802"
+        appId={STORYBOOK_APP_ID}
+        userId={STORYBOOK_USER_ID}
+        nickname={STORYBOOK_NICKNAME}
         breakpoint={/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)}
       >
         <ChannelSettings
-          {...args}
+          channelUrl={channel?.url ?? ''}
+          disableUserProfile={false}
         />
       </SendbirdProvider>
     </div>
   );
-};
-Default.args = {
-  channelUrl: "sendbird_group_channel_316207824_6a62239b0cb650a6feae8466701ffdd9890989f5",
-  disableUserProfile: false,
 };

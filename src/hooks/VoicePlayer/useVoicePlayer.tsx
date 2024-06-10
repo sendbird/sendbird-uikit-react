@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useVoicePlayerContext } from '.';
-import { VOICE_PLAYER_AUDIO_ID } from '../../utils/consts';
+import { VOICE_PLAYER_AUDIO_ID, VOICE_MESSAGE_MIME_TYPE } from '../../utils/consts';
 import { useVoiceRecorderContext } from '../VoiceRecorder';
 
 import { AudioUnitDefaultValue, VoicePlayerStatusType } from './dux/initialState';
@@ -11,6 +11,7 @@ export interface UseVoicePlayerProps {
   channelUrl?: string;
   audioFile?: File;
   audioFileUrl?: string;
+  audioFileMimeType?: string;
 }
 
 export interface UseVoicePlayerContext {
@@ -27,6 +28,7 @@ export const useVoicePlayer = ({
   channelUrl = '',
   audioFile,
   audioFileUrl = '',
+  audioFileMimeType = VOICE_MESSAGE_MIME_TYPE,
 }: UseVoicePlayerProps): UseVoicePlayerContext => {
   const groupKey = generateGroupKey(channelUrl, key);
   const {
@@ -44,6 +46,7 @@ export const useVoicePlayer = ({
         groupKey,
         audioFile,
         audioFileUrl,
+        audioFileMimeType,
       });
     }
   };
