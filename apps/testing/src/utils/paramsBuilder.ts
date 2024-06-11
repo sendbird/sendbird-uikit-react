@@ -28,6 +28,7 @@ export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
     accessToken: searchParams.get('accessToken') || initParams.accessToken,
     allowProfileEdit: parseValue(searchParams.get('enableProfileEdit')) ?? true,
     isMultipleFilesMessageEnabled: parseValue(searchParams.get('enableMultipleFilesMessage')) ?? true,
+    htmlTextDirection: parseValue(searchParams.get('htmlTextDirection')) ?? 'ltr',
     uikitOptions: {},
   } as ParamsAsProps;
 
