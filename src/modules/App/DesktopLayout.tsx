@@ -39,6 +39,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
     threadTargetMessage,
     setThreadTargetMessage,
     enableLegacyChannelModules,
+    htmlTextDirection,
   } = props;
 
   const updateFocusedChannel = (channel: GroupChannelClass) => {
@@ -109,7 +110,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
   };
 
   return (
-    <div className="sendbird-app__wrap">
+    <div className="sendbird-app__wrap" dir={htmlTextDirection}>
       <div className="sendbird-app__channellist-wrap">
         {enableLegacyChannelModules ? <ChannelList {...channelListProps} /> : <GroupChannelList {...channelListProps} />}
       </div>

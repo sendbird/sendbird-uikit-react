@@ -49,7 +49,7 @@ import {
   SendbirdProviderUtils,
 } from './types';
 import { GlobalModalProvider, ModalRoot } from '../hooks/useModal';
-import { RenderUserProfileProps, UserListQuery } from '../types';
+import { HTMLTextDirection, RenderUserProfileProps, UserListQuery } from '../types';
 import PUBSUB_TOPICS, { SBUGlobalPubSub, SBUGlobalPubSubTopicPayloadUnion } from './pubSub/topics';
 import { EmojiManager } from './emojiManager';
 import { uikitConfigStorage } from './utils/uikitConfigStorage';
@@ -101,6 +101,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   allowProfileEdit?: boolean;
   disableMarkAsDelivered?: boolean;
   breakpoint?: string | boolean;
+  htmlTextDirection?: HTMLTextDirection;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   onUserProfileMessage?: (channel: GroupChannel) => void;
   uikitOptions?: UIKitOptions;
@@ -175,6 +176,7 @@ const SendbirdSDK = ({
   customExtensionParams,
   isMultipleFilesMessageEnabled = false,
   eventHandlers,
+  htmlTextDirection = 'ltr',
 }: SendbirdProviderProps): React.ReactElement => {
   const { logLevel = '', userMention = {}, isREMUnitEnabled = false, pubSub: customPubSub } = config;
   const { isMobile } = useMediaQueryContext();
@@ -391,6 +393,7 @@ const SendbirdSDK = ({
           isTypingIndicatorEnabledOnChannelList: configs.groupChannel.channelList.enableTypingIndicator,
           isMessageReceiptStatusEnabledOnChannelList: configs.groupChannel.channelList.enableMessageReceiptStatus,
           showSearchIcon: sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
+          htmlTextDirection,
         },
         eventHandlers,
         emojiManager,

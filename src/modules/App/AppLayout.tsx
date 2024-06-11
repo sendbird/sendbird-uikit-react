@@ -19,6 +19,7 @@ export const AppLayout = (props: AppLayoutProps) => {
     currentChannel,
     setCurrentChannel,
     enableLegacyChannelModules,
+    htmlTextDirection,
   } = props;
 
   const globalStore = useSendbirdStateContext();
@@ -61,6 +62,7 @@ export const AppLayout = (props: AppLayoutProps) => {
               threadTargetMessage={threadTargetMessage}
               setThreadTargetMessage={setThreadTargetMessage}
               enableLegacyChannelModules={enableLegacyChannelModules}
+              htmlTextDirection={htmlTextDirection}
             />
           )
           : (
@@ -87,6 +89,7 @@ export const AppLayout = (props: AppLayoutProps) => {
               startingPoint={startingPoint}
               setStartingPoint={setStartingPoint}
               enableLegacyChannelModules={enableLegacyChannelModules}
+              htmlTextDirection={htmlTextDirection}
             />
           )
       }
