@@ -3,7 +3,8 @@ import format from 'date-fns/format';
 import './index.scss';
 
 import MessageStatus from '../MessageStatus';
-import { MessageMenu, MessageMenuProps } from '../MessageItemMenu';
+// import { MessageMenu, MessageMenuProps } from '../MessageItemMenu';
+import { MessageMenu, type MessageMenuProps } from '../MessageMenu';
 import { MessageEmojiMenu, MessageEmojiMenuProps } from '../MessageItemReactionMenu';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import EmojiReactions, { EmojiReactionsProps } from '../EmojiReactions';

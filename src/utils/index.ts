@@ -18,6 +18,8 @@ import { MessageContentMiddleContainerType, Nullable } from '../types';
 import { isSafari } from './browser';
 import { match } from 'ts-pattern';
 
+export { isReplyTypeMessageEnabled } from './menuConditions';
+
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 export const SUPPORTED_MIMES = {
   IMAGE: [
@@ -236,6 +238,7 @@ export const isFailedMessage = (
 export const isPendingMessage = (
   message: SendableMessageType,
 ): boolean => (message?.sendingStatus === 'pending');
+
 export const isSentStatus = (state: string): boolean => (
   state === OutgoingMessageStates.SENT
   || state === OutgoingMessageStates.DELIVERED
@@ -249,7 +252,7 @@ export const isAdminMessage = (message: CoreMessageType): message is AdminMessag
       : message?.messageType === 'admin'
   )
 );
-export const isUserMessage = (message: CoreMessageType): message is UserMessage => (
+export const isUserMessage = (message: CoreMessageType | BaseMessage): message is UserMessage => (
   message && (
     message['isUserMessage'] && typeof message.isUserMessage === 'function'
       ? message.isUserMessage()

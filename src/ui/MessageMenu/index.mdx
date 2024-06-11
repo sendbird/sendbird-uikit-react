@@ -1,0 +1,94 @@
+## Desktop layout
+### 조건 
+1. 각 메뉴 아이템은 아래와 같은 상태를 가질 수 있어야 함
+  (1) Clickable: onClick event, mouse cursor
+  (2) Disable: disabled status, non-Clickable
+2. 각 메뉴 아이템은 아래와 같은 컨텐츠를 가질 수 있어야 함
+  (1) 구성 컨텐츠(ReactNode)
+  (2) testID
+  (3) className
+
+```
+import { GroupChannel } from '@sendbird/uikit-react/GroupChannel';
+import { MessageMenu } from '@sendbird/uikit-react/ui/MessageMenu';
+
+const CustomChannel = () => {
+  return (
+    <GroupChannel
+      renderMessageContent={(props) => (
+        <MessageContent
+          {...props}
+
+          renderMessageMenu={(props) => (
+            <MessageMenu
+              renderTriggerIcon={() => (
+                <Icon />
+              )}
+            />
+          )}
+          
+          renderMessageMenu={() => {
+            return (
+              <MessageMenu
+                renderTriggerIcon={(props) => (
+                  <props.TriggerIcon {...props} renderIcon={() => <Icon />} />
+                )}
+                renderMenuItems={(props) => {
+                  const {
+                    Delete,
+                    Edit,
+                    Resend,
+                    OpenInChannel,
+                    Thread,
+                    Reply,
+                    Copy,
+                    MenuItem,
+                  } = props.items;
+                  return (
+                    <>
+                      <Delete />
+                      <MenuItemx
+                        testId="hi-city"
+                        className="hello-world"
+                        disabled={false}
+                        onClick={() => {
+                          // noop
+                        }}
+                      >
+                        {HELLO WORLD!}
+                      </MenuItemx>
+                    </>
+                  )
+                }}
+              />
+            )
+          }}
+        />
+      )}
+    />
+  )
+}
+```
+
+## Mobile layout
+```
+import { GroupChannel } from '@sendbird/uikit-react/GroupChannel';
+import { MessageMenu } from '@sendbird/uikit-react/ui/MessageMenu';
+
+const CustomChannel = () => {
+  return (
+    <GroupChannel
+      renderMessageContent={(props) => (
+        <MessageContent
+          {...props}
+          renderMobileMenuOnLongPress={(props) => (
+            <MobileMenu
+              {...props}
+            />
+          )}
+        />
+      )}
+    />
+  )
+}
+```

@@ -1,0 +1,29 @@
+@import '../../styles/variables';
+
+.sendbird__offline {
+  .sendbird-menu-item {
+    cursor: not-allowed;
+  }
+}
+
+.sendbird-menu-item {
+  cursor: pointer;
+  white-space: nowrap;
+  padding: 8px 16px;
+
+  &.disable {
+    cursor: not-allowed;
+
+    &:hover {
+      @include themed() {
+        background-color: t(bg--0-5);
+      }
+    }
+  }
+
+  &:hover {
+    @include themed() {
+      background-color: t(bg--1-4);
+    }
+  }
+}
