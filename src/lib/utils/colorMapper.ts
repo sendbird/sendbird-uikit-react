@@ -34,6 +34,13 @@ const colorMappingOrder = Object
   .values(colorMapping)
   .sort((a, b) => b.length - a.length);
 
+/**
+ * Convert colorMapping to a Map for quick lookup in mapColorKeys
+ */
+const colorMappingMap = new Map<string, string>(
+  Object.entries(colorMapping).map(([key, value]) => [value, key]),
+);
+
 export const mapColorKeys = (colorSet: ColorSet): ColorSet => {
   const mappedColors: ColorSet = {};
 
@@ -45,11 +52,8 @@ export const mapColorKeys = (colorSet: ColorSet): ColorSet => {
       // e.g., '-extra-dark$'
       const regex = new RegExp(`-${mappingValue}$`);
       if (regex.test(key)) {
-        // Find the corresponding numeric key for the mapping value
-        const numericKey = Object.entries(colorMapping).find((
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          [_, value]) => value === mappingValue,
-        )?.[0];
+        // Find the corresponding numeric key for the mapping value using Map
+        const numericKey = colorMappingMap.get(mappingValue);
         if (numericKey) {
           // Replace the descriptive text with the numeric key
           descriptiveKey = key.replace(regex, `-${numericKey}`);
