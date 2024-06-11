@@ -44,6 +44,7 @@ export interface AppProps {
   isMessageGroupingEnabled?: AppLayoutProps['isMessageGroupingEnabled'];
   disableAutoSelect?: AppLayoutProps['disableAutoSelect'];
   onProfileEditSuccess?: AppLayoutProps['onProfileEditSuccess'];
+  htmlTextDirection?: AppLayoutProps['htmlTextDirection'];
 
   /**
    * The default value is false.
@@ -100,6 +101,7 @@ export default function App(props: AppProps) {
     isUserIdUsedForNickname = true,
     enableLegacyChannelModules = false,
     uikitOptions,
+    htmlTextDirection = 'ltr',
     // The below configs are duplicates of the Dashboard UIKit Configs.
     // Since their default values will be set in the Sendbird component,
     // we don't need to set them here.
@@ -167,6 +169,7 @@ export default function App(props: AppProps) {
         isReactionEnabled={isReactionEnabled}
         replyType={replyType}
         showSearchIcon={showSearchIcon}
+        htmlTextDirection={htmlTextDirection}
       />
     </Sendbird>
   );

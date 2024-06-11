@@ -6,6 +6,7 @@ import {
   UserListQuery,
   RenderUserProfileProps,
   SendBirdProviderConfig,
+  HTMLTextDirection,
 } from '../../types';
 import { CustomExtensionParams, SBUEventHandlers, SendbirdChatInitParams } from '../../lib/types';
 import { SendableMessageType } from '../../utils';
@@ -13,6 +14,7 @@ import { SendableMessageType } from '../../utils';
 export interface AppLayoutProps {
   isReactionEnabled?: boolean;
   replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
+  htmlTextDirection?: HTMLTextDirection;
   isMessageGroupingEnabled?: boolean;
   isMultipleFilesMessageEnabled?: boolean;
   allowProfileEdit?: boolean;

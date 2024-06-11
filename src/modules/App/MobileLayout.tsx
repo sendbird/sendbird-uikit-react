@@ -44,6 +44,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
     highlightedMessage,
     setHighlightedMessage,
     enableLegacyChannelModules,
+    htmlTextDirection,
   } = props;
   const [panel, setPanel] = useState(PANELS.CHANNEL_LIST);
 
@@ -165,7 +166,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
   };
 
   return (
-    <div className="sb_mobile">
+    <div className="sb_mobile" dir={htmlTextDirection}>
       {panel === PANELS.CHANNEL_LIST && (
         <div className="sb_mobile__panelwrap">
           {enableLegacyChannelModules ? <ChannelList {...channelListProps} /> : <GroupChannelList {...channelListProps} />}
