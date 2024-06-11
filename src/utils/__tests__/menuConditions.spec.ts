@@ -29,6 +29,7 @@ interface Channel {
 }
 
 interface Message {
+  sendingStatus?: string;
   isResendable?: boolean;
   parentMessageId?: number | null;
 }
@@ -40,12 +41,14 @@ describe('Global-utils/MenuConditions', () => {
 
   beforeEach(() => {
     channel = {
-      isGroupChannel: jest.fn(),
+      isGroupChannel: () => true,
       isEphemeral: false,
       isBroadcast: false,
       myRole: Role.NONE,
     };
-    message = {};
+    message = {
+      sendingStatus: 'succeeded',
+    };
     params = {
       message,
       channel,
@@ -106,6 +109,8 @@ describe('Global-utils/MenuConditions', () => {
 
   it('showMenuItemReply returns true for quote reply', () => {
     params.replyType = 'QUOTE_REPLY';
+    (isFailedMessage as jest.Mock).mockReturnValue(false);
+    (isPendingMessage as jest.Mock).mockReturnValue(false);
     expect(showMenuItemReply(params)).toBe(true);
 
     params.replyType = 'THREAD';
@@ -116,6 +121,8 @@ describe('Global-utils/MenuConditions', () => {
     params.replyType = 'THREAD';
     params.onReplyInThread = () => {};
     params.message.parentMessageId = null;
+    (isFailedMessage as jest.Mock).mockReturnValue(false);
+    (isPendingMessage as jest.Mock).mockReturnValue(false);
     expect(showMenuItemThread(params)).toBe(true);
 
     params.onReplyInThread = null;
