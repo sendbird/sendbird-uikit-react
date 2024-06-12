@@ -24,6 +24,8 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { classnames } from '../../utils/utils';
+import { PrebuildMenuItemPropsType } from '../MessageMenu/items';
+import { BottomSheetMenuItem } from './bottomSheetMenuItem';
 
 const EMOJI_SIZE = 38;
 
@@ -46,6 +48,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     onReplyInThread,
     isOpenedFromThread = false,
     onDownloadClick,
+    renderMenuItems,
   } = props;
   const isByMe = message?.sender?.userId === userId;
   const { stringSet } = useLocalization();
@@ -88,6 +91,182 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     ? emojis
     : emojis?.slice(0, maxEmojisPerRow);
   const canShowMoreEmojis = emojis && emojis.length > maxEmojisPerRow;
+
+  const Copy = (props: PrebuildMenuItemPropsType) => (
+    <BottomSheetMenuItem
+      onClick={() => {
+        hideMenu();
+        copyToClipboard((message as UserMessage)?.message);
+      }}
+    >
+      {props?.children ?? (
+        <>
+          <Icon
+            type={IconTypes.COPY}
+            fillColor={IconColors.PRIMARY}
+            width="24px"
+            height="24px"
+          />
+          <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
+            {stringSet?.MESSAGE_MENU__COPY}
+          </Label>
+        </>
+      )}
+    </BottomSheetMenuItem>
+  );
+  const Edit = (props: PrebuildMenuItemPropsType) => (
+    <BottomSheetMenuItem
+      onClick={() => {
+        hideMenu();
+        showEdit?.(true);
+      }}
+    >
+      {props?.children ?? (
+        <>
+          <Icon
+            type={IconTypes.EDIT}
+            fillColor={IconColors.PRIMARY}
+            width="24px"
+            height="24px"
+          />
+          <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
+            {stringSet?.MESSAGE_MENU__EDIT}
+          </Label></>
+      )}
+    </BottomSheetMenuItem>
+  );
+  const Resend = (props: PrebuildMenuItemPropsType) => (
+    <BottomSheetMenuItem onClick={() => {
+      hideMenu();
+      resendMessage?.(message);
+    }}>
+      {props?.children ?? (
+        <><Icon
+          type={IconTypes.REFRESH}
+          fillColor={IconColors.PRIMARY}
+          width="24px"
+          height="24px"
+        />
+          <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
+            {stringSet?.MESSAGE_MENU__RESEND}
+          </Label></>
+      )}
+    </BottomSheetMenuItem>
+  );
+  const Reply = (props: PrebuildMenuItemPropsType) => (
+    <BottomSheetMenuItem disabled={disableReaction ? true : false} onClick={() => {
+      if (!disableReaction) {
+        hideMenu();
+        setQuoteMessage?.(message);
+      }
+    }}>
+      {props?.children ?? (
+        <>
+          <Icon
+            type={IconTypes.REPLY}
+            fillColor={disableReaction
+              ? IconColors.ON_BACKGROUND_3
+              : IconColors.PRIMARY
+            }
+            width="24px"
+            height="24px"
+          />
+          <Label
+            type={LabelTypography.SUBTITLE_1}
+            color={disableReaction ? LabelColors.ONBACKGROUND_4 : LabelColors.ONBACKGROUND_1}
+          >
+            {stringSet?.MESSAGE_MENU__REPLY}
+          </Label></>
+      )}
+    </BottomSheetMenuItem>
+  );
+  const Thread = (props: PrebuildMenuItemPropsType) => (
+    <BottomSheetMenuItem onClick={() => {
+      hideMenu();
+      onReplyInThread?.({ message });
+    }}>
+      {props?.children ?? (
+        <><Icon
+          type={IconTypes.THREAD}
+          fillColor={IconColors.PRIMARY}
+          width="24px"
+          height="24px"
+        />
+          <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
+            {stringSet.MESSAGE_MENU__THREAD}
+          </Label></>
+      )}
+    </BottomSheetMenuItem>
+  );
+  const Delete = (props: PrebuildMenuItemPropsType) => (
+    <BottomSheetMenuItem onClick={() => {
+      if (isFailedMessage(message)) {
+        hideMenu();
+        deleteMessage?.(message);
+      } else if (!disableDelete) {
+        hideMenu();
+        showRemove?.(true);
+      }
+    }}>
+      {props?.children ?? (
+        <><Icon
+          type={IconTypes.DELETE}
+          fillColor={
+            disableDelete
+              ? IconColors.ON_BACKGROUND_4
+              : IconColors.PRIMARY
+          }
+          width="24px"
+          height="24px"
+        />
+          <Label
+            type={LabelTypography.SUBTITLE_1}
+            color={
+              disableDelete
+                ? LabelColors.ONBACKGROUND_4
+                : LabelColors.ONBACKGROUND_1
+            }
+          >
+            {stringSet?.MESSAGE_MENU__DELETE}
+          </Label></>
+      )}
+    </BottomSheetMenuItem>
+  );
+  const Download = (props: PrebuildMenuItemPropsType) => (
+    <BottomSheetMenuItem onClick={() => {
+      hideMenu();
+    }}>
+      {props?.children ?? (
+        <a
+          className="sendbird-message__bottomsheet--hyperlink"
+          rel="noopener noreferrer"
+          href={fileMessage?.url}
+          target="_blank"
+          onClick={onDownloadClick}
+        >
+          <Icon
+            type={IconTypes.DOWNLOAD}
+            fillColor={IconColors.PRIMARY}
+            width="24px"
+            height="24px"
+          />
+          <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
+            {stringSet?.MESSAGE_MENU__SAVE}
+          </Label>
+        </a>
+      )}
+    </BottomSheetMenuItem>
+  );
+  const prebuildItems = {
+    Copy,
+    Edit,
+    Resend,
+    Reply,
+    Thread,
+    Delete,
+    Download,
+  };
+
   return (
     <BottomSheet onBackdropClick={hideMenu}>
       <div className='sendbird-message__bottomsheet'>
@@ -173,185 +352,17 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
         {
           !showEmojisOnly && (
             <div className='sendbird-message__bottomsheet--actions'>
-              {showMenuItemCopy && (
-                <div
-                  className='sendbird-message__bottomsheet--action'
-                  onClick={() => {
-                    hideMenu();
-                    copyToClipboard((message as UserMessage)?.message);
-                  }}
-                >
-                  <Icon
-                    type={IconTypes.COPY}
-                    fillColor={IconColors.PRIMARY}
-                    width="24px"
-                    height="24px"
-                  />
-                  <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
-                    {stringSet?.MESSAGE_MENU__COPY}
-                  </Label>
-                </div>
+              {renderMenuItems?.({ close: hideMenu, prebuildItems }) ?? (
+                <>
+                  {showMenuItemCopy && (<Copy />)}
+                  {showMenuItemEdit && (<Edit />)}
+                  {showMenuItemResend && (<Resend />)}
+                  {showMenuItemReply && (<Reply />)}
+                  {showMenuItemThread && (<Thread />)}
+                  {showMenuItemDeleteFinal && (<Delete />)}
+                  {showMenuItemDownload && (<Download />)}
+                </>
               )}
-              {
-                showMenuItemEdit && (
-                  <div
-                    className='sendbird-message__bottomsheet--action'
-                    onClick={() => {
-                      hideMenu();
-                      showEdit?.(true);
-                    }}
-                  >
-                    <Icon
-                      type={IconTypes.EDIT}
-                      fillColor={IconColors.PRIMARY}
-                      width="24px"
-                      height="24px"
-                    />
-                    <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
-                      {stringSet?.MESSAGE_MENU__EDIT}
-                    </Label>
-                  </div>
-                )
-              }
-              {
-                showMenuItemResend && (
-                  <div
-                    className='sendbird-message__bottomsheet--action'
-                    onClick={() => {
-                      hideMenu();
-                      resendMessage?.(message);
-                    }}
-                  >
-                    <Icon
-                      type={IconTypes.REFRESH}
-                      fillColor={IconColors.PRIMARY}
-                      width="24px"
-                      height="24px"
-                    />
-                    <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
-                      {stringSet?.MESSAGE_MENU__RESEND}
-                    </Label>
-                  </div>
-                )
-              }
-              {
-                showMenuItemReply && (
-                  <div
-                    className={classnames(
-                      'sendbird-message__bottomsheet--action',
-                      disableReaction && 'sendbird-message__bottomsheet--action-disabled',
-                    )}
-                    role="menuitem"
-                    aria-disabled={disableReaction ? true : false}
-                    onClick={() => {
-                      if (!disableReaction) {
-                        hideMenu();
-                        setQuoteMessage?.(message);
-                      }
-                    }}
-                  >
-                    <Icon
-                      type={IconTypes.REPLY}
-                      fillColor={disableReaction
-                        ? IconColors.ON_BACKGROUND_3
-                        : IconColors.PRIMARY
-                      }
-                      width="24px"
-                      height="24px"
-                    />
-                    <Label
-                      type={LabelTypography.SUBTITLE_1}
-                      color={disableReaction ? LabelColors.ONBACKGROUND_4 : LabelColors.ONBACKGROUND_1}
-                    >
-                      {stringSet?.MESSAGE_MENU__REPLY}
-                    </Label>
-                  </div>
-                )
-              }
-              {showMenuItemThread && (
-                <div
-                  className='sendbird-message__bottomsheet--action'
-                  onClick={() => {
-                    hideMenu();
-                    onReplyInThread?.({ message });
-                  }}
-                >
-                  <Icon
-                    type={IconTypes.THREAD}
-                    fillColor={IconColors.PRIMARY}
-                    width="24px"
-                    height="24px"
-                  />
-                  <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
-                    {stringSet.MESSAGE_MENU__THREAD}
-                  </Label>
-                </div>
-              )}
-              {
-                showMenuItemDeleteFinal && (
-                  <div
-                    className='sendbird-message__bottomsheet--action'
-                    onClick={() => {
-                      if (isFailedMessage(message)) {
-                        hideMenu();
-                        deleteMessage?.(message);
-                      } else if (!disableDelete) {
-                        hideMenu();
-                        showRemove?.(true);
-                      }
-                    }}
-                  >
-                    <Icon
-                      type={IconTypes.DELETE}
-                      fillColor={
-                        disableDelete
-                          ? IconColors.ON_BACKGROUND_4
-                          : IconColors.PRIMARY
-                      }
-                      width="24px"
-                      height="24px"
-                    />
-                    <Label
-                      type={LabelTypography.SUBTITLE_1}
-                      color={
-                        disableDelete
-                          ? LabelColors.ONBACKGROUND_4
-                          : LabelColors.ONBACKGROUND_1
-                      }
-                    >
-                      {stringSet?.MESSAGE_MENU__DELETE}
-                    </Label>
-                  </div>
-                )
-              }
-              {
-                showMenuItemDownload && (
-                  <div
-                    className='sendbird-message__bottomsheet--action'
-                    onClick={() => {
-                      hideMenu();
-                    }}
-                  >
-                    <a
-                      className="sendbird-message__bottomsheet--hyperlink"
-                      rel="noopener noreferrer"
-                      href={fileMessage?.url}
-                      target="_blank"
-                      onClick={onDownloadClick}
-                    >
-                      <Icon
-                        type={IconTypes.DOWNLOAD}
-                        fillColor={IconColors.PRIMARY}
-                        width="24px"
-                        height="24px"
-                      />
-                      <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
-                        {stringSet?.MESSAGE_MENU__SAVE}
-                      </Label>
-                    </a>
-                  </div>
-                )
-              }
             </div>
           )
         }

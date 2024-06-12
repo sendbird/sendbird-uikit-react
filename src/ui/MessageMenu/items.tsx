@@ -44,9 +44,10 @@ export interface MenuItemProps {
   disabled?: boolean;
   tabIndex?: number;
   testID?: string;
-  onClick?: (e: MouseEvent<HTMLLIElement>) => void;
+  onClick?: (e: MouseEvent<HTMLLIElement | HTMLDivElement>) => void;
   children: ReactNode;
 }
+
 export const MenuItem = ({
   className,
   disabled,
