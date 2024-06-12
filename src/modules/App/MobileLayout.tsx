@@ -17,6 +17,7 @@ import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import uuidv4 from '../../utils/uuid';
 import { ALL, useVoicePlayerContext } from '../../hooks/VoicePlayer';
 import { SendableMessageType } from '../../utils';
+import { APP_LAYOUT_ROOT } from './const';
 
 enum PANELS {
   CHANNEL_LIST = 'CHANNEL_LIST',
@@ -44,7 +45,6 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
     highlightedMessage,
     setHighlightedMessage,
     enableLegacyChannelModules,
-    htmlTextDirection,
   } = props;
   const [panel, setPanel] = useState(PANELS.CHANNEL_LIST);
 
@@ -166,7 +166,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
   };
 
   return (
-    <div className="sb_mobile" dir={htmlTextDirection}>
+    <div className="sb_mobile" id={APP_LAYOUT_ROOT}>
       {panel === PANELS.CHANNEL_LIST && (
         <div className="sb_mobile__panelwrap">
           {enableLegacyChannelModules ? <ChannelList {...channelListProps} /> : <GroupChannelList {...channelListProps} />}

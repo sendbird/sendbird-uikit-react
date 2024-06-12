@@ -60,15 +60,17 @@ export const MenuItem = ({
   );
 };
 
+export const DROPDOWN_PORTAL_ROOT = 'sendbird-dropdown-portal';
 export const MenuRoot = (): ReactElement => (
   <div
-    id="sendbird-dropdown-portal"
-    className="sendbird-dropdown-portal"
+    id={DROPDOWN_PORTAL_ROOT}
+    className={DROPDOWN_PORTAL_ROOT}
   />
 );
 
+export const EMOJI_REACTION_LIST_PORTAL_ROOT = 'sendbird-emoji-list-portal';
 // For the test environment
-export const EmojiReactionListRoot = (): ReactElement => <div id="sendbird-emoji-list-portal" />;
+export const EmojiReactionListRoot = (): ReactElement => <div id={EMOJI_REACTION_LIST_PORTAL_ROOT} />;
 
 type MenuDisplayingFunc = () => void;
 export interface ContextMenuProps {

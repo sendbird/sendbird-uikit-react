@@ -6,6 +6,7 @@ import scss from "rollup-plugin-scss";
 import postcss from "rollup-plugin-postcss";
 import replace from "@rollup/plugin-replace";
 import autoprefixer from "autoprefixer";
+import postcssRtl from "postcss-rtlcss";
 import copy from "rollup-plugin-copy";
 import nodePolyfills from "rollup-plugin-polyfill-node";
 import {visualizer} from "rollup-plugin-visualizer";
@@ -57,7 +58,7 @@ export default {
           const result = scss.renderSync({ file: id });
           resolvecss({ code: result.css.toString() });
         }),
-      plugins: [autoprefixer],
+      plugins: [autoprefixer, postcssRtl({ mode: 'override' })],
       sourceMap: false,
       extract: "dist/index.css",
       extensions: [".sass", ".scss", ".css"],
