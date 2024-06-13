@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 
 import SortByRow from '../SortByRow';
 import { Nullable } from '../../types';
+import { EMOJI_REACTION_LIST_PORTAL_ROOT } from './index';
 
 const defaultParentRect = { x: 0, y: 0, left: 0, top: 0, height: 0 };
 type SpaceFromTrigger = { x: number, y: number };
@@ -86,7 +87,7 @@ export const EmojiListItems = ({
     }
   }, []);
 
-  const rootElement = document.getElementById('sendbird-emoji-list-portal');
+  const rootElement = document.getElementById(EMOJI_REACTION_LIST_PORTAL_ROOT);
   if (rootElement) {
     return (
       createPortal(
