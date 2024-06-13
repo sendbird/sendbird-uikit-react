@@ -1,5 +1,10 @@
 # Changelog - v3
 
+## [v3.14.10] (June 13, 2024)
+### Fixes
+- Replaced non-existent `onlight-05` with `onlight-03` as per product designer's recommendation.
+- Added the `onClose` event to the modals inside of the `FileViewer` components.
+
 ## [v3.14.9] (June 7, 2024)
 ### Fixes
 - Resolved an issue where M4A format audio files were not playing in Safari. M4A files are now parsed as `audio/x-m4a` to ensure proper playback.
