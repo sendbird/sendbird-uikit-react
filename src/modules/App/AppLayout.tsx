@@ -9,6 +9,7 @@ import { MobileLayout } from './MobileLayout';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { SendableMessageType } from '../../utils';
 import { getCaseResolvedReplyType } from '../../lib/utils/resolvedReplyType';
+import useApplyTextDirection from './hooks/useApplyTextDirection';
 
 export const AppLayout = (props: AppLayoutProps) => {
   const {
@@ -32,6 +33,8 @@ export const AppLayout = (props: AppLayoutProps) => {
   const [highlightedMessage, setHighlightedMessage] = useState<number | null>(null);
   const [startingPoint, setStartingPoint] = useState<number | null>(null);
   const { isMobile } = useMediaQueryContext();
+
+  useApplyTextDirection(htmlTextDirection);
 
   /**
    * Below configs can be set via Dashboard UIKit config setting but as a lower priority than App props.
@@ -62,7 +65,6 @@ export const AppLayout = (props: AppLayoutProps) => {
               threadTargetMessage={threadTargetMessage}
               setThreadTargetMessage={setThreadTargetMessage}
               enableLegacyChannelModules={enableLegacyChannelModules}
-              htmlTextDirection={htmlTextDirection}
             />
           )
           : (
@@ -89,7 +91,6 @@ export const AppLayout = (props: AppLayoutProps) => {
               startingPoint={startingPoint}
               setStartingPoint={setStartingPoint}
               enableLegacyChannelModules={enableLegacyChannelModules}
-              htmlTextDirection={htmlTextDirection}
             />
           )
       }

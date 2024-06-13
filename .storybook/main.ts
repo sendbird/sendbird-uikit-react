@@ -19,6 +19,15 @@ export default {
   },
   viteFinal: (config) => {
     return mergeConfig(config, {
+      css: {
+        postcss: {
+          plugins: [
+            require('postcss-rtlcss')({
+              mode: 'override',
+            }),
+          ],
+        },
+      },
       plugins: [svgr({ include: '**/*.svg' })],
     });
   },

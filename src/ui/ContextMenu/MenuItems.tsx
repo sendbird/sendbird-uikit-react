@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { classnames } from '../../utils/utils';
-import { MENU_OBSERVING_CLASS_NAME } from '.';
+import { MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '.';
 
 interface MenuItemsProps {
   id?: string;
@@ -105,7 +105,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
   };
 
   render(): ReactElement {
-    const portalElement = document.getElementById('sendbird-dropdown-portal');
+    const portalElement = document.getElementById(MENU_ROOT_ID);
     if (!portalElement)
       return <></>;
 

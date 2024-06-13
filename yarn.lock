@@ -2710,6 +2710,7 @@ __metadata:
     jsdom: ^20.0.0
     plop: ^2.5.3
     postcss: ^8.3.5
+    postcss-rtlcss: ^5.3.0
     react: ^18.2.0
     react-dom: ^18.2.0
     rollup: ^4.9.2
@@ -12966,6 +12967,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postcss-rtlcss@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "postcss-rtlcss@npm:5.3.0"
+  dependencies:
+    rtlcss: 4.1.1
+  peerDependencies:
+    postcss: ^8.4.21
+  checksum: bd9bd09dc3b45b65db83dc8a0189701d1039b712916484bcb6afb7465a8343eafb0c09464c4d9079f016847e699a5724454e75855fb21fe72aa1b2b415f888ac
+  languageName: node
+  linkType: hard
+
 "postcss-safe-parser@npm:^4.0.2":
   version: 4.0.2
   resolution: "postcss-safe-parser@npm:4.0.2"
@@ -13063,7 +13075,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.3.5, postcss@npm:^8.4.38":
+"postcss@npm:^8.3.5, postcss@npm:^8.4.21, postcss@npm:^8.4.38":
   version: 8.4.38
   resolution: "postcss@npm:8.4.38"
   dependencies:
@@ -14040,6 +14052,20 @@ __metadata:
   bin:
     rollup: dist/bin/rollup
   checksum: fe19998a00401e7c2a41171e7d42af549176c6abfb6b20c4d0f401c973a3c7ad368605a722194bb21fe32775563eac06b53c9d96b24ef3d0ac95f69c5a3b67c8
+  languageName: node
+  linkType: hard
+
+"rtlcss@npm:4.1.1":
+  version: 4.1.1
+  resolution: "rtlcss@npm:4.1.1"
+  dependencies:
+    escalade: ^3.1.1
+    picocolors: ^1.0.0
+    postcss: ^8.4.21
+    strip-json-comments: ^3.1.1
+  bin:
+    rtlcss: bin/rtlcss.js
+  checksum: dcf37d76265b5c84d610488afa68a2506d008f95feac968b35ccae9aa49e7019ae0336a80363303f8f8bbf60df3ecdeb60413548b049114a24748319b68aefde
   languageName: node
   linkType: hard
 
