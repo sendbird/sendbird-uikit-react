@@ -29,7 +29,6 @@
   @include mobile() {
     min-width: 288px;
     width: 100%;
-    padding-right: 0;
   }
   @include themed() {
     border: 1px solid t(on-bg-4);

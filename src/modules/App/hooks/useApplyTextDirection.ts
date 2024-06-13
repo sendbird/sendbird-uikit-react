@@ -3,6 +3,7 @@ import { MODAL_ROOT } from '../../../hooks/useModal';
 import { EMOJI_REACTION_LIST_PORTAL_ROOT, DROPDOWN_PORTAL_ROOT } from '../../../ui/ContextMenu';
 import { HTMLTextDirection } from '../../../types';
 import { APP_LAYOUT_ROOT } from '../const';
+import { useMediaQueryContext } from '../../../lib/MediaQueryContext';
 
 const ELEMENT_IDS = [
   MODAL_ROOT,
@@ -22,6 +23,7 @@ const ELEMENT_IDS = [
  * attribute set explicitly to ensure proper directionality based on the app's language setting.
  */
 const useApplyTextDirection = (direction: HTMLTextDirection) => {
+  const { isMobile } = useMediaQueryContext();
   useEffect(() => {
     ELEMENT_IDS.forEach((id) => {
       const element = document.getElementById(id);
@@ -29,7 +31,7 @@ const useApplyTextDirection = (direction: HTMLTextDirection) => {
         element.dir = direction;
       }
     });
-  }, [direction]);
+  }, [direction, isMobile]);
 };
 
 export default useApplyTextDirection;
