@@ -2,7 +2,7 @@
 
 ## [v3.14.10] (June 13, 2024)
 ### Fixes
-- Replaced non-existent `onlight-05` with `onlight-03` as per product designer's recommendation.
+- Replaced onlight-05 with onlight-03 since onlight-05 doesn't exist in the product design guide.
 - Added the `onClose` event to the modals inside of the `FileViewer` components.
 
 ## [v3.14.9] (June 7, 2024)
