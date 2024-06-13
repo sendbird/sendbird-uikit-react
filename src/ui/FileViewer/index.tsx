@@ -39,7 +39,7 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
   const { stringSet } = useContext(LocalizationContext);
 
   return (
-    <Modal>
+    <Modal onClose={onClose}>
       <div
         className="sendbird-fileviewer"
         data-testid="sendbird-fileviewer"
