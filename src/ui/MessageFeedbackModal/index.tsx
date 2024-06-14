@@ -110,7 +110,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
           <Input
             name='sendbird-message-feedback-modal-body__root'
             ref={inputRef}
-            value={isEdit ? message.myFeedback?.comment : undefined}
+            value={isEdit ? message.myFeedback?.comment : ''}
             placeHolder={stringSet.FEEDBACK_CONTENT_PLACEHOLDER}
             autoFocus={true}
           />
