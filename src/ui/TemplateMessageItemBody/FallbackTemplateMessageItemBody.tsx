@@ -46,7 +46,7 @@ export function FallbackTemplateMessageItemBody({
             <Label
               className='sendbird-template-message-item-body__fallback_message__description'
               type={LabelTypography.BODY_1}
-              color={LabelColors.ONCONTENT_INVERSE_5}
+              color={LabelColors.ONCONTENT_INVERSE_3}
             >
               {stringSet.UNKNOWN__CANNOT_READ_TEMPLATE}
             </Label>

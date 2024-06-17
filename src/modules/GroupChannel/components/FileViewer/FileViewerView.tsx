@@ -78,7 +78,7 @@ export const FileViewerComponent = ({
   disableDelete,
   onDownloadClick,
 }: FileViewerUIProps) => (
-  <Modal>
+  <Modal onClose={onCancel}>
     <div className="sendbird-fileviewer" data-testid="sendbird-fileviewer">
       <div className="sendbird-fileviewer__header">
         <div className="sendbird-fileviewer__header__left">

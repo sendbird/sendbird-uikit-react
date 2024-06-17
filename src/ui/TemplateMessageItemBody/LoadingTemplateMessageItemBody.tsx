@@ -23,7 +23,7 @@ export function LoadingTemplateMessageItemBody({
       >
         <Icon
           type={IconTypes.SPINNER}
-          fillColor={IconColors.CONTENT_INVERSE_5}
+          fillColor={IconColors.CONTENT_INVERSE_3}
           width={TEMPLATE_LOADING_SPINNER_SIZE}
           height={TEMPLATE_LOADING_SPINNER_SIZE}
         />
