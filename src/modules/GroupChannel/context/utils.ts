@@ -37,6 +37,5 @@ export const isDisabledBecauseMuted = (groupChannel?: GroupChannel | null) => {
 };
 
 export const isDisabledBecauseSuggestedReplies = (channel: GroupChannel | null | undefined, enableSuggestedReplies: boolean) => {
-  if (!channel || !channel.lastMessage) return false;
-  return enableSuggestedReplies && !!channel.lastMessage.extendedMessagePayload?.disable_chat_input;
+  return enableSuggestedReplies && !!channel?.lastMessage?.extendedMessagePayload?.disable_chat_input;
 };
