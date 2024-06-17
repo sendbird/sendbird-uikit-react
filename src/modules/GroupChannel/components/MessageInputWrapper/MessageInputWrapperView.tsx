@@ -14,6 +14,7 @@ import type {
 import {
   isDisabledBecauseFrozen,
   isDisabledBecauseMuted,
+  isDisabledBecauseSuggestedReplies,
 } from '../../context/utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
@@ -97,11 +98,13 @@ export const MessageInputWrapperView = React.forwardRef((
 
   // Conditions
   const isMessageInputDisabled = loading
-    || !currentChannel
+    || (!currentChannel || !sdk)
+    || (!sdk.isCacheEnabled && !isOnline)
     || isDisabledBecauseFrozen(currentChannel)
     || isDisabledBecauseMuted(currentChannel)
-    || (!isOnline && !sdk?.isCacheEnabled)
+    || isDisabledBecauseSuggestedReplies(currentChannel, config.groupChannel.enableSuggestedReplies)
     || disabled;
+
   const showSuggestedMentionList = !isMessageInputDisabled
     && isMentionEnabled
     && mentionNickname.length > 0
@@ -192,7 +195,7 @@ export const MessageInputWrapperView = React.forwardRef((
       ) : (
         <MessageInput
           className="sendbird-message-input-wrapper__message-input"
-          channel={currentChannel as GroupChannel}
+          channel={currentChannel}
           channelUrl={currentChannel?.url}
           isMobile={isMobile}
           acceptableMimeTypes={acceptableMimeTypes}
