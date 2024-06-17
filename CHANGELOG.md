@@ -1,5 +1,36 @@
 # Changelog - v3
 
+## [v3.14.10] (June 13, 2024)
+### Fixes
+- Replaced onlight-05 with onlight-03 since onlight-05 doesn't exist in the product design guide.
+- Added the `onClose` event to the modals inside of the `FileViewer` components.
+
+## [v3.14.9] (June 7, 2024)
+### Fixes
+- Resolved an issue where M4A format audio files were not playing in Safari. M4A files are now parsed as `audio/x-m4a` to ensure proper playback.
+- Prevented the newly created channels from being filtered out from the ChannelList.
+
+### Features
+- Added a modal to the `FileViewer` components for utilizing the `onMounted` event handler.
+
+
+## [v3.14.8] (May 30, 2024)
+### Fixes
+- Resolved the issue of storybook user leaving the channel
+- Added a workaround to reset IME in mobile webkit for better input handling
+  - This fix involves creating a ghost input to manage focus transitions, preventing the virtual keyboard from closing and ensuring the proper composition of characters like Hangul
+  - The ghost input is used to reset the IME context, and focus is moved back to the original input using `requestAnimationFrame` to avoid delays
+- Retry connection when failed with a token expired error
+- Ensure scroll to the bottom of the list when mounted before painting
+- Minor bug fixes and adjustments for `SuggestedReplyItem` component:
+  - Fixed a bug where horizontal suggested reply items contents are not wrapping to multiple lines
+  - Adjusted bubble size
+  - Added missing margin
+
+### Features
+- Added support for rendering `.mov` file type only in Safari browser
+
+
 ## [v3.14.7] (May 23, 2024)
 ### Fixes
 * Fixed issue where files that failed to compress were not being sent

@@ -1,9 +1,6 @@
 import React from 'react';
-
-import { getSuggestedReplies } from '../../../../utils';
 import MessageInputWrapperView from '../../../GroupChannel/components/MessageInputWrapper/MessageInputWrapperView';
 import { useChannelContext } from '../../context/ChannelProvider';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { GroupChannelUIBasicProps } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
 
 export interface MessageInputWrapperProps {
@@ -16,30 +13,13 @@ export interface MessageInputWrapperProps {
 }
 
 export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
-  const { config } = useSendbirdStateContext();
   const context = useChannelContext();
-  const {
-    quoteMessage,
-    localMessages,
-    currentGroupChannel,
-    sendMessage,
-    sendFileMessage,
-    sendVoiceMessage,
-    sendMultipleFilesMessage,
-  } = context;
-
-  const lastMessage = currentGroupChannel?.lastMessage;
-  const isLastMessageSuggestedRepliesEnabled = config?.groupChannel?.enableSuggestedReplies
-    && getSuggestedReplies(lastMessage).length > 0
-    && localMessages?.length === 0;
-  const disableMessageInput = props.disabled
-    || isLastMessageSuggestedRepliesEnabled && !!lastMessage?.extendedMessagePayload?.['disable_chat_input'];
+  const { quoteMessage, currentGroupChannel, sendMessage, sendFileMessage, sendVoiceMessage, sendMultipleFilesMessage } = context;
 
   return (
     <MessageInputWrapperView
       {...props}
       {...context}
-      disabled={disableMessageInput}
       currentChannel={currentGroupChannel}
       sendUserMessage={(params) => {
         return sendMessage({

@@ -24,7 +24,10 @@ export const VOICE_PLAYER_AUDIO_ID = 'sendbird-global-audio-player-id';
 
 // voice message file
 export const VOICE_MESSAGE_FILE_NAME = 'Voice_message.mp3';
+export const VOICE_MESSAGE_FILE_NAME__XM4A = 'Voice_message.m4a';
+
 export const VOICE_MESSAGE_MIME_TYPE = 'audio/mp3;sbu_type=voice';
+export const VOICE_MESSAGE_MIME_TYPE__XM4A = 'audio/x-m4a;sbu_type=voice';
 
 // meta array
 export const META_ARRAY_VOICE_DURATION_KEY = 'KEY_VOICE_MESSAGE_DURATION';
