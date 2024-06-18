@@ -47,6 +47,8 @@ import MessageFeedbackModal from '../MessageFeedbackModal';
 import { SbFeedbackStatus } from './types';
 import MessageFeedbackFailedModal from '../MessageFeedbackFailedModal';
 import { MobileBottomSheetProps } from '../MobileMenu/types';
+import useElementObserver from '../../hooks/useElementObserver';
+import { getObservingId, MENU_OBSERVING_CLASS_NAME } from '../ContextMenu';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -140,7 +142,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [showMenu, setShowMenu] = useState(false);
 
   const [mouseHover, setMouseHover] = useState(false);
-  const [supposedHover, setSupposedHover] = useState(false);
+  const isMenuMounted = useElementObserver(`#${getObservingId(message.messageId)}`, MENU_OBSERVING_CLASS_NAME);
   // Feedback states
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
@@ -170,7 +172,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const chainTopClassName = chainTop ? 'chain-top' : '';
   const isReactionEnabledInChannel = isReactionEnabled && !channel?.isEphemeral;
   const isReactionEnabledClassName = isReactionEnabledInChannel ? 'use-reactions' : '';
-  const supposedHoverClassName = supposedHover ? 'sendbird-mouse-hover' : '';
+  const supposedHoverClassName = isMenuMounted ? 'sendbird-mouse-hover' : '';
   const useReplying = !!((replyType === 'QUOTE_REPLY' || replyType === 'THREAD')
     && message?.parentMessageId && message?.parentMessage
     && !disableQuoteMessage
@@ -291,7 +293,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               showRemove,
               resendMessage,
               setQuoteMessage,
-              setSupposedHover,
               onReplyInThread: ({ message }) => {
                 if (threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onReplyInThread?.({ message });
@@ -307,7 +308,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                 userId,
                 emojiContainer,
                 toggleReaction,
-                setSupposedHover,
               })
             )}
           </div>
@@ -528,7 +528,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                 userId,
                 emojiContainer,
                 toggleReaction,
-                setSupposedHover,
               })
             )}
             {renderMessageMenu({
@@ -541,7 +540,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               showRemove,
               resendMessage,
               setQuoteMessage,
-              setSupposedHover,
               onReplyInThread: ({ message }) => {
                 if (threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onReplyInThread?.({ message });

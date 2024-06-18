@@ -3,7 +3,7 @@ import React, { ReactElement, useRef } from 'react';
 import type { Reaction } from '@sendbird/chat/message';
 import type { Emoji, EmojiContainer } from '@sendbird/chat';
 
-import ContextMenu, { EmojiListItems } from '../ContextMenu';
+import ContextMenu, { EmojiListItems, getObservingId } from '../ContextMenu';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import IconButton from '../IconButton';
 import ImageRenderer from '../ImageRenderer';
@@ -18,7 +18,6 @@ export interface MessageEmojiMenuProps {
   spaceFromTrigger?: SpaceFromTriggerType;
   emojiContainer?: EmojiContainer;
   toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
-  setSupposedHover?: (bool: boolean) => void;
 }
 
 export function MessageEmojiMenu({
@@ -28,7 +27,6 @@ export function MessageEmojiMenu({
   spaceFromTrigger = { x: 0, y: 0 },
   emojiContainer,
   toggleReaction,
-  setSupposedHover,
 }: MessageEmojiMenuProps): ReactElement | null {
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
@@ -51,10 +49,6 @@ export function MessageEmojiMenu({
             height="32px"
             onClick={(): void => {
               toggleDropdown();
-              setSupposedHover?.(true);
-            }}
-            onBlur={(): void => {
-              setSupposedHover?.(false);
             }}
           >
             <Icon
@@ -67,13 +61,10 @@ export function MessageEmojiMenu({
             />
           </IconButton>
         )}
-        menuItems={(close: () => void): ReactElement => {
-          const closeDropdown = (): void => {
-            close();
-            setSupposedHover?.(false);
-          };
+        menuItems={(closeDropdown: () => void): ReactElement => {
           return (
             <EmojiListItems
+              id={getObservingId(message.messageId)}
               parentRef={triggerRef}
               parentContainRef={containerRef}
               closeDropdown={closeDropdown}

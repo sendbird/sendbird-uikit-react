@@ -11,6 +11,10 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 
 const ENTER_KEY = 13;
 
+// # useElementObserve
+export const MENU_OBSERVING_CLASS_NAME = 'sendbird-observing-message-menu';
+export const getObservingId = (txt: string | number) => `m_${txt}`;
+
 export const MenuItems = _MenuItems;
 export const EmojiListItems = _EmojiListItems;
 
