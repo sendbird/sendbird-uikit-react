@@ -11,11 +11,7 @@ type ContextReturnType<T extends TargetChannelContextTypes[]> =
   T[number] extends 'thread' ? ThreadProviderInterface :
   never;
 
-// Overload signatures
-export function useSafeGroupChannelContext(): GroupChannelContextType | ChannelProviderInterface;
-export function useSafeGroupChannelContext<T extends TargetChannelContextTypes[]>(...args: T): ContextReturnType<T>;
-// Implementing the function
-export function useSafeGroupChannelContext(...args: TargetChannelContextTypes[]) {
+export function useSafeGroupChannelContext<T extends TargetChannelContextTypes[]>(...args: TargetChannelContextTypes[]): ContextReturnType<T> {
   const defaultArgs: TargetChannelContextTypes[] = ['groupChannel', 'channel'];
   const actualArgs = args.length > 0 ? args : defaultArgs;
 
@@ -24,9 +20,9 @@ export function useSafeGroupChannelContext(...args: TargetChannelContextTypes[])
   for (const arg of actualArgs) {
     try {
       return match(arg)
-        .with('groupChannel', () => useGroupChannelContext())
-        .with('channel', () => useChannelContext())
-        .with('thread', () => useThreadContext())
+        .with('groupChannel', () => useGroupChannelContext() as ContextReturnType<T>)
+        .with('channel', () => useChannelContext() as ContextReturnType<T>)
+        .with('thread', () => useThreadContext() as ContextReturnType<T>)
         .exhaustive(); // Ensure all cases are handled
     } catch (error) {
       lastError = error;
