@@ -206,7 +206,6 @@ export default function ThreadListItemContent({
                 userId={userId}
                 emojiContainer={emojiContainer}
                 toggleReaction={toggleReaction}
-                setSupposedHover={setSupposedHover}
               />
             )}
           </div>
@@ -357,7 +356,6 @@ export default function ThreadListItemContent({
                 userId={userId}
                 emojiContainer={emojiContainer}
                 toggleReaction={toggleReaction}
-                setSupposedHover={setSupposedHover}
               />
             )}
             <MessageItemMenu
