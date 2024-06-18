@@ -34,13 +34,9 @@ interface MessageMenuProviderProps {
   isMobile?: boolean;
 }
 
-export const MessageMenuProvider = ({ children, value, isMobile = false }: MessageMenuProviderProps) => {
-  const contextValue = isMobile
-    ? value as MobileMessageMenuContextProps
-    : value as MessageMenuContextProps;
-
+export const MessageMenuProvider = ({ children, value }: MessageMenuProviderProps) => {
   return (
-    <MessageMenuContext.Provider value={contextValue}>
+    <MessageMenuContext.Provider value={value}>
       {children}
     </MessageMenuContext.Provider>
   );

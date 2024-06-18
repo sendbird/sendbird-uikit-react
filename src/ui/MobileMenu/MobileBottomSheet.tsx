@@ -108,7 +108,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
   };
 
   return (
-    <MessageMenuProvider value={contextValue} isMobile>
+    <MessageMenuProvider value={contextValue}>
       <BottomSheet onBackdropClick={hideMenu}>
         <div className="sendbird-message__bottomsheet">
           {showReaction && (
