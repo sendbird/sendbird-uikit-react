@@ -1,9 +1,10 @@
-import React, { MouseEvent } from 'react';
+import React, { MouseEvent, ReactNode } from 'react';
 import type { EmojiContainer } from '@sendbird/chat';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 import { CoreMessageType, SendableMessageType } from '../../utils';
 import { ReplyType } from '../../types';
+import { RenderMenuItemsParams } from '../MessageMenu/messageMenu';
 
 // Fixme@v4 - deleteMessageOption type, rethink options
 export type DeleteMenuStates = 'DISABLE' | 'HIDE' | 'ACTIVE';
@@ -28,6 +29,7 @@ export interface BaseMenuProps {
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
   isOpenedFromThread?: boolean;
   onDownloadClick?: (e: MouseEvent) => Promise<void>;
+  renderMenuItems?: (params: RenderMenuItemsParams) => ReactNode;
 }
 
 export interface MobileBottomSheetProps extends BaseMenuProps {
