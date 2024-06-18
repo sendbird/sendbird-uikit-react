@@ -1,5 +1,4 @@
 import React, { FocusEvent, MouseEvent, MutableRefObject, ReactNode } from 'react';
-import './index.scss';
 
 import IconButton from '../../IconButton';
 import Icon, { IconColors, IconProps, IconTypes } from '../../Icon';
