@@ -1,14 +1,14 @@
 import React from 'react';
 import { FileMessage } from '@sendbird/chat/message';
 
-import { PrebuildMenuItemPropsType } from '../MessageMenu/items';
-import { copyToClipboard, isUserMessage, isFailedMessage } from '../../utils';
-import { useLocalization } from '../../lib/LocalizationContext';
-import { MobileMessageMenuContextProps, useMessageMenuContext } from './messageMenuContext';
-import Icon, { IconTypes, IconColors } from '../Icon';
-import Label, { LabelColors, LabelTypography } from '../Label';
+import { PrebuildMenuItemPropsType } from './menuItems';
+import { copyToClipboard, isUserMessage, isFailedMessage } from '../../../utils';
+import { useLocalization } from '../../../lib/LocalizationContext';
+import { MobileMessageMenuContextProps, useMessageMenuContext } from '../MessageMenuProvider';
+import Icon, { IconTypes, IconColors } from '../../Icon';
+import Label, { LabelColors, LabelTypography } from '../../Label';
 
-import { BottomSheetMenuItem } from '../MobileMenu/bottomSheetMenuItem';
+import { BottomSheetMenuItem } from '../../MobileMenu/bottomSheetMenuItem';
 
 export const CopyMenuItem = (props: PrebuildMenuItemPropsType) => {
   const { stringSet } = useLocalization();

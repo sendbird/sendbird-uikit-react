@@ -1,13 +1,13 @@
 import React, { FocusEvent, MouseEvent, MutableRefObject, ReactNode } from 'react';
 import './index.scss';
 
-import IconButton from '../IconButton';
-import Icon, { IconColors, IconProps, IconTypes } from '../Icon';
-import { classnames, noop } from '../../utils/utils';
-import Label, { LabelColors, LabelTypography } from '../Label';
-import { copyToClipboard, isUserMessage, isFailedMessage } from '../../utils';
-import { useLocalization } from '../../lib/LocalizationContext';
-import { useMessageMenuContext } from './messageMenuContext';
+import IconButton from '../../IconButton';
+import Icon, { IconColors, IconProps, IconTypes } from '../../Icon';
+import { classnames, noop } from '../../../utils/utils';
+import Label, { LabelColors, LabelTypography } from '../../Label';
+import { copyToClipboard, isUserMessage, isFailedMessage } from '../../../utils';
+import { useLocalization } from '../../../lib/LocalizationContext';
+import { useMessageMenuContext } from '../MessageMenuProvider';
 
 export interface TriggerIconProps {
   ref: MutableRefObject<any>;

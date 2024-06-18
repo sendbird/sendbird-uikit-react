@@ -17,7 +17,7 @@ import {
   EditMenuItem,
   ResendMenuItem,
   DeleteMenuItem,
-} from './items';
+} from './menuItems/menuItems';
 import { ReplyType } from '../../types';
 import {
   MenuConditionsParams,
@@ -30,7 +30,7 @@ import {
   showMenuItemThread,
 } from '../../utils/menuConditions';
 
-import { MessageMenuProvider } from './messageMenuContext';
+import { MessageMenuProvider } from './MessageMenuProvider';
 
 export type RenderMenuItemsParams = {
   items: {

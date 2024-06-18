@@ -14,7 +14,7 @@ import {
 } from '../../utils';
 
 import { MessageMenuProvider } from '../MessageMenu';
-import type { MobileMessageMenuContextProps } from '../MessageMenu/messageMenuContext';
+import type { MobileMessageMenuContextProps } from '../MessageMenu/MessageMenuProvider';
 import {
   CopyMenuItem,
   ReplyMenuItem,
@@ -23,7 +23,7 @@ import {
   ResendMenuItem,
   DeleteMenuItem,
   DownloadMenuItem,
-} from '../MessageMenu/mobileItems';
+} from '../MessageMenu/menuItems/mobileItems';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { MenuItems } from '../ContextMenu';
 import { noop } from '../../utils/utils';

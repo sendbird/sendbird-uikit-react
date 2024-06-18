@@ -21,7 +21,7 @@ import ReactionButton from '../ReactionButton';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { classnames } from '../../utils/utils';
-import { MessageMenuProvider, MobileMessageMenuContextProps } from '../MessageMenu/messageMenuContext';
+import { MessageMenuProvider, MobileMessageMenuContextProps } from '../MessageMenu/MessageMenuProvider';
 import {
   CopyMenuItem,
   EditMenuItem,
@@ -30,7 +30,7 @@ import {
   ThreadMenuItem,
   DeleteMenuItem,
   DownloadMenuItem,
-} from '../MessageMenu/bottomSheetItems';
+} from '../MessageMenu/menuItems/bottomSheetItems';
 
 const EMOJI_SIZE = 38;
 
