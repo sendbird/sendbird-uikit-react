@@ -6,7 +6,10 @@ import { SendableMessageType } from '../../utils';
 import { classnames, noop } from '../../utils/utils';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { MenuItems, getObservingId } from '../ContextMenu';
-import { PrebuildMenuItemPropsType, TriggerIcon, TriggerIconProps,
+import {
+  type PrebuildMenuItemPropsType,
+  TriggerIcon,
+  TriggerIconProps,
   CopyMenuItem,
   ReplyMenuItem,
   ThreadMenuItem,
@@ -29,7 +32,7 @@ import {
 
 import { MessageMenuProvider } from './messageMenuContext';
 
-type RenderMenuItemsParams = {
+export type RenderMenuItemsParams = {
   items: {
     CopyMenuItem: (props: PrebuildMenuItemPropsType) => ReactElement;
     ReplyMenuItem: (props: PrebuildMenuItemPropsType) => ReactElement;
@@ -84,6 +87,7 @@ export const MessageMenu = ({
   const [isMenuVisible, setMenuVisibility] = useState(false);
   const hideMenu = () => setMenuVisibility(false);
   const showMenu = () => setMenuVisibility(true);
+  const toggleMenu = () => setMenuVisibility((visible) => !visible);
 
   const params: MenuConditionsParams = {
     message,
@@ -103,6 +107,7 @@ export const MessageMenu = ({
         message,
         hideMenu,
         showMenu,
+        toggleMenu,
         setQuoteMessage,
         onReplyInThread,
         onMoveToParentMessage,
@@ -115,7 +120,7 @@ export const MessageMenu = ({
         triggerRef,
         containerRef,
       }}>
-        {(renderTrigger({ ref: triggerRef, onClick: hideMenu }))}
+        {(renderTrigger({ ref: triggerRef, onClick: toggleMenu }))}
         {isMenuVisible && (
           <MenuItems
             id={getObservingId(message.messageId)} // NOTE: To use the useElementObserver on the MessageContent

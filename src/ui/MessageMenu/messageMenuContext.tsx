@@ -1,10 +1,9 @@
-import React, { createContext, useContext, ReactNode, MutableRefObject } from 'react';
+import React, { createContext, useContext, ReactNode, MutableRefObject, MouseEvent } from 'react';
 import { SendableMessageType } from '../../utils';
 
-export interface MessageMenuContextProps {
+interface CommonMessageMenuContextProps {
   message: SendableMessageType;
   hideMenu: () => void;
-  showMenu: () => void;
   setQuoteMessage: (message: SendableMessageType) => void;
   onReplyInThread: (props: { message: SendableMessageType }) => void;
   onMoveToParentMessage: () => void;
@@ -18,10 +17,33 @@ export interface MessageMenuContextProps {
   containerRef: MutableRefObject<null>;
 }
 
-const MessageMenuContext = createContext<MessageMenuContextProps | undefined>(undefined);
+export interface MessageMenuContextProps extends CommonMessageMenuContextProps {
+  showMenu: () => void;
+  toggleMenu: () => void;
+}
 
-export const MessageMenuProvider = ({ children, value }: { children: ReactNode, value: MessageMenuContextProps }) => {
-  return <MessageMenuContext.Provider value={value}>{children}</MessageMenuContext.Provider>;
+export interface MobileMessageMenuContextProps extends CommonMessageMenuContextProps {
+  onDownloadClick?: (e: MouseEvent) => Promise<void>;
+}
+
+const MessageMenuContext = createContext<MessageMenuContextProps | MobileMessageMenuContextProps | undefined>(undefined);
+
+interface MessageMenuProviderProps {
+  children: ReactNode;
+  value: MessageMenuContextProps | MobileMessageMenuContextProps;
+  isMobile?: boolean;
+}
+
+export const MessageMenuProvider = ({ children, value, isMobile = false }: MessageMenuProviderProps) => {
+  const contextValue = isMobile
+    ? value as MobileMessageMenuContextProps
+    : value as MessageMenuContextProps;
+
+  return (
+    <MessageMenuContext.Provider value={contextValue}>
+      {children}
+    </MessageMenuContext.Provider>
+  );
 };
 
 export const useMessageMenuContext = () => {

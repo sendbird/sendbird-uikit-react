@@ -4,10 +4,13 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 import { CoreMessageType, SendableMessageType } from '../../utils';
 import { ReplyType } from '../../types';
-import { RenderMenuItemsParams } from '../MessageMenu/messageMenu';
+import type { RenderMenuItemsParams } from '../MessageMenu/messageMenu';
 
 // Fixme@v4 - deleteMessageOption type, rethink options
 export type DeleteMenuStates = 'DISABLE' | 'HIDE' | 'ACTIVE';
+type MobileRenderMenuItemsParams = {
+  items: Omit<RenderMenuItemsParams['items'], 'OpenInChannelMenuItem'>
+};
 
 export interface BaseMenuProps {
   channel: GroupChannel | OpenChannel;
@@ -29,7 +32,7 @@ export interface BaseMenuProps {
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
   isOpenedFromThread?: boolean;
   onDownloadClick?: (e: MouseEvent) => Promise<void>;
-  renderMenuItems?: (params: RenderMenuItemsParams) => ReactNode;
+  renderMenuItems?: (params: MobileRenderMenuItemsParams) => ReactNode;
 }
 
 export interface MobileBottomSheetProps extends BaseMenuProps {
