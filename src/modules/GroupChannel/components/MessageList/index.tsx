@@ -84,6 +84,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     loadNext,
     loadPrevious,
     setIsScrollBottomReached,
+    resetNewMessages,
   } = useGroupChannelContext();
 
   const store = useSendbirdStateContext();
@@ -167,7 +168,13 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
           scrollDistanceFromBottomRef={scrollDistanceFromBottomRef}
           onLoadNext={loadNext}
           onLoadPrevious={loadPrevious}
-          onScrollPosition={(it) => setIsScrollBottomReached(it === 'bottom')}
+          onScrollPosition={(it) => {
+            const isScrollBottomReached = it === 'bottom';
+            if (newMessages.length > 0 && isScrollBottomReached) {
+              resetNewMessages();
+            }
+            setIsScrollBottomReached(isScrollBottomReached);
+          }}
           messages={messages}
           renderMessage={({ message, index }) => {
             const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
