@@ -252,7 +252,7 @@ export const isAdminMessage = (message: CoreMessageType): message is AdminMessag
       : message?.messageType === 'admin'
   )
 );
-export const isUserMessage = (message: CoreMessageType | BaseMessage): message is UserMessage => (
+export const isUserMessage = (message: CoreMessageType): message is UserMessage => (
   message && (
     message['isUserMessage'] && typeof message.isUserMessage === 'function'
       ? message.isUserMessage()
