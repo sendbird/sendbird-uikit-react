@@ -9,7 +9,7 @@ import MentionLabel from '../../../../ui/MentionLabel';
 import { USER_MENTION_PREFIX } from '../../consts';
 import LinkLabel from '../../../../ui/LinkLabel';
 import { LabelColors, LabelTypography } from '../../../../ui/Label';
-import { getWhiteSpacePreservedText } from '../../utils/tokens/tokenize';
+import { getWhiteSpacePreservedText, tokenizeMarkdown } from '../../utils/tokens/tokenize';
 
 export type TextFragmentProps = {
   tokens: Token[];
@@ -36,17 +36,21 @@ export default function TextFragment({
               {
                 match(markdownToken.markdownType)
                   .with('bold', () => (
-                    <strong>{groups[1]}</strong>
+                    <strong>
+                      <TextFragment tokens={tokenizeMarkdown({ messageText: groups[1] })}/>
+                    </strong>
                   ))
-                  .with('url', () => (
-                    <LinkLabel
-                      src={groups[2]}
-                      type={LabelTypography.BODY_1}
-                      color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
-                    >
-                      {groups[1]}
-                    </LinkLabel>
-                  ))
+                  .with('url', () => {
+                    return (
+                      <LinkLabel
+                        src={groups[2]}
+                        type={LabelTypography.BODY_1}
+                        color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
+                      >
+                        <TextFragment tokens={tokenizeMarkdown({ messageText: groups[1] })}/>
+                      </LinkLabel>
+                    );
+                  })
                   .otherwise(() => <></>)
               }
           </span>;

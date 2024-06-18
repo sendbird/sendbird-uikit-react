@@ -202,6 +202,17 @@ export function tokenizeMessage({
   return result;
 }
 
+export function tokenizeMarkdown({
+  messageText,
+}): Token[] {
+  const partialResult = [{
+    type: TOKEN_TYPES.undetermined,
+    value: messageText,
+  }];
+  const result = combineNearbyStrings(splitTokensWithMarkdowns(partialResult));
+  return result;
+}
+
 /**
  * Don't need to use this util in DOM element since the white spaces will be kept as is,
  * but will need if the text is wrapped \w React.Fragement or </>

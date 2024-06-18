@@ -185,6 +185,7 @@ const SendbirdSDK = ({
   const [appInfoStore, appInfoDispatcher] = useReducer(appInfoReducers, appInfoInitialState);
 
   const { configs, configsWithAppAttr, initDashboardConfigs } = useUIKitConfig();
+
   const sdkInitialized = sdkStore.initialized;
   const sdk = sdkStore?.sdk;
   const { uploadSizeLimit, multipleFilesMessageFileCountLimit } = sdk?.appInfo ?? {};

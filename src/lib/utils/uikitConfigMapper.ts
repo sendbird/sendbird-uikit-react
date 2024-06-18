@@ -15,6 +15,7 @@ export function uikitConfigMapper({
     isMessageReceiptStatusEnabledOnChannelList,
     showSearchIcon,
   } = legacyConfig;
+
   return {
     common: {
       enableUsingDefaultUserProfile: uikitOptions.common?.enableUsingDefaultUserProfile
