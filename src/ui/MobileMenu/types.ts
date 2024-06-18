@@ -4,7 +4,7 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 import { CoreMessageType, SendableMessageType } from '../../utils';
 import { ReplyType } from '../../types';
-import type { RenderMenuItemsParams } from '../MessageMenu/MessageMenuho';
+import type { RenderMenuItemsParams } from '../MessageMenu/MessageMenu';
 
 // Fixme@v4 - deleteMessageOption type, rethink options
 export type DeleteMenuStates = 'DISABLE' | 'HIDE' | 'ACTIVE';
