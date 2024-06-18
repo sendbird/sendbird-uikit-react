@@ -10,13 +10,11 @@ import {
   UndeterminedToken,
 } from './types';
 
-const RegexDataList: { type: 'url' | 'bold'; regex: RegExp }[] = [{
-  type: 'url',
-  regex: /\[(.*?)\]\((.*?)\)/g,
-}, {
-  type: 'bold',
-  regex: /\*\*(.*?)\*\*/g,
-}];
+/**
+ * /\[(.*?)\]\((.*?)\) is for url.
+ * /\*\*(.*?)\*\* for bold.
+ */
+const MarkdownRegex = /\[(.*?)\]\((.*?)\)|\*\*(.*?)\*\*/g;
 
 export function getUserMentionRegex(mentionedUsers: User[], templatePrefix_: string): RegExp {
   const templatePrefix = templatePrefix_ || USER_MENTION_PREFIX;
@@ -110,50 +108,53 @@ export function identifyUrlsAndStrings(token: Token[]): Token[] {
  */
 export function splitTokensWithMarkdowns(tokens: Token[]): Token[] {
   let newTokens = tokens;
-  RegexDataList.forEach((regexData) => {
-    const { type: regexType, regex } = regexData;
-    const prevTokens = newTokens;
-    newTokens = [];
-    prevTokens.forEach((token) => {
-      if (token.type === TOKEN_TYPES.mention || token.type === TOKEN_TYPES.markdown) {
-        newTokens.push(token);
-        return;
-      }
-      const rawStr = token.value;
-      // @ts-ignore
-      const matches = [...rawStr.matchAll(regex)];
-      const allMatches = matches.map((value) => {
-        const text = value[0];
-        const start = value.index ?? 0;
-        const end = start + text.length;
-        return { text, start, end, groups: value.filter((val: any) => typeof val === 'string') };
-      });
-      let restText = rawStr;
-      let cursor = 0;
-      allMatches.forEach(({ text, start, end, groups }) => {
-        const left: Token = {
-          type: TOKEN_TYPES.undetermined,
-          value: restText.slice(0, start - cursor),
-        };
-        newTokens.push(left);
-        const mid: MarkdownToken = {
-          type: TOKEN_TYPES.markdown,
-          markdownType: regexType,
-          value: text,
-          groups,
-        };
-        newTokens.push(mid);
-        restText = rawStr.slice(end);
-        cursor = end;
-      });
-      if (restText) {
-        const right: Token = {
-          type: TOKEN_TYPES.undetermined,
-          value: restText,
-        };
-        newTokens.push(right);
-      }
+  const prevTokens = newTokens;
+  newTokens = [];
+  prevTokens.forEach((token) => {
+    if (token.type === TOKEN_TYPES.mention || token.type === TOKEN_TYPES.markdown) {
+      newTokens.push(token);
+      return;
+    }
+    const rawStr = token.value;
+    // @ts-ignore
+    const matches = [...rawStr.matchAll(MarkdownRegex)];
+    const allMatches = matches.map((value) => {
+      const text = value[0];
+      const start = value.index ?? 0;
+      const end = start + text.length;
+      return { text, start, end, groups: value.filter((val: any) => typeof val === 'string') };
     });
+    let restText = rawStr;
+    let cursor = 0;
+    allMatches.forEach(({ text, start, end, groups }) => {
+      const left: Token = {
+        type: TOKEN_TYPES.undetermined,
+        value: restText.slice(0, start - cursor),
+      };
+      newTokens.push(left);
+      let markdownType;
+      if (text.startsWith('[')) {
+        markdownType = 'url';
+      } else if (text.startsWith('**')) {
+        markdownType = 'bold';
+      }
+      const mid: MarkdownToken = {
+        type: TOKEN_TYPES.markdown,
+        markdownType,
+        value: text,
+        groups,
+      };
+      newTokens.push(mid);
+      restText = rawStr.slice(end);
+      cursor = end;
+    });
+    if (restText) {
+      const right: Token = {
+        type: TOKEN_TYPES.undetermined,
+        value: restText,
+      };
+      newTokens.push(right);
+    }
   });
   return newTokens;
 }

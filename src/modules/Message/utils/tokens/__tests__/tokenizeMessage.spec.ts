@@ -97,7 +97,9 @@ describe('tokenizeMessage', () => {
 
   it('should tokenize a string with mention, markdown strings', () => {
     const tokens = tokenizeMessage({
-      messageText: 'Hello @{userA}! This is a test for **tokenizeMessage**. Followings are urls with different syntaxes: https://example.com, and [here](https://example.com).',
+      messageText: 'Hello @{userA}! This is a test for **tokenizeMessage**. Followings are urls with different '
+        + 'syntaxes: https://example.com, and [here](https://example.com). Finally, the followings are nested '
+        + 'markdown cases: [**this one**](https://example.com) and **[this one](https://example.com)**',
       mentionedUsers: [
         ({ userId: 'userA', nickname: 'User A' } as User),
       ],
@@ -123,9 +125,39 @@ describe('tokenizeMessage', () => {
         type: 'markdown',
         markdownType: 'url',
         value: '[here](https://example.com)',
-        groups: ['[here](https://example.com)'],
+        groups: [
+          '[here](https://example.com)',
+          'here',
+          'https://example.com',
+        ],
       },
-      { value: '.', type: 'string' },
+      {
+        value: '. Finally, the followings are nested markdown cases: ',
+        type: 'string',
+      },
+      {
+        groups: [
+          '[**this one**](https://example.com)',
+          '**this one**',
+          'https://example.com',
+        ],
+        markdownType: 'url',
+        type: 'markdown',
+        value: '[**this one**](https://example.com)',
+      },
+      {
+        type: 'string',
+        value: ' and ',
+      },
+      {
+        groups: [
+          '**[this one](https://example.com)**',
+          '[this one](https://example.com)',
+        ],
+        markdownType: 'bold',
+        type: 'markdown',
+        value: '**[this one](https://example.com)**',
+      },
     ]);
   });
 });

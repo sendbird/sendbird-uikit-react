@@ -10,6 +10,7 @@ import { USER_MENTION_PREFIX } from '../../consts';
 import LinkLabel from '../../../../ui/LinkLabel';
 import { LabelColors, LabelTypography } from '../../../../ui/Label';
 import { getWhiteSpacePreservedText, tokenizeMarkdown } from '../../utils/tokens/tokenize';
+import { asSafeURL } from '../../utils/tokens/asSafeURL';
 
 export type TextFragmentProps = {
   tokens: Token[];
@@ -36,19 +37,22 @@ export default function TextFragment({
               {
                 match(markdownToken.markdownType)
                   .with('bold', () => (
-                    <strong>
+                    <span style={{ fontWeight: 'bold' }}>
                       <TextFragment tokens={tokenizeMarkdown({ messageText: groups[1] })}/>
-                    </strong>
+                    </span>
                   ))
                   .with('url', () => {
                     return (
-                      <LinkLabel
-                        src={groups[2]}
-                        type={LabelTypography.BODY_1}
-                        color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
+                      <a
+                        className={
+                          isByMe
+                            ? 'sendbird-label--color-oncontent-1'
+                            : 'sendbird-label--color-onbackground-1'
+                        }
+                        href={asSafeURL(groups[2])}
                       >
                         <TextFragment tokens={tokenizeMarkdown({ messageText: groups[1] })}/>
-                      </LinkLabel>
+                      </a>
                     );
                   })
                   .otherwise(() => <></>)
