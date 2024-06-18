@@ -4,6 +4,7 @@ import './__experimental__typography.scss';
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { UIKitConfigProvider, useUIKitConfig } from '@sendbird/uikit-tools';
+import type { Locale } from 'date-fns';
 
 import { SendbirdSdkContext } from './SendbirdSdkContext';
 

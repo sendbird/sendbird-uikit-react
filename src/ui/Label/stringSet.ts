@@ -139,6 +139,7 @@ const stringSet = {
     // Message Input
     MESSAGE_INPUT__PLACE_HOLDER: 'Enter message',
     MESSAGE_INPUT__PLACE_HOLDER__DISABLED: 'Chat is unavailable in this channel',
+    MESSAGE_INPUT__PLACE_HOLDER__SUGGESTED_REPLIES: 'Please choose one from above',
     MESSAGE_INPUT__PLACE_HOLDER__FROZEN: 'Chat is unavailable in this channel',
     MESSAGE_INPUT__PLACE_HOLDER__MUTED: 'Chat is unavailable because you\'re muted',
     MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT: 'You\'re muted',
