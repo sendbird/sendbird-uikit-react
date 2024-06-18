@@ -1,12 +1,13 @@
 import React from 'react';
+import { FileMessage } from '@sendbird/chat/message';
+
 import { MenuItem, PrebuildMenuItemPropsType } from '../MessageMenu/items';
-import { SendableMessageType, copyToClipboard, isUserMessage, isFailedMessage } from '../../utils';
+import { copyToClipboard, isUserMessage, isFailedMessage } from '../../utils';
 import { useLocalization } from '../../lib/LocalizationContext';
 // import { useMessageMenuContext } from './MessageMenuContext';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
-import { useMessageMenuContext } from './messageMenuContext';
-import { FileMessage } from '@sendbird/chat/message';
+import { MobileMessageMenuContextProps, useMessageMenuContext } from './messageMenuContext';
 
 export const CopyMenuItem = (props: PrebuildMenuItemPropsType) => {
   const { stringSet } = useLocalization();
@@ -185,7 +186,7 @@ export const DeleteMenuItem = (props: PrebuildMenuItemPropsType) => {
 
 export const DownloadMenuItem = (props: PrebuildMenuItemPropsType) => {
   const { stringSet } = useLocalization();
-  const { hideMenu, message, onDownloadClick } = useMessageMenuContext();
+  const { hideMenu, message, onDownloadClick } = useMessageMenuContext() as MobileMessageMenuContextProps;
   const { url } = message as FileMessage;
 
   return (

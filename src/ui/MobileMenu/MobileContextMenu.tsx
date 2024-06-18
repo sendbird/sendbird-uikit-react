@@ -97,7 +97,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               EditMenuItem,
               ResendMenuItem,
               DeleteMenuItem,
-            }
+            },
           }) ?? (
             <>
               {showMenuItemCopy && <CopyMenuItem />}
