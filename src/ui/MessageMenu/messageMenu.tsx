@@ -6,7 +6,15 @@ import { SendableMessageType } from '../../utils';
 import { classnames, noop } from '../../utils/utils';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { MenuItems, getObservingId } from '../ContextMenu';
-import { PrebuildMenuItemPropsType, TriggerIcon, TriggerIconProps } from './items';
+import { PrebuildMenuItemPropsType, TriggerIcon, TriggerIconProps,
+  CopyMenuItem,
+  ReplyMenuItem,
+  ThreadMenuItem,
+  OpenInChannelMenuItem,
+  EditMenuItem,
+  ResendMenuItem,
+  DeleteMenuItem,
+} from './items';
 import { ReplyType } from '../../types';
 import {
   MenuConditionsParams,
@@ -19,15 +27,6 @@ import {
   showMenuItemThread,
 } from '../../utils/menuConditions';
 
-import {
-  CopyMenuItem,
-  ReplyMenuItem,
-  ThreadMenuItem,
-  OpenInChannelMenuItem,
-  EditMenuItem,
-  ResendMenuItem,
-  DeleteMenuItem
-} from './items';
 import { MessageMenuProvider } from './messageMenuContext';
 
 type RenderMenuItemsParams = {
@@ -145,7 +144,7 @@ export const MessageMenu = ({
                   {showMenuItemResend(params) && <ResendMenuItem />}
                   {showMenuItemDelete(params) && <DeleteMenuItem />}
                 </>
-              )}
+            )}
           </MenuItems>
         )}
       </MessageMenuProvider>

@@ -1,3 +1,7 @@
+/* global MutationCallback */
+/* global MutationObserverInit */
+// for lint
+
 import { useEffect, useState } from 'react';
 
 function useElementObserver(selector: string, className: string): boolean {

@@ -77,31 +77,26 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
         class="sendbird-message-content-menu incoming"
       >
         <div
-          class="sendbird-message-menu sendbird-message-content-menu__normal-menu"
+          class="senbird-message-menu sendbird-message-content-menu__normal-menu"
         >
-          <div
-            class="sendbird-context-menu"
-            style="display: inline;"
+          <button
+            class=" sendbird-iconbutton "
+            style="height: 32px; width: 32px;"
+            type="button"
           >
-            <button
-              class=" sendbird-iconbutton "
-              style="height: 32px; width: 32px;"
-              type="button"
+            <span
+              class="sendbird-iconbutton__inner"
             >
-              <span
-                class="sendbird-iconbutton__inner"
+              <div
+                class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
+                role="button"
+                style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
+                tabindex="0"
               >
-                <div
-                  class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
-                  role="button"
-                  style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
-                  tabindex="0"
-                >
-                  <test-file-stub />
-                </div>
-              </span>
-            </button>
-          </div>
+                <test-file-stub />
+              </div>
+            </span>
+          </button>
         </div>
       </div>
     </div>
