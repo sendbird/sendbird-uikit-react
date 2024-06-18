@@ -1,4 +1,3 @@
-// bottomSheetItems.tsx
 import React from 'react';
 import { FileMessage } from '@sendbird/chat/message';
 

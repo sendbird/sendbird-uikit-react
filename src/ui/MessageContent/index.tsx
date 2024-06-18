@@ -3,7 +3,6 @@ import format from 'date-fns/format';
 import './index.scss';
 
 import MessageStatus from '../MessageStatus';
-// import { MessageMenu, MessageMenuProps } from '../MessageItemMenu';
 import { MessageMenu, type MessageMenuProps } from '../MessageMenu';
 import { MessageEmojiMenu, MessageEmojiMenuProps } from '../MessageItemReactionMenu';
 import Label, { LabelColors, LabelTypography } from '../Label';
@@ -288,7 +287,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               message,
               isByMe,
               replyType,
-              // disabled,
               showEdit,
               showRemove,
               resendMessage,
@@ -536,7 +534,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               message,
               isByMe,
               replyType,
-              // disabled,
               showRemove,
               resendMessage,
               setQuoteMessage,

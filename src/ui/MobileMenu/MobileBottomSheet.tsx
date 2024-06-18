@@ -1,4 +1,3 @@
-// MobileBottomSheet.tsx
 import type { Emoji } from '@sendbird/chat';
 import { Reaction, UserMessage } from '@sendbird/chat/message';
 import React, { useState } from 'react';
