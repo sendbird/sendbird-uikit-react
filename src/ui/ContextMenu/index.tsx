@@ -64,15 +64,14 @@ export const MenuItem = ({
   );
 };
 
+export const MENU_ROOT_ID = 'sendbird-dropdown-portal';
 export const MenuRoot = (): ReactElement => (
-  <div
-    id="sendbird-dropdown-portal"
-    className="sendbird-dropdown-portal"
-  />
+  <div id={MENU_ROOT_ID} className={MENU_ROOT_ID} />
 );
 
 // For the test environment
-export const EmojiReactionListRoot = (): ReactElement => <div id="sendbird-emoji-list-portal" />;
+export const EMOJI_MENU_ROOT_ID = 'sendbird-emoji-list-portal';
+export const EmojiReactionListRoot = (): ReactElement => <div id={EMOJI_MENU_ROOT_ID} />;
 
 type MenuDisplayingFunc = () => void;
 export interface ContextMenuProps {

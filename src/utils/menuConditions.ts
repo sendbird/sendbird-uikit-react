@@ -13,7 +13,8 @@ export const isReplyTypeMessageEnabled = ({ channel, message }) => {
   }
   const isBroadcast = (channel as GroupChannel)?.isBroadcast;
   const isOperator = channel?.myRole === Role.OPERATOR;
-  return isBroadcast ? isOperator : true;
+  if (isBroadcast) return isOperator;
+  return true;
 };
 
 export interface MenuConditionsParams {

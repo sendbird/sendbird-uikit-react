@@ -30,7 +30,7 @@ import {
   ThreadMenuItem,
   DeleteMenuItem,
   DownloadMenuItem,
-} from '../MessageMenu/menuItems/bottomSheetItems';
+} from '../MessageMenu/menuItems/BottomSheetMenuItems';
 
 const EMOJI_SIZE = 38;
 

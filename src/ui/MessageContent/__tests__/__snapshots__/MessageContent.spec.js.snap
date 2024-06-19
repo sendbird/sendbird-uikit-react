@@ -77,7 +77,7 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
         class="sendbird-message-content-menu incoming"
       >
         <div
-          class="senbird-message-menu sendbird-message-content-menu__normal-menu"
+          class="sendbird-message-menu sendbird-message-content-menu__normal-menu"
         >
           <button
             class=" sendbird-iconbutton "

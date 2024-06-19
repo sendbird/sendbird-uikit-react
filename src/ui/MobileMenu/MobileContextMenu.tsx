@@ -23,7 +23,7 @@ import {
   ResendMenuItem,
   DeleteMenuItem,
   DownloadMenuItem,
-} from '../MessageMenu/menuItems/mobileItems';
+} from '../MessageMenu/menuItems/MobileMenuItems';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { MenuItems } from '../ContextMenu';
 import { noop } from '../../utils/utils';

@@ -47,7 +47,7 @@ import { SbFeedbackStatus } from './types';
 import MessageFeedbackFailedModal from '../MessageFeedbackFailedModal';
 import { MobileBottomSheetProps } from '../MobileMenu/types';
 import useElementObserver from '../../hooks/useElementObserver';
-import { getObservingId, MENU_OBSERVING_CLASS_NAME } from '../ContextMenu';
+import { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '../ContextMenu';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -133,7 +133,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const { config, eventHandlers } = useSendbirdStateContext();
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
-  const contentRef = useRef(null);
+  const contentRef = useRef<HTMLDivElement>();
   const timestampRef = useRef<HTMLDivElement>();
   const threadRepliesRef = useRef<HTMLDivElement>();
   const feedbackButtonsRef = useRef<HTMLDivElement>();
@@ -141,7 +141,13 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [showMenu, setShowMenu] = useState(false);
 
   const [mouseHover, setMouseHover] = useState(false);
-  const isMenuMounted = useElementObserver(`#${getObservingId(message.messageId)}`, MENU_OBSERVING_CLASS_NAME);
+  const isMenuMounted = useElementObserver(
+    `#${getObservingId(message.messageId)}.${MENU_OBSERVING_CLASS_NAME}`,
+    [
+      document.getElementById(MENU_ROOT_ID),
+      document.getElementById(EMOJI_MENU_ROOT_ID),
+    ],
+  );
   // Feedback states
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);

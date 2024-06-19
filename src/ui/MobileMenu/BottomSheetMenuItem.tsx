@@ -1,5 +1,5 @@
 import React from 'react';
-import { MenuItemProps } from '../MessageMenu/menuItems/menuItems';
+import { MenuItemProps } from '../MessageMenu/menuItems/MessageMenuItems';
 import { classnames } from '../../utils/utils';
 
 export const BottomSheetMenuItem = ({

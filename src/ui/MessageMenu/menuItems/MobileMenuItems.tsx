@@ -1,7 +1,7 @@
 import React from 'react';
 import { FileMessage } from '@sendbird/chat/message';
 
-import { MenuItem, PrebuildMenuItemPropsType } from './menuItems';
+import { MenuItem, PrebuildMenuItemPropsType } from './MessageMenuItems';
 import { copyToClipboard, isUserMessage, isFailedMessage } from '../../../utils';
 import { useLocalization } from '../../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../../Icon';

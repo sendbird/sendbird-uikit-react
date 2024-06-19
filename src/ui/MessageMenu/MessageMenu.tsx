@@ -17,7 +17,7 @@ import {
   EditMenuItem,
   ResendMenuItem,
   DeleteMenuItem,
-} from './menuItems/menuItems';
+} from './menuItems/MessageMenuItems';
 import { ReplyType } from '../../types';
 import {
   MenuConditionsParams,
@@ -100,7 +100,7 @@ export const MessageMenu = ({
 
   return (
     <div
-      className={classnames('senbird-message-menu', className)}
+      className={classnames('sendbird-message-menu', className)}
       ref={containerRef}
     >
       <MessageMenuProvider value={{
