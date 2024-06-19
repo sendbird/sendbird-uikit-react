@@ -93,6 +93,7 @@ export interface ModalProps {
   customFooter?: ReactNode;
   /** @deprecated Please use `onClose` instead, we will remove `onCancel` in v4. * */
   onCancel?: () => void;
+  rootElementId?: string;
 }
 export function Modal(props: ModalProps): ReactElement {
   const {
@@ -111,6 +112,7 @@ export function Modal(props: ModalProps): ReactElement {
     onClose,
     onCancel,
     customFooter,
+    rootElementId,
   } = props;
   const handleClose = onClose ?? onCancel ?? noop;
   const { eventHandlers } = useSendbirdStateContext();
@@ -142,7 +144,7 @@ export function Modal(props: ModalProps): ReactElement {
         }}
       />
     </div>,
-    document.getElementById(MODAL_ROOT) as HTMLElement,
+    document.getElementById(rootElementId ?? MODAL_ROOT) as HTMLElement,
   );
 }
 export default Modal;

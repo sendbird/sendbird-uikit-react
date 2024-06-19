@@ -1,0 +1,39 @@
+{
+  "name": "some form",
+  "items": [
+    {
+      "name": "name",
+      "item_type": "text",
+      "required": true,
+      "sort_order": 0,
+      "placeholder": "enter a name",
+      "validators": [
+        {
+          "key": "text",
+          "max_length": 20
+        }
+      ]
+    },
+    {
+      "name": "phone number",
+      "item_type": "text",
+      "required": false,
+      "sort_order": 1,
+      "placeholder": "enter a phone number",
+      "validators": []
+    },
+    {
+      "name": "email",
+      "item_type": "email",
+      "required": false,
+      "sort_order": 2,
+      "placeholder": "enter your email address",
+      "validators": [
+        {
+          "key": "regex",
+          "regex": "^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+        }
+      ]
+    }
+  ]
+}
