@@ -324,7 +324,6 @@ export default function ParentMessageInfo({
           userId={userId}
           emojiContainer={emojiContainer}
           toggleReaction={toggleReaction}
-          setSupposedHover={setSupposedHover}
         />
       )}
       {showRemove && (

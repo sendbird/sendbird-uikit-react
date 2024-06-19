@@ -237,6 +237,7 @@ export const isFailedMessage = (
 export const isPendingMessage = (
   message: SendableMessageType,
 ): boolean => (message?.sendingStatus === 'pending');
+
 export const isSentStatus = (state: string): boolean => (
   state === OutgoingMessageStates.SENT
   || state === OutgoingMessageStates.DELIVERED

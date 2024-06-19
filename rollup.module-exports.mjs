@@ -198,6 +198,7 @@ export default {
   'ui/MessageInput/hooks/usePaste': 'src/ui/MessageInput/hooks/usePaste/index.ts',
   'ui/MessageItemMenu': 'src/ui/MessageItemMenu/index.tsx',
   'ui/MessageItemReactionMenu': 'src/ui/MessageItemReactionMenu/index.tsx',
+  'ui/MessageMenu': 'src/ui/MessageMenu/index.tsx',
   'ui/MessageSearchFileItem': 'src/ui/MessageSearchFileItem/index.tsx',
   'ui/MessageSearchItem': 'src/ui/MessageSearchItem/index.tsx',
   'ui/MessageStatus': 'src/ui/MessageStatus/index.tsx',

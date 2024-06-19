@@ -1,7 +1,10 @@
 import React, { ReactElement } from 'react';
 import { createPortal } from 'react-dom';
+import { classnames } from '../../utils/utils';
+import { MENU_OBSERVING_CLASS_NAME } from '.';
 
 interface MenuItemsProps {
+  id?: string;
   className?: string;
   testID?: string;
   style?: Record<string, string>;
@@ -107,11 +110,11 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
       return <></>;
 
     const { menuStyle } = this.state;
-    const { children, style, className = '', testID } = this.props;
+    const { children, style, className = '', testID, id } = this.props;
     return (
       createPortal(
         (
-          <div className={className} data-testid={testID}>
+          <div className={classnames(MENU_OBSERVING_CLASS_NAME, className)} data-testid={testID} id={id}>
             <div className="sendbird-dropdown__menu-backdrop" />
             <ul
               className={`${className} sendbird-dropdown__menu`}

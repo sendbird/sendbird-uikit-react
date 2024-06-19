@@ -11,6 +11,10 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 
 const ENTER_KEY = 13;
 
+// # useElementObserve
+export const MENU_OBSERVING_CLASS_NAME = 'sendbird-observing-message-menu';
+export const getObservingId = (txt: string | number) => `m_${txt}`;
+
 export const MenuItems = _MenuItems;
 export const EmojiListItems = _EmojiListItems;
 
@@ -60,15 +64,14 @@ export const MenuItem = ({
   );
 };
 
+export const MENU_ROOT_ID = 'sendbird-dropdown-portal';
 export const MenuRoot = (): ReactElement => (
-  <div
-    id="sendbird-dropdown-portal"
-    className="sendbird-dropdown-portal"
-  />
+  <div id={MENU_ROOT_ID} className={MENU_ROOT_ID} />
 );
 
 // For the test environment
-export const EmojiReactionListRoot = (): ReactElement => <div id="sendbird-emoji-list-portal" />;
+export const EMOJI_MENU_ROOT_ID = 'sendbird-emoji-list-portal';
+export const EmojiReactionListRoot = (): ReactElement => <div id={EMOJI_MENU_ROOT_ID} />;
 
 type MenuDisplayingFunc = () => void;
 export interface ContextMenuProps {

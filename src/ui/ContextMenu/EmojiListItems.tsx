@@ -3,11 +3,13 @@ import { createPortal } from 'react-dom';
 
 import SortByRow from '../SortByRow';
 import { Nullable } from '../../types';
+import { EMOJI_MENU_ROOT_ID, MENU_OBSERVING_CLASS_NAME } from '.';
 
 const defaultParentRect = { x: 0, y: 0, left: 0, top: 0, height: 0 };
 type SpaceFromTrigger = { x: number, y: number };
 type ReactionStyle = { left: number, top: number };
 export interface EmojiListItemsProps {
+  id?: string;
   closeDropdown: () => void;
   children: ReactNode;
   parentRef: RefObject<HTMLDivElement>;
@@ -16,6 +18,7 @@ export interface EmojiListItemsProps {
 }
 
 export const EmojiListItems = ({
+  id,
   children,
   parentRef,
   parentContainRef,
@@ -86,11 +89,11 @@ export const EmojiListItems = ({
     }
   }, []);
 
-  const rootElement = document.getElementById('sendbird-emoji-list-portal');
+  const rootElement = document.getElementById(EMOJI_MENU_ROOT_ID);
   if (rootElement) {
     return (
       createPortal(
-        <>
+        <div className={MENU_OBSERVING_CLASS_NAME} id={id}>
           <div className="sendbird-dropdown__menu-backdrop" />
           <ul
             className="sendbird-dropdown__reaction-bar"
@@ -112,7 +115,7 @@ export const EmojiListItems = ({
               {children}
             </SortByRow>
           </ul>
-        </>,
+        </div>,
         rootElement,
       )
     );

@@ -3,7 +3,7 @@ import format from 'date-fns/format';
 import './index.scss';
 
 import MessageStatus from '../MessageStatus';
-import { MessageMenu, MessageMenuProps } from '../MessageItemMenu';
+import { MessageMenu, type MessageMenuProps } from '../MessageMenu';
 import { MessageEmojiMenu, MessageEmojiMenuProps } from '../MessageItemReactionMenu';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import EmojiReactions, { EmojiReactionsProps } from '../EmojiReactions';
@@ -46,6 +46,8 @@ import MessageFeedbackModal from '../MessageFeedbackModal';
 import { SbFeedbackStatus } from './types';
 import MessageFeedbackFailedModal from '../MessageFeedbackFailedModal';
 import { MobileBottomSheetProps } from '../MobileMenu/types';
+import useElementObserver from '../../hooks/useElementObserver';
+import { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '../ContextMenu';
 
 export interface MessageContentProps {
   className?: string | Array<string>;
@@ -131,7 +133,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const { config, eventHandlers } = useSendbirdStateContext();
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
-  const contentRef = useRef(null);
+  const contentRef = useRef<HTMLDivElement>();
   const timestampRef = useRef<HTMLDivElement>();
   const threadRepliesRef = useRef<HTMLDivElement>();
   const feedbackButtonsRef = useRef<HTMLDivElement>();
@@ -139,7 +141,13 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const [showMenu, setShowMenu] = useState(false);
 
   const [mouseHover, setMouseHover] = useState(false);
-  const [supposedHover, setSupposedHover] = useState(false);
+  const isMenuMounted = useElementObserver(
+    `#${getObservingId(message.messageId)}.${MENU_OBSERVING_CLASS_NAME}`,
+    [
+      document.getElementById(MENU_ROOT_ID),
+      document.getElementById(EMOJI_MENU_ROOT_ID),
+    ],
+  );
   // Feedback states
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
@@ -169,7 +177,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const chainTopClassName = chainTop ? 'chain-top' : '';
   const isReactionEnabledInChannel = isReactionEnabled && !channel?.isEphemeral;
   const isReactionEnabledClassName = isReactionEnabledInChannel ? 'use-reactions' : '';
-  const supposedHoverClassName = supposedHover ? 'sendbird-mouse-hover' : '';
+  const hoveredMenuClassName = isMenuMounted ? 'sendbird-mouse-hover' : '';
   const useReplying = !!((replyType === 'QUOTE_REPLY' || replyType === 'THREAD')
     && message?.parentMessageId && message?.parentMessage
     && !disableQuoteMessage
@@ -279,18 +287,16 @@ export default function MessageContent(props: MessageContentProps): ReactElement
         }
         {/* outgoing menu */}
         {showOutgoingMenu && (
-          <div className={classnames('sendbird-message-content-menu', isReactionEnabledClassName, supposedHoverClassName, isByMeClassName)}>
+          <div className={classnames('sendbird-message-content-menu', isReactionEnabledClassName, hoveredMenuClassName, isByMeClassName)}>
             {renderMessageMenu({
               channel,
               message,
               isByMe,
               replyType,
-              disabled,
               showEdit,
               showRemove,
               resendMessage,
               setQuoteMessage,
-              setSupposedHover,
               onReplyInThread: ({ message }) => {
                 if (threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onReplyInThread?.({ message });
@@ -306,7 +312,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                 userId,
                 emojiContainer,
                 toggleReaction,
-                setSupposedHover,
               })
             )}
           </div>
@@ -367,7 +372,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               className={classnames(
                 'sendbird-message-content__middle__body-container__created-at',
                 'left',
-                supposedHoverClassName,
+                hoveredMenuClassName,
                 uiContainerType,
               )}
               ref={timestampRef}
@@ -423,7 +428,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               className={classnames(
                 'sendbird-message-content__middle__body-container__created-at',
                 'right',
-                supposedHoverClassName,
+                hoveredMenuClassName,
                 uiContainerType,
               )}
               type={LabelTypography.CAPTION_3}
@@ -519,7 +524,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           className={classnames('sendbird-message-content__right', chainTopClassName, isReactionEnabledClassName, useReplyingClassName)}
           data-testid="sendbird-message-content__right"
         >
-          <div className={classnames('sendbird-message-content-menu', chainTopClassName, supposedHoverClassName, isByMeClassName)}>
+          <div className={classnames('sendbird-message-content-menu', chainTopClassName, hoveredMenuClassName, isByMeClassName)}>
             {isReactionEnabledInChannel && (
               renderEmojiMenu({
                 className: 'sendbird-message-content-menu__reaction-menu',
@@ -527,7 +532,6 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                 userId,
                 emojiContainer,
                 toggleReaction,
-                setSupposedHover,
               })
             )}
             {renderMessageMenu({
@@ -536,11 +540,9 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               message,
               isByMe,
               replyType,
-              disabled,
               showRemove,
               resendMessage,
               setQuoteMessage,
-              setSupposedHover,
               onReplyInThread: ({ message }) => {
                 if (threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onReplyInThread?.({ message });
