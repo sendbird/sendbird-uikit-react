@@ -7,8 +7,7 @@ import { useLocalization } from '../../../lib/LocalizationContext';
 import { MobileMessageMenuContextProps, useMessageMenuContext } from '../MessageMenuProvider';
 import Icon, { IconTypes, IconColors } from '../../Icon';
 import Label, { LabelColors, LabelTypography } from '../../Label';
-
-import { BottomSheetMenuItem } from '../../MobileMenu/BottomSheetMenuItem';
+import { BottomSheetMenuItem } from './BasicItems';
 
 export const CopyMenuItem = (props: PrebuildMenuItemPropsType) => {
   const { stringSet } = useLocalization();

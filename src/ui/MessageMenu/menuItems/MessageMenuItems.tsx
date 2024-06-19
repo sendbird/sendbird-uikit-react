@@ -2,11 +2,11 @@ import React, { FocusEvent, MouseEvent, MutableRefObject, ReactNode } from 'reac
 
 import IconButton from '../../IconButton';
 import Icon, { IconColors, IconProps, IconTypes } from '../../Icon';
-import { classnames, noop } from '../../../utils/utils';
-import Label, { LabelColors, LabelTypography } from '../../Label';
+import { noop } from '../../../utils/utils';
 import { copyToClipboard, isUserMessage, isFailedMessage } from '../../../utils';
 import { useLocalization } from '../../../lib/LocalizationContext';
 import { useMessageMenuContext } from '../MessageMenuProvider';
+import { MenuItem, MenuItemProps } from './BasicItems';
 
 export interface TriggerIconProps {
   ref: MutableRefObject<any>;
@@ -35,48 +35,6 @@ export const TriggerIcon = ({
         height: '24px',
       })}
     </IconButton>
-  );
-};
-
-export interface MenuItemProps {
-  className?: string;
-  disabled?: boolean;
-  tabIndex?: number;
-  testID?: string;
-  onClick?: (e: MouseEvent<HTMLLIElement | HTMLDivElement>) => void;
-  children: ReactNode;
-}
-
-export const MenuItem = ({
-  className,
-  disabled,
-  tabIndex = 0,
-  testID,
-  onClick,
-  children,
-}: MenuItemProps) => {
-  const handleClickEvent = (e) => {
-    if (!disabled && onClick) {
-      onClick(e);
-    }
-  };
-  return (
-    <li
-      className={classnames('sendbird-menu-item', className)}
-      role="menuitem"
-      aria-disabled={disabled}
-      data-testid={testID}
-      tabIndex={tabIndex}
-      onClick={handleClickEvent}
-      onKeyDown={(e) => { if (e.code === 'Enter') handleClickEvent(e); }}
-    >
-      <Label
-        type={LabelTypography.SUBTITLE_2}
-        color={disabled ? LabelColors.ONBACKGROUND_4 : LabelColors.ONBACKGROUND_1}
-      >
-        {children}
-      </Label>
-    </li>
   );
 };
 
