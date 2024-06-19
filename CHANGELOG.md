@@ -43,16 +43,92 @@
     On Dark -04 -> Ondark-text-disabled
     ```
 
-### Fixes
-- Fixed an issue where the `newMessages` array was not being reset even after the message list scroll reached the bottom, causing the message notification bar to not disappear properly. Manually called `resetNewMessages()` under certain conditions.
-- Updated the logic to align with other platforms for consistency. Relocated the logic to the same section where other `disabled` conditions are checked.
-
-### Chores
 - Message Menu Component Refactor
   - Created `MessageMenuProvider`, `useMessageMenuContext`, and `MessageMenu` component.
   - Replaced `MessageItemMenu` with `MessageMenu` in **GroupChannel**. Future PR will apply it to Thread.
   - Migrated `MobileContextMenu` and `MobileBottomSheet` using `MessageMenuProvider`.
+  - Exported the `MobileMenu`
+    ```tsx
+    import { MobileMenu, MobileContextMenu, MobileBottomSheet } from '@sendbird/uikit-react/ui/MobileMenu';
+    ```
+  - How to use?
 
+    Desktop menu
+    ```tsx
+    import GroupChannel from '@sendbird/uikit-react/GroupChannel';
+    import MessageContent from '@sendbird/uikit-react/ui/MessageContent';
+    import { MessageMenu } from '@sendbird/uikit-react/ui/MessageMenu';
+
+    const GroupChannelPage = () => (
+      <GroupChannel
+        renderMessageContent={(props) => (
+          <MessageContent
+            {...props}
+            renderMessageMenu={(props) => (
+              <MessageMenu
+                {...props}
+                renderMenuItems={(props) => {
+                  const {
+                    CopyMenuItem,
+                    ReplyMenuItem,
+                    // ...
+                    DeleteMenuItem,
+                  } = props.items;
+                  // organize the menu items using the items
+                  return (
+                    <>
+                      <CopyMenuItem />
+                      <DeleteMenuItem />
+                    </>
+                  );
+                }}
+              />
+            )}
+          />
+        )}
+      />
+    );
+    ```
+    Mobile menu
+    ```tsx
+    import GroupChannel from '@sendbird/uikit-react/GroupChannel';
+    import MessageContent from '@sendbird/uikit-react/ui/MessageContent';
+    import { MobileMenu } from '@sendbird/uikit-react/ui/MessageMenu';
+
+    const GroupChannelPage = () => (
+      <GroupChannel
+        renderMessageContent={(props) => (
+          <MessageContent
+            {...props}
+            renderMobileMenuOnLongPress={(props) => (
+              <MobileMenu
+                {...props}
+                renderMenuItems={(props) => {
+                  const {
+                    CopyMenuItem,
+                    ReplyMenuItem,
+                    // ...
+                    DeleteMenuItem,
+                  } = props.items;
+                  // organize the menu items using the items
+                  return (
+                    <>
+                      <CopyMenuItem />
+                      <DeleteMenuItem />
+                    </>
+                  );
+                }}
+              />
+            )}
+          />
+        )}
+      />
+    );
+    ```
+
+### Fixes
+- Fixed an issue where the `newMessages` array was not being reset even after the message list scroll reached the bottom, causing the message notification bar to not disappear properly. Manually called `resetNewMessages()` under certain conditions.
+- Updated the logic to align with other platforms for consistency. Relocated the logic to the same section where other `disabled` conditions are checked.
 
 ## [v3.14.10] (June 13, 2024)
 ### Fixes
