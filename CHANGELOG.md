@@ -1,5 +1,59 @@
 # Changelog - v3
 
+## [v3.11.14] (June 19, 2024)
+### Features
+- Markdown Support for Text Messages
+  - Added `enableMarkdownForUserMessage` to `UIKitOptions`. When enabled, markdown syntaxes for bold and link are now applied to user messages.
+
+- Descriptive Color Names Support
+  - Users can now customize the color set using more descriptive color names instead of numerical codes.
+  - Added a color map parsing utility function, `mapColorKeys`, to support both new and existing color names.
+  - Detailed color name mappings:
+     1. Primary, Secondary, Error, information
+    ```
+    Primary-500 -> Primary-extra dark
+    Primary-400 -> Primary-dark
+    Primary-300 -> Primary-main
+    Primary-200 -> Primary-light
+    Primary-100 -> Primary-extra light
+
+    Secondary-500 -> Secondary-extra dark
+    Secondary-400 -> Secondary-dark
+    Secondary-300 -> Secondary-main
+    Secondary-200 -> Secondary-light
+    Secondary-100 -> Secondary-extra light
+    ```
+    2. Background 100~700: No changes
+    3. Overlay
+    ```
+    Overlay-01 -> Overlay-dark
+    Overlay-02 -> Overlay-light
+    ```
+    4. OnLight & OnDark
+    ```
+    // On Light
+    On Light-01 -> Onlight-text-high-emphasis
+    On Light-02 -> Onlight-text-mid-emphasis
+    On Light-03 -> Onlight-text-low-emphasis
+    On Light-04 -> Onlight-text-disabled
+    // On Dark
+    On Dark -01 -> Ondark-text-high-emphasis
+    On Dark -02 -> Ondark-text-mid-emphasis
+    On Dark -03 -> Ondark-text-low-emphasis
+    On Dark -04 -> Ondark-text-disabled
+    ```
+
+### Fixes
+- Fixed an issue where the `newMessages` array was not being reset even after the message list scroll reached the bottom, causing the message notification bar to not disappear properly. Manually called `resetNewMessages()` under certain conditions.
+- Updated the logic to align with other platforms for consistency. Relocated the logic to the same section where other `disabled` conditions are checked.
+
+### Chores
+- Message Menu Component Refactor
+  - Created `MessageMenuProvider`, `useMessageMenuContext`, and `MessageMenu` component.
+  - Replaced `MessageItemMenu` with `MessageMenu` in **GroupChannel**. Future PR will apply it to Thread.
+  - Migrated `MobileContextMenu` and `MobileBottomSheet` using `MessageMenuProvider`.
+
+
 ## [v3.14.10] (June 13, 2024)
 ### Fixes
 - Replaced onlight-05 with onlight-03 since onlight-05 doesn't exist in the product design guide.
