@@ -52,15 +52,15 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
   const { isOnline } = config;
 
   // Menu Items condition
-  const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
-  const showMenuItemEdit: boolean = isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe;
-  const showMenuItemResend: boolean = isFailedMessage(message) && message?.isResendable && isByMe;
-  const showMenuItemDelete: boolean = !isPendingMessage(message) && isByMe;
+  const showMenuItemCopy = isUserMessage(message as UserMessage);
+  const showMenuItemEdit = isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe;
+  const showMenuItemResend = isFailedMessage(message) && message?.isResendable && isByMe;
+  const showMenuItemDelete = !isPendingMessage(message) && isByMe;
   const showMenuItemDeleteByState = isByMe && (deleteMenuState === undefined || deleteMenuState !== 'HIDE');
   const showMenuItemDeleteFinal = showMenuItemDeleteByState && showMenuItemDelete;
-  const showMenuItemDownload: boolean = !isPendingMessage(message) && isFileMessage(message) && !(isVoiceMessage(message) && (channel as GroupChannel)?.isSuper || (channel as GroupChannel)?.isBroadcast);
-  const showMenuItemReply: boolean = replyType === 'QUOTE_REPLY' && !isFailedMessage(message) && !isPendingMessage(message) && channel?.isGroupChannel();
-  const showMenuItemThread: boolean = replyType === 'THREAD' && !isOpenedFromThread && !isFailedMessage(message) && !isPendingMessage(message) && !isThreadMessage(message) && channel?.isGroupChannel();
+  const showMenuItemDownload = !isPendingMessage(message) && isFileMessage(message) && !(isVoiceMessage(message) && (channel as GroupChannel)?.isSuper || (channel as GroupChannel)?.isBroadcast);
+  const showMenuItemReply = replyType === 'QUOTE_REPLY' && !isFailedMessage(message) && !isPendingMessage(message) && channel?.isGroupChannel();
+  const showMenuItemThread = replyType === 'THREAD' && !isOpenedFromThread && !isFailedMessage(message) && !isPendingMessage(message) && !isThreadMessage(message) && channel?.isGroupChannel();
   const disableDeleteMessage = (deleteMenuState !== undefined && deleteMenuState === 'DISABLE') || (message?.threadInfo?.replyCount ?? 0) > 0;
 
   const contextValue: MobileMessageMenuContextProps = {

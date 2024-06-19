@@ -177,7 +177,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const chainTopClassName = chainTop ? 'chain-top' : '';
   const isReactionEnabledInChannel = isReactionEnabled && !channel?.isEphemeral;
   const isReactionEnabledClassName = isReactionEnabledInChannel ? 'use-reactions' : '';
-  const supposedHoverClassName = isMenuMounted ? 'sendbird-mouse-hover' : '';
+  const hoveredMenuClassName = isMenuMounted ? 'sendbird-mouse-hover' : '';
   const useReplying = !!((replyType === 'QUOTE_REPLY' || replyType === 'THREAD')
     && message?.parentMessageId && message?.parentMessage
     && !disableQuoteMessage
@@ -287,7 +287,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
         }
         {/* outgoing menu */}
         {showOutgoingMenu && (
-          <div className={classnames('sendbird-message-content-menu', isReactionEnabledClassName, supposedHoverClassName, isByMeClassName)}>
+          <div className={classnames('sendbird-message-content-menu', isReactionEnabledClassName, hoveredMenuClassName, isByMeClassName)}>
             {renderMessageMenu({
               channel,
               message,
@@ -372,7 +372,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               className={classnames(
                 'sendbird-message-content__middle__body-container__created-at',
                 'left',
-                supposedHoverClassName,
+                hoveredMenuClassName,
                 uiContainerType,
               )}
               ref={timestampRef}
@@ -428,7 +428,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
               className={classnames(
                 'sendbird-message-content__middle__body-container__created-at',
                 'right',
-                supposedHoverClassName,
+                hoveredMenuClassName,
                 uiContainerType,
               )}
               type={LabelTypography.CAPTION_3}
@@ -524,7 +524,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
           className={classnames('sendbird-message-content__right', chainTopClassName, isReactionEnabledClassName, useReplyingClassName)}
           data-testid="sendbird-message-content__right"
         >
-          <div className={classnames('sendbird-message-content-menu', chainTopClassName, supposedHoverClassName, isByMeClassName)}>
+          <div className={classnames('sendbird-message-content-menu', chainTopClassName, hoveredMenuClassName, isByMeClassName)}>
             {isReactionEnabledInChannel && (
               renderEmojiMenu({
                 className: 'sendbird-message-content-menu__reaction-menu',
