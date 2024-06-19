@@ -1,6 +1,20 @@
 import { User } from '@sendbird/chat';
 import { USER_MENTION_PREFIX } from '../../consts';
-import { IdentifyMentionsType, MentionToken, Token, TOKEN_TYPES, TokenParams, UndeterminedToken } from './types';
+import {
+  IdentifyMentionsType,
+  MarkdownToken,
+  MentionToken,
+  Token,
+  TOKEN_TYPES,
+  TokenParams,
+  UndeterminedToken,
+} from './types';
+
+/**
+ * /\[(.*?)\]\((.*?)\) is for url.
+ * /\*\*(.*?)\*\* for bold.
+ */
+const MarkdownRegex = /\[(.*?)\]\((.*?)\)|\*\*(.*?)\*\*/g;
 
 export function getUserMentionRegex(mentionedUsers: User[], templatePrefix_: string): RegExp {
   const templatePrefix = templatePrefix_ || USER_MENTION_PREFIX;
@@ -86,6 +100,64 @@ export function identifyUrlsAndStrings(token: Token[]): Token[] {
   return results;
 }
 
+/**
+ * For every string token in the given list of tokens, if the token contains markdowns, the token is split into
+ * string tokens and markdown tokens in the original order.
+ * Returns a new array tokens.
+ * @param tokens
+ */
+export function splitTokensWithMarkdowns(tokens: Token[]): Token[] {
+  const prevTokens = tokens;
+  const newTokens = [];
+  prevTokens.forEach((token) => {
+    if (token.type === TOKEN_TYPES.mention || token.type === TOKEN_TYPES.markdown) {
+      newTokens.push(token);
+      return;
+    }
+    const rawStr = token.value;
+    // @ts-ignore
+    const matches = [...rawStr.matchAll(MarkdownRegex)];
+    const allMatches = matches.map((value) => {
+      const text = value[0];
+      const start = value.index ?? 0;
+      const end = start + text.length;
+      return { text, start, end, groups: value.filter((val: any) => typeof val === 'string') };
+    });
+    let restText = rawStr;
+    let cursor = 0;
+    allMatches.forEach(({ text, start, end, groups }) => {
+      const left: Token = {
+        type: TOKEN_TYPES.undetermined,
+        value: restText.slice(0, start - cursor),
+      };
+      newTokens.push(left);
+      let markdownType;
+      if (text.startsWith('[')) {
+        markdownType = 'url';
+      } else if (text.startsWith('**')) {
+        markdownType = 'bold';
+      }
+      const mid: MarkdownToken = {
+        type: TOKEN_TYPES.markdown,
+        markdownType,
+        value: text,
+        groups,
+      };
+      newTokens.push(mid);
+      restText = rawStr.slice(end);
+      cursor = end;
+    });
+    if (restText) {
+      const right: Token = {
+        type: TOKEN_TYPES.undetermined,
+        value: restText,
+      };
+      newTokens.push(right);
+    }
+  });
+  return newTokens;
+}
+
 export function combineNearbyStrings(tokens: Token[]): Token[] {
   const results: Token[] = tokens.reduce((acc, token) => {
     const lastToken = acc[acc.length - 1];
@@ -105,6 +177,7 @@ export function tokenizeMessage({
   messageText,
   mentionedUsers = [],
   templatePrefix = USER_MENTION_PREFIX,
+  includeMarkdown = false,
 }: TokenParams): Token[] {
   // mention can be squeezed-in(no-space-between) with other mentions and urls
   // if no users are mentioned, return the messageText as a single token
@@ -120,9 +193,23 @@ export function tokenizeMessage({
     mentionedUsers,
     templatePrefix,
   });
-  const partialsWithUrlsAndMentions = identifyUrlsAndStrings(partialWithMentions);
+  const partialsWithUrlsAndMentions = identifyUrlsAndStrings(
+    includeMarkdown
+      ? splitTokensWithMarkdowns(partialWithMentions)
+      : partialWithMentions,
+  );
   const result = combineNearbyStrings(partialsWithUrlsAndMentions);
+  return result;
+}
 
+export function tokenizeMarkdown({
+  messageText,
+}): Token[] {
+  const partialResult = [{
+    type: TOKEN_TYPES.undetermined,
+    value: messageText,
+  }];
+  const result = combineNearbyStrings(splitTokensWithMarkdowns(partialResult));
   return result;
 }
 

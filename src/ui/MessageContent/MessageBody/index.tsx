@@ -86,6 +86,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         isMentionEnabled={config.groupChannel.enableMention ?? false}
         isReactionEnabled={isReactionEnabledInChannel}
         onMessageHeightChange={onMessageHeightChange}
+        isMarkdownEnabled={config.groupChannel.enableMarkdownForUserMessage}
       />
     ))
     .when(isTextMessage, () => (
@@ -96,6 +97,7 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         mouseHover={mouseHover}
         isMentionEnabled={config.groupChannel.enableMention ?? false}
         isReactionEnabled={isReactionEnabledInChannel}
+        isMarkdownEnabled={config.groupChannel.enableMarkdownForUserMessage}
       />
     ))
     .when((message) => getUIKitMessageType(message) === messageTypes.FILE, () => (

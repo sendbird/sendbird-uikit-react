@@ -185,6 +185,7 @@ const SendbirdSDK = ({
   const [appInfoStore, appInfoDispatcher] = useReducer(appInfoReducers, appInfoInitialState);
 
   const { configs, configsWithAppAttr, initDashboardConfigs } = useUIKitConfig();
+
   const sdkInitialized = sdkStore.initialized;
   const sdk = sdkStore?.sdk;
   const { uploadSizeLimit, multipleFilesMessageFileCountLimit } = sdk?.appInfo ?? {};
@@ -370,6 +371,7 @@ const SendbirdSDK = ({
             enableSuggestedReplies: configs.groupChannel.channel.enableSuggestedReplies,
             showSuggestedRepliesFor: configs.groupChannel.channel.showSuggestedRepliesFor,
             suggestedRepliesDirection: configs.groupChannel.channel.suggestedRepliesDirection,
+            enableMarkdownForUserMessage: configs.groupChannel.channel.enableMarkdownForUserMessage,
           },
           groupChannelList: {
             enableTypingIndicator: configs.groupChannel.channelList.enableTypingIndicator,

@@ -84,16 +84,17 @@ export default function ParentMessageInfoItem({
   const isReactionActivated = isReactionEnabled
     && config.groupChannel.replyType === 'thread'
     && message?.reactions?.length > 0;
-
   const tokens = useMemo(() => {
     if (isMentionedMessage) {
       return tokenizeMessage({
         mentionedUsers: message?.mentionedUsers ?? undefined,
         messageText: message?.mentionedMessageTemplate,
+        includeMarkdown: config.groupChannel.enableMarkdownForUserMessage,
       });
     }
     return tokenizeMessage({
       messageText: (message as UserMessage)?.message,
+      includeMarkdown: config.groupChannel.enableMarkdownForUserMessage,
     });
   }, [message?.updatedAt, (message as UserMessage)?.message]);
 

@@ -6,6 +6,7 @@ export const TOKEN_TYPES = {
   mention: 'mention',
   url: 'url',
   undetermined: 'undetermined',
+  markdown: 'markdown',
 } as const;
 
 export type TokenType = ObjectValues<typeof TOKEN_TYPES>;
@@ -31,12 +32,20 @@ export type UndeterminedToken = {
   value: string;
 };
 
-export type Token = StringToken | MentionToken | UrlToken | UndeterminedToken;
+export type MarkdownToken = {
+  type: typeof TOKEN_TYPES.markdown;
+  markdownType: 'bold' | 'url';
+  value: string; // match
+  groups: string[];
+};
+
+export type Token = StringToken | MentionToken | UrlToken | MarkdownToken | UndeterminedToken;
 
 export type TokenParams = {
   messageText: string;
   mentionedUsers?: User[];
   templatePrefix?: string;
+  includeMarkdown?: boolean;
 };
 
 export type IdentifyMentionsType = {

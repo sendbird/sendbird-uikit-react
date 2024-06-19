@@ -15,6 +15,7 @@ export function uikitConfigMapper({
     isMessageReceiptStatusEnabledOnChannelList,
     showSearchIcon,
   } = legacyConfig;
+
   return {
     common: {
       enableUsingDefaultUserProfile: uikitOptions.common?.enableUsingDefaultUserProfile
@@ -38,6 +39,7 @@ export function uikitConfigMapper({
       enableSuggestedReplies: uikitOptions.groupChannel?.enableSuggestedReplies,
       showSuggestedRepliesFor: uikitOptions.groupChannel?.showSuggestedRepliesFor,
       suggestedRepliesDirection: uikitOptions.groupChannel?.suggestedRepliesDirection,
+      enableMarkdownForUserMessage: uikitOptions.groupChannel?.enableMarkdownForUserMessage,
     },
     groupChannelList: {
       enableTypingIndicator: uikitOptions.groupChannelList?.enableTypingIndicator ?? isTypingIndicatorEnabledOnChannelList,
