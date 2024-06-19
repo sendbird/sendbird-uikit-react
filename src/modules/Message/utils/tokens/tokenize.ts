@@ -107,9 +107,8 @@ export function identifyUrlsAndStrings(token: Token[]): Token[] {
  * @param tokens
  */
 export function splitTokensWithMarkdowns(tokens: Token[]): Token[] {
-  let newTokens = tokens;
-  const prevTokens = newTokens;
-  newTokens = [];
+  const prevTokens = tokens;
+  const newTokens = [];
   prevTokens.forEach((token) => {
     if (token.type === TOKEN_TYPES.mention || token.type === TOKEN_TYPES.markdown) {
       newTokens.push(token);

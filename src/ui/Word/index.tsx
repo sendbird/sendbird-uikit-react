@@ -56,6 +56,7 @@ export default function Word(props: WordProps): JSX.Element | null {
             return (
               <LinkLabel
                 key={key}
+                className="sendbird-word__url"
                 src={word}
                 type={LabelTypography.BODY_1}
                 color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
