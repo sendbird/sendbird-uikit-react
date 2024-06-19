@@ -239,6 +239,7 @@ export default {
   'ui/Word': 'src/ui/Word/index.tsx',
   'ui/FeedbackIconButton': 'src/ui/FeedbackIconButton/index.tsx',
   'ui/MobileFeedbackMenu': 'src/ui/MobileFeedbackMenu/index.tsx',
+  'ui/MobileMenu': 'src/ui/MobileMenu/index.tsx',
   'ui/MessageFeedbackModal': 'src/ui/MessageFeedbackModal/index.tsx',
   'ui/MessageFeedbackFailedModal': 'src/ui/MessageFeedbackFailedModal/index.tsx',
 };
