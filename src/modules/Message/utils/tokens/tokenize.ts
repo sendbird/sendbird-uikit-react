@@ -116,7 +116,7 @@ export function splitTokensWithMarkdowns(tokens: Token[]): Token[] {
     }
     const rawStr = token.value;
     // @ts-ignore
-    const matches = [...rawStr.matchAll(MarkdownRegex)];
+    const matches = Array.from(rawStr.matchAll(MarkdownRegex));
     const allMatches = matches.map((value) => {
       const text = value[0];
       const start = value.index ?? 0;
