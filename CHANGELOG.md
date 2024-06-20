@@ -1,6 +1,6 @@
 # Changelog - v3
 
-## [v3.11.14] (June 20, 2024)
+## [v3.14.11] (June 20, 2024)
 ### Features
 - Markdown Support for Text Messages
   - Added `enableMarkdownForUserMessage` to `UIKitOptions`. When enabled, markdown syntaxes for bold and link are now applied to user messages.
