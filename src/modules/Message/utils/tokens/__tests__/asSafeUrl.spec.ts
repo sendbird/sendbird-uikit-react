@@ -8,6 +8,7 @@ describe('asSafeURL', () => {
 
   test('should return a safe URL if it is not safe', () => {
     expect(asSafeURL('mailto:email@gmail.com')).toBe('#');
+    // eslint-disable-next-line no-script-url
     expect(asSafeURL('javascript:alert(1)')).toBe('#');
     expect(asSafeURL('javascript%3Aalert%281%29')).toBe('#');
     expect(asSafeURL('data:text/html;base64,ABCDE==')).toBe('#');
