@@ -8,12 +8,14 @@ import { useKeyDown } from '../../hooks/useKeyDown/useKeyDown';
 
 export interface MessageFeedbackFailedModalProps {
   text: string;
+  rootElementId?: string;
   onCancel?: () => void;
 }
 
 export default function MessageFeedbackFailedModal(props: MessageFeedbackFailedModalProps): ReactElement {
   const {
     text,
+    rootElementId,
     onCancel,
   } = props;
 
@@ -53,6 +55,7 @@ export default function MessageFeedbackFailedModal(props: MessageFeedbackFailedM
             </Button>
           </div>
         }
+        rootElementId={rootElementId}
       />
     </div>
   );
