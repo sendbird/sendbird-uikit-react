@@ -24,14 +24,21 @@
 
   &.sendbird-button__disabled {
     cursor: not-allowed;
+
+    .sendbird-button__text {
+      @include themed() {
+        color: t(on-bg-4);
+      }
+    }
+
     @include themed() {
-      background-color: t(bg-2);
+      background-color: t(bg-1);
       border: none;
     }
 
     &:hover {
       @include themed() {
-        background-color: t(bg-2);
+        background-color: t(bg-1);
       }
     }
   }
