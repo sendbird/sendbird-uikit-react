@@ -32,5 +32,10 @@
   .sendbird-channel-settings-accordion__footer {
     padding-left: 14px;
     padding-top: 14px;
+    padding-bottom: 14px;
+    @include themed() {
+      background-color: t(bg-0);
+      border-bottom: 1px solid t(on-bg-4);
+    }
   }
 }
