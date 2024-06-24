@@ -88,4 +88,6 @@
 .sendbird-ui-thread-replies__icon {
   position: relative;
   display: inline-flex;
+  /*rtl:raw:
+  transform: rotate(180deg);*/
 }

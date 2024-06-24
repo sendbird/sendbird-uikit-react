@@ -71,7 +71,7 @@
   }
   .sendbird-message-search-item__left {
     @include themed() {
-      border-left: 4px solid t(primary-3);
+      border-inline-start: 4px solid t(primary-3);
     }
   }
 }
