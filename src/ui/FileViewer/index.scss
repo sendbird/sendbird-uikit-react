@@ -60,11 +60,7 @@ $file-viewer-img-max-width: calc(100% - #{$file-viewer-slide-buttons-side-length
       }
   
       .sendbird-fileviewer__header__left__sender-name {
-        max-width: 200px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: inline-flex;
+        display: inline-block;
         margin-left: 8px;
         padding-top: 5px;
       }
