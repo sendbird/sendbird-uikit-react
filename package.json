@@ -76,6 +76,9 @@
     "date-fns": "^2.16.1",
     "dompurify": "^3.0.1"
   },
+  "resolutions": {
+    "@sendbird/chat": "file:./sendbird-chat-4.12.9.tgz"
+  },
   "bugs": {
     "url": "https://community.sendbird.com"
   },
