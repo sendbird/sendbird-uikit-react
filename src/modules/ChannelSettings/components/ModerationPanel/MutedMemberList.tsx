@@ -4,22 +4,16 @@ import React, {
   useState,
   useCallback,
 } from 'react';
+import type { Member } from '@sendbird/chat/groupChannel';
+
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
-import IconButton from '../../../../ui/IconButton';
-import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
-import
-Label, {
-  LabelTypography,
-  LabelColors,
-} from '../../../../ui/Label';
+import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
+import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 import UserListItem from '../UserListItem';
 import MutedMembersModal from './MutedMembersModal';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useLocalization } from '../../../../lib/LocalizationContext';
-import { Member } from '@sendbird/chat/groupChannel';
 
 export const MutedMemberList = (): ReactElement => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -28,8 +22,6 @@ export const MutedMemberList = (): ReactElement => {
   const { stringSet } = useLocalization();
 
   const { channel } = useChannelSettingsContext();
-  const state = useSendbirdStateContext();
-  const currentUser = state?.config?.userId;
 
   useEffect(() => {
     if (!channel) {
@@ -71,55 +63,18 @@ export const MutedMemberList = (): ReactElement => {
           <UserListItem
             key={member.userId}
             user={member}
-            currentUser={currentUser}
-            action={({ actionRef, parentRef }) => {
-              return (
-                <ContextMenu
-                  menuTrigger={(toggleDropdown) => (
-                    <IconButton
-                      className="sendbird-user-message__more__menu"
-                      width="32px"
-                      height="32px"
-                      onClick={toggleDropdown}
-                    >
-                      <Icon
-                        width="24px"
-                        height="24px"
-                        type={IconTypes.MORE}
-                        fillColor={IconColors.CONTENT_INVERSE}
-                      />
-                    </IconButton>
-                  )}
-                  menuItems={(closeDropdown) => (
-                    <MenuItems
-                      closeDropdown={closeDropdown}
-                      openLeft
-                      parentContainRef={parentRef}
-                      parentRef={actionRef} // for catching location(x, y) of MenuItems
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          channel?.unmuteUser(member).then(() => {
-                            /**
-                             * Limitation to server-side table update delay.
-                             */
-                            setTimeout(() => {
-                              refreshList();
-                            }, 500);
-                            closeDropdown();
-                          });
-                        }}
-                        testID="channel_setting_muted_member_context_menu_unmute"
-                      >
-                        {/* @ts-ignore */}
-                        {stringSet?.CHANNEL_SETTING__UNMUTE || stringSet.CHANNEL_SETTING__MODERATION__UNMUTE}
-                      </MenuItem>
-                    </MenuItems>
-                  )}
-                />
-              );
-            }
-            }
+            channel={channel}
+            renderListItemMenu={(props) => (
+              <UserListItemMenu {...props}
+                onToggleMuteState={() => {
+                  // Limitation to server-side table update delay.
+                  setTimeout(() => {
+                    refreshList();
+                  }, 500);
+                }}
+                renderMenuItems={({ items }) => (<items.MuteToggleMenuItem />)}
+              />
+            )}
           />
         ))
       }

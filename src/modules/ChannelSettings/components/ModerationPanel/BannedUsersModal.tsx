@@ -15,6 +15,7 @@ import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { BannedUserListQuery, RestrictedUser } from '@sendbird/chat';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
+import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
 interface Props {
   onCancel(): void;
@@ -67,48 +68,18 @@ export default function BannedUsersModal({
             <UserListItem
               user={member}
               key={member.userId}
-              action={({ parentRef, actionRef }) => (
-                <ContextMenu
-                  menuTrigger={(toggleDropdown) => (
-                    <IconButton
-                      className="sendbird-user-message__more__menu"
-                      width="32px"
-                      height="32px"
-                      onClick={toggleDropdown}
-                    >
-                      <Icon
-                        width="24px"
-                        height="24px"
-                        type={IconTypes.MORE}
-                        fillColor={IconColors.CONTENT_INVERSE}
-                      />
-                    </IconButton>
-                  )}
-                  menuItems={(closeDropdown) => (
-                    <MenuItems
-                      parentContainRef={parentRef}
-                      parentRef={actionRef} // for catching location(x, y) of MenuItems
-                      closeDropdown={closeDropdown}
-                      openLeft
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          channel?.unbanUser(member).then(() => {
-                            closeDropdown();
-                            setMembers(members.filter(m => {
-                              return (m.userId !== member.userId);
-                            }));
-                          });
-                        }}
-                        testID="channel_setting_banned_user_context_menu_unban"
-                      >
-                        {stringSet.CHANNEL_SETTING__MODERATION__UNBAN}
-                      </MenuItem>
-                    </MenuItems>
-                  )}
+              channel={channel}
+              renderListItemMenu={(props) => (
+                <UserListItemMenu
+                  {...props}
+                  onToggleBanState={() => {
+                    setMembers(members.filter(m => {
+                      return (m.userId !== member.userId);
+                    }));
+                  }}
+                  renderMenuItems={({ items }) => <items.BanToggleMenuItem />}
                 />
-              )
-              }
+              )}
             />
           ))}
         </div>

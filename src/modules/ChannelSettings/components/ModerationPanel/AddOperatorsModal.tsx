@@ -85,6 +85,8 @@ export default function AddOperatorsModal({
           {
             members.map((member) => (
               <UserListItem
+                user={member}
+                key={member.userId}
                 checkBox
                 checked={selectedMembers[member.userId]}
                 isOperator={member?.role === 'operator'}
@@ -101,8 +103,6 @@ export default function AddOperatorsModal({
                     setSelectedMembers(modifiedSelectedMembers);
                   }
                 }
-                user={member}
-                key={member.userId}
               />
             ))
           }

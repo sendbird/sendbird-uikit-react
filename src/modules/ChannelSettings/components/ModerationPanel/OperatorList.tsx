@@ -5,19 +5,17 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
+import type { User } from '@sendbird/chat';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
+
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
-import IconButton from '../../../../ui/IconButton';
-import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
+import UserListItemMenu from '../../../../ui/UserListItemMenu/UserListItemMenu';
 
 import UserListItem from '../UserListItem';
 import OperatorsModal from './OperatorsModal';
 import AddOperatorsModal from './AddOperatorsModal';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
-import { User } from '@sendbird/chat';
 
 export const OperatorList = (): ReactElement => {
   const [operators, setOperators] = useState<User[]>([]);
@@ -25,11 +23,7 @@ export const OperatorList = (): ReactElement => {
   const [showAdd, setShowAdd] = useState(false);
   const [hasNext, setHasNext] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
-
-  const state = useSendbirdStateContext();
   const { channel } = useChannelSettingsContext();
-
-  const userId = state?.config?.userId;
 
   useEffect(() => {
     if (!channel) {
@@ -46,22 +40,17 @@ export const OperatorList = (): ReactElement => {
     });
   }, [channel]);
 
-  const refreshList = useCallback(
-    () => {
-      if (!channel) {
-        setOperators([]);
-        return;
-      }
-      const operatorListQuery = channel?.createOperatorListQuery({
-        limit: 10,
-      });
-      operatorListQuery.next().then((operators) => {
-        setOperators(operators);
-        setHasNext(operatorListQuery.hasNext);
-      });
-    },
-    [channel],
-  );
+  const refreshList = useCallback(() => {
+    if (!channel) {
+      setOperators([]);
+      return;
+    }
+    const operatorListQuery = channel?.createOperatorListQuery({ limit: 10 });
+    operatorListQuery.next().then((operators) => {
+      setOperators(operators);
+      setHasNext(operatorListQuery.hasNext);
+    });
+  }, [channel]);
 
   return (
     <>
@@ -70,61 +59,29 @@ export const OperatorList = (): ReactElement => {
           <UserListItem
             key={operator.userId}
             user={operator}
-            currentUser={userId}
-            action={({ actionRef }) => {
-              if (operator?.userId === userId) {
-                return null;
-              }
-              return (
-                <ContextMenu
-                  menuTrigger={(toggleDropdown) => (
-                    <IconButton
-                      className="sendbird-user-message__more__menu"
-                      width="32px"
-                      height="32px"
-                      onClick={toggleDropdown}
-                    >
-                      <Icon
-                        width="24px"
-                        height="24px"
-                        type={IconTypes.MORE}
-                        fillColor={IconColors.CONTENT_INVERSE}
-                      />
-                    </IconButton>
-                  )}
-                  menuItems={(closeDropdown) => (
-                    <MenuItems
-                      parentRef={actionRef}
-                      closeDropdown={closeDropdown}
-                      openLeft
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          channel?.removeOperators([operator.userId]).then(() => {
-                            /**
-                             * Limitation to server-side table update delay.
-                             */
-                            setTimeout(() => {
-                              refreshList();
-                            }, 500);
-                          });
-                          closeDropdown();
-                        }}
-                        testID="channel_setting_operator_context_menu_unregister_operator"
-                      >
-                        {stringSet.CHANNEL_SETTING__MODERATION__UNREGISTER_OPERATOR}
-                      </MenuItem>
-                    </MenuItems>
-                  )}
-                />
-              );
-            }}
+            channel={channel}
+            renderListItemMenu={(props) => (
+              <UserListItemMenu {...props}
+                /**
+                 * isOperator:
+                 * The ReturnType of createOperatorListQuery is User[].
+                 * We can't determine if this user is an operator, because User doesn't have a `role` property.
+                 * Therefore, we need to explicitly specify that this user is an operator.
+                */
+                isOperator
+                onToggleOperatorState={() => {
+                  // Limitation to server-side table update delay.
+                  setTimeout(() => {
+                    refreshList();
+                  }, 500);
+                }}
+                renderMenuItems={({ items }) => (<items.OperatorToggleMenuItem />)}
+              />
+            )}
           />
         ))
       }
-      <div
-        className="sendbird-channel-settings-accordion__footer"
-      >
+      <div className="sendbird-channel-settings-accordion__footer">
         <Button
           type={ButtonTypes.SECONDARY}
           size={ButtonSizes.SMALL}
