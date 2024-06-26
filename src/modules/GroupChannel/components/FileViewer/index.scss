@@ -4,6 +4,10 @@
  */
 @import '../../../../styles/variables';
 
+:root {
+  --file-viewer-header-button-width: 64;
+}
+
 .sendbird-fileviewer__header__right__actions__download,
 .sendbird-fileviewer__header__right__actions__delete,
 .sendbird-fileviewer__header__right__actions__close {
@@ -47,7 +51,7 @@
       align-items: center;
       height: 64px;
       padding: 16px 20px;
-      width: calc(100% - 128px);
+      width: calc(100% - var(--file-viewer-header-button-width) * 2);
 
       .sendbird-fileviewer__header__left__avatar {
         margin-right: 8px;
