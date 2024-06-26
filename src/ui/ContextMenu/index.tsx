@@ -6,10 +6,8 @@ import { MuteMenuItem } from './items/MuteMenuItem';
 import { OperatorMenuItem } from './items/OperatorMenuItem';
 import _EmojiListItems from './EmojiListItems';
 
-import { getClassName } from '../../utils';
-import Label, { LabelTypography, LabelColors } from '../Label';
-
-const ENTER_KEY = 13;
+import { MenuItem as MenuItem_MessageMenu } from '../MessageMenu';
+import { classnames } from '../../utils/utils';
 
 // # useElementObserve
 export const MENU_OBSERVING_CLASS_NAME = 'sendbird-observing-message-menu';
@@ -18,6 +16,10 @@ export const getObservingId = (txt: string | number) => `m_${txt}`;
 export const MenuItems = _MenuItems;
 export const EmojiListItems = _EmojiListItems;
 
+/**
+ * @deprecated
+ * Use the `MessageItemProps` from '@sendbird/uikit-react/ui/MessageMenu' instead
+ */
 export interface MenuItemProps {
   className?: string | Array<string>;
   children: ReactElement | ReactElement[] | ReactNode;
@@ -29,6 +31,10 @@ export interface MenuItemProps {
   dataSbId?: string;
   testID?: string;
 }
+/**
+ * @deprecated
+ * Use the `MenuItem` from '@sendbird/uikit-react/ui/MessageMenu' instead
+ */
 export const MenuItem = ({
   className = '',
   children,
@@ -36,31 +42,20 @@ export const MenuItem = ({
   disable = false,
   dataSbId = '',
   testID,
-}: MenuItemProps): ReactElement => {
-  const handleClickEvent = (e) => {
-    if (!disable && onClick) {
-      onClick?.(e);
-    }
-  };
+}: MenuItemProps) => {
   return (
-    <li
-      className={getClassName([className, 'sendbird-dropdown__menu-item', disable ? 'disable' : ''])}
-      role="menuitem"
-      aria-disabled={disable ? true : false}
-      onClick={handleClickEvent}
-      onKeyPress={(e) => { if (e.keyCode === ENTER_KEY) handleClickEvent(e); }}
-      tabIndex={0}
-      data-sb-id={testID ?? dataSbId}
-      data-testid={testID ?? dataSbId}
+    <MenuItem_MessageMenu
+      className={classnames(
+        ...(Array.isArray(className) ? className : [className]),
+        'sendbird-dropdown__menu-item',
+        disable ? 'disable' : '',
+      )}
+      disabled={disable}
+      testID={testID ?? dataSbId}
+      onClick={onClick}
     >
-      <Label
-        className="sendbird-dropdown__menu-item__text"
-        type={LabelTypography.SUBTITLE_2}
-        color={disable ? LabelColors.ONBACKGROUND_4 : LabelColors.ONBACKGROUND_1}
-      >
-        {children}
-      </Label>
-    </li>
+      {children}
+    </MenuItem_MessageMenu>
   );
 };
 
