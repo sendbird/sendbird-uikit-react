@@ -13,9 +13,6 @@ Label, {
   LabelTypography,
   LabelColors,
 } from '../../../../ui/Label';
-import IconButton from '../../../../ui/IconButton';
-import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 
 import UserListItem from '../UserListItem';
 import BannedUsersModal from './BannedUsersModal';
