@@ -1,5 +1,5 @@
 import './index.scss';
-import React, {MouseEvent, ReactNode} from 'react';
+import React, { MouseEvent, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 import type { FileViewerProps } from '.';
@@ -28,12 +28,13 @@ export const FileViewerView = ({
   profile,
 }: FileViewerViewProps): React.ReactNode => {
   const { sender, type, url, name = '', threadInfo } = message;
-  const { nickname, userId } = sender;
+  const { profileUrl, nickname, userId } = sender;
 
   const { config } = useSendbirdStateContext();
 
   return createPortal(
     <FileViewerComponent
+      profileUrl={profileUrl}
       profile={profile}
       nickname={nickname}
       type={type}
