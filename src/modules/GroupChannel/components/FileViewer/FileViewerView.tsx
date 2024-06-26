@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { MouseEvent } from 'react';
+import React, {MouseEvent, ReactNode} from 'react';
 import { createPortal } from 'react-dom';
 
 import type { FileViewerProps } from '.';
@@ -17,6 +17,7 @@ type DeleteMessageTypeLegacy = (message: CoreMessageType) => Promise<void>;
 export interface FileViewerViewProps extends FileViewerProps {
   deleteMessage: ((message: SendableMessageType) => Promise<void>) | DeleteMessageTypeLegacy;
   onDownloadClick?: (e: MouseEvent) => Promise<void>;
+  profile?: ReactNode;
 }
 
 export const FileViewerView = ({
@@ -24,15 +25,16 @@ export const FileViewerView = ({
   onCancel,
   deleteMessage,
   onDownloadClick,
+  profile,
 }: FileViewerViewProps): React.ReactNode => {
   const { sender, type, url, name = '', threadInfo } = message;
-  const { profileUrl, nickname, userId } = sender;
+  const { nickname, userId } = sender;
 
   const { config } = useSendbirdStateContext();
 
   return createPortal(
     <FileViewerComponent
-      profileUrl={profileUrl}
+      profile={profile}
       nickname={nickname}
       type={type}
       url={url}
@@ -61,6 +63,7 @@ export interface FileViewerUIProps {
   onDelete: () => void;
   disableDelete: boolean;
   onDownloadClick?: (e: MouseEvent) => Promise<void>;
+  profile?: ReactNode;
 }
 
 export const FileViewerComponent = ({
@@ -77,18 +80,21 @@ export const FileViewerComponent = ({
   onDelete,
   disableDelete,
   onDownloadClick,
+  profile,
 }: FileViewerUIProps) => (
   <Modal onClose={onCancel}>
     <div className="sendbird-fileviewer" data-testid="sendbird-fileviewer">
       <div className="sendbird-fileviewer__header">
         <div className="sendbird-fileviewer__header__left">
           <div className="sendbird-fileviewer__header__left__avatar">
-            <Avatar height="32px" width="32px" src={profileUrl} />
+            {profile ?? <Avatar height="32px" width="32px" src={profileUrl}/>}
           </div>
-          <Label className="sendbird-fileviewer__header__left__filename" type={LabelTypography.H_2} color={LabelColors.ONBACKGROUND_1}>
+          <Label className="sendbird-fileviewer__header__left__filename" type={LabelTypography.H_2}
+                 color={LabelColors.ONBACKGROUND_1}>
             {name}
           </Label>
-          <Label className="sendbird-fileviewer__header__left__sender-name" type={LabelTypography.BODY_1} color={LabelColors.ONBACKGROUND_2}>
+          <Label className="sendbird-fileviewer__header__left__sender-name" type={LabelTypography.BODY_1}
+                 color={LabelColors.ONBACKGROUND_2}>
             {nickname}
           </Label>
         </div>
