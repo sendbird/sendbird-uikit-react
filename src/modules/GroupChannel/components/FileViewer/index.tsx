@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import type { FileMessage } from '@sendbird/chat/message';
 
 import { FileViewerView } from './FileViewerView';
@@ -8,12 +8,14 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 export interface FileViewerProps {
   onCancel: () => void;
   message: FileMessage;
+  profile?: ReactNode;
 }
 
 export const FileViewer = (props: FileViewerProps) => {
   const { deleteMessage, onBeforeDownloadFileMessage } = useGroupChannelContext();
   const { config } = useSendbirdStateContext();
   const { logger } = config;
+
   return (
     <FileViewerView
       {...props}

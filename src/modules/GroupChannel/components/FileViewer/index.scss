@@ -47,6 +47,7 @@
       align-items: center;
       height: 64px;
       padding: 16px 20px;
+      width: calc(100% - 128px);
 
       .sendbird-fileviewer__header__left__avatar {
         margin-right: 8px;
@@ -68,11 +69,7 @@
       }
 
       .sendbird-fileviewer__header__left__sender-name {
-        max-width: 200px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: inline-flex;
+        display: inline-block;
         margin-left: 8px;
         padding-top: 5px;
         @include mobile() {
