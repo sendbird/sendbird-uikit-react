@@ -12,26 +12,31 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import ChannelProfile from '../ChannelProfile';
-import ModerationPanel from '../ModerationPanel';
 import LeaveChannelModal from '../LeaveChannel';
-import UserPanel from '../UserPanel';
 import { deleteNullish } from '../../../../utils/utils';
+import MenuItem from './MenuItem';
+import MenuListByRole from './MenuListByRole';
+import useMenuItems from './hooks/useMenuItems';
 
+interface ModerationPanelProps {
+  menuItems: ReturnType<typeof useMenuItems>;
+}
 export interface ChannelSettingsUIProps {
   renderHeader?: (props: ChannelSettingsHeaderProps) => React.ReactElement;
   renderChannelProfile?: () => React.ReactElement;
-  renderModerationPanel?: () => React.ReactElement;
+  renderModerationPanel?: (props: ModerationPanelProps) => React.ReactElement;
   renderLeaveChannel?: () => React.ReactElement;
   renderPlaceholderError?: () => React.ReactElement;
   renderPlaceholderLoading?: () => React.ReactElement;
 }
 
 const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
+  const menuItems = useMenuItems();
   const {
-    renderHeader = (p: ChannelSettingsHeaderProps) => <ChannelSettingsHeader {...p} />,
+    renderHeader = (props: ChannelSettingsHeaderProps) => <ChannelSettingsHeader {...props} />,
     renderLeaveChannel,
     renderChannelProfile,
-    renderModerationPanel,
+    renderModerationPanel = (props: ModerationPanelProps) => <MenuListByRole {...props} />,
     renderPlaceholderError,
     renderPlaceholderLoading,
   } = deleteNullish(props);
@@ -64,40 +69,33 @@ const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
       {renderHeader(headerProps)}
       <div className="sendbird-channel-settings__scroll-area">
         {renderChannelProfile?.() || <ChannelProfile />}
-        {renderModerationPanel?.() || (channel?.myRole === 'operator' ? <ModerationPanel /> : <UserPanel />)}
+        {renderModerationPanel?.({ menuItems })}
         {renderLeaveChannel?.() || (
-          <div
-            className={[
-              'sendbird-channel-settings__panel-item',
-              'sendbird-channel-settings__leave-channel',
-              !isOnline ? 'sendbird-channel-settings__panel-item__disabled' : '',
-            ].join(' ')}
-            role="button"
+          <MenuItem
+            className={!isOnline ? 'sendbird-channel-settings__panel-item__disabled' : ''}
             onKeyDown={() => {
-              if (!isOnline) {
-                return;
-              }
+              if (!isOnline) return;
               setShowLeaveChannelModal(true);
             }}
             onClick={() => {
-              if (!isOnline) {
-                return;
-              }
+              if (!isOnline) return;
               setShowLeaveChannelModal(true);
             }}
-            tabIndex={0}
-          >
-            <Icon
-              className={['sendbird-channel-settings__panel-icon-left', 'sendbird-channel-settings__panel-icon__leave'].join(' ')}
-              type={IconTypes.LEAVE}
-              fillColor={IconColors.ERROR}
-              height="24px"
-              width="24px"
-            />
-            <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
-              {stringSet.CHANNEL_SETTING__LEAVE_CHANNEL__TITLE}
-            </Label>
-          </div>
+            renderLeft={() => (
+              <Icon
+                className={['sendbird-channel-settings__panel-icon-left', 'sendbird-channel-settings__panel-icon__leave'].join(' ')}
+                type={IconTypes.LEAVE}
+                fillColor={IconColors.ERROR}
+                height="24px"
+                width="24px"
+              />
+            )}
+            renderMiddle={() => (
+              <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
+                {stringSet.CHANNEL_SETTING__LEAVE_CHANNEL__TITLE}
+              </Label>
+            )}
+          />
         )}
         {showLeaveChannelModal && (
           <LeaveChannelModal
