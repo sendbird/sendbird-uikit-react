@@ -25,21 +25,6 @@ export const OperatorList = (): ReactElement => {
   const { stringSet } = useContext(LocalizationContext);
   const { channel } = useChannelSettingsContext();
 
-  useEffect(() => {
-    if (!channel) {
-      setOperators([]);
-      return;
-    }
-
-    const operatorListQuery = channel?.createOperatorListQuery({
-      limit: 10,
-    });
-    operatorListQuery.next().then((operators) => {
-      setOperators(operators);
-      setHasNext(operatorListQuery.hasNext);
-    });
-  }, [channel]);
-
   const refreshList = useCallback(() => {
     if (!channel) {
       setOperators([]);
@@ -51,6 +36,7 @@ export const OperatorList = (): ReactElement => {
       setHasNext(operatorListQuery.hasNext);
     });
   }, [channel]);
+  useEffect(refreshList, [channel]);
 
   return (
     <>

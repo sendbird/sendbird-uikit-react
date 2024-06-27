@@ -41,7 +41,8 @@ const UserListItem = ({
   className = '',
   action,
   renderListItemMenu,
-}: Props): ReactElement => { const { config } = useSendbirdStateContext();
+}: Props): ReactElement => {
+  const { config } = useSendbirdStateContext();
   const currentUser = config.userId;
   const actionRef = useRef(null);
   const parentRef = useRef(null);

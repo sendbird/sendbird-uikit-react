@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, MutableRefObject } from 'react';
-import type { BaseChannel, User } from '@sendbird/chat';
+import type { User } from '@sendbird/chat';
 import { Role } from '@sendbird/chat';
-import type { Member } from '@sendbird/chat/groupChannel';
+import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { OpenChannel } from '@sendbird/chat/openChannel';
 
 import type { UserListItemMenuContextValues } from './context';
@@ -22,7 +22,7 @@ const processToggleAction = async (
   }
 };
 
-const getInitialIsOperator = (channel: BaseChannel | undefined, user: User | Member): boolean => {
+const getInitialIsOperator = (channel: GroupChannel | undefined, user: User): boolean => {
   if (!channel) return false;
   if (channel instanceof OpenChannel) {
     return channel.isOperator(user);
@@ -30,7 +30,7 @@ const getInitialIsOperator = (channel: BaseChannel | undefined, user: User | Mem
   return (user as Member)?.role === Role.OPERATOR;
 };
 
-const getInitialIsMuted = (channel: BaseChannel | undefined, user: User | Member): boolean => {
+const getInitialIsMuted = (channel: GroupChannel | undefined, user: User): boolean => {
   return channel ? (user as Member)?.isMuted : false;
 };
 
@@ -57,6 +57,8 @@ export const useToggleOperator = ({
         const newStatus = !isOperator;
         setIsOperator(newStatus);
         onToggleOperatorState?.({ user, newStatus });
+      }).catch((error) => {
+        onToggleOperatorState?.({ user, newStatus: isOperator, error });
       });
     },
     [isOperator, channel, user, onToggleOperatorState],
@@ -91,6 +93,8 @@ export const useToggleMute = ({
         const newStatus = !isMuted;
         setIsMuted(newStatus);
         onToggleMuteState?.({ user, newStatus });
+      }).catch((error) => {
+        onToggleMuteState?.({ user, newStatus: isMuted, error });
       });
     },
     [isMuted, channel, user, onToggleMuteState],
@@ -118,13 +122,15 @@ export const useToggleBan = ({
 
       return processToggleAction(isProcessing, async () => {
         const togglePromise = isBanned
-          ? (channel as BaseChannel).unbanUser(user)
-          : (channel as BaseChannel).banUser(user, -1, '');
+          ? channel.unbanUser(user)
+          : channel.banUser(user, -1, '');
 
         await togglePromise;
         const newStatus = !isBanned;
         setIsBanned(newStatus);
         onToggleBanState?.({ user, newStatus });
+      }).catch((error) => {
+        onToggleBanState?.({ user, newStatus: isBanned, error });
       });
     },
     [isBanned, channel, user, onToggleBanState],

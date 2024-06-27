@@ -71,6 +71,7 @@ export const MemberList = (): ReactElement => {
                   for (const newMember of newMembers) {
                     if (newMember.userId === member.userId) {
                       newMember.role = isOperator ? Role.OPERATOR : Role.NONE;
+                      break;
                     }
                   }
                   setMembers(newMembers);
@@ -80,6 +81,7 @@ export const MemberList = (): ReactElement => {
                   for (const newMember of newMembers) {
                     if (newMember.userId === member.userId) {
                       newMember.isMuted = isMuted;
+                      break;
                     }
                   }
                   setMembers(newMembers);
