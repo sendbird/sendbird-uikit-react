@@ -64,6 +64,7 @@ export const BannedMemberList = (): ReactElement => {
             renderListItemMenu={(props) => (
               <UserListItemMenu
                 {...props}
+                isBanned
                 onToggleBanState={() => refreshList()}
                 renderMenuItems={({ items }) => (<items.BanToggleMenuItem />)}
               />

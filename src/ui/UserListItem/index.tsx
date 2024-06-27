@@ -172,7 +172,7 @@ export default function UserListItem({
         </Label>
       )}
       {/* Deprecated logic */}
-      {(!renderListItemMenu && action) && (
+      {(!checkBox && !renderListItemMenu && action) && (
         <div
           className="sendbird-user-list-item__action"
           ref={actionRef}
@@ -180,7 +180,7 @@ export default function UserListItem({
           {action({ actionRef, parentRef })}
         </div>
       )}
-      {renderListItemMenu && (
+      {(!checkBox && renderListItemMenu) && (
         <div
           className="sendbird-user-list-item__action"
           ref={actionRef}

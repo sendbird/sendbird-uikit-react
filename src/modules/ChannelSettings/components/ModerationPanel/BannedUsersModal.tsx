@@ -69,6 +69,7 @@ export default function BannedUsersModal({
               renderListItemMenu={(props) => (
                 <UserListItemMenu
                   {...props}
+                  isBanned
                   onToggleBanState={() => {
                     setMembers(members.filter(m => {
                       return (m.userId !== member.userId);

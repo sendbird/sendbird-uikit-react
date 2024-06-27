@@ -45,7 +45,7 @@ export const UserListItemMenuProvider = ({ children, ...values }: UserListItemMe
   const isCurrentUserOperator = (() => {
     if (!channel) return false;
     return channel instanceof OpenChannel
-      ? channel.isOperator(user)
+      ? channel.isOperator(currentUserId)
       : channel.myRole === Role.OPERATOR;
   })();
 

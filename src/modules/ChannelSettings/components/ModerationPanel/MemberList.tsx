@@ -6,6 +6,7 @@ import React, {
   useContext,
 } from 'react';
 import type { Member } from '@sendbird/chat/groupChannel';
+import { Role } from '@sendbird/chat';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
@@ -51,7 +52,7 @@ export const MemberList = (): ReactElement => {
     memberUserListQuery.next().then((members) => {
       setMembers(members);
       setHasNext(memberUserListQuery.hasNext);
-      setChannelUpdateId?.(uuidv4()); // For...? This causes the ChannelSettings flickering
+      setChannelUpdateId?.(uuidv4());
     });
   }, [channel]);
 
@@ -65,20 +66,28 @@ export const MemberList = (): ReactElement => {
             channel={channel}
             renderListItemMenu={(props) => (
               <UserListItemMenu {...props}
-                onToggleOperatorState={() => {
-                  setTimeout(() => {
-                    refreshList();
-                  }, 500);
+                onToggleOperatorState={({ newStatus: isOperator }) => {
+                  const newMembers = [...members];
+                  for (const newMember of newMembers) {
+                    if (newMember.userId === member.userId) {
+                      newMember.role = isOperator ? Role.OPERATOR : Role.NONE;
+                    }
+                  }
+                  setMembers(newMembers);
                 }}
-                onToggleMuteState={() => {
-                  setTimeout(() => {
-                    refreshList();
-                  }, 500);
+                onToggleMuteState={({ newStatus: isMuted }) => {
+                  const newMembers = [...members];
+                  for (const newMember of newMembers) {
+                    if (newMember.userId === member.userId) {
+                      newMember.isMuted = isMuted;
+                    }
+                  }
+                  setMembers(newMembers);
                 }}
                 onToggleBanState={() => {
-                  setTimeout(() => {
-                    refreshList();
-                  }, 500);
+                  setMembers(members.filter(({ userId }) => {
+                    return userId !== member.userId;
+                  }));
                 }}
               />
             )}
