@@ -23,6 +23,7 @@ import { SBUConfig } from '@sendbird/uikit-tools';
 import { Module, ModuleNamespaces } from '@sendbird/chat/lib/__definition';
 
 import type {
+  HTMLTextDirection,
   RenderUserProfileProps,
   ReplyType,
   UserListQuery,
@@ -71,6 +72,7 @@ export interface SendBirdStateConfig {
   appId: string;
   accessToken?: string;
   theme: string;
+  htmlTextDirection: HTMLTextDirection;
   pubSub: SBUGlobalPubSub;
   logger: Logger;
   setCurrentTheme: (theme: 'light' | 'dark') => void;

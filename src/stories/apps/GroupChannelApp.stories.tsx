@@ -29,6 +29,7 @@ const meta: Meta<typeof App> = {
         'isMessageReceiptStatusEnabledOnChannelList',
         'isMessageGroupingEnabled',
         'disableAutoSelect',
+        'htmlTextDirection',
       ],
     },
   },
@@ -136,6 +137,12 @@ const meta: Meta<typeof App> = {
         'A property that determines whether to automatically select another channel when the currently selected channel is deleted, or the user exits the channel, causing it to be deselected in the channel list.',
       control: 'boolean',
     },
+    htmlTextDirection: {
+      type: 'string',
+      description: 'A property that sets the text direction of the HTML. `ltr` is for left-to-right, and `rtl` is for right-to-left.',
+      control: 'radio',
+      options: ['ltr', 'rtl'],
+    }
   },
 };
 export default meta;
@@ -169,4 +176,5 @@ Default.args = {
   isMessageReceiptStatusEnabledOnChannelList: true,
   isMessageGroupingEnabled: true,
   disableAutoSelect: false,
+  htmlTextDirection: 'ltr',
 };

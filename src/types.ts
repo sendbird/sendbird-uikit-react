@@ -91,3 +91,5 @@ export enum MessageContentMiddleContainerType {
   DEFAULT = 'default',
   WIDE = 'wide',
 }
+
+export type HTMLTextDirection = 'ltr' | 'rtl';

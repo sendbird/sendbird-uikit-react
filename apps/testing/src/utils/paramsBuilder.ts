@@ -29,6 +29,7 @@ export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
     allowProfileEdit: parseValue(searchParams.get('enableProfileEdit')) ?? true,
     isMultipleFilesMessageEnabled: parseValue(searchParams.get('enableMultipleFilesMessage')) ?? true,
     enableLegacyChannelModules: parseValue(searchParams.get('enableLegacyChannelModules')) ?? false,
+    htmlTextDirection: parseValue(searchParams.get('htmlTextDirection')) ?? 'ltr',
     uikitOptions: {},
   } as ParamsAsProps;
 

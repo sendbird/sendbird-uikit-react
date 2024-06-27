@@ -69,7 +69,6 @@ export const MenuRoot = (): ReactElement => (
   <div id={MENU_ROOT_ID} className={MENU_ROOT_ID} />
 );
 
-// For the test environment
 export const EMOJI_MENU_ROOT_ID = 'sendbird-emoji-list-portal';
 export const EmojiReactionListRoot = (): ReactElement => <div id={EMOJI_MENU_ROOT_ID} />;
 

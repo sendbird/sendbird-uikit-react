@@ -127,6 +127,8 @@ $file-viewer-img-max-width: calc(100% - #{$file-viewer-slide-buttons-side-length
   top: calc(50% - 16px);
 }
 
+// Fliping the arrow icons for RTL is not necessary
+/*rtl:begin:ignore*/
 .sendbird-file-viewer-arrow--left {
   left: 14px;
 }
@@ -135,3 +137,4 @@ $file-viewer-img-max-width: calc(100% - #{$file-viewer-slide-buttons-side-length
   right: 14px;
   transform: rotate(180deg);
 }
+/*rtl:end:ignore*/

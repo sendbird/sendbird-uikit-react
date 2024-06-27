@@ -13,6 +13,7 @@ import MessageSearchPannel from '../MessageSearch';
 import Thread from '../Thread';
 import { SendableMessageType } from '../../utils';
 import { classnames } from '../../utils/utils';
+import { APP_LAYOUT_ROOT } from './const';
 
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayoutProps) => {
   const {
@@ -109,7 +110,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
   };
 
   return (
-    <div className="sendbird-app__wrap">
+    <div className="sendbird-app__wrap" id={APP_LAYOUT_ROOT}>
       <div className="sendbird-app__channellist-wrap">
         {enableLegacyChannelModules ? <ChannelList {...channelListProps} /> : <GroupChannelList {...channelListProps} />}
       </div>

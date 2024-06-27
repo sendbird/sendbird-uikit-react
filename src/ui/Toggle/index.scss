@@ -4,22 +4,24 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-
   box-sizing: border-box;
   cursor: pointer;
 }
+
 .sendbird-input-toggle-button--checked {
   @include themed() {
     background-color: t(primary-3);
     border: 1px solid t(primary-3);
   }
 }
+
 .sendbird-input-toggle-button--unchecked {
   @include themed() {
     background-color: t(bg-3);
     border: 1px solid t(bg-3);
   }
 }
+
 .sendbird-input-toggle-button--disabled {
   cursor: not-allowed;
   @include themed() {
@@ -43,49 +45,58 @@
 }
 
 /* Manage animation and position by status */
-@keyframes sendbirdMoveToRight {
+@keyframes sendbirdMoveToEnd {
   0% {
-    right: 60%;
+    inset-inline-end: 60%;
   }
   100% {
-    right: 10%;
+    inset-inline-end: 10%;
   }
 }
-@keyframes sendbirdMoveToLeft {
+
+@keyframes sendbirdMoveToStart {
   0% {
-    right: 10%;
+    inset-inline-end: 10%;
   }
   100% {
-    right: 60%;
+    inset-inline-end: 60%;
   }
 }
+
 // normal - animation
 .sendbird-input-toggle-button--turned-on .sendbird-input-toggle-button__inner-dot {
-  animation-name: sendbirdMoveToRight;
+  animation-name: sendbirdMoveToEnd;
 }
+
 .sendbird-input-toggle-button--turned-off .sendbird-input-toggle-button__inner-dot {
-  animation-name: sendbirdMoveToLeft;
+  animation-name: sendbirdMoveToStart;
 }
+
 // normal - position
 .sendbird-input-toggle-button--unchecked .sendbird-input-toggle-button__inner-dot {
-  right: 60%;
+  inset-inline-end: 60%;
 }
+
 .sendbird-input-toggle-button--checked .sendbird-input-toggle-button__inner-dot {
-  right: 10%;
+  inset-inline-end: 10%;
 }
+
 .sendbird-input-toggle-button--reversed {
   // reverse - animation
   .sendbird-input-toggle-button--turned-on .sendbird-input-toggle-button__inner-dot {
-    animation-name: sendbirdMoveToLeft;
+    animation-name: sendbirdMoveToStart;
   }
+
   .sendbird-input-toggle-button--turned-off .sendbird-input-toggle-button__inner-dot {
-    animation-name: sendbirdMoveToRight;
+    animation-name: sendbirdMoveToEnd;
   }
+
   // reverse - position
   &.sendbird-input-toggle-button--unchecked .sendbird-input-toggle-button__inner-dot {
-    right: 10%;
+    inset-inline-end: 10%;
   }
+
   &.sendbird-input-toggle-button--checked .sendbird-input-toggle-button__inner-dot {
-    right: 60%;
+    inset-inline-end: 60%;
   }
 }
