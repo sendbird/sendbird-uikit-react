@@ -17,8 +17,8 @@ interface UserListItemMenuContextInterface extends
 const UserListItemMenuContext = createContext<UserListItemMenuContextInterface>(undefined);
 
 export type OnToggleStateHandlerType = (params: {
-  user?: User,
-  newStatus?: boolean,
+  user: User,
+  newStatus: boolean,
   error?: Error,
 }) => void;
 export interface UserListItemMenuContextValues {

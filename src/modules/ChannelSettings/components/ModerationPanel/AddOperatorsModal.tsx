@@ -89,7 +89,6 @@ export default function AddOperatorsModal({
                 key={member.userId}
                 checkBox
                 checked={selectedMembers[member.userId]}
-                isOperator={member?.role === 'operator'}
                 disabled={member?.role === 'operator'}
                 onChange={
                   (event) => {

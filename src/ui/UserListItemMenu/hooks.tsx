@@ -10,13 +10,19 @@ import type { UserListItemMenuContextValues } from './context';
 const processToggleAction = async (
   isProcessing: MutableRefObject<boolean>,
   action: () => Promise<void>,
+  errorHandler?: (error: Error) => void,
 ): Promise<void> => {
   if (isProcessing.current) {
-    return Promise.reject(new Error('Processing in progress'));
+    const error = new Error('Processing in progress');
+    errorHandler(error);
+    return Promise.reject(error);
   }
   isProcessing.current = true;
   try {
     await action();
+  } catch (error) {
+    errorHandler?.(error);
+    throw error;
   } finally {
     isProcessing.current = false;
   }
@@ -48,20 +54,24 @@ export const useToggleOperator = ({
       // If channel is undefined, resolve immediately
       if (!channel) return Promise.resolve();
 
-      return processToggleAction(isProcessing, async () => {
-        const togglePromise = isOperator
-          ? channel.removeOperators([user.userId])
-          : channel.addOperators([user.userId]);
+      return processToggleAction(
+        isProcessing,
+        async () => {
+          const togglePromise = isOperator
+            ? channel.removeOperators([user.userId])
+            : channel.addOperators([user.userId]);
 
-        await togglePromise;
-        const newStatus = !isOperator;
-        setIsOperator(newStatus);
-        onToggleOperatorState?.({ user, newStatus });
-      }).catch((error) => {
-        onToggleOperatorState?.({ user, newStatus: isOperator, error });
-      });
+          await togglePromise;
+          const newStatus = !isOperator;
+          setIsOperator(newStatus);
+          onToggleOperatorState?.({ user, newStatus });
+        },
+        (error) => {
+          onToggleOperatorState?.({ user, newStatus: isOperator, error });
+        },
+      );
     },
-    [isOperator, channel, user, onToggleOperatorState],
+    [isOperator, channel.url, user.userId, onToggleOperatorState],
   );
 
   return {
@@ -84,20 +94,24 @@ export const useToggleMute = ({
       // If channel is undefined, resolve immediately
       if (!channel) return Promise.resolve();
 
-      return processToggleAction(isProcessing, async () => {
-        const togglePromise = isMuted
-          ? channel.unmuteUser(user)
-          : channel.muteUser(user);
+      return processToggleAction(
+        isProcessing,
+        async () => {
+          const togglePromise = isMuted
+            ? channel.unmuteUser(user)
+            : channel.muteUser(user);
 
-        await togglePromise;
-        const newStatus = !isMuted;
-        setIsMuted(newStatus);
-        onToggleMuteState?.({ user, newStatus });
-      }).catch((error) => {
-        onToggleMuteState?.({ user, newStatus: isMuted, error });
-      });
+          await togglePromise;
+          const newStatus = !isMuted;
+          setIsMuted(newStatus);
+          onToggleMuteState?.({ user, newStatus });
+        },
+        (error) => {
+          onToggleMuteState?.({ user, newStatus: isMuted, error });
+        },
+      );
     },
-    [isMuted, channel, user, onToggleMuteState],
+    [isMuted, channel.url, user.userId, onToggleMuteState],
   );
 
   return {
@@ -120,20 +134,24 @@ export const useToggleBan = ({
       // If channel is undefined, resolve immediately
       if (!channel) return Promise.resolve();
 
-      return processToggleAction(isProcessing, async () => {
-        const togglePromise = isBanned
-          ? channel.unbanUser(user)
-          : channel.banUser(user, -1, '');
+      return processToggleAction(
+        isProcessing,
+        async () => {
+          const togglePromise = isBanned
+            ? channel.unbanUser(user)
+            : channel.banUser(user, -1, '');
 
-        await togglePromise;
-        const newStatus = !isBanned;
-        setIsBanned(newStatus);
-        onToggleBanState?.({ user, newStatus });
-      }).catch((error) => {
-        onToggleBanState?.({ user, newStatus: isBanned, error });
-      });
+          await togglePromise;
+          const newStatus = !isBanned;
+          setIsBanned(newStatus);
+          onToggleBanState?.({ user, newStatus });
+        },
+        (error) => {
+          onToggleBanState?.({ user, newStatus: isBanned, error });
+        },
+      );
     },
-    [isBanned, channel, user, onToggleBanState],
+    [isBanned, channel.url, user.userId, onToggleBanState],
   );
 
   return {
