@@ -206,13 +206,14 @@ const SendbirdSDK = ({
     getCachedTemplate,
   };
 
-  const reconnect = useConnect({
-    appId,
-    userId,
-    accessToken,
-    isUserIdUsedForNickname,
-    isMobile,
-  },
+  const reconnect = useConnect(
+    {
+      appId,
+      userId,
+      accessToken,
+      isUserIdUsedForNickname,
+      isMobile,
+    },
     {
       logger,
       nickname,
