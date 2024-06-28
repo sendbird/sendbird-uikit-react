@@ -213,23 +213,23 @@ const SendbirdSDK = ({
     isUserIdUsedForNickname,
     isMobile,
   },
-  {
-    logger,
-    nickname,
-    profileUrl,
-    configureSession,
-    customApiHost,
-    customWebSocketHost,
-    sdkInitParams,
-    customExtensionParams,
-    sdk,
-    sdkDispatcher,
-    userDispatcher,
-    appInfoDispatcher,
-    initDashboardConfigs,
-    eventHandlers,
-    initializeMessageTemplatesInfo,
-  },
+    {
+      logger,
+      nickname,
+      profileUrl,
+      configureSession,
+      customApiHost,
+      customWebSocketHost,
+      sdkInitParams,
+      customExtensionParams,
+      sdk,
+      sdkDispatcher,
+      userDispatcher,
+      appInfoDispatcher,
+      initDashboardConfigs,
+      eventHandlers,
+      initializeMessageTemplatesInfo,
+    },
   );
 
   useUnmount(() => {
@@ -280,7 +280,7 @@ const SendbirdSDK = ({
         body?.classList.remove('sendbird-theme--light');
         body?.classList.remove('sendbird-theme--dark');
         // eslint-disable-next-line no-empty
-      } catch {}
+      } catch { }
     };
   }, [currentTheme]);
 
@@ -312,109 +312,109 @@ const SendbirdSDK = ({
   return (
     <div id="sendbird-provider-wrapper">
       <SendbirdSdkContext.Provider
-      value={{
-        stores: {
-          sdkStore,
-          userStore,
-          appInfoStore,
-        },
-        dispatchers: {
-          sdkDispatcher,
-          userDispatcher,
-          appInfoDispatcher,
-          reconnect,
-        },
-        config: {
-          disableMarkAsDelivered,
-          renderUserProfile,
-          onUserProfileMessage,
-          allowProfileEdit,
-          isOnline,
-          userId,
-          appId,
-          accessToken,
-          theme: currentTheme,
-          setCurrentTheme,
-          setCurrenttheme: setCurrentTheme, // deprecated: typo
-          isMultipleFilesMessageEnabled,
-          uikitUploadSizeLimit: uploadSizeLimit ?? DEFAULT_UPLOAD_SIZE_LIMIT,
-          uikitMultipleFilesMessageLimit,
-          userListQuery,
-          logger,
-          pubSub,
-          imageCompression: {
-            compressionRate: 0.7,
-            outputFormat: 'preserve',
-            ...imageCompression,
+        value={{
+          stores: {
+            sdkStore,
+            userStore,
+            appInfoStore,
           },
-          voiceRecord: {
-            maxRecordingTime: voiceRecord?.maxRecordingTime ?? VOICE_RECORDER_DEFAULT_MAX,
-            minRecordingTime: voiceRecord?.minRecordingTime ?? VOICE_RECORDER_DEFAULT_MIN,
+          dispatchers: {
+            sdkDispatcher,
+            userDispatcher,
+            appInfoDispatcher,
+            reconnect,
           },
-          userMention: {
-            maxMentionCount: userMention?.maxMentionCount || 10,
-            maxSuggestionCount: userMention?.maxSuggestionCount || 15,
+          config: {
+            disableMarkAsDelivered,
+            renderUserProfile,
+            onUserProfileMessage,
+            allowProfileEdit,
+            isOnline,
+            userId,
+            appId,
+            accessToken,
+            theme: currentTheme,
+            setCurrentTheme,
+            setCurrenttheme: setCurrentTheme, // deprecated: typo
+            isMultipleFilesMessageEnabled,
+            uikitUploadSizeLimit: uploadSizeLimit ?? DEFAULT_UPLOAD_SIZE_LIMIT,
+            uikitMultipleFilesMessageLimit,
+            userListQuery,
+            logger,
+            pubSub,
+            imageCompression: {
+              compressionRate: 0.7,
+              outputFormat: 'preserve',
+              ...imageCompression,
+            },
+            voiceRecord: {
+              maxRecordingTime: voiceRecord?.maxRecordingTime ?? VOICE_RECORDER_DEFAULT_MAX,
+              minRecordingTime: voiceRecord?.minRecordingTime ?? VOICE_RECORDER_DEFAULT_MIN,
+            },
+            userMention: {
+              maxMentionCount: userMention?.maxMentionCount || 10,
+              maxSuggestionCount: userMention?.maxSuggestionCount || 15,
+            },
+            markAsReadScheduler,
+            markAsDeliveredScheduler,
+            // Remote configs set from dashboard by UIKit feature configuration
+            common: configs.common,
+            groupChannel: {
+              enableOgtag: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableOgtag,
+              enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
+              enableReactions: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactions,
+              enableReactionsSupergroup: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactionsSupergroup,
+              enableMention: configs.groupChannel.channel.enableMention,
+              replyType: configs.groupChannel.channel.replyType,
+              threadReplySelectType: configs.groupChannel.channel.threadReplySelectType,
+              enableVoiceMessage: configs.groupChannel.channel.enableVoiceMessage,
+              enableDocument: configs.groupChannel.channel.input.enableDocument,
+              typingIndicatorTypes: configs.groupChannel.channel.typingIndicatorTypes,
+              enableFeedback: configs.groupChannel.channel.enableFeedback,
+              enableSuggestedReplies: configs.groupChannel.channel.enableSuggestedReplies,
+              showSuggestedRepliesFor: configs.groupChannel.channel.showSuggestedRepliesFor,
+              suggestedRepliesDirection: configs.groupChannel.channel.suggestedRepliesDirection,
+              enableMarkdownForUserMessage: configs.groupChannel.channel.enableMarkdownForUserMessage,
+            },
+            groupChannelList: {
+              enableTypingIndicator: configs.groupChannel.channelList.enableTypingIndicator,
+              enableMessageReceiptStatus: configs.groupChannel.channelList.enableMessageReceiptStatus,
+            },
+            groupChannelSettings: {
+              enableMessageSearch: sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
+            },
+            openChannel: {
+              enableOgtag: sdkInitialized && configsWithAppAttr(sdk).openChannel.channel.enableOgtag,
+              enableDocument: configs.openChannel.channel.input.enableDocument,
+            },
+            // deprecated configs
+            disableUserProfile: !configs.common.enableUsingDefaultUserProfile,
+            isReactionEnabled: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactions,
+            isMentionEnabled: configs.groupChannel.channel.enableMention,
+            isVoiceMessageEnabled: configs.groupChannel.channel.enableVoiceMessage,
+            replyType: getCaseResolvedReplyType(configs.groupChannel.channel.replyType).upperCase,
+            isTypingIndicatorEnabledOnChannelList: configs.groupChannel.channelList.enableTypingIndicator,
+            isMessageReceiptStatusEnabledOnChannelList: configs.groupChannel.channelList.enableMessageReceiptStatus,
+            showSearchIcon: sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
+            htmlTextDirection,
           },
-          markAsReadScheduler,
-          markAsDeliveredScheduler,
-          // Remote configs set from dashboard by UIKit feature configuration
-          common: configs.common,
-          groupChannel: {
-            enableOgtag: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableOgtag,
-            enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
-            enableReactions: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactions,
-            enableReactionsSupergroup: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactionsSupergroup,
-            enableMention: configs.groupChannel.channel.enableMention,
-            replyType: configs.groupChannel.channel.replyType,
-            threadReplySelectType: configs.groupChannel.channel.threadReplySelectType,
-            enableVoiceMessage: configs.groupChannel.channel.enableVoiceMessage,
-            enableDocument: configs.groupChannel.channel.input.enableDocument,
-            typingIndicatorTypes: configs.groupChannel.channel.typingIndicatorTypes,
-            enableFeedback: configs.groupChannel.channel.enableFeedback,
-            enableSuggestedReplies: configs.groupChannel.channel.enableSuggestedReplies,
-            showSuggestedRepliesFor: configs.groupChannel.channel.showSuggestedRepliesFor,
-            suggestedRepliesDirection: configs.groupChannel.channel.suggestedRepliesDirection,
-            enableMarkdownForUserMessage: configs.groupChannel.channel.enableMarkdownForUserMessage,
-          },
-          groupChannelList: {
-            enableTypingIndicator: configs.groupChannel.channelList.enableTypingIndicator,
-            enableMessageReceiptStatus: configs.groupChannel.channelList.enableMessageReceiptStatus,
-          },
-          groupChannelSettings: {
-            enableMessageSearch: sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
-          },
-          openChannel: {
-            enableOgtag: sdkInitialized && configsWithAppAttr(sdk).openChannel.channel.enableOgtag,
-            enableDocument: configs.openChannel.channel.input.enableDocument,
-          },
-          // deprecated configs
-          disableUserProfile: !configs.common.enableUsingDefaultUserProfile,
-          isReactionEnabled: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactions,
-          isMentionEnabled: configs.groupChannel.channel.enableMention,
-          isVoiceMessageEnabled: configs.groupChannel.channel.enableVoiceMessage,
-          replyType: getCaseResolvedReplyType(configs.groupChannel.channel.replyType).upperCase,
-          isTypingIndicatorEnabledOnChannelList: configs.groupChannel.channelList.enableTypingIndicator,
-          isMessageReceiptStatusEnabledOnChannelList: configs.groupChannel.channelList.enableMessageReceiptStatus,
-          showSearchIcon: sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
-          htmlTextDirection,
-        },
-        eventHandlers,
-        emojiManager,
-        utils,
-      }}
-    >
-      <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
-        <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
-          <VoiceMessageProvider>
-            <GlobalModalProvider>{children}</GlobalModalProvider>
-          </VoiceMessageProvider>
-        </LocalizationProvider>
-      </MediaQueryProvider>
-      {/* Roots */}
-      <EmojiReactionListRoot />
-      <ModalRoot />
-      <MenuRoot />
-    </SendbirdSdkContext.Provider>
+          eventHandlers,
+          emojiManager,
+          utils,
+        }}
+      >
+        <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
+          <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
+            <VoiceMessageProvider>
+              <GlobalModalProvider>{children}</GlobalModalProvider>
+            </VoiceMessageProvider>
+          </LocalizationProvider>
+        </MediaQueryProvider>
+        {/* Roots */}
+        <EmojiReactionListRoot />
+        <ModalRoot />
+        <MenuRoot />
+      </SendbirdSdkContext.Provider>
     </div>
   );
 };
