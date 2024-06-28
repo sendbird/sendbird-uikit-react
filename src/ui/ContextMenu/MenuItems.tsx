@@ -21,7 +21,6 @@ interface MenuItemsState {
   handleClickOutside: (e: MouseEvent) => void;
 }
 
-// padding to handle height of last item in message-list
 const HEIGHT_PADDING = 60;
 
 export default class MenuItems extends React.Component<MenuItemsProps, MenuItemsState> {
@@ -68,24 +67,27 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
 
   getMenuPosition = (): MenuStyleType => {
     const { parentRef, openLeft } = this.props;
+    const portalElement = document.getElementById('sendbird-provider-wrapper');
+    const portalRect = portalElement?.getBoundingClientRect?.();
     const parentRect = parentRef?.current?.getBoundingClientRect?.();
-    const x = parentRect?.x || parentRect?.left || 0;
-    const y = parentRect?.y || parentRect?.top || 0;
+    if (!portalElement) return { top: 0, left: 0 };
+
+    const x = (parentRect?.x || parentRect?.left || 0) - portalRect.left;
+    const y = (parentRect?.y || parentRect?.top || 0) - portalRect.top;
     const menuStyle = {
       top: y,
       left: x,
     };
     if (!this.menuRef.current) return menuStyle;
-    const { innerWidth, innerHeight } = window;
     const rect = this.menuRef.current.getBoundingClientRect();
-    if (y + rect.height + HEIGHT_PADDING > innerHeight) {
+    if (y + rect.height + HEIGHT_PADDING > portalRect.height) {
       menuStyle.top -= rect.height;
     }
-    if (x + rect.width > innerWidth && !openLeft) {
+    if (x + rect.width > portalRect.width && !openLeft) {
       menuStyle.left -= rect.width;
     }
     if (menuStyle.top < 0) {
-      menuStyle.top = rect.height < innerHeight ? (innerHeight - rect.height) / 2 : 0;
+      menuStyle.top = rect.height < portalRect.height ? (portalRect.height - rect.height) / 2 : 0;
     }
     menuStyle.top += 32;
     if (openLeft) {
@@ -94,13 +96,12 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
         : rect.width - 30;
       menuStyle.left -= padding;
     }
-    // warning: this section has to be executed after the openLeft is calculated
-    // menu is outside viewport
     if (menuStyle.left < 0) {
-      menuStyle.left = rect.width < innerWidth ? (innerWidth - rect.width) / 2 : 0;
+      menuStyle.left = rect.width < portalRect.width ? (portalRect.width - rect.width) / 2 : 0;
     }
 
     this.setState({ menuStyle });
+    console.log(menuStyle);
     return menuStyle;
   };
 

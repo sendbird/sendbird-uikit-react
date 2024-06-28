@@ -57,9 +57,13 @@ export const EmojiListItems = ({
   useEffect(() => {
     const spaceFromTriggerX = spaceFromTrigger?.x || 0;
     const spaceFromTriggerY = spaceFromTrigger?.y || 0;
+    const portalElement = document.getElementById('sendbird-provider-wrapper');
+    const portalRect = portalElement?.getBoundingClientRect?.();
     const parentRect = parentRef?.current?.getBoundingClientRect() ?? defaultParentRect;
-    const x = parentRect.x || parentRect.left;
-    const y = parentRect.y || parentRect.top;
+    if (!portalElement) return;
+
+    const x = (parentRect?.x || parentRect?.left) - portalRect.left;
+    const y = (parentRect?.y || parentRect?.top) - portalRect.top;
     const reactionStyle = {
       top: y,
       left: x,

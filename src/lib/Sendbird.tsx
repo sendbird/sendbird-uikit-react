@@ -310,7 +310,8 @@ const SendbirdSDK = ({
   }, [sdkStore.initialized]);
 
   return (
-    <SendbirdSdkContext.Provider
+    <div id="sendbird-provider-wrapper">
+      <SendbirdSdkContext.Provider
       value={{
         stores: {
           sdkStore,
@@ -414,6 +415,7 @@ const SendbirdSDK = ({
       <ModalRoot />
       <MenuRoot />
     </SendbirdSdkContext.Provider>
+    </div>
   );
 };
 
