@@ -30,6 +30,11 @@ const kFormatter = (num: number): string | number => {
     : num;
 };
 
+/**
+ * @deprecated
+ * `ModerationPanel` is deprecated.
+ * Use `@sendbird/ChannelSettings/components/ChannelSettingMenuList` instead.
+ */
 export default function ModerationPanel(): ReactElement {
   const [frozen, setFrozen] = useState(false);
 

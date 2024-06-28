@@ -6,7 +6,7 @@ import { changeTypographyToClassName, changeColorToClassName } from './utils';
 import getStringSet from './stringSet';
 import { ObjectValues } from '../../utils/typeHelpers/objectValues';
 
-type LabelProps = {
+export type LabelProps = {
   className?: string | string[];
   type?: ObjectValues<typeof Typography>;
   color?: ObjectValues<typeof Colors>;

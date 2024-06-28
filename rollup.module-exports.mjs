@@ -65,7 +65,7 @@ export default {
   'ChannelSettings/components/EditDetailsModal': 'src/modules/ChannelSettings/components/EditDetailsModal/index.tsx',
   'ChannelSettings/components/LeaveChannel': 'src/modules/ChannelSettings/components/LeaveChannel/index.tsx',
   'ChannelSettings/components/UserListItem': 'src/modules/ChannelSettings/components/UserListItem/index.tsx',
-  // legacy - not using it internally
+  // legacy - not using below internally
   'ChannelSettings/components/UserPanel': 'src/modules/ChannelSettings/components/UserPanel/index.tsx',
   'ChannelSettings/components/ModerationPanel': 'src/modules/ChannelSettings/components/ModerationPanel/index.tsx',
 
