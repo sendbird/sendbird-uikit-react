@@ -101,7 +101,6 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
     }
 
     this.setState({ menuStyle });
-    console.log(menuStyle);
     return menuStyle;
   };
 

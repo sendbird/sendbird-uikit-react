@@ -62,8 +62,8 @@ export const EmojiListItems = ({
     const parentRect = parentRef?.current?.getBoundingClientRect() ?? defaultParentRect;
     if (!portalElement) return;
 
-    const x = (parentRect?.x || parentRect?.left) - portalRect.left;
-    const y = (parentRect?.y || parentRect?.top) - portalRect.top;
+    const x = (parentRect?.x || parentRect?.left || 0) - portalRect.left;
+    const y = (parentRect?.y || parentRect?.top || 0) - portalRect.top;
     const reactionStyle = {
       top: y,
       left: x,
