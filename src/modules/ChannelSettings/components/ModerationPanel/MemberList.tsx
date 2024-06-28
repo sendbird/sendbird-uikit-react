@@ -13,7 +13,6 @@ import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
-import uuidv4 from '../../../../utils/uuid';
 
 import UserListItem from '../UserListItem';
 import MembersModal from './MembersModal';
@@ -26,22 +25,9 @@ export const MemberList = (): ReactElement => {
   const [showInviteUsers, setShowInviteUsers] = useState(false);
   const {
     channel,
-    setChannelUpdateId,
+    forceUpdateUI,
   } = useChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
-
-  useEffect(() => {
-    if (!channel) {
-      setMembers([]);
-      return;
-    }
-
-    const memberUserListQuery = channel?.createMemberListQuery({ limit: 10 });
-    memberUserListQuery.next().then((members) => {
-      setMembers(members);
-      setHasNext(memberUserListQuery.hasNext);
-    });
-  }, [channel]);
 
   const refreshList = useCallback(() => {
     if (!channel) {
@@ -52,9 +38,9 @@ export const MemberList = (): ReactElement => {
     memberUserListQuery.next().then((members) => {
       setMembers(members);
       setHasNext(memberUserListQuery.hasNext);
-      setChannelUpdateId?.(uuidv4());
     });
   }, [channel]);
+  useEffect(refreshList, [channel]);
 
   return (
     <div className="sendbird-channel-settings-member-list">
@@ -122,6 +108,7 @@ export const MemberList = (): ReactElement => {
             onCancel={() => {
               setShowAllMembers(false);
               refreshList();
+              forceUpdateUI();
             }}
           />
         )
@@ -132,6 +119,7 @@ export const MemberList = (): ReactElement => {
             onSubmit={() => {
               setShowInviteUsers(false);
               refreshList();
+              forceUpdateUI();
             }}
             onCancel={() => setShowInviteUsers(false)}
           />

@@ -1,5 +1,5 @@
 import './channel-profile.scss';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
@@ -27,7 +27,7 @@ const ChannelProfile: React.FC = () => {
 
   const channel = channelSettingStore?.channel;
 
-  const getChannelName = () => {
+  const channelName = useMemo(() => {
     if (channel?.name && channel.name !== 'Group Channel') {
       return channel.name;
     }
@@ -36,7 +36,7 @@ const ChannelProfile: React.FC = () => {
     }
 
     return stringSet.NO_TITLE;
-  };
+  }, [channel?.name, channel?.joinedMemberCount]);
 
   return (
     <div className="sendbird-channel-profile">
@@ -55,7 +55,7 @@ const ChannelProfile: React.FC = () => {
           type={LabelTypography.SUBTITLE_2}
           color={LabelColors.ONBACKGROUND_1}
         >
-          {getChannelName()}
+          {channelName}
         </Label>
         <TextButton
           disabled={disabled}
