@@ -6,9 +6,10 @@ import BannedUserList from '../../ModerationPanel/BannedUserList';
 import MutedMemberList from '../../ModerationPanel/MutedMemberList';
 
 import { LocalizationContext } from '../../../../../lib/LocalizationContext';
-import { IconTypes } from '../../../../../ui/Icon';
+import { IconColors, IconTypes, IconProps } from '../../../../../ui/Icon';
 import Badge from '../../../../../ui/Badge';
 import { Toggle } from '../../../../../ui/Toggle';
+import { LabelColors, LabelTypography, type LabelProps } from '../../../../../ui/Label';
 import { useChannelSettingsContext } from '../../../context/ChannelSettingsProvider';
 
 import { MenuItemAction, type MenuItemActionProps } from '../MenuItem';
@@ -20,8 +21,8 @@ const kFormatter = (num: number): string | number => {
 };
 
 type MenuItem = {
-  icon: typeof IconTypes[keyof typeof IconTypes];
-  label: string;
+  icon: IconProps;
+  label: LabelProps;
   rightComponent?: (props: MenuItemActionProps) => React.ReactNode;
   accordionComponent?: () => React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
@@ -38,6 +39,17 @@ type MenuItems = {
   nonOperator: MenuItemsByRole;
 };
 
+const commonIconProps = {
+  fillColor: IconColors.PRIMARY,
+  width: 24,
+  height: 24,
+  className: 'sendbird-channel-settings__accordion-icon',
+};
+
+const commonLabelProps = {
+  type: LabelTypography.SUBTITLE_1,
+  color: LabelColors.ONBACKGROUND_1,
+};
 export const useMenuItems = (): MenuItems => {
   const [frozen, setFrozen] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
@@ -53,13 +65,13 @@ export const useMenuItems = (): MenuItems => {
   return useMemo(() => ({
     operator: {
       operators: {
-        icon: IconTypes.OPERATOR,
-        label: stringSet.CHANNEL_SETTING__OPERATORS__TITLE,
+        icon: { ...commonIconProps, type: IconTypes.OPERATOR },
+        label: { ...commonLabelProps, children: stringSet.CHANNEL_SETTING__OPERATORS__TITLE },
         accordionComponent: () => <OperatorList />,
       },
       allUsers: {
-        icon: IconTypes.MEMBERS,
-        label: stringSet.CHANNEL_SETTING__MEMBERS__TITLE,
+        icon: { ...commonIconProps, type: IconTypes.MEMBERS },
+        label: { ...commonLabelProps, children: stringSet.CHANNEL_SETTING__MEMBERS__TITLE },
         rightComponent: (props) => (
           <div className="sendbird-channel-settings__members">
             <Badge count={channel?.memberCount ? kFormatter(channel.memberCount) : ''}/>
@@ -71,19 +83,19 @@ export const useMenuItems = (): MenuItems => {
         accordionComponent: () => <MemberList />,
       },
       mutedUsers: {
-        icon: IconTypes.MUTE,
-        label: stringSet.CHANNEL_SETTING__MUTED_MEMBERS__TITLE,
+        icon: { ...commonIconProps, type: IconTypes.MUTE },
+        label: { ...commonLabelProps, children: stringSet.CHANNEL_SETTING__MUTED_MEMBERS__TITLE },
         accordionComponent: () => <MutedMemberList />,
       },
       bannedUsers: {
-        icon: IconTypes.BAN,
-        label: stringSet.CHANNEL_SETTING__BANNED_MEMBERS__TITLE,
+        icon: { ...commonIconProps, type: IconTypes.BAN },
+        label: { ...commonLabelProps, children: stringSet.CHANNEL_SETTING__BANNED_MEMBERS__TITLE },
         accordionComponent: () => <BannedUserList />,
       },
       freezeChannel: {
         hideMenu: channel?.isBroadcast,
-        icon: IconTypes.FREEZE,
-        label: stringSet.CHANNEL_SETTING__FREEZE_CHANNEL,
+        icon: { ...commonIconProps, type: IconTypes.FREEZE },
+        label: { ...commonLabelProps, children: stringSet.CHANNEL_SETTING__FREEZE_CHANNEL },
         rightComponent: () => <Toggle
           className="sendbird-channel-settings__frozen-icon"
           checked={frozen}
@@ -103,8 +115,8 @@ export const useMenuItems = (): MenuItems => {
     },
     nonOperator: {
       allUsers: {
-        icon: IconTypes.MEMBERS,
-        label: stringSet.CHANNEL_SETTING__MEMBERS__TITLE,
+        icon: { ...commonIconProps, type: IconTypes.MEMBERS },
+        label: { ...commonLabelProps, children: stringSet.CHANNEL_SETTING__MEMBERS__TITLE },
         rightComponent: (props) => (
           <div className="sendbird-channel-settings__members">
             <Badge count={channel?.memberCount ? kFormatter(channel.memberCount) : ''}/>

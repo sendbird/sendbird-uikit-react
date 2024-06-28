@@ -33,12 +33,14 @@
 }
 
 .sendbird-channel-settings-accordion__footer {
-  padding-top: 16px;
+  padding: 16px 12px;
   display: flex;
   justify-content: left;
-  padding-left: 12px;
   .sendbird-button:nth-child(2) {
     margin-left: 8px;
+  }
+  @include themed() {
+    border-bottom: 1px solid t(on-bg-4);
   }
 }
 

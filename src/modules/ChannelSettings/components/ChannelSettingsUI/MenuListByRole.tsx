@@ -2,8 +2,8 @@ import '../ModerationPanel/admin-panel.scss';
 
 import React from 'react';
 
-import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
-import Icon, { IconColors } from '../../../../ui/Icon';
+import Label from '../../../../ui/Label';
+import Icon from '../../../../ui/Icon';
 import { isOperator } from '../../../Channel/context/utils';
 
 import MenuItem from './MenuItem';
@@ -23,23 +23,8 @@ const MenuListByRole = ({ menuItems }: { menuItems: ReturnType<typeof useMenuIte
             key={key}
             onClick={item.onClick}
             onKeyDown={item.onKeyDown}
-            renderLeft={() => (
-              <Icon
-                type={item.icon}
-                fillColor={IconColors.PRIMARY}
-                width={24}
-                height={24}
-                className="sendbird-channel-settings__accordion-icon"
-              />
-            )}
-            renderMiddle={() => (
-              <Label
-                type={LabelTypography.SUBTITLE_1}
-                color={LabelColors.ONBACKGROUND_1}
-              >
-                {item.label}
-              </Label>
-            )}
+            renderLeft={() => <Icon {...item.icon} />}
+            renderMiddle={() => <Label {...item.label} />}
             renderRight={item.rightComponent}
             renderAccordion={item.accordionComponent}
           />
