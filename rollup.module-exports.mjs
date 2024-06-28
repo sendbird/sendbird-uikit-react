@@ -57,14 +57,17 @@ export default {
   // ChannelSettings
   ChannelSettings: 'src/modules/ChannelSettings/index.tsx',
   'ChannelSettings/context': 'src/modules/ChannelSettings/context/ChannelSettingsProvider.tsx',
-  'ChannelSettings/components/ModerationPanel': 'src/modules/ChannelSettings/components/ModerationPanel/index.tsx',
   'ChannelSettings/components/ChannelProfile': 'src/modules/ChannelSettings/components/ChannelProfile/index.tsx',
   'ChannelSettings/components/ChannelSettingsUI': 'src/modules/ChannelSettings/components/ChannelSettingsUI/index.tsx',
   'ChannelSettings/components/ChannelSettingsHeader': 'src/modules/ChannelSettings/components/ChannelSettingsUI/ChannelSettingsHeader.tsx',
+  'ChannelSettings/components/ChannelSettingMenuList': 'src/modules/ChannelSettings/components/ChannelSettingsUI/MenuListByRole.tsx',
+  'ChannelSettings/hooks/useMenuList': 'src/modules/ChannelSettings/components/ChannelSettingsUI/hooks/useMenuItems.tsx',
   'ChannelSettings/components/EditDetailsModal': 'src/modules/ChannelSettings/components/EditDetailsModal/index.tsx',
   'ChannelSettings/components/LeaveChannel': 'src/modules/ChannelSettings/components/LeaveChannel/index.tsx',
   'ChannelSettings/components/UserListItem': 'src/modules/ChannelSettings/components/UserListItem/index.tsx',
+  // legacy - not using below internally
   'ChannelSettings/components/UserPanel': 'src/modules/ChannelSettings/components/UserPanel/index.tsx',
+  'ChannelSettings/components/ModerationPanel': 'src/modules/ChannelSettings/components/ModerationPanel/index.tsx',
 
   // Channel - legacy
   Channel: 'src/modules/Channel/index.tsx',
