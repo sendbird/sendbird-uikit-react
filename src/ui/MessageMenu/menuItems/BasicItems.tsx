@@ -35,6 +35,7 @@ export const MenuItem = ({
       onKeyDown={(e) => { if (e.code === 'Enter') handleClickEvent(e); }}
     >
       <Label
+        className="sendbird-menu-item__text"
         type={LabelTypography.SUBTITLE_2}
         color={disabled ? LabelColors.ONBACKGROUND_4 : LabelColors.ONBACKGROUND_1}
       >

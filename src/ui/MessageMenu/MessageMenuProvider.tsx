@@ -31,7 +31,6 @@ const MessageMenuContext = createContext<MessageMenuContextProps | MobileMessage
 interface MessageMenuProviderProps {
   children: ReactNode;
   value: MessageMenuContextProps | MobileMessageMenuContextProps;
-  isMobile?: boolean;
 }
 
 export const MessageMenuProvider = ({ children, value }: MessageMenuProviderProps) => {
@@ -45,7 +44,7 @@ export const MessageMenuProvider = ({ children, value }: MessageMenuProviderProp
 export const useMessageMenuContext = () => {
   const context = useContext(MessageMenuContext);
   if (!context) {
-    throw new Error('useMessageMenuContext must be used within a MessageMenuProvider');
+    throw new Error('useMessageMenuContext must be used within a MessageMenuProvider.');
   }
   return context;
 };

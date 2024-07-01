@@ -1,16 +1,19 @@
 import React, { ReactElement, useRef, useContext, ReactNode } from 'react';
 import { User } from '@sendbird/chat';
-import { Member } from '@sendbird/chat/groupChannel';
+import { type GroupChannel, Member } from '@sendbird/chat/groupChannel';
 
+import './user-list-item.scss';
+
+import { useSendbirdStateContext } from '../../../../lib/Sendbird';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
+
 import Avatar from '../../../../ui/Avatar/index';
 import MutedAvatarOverlay from '../../../../ui/Avatar/MutedAvatarOverlay';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import UserProfile from '../../../../ui/UserProfile';
 import ContextMenu, { MenuItems } from '../../../../ui/ContextMenu';
-
-import './user-list-item.scss';
+import { UserListItemMenuProps } from '../../../../ui/UserListItemMenu/UserListItemMenu';
 
 interface ActionProps {
   actionRef: React.RefObject<HTMLInputElement>;
@@ -19,17 +22,28 @@ interface ActionProps {
 
 interface Props {
   user: User | Member;
+  channel: GroupChannel;
+  /** @deprecated Doesn't need to fill this props */
   currentUser?: string;
   className?: string;
+  /** @deprecated Use the props `renderListItemMenu` instead */
   action?(props: ActionProps): ReactNode;
+  renderListItemMenu?: (props: UserListItemMenuProps) => ReactNode;
 }
 
+/**
+ * This UserListItem component is usually used in the ChannelSettings.
+ * There's another UserListItem which is used in the modal. (ui/UserListItem)
+ */
 const UserListItem = ({
   user,
+  channel,
   className = '',
-  currentUser,
   action,
+  renderListItemMenu,
 }: Props): ReactElement => {
+  const { config } = useSendbirdStateContext();
+  const currentUser = config.userId;
   const actionRef = useRef(null);
   const parentRef = useRef(null);
   const avatarRef = useRef(null);
@@ -43,6 +57,7 @@ const UserListItem = ({
         'sendbird-user-list-item--small', ...injectingClassNames,
       ].join(' ')}
     >
+      {/* UserProfile */}
       <ContextMenu
         menuTrigger={(toggleDropdown) => (
           <>
@@ -58,11 +73,9 @@ const UserListItem = ({
               width={24}
               height={24}
             />
-            {
-              user instanceof Member && user.isMuted && (
-                <MutedAvatarOverlay />
-              )
-            }
+            {user instanceof Member && user.isMuted && (
+              <MutedAvatarOverlay />
+            )}
           </>
         )}
         menuItems={(closeDropdown) => (
@@ -92,11 +105,6 @@ const UserListItem = ({
             )
         )}
       />
-      {/* {
-        user.isMuted && (
-          <MutedAvatarOverlay />
-        )
-      } */}
       <Label
         className="sendbird-user-list-item--small__title"
         type={LabelTypography.SUBTITLE_1}
@@ -131,13 +139,17 @@ const UserListItem = ({
           </Label>
         )
       }
-      {
-        action && (
-          <div ref={actionRef} className="sendbird-user-list-item--small__action">
-            {action({ actionRef, parentRef })}
-          </div>
-        )
-      }
+      {/* Deprecated logic */}
+      {(!renderListItemMenu && action) && (
+        <div ref={actionRef} className="sendbird-user-list-item--small__action">
+          {action({ actionRef, parentRef })}
+        </div>
+      )}
+      {renderListItemMenu && (
+        <div ref={actionRef} className="sendbird-user-list-item--small__action">
+          {renderListItemMenu({ channel, user })}
+        </div>
+      )}
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import UserListItem from "../index";
+import { SendbirdSdkContext } from '../../../lib/SendbirdSdkContext';
 
 const getUserList = () => [
   {
@@ -34,12 +35,14 @@ describe('ui/UserListItem', () => {
   it('should do a snapshot test of the UserListItem DOM', function () {
     const [user1] = getUserList();
     const { asFragment } = render(
-      <UserListItem
-        user={user1}
-        checkBox
-        checked={true}
-        onChange={() => { }}
-      />
+      <SendbirdSdkContext.Provider value={{ config: { userId: '' } }}>
+        <UserListItem
+          user={user1}
+          checkBox
+          checked={true}
+          onChange={() => { }}
+        />
+      </SendbirdSdkContext.Provider>
     );
     expect(asFragment()).toMatchSnapshot();
   });

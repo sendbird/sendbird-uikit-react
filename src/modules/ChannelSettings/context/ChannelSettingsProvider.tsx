@@ -77,7 +77,7 @@ const ChannelSettingsProvider = ({
   const forceUpdateUI = () => setChannelUpdateId(uuidv4());
 
   const {
-    response = null,
+    response: channel = null,
     loading,
     error,
     refresh,
@@ -126,7 +126,7 @@ const ChannelSettingsProvider = ({
         overrideInviteUser,
         setChannelUpdateId,
         forceUpdateUI,
-        channel: response,
+        channel,
         loading,
         invalidChannel: Boolean(error),
       }}

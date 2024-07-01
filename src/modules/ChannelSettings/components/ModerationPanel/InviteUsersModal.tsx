@@ -100,10 +100,10 @@ export default function InviteUsers({ onCancel, onSubmit }: Props) {
               return (
                 <UserListItem
                   key={user.userId}
+                  user={user}
                   checkBox
                   checked={isMember || isSelected}
                   disabled={isMember}
-                  user={user}
                   onChange={() => onSelectUser(user)}
                 />
               );

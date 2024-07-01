@@ -90,6 +90,8 @@ export default function AddOperatorsModal({
               const isOperator = channel?.operators.find((operator) => operator?.userId === participant?.userId) ? true : false;
               return (
                 <UserListItem
+                  user={participant}
+                  key={participant.userId}
                   checkBox
                   checked={selectedUsers[participant.userId] || isOperator}
                   disabled={isOperator}
@@ -106,8 +108,6 @@ export default function AddOperatorsModal({
                       setSelectedUsers(modifiedSelectedUsers);
                     }
                   }
-                  user={participant}
-                  key={participant.userId}
                 />
               );
             })

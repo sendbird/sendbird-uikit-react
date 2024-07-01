@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
-import { BannedUserListQueryParams, RestrictedUser } from '@sendbird/chat';
+import type { RestrictedUser } from '@sendbird/chat';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import
@@ -13,14 +13,12 @@ Label, {
   LabelTypography,
   LabelColors,
 } from '../../../../ui/Label';
-import IconButton from '../../../../ui/IconButton';
-import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 
 import UserListItem from '../UserListItem';
 import BannedUsersModal from './BannedUsersModal';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
 export const BannedMemberList = (): ReactElement => {
   const [members, setMembers] = useState<RestrictedUser[]>([]);
@@ -30,30 +28,18 @@ export const BannedMemberList = (): ReactElement => {
   const { stringSet } = useContext(LocalizationContext);
   const { channel } = useChannelSettingsContext();
 
-  const bannedUserListQueryParams: BannedUserListQueryParams = { limit: 10 };
-  useEffect(() => {
-    if (!channel) {
-      setMembers([]);
-      return;
-    }
-    const bannedUserListQuery = channel?.createBannedUserListQuery(bannedUserListQueryParams);
-    bannedUserListQuery.next().then((users) => {
-      setMembers(users);
-      setHasNext(bannedUserListQuery.hasNext);
-    });
-  }, [channel]);
-
   const refreshList = useCallback(() => {
     if (!channel) {
       setMembers([]);
       return;
     }
-    const bannedUserListQuery = channel?.createBannedUserListQuery(bannedUserListQueryParams);
+    const bannedUserListQuery = channel?.createBannedUserListQuery({ limit: 10 });
     bannedUserListQuery.next().then((users) => {
       setMembers(users);
       setHasNext(bannedUserListQuery.hasNext);
     });
-  }, [channel]);
+  }, [channel?.url, channel?.createBannedUserListQuery]);
+  useEffect(refreshList, [channel?.url]);
 
   return (
     <>
@@ -62,47 +48,15 @@ export const BannedMemberList = (): ReactElement => {
           <UserListItem
             key={member.userId}
             user={member}
-            action={({ actionRef, parentRef }) => {
-              return (
-                <ContextMenu
-                  menuTrigger={(toggleDropdown) => (
-                    <IconButton
-                      className="sendbird-user-message__more__menu"
-                      width="32px"
-                      height="32px"
-                      onClick={toggleDropdown}
-                    >
-                      <Icon
-                        width="24px"
-                        height="24px"
-                        type={IconTypes.MORE}
-                        fillColor={IconColors.CONTENT_INVERSE}
-                      />
-                    </IconButton>
-                  )}
-                  menuItems={(closeDropdown) => (
-                    <MenuItems
-                      parentContainRef={parentRef}
-                      parentRef={actionRef} // for catching location(x, y) of MenuItems
-                      closeDropdown={closeDropdown}
-                      openLeft
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          channel?.unbanUser(member).then(() => {
-                            closeDropdown();
-                            refreshList();
-                          });
-                        }}
-                        testID="channel_setting_banned_user_context_menu_unban"
-                      >
-                        {stringSet.CHANNEL_SETTING__MODERATION__UNBAN}
-                      </MenuItem>
-                    </MenuItems>
-                  )}
-                />
-              );
-            }}
+            channel={channel}
+            renderListItemMenu={(props) => (
+              <UserListItemMenu
+                {...props}
+                isBanned
+                onToggleBanState={() => refreshList()}
+                renderMenuItems={({ items }) => (<items.BanToggleMenuItem />)}
+              />
+            )}
           />
         ))
       }
