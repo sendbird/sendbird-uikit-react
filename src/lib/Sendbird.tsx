@@ -206,30 +206,31 @@ const SendbirdSDK = ({
     getCachedTemplate,
   };
 
-  const reconnect = useConnect({
-    appId,
-    userId,
-    accessToken,
-    isUserIdUsedForNickname,
-    isMobile,
-  },
-  {
-    logger,
-    nickname,
-    profileUrl,
-    configureSession,
-    customApiHost,
-    customWebSocketHost,
-    sdkInitParams,
-    customExtensionParams,
-    sdk,
-    sdkDispatcher,
-    userDispatcher,
-    appInfoDispatcher,
-    initDashboardConfigs,
-    eventHandlers,
-    initializeMessageTemplatesInfo,
-  },
+  const reconnect = useConnect(
+    {
+      appId,
+      userId,
+      accessToken,
+      isUserIdUsedForNickname,
+      isMobile,
+    },
+    {
+      logger,
+      nickname,
+      profileUrl,
+      configureSession,
+      customApiHost,
+      customWebSocketHost,
+      sdkInitParams,
+      customExtensionParams,
+      sdk,
+      sdkDispatcher,
+      userDispatcher,
+      appInfoDispatcher,
+      initDashboardConfigs,
+      eventHandlers,
+      initializeMessageTemplatesInfo,
+    },
   );
 
   useUnmount(() => {
@@ -280,7 +281,7 @@ const SendbirdSDK = ({
         body?.classList.remove('sendbird-theme--light');
         body?.classList.remove('sendbird-theme--dark');
         // eslint-disable-next-line no-empty
-      } catch {}
+      } catch { }
     };
   }, [currentTheme]);
 
@@ -402,17 +403,19 @@ const SendbirdSDK = ({
         utils,
       }}
     >
-      <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
-        <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
-          <VoiceMessageProvider>
-            <GlobalModalProvider>{children}</GlobalModalProvider>
-          </VoiceMessageProvider>
-        </LocalizationProvider>
-      </MediaQueryProvider>
-      {/* Roots */}
-      <EmojiReactionListRoot />
-      <ModalRoot />
-      <MenuRoot />
+      <div id="sendbird-uikit-area">{/** To calculate the area being used by Sendbird UIKit */}
+        <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
+          <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
+            <VoiceMessageProvider>
+              <GlobalModalProvider>{children}</GlobalModalProvider>
+            </VoiceMessageProvider>
+          </LocalizationProvider>
+        </MediaQueryProvider>
+        {/* Roots */}
+        <EmojiReactionListRoot />
+        <ModalRoot />
+        <MenuRoot />
+      </div>
     </SendbirdSdkContext.Provider>
   );
 };

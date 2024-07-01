@@ -1,7 +1,9 @@
 import React from 'react';
 import type { Preview } from '@storybook/react';
-import '../src/lib/index.scss';
 import { SendbirdSdkContext } from '../src/lib/SendbirdSdkContext';
+
+import '../src/lib/index.scss';
+import './index.css';
 
 const preview: Preview = {
   parameters: {
