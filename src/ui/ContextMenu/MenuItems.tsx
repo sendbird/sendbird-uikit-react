@@ -67,7 +67,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
 
   getMenuPosition = (): MenuStyleType => {
     const { parentRef, openLeft } = this.props;
-    const portalElement = document.getElementById('sendbird-provider-wrapper');
+    const portalElement = document.getElementById('sendbird-uikit-area');
     const portalRect = portalElement?.getBoundingClientRect?.();
     const parentRect = parentRef?.current?.getBoundingClientRect?.();
     if (!portalElement) return { top: 0, left: 0 };
