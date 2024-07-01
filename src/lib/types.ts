@@ -100,6 +100,9 @@ export interface SendBirdStateConfig {
     enableOgtag: SBUConfig['groupChannel']['channel']['enableOgtag'];
     enableTypingIndicator: SBUConfig['groupChannel']['channel']['enableTypingIndicator'];
     enableReactions: SBUConfig['groupChannel']['channel']['enableReactions'];
+    /**
+     * @deprecated Currently, this feature is turned off by default. If you wish to use this feature, contact us: {@link https://dashboard.sendbird.com/settings/contact_us?category=feedback_and_feature_requests&product=UIKit}
+     */
     enableReactionsSupergroup: SBUConfig['groupChannel']['channel']['enableReactionsSupergroup'];
     enableMention: SBUConfig['groupChannel']['channel']['enableMention'];
     replyType: SBUConfig['groupChannel']['channel']['replyType'];
