@@ -414,7 +414,8 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                   message,
                   channel,
                   isByMe,
-                  emojiContainer: emojiContainer ?? new EmojiContainer(),
+                  // @ts-ignore
+                  emojiContainer: emojiContainer ?? new EmojiContainer({}),
                   memberNicknamesMap: nicknamesMap ?? new Map(),
                   toggleReaction,
                   onPressUserProfile: onPressUserProfileHandler,
