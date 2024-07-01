@@ -362,7 +362,6 @@ const SendbirdSDK = ({
             enableOgtag: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableOgtag,
             enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
             enableReactions: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactions,
-            enableReactionsSupergroup: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactionsSupergroup,
             enableMention: configs.groupChannel.channel.enableMention,
             replyType: configs.groupChannel.channel.replyType,
             threadReplySelectType: configs.groupChannel.channel.threadReplySelectType,
@@ -374,6 +373,7 @@ const SendbirdSDK = ({
             showSuggestedRepliesFor: configs.groupChannel.channel.showSuggestedRepliesFor,
             suggestedRepliesDirection: configs.groupChannel.channel.suggestedRepliesDirection,
             enableMarkdownForUserMessage: configs.groupChannel.channel.enableMarkdownForUserMessage,
+            enableReactionsSupergroup: undefined as never,
           },
           groupChannelList: {
             enableTypingIndicator: configs.groupChannel.channelList.enableTypingIndicator,
