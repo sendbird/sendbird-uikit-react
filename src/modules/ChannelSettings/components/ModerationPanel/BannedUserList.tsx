@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
-import { BannedUserListQueryParams, RestrictedUser } from '@sendbird/chat';
+import type { RestrictedUser } from '@sendbird/chat';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import
@@ -28,30 +28,18 @@ export const BannedMemberList = (): ReactElement => {
   const { stringSet } = useContext(LocalizationContext);
   const { channel } = useChannelSettingsContext();
 
-  const bannedUserListQueryParams: BannedUserListQueryParams = { limit: 10 };
-  useEffect(() => {
-    if (!channel) {
-      setMembers([]);
-      return;
-    }
-    const bannedUserListQuery = channel?.createBannedUserListQuery(bannedUserListQueryParams);
-    bannedUserListQuery.next().then((users) => {
-      setMembers(users);
-      setHasNext(bannedUserListQuery.hasNext);
-    });
-  }, [channel]);
-
   const refreshList = useCallback(() => {
     if (!channel) {
       setMembers([]);
       return;
     }
-    const bannedUserListQuery = channel?.createBannedUserListQuery(bannedUserListQueryParams);
+    const bannedUserListQuery = channel?.createBannedUserListQuery({ limit: 10 });
     bannedUserListQuery.next().then((users) => {
       setMembers(users);
       setHasNext(bannedUserListQuery.hasNext);
     });
-  }, [channel]);
+  }, [channel?.url, channel?.createBannedUserListQuery]);
+  useEffect(refreshList, [channel?.url]);
 
   return (
     <>

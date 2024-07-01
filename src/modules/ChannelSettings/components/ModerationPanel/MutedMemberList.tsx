@@ -23,29 +23,11 @@ export const MutedMemberList = (): ReactElement => {
 
   const { channel } = useChannelSettingsContext();
 
-  useEffect(() => {
-    if (!channel) {
-      setMembers([]);
-      return;
-    }
-
-    const memberUserListQuery = channel?.createMemberListQuery({
-      limit: 10,
-      // @ts-ignore
-      mutedMemberFilter: 'muted',
-    });
-    memberUserListQuery.next().then((members) => {
-      setMembers(members);
-      setHasNext(memberUserListQuery.hasNext);
-    });
-  }, [channel]);
-
   const refreshList = useCallback(() => {
     if (!channel) {
       setMembers([]);
       return;
     }
-
     const memberUserListQuery = channel?.createMemberListQuery({
       limit: 10,
       // @ts-ignore
@@ -55,7 +37,9 @@ export const MutedMemberList = (): ReactElement => {
       setMembers(members);
       setHasNext(memberUserListQuery.hasNext);
     });
-  }, [channel]);
+  }, [channel?.url, channel?.createMemberListQuery]);
+  useEffect(refreshList, [channel?.url]);
+
   return (
     <>
       {

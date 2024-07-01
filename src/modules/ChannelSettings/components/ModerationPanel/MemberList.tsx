@@ -39,8 +39,8 @@ export const MemberList = (): ReactElement => {
       setMembers(members);
       setHasNext(memberUserListQuery.hasNext);
     });
-  }, [channel]);
-  useEffect(refreshList, [channel]);
+  }, [channel?.url, channel?.createMemberListQuery]);
+  useEffect(refreshList, [channel?.url]);
 
   return (
     <div className="sendbird-channel-settings-member-list">

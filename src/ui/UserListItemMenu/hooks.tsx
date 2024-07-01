@@ -13,16 +13,14 @@ const processToggleAction = async (
   errorHandler?: (error: Error) => void,
 ): Promise<void> => {
   if (isProcessing.current) {
-    const error = new Error('Processing in progress');
-    errorHandler(error);
-    return Promise.reject(error);
+    errorHandler?.(new Error('Processing in progress'));
+    return;
   }
   isProcessing.current = true;
   try {
     await action();
   } catch (error) {
-    errorHandler?.(error);
-    throw error;
+    errorHandler?.(error as Error);
   } finally {
     isProcessing.current = false;
   }
@@ -139,7 +137,7 @@ export const useToggleBan = ({
         async () => {
           const togglePromise = isBanned
             ? channel.unbanUser(user)
-            : channel.banUser(user, -1, '');
+            : channel.banUser(user);
 
           await togglePromise;
           const newStatus = !isBanned;

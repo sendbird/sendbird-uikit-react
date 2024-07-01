@@ -35,8 +35,8 @@ export const OperatorList = (): ReactElement => {
       setOperators(operators);
       setHasNext(operatorListQuery.hasNext);
     });
-  }, [channel]);
-  useEffect(refreshList, [channel]);
+  }, [channel?.url, channel?.createOperatorListQuery]);
+  useEffect(refreshList, [channel?.url]);
 
   return (
     <>
