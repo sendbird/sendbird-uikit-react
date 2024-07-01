@@ -17,6 +17,7 @@ export interface MessageFeedbackModalProps {
   onSubmit?: (selectedFeedback: FeedbackRating, comment: string) => void;
   onUpdate?: (selectedFeedback: FeedbackRating, comment: string) => void;
   onRemove?: () => void;
+  rootElementId?: string;
 }
 
 export default function MessageFeedbackModal(props: MessageFeedbackModalProps): ReactElement {
@@ -60,6 +61,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
   return (
     <div onKeyDown={onKeyDown}>
       <Modal
+        rootElementId={props.rootElementId}
         contentClassName='sendbird-message-feedback-modal-content__mobile'
         type={ButtonTypes.PRIMARY}
         onCancel={onClose}
