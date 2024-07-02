@@ -8,6 +8,7 @@ export interface MobileFeedbackMenuProps {
   hideMenu(): void;
   onEditFeedback(): void;
   onRemoveFeedback(): void;
+  rootElementId?: string;
 }
 
 export default function MobileFeedbackMenu(
@@ -17,12 +18,13 @@ export default function MobileFeedbackMenu(
     hideMenu,
     onEditFeedback,
     onRemoveFeedback,
+    rootElementId,
   } = props;
 
   const { stringSet } = useLocalization();
 
   return (
-    <BottomSheet onBackdropClick={hideMenu}>
+    <BottomSheet rootElementId={rootElementId} onBackdropClick={hideMenu}>
       <div className='sendbird-message__bottomsheet--feedback-options-menu'>
         <div
           className='sendbird-message__bottomsheet--feedback-option'

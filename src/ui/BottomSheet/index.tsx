@@ -9,6 +9,7 @@ interface BottomSheetProps {
   className?: string;
   children: React.ReactElement;
   onBackdropClick?: () => void;
+  rootElementId?: string;
 }
 
 const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomSheetProps) => {
@@ -21,13 +22,20 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
 
   // https://github.com/testing-library/react-testing-library/issues/62#issuecomment-438653348
   const portalRoot = useRef<HTMLElement| null>();
-  portalRoot.current = document.getElementById(MODAL_ROOT);
-  if (!portalRoot.current) {
-    portalRoot.current = document.createElement('div');
-    portalRoot.current.setAttribute('id', MODAL_ROOT);
-    document.body.appendChild(portalRoot.current);
+
+  function getRootElement() {
+    const elem = props.rootElementId ? document.getElementById(props.rootElementId) : document.getElementById(MODAL_ROOT);
+    if (elem) return elem;
+
     logger?.warning?.('@sendbird/uikit-react/ui/BottomSheet | Should put a ModalRoot to use the BottomSheet.');
+    const div = document.createElement('div');
+    div.setAttribute('id', MODAL_ROOT);
+    document.body.appendChild(div);
+    return div;
   }
+
+  portalRoot.current = getRootElement();
+
   return createPortal(
     <div
       className={`${className} sendbird-bottomsheet`}

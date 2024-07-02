@@ -18,6 +18,7 @@ export interface MessageFeedbackModalProps {
   onUpdate?: (selectedFeedback: FeedbackRating, comment: string) => void;
   onRemove?: () => void;
   rootElementId?: string;
+  isMobile?: boolean;
 }
 
 export default function MessageFeedbackModal(props: MessageFeedbackModalProps): ReactElement {
@@ -28,10 +29,13 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
     onSubmit,
     onUpdate,
     onRemove,
+    isMobile,
   } = props;
 
   const { stringSet } = useContext(LocalizationContext);
-  const { isMobile } = useMediaQueryContext();
+  const mediaQueryContext = useMediaQueryContext();
+
+  const mobile = isMobile ?? mediaQueryContext.isMobile;
 
   const isEdit = message?.myFeedback && selectedFeedback === message.myFeedback.rating;
   const hasComment = message?.myFeedback?.comment;
@@ -83,7 +87,7 @@ export default function MessageFeedbackModal(props: MessageFeedbackModalProps): 
         customFooter={
           <div className='sendbird-message-feedback-modal-footer__root'>
             {
-              !isMobile && message?.myFeedback && selectedFeedback === message.myFeedback.rating
+              !mobile && message?.myFeedback && selectedFeedback === message.myFeedback.rating
                 ? <Button
                   type={ButtonTypes.WARNING}
                   onClick={onRemove}
