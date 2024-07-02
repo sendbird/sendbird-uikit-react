@@ -373,7 +373,7 @@ const SendbirdSDK = ({
             showSuggestedRepliesFor: configs.groupChannel.channel.showSuggestedRepliesFor,
             suggestedRepliesDirection: configs.groupChannel.channel.suggestedRepliesDirection,
             enableMarkdownForUserMessage: configs.groupChannel.channel.enableMarkdownForUserMessage,
-            enableReactionsSupergroup: undefined as never,
+            enableReactionsSupergroup: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactionsSupergroup as never,
           },
           groupChannelList: {
             enableTypingIndicator: configs.groupChannel.channelList.enableTypingIndicator,
