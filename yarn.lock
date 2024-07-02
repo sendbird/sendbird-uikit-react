@@ -2623,15 +2623,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendbird/chat@npm:^4.12.3":
-  version: 4.12.3
-  resolution: "@sendbird/chat@npm:4.12.3"
+"@sendbird/chat@file:./sendbird-chat-4.12.9.tgz::locator=%40sendbird%2Fuikit-react%40workspace%3A.":
+  version: 4.12.9
+  resolution: "@sendbird/chat@file:./sendbird-chat-4.12.9.tgz::locator=%40sendbird%2Fuikit-react%40workspace%3A."
   peerDependencies:
     "@react-native-async-storage/async-storage": ^1.17.6
+    react-native-mmkv: ^2.0.0
   peerDependenciesMeta:
     "@react-native-async-storage/async-storage":
       optional: true
-  checksum: bfee76dd86eb5ace8d13983e20594d04933123e990f31651ecf7183a82197b49258aa89f59aaeda5ae239364081791acc092fe01c9ecb0d613c2031ce9366f8e
+    react-native-mmkv:
+      optional: true
+  checksum: 6690e6f2bc02858770616be0148a183f9759064114091b62fc9733788ad8e9312e0994d6dee28c482fd9b3a8a78bb0f346572ad66a9bc2e961c57abc2238a8ef
   languageName: node
   linkType: hard
 
@@ -2675,7 +2678,7 @@ __metadata:
     "@rollup/plugin-node-resolve": ^15.2.3
     "@rollup/plugin-replace": ^5.0.4
     "@rollup/plugin-typescript": ^11.1.5
-    "@sendbird/chat": ^4.12.3
+    "@sendbird/chat": ^4.12.9
     "@sendbird/react-uikit-message-template-view": 0.0.1-alpha.76
     "@sendbird/uikit-tools": 0.0.1-alpha.76
     "@storybook/addon-essentials": ^8.0.9
