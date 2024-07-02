@@ -100,7 +100,6 @@ export interface SendBirdStateConfig {
     enableOgtag: SBUConfig['groupChannel']['channel']['enableOgtag'];
     enableTypingIndicator: SBUConfig['groupChannel']['channel']['enableTypingIndicator'];
     enableReactions: SBUConfig['groupChannel']['channel']['enableReactions'];
-    enableReactionsSupergroup: SBUConfig['groupChannel']['channel']['enableReactionsSupergroup'];
     enableMention: SBUConfig['groupChannel']['channel']['enableMention'];
     replyType: SBUConfig['groupChannel']['channel']['replyType'];
     threadReplySelectType: SBUConfig['groupChannel']['channel']['threadReplySelectType'];
@@ -112,6 +111,10 @@ export interface SendBirdStateConfig {
     showSuggestedRepliesFor: SBUConfig['groupChannel']['channel']['showSuggestedRepliesFor'];
     suggestedRepliesDirection: SBUConfig['groupChannel']['channel']['suggestedRepliesDirection'];
     enableMarkdownForUserMessage: SBUConfig['groupChannel']['channel']['enableMarkdownForUserMessage'];
+    /**
+     * @deprecated Currently, this feature is turned off by default. If you wish to use this feature, contact us: {@link https://dashboard.sendbird.com/settings/contact_us?category=feedback_and_feature_requests&product=UIKit}
+     */
+    enableReactionsSupergroup: never;
   },
   groupChannelList: {
     enableTypingIndicator: SBUConfig['groupChannel']['channelList']['enableTypingIndicator'];
