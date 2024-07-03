@@ -236,6 +236,7 @@ export default {
   'ui/TypingIndicatorBubble': 'src/ui/TypingIndicatorBubble/index.tsx',
   'ui/UnknownMessageItemBody': 'src/ui/UnknownMessageItemBody/index.tsx',
   'ui/UserListItem': 'src/ui/UserListItem/index.tsx',
+  'ui/UserListItemMenu': 'src/ui/UserListItemMenu/index.tsx',
   'ui/UserProfile': 'src/ui/UserProfile/index.tsx',
   'ui/VoiceMessageInput': 'src/ui/VoiceMessageInput/index.tsx',
   'ui/VoiceMessageItemBody': 'src/ui/VoiceMessageItemBody/index.tsx',

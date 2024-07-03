@@ -4,6 +4,7 @@ import React, {
   useState,
   useCallback,
   useContext,
+  ReactNode,
 } from 'react';
 import type { RestrictedUser } from '@sendbird/chat';
 
@@ -14,13 +15,19 @@ Label, {
   LabelColors,
 } from '../../../../ui/Label';
 
-import UserListItem from '../UserListItem';
+import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 import BannedUsersModal from './BannedUsersModal';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
-export const BannedMemberList = (): ReactElement => {
+interface BannedUserListProps {
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
+}
+
+export const BannedUserList = ({
+  renderUserListItem = (props) => <UserListItem {...props} />,
+}: BannedUserListProps): ReactElement => {
   const [members, setMembers] = useState<RestrictedUser[]>([]);
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -45,19 +52,21 @@ export const BannedMemberList = (): ReactElement => {
     <>
       {
         members.map((member) => (
-          <UserListItem
-            key={member.userId}
-            user={member}
-            channel={channel}
-            renderListItemMenu={(props) => (
+          renderUserListItem({
+            key: member.userId,
+            user: member,
+            channel,
+            size: 'small',
+            avatarSize: '24px',
+            renderListItemMenu: (props) => (
               <UserListItemMenu
                 {...props}
                 isBanned
                 onToggleBanState={() => refreshList()}
                 renderMenuItems={({ items }) => (<items.BanToggleMenuItem />)}
               />
-            )}
-          />
+            ),
+          })
         ))
       }
       {
@@ -73,9 +82,7 @@ export const BannedMemberList = (): ReactElement => {
       }
       {
         hasNext && (
-          <div
-            className="sendbird-channel-settings-accordion__footer"
-          >
+          <div className="sendbird-channel-settings-accordion__footer">
             <Button
               type={ButtonTypes.SECONDARY}
               size={ButtonSizes.SMALL}
@@ -95,6 +102,7 @@ export const BannedMemberList = (): ReactElement => {
               setShowModal(false);
               refreshList();
             }}
+            renderUserListItem={renderUserListItem}
           />
         )
       }
@@ -102,4 +110,6 @@ export const BannedMemberList = (): ReactElement => {
   );
 };
 
-export default BannedMemberList;
+/** @deprecated Use the BannedUserList instead */
+export const BannedMemberList = BannedUserList; // For legacy
+export default BannedUserList;

@@ -1,6 +1,6 @@
 import './channel-settings-ui.scss';
 
-import React, { useContext, useState } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
@@ -17,6 +17,7 @@ import { deleteNullish, classnames } from '../../../../utils/utils';
 import MenuItem from './MenuItem';
 import MenuListByRole from './MenuListByRole';
 import useMenuItems from './hooks/useMenuItems';
+import { UserListItemProps } from '../../../../ui/UserListItem';
 
 interface ModerationPanelProps {
   menuItems: ReturnType<typeof useMenuItems>;
@@ -28,10 +29,11 @@ export interface ChannelSettingsUIProps {
   renderLeaveChannel?: () => React.ReactElement;
   renderPlaceholderError?: () => React.ReactElement;
   renderPlaceholderLoading?: () => React.ReactElement;
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
 }
 
 const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
-  const menuItems = useMenuItems();
+  const menuItems = useMenuItems({ renderUserListItem: props?.renderUserListItem });
   const {
     renderHeader = (props: ChannelSettingsHeaderProps) => <ChannelSettingsHeader {...props} />,
     renderLeaveChannel,
@@ -114,3 +116,7 @@ const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
 };
 
 export default ChannelSettingsUI;
+export { OperatorList } from '../ModerationPanel/OperatorList';
+export { MemberList } from '../ModerationPanel/MemberList';
+export { MutedMemberList } from '../ModerationPanel/MutedMemberList';
+export { BannedUserList } from '../ModerationPanel/BannedUserList';

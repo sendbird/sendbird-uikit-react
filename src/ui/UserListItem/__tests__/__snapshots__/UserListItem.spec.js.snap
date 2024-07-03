@@ -3,7 +3,7 @@
 exports[`ui/UserListItem should do a snapshot test of the UserListItem DOM 1`] = `
 <DocumentFragment>
   <div
-    class=" sendbird-user-list-item"
+    class="sendbird-user-list-item"
   >
     <div
       class="sendbird-context-menu"

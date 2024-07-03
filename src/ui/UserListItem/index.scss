@@ -77,3 +77,88 @@
     }
   }
 }
+
+.sendbird-user-list-item--small {
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+  height: 40px;
+  padding-left: 12px;
+
+  .sendbird-user-list-item--small__avatar {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+  }
+
+  .sendbird-muted-avatar {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    pointer-events: none;
+  }
+
+  .sendbird-user-list-item--small__title {
+    position: absolute;
+    top: 10px;
+    left: 54px;
+    width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sendbird-user-list-item--small__subtitle {
+    position: absolute;
+    top: 14px;
+    left: 140px;
+    max-width: 237px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    @include mobile() {
+      max-width: 40%;
+    }
+  }
+
+  .sendbird-user-list-item--small__checkbox {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+
+  .sendbird-user-list-item--small__action {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 4px;
+  }
+
+  .sendbird-user-list-item--small__operator {
+    position: absolute;
+    right: 24px;
+    top: 10px;
+  }
+
+  &:hover,
+  &.sendbird-icon--pressed {
+    @include themed() {
+      background-color: t(bg-1);
+    }
+    .sendbird-user-list-item--small__action {
+      display: block;
+    }
+
+    .sendbird-user-list-item--small__operator {
+      display: none;
+    }
+  }
+
+  &.sendbird-icon--pressed {
+    .sendbird-iconbutton {
+      @include themed() {
+        background-color: t(primary--1-bg--7);
+      }
+    }
+  }
+}

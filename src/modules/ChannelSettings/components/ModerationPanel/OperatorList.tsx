@@ -4,6 +4,7 @@ import React, {
   useState,
   useCallback,
   useContext,
+  ReactNode,
 } from 'react';
 import type { User } from '@sendbird/chat';
 
@@ -13,11 +14,16 @@ import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import UserListItemMenu from '../../../../ui/UserListItemMenu/UserListItemMenu';
 
-import UserListItem from '../UserListItem';
+import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 import OperatorsModal from './OperatorsModal';
 import AddOperatorsModal from './AddOperatorsModal';
 
-export const OperatorList = (): ReactElement => {
+interface OperatorListProps {
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
+}
+export const OperatorList = ({
+  renderUserListItem = (props) => <UserListItem {...props} />,
+}: OperatorListProps): ReactElement => {
   const [operators, setOperators] = useState<User[]>([]);
   const [showMore, setShowMore] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
@@ -42,11 +48,13 @@ export const OperatorList = (): ReactElement => {
     <>
       {
         operators.map((operator) => (
-          <UserListItem
-            key={operator.userId}
-            user={operator}
-            channel={channel}
-            renderListItemMenu={(props) => (
+          renderUserListItem({
+            key: operator.userId,
+            user: operator,
+            channel,
+            size: 'small',
+            avatarSize: '24px',
+            renderListItemMenu: (props) => (
               <UserListItemMenu {...props}
                 /**
                  * isOperator:
@@ -63,8 +71,8 @@ export const OperatorList = (): ReactElement => {
                 }}
                 renderMenuItems={({ items }) => (<items.OperatorToggleMenuItem />)}
               />
-            )}
-          />
+            ),
+          })
         ))
       }
       <div className="sendbird-channel-settings-accordion__footer">
@@ -93,10 +101,13 @@ export const OperatorList = (): ReactElement => {
       </div>
       {
         showMore && (
-          <OperatorsModal onCancel={() => {
-            setShowMore(false);
-            refreshList();
-          }} />
+          <OperatorsModal
+            onCancel={() => {
+              setShowMore(false);
+              refreshList();
+            }}
+            renderUserListItem={renderUserListItem}
+          />
         )
       }
       {
@@ -112,6 +123,7 @@ export const OperatorList = (): ReactElement => {
               }, 500);
               setShowAdd(false);
             }}
+            renderUserListItem={renderUserListItem}
           />
         )
       }

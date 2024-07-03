@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useContext, useState } from 'react';
+import React, { useMemo, useEffect, useContext, useState, ReactNode } from 'react';
 
 import OperatorList from '../../ModerationPanel/OperatorList';
 import MemberList from '../../ModerationPanel/MemberList';
@@ -6,6 +6,8 @@ import BannedUserList from '../../ModerationPanel/BannedUserList';
 import MutedMemberList from '../../ModerationPanel/MutedMemberList';
 
 import { LocalizationContext } from '../../../../../lib/LocalizationContext';
+
+import type { UserListItemProps } from '../../../../../ui/UserListItem';
 import { IconColors, IconTypes, IconProps } from '../../../../../ui/Icon';
 import Badge from '../../../../../ui/Badge';
 import { Toggle } from '../../../../../ui/Toggle';
@@ -50,7 +52,12 @@ const commonLabelProps = {
   type: LabelTypography.SUBTITLE_1,
   color: LabelColors.ONBACKGROUND_1,
 };
-export const useMenuItems = (): MenuItems => {
+
+interface UseMenuItemsParams {
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
+}
+export const useMenuItems = (props?: UseMenuItemsParams): MenuItems => {
+  const { renderUserListItem } = props;
   const [frozen, setFrozen] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
   const { channel } = useChannelSettingsContext();
@@ -67,7 +74,7 @@ export const useMenuItems = (): MenuItems => {
       operators: {
         icon: { ...commonIconProps, type: IconTypes.OPERATOR },
         label: { ...commonLabelProps, children: stringSet.CHANNEL_SETTING__OPERATORS__TITLE },
-        accordionComponent: () => <OperatorList />,
+        accordionComponent: () => <OperatorList renderUserListItem={renderUserListItem} />,
       },
       allUsers: {
         icon: { ...commonIconProps, type: IconTypes.MEMBERS },
@@ -80,17 +87,17 @@ export const useMenuItems = (): MenuItems => {
             />
           </div>
         ),
-        accordionComponent: () => <MemberList />,
+        accordionComponent: () => <MemberList renderUserListItem={renderUserListItem} />,
       },
       mutedUsers: {
         icon: { ...commonIconProps, type: IconTypes.MUTE },
         label: { ...commonLabelProps, children: stringSet.CHANNEL_SETTING__MUTED_MEMBERS__TITLE },
-        accordionComponent: () => <MutedMemberList />,
+        accordionComponent: () => <MutedMemberList renderUserListItem={renderUserListItem} />,
       },
       bannedUsers: {
         icon: { ...commonIconProps, type: IconTypes.BAN },
         label: { ...commonLabelProps, children: stringSet.CHANNEL_SETTING__BANNED_MEMBERS__TITLE },
-        accordionComponent: () => <BannedUserList />,
+        accordionComponent: () => <BannedUserList renderUserListItem={renderUserListItem} />,
       },
       freezeChannel: {
         hideMenu: channel?.isBroadcast,
@@ -125,7 +132,7 @@ export const useMenuItems = (): MenuItems => {
             />
           </div>
         ),
-        accordionComponent: () => <MemberList />,
+        accordionComponent: () => <MemberList renderUserListItem={renderUserListItem} />,
       },
     } }), [channel?.url, frozen]);
 };

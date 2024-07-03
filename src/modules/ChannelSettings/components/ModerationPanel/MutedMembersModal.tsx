@@ -1,11 +1,12 @@
 import React, {
   ReactElement,
+  ReactNode,
   useEffect,
   useState,
 } from 'react';
 
 import Modal from '../../../../ui/Modal';
-import UserListItem from '../../../../ui/UserListItem';
+import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
@@ -13,13 +14,15 @@ import { Member, MemberListQuery } from '@sendbird/chat/groupChannel';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
-interface Props {
+export interface MutedMembersModalProps {
   onCancel(): void;
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
 }
 
-export default function MutedMembersModal({
+export function MutedMembersModal({
   onCancel,
-}: Props): ReactElement {
+  renderUserListItem = (props) => <UserListItem {...props} />,
+}: MutedMembersModalProps): ReactElement {
   const [members, setMembers] = useState<Member[]>([]);
   const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
 
@@ -63,11 +66,11 @@ export default function MutedMembersModal({
           })}
         >
           {members.map((member) => (
-            <UserListItem
-              user={member}
-              key={member.userId}
-              channel={channel}
-              renderListItemMenu={(props) => (
+            renderUserListItem({
+              user: member,
+              key: member.userId,
+              channel,
+              renderListItemMenu: (props) => (
                 <UserListItemMenu
                   {...props}
                   onToggleMuteState={() => {
@@ -77,11 +80,13 @@ export default function MutedMembersModal({
                   }}
                   renderMenuItems={({ items }) => (<items.MuteToggleMenuItem />)}
                 />
-              )}
-            />
+              ),
+            })
           ))}
         </div>
       </Modal>
     </div>
   );
 }
+
+export default MutedMembersModal;
