@@ -13,7 +13,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import ChannelProfile from '../ChannelProfile';
 import LeaveChannelModal from '../LeaveChannel';
-import { deleteNullish } from '../../../../utils/utils';
+import { deleteNullish, classnames } from '../../../../utils/utils';
 import MenuItem from './MenuItem';
 import MenuListByRole from './MenuListByRole';
 import useMenuItems from './hooks/useMenuItems';
@@ -72,7 +72,7 @@ const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
         {renderModerationPanel?.({ menuItems })}
         {renderLeaveChannel?.() || (
           <MenuItem
-            className={!isOnline ? 'sendbird-channel-settings__panel-item__disabled' : ''}
+            className={classnames(!isOnline ? 'sendbird-channel-settings__panel-item__disabled' : '', 'sendbird-channel-settings__panel-item__leave-channel')}
             onKeyDown={() => {
               if (!isOnline) return;
               setShowLeaveChannelModal(true);
