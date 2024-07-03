@@ -60,6 +60,8 @@ export const MemberList = ({
             key: member.userId,
             user: member,
             channel,
+            size: 'small',
+            avatarSize: '24px',
             renderListItemMenu: (props) => (
               <UserListItemMenu {...props}
                 onToggleOperatorState={({ newStatus: isOperator }) => {

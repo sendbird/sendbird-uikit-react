@@ -15,6 +15,7 @@ import ContextMenu, { MenuItems } from '../ContextMenu';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import { UserListItemMenuProps } from '../UserListItemMenu/UserListItemMenu';
 import { classnames } from '../../utils/utils';
+import pxToNumber from '../../utils/pxToNumber';
 
 export interface UserListItemProps {
   user: User | Member;
@@ -82,7 +83,7 @@ export function UserListItem({
       key={key}
     >
       {(user as Member)?.isMuted && (
-        <MutedAvatarOverlay height={40} width={40} />
+        <MutedAvatarOverlay height={pxToNumber(avatarSize)} width={pxToNumber(avatarSize)} />
       )}
       <ContextMenu
         menuTrigger={(toggleDropdown) => (
@@ -160,7 +161,7 @@ export function UserListItem({
       )}
       {operator && (
         <Label
-          className={[operatorClassName, checkBox ? 'checkbox' : ''].join(' ')}
+          className={classnames(operatorClassName, checkBox && 'checkbox')}
           type={LabelTypography.SUBTITLE_2}
           color={LabelColors.ONBACKGROUND_2}
         >

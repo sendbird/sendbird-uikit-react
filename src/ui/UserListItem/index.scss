@@ -110,13 +110,13 @@
 
   .sendbird-user-list-item--small__subtitle {
     position: absolute;
-    top: 23px;
+    top: 14px;
     left: 140px;
     max-width: 237px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    @include mobile () {
+    @include mobile() {
       max-width: 40%;
     }
   }

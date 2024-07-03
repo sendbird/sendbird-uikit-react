@@ -56,6 +56,8 @@ export const OperatorList = ({
             key: operator.userId,
             user: operator,
             channel,
+            size: 'small',
+            avatarSize: '24px',
             renderListItemMenu: (props) => (
               <UserListItemMenu {...props}
                 /**
