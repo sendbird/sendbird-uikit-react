@@ -1,0 +1,8 @@
+#storybook-docs .innerZoomElementWrapper>* {
+  border: 0px !important;
+  /*
+   * Storybook automatically uses this class name to set the sample app's border to 10px.
+   * This interferes with the logic that calculates the positions of context menus within the UIKit.
+   * Therefore, it is better to keep this border's value at 0px.
+   */
+}
