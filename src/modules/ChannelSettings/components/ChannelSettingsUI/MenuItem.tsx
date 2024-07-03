@@ -1,5 +1,4 @@
 import React, {
-  MouseEvent,
   ReactNode,
   useState,
 } from 'react';

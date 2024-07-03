@@ -105,6 +105,7 @@ export const MutedMemberList = ({
               setShowModal(false);
               refreshList();
             },
+            renderUserListItem,
           })
         )
       }

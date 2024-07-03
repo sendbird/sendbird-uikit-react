@@ -1,7 +1,8 @@
 import '../ModerationPanel/admin-panel.scss';
 
-import React from 'react';
+import React, { type ReactNode } from 'react';
 
+import type { UserListItemProps } from '../../../../ui/UserListItem';
 import Label from '../../../../ui/Label';
 import Icon from '../../../../ui/Icon';
 import { isOperator } from '../../../Channel/context/utils';
@@ -10,7 +11,14 @@ import MenuItem from './MenuItem';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useMenuItems from './hooks/useMenuItems';
 
-const MenuListByRole = ({ menuItems }: { menuItems: ReturnType<typeof useMenuItems> }) => {
+interface MenuListByRoleProps {
+  menuItems: ReturnType<typeof useMenuItems>;
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
+}
+export const MenuListByRole = ({
+  menuItems,
+
+}: MenuListByRoleProps) => {
   const { channel } = useChannelSettingsContext();
   const menuItemsByRole = isOperator(channel) ? menuItems.operator : menuItems.nonOperator;
 

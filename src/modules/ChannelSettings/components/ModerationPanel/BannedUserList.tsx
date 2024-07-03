@@ -104,6 +104,7 @@ export const BannedUserList = ({
               setShowModal(false);
               refreshList();
             },
+            renderUserListItem,
           })
         )
       }

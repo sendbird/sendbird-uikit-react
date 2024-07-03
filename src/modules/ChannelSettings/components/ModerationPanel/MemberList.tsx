@@ -122,6 +122,7 @@ export const MemberList = ({
               refreshList();
               forceUpdateUI();
             },
+            renderUserListItem,
           })
         )
       }
@@ -134,6 +135,7 @@ export const MemberList = ({
               refreshList();
               forceUpdateUI();
             },
+            renderUserListItem,
           })
         )
       }

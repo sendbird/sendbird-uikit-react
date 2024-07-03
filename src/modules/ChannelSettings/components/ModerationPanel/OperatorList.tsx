@@ -110,6 +110,7 @@ export const OperatorList = ({
               setShowMore(false);
               refreshList();
             },
+            renderUserListItem,
           })
         )
       }
@@ -126,6 +127,7 @@ export const OperatorList = ({
               }, 500);
               setShowAdd(false);
             },
+            renderUserListItem,
           })
         )
       }
