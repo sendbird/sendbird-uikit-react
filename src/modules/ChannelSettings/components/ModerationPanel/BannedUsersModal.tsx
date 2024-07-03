@@ -1,11 +1,12 @@
 import React, {
   ReactElement,
+  ReactNode,
   useEffect,
   useState,
 } from 'react';
 
 import Modal from '../../../../ui/Modal';
-import UserListItem from '../../../../ui/UserListItem';
+import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 
 import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
@@ -14,13 +15,15 @@ import { BannedUserListQuery, RestrictedUser } from '@sendbird/chat';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
-interface Props {
+export interface BannedUsersModalProps {
   onCancel(): void;
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
 }
 
 export default function BannedUsersModal({
   onCancel,
-}: Props): ReactElement {
+  renderUserListItem = (props) => <UserListItem {...props} />,
+}: BannedUsersModalProps): ReactElement {
   const [members, setMembers] = useState<RestrictedUser[]>([]);
   const [memberQuery, setMemberQuery] = useState<BannedUserListQuery | null>(null);
   const { channel } = useChannelSettingsContext();
@@ -62,11 +65,11 @@ export default function BannedUsersModal({
           })}
         >
           {members.map((member) => (
-            <UserListItem
-              user={member}
-              key={member.userId}
-              channel={channel}
-              renderListItemMenu={(props) => (
+            renderUserListItem({
+              user: member,
+              key: member.userId,
+              channel,
+              renderListItemMenu: (props) => (
                 <UserListItemMenu
                   {...props}
                   isBanned
@@ -77,8 +80,8 @@ export default function BannedUsersModal({
                   }}
                   renderMenuItems={({ items }) => <items.BanToggleMenuItem />}
                 />
-              )}
-            />
+              ),
+            })
           ))}
         </div>
       </Modal>

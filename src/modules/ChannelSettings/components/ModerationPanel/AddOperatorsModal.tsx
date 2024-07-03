@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useState,
   useContext,
+  ReactNode,
 } from 'react';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
@@ -12,20 +13,22 @@ import Label, {
   LabelColors,
 } from '../../../../ui/Label';
 import { ButtonTypes } from '../../../../ui/Button';
-import UserListItem from '../../../../ui/UserListItem';
+import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { Member, MemberListQuery, OperatorFilter } from '@sendbird/chat/groupChannel';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
-interface Props {
+export interface AddOperatorsModalProps {
   onCancel(): void;
   onSubmit(members: Array<string>): void;
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
 }
 
 export default function AddOperatorsModal({
   onCancel,
   onSubmit,
-}: Props): ReactElement {
+  renderUserListItem = (props) => <UserListItem {...props} />,
+}: AddOperatorsModalProps): ReactElement {
   const [members, setMembers] = useState<Member[]>([]);
   const [selectedMembers, setSelectedMembers] = useState({});
   const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
@@ -84,25 +87,23 @@ export default function AddOperatorsModal({
         >
           {
             members.map((member) => (
-              <UserListItem
-                user={member}
-                key={member.userId}
-                checkBox
-                checked={selectedMembers[member.userId]}
-                disabled={member?.role === 'operator'}
-                onChange={
-                  (event) => {
-                    const modifiedSelectedMembers = {
-                      ...selectedMembers,
-                      [event.target.id]: event.target.checked,
-                    };
-                    if (!event.target.checked) {
-                      delete modifiedSelectedMembers[event.target.id];
-                    }
-                    setSelectedMembers(modifiedSelectedMembers);
+              renderUserListItem({
+                user: member,
+                key: member.userId,
+                checkBox: true,
+                checked: selectedMembers[member.userId],
+                disabled: member?.role === 'operator',
+                onChange: (event) => {
+                  const modifiedSelectedMembers = {
+                    ...selectedMembers,
+                    [event.target.id]: event.target.checked,
+                  };
+                  if (!event.target.checked) {
+                    delete modifiedSelectedMembers[event.target.id];
                   }
-                }
-              />
+                  setSelectedMembers(modifiedSelectedMembers);
+                },
+              })
             ))
           }
         </div>

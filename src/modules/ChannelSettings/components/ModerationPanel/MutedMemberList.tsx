@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useState,
   useCallback,
+  ReactNode,
 } from 'react';
 import type { Member } from '@sendbird/chat/groupChannel';
 
@@ -12,10 +13,17 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
-import UserListItem from '../UserListItem';
-import MutedMembersModal from './MutedMembersModal';
+import UserListItem, { UserListItemProps } from '../UserListItem';
+import MutedMembersModal, { type MutedMembersModalProps } from './MutedMembersModal';
 
-export const MutedMemberList = (): ReactElement => {
+interface MutedMemberListProps {
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
+  renderMembersModal?: (props: MutedMembersModalProps) => ReactNode;
+}
+export const MutedMemberList = ({
+  renderUserListItem = (props) => <UserListItem {...props} />,
+  renderMembersModal = (props) => <MutedMembersModal {...props} />,
+}: MutedMemberListProps): ReactElement => {
   const [members, setMembers] = useState<Member[]>([]);
   const [hasNext, setHasNext] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -44,11 +52,11 @@ export const MutedMemberList = (): ReactElement => {
     <>
       {
         members.map((member) => (
-          <UserListItem
-            key={member.userId}
-            user={member}
-            channel={channel}
-            renderListItemMenu={(props) => (
+          renderUserListItem({
+            key: member.userId,
+            user: member,
+            channel,
+            renderListItemMenu: (props) => (
               <UserListItemMenu {...props}
                 onToggleMuteState={() => {
                   // Limitation to server-side table update delay.
@@ -58,8 +66,8 @@ export const MutedMemberList = (): ReactElement => {
                 }}
                 renderMenuItems={({ items }) => (<items.MuteToggleMenuItem />)}
               />
-            )}
-          />
+            ),
+          })
         ))
       }
       {
@@ -75,9 +83,7 @@ export const MutedMemberList = (): ReactElement => {
       }
       {
         hasNext && (
-          <div
-            className="sendbird-channel-settings-accordion__footer"
-          >
+          <div className="sendbird-channel-settings-accordion__footer">
             <Button
               type={ButtonTypes.SECONDARY}
               size={ButtonSizes.SMALL}
@@ -92,12 +98,12 @@ export const MutedMemberList = (): ReactElement => {
       }
       {
         showModal && (
-          <MutedMembersModal
-            onCancel={() => {
+          renderMembersModal({
+            onCancel: () => {
               setShowModal(false);
               refreshList();
-            }}
-          />
+            },
+          })
         )
       }
     </>

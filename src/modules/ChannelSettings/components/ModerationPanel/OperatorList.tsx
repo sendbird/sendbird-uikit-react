@@ -4,6 +4,7 @@ import React, {
   useState,
   useCallback,
   useContext,
+  ReactNode,
 } from 'react';
 import type { User } from '@sendbird/chat';
 
@@ -13,11 +14,20 @@ import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import UserListItemMenu from '../../../../ui/UserListItemMenu/UserListItemMenu';
 
-import UserListItem from '../UserListItem';
-import OperatorsModal from './OperatorsModal';
-import AddOperatorsModal from './AddOperatorsModal';
+import UserListItem, { type UserListItemProps } from '../UserListItem';
+import OperatorsModal, { type OperatorsModalProps } from './OperatorsModal';
+import AddOperatorsModal, { type AddOperatorsModalProps } from './AddOperatorsModal';
 
-export const OperatorList = (): ReactElement => {
+interface OperatorListProps {
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
+  renderOperatorsModal?: (props: OperatorsModalProps) => ReactNode;
+  renderAddOperatorsModal?: (props: AddOperatorsModalProps) => ReactNode;
+}
+export const OperatorList = ({
+  renderUserListItem = (props) => <UserListItem {...props} />,
+  renderOperatorsModal = (props) => <OperatorsModal {...props} />,
+  renderAddOperatorsModal = (props) => <AddOperatorsModal {...props} />,
+}: OperatorListProps): ReactElement => {
   const [operators, setOperators] = useState<User[]>([]);
   const [showMore, setShowMore] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
@@ -42,11 +52,11 @@ export const OperatorList = (): ReactElement => {
     <>
       {
         operators.map((operator) => (
-          <UserListItem
-            key={operator.userId}
-            user={operator}
-            channel={channel}
-            renderListItemMenu={(props) => (
+          renderUserListItem({
+            key: operator.userId,
+            user: operator,
+            channel,
+            renderListItemMenu: (props) => (
               <UserListItemMenu {...props}
                 /**
                  * isOperator:
@@ -63,8 +73,8 @@ export const OperatorList = (): ReactElement => {
                 }}
                 renderMenuItems={({ items }) => (<items.OperatorToggleMenuItem />)}
               />
-            )}
-          />
+            ),
+          })
         ))
       }
       <div className="sendbird-channel-settings-accordion__footer">
@@ -93,17 +103,19 @@ export const OperatorList = (): ReactElement => {
       </div>
       {
         showMore && (
-          <OperatorsModal onCancel={() => {
-            setShowMore(false);
-            refreshList();
-          }} />
+          renderOperatorsModal({
+            onCancel: () => {
+              setShowMore(false);
+              refreshList();
+            },
+          })
         )
       }
       {
         showAdd && (
-          <AddOperatorsModal
-            onCancel={() => setShowAdd(false)}
-            onSubmit={() => {
+          renderAddOperatorsModal({
+            onCancel: () => setShowAdd(false),
+            onSubmit: () => {
               /**
                * Limitation to server-side table update delay.
                */
@@ -111,8 +123,8 @@ export const OperatorList = (): ReactElement => {
                 refreshList();
               }, 500);
               setShowAdd(false);
-            }}
-          />
+            },
+          })
         )
       }
     </>

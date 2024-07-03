@@ -4,6 +4,7 @@ import React, {
   useState,
   useCallback,
   useContext,
+  ReactNode,
 } from 'react';
 import type { Member } from '@sendbird/chat/groupChannel';
 import { Role } from '@sendbird/chat';
@@ -14,11 +15,20 @@ import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
-import UserListItem from '../UserListItem';
-import MembersModal from './MembersModal';
-import InviteUsers from './InviteUsersModal';
+import UserListItem, { type UserListItemProps } from '../UserListItem';
+import MembersModal, { type MembersModalProps } from './MembersModal';
+import InviteUsers, { type InviteUsersModalProps } from './InviteUsersModal';
 
-export const MemberList = (): ReactElement => {
+interface MemberListProps {
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
+  renderMembersModal?: (props: MembersModalProps) => ReactNode;
+  renderInviteUsersModal?: (props: InviteUsersModalProps) => ReactNode;
+}
+export const MemberList = ({
+  renderUserListItem = (props) => <UserListItem {...props} />,
+  renderMembersModal = (props) => <MembersModal {...props} />,
+  renderInviteUsersModal = (props) => <InviteUsers {...props} />,
+}: MemberListProps): ReactElement => {
   const [members, setMembers] = useState<Array<Member>>([]);
   const [hasNext, setHasNext] = useState(false);
   const [showAllMembers, setShowAllMembers] = useState(false);
@@ -46,11 +56,11 @@ export const MemberList = (): ReactElement => {
     <div className="sendbird-channel-settings-member-list">
       {
         members.map((member) => (
-          <UserListItem
-            key={member.userId}
-            user={member}
-            channel={channel}
-            renderListItemMenu={(props) => (
+          renderUserListItem({
+            key: member.userId,
+            user: member,
+            channel,
+            renderListItemMenu: (props) => (
               <UserListItemMenu {...props}
                 onToggleOperatorState={({ newStatus: isOperator }) => {
                   const newMembers = [...members];
@@ -78,8 +88,8 @@ export const MemberList = (): ReactElement => {
                   }));
                 }}
               />
-            )}
-          />
+            ),
+          })
         ))
       }
       <div className="sendbird-channel-settings-accordion__footer">
@@ -104,25 +114,25 @@ export const MemberList = (): ReactElement => {
       </div>
       {
         showAllMembers && (
-          <MembersModal
-            onCancel={() => {
+          renderMembersModal({
+            onCancel: () => {
               setShowAllMembers(false);
               refreshList();
               forceUpdateUI();
-            }}
-          />
+            },
+          })
         )
       }
       {
         showInviteUsers && (
-          <InviteUsers
-            onSubmit={() => {
+          renderInviteUsersModal({
+            onCancel: () => setShowInviteUsers(false),
+            onSubmit: () => {
               setShowInviteUsers(false);
               refreshList();
               forceUpdateUI();
-            }}
-            onCancel={() => setShowInviteUsers(false)}
-          />
+            },
+          })
         )
       }
     </div>

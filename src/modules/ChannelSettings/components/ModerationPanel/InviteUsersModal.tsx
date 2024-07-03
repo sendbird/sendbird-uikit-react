@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { ReactNode, useEffect, useMemo, useState } from 'react';
 import { User } from '@sendbird/chat';
 
 import Modal from '../../../../ui/Modal';
 import { ButtonTypes } from '../../../../ui/Button';
-import UserListItem from '../../../../ui/UserListItem';
+import UserListItem, { type UserListItemProps } from '../../../../ui/UserListItem';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
@@ -11,12 +11,17 @@ import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScroll
 import { UserListQuery } from '../../../../types';
 
 type UserId = string;
-interface Props {
+export interface InviteUsersModalProps {
   onCancel(): void;
   onSubmit(userIds: UserId[]): void;
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
 }
 
-export default function InviteUsers({ onCancel, onSubmit }: Props) {
+export function InviteUsersModal({
+  onCancel,
+  onSubmit,
+  renderUserListItem = (props) => <UserListItem {...props} />,
+}: InviteUsersModalProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [userListQuery, setUserListQuery] = useState<UserListQuery | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<Record<UserId, User>>({});
@@ -97,16 +102,14 @@ export default function InviteUsers({ onCancel, onSubmit }: Props) {
             {users.map((user) => {
               const isMember = Boolean(membersMap ? membersMap[user.userId] : false);
               const isSelected = Boolean(selectedUsers[user.userId]);
-              return (
-                <UserListItem
-                  key={user.userId}
-                  user={user}
-                  checkBox
-                  checked={isMember || isSelected}
-                  disabled={isMember}
-                  onChange={() => onSelectUser(user)}
-                />
-              );
+              return renderUserListItem({
+                key: user.userId,
+                user,
+                checkBox: true,
+                checked: isMember || isSelected,
+                disabled: isMember,
+                onChange: () => onSelectUser(user),
+              });
             })}
           </div>
         </div>
@@ -114,3 +117,5 @@ export default function InviteUsers({ onCancel, onSubmit }: Props) {
     </div>
   );
 }
+
+export default InviteUsersModal;

@@ -20,9 +20,10 @@ interface ActionProps {
   parentRef: React.RefObject<HTMLInputElement>;
 }
 
-interface Props {
+export interface UserListItemProps {
   user: User | Member;
   channel: GroupChannel;
+  key?: string | number;
   /** @deprecated Doesn't need to fill this props */
   currentUser?: string;
   className?: string;
@@ -38,10 +39,11 @@ interface Props {
 const UserListItem = ({
   user,
   channel,
+  key,
   className = '',
   action,
   renderListItemMenu,
-}: Props): ReactElement => {
+}: UserListItemProps): ReactElement => {
   const { config } = useSendbirdStateContext();
   const currentUser = config.userId;
   const actionRef = useRef(null);
@@ -53,6 +55,7 @@ const UserListItem = ({
   return (
     <div
       ref={parentRef}
+      key={key}
       className={[
         'sendbird-user-list-item--small', ...injectingClassNames,
       ].join(' ')}

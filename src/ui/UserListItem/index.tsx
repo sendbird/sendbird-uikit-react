@@ -18,6 +18,7 @@ import { UserListItemMenuProps } from '../UserListItemMenu/UserListItemMenu';
 export interface UserListItemProps {
   user: User | Member;
   channel?: GroupChannel;
+  key?: string | number;
   className?: string;
   checked?: boolean;
   checkBox?: boolean;
@@ -46,6 +47,7 @@ export interface UserListItemProps {
 export default function UserListItem({
   user,
   channel,
+  key,
   className,
   checked,
   checkBox,
@@ -76,6 +78,7 @@ export default function UserListItem({
         'sendbird-user-list-item',
       ].join(' ')}
       ref={parentRef}
+      key={key}
     >
       {(user as Member)?.isMuted && (
         <MutedAvatarOverlay height={40} width={40} />

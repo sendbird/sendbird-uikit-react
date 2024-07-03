@@ -1,12 +1,13 @@
 import React, {
   ReactElement,
+  ReactNode,
   useContext,
   useEffect,
   useState,
 } from 'react';
 
 import Modal from '../../../../ui/Modal';
-import UserListItem from '../../../../ui/UserListItem';
+import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
@@ -14,9 +15,15 @@ import { OperatorListQuery, User } from '@sendbird/chat';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
-interface Props { onCancel?(): void }
+export interface OperatorsModalProps {
+  onCancel?(): void;
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
+}
 
-export default function OperatorsModal({ onCancel }: Props): ReactElement {
+export default function OperatorsModal({
+  onCancel,
+  renderUserListItem = (props) => <UserListItem {...props} />,
+}: OperatorsModalProps): ReactElement {
   const [operators, setOperators] = useState<User[]>([]);
   const [operatorQuery, setOperatorQuery] = useState<OperatorListQuery | null>(null);
 
@@ -56,25 +63,23 @@ export default function OperatorsModal({ onCancel }: Props): ReactElement {
           })}
         >
           {operators.map((member) => (
-            <UserListItem
-              user={member}
-              key={member.userId}
-              channel={channel}
-              renderListItemMenu={(props) => (
+            renderUserListItem({
+              key: member.userId,
+              user: member,
+              channel,
+              renderListItemMenu: (props) => (
                 <UserListItemMenu
                   {...props}
                   isOperator
                   onToggleOperatorState={({ user }) => {
-                    setOperators(operators.filter(({ userId }) => {
-                      return userId !== user.userId;
-                    }));
+                    setOperators(operators.filter(({ userId }) => userId !== user.userId));
                   }}
                   renderMenuItems={({ items }) => (
                     <items.OperatorToggleMenuItem />
                   )}
                 />
-              )}
-            />
+              ),
+            })
           ))}
         </div>
       </Modal>
