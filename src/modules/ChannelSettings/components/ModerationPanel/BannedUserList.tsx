@@ -26,7 +26,7 @@ interface BannedUserListProps {
   renderBannedUsersModal?: (props: BannedUsersModalProps) => ReactNode;
 }
 
-export const BannedMemberList = ({
+export const BannedUserList = ({
   renderUserListItem = (props) => <UserListItem {...props} />,
   renderBannedUsersModal = (props) => <BannedUsersModal {...props} />,
 }: BannedUserListProps): ReactElement => {
@@ -109,4 +109,6 @@ export const BannedMemberList = ({
   );
 };
 
-export default BannedMemberList;
+/** @deprecated Use the BannedUserList instead */
+export const BannedMemberList = BannedUserList; // For legacy
+export default BannedUserList;

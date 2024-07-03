@@ -20,7 +20,7 @@ export interface BannedUsersModalProps {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
 }
 
-export default function BannedUsersModal({
+export function BannedUsersModal({
   onCancel,
   renderUserListItem = (props) => <UserListItem {...props} />,
 }: BannedUsersModalProps): ReactElement {
@@ -88,3 +88,5 @@ export default function BannedUsersModal({
     </div>
   );
 }
+
+export default BannedUsersModal;

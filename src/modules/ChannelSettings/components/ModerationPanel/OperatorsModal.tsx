@@ -20,7 +20,7 @@ export interface OperatorsModalProps {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
 }
 
-export default function OperatorsModal({
+export function OperatorsModal({
   onCancel,
   renderUserListItem = (props) => <UserListItem {...props} />,
 }: OperatorsModalProps): ReactElement {
@@ -86,3 +86,5 @@ export default function OperatorsModal({
     </div>
   );
 }
+
+export default OperatorsModal;

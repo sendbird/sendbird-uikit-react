@@ -114,3 +114,11 @@ const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
 };
 
 export default ChannelSettingsUI;
+export { OperatorList } from '../ModerationPanel/OperatorList';
+export { OperatorsModal } from '../ModerationPanel/OperatorsModal';
+export { MemberList } from '../ModerationPanel/MemberList';
+export { MembersModal } from '../ModerationPanel/MembersModal';
+export { MutedMemberList } from '../ModerationPanel/MutedMemberList';
+export { MutedMembersModal } from '../ModerationPanel/MutedMembersModal';
+export { BannedUserList } from '../ModerationPanel/BannedUserList';
+export { BannedUsersModal } from '../ModerationPanel/BannedUsersModal';

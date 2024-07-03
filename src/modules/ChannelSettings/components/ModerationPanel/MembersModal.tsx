@@ -22,7 +22,7 @@ export interface MembersModalProps {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
 }
 
-export default function MembersModal({
+export function MembersModal({
   onCancel,
   renderUserListItem = (props) => <UserListItem {...props} />,
 }: MembersModalProps): ReactElement {
@@ -107,3 +107,5 @@ export default function MembersModal({
     </div>
   );
 }
+
+export default MembersModal;

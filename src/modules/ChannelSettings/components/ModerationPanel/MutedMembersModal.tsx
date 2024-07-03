@@ -19,7 +19,7 @@ export interface MutedMembersModalProps {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
 }
 
-export default function MutedMembersModal({
+export function MutedMembersModal({
   onCancel,
   renderUserListItem = (props) => <UserListItem {...props} />,
 }: MutedMembersModalProps): ReactElement {
@@ -88,3 +88,5 @@ export default function MutedMembersModal({
     </div>
   );
 }
+
+export default MutedMembersModal;
