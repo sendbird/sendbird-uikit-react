@@ -5,6 +5,16 @@
 ### Features
 - **RTL Support**
   - Added `htmlTextDirection` prop to `SendbirdProvider` to support Right-To-Left (RTL) text direction for Middle East customers. [Read more](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dir).
+  ```tsx
+  import ar from 'date-fns/locale/ar';
+  <SendbirdProvider
+    ...
+    htmlTextDirection={'rtl' | 'ltr'}
+    // Setting a proper value to dateLocale would be necessary
+    dateLocale={ar}
+  >
+  </SendbirdProvider>
+  ```
 
 - **DX Improvements: ChannelSetting SettingMenu**
   - Added new components and hooks to make the menu items in the `ChannelSettingsUI` more modular and customizable.
