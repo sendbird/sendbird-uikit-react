@@ -39,9 +39,6 @@
   .sendbird-button:nth-child(2) {
     margin-left: 8px;
   }
-  @include themed() {
-    border-bottom: 1px solid t(on-bg-4);
-  }
 }
 
 .sendbird-channel-settings__freeze {

@@ -1,6 +1,7 @@
 import '../ModerationPanel/admin-panel.scss';
+import '../UserPanel/user-panel.scss';
 
-import React, { type ReactNode } from 'react';
+import React, { type ReactNode, useState } from 'react';
 
 import type { UserListItemProps } from '../../../../ui/UserListItem';
 import Label from '../../../../ui/Label';
@@ -21,6 +22,8 @@ export const MenuListByRole = ({
 }: MenuListByRoleProps) => {
   const { channel } = useChannelSettingsContext();
   const menuItemsByRole = isOperator(channel) ? menuItems.operator : menuItems.nonOperator;
+  // State to track the open accordion key
+  const [openAccordionKey, setOpenAccordionKey] = useState<string | null>(null);
 
   return (
     <div className="sendbird-channel-settings__operator">
@@ -35,6 +38,10 @@ export const MenuListByRole = ({
             renderMiddle={() => <Label {...item.label} />}
             renderRight={item.rightComponent}
             renderAccordion={item.accordionComponent}
+            accordionOpened={openAccordionKey === key}
+            setAccordionOpened={() => {
+              setOpenAccordionKey((prevKey) => (prevKey === key ? null : key));
+            }}
           />
         );
       })}
