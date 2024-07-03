@@ -57,17 +57,28 @@
     export default CustomChannelSettings;
     ```
 
-- **DX Improvements: ChannelSetting UserListItem**
-  - `UserListItemMenu` has been newly component
+- DX Improvements: ChannelSetting UserListItem
+  - `UserListItemMenu` has been newly created
   - Provided it as a module which also contains `UserListItemMenuProvider` and `useUserListItemMenuContext`
-  - **Example usage:**
     ```tsx
     import { UserListItemMenu, UserListItemMenuProvider, useUserListItemMenuContext } from '@sendbird/uikit-react/ui/UserListItemMenu';
     ```
-    How to use?
+  - Added new `renderUserListItem` props to the list components of `ChannelSettings`:
+    * `OperatorList`, `MemberList`, `MutedMemberList`, `BannedUserList`
+  - Exported the following modules:
+    * `OperatorList`, `MemberList`, `MutedMemberList`, `BannedUserList`
     ```tsx
-    <SomeUserListComponent
-      renderUserListItem={(props) => ( // TODO: will be added
+    import { OperatorList, MemberList, MutedMemberList, BannedUserList } from '@sendbird/uikit-react/ChannelSettings/components/ChannelSettingsUI';
+    ```
+  - Merged `ui/UserListItem` and `ChannelSettings/components/UserListItem`:
+    * Use `ui/UserListItem` from now on
+    * Added `size` prop to `UserListItem`, which now accepts two values: 'normal' and 'small' ('small' replaces the previous `ChannelSettings/components/UserListItem`)
+      * `normal`: Used primarily in Modals
+      * `small`: Used primarily in Lists
+  - **Example usage:**
+    ```tsx
+    <ChannelSettings
+      renderUserListItem={(props) => (
         <UserListItem {...props}
           renderListItemMenu={(props) => (
             <UserListItemMenu
@@ -93,6 +104,11 @@
 ### Fixes
 - Fixed image file viewer header style 
 - Disabled `isSuperGroupReactionsEnabled` setter
+- Use `APP_LAYOUT_ROOT` to get the area info of the UIKit
+  ```tsx
+  export const APP_LAYOUT_ROOT = 'sendbird-app__layout';
+  ```
+  * To ensure the menu positions are calculated correctly, wrap the entire area using `SendbirdProvider` with a tag that has the specified ID.
 
 ### Chore
 - Updated `@sendbird/chat` version to 4.13.0
