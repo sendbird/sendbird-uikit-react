@@ -82,24 +82,27 @@ export function UserListItem({
       ref={parentRef}
       key={key}
     >
-      {(user as Member)?.isMuted && (
-        <MutedAvatarOverlay height={pxToNumber(avatarSize)} width={pxToNumber(avatarSize)} />
-      )}
+
       <ContextMenu
         menuTrigger={(toggleDropdown) => (
-          <Avatar
-            className={avatarClassName}
-            ref={avatarRef}
-            src={user?.profileUrl || user?.plainProfileUrl || ''}
-            width={avatarSize}
-            height={avatarSize}
-            onClick={() => {
-              if (!disableUserProfile) {
-                toggleDropdown();
-                (onUserAvatarClick ?? onClick)?.();
-              }
-            }}
-          />
+          <>
+            <Avatar
+              className={avatarClassName}
+              ref={avatarRef}
+              src={user?.profileUrl || user?.plainProfileUrl || ''}
+              width={avatarSize}
+              height={avatarSize}
+              onClick={() => {
+                if (!disableUserProfile) {
+                  toggleDropdown();
+                  (onUserAvatarClick ?? onClick)?.();
+                }
+              }}
+            />
+            {(user as Member)?.isMuted && (
+              <MutedAvatarOverlay height={pxToNumber(avatarSize)} width={pxToNumber(avatarSize)} />
+            )}
+          </>
         )}
         menuItems={(closeDropdown) => (
           renderUserProfile
