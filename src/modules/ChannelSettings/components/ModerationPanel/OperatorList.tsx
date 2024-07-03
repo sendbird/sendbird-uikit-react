@@ -14,7 +14,7 @@ import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import UserListItemMenu from '../../../../ui/UserListItemMenu/UserListItemMenu';
 
-import UserListItem, { type UserListItemProps } from '../UserListItem';
+import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 import OperatorsModal, { type OperatorsModalProps } from './OperatorsModal';
 import AddOperatorsModal, { type AddOperatorsModalProps } from './AddOperatorsModal';
 

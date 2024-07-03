@@ -15,7 +15,7 @@ Label, {
   LabelColors,
 } from '../../../../ui/Label';
 
-import UserListItem, { UserListItemProps } from '../UserListItem';
+import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 import BannedUsersModal, { type BannedUsersModalProps } from './BannedUsersModal';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';

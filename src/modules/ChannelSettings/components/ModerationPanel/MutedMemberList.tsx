@@ -13,7 +13,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
-import UserListItem, { UserListItemProps } from '../UserListItem';
+import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 import MutedMembersModal, { type MutedMembersModalProps } from './MutedMembersModal';
 
 interface MutedMemberListProps {
