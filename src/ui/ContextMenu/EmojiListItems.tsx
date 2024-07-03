@@ -87,7 +87,7 @@ export const EmojiListItems = ({
       reactionStyle.left -= rect.width / 2;
       reactionStyle.left += (parentRect.height / 2) - 2;
       reactionStyle.left += spaceFromTriggerX;
-      const maximumLeft = window.innerWidth - rect.width;
+      const maximumLeft = portalRect.width - rect.width;
       if (maximumLeft < reactionStyle.left) {
         reactionStyle.left = maximumLeft;
       }
