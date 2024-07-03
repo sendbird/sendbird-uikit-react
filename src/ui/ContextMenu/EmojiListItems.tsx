@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import SortByRow from '../SortByRow';
 import { Nullable } from '../../types';
 import { EMOJI_MENU_ROOT_ID, MENU_OBSERVING_CLASS_NAME } from '.';
+import { APP_LAYOUT_ROOT } from '../../modules/App/const';
 
 const defaultParentRect = { x: 0, y: 0, left: 0, top: 0, height: 0 };
 type SpaceFromTrigger = { x: number, y: number };
@@ -57,10 +58,14 @@ export const EmojiListItems = ({
   useEffect(() => {
     const spaceFromTriggerX = spaceFromTrigger?.x || 0;
     const spaceFromTriggerY = spaceFromTrigger?.y || 0;
-    const portalElement = document.getElementById('sendbird-uikit-area');
-    const portalRect = portalElement?.getBoundingClientRect?.();
+    const portalElement = document.getElementById(APP_LAYOUT_ROOT);
+    const portalRect = portalElement?.getBoundingClientRect?.() || {
+      top: 0,
+      left: 0,
+      width: window.innerWidth,
+      height: window.innerHeight,
+    } as DOMRect;
     const parentRect = parentRef?.current?.getBoundingClientRect() ?? defaultParentRect;
-    if (!portalElement) return;
 
     const x = (parentRect?.x || parentRect?.left || 0) - portalRect.left;
     const y = (parentRect?.y || parentRect?.top || 0) - portalRect.top;

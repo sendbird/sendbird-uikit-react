@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { classnames } from '../../utils/utils';
 import { MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '.';
+import { APP_LAYOUT_ROOT } from '../../modules/App/const';
 
 interface MenuItemsProps {
   id?: string;
@@ -67,10 +68,14 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
 
   getMenuPosition = (): MenuStyleType => {
     const { parentRef, openLeft } = this.props;
-    const portalElement = document.getElementById('sendbird-uikit-area');
-    const portalRect = portalElement?.getBoundingClientRect?.();
+    const portalElement = document.getElementById(APP_LAYOUT_ROOT);
+    const portalRect = portalElement?.getBoundingClientRect?.() || {
+      top: 0,
+      left: 0,
+      width: window.innerWidth,
+      height: window.innerHeight,
+    } as DOMRect;
     const parentRect = parentRef?.current?.getBoundingClientRect?.();
-    if (!portalElement) return { top: 0, left: 0 };
 
     const x = (parentRect?.x || parentRect?.left || 0) - portalRect.left;
     const y = (parentRect?.y || parentRect?.top || 0) - portalRect.top;

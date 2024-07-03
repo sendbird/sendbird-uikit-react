@@ -403,19 +403,17 @@ const SendbirdSDK = ({
         utils,
       }}
     >
-      <div id="sendbird-uikit-area">{/** To calculate the area being used by Sendbird UIKit */}
-        <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
-          <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
-            <VoiceMessageProvider>
-              <GlobalModalProvider>{children}</GlobalModalProvider>
-            </VoiceMessageProvider>
-          </LocalizationProvider>
-        </MediaQueryProvider>
-        {/* Roots */}
-        <EmojiReactionListRoot />
-        <ModalRoot />
-        <MenuRoot />
-      </div>
+      <MediaQueryProvider logger={logger} breakpoint={breakpoint}>
+        <LocalizationProvider stringSet={localeStringSet} dateLocale={dateLocale}>
+          <VoiceMessageProvider>
+            <GlobalModalProvider>{children}</GlobalModalProvider>
+          </VoiceMessageProvider>
+        </LocalizationProvider>
+      </MediaQueryProvider>
+      {/* Roots */}
+      <EmojiReactionListRoot />
+      <ModalRoot />
+      <MenuRoot />
     </SendbirdSdkContext.Provider>
   );
 };
