@@ -52,21 +52,24 @@ export const BannedUserList = ({
     <>
       {
         members.map((member) => (
-          renderUserListItem({
-            key: member.userId,
-            user: member,
-            channel,
-            size: 'small',
-            avatarSize: '24px',
-            renderListItemMenu: (props) => (
-              <UserListItemMenu
-                {...props}
-                isBanned
-                onToggleBanState={() => refreshList()}
-                renderMenuItems={({ items }) => (<items.BanToggleMenuItem />)}
-              />
-            ),
-          })
+          <React.Fragment key={member.userId}>
+            {
+              renderUserListItem({
+                user: member,
+                channel,
+                size: 'small',
+                avatarSize: '24px',
+                renderListItemMenu: (props) => (
+                  <UserListItemMenu
+                    {...props}
+                    isBanned
+                    onToggleBanState={() => refreshList()}
+                    renderMenuItems={({ items }) => (<items.BanToggleMenuItem />)}
+                  />
+                ),
+              })
+            }
+          </React.Fragment>
         ))
       }
       {

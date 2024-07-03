@@ -66,22 +66,25 @@ export function MutedMembersModal({
           })}
         >
           {members.map((member) => (
-            renderUserListItem({
-              user: member,
-              key: member.userId,
-              channel,
-              renderListItemMenu: (props) => (
-                <UserListItemMenu
-                  {...props}
-                  onToggleMuteState={() => {
-                    setMembers(members.filter(m => {
-                      return (m.userId !== member.userId);
-                    }));
-                  }}
-                  renderMenuItems={({ items }) => (<items.MuteToggleMenuItem />)}
-                />
-              ),
-            })
+            <React.Fragment key={member.userId}>
+              {
+                renderUserListItem({
+                  user: member,
+                  channel,
+                  renderListItemMenu: (props) => (
+                    <UserListItemMenu
+                      {...props}
+                      onToggleMuteState={() => {
+                        setMembers(members.filter(m => {
+                          return (m.userId !== member.userId);
+                        }));
+                      }}
+                      renderMenuItems={({ items }) => (<items.MuteToggleMenuItem />)}
+                    />
+                  ),
+                })
+              }
+            </React.Fragment>
           ))}
         </div>
       </Modal>

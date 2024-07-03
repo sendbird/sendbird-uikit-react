@@ -67,7 +67,6 @@ export function BannedUsersModal({
           {members.map((member) => (
             renderUserListItem({
               user: member,
-              key: member.userId,
               channel,
               renderListItemMenu: (props) => (
                 <UserListItemMenu

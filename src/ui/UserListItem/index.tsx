@@ -20,7 +20,6 @@ import pxToNumber from '../../utils/pxToNumber';
 export interface UserListItemProps {
   user: User | Member;
   channel?: GroupChannel;
-  key?: string | number;
   className?: string;
   checked?: boolean;
   checkBox?: boolean;
@@ -43,7 +42,6 @@ export interface UserListItemProps {
 export function UserListItem({
   user,
   channel,
-  key,
   className = undefined,
   checked,
   checkBox,
@@ -80,7 +78,6 @@ export function UserListItem({
     <div
       className={classnames(itemClassName, ...(Array.isArray(className) ? className : [className]))}
       ref={parentRef}
-      key={key}
     >
 
       <ContextMenu

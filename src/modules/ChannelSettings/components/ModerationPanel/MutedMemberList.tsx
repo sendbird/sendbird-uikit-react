@@ -50,24 +50,27 @@ export const MutedMemberList = ({
     <>
       {
         members.map((member) => (
-          renderUserListItem({
-            key: member.userId,
-            user: member,
-            channel,
-            size: 'small',
-            avatarSize: '24px',
-            renderListItemMenu: (props) => (
-              <UserListItemMenu {...props}
-                onToggleMuteState={() => {
-                  // Limitation to server-side table update delay.
-                  setTimeout(() => {
-                    refreshList();
-                  }, 500);
-                }}
-                renderMenuItems={({ items }) => (<items.MuteToggleMenuItem />)}
-              />
-            ),
-          })
+          <React.Fragment key={member.userId}>
+            {
+              renderUserListItem({
+                user: member,
+                channel,
+                size: 'small',
+                avatarSize: '24px',
+                renderListItemMenu: (props) => (
+                  <UserListItemMenu {...props}
+                    onToggleMuteState={() => {
+                      // Limitation to server-side table update delay.
+                      setTimeout(() => {
+                        refreshList();
+                      }, 500);
+                    }}
+                    renderMenuItems={({ items }) => (<items.MuteToggleMenuItem />)}
+                  />
+                ),
+              })
+            }
+          </React.Fragment>
         ))
       }
       {
