@@ -1,7 +1,5 @@
 import React, {
-  MouseEvent,
   ReactNode,
-  useState,
 } from 'react';
 import Icon, { IconTypes } from '../../../../ui/Icon';
 import { classnames } from '../../../../utils/utils';
@@ -14,6 +12,8 @@ interface Props {
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
+  accordionOpened?: boolean;
+  setAccordionOpened?: (value: boolean) => void;
 }
 
 export const MenuItem = ({
@@ -24,9 +24,10 @@ export const MenuItem = ({
   className,
   onClick,
   onKeyDown,
+  accordionOpened,
+  setAccordionOpened,
 }: Props) => {
-  const useAccordian = typeof renderAccordion === 'function';
-  const [accordianOpened, setAccordianOpened] = useState<boolean>(false);
+  const useAccordion = typeof renderAccordion === 'function';
 
   return (
     <>
@@ -34,43 +35,43 @@ export const MenuItem = ({
         className={classnames('sendbird-channel-settings__panel-item', className)}
         onClick={(e) => {
           onClick?.(e);
-          if (useAccordian) setAccordianOpened((value) => !value);
+          if (useAccordion) setAccordionOpened(!accordionOpened);
         }}
         onKeyDown={(e) => {
           onKeyDown?.(e);
-          if (useAccordian) setAccordianOpened((value) => !value);
+          if (useAccordion) setAccordionOpened(!accordionOpened);
         }}
       >
         {renderLeft()}
         {renderMiddle()}
         {renderRight({
-          useAccordian,
-          accordianOpened,
+          useAccordion,
+          accordionOpened,
         })}
       </div>
-      {accordianOpened && renderAccordion?.()}
+      {accordionOpened && renderAccordion?.()}
     </>
   );
 };
 
 export interface MenuItemActionProps {
-  useAccordian: boolean;
-  accordianOpened: boolean;
+  useAccordion: boolean;
+  accordionOpened: boolean;
   children?: ReactNode;
 }
 export const MenuItemAction = ({
-  useAccordian,
-  accordianOpened,
+  useAccordion,
+  accordionOpened,
   children,
 }: MenuItemActionProps) => {
 
-  return useAccordian
+  return useAccordion
     ? <Icon
         type={IconTypes.CHEVRON_RIGHT}
         className={[
           'sendbird-accordion__panel-icon-right',
           'sendbird-accordion__panel-icon--chevron',
-          (accordianOpened ? 'sendbird-accordion__panel-icon--open' : ''),
+          (accordionOpened ? 'sendbird-accordion__panel-icon--open' : ''),
         ].join(' ')}
         height="24px"
         width="24px"

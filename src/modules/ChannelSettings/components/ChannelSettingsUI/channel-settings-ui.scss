@@ -56,14 +56,22 @@
     position: relative;
     padding: 12px 22px 10px 56px;
     @include themed() {
-      background-color: t(bg-0);
-      border-bottom: 1px solid t(on-bg-4);
+      border-top: 1px solid t(on-bg-4);
+      &:last-child {
+        border-bottom: 1px solid t(on-bg-4);
+      }
     }
     &:focus {
       outline: none;
     }
     &.sendbird-channel-settings__panel-item__disabled {
       cursor: not-allowed;
+    }
+  }
+
+  .sendbird-channel-settings__panel-item__leave-channel {
+    @include themed() {
+      border-top: 0;
     }
   }
 
