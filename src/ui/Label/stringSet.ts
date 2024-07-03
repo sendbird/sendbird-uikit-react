@@ -232,6 +232,9 @@ const stringSet = {
     FEEDBACK_FAILED_SUBMIT: 'Couldn’t submit. Try again.',
     FEEDBACK_FAILED_SAVE: 'Couldn’t save. Try again.',
     FEEDBACK_FAILED_DELETE: 'Couldn’t delete. Try again.',
+    // Form submit failed error messages
+    FORM_ITEM_REQUIRED: 'This field is required',
+    FORM_ITEM_INVALID: 'Please check the value',
   },
 };
 
