@@ -1,5 +1,94 @@
 # Changelog - v3
 
+## [v3.14.12] (July 3, 2024)
+
+### Features
+- **RTL Support**
+  - Added `htmlTextDirection` prop to `SendbirdProvider` to support Right-To-Left (RTL) text direction for Middle East customers. [Read more](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dir).
+
+- **DX Improvements: ChannelSetting SettingMenu**
+  - Added new components and hooks to make the menu items in the `ChannelSettingsUI` more modular and customizable.
+  - New Files:
+    - `useMenuItems.tsx`: Custom hook for menu items based on user roles.
+    - `MenuItem.tsx`: Reusable and customizable menu item component.
+    - `MenuListByRole.tsx`: Renders a list of menu items based on user roles.
+  - **Example usage:**
+    To customize the moderation panel with selected menu items:
+    ```tsx
+    import React from 'react';
+    import ChannelSettingsUI from '@sendbird-uikit/ChannelSettings/components/ChannelSettingsUI';
+    import useMenuItems from '@sendbird-uikit/ChannelSettings/hooks/useMenuList';
+
+    const CustomChannelSettings = () => {
+      const menuItems = useMenuItems();
+
+      const renderCustomModerationPanel = () => {
+        // Create a new object by selecting only the desired menu items.
+        const customMenuItems = {
+          operator: {
+            operators: menuItems.operator.operators, // Keep the operators menu
+            allUsers: menuItems.operator.allUsers, // Keep the all users menu
+            // Add or remove other menu items as needed.
+          },
+          nonOperator: {
+            allUsers: menuItems.nonOperator.allUsers, // Keep the all users menu
+            // Add or remove other menu items as needed.
+          },
+        };
+
+        return <MenuListByRole menuItems={customMenuItems} />;
+      };
+
+      return (
+        <ChannelSettingsUI renderModerationPanel={renderCustomModerationPanel} />
+      );
+    };
+
+    export default CustomChannelSettings;
+    ```
+
+- **DX Improvements: ChannelSetting UserListItem**
+  - `UserListItemMenu` has been newly component
+  - Provided it as a module which also contains `UserListItemMenuProvider` and `useUserListItemMenuContext`
+  - **Example usage:**
+    ```tsx
+    import { UserListItemMenu, UserListItemMenuProvider, useUserListItemMenuContext } from '@sendbird/uikit-react/ui/UserListItemMenu';
+    ```
+    How to use?
+    ```tsx
+    <SomeUserListComponent
+      renderUserListItem={(props) => ( // TODO: will be added
+        <UserListItem {...props}
+          renderListItemMenu={(props) => (
+            <UserListItemMenu
+              {...props}
+              onToggleOperatorState={({ user, newState, error }) => {/** Handle operator state change */}}
+              onToggleMuteState={({ user, newState, error }) => {/** Handle mute state change */}}
+              onToggleBanState={({ user, newState, error }) => {/** Handle ban state change */}}
+              renderTrigger={({ ref }) => (<div ref={ref}>{/** Render your custom trigger icon here */}</div>)}
+              renderMenuItems={({ items }) => (
+                <>
+                  <items.OperatorToggleMenuItem />
+                  <items.MuteToggleMenuItem />
+                  <items.BanToggleMenuItem />
+                </>
+              )}
+            />
+          )}
+        />
+      )}
+    />
+    ```
+
+### Fixes
+- Fixed image file viewer header style 
+- Disabled `isSuperGroupReactionsEnabled` setter
+
+### Chore
+- Updated `@sendbird/chat` version to 4.13.0
+  - Improved channel/message refreshing performance utilizing LocalCaching.
+
+
 ## [v3.14.11] (June 20, 2024)
 ### Features
 - Markdown Support for Text Messages
