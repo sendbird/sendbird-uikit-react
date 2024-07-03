@@ -15,18 +15,14 @@ import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import UserListItemMenu from '../../../../ui/UserListItemMenu/UserListItemMenu';
 
 import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
-import OperatorsModal, { type OperatorsModalProps } from './OperatorsModal';
-import AddOperatorsModal, { type AddOperatorsModalProps } from './AddOperatorsModal';
+import OperatorsModal from './OperatorsModal';
+import AddOperatorsModal from './AddOperatorsModal';
 
 interface OperatorListProps {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
-  renderOperatorsModal?: (props: OperatorsModalProps) => ReactNode;
-  renderAddOperatorsModal?: (props: AddOperatorsModalProps) => ReactNode;
 }
 export const OperatorList = ({
   renderUserListItem = (props) => <UserListItem {...props} />,
-  renderOperatorsModal = (props) => <OperatorsModal {...props} />,
-  renderAddOperatorsModal = (props) => <AddOperatorsModal {...props} />,
 }: OperatorListProps): ReactElement => {
   const [operators, setOperators] = useState<User[]>([]);
   const [showMore, setShowMore] = useState(false);
@@ -105,20 +101,20 @@ export const OperatorList = ({
       </div>
       {
         showMore && (
-          renderOperatorsModal({
-            onCancel: () => {
+          <OperatorsModal
+            onCancel={() => {
               setShowMore(false);
               refreshList();
-            },
-            renderUserListItem,
-          })
+            }}
+            renderUserListItem={renderUserListItem}
+          />
         )
       }
       {
         showAdd && (
-          renderAddOperatorsModal({
-            onCancel: () => setShowAdd(false),
-            onSubmit: () => {
+          <AddOperatorsModal
+            onCancel={() => setShowAdd(false)}
+            onSubmit={() => {
               /**
                * Limitation to server-side table update delay.
                */
@@ -126,9 +122,9 @@ export const OperatorList = ({
                 refreshList();
               }, 500);
               setShowAdd(false);
-            },
-            renderUserListItem,
-          })
+            }}
+            renderUserListItem={renderUserListItem}
+          />
         )
       }
     </>

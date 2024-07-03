@@ -16,19 +16,17 @@ Label, {
 } from '../../../../ui/Label';
 
 import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
-import BannedUsersModal, { type BannedUsersModalProps } from './BannedUsersModal';
+import BannedUsersModal from './BannedUsersModal';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
 interface BannedUserListProps {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
-  renderBannedUsersModal?: (props: BannedUsersModalProps) => ReactNode;
 }
 
 export const BannedUserList = ({
   renderUserListItem = (props) => <UserListItem {...props} />,
-  renderBannedUsersModal = (props) => <BannedUsersModal {...props} />,
 }: BannedUserListProps): ReactElement => {
   const [members, setMembers] = useState<RestrictedUser[]>([]);
   const [hasNext, setHasNext] = useState(false);
@@ -99,13 +97,13 @@ export const BannedUserList = ({
       }
       {
         showModal && (
-          renderBannedUsersModal({
-            onCancel: () => {
+          <BannedUsersModal
+            onCancel={() => {
               setShowModal(false);
               refreshList();
-            },
-            renderUserListItem,
-          })
+            }}
+            renderUserListItem={renderUserListItem}
+          />
         )
       }
     </>

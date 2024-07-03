@@ -14,15 +14,13 @@ import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
-import MutedMembersModal, { type MutedMembersModalProps } from './MutedMembersModal';
+import MembersModal from './MembersModal';
 
 interface MutedMemberListProps {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
-  renderMembersModal?: (props: MutedMembersModalProps) => ReactNode;
 }
 export const MutedMemberList = ({
   renderUserListItem = (props) => <UserListItem {...props} />,
-  renderMembersModal = (props) => <MutedMembersModal {...props} />,
 }: MutedMemberListProps): ReactElement => {
   const [members, setMembers] = useState<Member[]>([]);
   const [hasNext, setHasNext] = useState(false);
@@ -100,13 +98,13 @@ export const MutedMemberList = ({
       }
       {
         showModal && (
-          renderMembersModal({
-            onCancel: () => {
+          <MembersModal
+            onCancel={() => {
               setShowModal(false);
               refreshList();
-            },
-            renderUserListItem,
-          })
+            }}
+            renderUserListItem={renderUserListItem}
+          />
         )
       }
     </>

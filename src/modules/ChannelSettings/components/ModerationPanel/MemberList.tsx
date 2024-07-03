@@ -16,18 +16,14 @@ import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
 import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
-import MembersModal, { type MembersModalProps } from './MembersModal';
-import InviteUsers, { type InviteUsersModalProps } from './InviteUsersModal';
+import MembersModal from './MembersModal';
+import { InviteUsersModal } from './InviteUsersModal';
 
 interface MemberListProps {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
-  renderMembersModal?: (props: MembersModalProps) => ReactNode;
-  renderInviteUsersModal?: (props: InviteUsersModalProps) => ReactNode;
 }
 export const MemberList = ({
   renderUserListItem = (props) => <UserListItem {...props} />,
-  renderMembersModal = (props) => <MembersModal {...props} />,
-  renderInviteUsersModal = (props) => <InviteUsers {...props} />,
 }: MemberListProps): ReactElement => {
   const [members, setMembers] = useState<Array<Member>>([]);
   const [hasNext, setHasNext] = useState(false);
@@ -116,27 +112,27 @@ export const MemberList = ({
       </div>
       {
         showAllMembers && (
-          renderMembersModal({
-            onCancel: () => {
+          <MembersModal
+            onCancel={() => {
               setShowAllMembers(false);
               refreshList();
               forceUpdateUI();
-            },
-            renderUserListItem,
-          })
+            }}
+            renderUserListItem={renderUserListItem}
+          />
         )
       }
       {
         showInviteUsers && (
-          renderInviteUsersModal({
-            onCancel: () => setShowInviteUsers(false),
-            onSubmit: () => {
+          <InviteUsersModal
+            onCancel={() => setShowInviteUsers(false)}
+            onSubmit={() => {
               setShowInviteUsers(false);
               refreshList();
               forceUpdateUI();
-            },
-            renderUserListItem,
-          })
+            }}
+            renderUserListItem={renderUserListItem}
+          />
         )
       }
     </div>
