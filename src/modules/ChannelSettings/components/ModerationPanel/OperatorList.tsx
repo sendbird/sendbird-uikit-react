@@ -48,31 +48,34 @@ export const OperatorList = ({
     <>
       {
         operators.map((operator) => (
-          renderUserListItem({
-            key: operator.userId,
-            user: operator,
-            channel,
-            size: 'small',
-            avatarSize: '24px',
-            renderListItemMenu: (props) => (
-              <UserListItemMenu {...props}
-                /**
-                 * isOperator:
-                 * The ReturnType of createOperatorListQuery is User[].
-                 * We can't determine if this user is an operator, because User doesn't have a `role` property.
-                 * Therefore, we need to explicitly specify that this user is an operator.
-                */
-                isOperator
-                onToggleOperatorState={() => {
-                  // Limitation to server-side table update delay.
-                  setTimeout(() => {
-                    refreshList();
-                  }, 500);
-                }}
-                renderMenuItems={({ items }) => (<items.OperatorToggleMenuItem />)}
-              />
-            ),
-          })
+          <React.Fragment key={operator.userId}>
+            {
+              renderUserListItem({
+                user: operator,
+                channel,
+                size: 'small',
+                avatarSize: '24px',
+                renderListItemMenu: (props) => (
+                  <UserListItemMenu {...props}
+                    /**
+                     * isOperator:
+                     * The ReturnType of createOperatorListQuery is User[].
+                     * We can't determine if this user is an operator, because User doesn't have a `role` property.
+                     * Therefore, we need to explicitly specify that this user is an operator.
+                    */
+                    isOperator
+                    onToggleOperatorState={() => {
+                      // Limitation to server-side table update delay.
+                      setTimeout(() => {
+                        refreshList();
+                      }, 500);
+                    }}
+                    renderMenuItems={({ items }) => (<items.OperatorToggleMenuItem />)}
+                  />
+                ),
+              })
+            }
+          </React.Fragment>
         ))
       }
       <div className="sendbird-channel-settings-accordion__footer">

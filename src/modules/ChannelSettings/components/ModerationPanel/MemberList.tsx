@@ -52,42 +52,45 @@ export const MemberList = ({
     <div className="sendbird-channel-settings-member-list">
       {
         members.map((member) => (
-          renderUserListItem({
-            key: member.userId,
-            user: member,
-            channel,
-            size: 'small',
-            avatarSize: '24px',
-            renderListItemMenu: (props) => (
-              <UserListItemMenu {...props}
-                onToggleOperatorState={({ newStatus: isOperator }) => {
-                  const newMembers = [...members];
-                  for (const newMember of newMembers) {
-                    if (newMember.userId === member.userId) {
-                      newMember.role = isOperator ? Role.OPERATOR : Role.NONE;
-                      break;
-                    }
-                  }
-                  setMembers(newMembers);
-                }}
-                onToggleMuteState={({ newStatus: isMuted }) => {
-                  const newMembers = [...members];
-                  for (const newMember of newMembers) {
-                    if (newMember.userId === member.userId) {
-                      newMember.isMuted = isMuted;
-                      break;
-                    }
-                  }
-                  setMembers(newMembers);
-                }}
-                onToggleBanState={() => {
-                  setMembers(members.filter(({ userId }) => {
-                    return userId !== member.userId;
-                  }));
-                }}
-              />
-            ),
-          })
+          <React.Fragment key={member.userId}>
+            {
+              renderUserListItem({
+                user: member,
+                channel,
+                size: 'small',
+                avatarSize: '24px',
+                renderListItemMenu: (props) => (
+                  <UserListItemMenu {...props}
+                    onToggleOperatorState={({ newStatus: isOperator }) => {
+                      const newMembers = [...members];
+                      for (const newMember of newMembers) {
+                        if (newMember.userId === member.userId) {
+                          newMember.role = isOperator ? Role.OPERATOR : Role.NONE;
+                          break;
+                        }
+                      }
+                      setMembers(newMembers);
+                    }}
+                    onToggleMuteState={({ newStatus: isMuted }) => {
+                      const newMembers = [...members];
+                      for (const newMember of newMembers) {
+                        if (newMember.userId === member.userId) {
+                          newMember.isMuted = isMuted;
+                          break;
+                        }
+                      }
+                      setMembers(newMembers);
+                    }}
+                    onToggleBanState={() => {
+                      setMembers(members.filter(({ userId }) => {
+                        return userId !== member.userId;
+                      }));
+                    }}
+                  />
+                ),
+              })
+            }
+          </React.Fragment>
         ))
       }
       <div className="sendbird-channel-settings-accordion__footer">

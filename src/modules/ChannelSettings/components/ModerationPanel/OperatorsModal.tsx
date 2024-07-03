@@ -63,23 +63,26 @@ export function OperatorsModal({
           })}
         >
           {operators.map((member) => (
-            renderUserListItem({
-              key: member.userId,
-              user: member,
-              channel,
-              renderListItemMenu: (props) => (
-                <UserListItemMenu
-                  {...props}
-                  isOperator
-                  onToggleOperatorState={({ user }) => {
-                    setOperators(operators.filter(({ userId }) => userId !== user.userId));
-                  }}
-                  renderMenuItems={({ items }) => (
-                    <items.OperatorToggleMenuItem />
-                  )}
-                />
-              ),
-            })
+            <React.Fragment key={member.userId}>
+              {
+                renderUserListItem({
+                  user: member,
+                  channel,
+                  renderListItemMenu: (props) => (
+                    <UserListItemMenu
+                      {...props}
+                      isOperator
+                      onToggleOperatorState={({ user }) => {
+                        setOperators(operators.filter(({ userId }) => userId !== user.userId));
+                      }}
+                      renderMenuItems={({ items }) => (
+                        <items.OperatorToggleMenuItem />
+                      )}
+                    />
+                  ),
+                })
+              }
+            </React.Fragment>
           ))}
         </div>
       </Modal>

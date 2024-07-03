@@ -87,23 +87,26 @@ export default function AddOperatorsModal({
         >
           {
             members.map((member) => (
-              renderUserListItem({
-                user: member,
-                key: member.userId,
-                checkBox: true,
-                checked: selectedMembers[member.userId],
-                disabled: member?.role === 'operator',
-                onChange: (event) => {
-                  const modifiedSelectedMembers = {
-                    ...selectedMembers,
-                    [event.target.id]: event.target.checked,
-                  };
-                  if (!event.target.checked) {
-                    delete modifiedSelectedMembers[event.target.id];
-                  }
-                  setSelectedMembers(modifiedSelectedMembers);
-                },
-              })
+              <React.Fragment key={member.userId}>
+                {
+                  renderUserListItem({
+                    user: member,
+                    checkBox: true,
+                    checked: selectedMembers[member.userId],
+                    disabled: member?.role === 'operator',
+                    onChange: (event) => {
+                      const modifiedSelectedMembers = {
+                        ...selectedMembers,
+                        [event.target.id]: event.target.checked,
+                      };
+                      if (!event.target.checked) {
+                        delete modifiedSelectedMembers[event.target.id];
+                      }
+                      setSelectedMembers(modifiedSelectedMembers);
+                    },
+                  })
+                }
+              </React.Fragment>
             ))
           }
         </div>

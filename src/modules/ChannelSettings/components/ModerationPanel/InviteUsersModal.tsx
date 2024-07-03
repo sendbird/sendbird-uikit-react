@@ -102,14 +102,19 @@ export function InviteUsersModal({
             {users.map((user) => {
               const isMember = Boolean(membersMap ? membersMap[user.userId] : false);
               const isSelected = Boolean(selectedUsers[user.userId]);
-              return renderUserListItem({
-                key: user.userId,
-                user,
-                checkBox: true,
-                checked: isMember || isSelected,
-                disabled: isMember,
-                onChange: () => onSelectUser(user),
-              });
+              return (
+                <React.Fragment key={user.userId}>
+                  {
+                    renderUserListItem({
+                      user,
+                      checkBox: true,
+                      checked: isMember || isSelected,
+                      disabled: isMember,
+                      onChange: () => onSelectUser(user),
+                    })
+                  }
+                </React.Fragment>
+              );
             })}
           </div>
         </div>

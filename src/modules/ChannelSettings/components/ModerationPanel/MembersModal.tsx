@@ -66,41 +66,44 @@ export function MembersModal({
           })}
         >
           {members.map((member: Member) => (
-            renderUserListItem({
-              user: member,
-              key: member.userId,
-              channel,
-              renderListItemMenu: (props) => (
-                <UserListItemMenu
-                  {...props}
-                  onToggleOperatorState={({ newStatus: isOperator }) => {
-                    const newMembers = [...members];
-                    for (const newMember of newMembers) {
-                      if (newMember.userId === member.userId) {
-                        newMember.role = isOperator ? Role.OPERATOR : Role.NONE;
-                        break;
-                      }
-                    }
-                    setMembers(newMembers);
-                  }}
-                  onToggleMuteState={({ newStatus: isMuted }) => {
-                    const newMembers = [...members];
-                    for (const newMember of newMembers) {
-                      if (newMember.userId === member.userId) {
-                        newMember.isMuted = isMuted;
-                        break;
-                      }
-                    }
-                    setMembers(newMembers);
-                  }}
-                  onToggleBanState={() => {
-                    setMembers(members.filter(({ userId }) => {
-                      return userId !== member.userId;
-                    }));
-                  }}
-                />
-              ),
-            })
+            <React.Fragment key={member.userId}>
+              {
+                renderUserListItem({
+                  user: member,
+                  channel,
+                  renderListItemMenu: (props) => (
+                    <UserListItemMenu
+                      {...props}
+                      onToggleOperatorState={({ newStatus: isOperator }) => {
+                        const newMembers = [...members];
+                        for (const newMember of newMembers) {
+                          if (newMember.userId === member.userId) {
+                            newMember.role = isOperator ? Role.OPERATOR : Role.NONE;
+                            break;
+                          }
+                        }
+                        setMembers(newMembers);
+                      }}
+                      onToggleMuteState={({ newStatus: isMuted }) => {
+                        const newMembers = [...members];
+                        for (const newMember of newMembers) {
+                          if (newMember.userId === member.userId) {
+                            newMember.isMuted = isMuted;
+                            break;
+                          }
+                        }
+                        setMembers(newMembers);
+                      }}
+                      onToggleBanState={() => {
+                        setMembers(members.filter(({ userId }) => {
+                          return userId !== member.userId;
+                        }));
+                      }}
+                    />
+                  ),
+                })
+              }
+            </React.Fragment>
           ))}
         </div>
       </Modal>
