@@ -13,6 +13,7 @@ import type {
 
 import {
   isDisabledBecauseFrozen,
+  isDisabledBecauseMessageForm,
   isDisabledBecauseMuted,
   isDisabledBecauseSuggestedReplies,
 } from '../../context/utils';
@@ -103,6 +104,7 @@ export const MessageInputWrapperView = React.forwardRef((
     || isDisabledBecauseFrozen(currentChannel)
     || isDisabledBecauseMuted(currentChannel)
     || isDisabledBecauseSuggestedReplies(currentChannel, config.groupChannel.enableSuggestedReplies)
+    || isDisabledBecauseMessageForm(currentChannel)
     || disabled;
 
   const showSuggestedMentionList = !isMessageInputDisabled
@@ -212,6 +214,7 @@ export const MessageInputWrapperView = React.forwardRef((
             || (isDisabledBecauseFrozen(currentChannel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__FROZEN)
             || (isDisabledBecauseMuted(currentChannel) && (isMobile ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT : stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED))
             || (isDisabledBecauseSuggestedReplies(currentChannel, config.groupChannel.enableSuggestedReplies) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__SUGGESTED_REPLIES)
+            || (isDisabledBecauseMessageForm(currentChannel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MESSAGE_FORM)
             || (disabled && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
             || undefined
           }
