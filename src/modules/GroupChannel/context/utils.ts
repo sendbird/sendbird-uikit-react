@@ -36,6 +36,20 @@ export const isDisabledBecauseMuted = (groupChannel?: GroupChannel | null) => {
   return groupChannel.myMutedState === 'muted';
 };
 
-export const isDisabledBecauseSuggestedReplies = (channel: GroupChannel | null | undefined, enableSuggestedReplies: boolean) => {
-  return enableSuggestedReplies && !!channel?.lastMessage?.extendedMessagePayload?.disable_chat_input;
+export const isDisabledBecauseSuggestedReplies = (
+  channel: GroupChannel | null | undefined,
+  enableSuggestedReplies: boolean,
+) => {
+  return enableSuggestedReplies
+    && Array.isArray(channel?.lastMessage?.extendedMessagePayload?.suggested_replies)
+    && !!channel?.lastMessage?.extendedMessagePayload?.disable_chat_input;
+};
+
+export const isDisabledBecauseMessageForm = (
+  channel: GroupChannel | null | undefined,
+  enableFormTypeMessage: boolean,
+) => {
+  return enableFormTypeMessage
+    && !!channel?.lastMessage?.messageForm
+    && !!channel?.lastMessage?.extendedMessagePayload?.disable_chat_input;
 };

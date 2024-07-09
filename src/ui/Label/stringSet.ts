@@ -139,6 +139,8 @@ const stringSet = {
     // Message Input
     MESSAGE_INPUT__PLACE_HOLDER: 'Enter message',
     MESSAGE_INPUT__PLACE_HOLDER__DISABLED: 'Chat is unavailable in this channel',
+    MESSAGE_INPUT__PLACE_HOLDER__SUGGESTED_REPLIES: 'Please choose one from above',
+    MESSAGE_INPUT__PLACE_HOLDER__MESSAGE_FORM: 'Please fill out the message form.',
     MESSAGE_INPUT__PLACE_HOLDER__FROZEN: 'Chat is unavailable in this channel',
     MESSAGE_INPUT__PLACE_HOLDER__MUTED: 'Chat is unavailable because you\'re muted',
     MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT: 'You\'re muted',
@@ -231,6 +233,9 @@ const stringSet = {
     FEEDBACK_FAILED_SUBMIT: 'Couldn’t submit. Try again.',
     FEEDBACK_FAILED_SAVE: 'Couldn’t save. Try again.',
     FEEDBACK_FAILED_DELETE: 'Couldn’t delete. Try again.',
+    // Form submit failed error messages
+    FORM_ITEM_REQUIRED: 'This field is required',
+    FORM_ITEM_INVALID: 'Please check the value',
   },
 };
 

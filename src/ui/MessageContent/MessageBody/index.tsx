@@ -4,7 +4,7 @@ import {
   CoreMessageType,
   getUIKitMessageType, getUIKitMessageTypes, isTemplateMessage, isMultipleFilesMessage,
   isOGMessage, isSendableMessage,
-  isTextMessage, isThumbnailMessage, isVoiceMessage,
+  isTextMessage, isThumbnailMessage, isVoiceMessage, isFormMessage,
 } from '../../../utils';
 import { BaseMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 import OGMessageItemBody from '../../OGMessageItemBody';
@@ -22,6 +22,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { match } from 'ts-pattern';
 import TemplateMessageItemBody from '../../TemplateMessageItemBody';
 import type { OnBeforeDownloadFileMessageType } from '../../../modules/GroupChannel/context/GroupChannelProvider';
+import FormMessageItemBody from '../../FormMessageItemBody';
 
 const MESSAGE_ITEM_BODY_CLASSNAME = 'sendbird-message-content__middle__message-item-body';
 export type RenderedTemplateBodyType = 'failed' | 'composite' | 'simple';
@@ -66,6 +67,12 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
   const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
 
   return match(message)
+    .when(isFormMessage, () => (
+      <FormMessageItemBody
+        message={message as BaseMessage}
+        form={message.messageForm}
+      />
+    ))
     .when(isTemplateMessage, () => (
       <TemplateMessageItemBody
         className={MESSAGE_ITEM_BODY_CLASSNAME}
