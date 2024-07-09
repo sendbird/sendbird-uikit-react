@@ -96,6 +96,7 @@ export const paramKeys = [
   'groupChannel_enableSuggestedReplies',
   'groupChannel_showSuggestedRepliesFor',
   'groupChannel_enableMarkdownForUserMessage',
+  'groupChannel_enableFormTypeMessage',
   'groupChannelList_enableTypingIndicator',
   'groupChannelList_enableMessageReceiptStatus',
   'groupChannelSettings_enableMessageSearch',
