@@ -1,0 +1,177 @@
+.sendbird-form-message__submit-button {
+  width: 100%;
+}
+
+.sendbird-form-message__input__label {
+  line-height: 14px;
+  display: block;
+  margin: 0;
+}
+
+.sendbird-form-message__input__title-container {
+  display: inline-block;
+}
+
+.sendbird-form-message__input__container {
+  width: 100%;
+}
+
+.sendbird-form-message__input__title_optional {
+  @include themed() {
+    color: t(inverse-on-content-3);
+  }
+}
+
+.sendbird-form-message__root {
+  padding-bottom: 12px;
+  width: 100%;
+}
+
+.sendbird-form-message__input__textarea {
+  display: block; // Without this, parent height does not fit this height.
+  ::placeholder {
+    color: var(--sendbird-light-onlight-03);
+  }
+  resize: none;
+  height: 96px;
+  padding: 8px 12px;
+}
+
+.sendbird-form-message__error-label {
+  margin-top: 4px;
+  color: var(--sendbird-light-error-300);
+}
+
+.sendbird-form-message__submitted-input-box-text {
+  width: calc(100% - 24px);
+  line-height: 20px;
+}
+
+.sendbird-form-message__root {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 12px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: t(dbg-100-dgb-400);
+}
+
+.sendbird-form-message__submitted-check-icon-chip {
+  margin-left: 4px;
+}
+
+.sendbird-form-message__submit-button-text {
+  @include themed() {
+    color: t(dod-1-lol-1);
+  }
+  &.disabled {
+    color: inherit;
+  }
+}
+
+.sendbird-form-message__submitted-check-icon-container {
+  display: flex;
+  height: auto;
+  align-items: flex-end;
+}
+
+.sendbird-form-message__submitted-input-box {
+  display: flex;
+  word-wrap: break-word;
+  width: calc(100% - 24px);
+  @include themed() {
+    color: t(dol-1-dod-1);
+    background-color: t(dod-2-lol-4);
+  }
+  border: none;
+  pointer-events: none;
+  border-radius: 4px;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  padding: 8px 12px;
+  min-height: 20px;
+  &.textarea {
+    padding: 9px 12px;
+    min-height: 78px;
+  }
+}
+
+.sendbird-form-message__input__chip-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: bold;
+  font-style: normal;
+  line-height: 20px;
+  letter-spacing: normal;
+}
+
+.sendbird-form-message__input__chip {
+  border-radius: 100px;
+  padding: 5px 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: calc(100% - 32px);
+  
+  &.default {
+    @include themed() {
+      color: t(on-bg-2);
+      background-color: t(lbg-50-lol-3);
+      border: 1px solid t(on-bg-4);
+      cursor: pointer;
+      &:hover {
+        color: t(primary--3-2);
+        background-color: t(lbg-50-lol-3);
+        border: 1px solid t(lbg-50-lol-3);
+      }
+      &:focus {
+        color: t(on-bg-2);
+        background-color: t(lbg-50-lol-3);
+        border: 1px solid t(lp-300-dod-2);
+        outline: none;
+        box-shadow: 0 0 0 1px t(lp-300-dod-2);
+      },
+    }
+  }
+  &.selected {
+    @include themed() {
+      color: t(primary--3-2);
+      background-color: t(lp-100-dbg-600);
+      border: 1px solid t(primary--3-2);
+      cursor: pointer;
+      &:hover {
+        color: t(primary--3-2);
+        background-color: t(lbg-50-lol-3);
+        border: 1px solid t(primary--3-2);
+      }
+      &:focus {
+        color: t(lp-300-dod-2);
+        background-color: t(lbg-50-lol-3);
+        border: 1px solid t(lp-300-dod-2);
+        outline: none;
+        box-shadow: 0 0 0 1px t(lp-300-dod-2);
+      }
+    }
+  }
+  &.submittedDefault {
+    border: none;
+    cursor: default;
+    padding: 6px 16px;
+    @include themed() {
+      color: t(lol-2-dod-4);
+      background-color: t(dod-2-dbg-500);
+    }
+  }
+  &.submittedSelected {
+    border: none;
+    cursor: default;
+    padding: 6px 16px;
+    @include themed() {
+      color: t(on-bg-1);
+      background-color: t(dod-2-lol-4);
+    }
+  }
+}

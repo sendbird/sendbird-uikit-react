@@ -61,6 +61,64 @@
   }
 }
 
+.sendbird-input_for_form {
+  display: inline-block;
+  width: 100%;
+  height: unset;
+  position: relative;
+  .sendbird-input__input {
+    width: 100%;
+    height: fit-content;
+    border-radius: 4px;
+    font-family: var(--sendbird-font-family-default);
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    padding: 7px 12px;
+    box-sizing: border-box;
+    background-color: inherit;
+    @include themed() {
+      caret-color: t(primary-3);
+      color: t(inverse-on-content-1);
+      background-color: t(lbg-50-lol-3);
+      border: solid 1px t(on-bg-4);
+      &:disabled {
+        pointer-events: none;
+        border: none;
+        cursor: not-allowed;
+        background-color: t(dod-2-lol-2);
+        color: t(on-bg-3);
+      }
+      &:focus {
+        border: solid 1px t(primary--3-2);
+        outline: none;
+        box-shadow: 0 0 0 1px t(primary--3-2);
+      }
+      &:active {
+        border: solid 1px t(primary--3-2);
+      }
+      &.error {
+        border: solid 1px t(ler-300-der-200);
+      }
+    }
+  }
+  .sendbird-input__placeholder {
+    position: absolute;
+    pointer-events: none;
+    top: 10px;
+    left: 16px;
+    font-family: var(--sendbird-font-family-default);
+    font-size: 14px;
+    line-height: 1.43;
+    @include themed() {
+      color: t(on-bg-3);
+    }
+  }
+}
+
 .sendbird-input-label {
   margin: 4px 0;
 }
