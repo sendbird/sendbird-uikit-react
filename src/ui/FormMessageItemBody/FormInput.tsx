@@ -1,6 +1,7 @@
 import { MessageFormItemStyle } from '@sendbird/chat/message';
 import React, { ReactElement, ReactNode, useState } from 'react';
 
+import './index.scss';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import { classnames } from '../../utils/utils';
@@ -121,10 +122,10 @@ const FormInput = (props: InputProps) => {
   };
 
   return (
-    <div className='sendbird-form-message__root'>
+    <div className='sendbird-form-message__input__root'>
       <InputLabel>
         <div className='sendbird-form-message__input__title-container'>
-          {name} {!required && <div className='sendbird-form-message__input__title_optional'>(optional)</div>}
+          {name} {!required && <div className='sendbird-form-message__input__title-optional'>(optional)</div>}
         </div>
       </InputLabel>
       <div className='sendbird-input_for_form'>
@@ -132,7 +133,7 @@ const FormInput = (props: InputProps) => {
           switch (layout) {
             case 'chip': {
               return (
-                <div className='sendbird-form-chip__container'>
+                <div className='sendbird-form-message__input__chip-container'>
                   {chipDataList.map((chipData, index) => {
                     return (
                       <div className={`sendbird-form-message__input__chip ${chipData.state}`}
