@@ -71,6 +71,9 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
       <FormMessageItemBody
         message={message as BaseMessage}
         form={message.messageForm}
+        isByMe={isByMe}
+        mouseHover={mouseHover}
+        isReactionEnabled={isReactionEnabledInChannel}
       />
     ))
     .when(isTemplateMessage, () => (

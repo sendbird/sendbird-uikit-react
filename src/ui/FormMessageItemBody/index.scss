@@ -1,3 +1,5 @@
+@import '../../styles/variables';
+
 .sendbird-form-message__submit-button {
   width: 100%;
 }
@@ -16,15 +18,16 @@
   width: 100%;
 }
 
-.sendbird-form-message__input__title_optional {
+.sendbird-form-message__input__title-optional {
   @include themed() {
     color: t(inverse-on-content-3);
   }
 }
 
-.sendbird-form-message__root {
+.sendbird-form-message__input__root {
   padding-bottom: 12px;
   width: 100%;
+  font-family: var(--sendbird-font-family-default);
 }
 
 .sendbird-form-message__input__textarea {
@@ -54,8 +57,19 @@
   padding: 16px 12px;
   border-radius: 16px;
   overflow: hidden;
-  background-color: t(dbg-100-dgb-400);
+  @include themed() {
+    background-color: t(dbg-100-dgb-400);
+  }
 }
+
+.sendbird-form-message__input__chip-container {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
 
 .sendbird-form-message__submitted-check-icon-chip {
   margin-left: 4px;
@@ -77,6 +91,12 @@
 }
 
 .sendbird-form-message__submitted-input-box {
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
   display: flex;
   word-wrap: break-word;
   width: calc(100% - 24px);
@@ -133,7 +153,7 @@
         border: 1px solid t(lp-300-dod-2);
         outline: none;
         box-shadow: 0 0 0 1px t(lp-300-dod-2);
-      },
+      }
     }
   }
   &.selected {

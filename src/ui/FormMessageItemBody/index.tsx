@@ -1,16 +1,22 @@
 import { BaseMessage, MessageForm } from '@sendbird/chat/message';
 import React, { useCallback, useContext, useState } from 'react';
 
+import './index.scss';
 import Button from '../Button';
 import Label, { LabelTypography } from '../Label';
 import MessageFeedbackFailedModal from '../MessageFeedbackFailedModal';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import FormInput from './FormInput';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import { getClassName } from '../../utils';
+import { TEXT_MESSAGE_BODY_CLASSNAME } from '../TextMessageItemBody/consts';
 
 interface Props {
   message: BaseMessage;
   form: MessageForm;
+  isByMe?: boolean;
+  mouseHover?: boolean;
+  isReactionEnabled?: boolean;
 }
 
 interface FormValue {
@@ -20,7 +26,13 @@ interface FormValue {
 }
 
 export default function FormMessageItemBody(props: Props) {
-  const { message, form } = props;
+  const {
+    message,
+    form,
+    isByMe = false,
+    mouseHover = false,
+    isReactionEnabled = false,
+  } = props;
   const { items, id: formId } = form;
   const { stringSet } = useContext(LocalizationContext);
   const { config } = useSendbirdStateContext();
@@ -80,10 +92,25 @@ export default function FormMessageItemBody(props: Props) {
   }, [formValues, message.messageId, message.submitMessageForm, formId]);
 
   return (
-    <div className='sendbird-form-message__root'>
+    <div className={getClassName([
+      TEXT_MESSAGE_BODY_CLASSNAME,
+      'sendbird-form-message__root',
+      isByMe ? 'outgoing' : 'incoming',
+      mouseHover ? 'mouse-hover' : '',
+      (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
+    ])}>
       {items.map((item, index) => {
-        const { name, placeholder, id, required, style } = item;
-        const { draftValues = [], errorMessage } = formValues[index];
+        const {
+          name,
+          placeholder,
+          id,
+          required,
+          style,
+        } = item;
+        const {
+          draftValues = [],
+          errorMessage,
+        } = formValues[index];
 
         return (
           <FormInput
@@ -120,7 +147,7 @@ export default function FormMessageItemBody(props: Props) {
         );
       })}
       <Button
-        className='sendbird-form-message-submit-button'
+        className='sendbird-form-message__submit-button'
         onClick={handleSubmit}
         disabled={(!isInputFocused && hasError) || isSubmitted}
       >
