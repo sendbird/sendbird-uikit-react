@@ -93,7 +93,7 @@
         color: t(on-bg-3);
       }
       &:focus {
-        border: solid 1px t(primary--3-2);
+        border: solid 1px t(primary--3-2) !important; // This is for when focus and error are being applied at the same time.
         outline: none;
         box-shadow: 0 0 0 1px t(primary--3-2);
       }
