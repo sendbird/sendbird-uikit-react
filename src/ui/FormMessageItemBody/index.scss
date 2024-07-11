@@ -77,7 +77,7 @@
 
 .sendbird-form-message__submit-button-text {
   @include themed() {
-    color: t(dod-1-lol-1);
+    color: t(on-content-1);
   }
   &.disabled {
     color: inherit;
