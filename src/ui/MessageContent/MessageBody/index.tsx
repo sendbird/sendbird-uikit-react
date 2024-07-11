@@ -74,16 +74,26 @@ export const MessageBody = (props: MessageBodyProps) => {
 
   const messageTypes = getUIKitMessageTypes();
   const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
+  const isFormMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableFormTypeMessage;
 
   return match(message)
     .when(isFormMessage, () => (
-      <FormMessageItemBody
+      isFormMessageEnabledInGroupChannel
+        ? <FormMessageItemBody
         message={message as BaseMessage}
         form={message.messageForm}
         isByMe={isByMe}
         mouseHover={mouseHover}
         isReactionEnabled={isReactionEnabledInChannel}
-      />
+      /> : <TextMessageItemBody
+          className={MESSAGE_ITEM_BODY_CLASSNAME}
+          message={message as UserMessage}
+          isByMe={isByMe}
+          mouseHover={mouseHover}
+          isMentionEnabled={config.groupChannel.enableMention ?? false}
+          isReactionEnabled={isReactionEnabledInChannel}
+          isMarkdownEnabled={config.groupChannel.enableMarkdownForUserMessage}
+        />
     ))
     .when(isTemplateMessage, () => (
       <TemplateMessageItemBody
