@@ -82,9 +82,6 @@ export const MessageBody = (props: MessageBodyProps) => {
         ? <FormMessageItemBody
         message={message as BaseMessage}
         form={message.messageForm}
-        isByMe={isByMe}
-        mouseHover={mouseHover}
-        isReactionEnabled={isReactionEnabledInChannel}
       /> : <TextMessageItemBody
           className={MESSAGE_ITEM_BODY_CLASSNAME}
           message={message as UserMessage}

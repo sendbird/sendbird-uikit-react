@@ -14,9 +14,6 @@ import { TEXT_MESSAGE_BODY_CLASSNAME } from '../TextMessageItemBody/consts';
 interface Props {
   message: BaseMessage;
   form: MessageForm;
-  isByMe?: boolean;
-  mouseHover?: boolean;
-  isReactionEnabled?: boolean;
 }
 
 interface FormValue {
@@ -29,9 +26,6 @@ export default function FormMessageItemBody(props: Props) {
   const {
     message,
     form,
-    isByMe = false,
-    mouseHover = false,
-    isReactionEnabled = false,
   } = props;
   const { items, id: formId } = form;
   const { stringSet } = useContext(LocalizationContext);
@@ -95,9 +89,7 @@ export default function FormMessageItemBody(props: Props) {
     <div className={getClassName([
       `${TEXT_MESSAGE_BODY_CLASSNAME} disable-hover`,
       'sendbird-form-message__root',
-      isByMe ? 'outgoing' : 'incoming',
-      // mouseHover ? 'mouse-hover' : '',
-      (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
+      'incoming',
     ])}>
       {items.map((item, index) => {
         const {
