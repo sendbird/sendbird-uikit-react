@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useState } from 'react';
 
 import './index.scss';
 import Button from '../Button';
-import Label, { LabelTypography } from '../Label';
+import Label, { LabelColors, LabelTypography } from '../Label';
 import MessageFeedbackFailedModal from '../MessageFeedbackFailedModal';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import FormInput from './FormInput';
@@ -151,14 +151,8 @@ export default function FormMessageItemBody(props: Props) {
         onClick={handleSubmit}
         disabled={(!isInputFocused && hasError) || isSubmitted}
       >
-        <Label type={LabelTypography.BUTTON_2}>
-          <div
-            className={`sendbird-form-message__submit-button-text ${
-              (!isInputFocused && hasError) || isSubmitted ? 'disabled' : ''
-            }`}
-          >
-            {isSubmitted ? 'Submitted successfully' : 'Submit'}
-          </div>
+        <Label type={LabelTypography.BUTTON_2} color={LabelColors.ONCONTENT_1}>
+          {isSubmitted ? 'Submitted successfully' : 'Submit'}
         </Label>
       </Button>
       {submitFailed && (
