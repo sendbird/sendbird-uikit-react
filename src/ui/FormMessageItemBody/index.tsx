@@ -93,10 +93,10 @@ export default function FormMessageItemBody(props: Props) {
 
   return (
     <div className={getClassName([
-      TEXT_MESSAGE_BODY_CLASSNAME,
+      `${TEXT_MESSAGE_BODY_CLASSNAME} disable-hover`,
       'sendbird-form-message__root',
       isByMe ? 'outgoing' : 'incoming',
-      mouseHover ? 'mouse-hover' : '',
+      // mouseHover ? 'mouse-hover' : '',
       (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
     ])}>
       {items.map((item, index) => {
