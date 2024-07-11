@@ -98,6 +98,7 @@
         box-shadow: 0 0 0 1px t(primary--3-2);
       }
       &:active {
+        box-shadow: none;
         border: solid 1px t(primary--3-2);
       }
       &.error {
