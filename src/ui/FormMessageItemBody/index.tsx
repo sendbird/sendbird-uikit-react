@@ -48,6 +48,7 @@ export default function FormMessageItemBody(props: Props) {
   });
   const isSubmitted = form.isSubmitted;
   const hasError = formValues.some(({ errorMessage }) => !!errorMessage);
+  const isButtonDisabled = (!isInputFocused && hasError) || isSubmitted;
 
   const handleSubmit = useCallback(async () => {
     try {
@@ -141,9 +142,14 @@ export default function FormMessageItemBody(props: Props) {
       <Button
         className='sendbird-form-message__submit-button'
         onClick={handleSubmit}
-        disabled={(!isInputFocused && hasError) || isSubmitted}
+        disabled={isButtonDisabled}
       >
-        <Label type={LabelTypography.BUTTON_2} color={LabelColors.ONCONTENT_1}>
+        <Label
+          type={LabelTypography.BUTTON_2}
+          color={
+            isButtonDisabled ? LabelColors.ONBACKGROUND_4 : LabelColors.ONCONTENT_1
+          }
+        >
           {isSubmitted ? 'Submitted successfully' : 'Submit'}
         </Label>
       </Button>

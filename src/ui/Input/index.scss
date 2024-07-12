@@ -61,6 +61,20 @@
   }
 }
 
+.sendbird-theme--light {
+  --form__input__bg-color_default: var(--sendbird-light-background-50);
+  
+  --form__input__bg-color_disabled: var(--sendbird-dark-ondark-02);
+  --form__input__bd-color_error: var(--sendbird-light-error-300);
+}
+
+.sendbird-theme--dark {
+  --form__input__bg-color_default: var(--sendbird-light-onlight-03);
+  
+  --form__input__bg-color_disabled: var(--sendbird-light-onlight-04);
+  --form__input__bd-color_error: var(--sendbird-dark-error-200);
+}
+
 .sendbird-input_for_form {
   display: inline-block;
   width: 100%;
@@ -83,13 +97,13 @@
     @include themed() {
       caret-color: t(primary-3);
       color: t(inverse-on-content-1);
-      background-color: t(lbg-50-lol-3);
+      background-color: var(--form__input__bg-color_default);
       border: solid 1px t(on-bg-4);
       &:disabled {
         pointer-events: none;
         border: none;
         cursor: not-allowed;
-        background-color: t(dod-2-lol-2);
+        background-color: var(--form__input__bg-color_disabled);
         color: t(on-bg-3);
       }
       &:focus {
@@ -102,7 +116,7 @@
         border: solid 1px t(primary--3-2);
       }
       &.error {
-        border: solid 1px t(ler-300-der-200);
+        border: solid 1px var(--form__input__bd-color_error);
       }
     }
   }
