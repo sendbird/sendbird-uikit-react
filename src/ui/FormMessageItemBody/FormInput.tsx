@@ -125,7 +125,7 @@ const FormInput = (props: InputProps) => {
     <div className='sendbird-form-message__input__root'>
       <InputLabel>
         <div className='sendbird-form-message__input__title-container'>
-          {name} {!required && <div className='sendbird-form-message__input__title-optional'>(optional)</div>}
+          {name} {!required && <span className='sendbird-form-message__input__title-optional'>(optional)</span>}
         </div>
       </InputLabel>
       <div className='sendbird-input_for_form'>
