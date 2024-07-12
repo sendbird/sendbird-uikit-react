@@ -11,6 +11,8 @@ export function GroupChannelPage() {
     uikitOptions={{
       groupChannel: {
         enableFormTypeMessage: true,
+        enableSuggestedReplies: true,
+        enableFeedback: true,
       }
     }}
   />;
