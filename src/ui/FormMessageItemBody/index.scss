@@ -1,7 +1,55 @@
 @import '../../styles/variables';
 
+.sendbird-theme--light {
+  --form__chip__color__selected-focus: var(--sendbird-light-primary-300);
+  --form__chip__color__submitted-default: var(--sendbird-light-onlight-02);
+  
+  --form__chip__bg-color__default: var(--sendbird-light-background-50);
+  --form__chip__bg-color__selected: var(--sendbird-light-primary-100);
+  --form__chip__bg-color__selected-hover: var(--sendbird-light-background-50);
+  --form__chip__bg-color__selected-focus: var(--sendbird-light-background-50);
+  --form__chip__bg-color__submitted-default: var(--sendbird-dark-ondark-02);
+  --form__chip__bg-color__submitted-selected: var(--sendbird-dark-ondark-02);
+  
+  --form__chip__bd-color__default-focus: var(--sendbird-light-primary-300);
+  --form__chip__bd-color__selected-focus: var(--sendbird-light-primary-300);
+  
+  --form__submitted-input-box__color: var(--sendbird-dark-onlight-01);
+  --form__submitted-input-box__bg-color: var(--sendbird-dark-ondark-02);
+}
+
+.sendbird-theme--dark {
+  --form__chip__color__selected-focus: var(--sendbird-dark-ondark-02);
+  --form__chip__color__submitted-default: var(--sendbird-dark-ondark-04);
+  
+  --form__chip__bg-color__default: var(--sendbird-light-onlight-03);
+  --form__chip__bg-color__selected: var(--sendbird-dark-background-600);
+  --form__chip__bg-color__selected-hover: var(--sendbird-light-onlight-03);
+  --form__chip__bg-color__selected-focus: var(--sendbird-light-onlight-03);
+  --form__chip__bg-color__submitted-default: var(--sendbird-dark-background-500);
+  --form__chip__bg-color__submitted-selected: var(-sendbird-light-onlight-04);
+  
+  --form__chip__bd-color__default-focus: var(--sendbird-dark-ondark-02);
+  --form__chip__bd-color__selected-focus: var(--sendbird-dark-ondark-02);
+  
+  --form__submitted-input-box__color: var(--sendbird-dark-ondark-01);
+  --form__submitted-input-box__bg-color: var(--sendbird-light-onlight-04);
+}
+
 .sendbird-form-message__submit-button {
   width: 100%;
+  &.sendbird-button__disabled {
+    cursor: not-allowed;
+    @include themed() {
+      background-color: t(bg-1);
+      border: none;
+    }
+    &:hover {
+      @include themed() {
+        background-color: t(bg-1);
+      }
+    }
+  }
 }
 
 .sendbird-form-message__input__label {
@@ -97,10 +145,8 @@
   display: flex;
   word-wrap: break-word;
   width: calc(100% - 24px);
-  @include themed() {
-    color: t(dol-1-dod-1);
-    background-color: t(dod-2-lol-4);
-  }
+  color: var(--form__submitted-input-box__color);
+  background-color: var(--form__submitted-input-box__bg-color);
   border: none;
   pointer-events: none;
   border-radius: 4px;
@@ -136,40 +182,38 @@
   &.default {
     @include themed() {
       color: t(on-bg-2);
-      background-color: t(lbg-50-lol-3);
       border: 1px solid t(on-bg-4);
       cursor: pointer;
+      background-color: var(--form__chip__bg-color__default);
       &:hover {
         color: t(primary--3-2);
-        background-color: t(lbg-50-lol-3);
         border: 1px solid t(primary--3-2);
       }
       &:focus {
         color: t(on-bg-2);
-        background-color: t(lbg-50-lol-3);
-        border: 1px solid t(lp-300-dod-2);
+        border: 1px solid var(--form__chip__bd-color__default-focus);
         outline: none;
-        box-shadow: 0 0 0 1px t(lp-300-dod-2);
+        box-shadow: 0 0 0 1px var(--form__chip__bd-color__default-focus);
       }
     }
   }
   &.selected {
     @include themed() {
       color: t(primary--3-2);
-      background-color: t(lp-100-dbg-600);
+      background-color: var(--form__chip__bg-color__selected);
       border: 1px solid t(primary--3-2);
       cursor: pointer;
       &:hover {
         color: t(primary--3-2);
-        background-color: t(lbg-50-lol-3);
+        background-color: var(--form__chip__bg-color__selected-hover);
         border: 1px solid t(primary--3-2);
       }
       &:focus {
-        color: t(lp-300-dod-2);
-        background-color: t(lbg-50-lol-3);
-        border: 1px solid t(lp-300-dod-2);
+        color: var(--form__chip__color__selected-focus);
+        background-color: var(--form__chip__bg-color__selected-focus);
+        border: 1px solid var(--form__chip__bd-color__selected-focus);
         outline: none;
-        box-shadow: 0 0 0 1px t(lp-300-dod-2);
+        box-shadow: 0 0 0 1px var(--form__chip__bd-color__selected-focus);
       }
     }
   }
@@ -178,8 +222,8 @@
     cursor: default;
     padding: 6px 16px;
     @include themed() {
-      color: t(lol-2-dod-4);
-      background-color: t(dod-2-dbg-500);
+      color: var(--form__chip__color__submitted-default);
+      background-color: var(--form__chip__bg-color__submitted-default);
     }
   }
   &.submittedSelected {
@@ -188,7 +232,7 @@
     padding: 6px 16px;
     @include themed() {
       color: t(on-bg-1);
-      background-color: t(dod-2-lol-4);
+      background-color: var(--form__chip__bg-color__submitted-selected);
     }
   }
 }
