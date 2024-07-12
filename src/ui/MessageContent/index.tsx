@@ -193,7 +193,9 @@ export default function MessageContent(props: MessageContentProps): ReactElement
   const isFeedbackMessage = !isByMe
     && !!message?.myFeedbackStatus
     && message.myFeedbackStatus !== SbFeedbackStatus.NOT_APPLICABLE;
-  const isFeedbackEnabled = !!config?.groupChannel?.enableFeedback && isFeedbackMessage;
+  const isFeedbackEnabled = !!config?.groupChannel?.enableFeedback
+    && isFeedbackMessage
+    && !isFormMessage(message);
 
   /**
    * For TemplateMessage, do not display:

@@ -185,7 +185,9 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     onMessagesReceived: () => {
       // FIXME: onMessagesReceived called with onApiResult
       if (isScrollBottomReached && isContextMenuClosed()) {
-        scrollPubSub.publish('scrollToBottom', {});
+        setTimeout(() => {
+          scrollPubSub.publish('scrollToBottom', {});
+        }, 10);
       }
     },
     onChannelDeleted: () => {
