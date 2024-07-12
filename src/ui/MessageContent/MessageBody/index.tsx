@@ -77,21 +77,13 @@ export const MessageBody = (props: MessageBodyProps) => {
   const isFormMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableFormTypeMessage;
 
   return match(message)
-    .when(isFormMessage, () => (
-      isFormMessageEnabledInGroupChannel
-        ? <FormMessageItemBody
-        message={message as BaseMessage}
-        form={message.messageForm}
-      /> : <TextMessageItemBody
-          className={MESSAGE_ITEM_BODY_CLASSNAME}
-          message={message as UserMessage}
-          isByMe={isByMe}
-          mouseHover={mouseHover}
-          isMentionEnabled={config.groupChannel.enableMention ?? false}
-          isReactionEnabled={isReactionEnabledInChannel}
-          isMarkdownEnabled={config.groupChannel.enableMarkdownForUserMessage}
+    .when((message) => isFormMessageEnabledInGroupChannel && isFormMessage(message),
+      () => (
+        <FormMessageItemBody
+          message={message as BaseMessage}
+          form={message.messageForm}
         />
-    ))
+      ))
     .when(isTemplateMessage, () => (
       <TemplateMessageItemBody
         className={className}
