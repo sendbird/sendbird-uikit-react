@@ -56,6 +56,7 @@
   line-height: 14px;
   display: block;
   margin: 0;
+  font-weight: 500;
 }
 
 .sendbird-form-message__input__title-container {
@@ -81,11 +82,13 @@
 .sendbird-form-message__input__textarea {
   display: block; // Without this, parent height does not fit this height.
   ::placeholder {
-    color: var(--sendbird-light-onlight-03);
+    @include themed() {
+      color: t(inverse-on-content-3);
+    }
   }
   resize: none;
   height: 96px !important;
-  padding: 8px 12px !important;
+  padding: 7px 12px !important;
 }
 
 .sendbird-form-message__error-label {
@@ -173,7 +176,7 @@
 
 .sendbird-form-message__input__chip {
   border-radius: 100px;
-  padding: 5px 15px;
+  padding: 5px 11px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -220,7 +223,7 @@
   &.submittedDefault {
     border: none;
     cursor: default;
-    padding: 6px 16px;
+    padding: 6px 12px;
     @include themed() {
       color: var(--form__chip__color__submitted-default);
       background-color: var(--form__chip__bg-color__submitted-default);
@@ -229,7 +232,7 @@
   &.submittedSelected {
     border: none;
     cursor: default;
-    padding: 6px 16px;
+    padding: 6px 12px;
     @include themed() {
       color: t(on-bg-1);
       background-color: var(--form__chip__bg-color__submitted-selected);
