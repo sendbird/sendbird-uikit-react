@@ -51,5 +51,6 @@ export const isDisabledBecauseMessageForm = (
 ) => {
   return enableFormTypeMessage
     && !!channel?.lastMessage?.messageForm
+    && !channel?.lastMessage?.messageForm.isSubmitted
     && !!channel?.lastMessage?.extendedMessagePayload?.disable_chat_input;
 };
