@@ -8,32 +8,24 @@ import ChannelListUI, { ChannelListUIProps } from './components/ChannelListUI';
 
 export interface ChannelListProps extends ChannelListProviderProps, ChannelListUIProps {}
 
+/**
+ * @deprecated This component is deprecated and will be removed in future releases.
+ * Please use the `GroupChannelList` component from '@sendbird/uikit-react/GroupChannelList' instead.
+ * 
+ * Example usage:
+ * 
+ * import { GroupChannelList } from '@sendbird/uikit-react/GroupChannelList';
+ * 
+ * <GroupChannelList
+ *   // pass required props here
+ * />
+ * 
+ * The `GroupChannelList` component provides enhanced functionality and improved performance.
+ */
 const ChannelList: React.FC<ChannelListProps> = (props: ChannelListProps) => {
   return (
-    <ChannelListProvider
-      className={props?.className}
-      disableUserProfile={props?.disableUserProfile}
-      allowProfileEdit={props?.allowProfileEdit}
-      onBeforeCreateChannel={props?.onBeforeCreateChannel}
-      onThemeChange={props?.onThemeChange}
-      overrideInviteUser={props?.overrideInviteUser}
-      onProfileEditSuccess={props?.onProfileEditSuccess}
-      onChannelSelect={props?.onChannelSelect}
-      sortChannelList={props?.sortChannelList}
-      queries={props?.queries}
-      disableAutoSelect={props?.disableAutoSelect}
-      activeChannelUrl={props?.activeChannelUrl}
-      isTypingIndicatorEnabled={props?.isTypingIndicatorEnabled}
-      isMessageReceiptStatusEnabled={props?.isMessageReceiptStatusEnabled}
-      reconnectOnIdle={props?.reconnectOnIdle}
-    >
-      <ChannelListUI
-        renderChannelPreview={props?.renderChannelPreview}
-        renderHeader={props?.renderHeader}
-        renderPlaceHolderEmptyList={props?.renderPlaceHolderEmptyList}
-        renderPlaceHolderError={props?.renderPlaceHolderError}
-        renderPlaceHolderLoading={props?.renderPlaceHolderLoading}
-      />
+    <ChannelListProvider {...props}>
+      <ChannelListUI {...props}/>
     </ChannelListProvider>
   );
 };
