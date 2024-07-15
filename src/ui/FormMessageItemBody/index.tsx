@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useState } from 'react';
 
 import './index.scss';
 import Button from '../Button';
-import Label, { LabelColors, LabelTypography } from '../Label';
+import { LabelColors, LabelTypography } from '../Label';
 import MessageFeedbackFailedModal from '../MessageFeedbackFailedModal';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import FormInput from './FormInput';
