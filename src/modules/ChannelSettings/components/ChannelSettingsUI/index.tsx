@@ -29,11 +29,15 @@ export interface ChannelSettingsUIProps {
   renderLeaveChannel?: () => React.ReactElement;
   renderPlaceholderError?: () => React.ReactElement;
   renderPlaceholderLoading?: () => React.ReactElement;
+  /**
+   * @deprecated This prop is deprecated and will be removed in future releases.
+   * Please use the `renderUserListItem` prop of the `ChannelSettingsProvider` instead.
+   */
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
 }
 
 const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
-  const menuItems = useMenuItems({ renderUserListItem: props?.renderUserListItem });
+  const { channel, invalidChannel, onCloseClick, loading } = useChannelSettingsContext();
   const {
     renderHeader = (props: ChannelSettingsHeaderProps) => <ChannelSettingsHeader {...props} />,
     renderLeaveChannel,
@@ -42,9 +46,9 @@ const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
     renderPlaceholderError,
     renderPlaceholderLoading,
   } = deleteNullish(props);
+  const menuItems = useMenuItems();
 
   const state = useSendbirdStateContext();
-  const { channel, invalidChannel, onCloseClick, loading } = useChannelSettingsContext();
   const [showLeaveChannelModal, setShowLeaveChannelModal] = useState(false);
 
   const isOnline = state?.config?.isOnline;

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { GroupChannel, GroupChannelUpdateParams } from '@sendbird/chat/groupChannel';
 
+import type { UserListItemProps } from '../../../ui/UserListItem';
+import type { RenderUserProfileProps } from '../../../types';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { RenderUserProfileProps } from '../../../types';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import uuidv4 from '../../../utils/uuid';
 import { useAsyncRequest } from '../../../hooks/useAsyncRequest';
@@ -24,21 +25,7 @@ type OverrideInviteUserType = {
   channel: GroupChannel;
 };
 
-export type ChannelSettingsContextProps = {
-  children?: React.ReactElement;
-  channelUrl: string;
-  className?: string;
-  onCloseClick?(): void;
-  onLeaveChannel?(): void;
-  overrideInviteUser?(params: OverrideInviteUserType): void;
-  onChannelModified?(channel: GroupChannel): void;
-  onBeforeUpdateChannel?(currentTitle: string, currentImg: File, data: string): GroupChannelUpdateParams;
-  queries?: ChannelSettingsQueries;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
-  disableUserProfile?: boolean;
-};
-
-interface ChannelSettingsProviderInterface {
+interface CommonChannelSettingsProps {
   channelUrl: string;
   onCloseClick?(): void;
   onLeaveChannel?(): void;
@@ -46,6 +33,15 @@ interface ChannelSettingsProviderInterface {
   onChannelModified?(channel: GroupChannel): void;
   onBeforeUpdateChannel?(currentTitle: string, currentImg: File | null, data: string | undefined): GroupChannelUpdateParams;
   queries?: ChannelSettingsQueries;
+  renderUserListItem?: (props: UserListItemProps) => ReactNode;
+}
+export interface ChannelSettingsContextProps extends CommonChannelSettingsProps {
+  children?: React.ReactElement;
+  className?: string;
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  disableUserProfile?: boolean;
+}
+interface ChannelSettingsProviderInterface extends CommonChannelSettingsProps {
   setChannelUpdateId(uniqId: string): void;
   forceUpdateUI(): void;
   channel: GroupChannel | null;
@@ -67,6 +63,7 @@ const ChannelSettingsProvider = ({
   queries,
   renderUserProfile,
   disableUserProfile,
+  renderUserListItem,
 }: ChannelSettingsContextProps) => {
   const { config, stores } = useSendbirdStateContext();
   const { sdkStore } = stores;
@@ -129,6 +126,7 @@ const ChannelSettingsProvider = ({
         channel,
         loading,
         invalidChannel: Boolean(error),
+        renderUserListItem,
       }}
     >
       <UserProfileProvider
