@@ -11,16 +11,8 @@ export interface ChannelListProps extends ChannelListProviderProps, ChannelListU
 /**
  * @deprecated This component is deprecated and will be removed in future releases.
  * Please use the `GroupChannelList` component from '@sendbird/uikit-react/GroupChannelList' instead.
- *
- * Example usage:
- *
- * import { GroupChannelList } from '@sendbird/uikit-react/GroupChannelList';
- *
- * <GroupChannelList
- *   // pass required props here
- * />
- *
- * The `GroupChannelList` component provides enhanced functionality and improved performance.
+ * For more information, please refer to the migration guide:
+ * https://docs.sendbird.com/docs/chat/uikit/v3/react/introduction/group-channel-migration-guide
  */
 const ChannelList: React.FC<ChannelListProps> = (props: ChannelListProps) => {
   return (

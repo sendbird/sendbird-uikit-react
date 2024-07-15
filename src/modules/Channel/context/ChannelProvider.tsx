@@ -164,17 +164,9 @@ const ChannelContext = React.createContext<ChannelProviderInterface | null>(null
 
 /**
  * @deprecated This provider is deprecated and will be removed in future releases.
- * Please use the `GroupChannelProvider` from '@sendbird/uikit-react/GroupChannel/context' instead.
- *
- * Example usage:
- *
- * import { GroupChannelProvider } from '@sendbird/uikit-react/GroupChannel/context';
- *
- * <GroupChannelProvider
- *   // pass required props here
- * >
- *   {children}
- * </GroupChannelProvider>
+ * Please use the `GroupChannelProvider` from '@sendbird/uikit-react/GroupChannel' instead.
+ * For more information, please refer to the migration guide:
+ * https://docs.sendbird.com/docs/chat/uikit/v3/react/introduction/group-channel-migration-guide
  */
 const ChannelProvider = (props: ChannelContextProps) => {
   const {

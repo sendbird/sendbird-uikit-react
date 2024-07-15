@@ -112,17 +112,9 @@ const ChannelListContext = React.createContext<ChannelListProviderInterface | nu
 
 /**
  * @deprecated This provider is deprecated and will be removed in future releases.
- * Please use the `GroupChannelListProvider` from '@sendbird/uikit-react/GroupChannelList/context' instead.
- *
- * Example usage:
- *
- * import { GroupChannelListProvider } from '@sendbird/uikit-react/GroupChannelList/context';
- *
- * <GroupChannelListProvider
- *   // pass required props here
- * >
- *   {children}
- * </GroupChannelListProvider>
+ * Please use the `GroupChannelListProvider` from '@sendbird/uikit-react/GroupChannelList' instead.
+ * For more information, please refer to the migration guide:
+ * https://docs.sendbird.com/docs/chat/uikit/v3/react/introduction/group-channel-migration-guide
  */
 const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelListProviderProps) => {
   // destruct props
