@@ -57,7 +57,7 @@ interface UseMenuItemsParams {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
 }
 export const useMenuItems = (props?: UseMenuItemsParams): MenuItems => {
-  const { renderUserListItem } = props;
+  const { renderUserListItem = undefined } = props ?? {};
   const [frozen, setFrozen] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
   const { channel } = useChannelSettingsContext();
