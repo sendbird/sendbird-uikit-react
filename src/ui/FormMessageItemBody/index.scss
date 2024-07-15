@@ -29,8 +29,8 @@
   --form__chip__bg-color__selected: var(--sendbird-dark-background-600);
   --form__chip__bg-color__selected-hover: var(--sendbird-light-onlight-03);
   --form__chip__bg-color__selected-focus: var(--sendbird-light-onlight-03);
-  --form__chip__bg-color__submitted-default: var(--sendbird-dark-background-500);
-  --form__chip__bg-color__submitted-selected: var(-sendbird-light-onlight-04);
+  --form__chip__bg-color__submitted-default: var(--sendbird-light-onlight-04);
+  --form__chip__bg-color__submitted-selected: var(--sendbird-light-onlight-04);
   
   --form__chip__bd-color__default-focus: var(--sendbird-dark-ondark-02);
   --form__chip__bd-color__selected-focus: var(--sendbird-dark-ondark-02);
@@ -38,8 +38,8 @@
   --form__submitted-input-box__color: var(--sendbird-dark-ondark-01);
   --form__submitted-input-box__bg-color: var(--sendbird-light-onlight-04);
   
-  --form__submit-button__color__disabled: var(--sendbird-dark-ondark-04);
-  --form__submit-button__bg-color__disabled: var(--sendbird-dark-background-500);
+  --form__submit-button__color__disabled: var(--sendbird-light-onlight-01);
+  --form__submit-button__bg-color__disabled: var(--sendbird-dark-ondark-04);
 }
 
 .sendbird-form-message__submit-button {
