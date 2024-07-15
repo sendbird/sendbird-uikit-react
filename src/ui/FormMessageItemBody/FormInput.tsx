@@ -176,19 +176,29 @@ const FormInput = (props: InputProps) => {
                       )}
                     </div>
                   ) : (
-                    <textarea
-                      className={classnames('sendbird-input__input', 'sendbird-form-message__input__textarea')}
-                      required={required}
-                      disabled={disabled}
-                      value={currentValue}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        onChange(value ? [value] : []);
-                      }}
-                      placeholder={!disabled ? placeHolder : ''}
-                    />
+                    <>
+                      <textarea
+                        className={classnames('sendbird-input__input', 'sendbird-form-message__input__textarea')}
+                        required={required}
+                        disabled={disabled}
+                        value={currentValue}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          onChange(value ? [value] : []);
+                        }}
+                      />
+                      {(!disabled && placeHolder && !currentValue) && (
+                        <Label
+                          className='sendbird-input__placeholder'
+                          type={LabelTypography.BODY_1}
+                          color={LabelColors.ONBACKGROUND_3}
+                        >
+                          {placeHolder}
+                        </Label>
+                      )}
+                    </>
                   )}
                 </div>
               );
@@ -199,10 +209,10 @@ const FormInput = (props: InputProps) => {
             case 'email': {
               const currentValue = values.length > 0 ? values[0] : '';
               return (
-                <div className='sendbird-form-message__input__container'>
+                <div className="sendbird-form-message__input__container">
                   {isSubmitted ? (
-                    <div className='sendbird-form-message__submitted-input-box'>
-                      <div className='sendbird-form-message__submitted-input-box-text'>{currentValue}</div>
+                    <div className="sendbird-form-message__submitted-input-box">
+                      <div className="sendbird-form-message__submitted-input-box-text">{currentValue}</div>
                       {isValid && (
                         <div className="sendbird-form-message__submitted-check-icon-container">
                           <Icon
@@ -215,21 +225,31 @@ const FormInput = (props: InputProps) => {
                       )}
                     </div>
                   ) : (
-                    <input
-                      type={layout}
-                      className={`sendbird-input__input ${errorMessage ? 'error' : ''}`}
-                      name={name}
-                      required={required}
-                      disabled={disabled}
-                      value={currentValue}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        onChange(value ? [value] : []);
-                      }}
-                      placeholder={!disabled ? placeHolder : ''}
-                    />
+                    <>
+                      <input
+                        type={layout}
+                        className={`sendbird-input__input ${errorMessage ? 'error' : ''}`}
+                        name={name}
+                        required={required}
+                        disabled={disabled}
+                        value={currentValue}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          onChange(value ? [value] : []);
+                        }}
+                      />
+                      {(!disabled && placeHolder && !currentValue) && (
+                        <Label
+                          className='sendbird-input__placeholder'
+                          type={LabelTypography.BODY_1}
+                          color={LabelColors.ONBACKGROUND_3}
+                        >
+                          {placeHolder}
+                        </Label>
+                      )}
+                    </>
                   )}
                 </div>
               );
