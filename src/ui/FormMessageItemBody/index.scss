@@ -114,6 +114,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 16px 12px;
+  min-width: calc(244px - 24px);
   border-radius: 16px;
   overflow: hidden;
 }
