@@ -16,6 +16,9 @@
   
   --form__submitted-input-box__color: var(--sendbird-dark-onlight-01);
   --form__submitted-input-box__bg-color: var(--sendbird-dark-ondark-02);
+  
+  --form__submit-button__color__disabled: var(--sendbird-light-background-50);
+  --form__submit-button__bg-color__disabled: var(--sendbird-light-onlight-04);
 }
 
 .sendbird-theme--dark {
@@ -34,19 +37,24 @@
   
   --form__submitted-input-box__color: var(--sendbird-dark-ondark-01);
   --form__submitted-input-box__bg-color: var(--sendbird-light-onlight-04);
+  
+  --form__submit-button__color__disabled: var(--sendbird-dark-ondark-04);
+  --form__submit-button__bg-color__disabled: var(--sendbird-dark-background-500);
 }
 
 .sendbird-form-message__submit-button {
   width: 100%;
+  
   &.sendbird-button__disabled {
     cursor: not-allowed;
-    @include themed() {
-      background-color: t(bg-1);
-      border: none;
+    &.sendbird-button--primary .sendbird-button__text {
+      color: var(--form__submit-button__color__disabled);
     }
-    &:hover {
-      @include themed() {
-        background-color: t(bg-1);
+    @include themed() {
+      background-color: var(--form__submit-button__bg-color__disabled);
+      border: none;
+      &:hover {
+        background-color: var(--form__submit-button__bg-color__disabled);
       }
     }
   }
@@ -123,15 +131,6 @@
   margin-left: 4px;
 }
 
-.sendbird-form-message__submit-button-text {
-  @include themed() {
-    color: t(on-content-1);
-  }
-  &.disabled {
-    color: inherit;
-  }
-}
-
 .sendbird-form-message__submitted-check-icon-container {
   display: flex;
   height: auto;
@@ -168,7 +167,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 500;
   font-style: normal;
   line-height: 20px;
   letter-spacing: normal;

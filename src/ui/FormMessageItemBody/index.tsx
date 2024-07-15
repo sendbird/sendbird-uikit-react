@@ -143,15 +143,10 @@ export default function FormMessageItemBody(props: Props) {
         className='sendbird-form-message__submit-button'
         onClick={handleSubmit}
         disabled={isButtonDisabled}
+        labelType={LabelTypography.BUTTON_2}
+        labelColor={LabelColors.ONCONTENT_1}
       >
-        <Label
-          type={LabelTypography.BUTTON_2}
-          color={
-            isButtonDisabled ? LabelColors.ONBACKGROUND_4 : LabelColors.ONCONTENT_1
-          }
-        >
-          {isSubmitted ? 'Submitted successfully' : 'Submit'}
-        </Label>
+        {isSubmitted ? 'Submitted successfully' : 'Submit'}
       </Button>
       {submitFailed && (
         <MessageFeedbackFailedModal
