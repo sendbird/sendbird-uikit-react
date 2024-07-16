@@ -30,7 +30,7 @@ export interface ChannelSettingsUIProps {
   renderPlaceholderError?: () => React.ReactElement;
   renderPlaceholderLoading?: () => React.ReactElement;
   /**
-   * @deprecated This prop is deprecated and will be removed in future releases.
+   * @deprecated This prop is deprecated and will be removed in the next major update.
    * Please use the `renderUserListItem` prop of the `ChannelSettingsProvider` instead.
    */
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
