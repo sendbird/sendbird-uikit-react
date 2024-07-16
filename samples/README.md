@@ -55,11 +55,11 @@ import SendbirdApp from '@sendbird/uikit-react/App';
 
 Here is a list of the essential components that you need to import before you start customizing chat. Note that the names of the components are changed as shown in the code below.
 
-Try [importing components on StackBlitz](https://stackblitz.com/edit/sendbird-react-uikit-customized-app).
+Try [importing components on StackBlitz](https://stackblitz.com/edit/sendbird-react-uikit-customized-app-cefvhx).
 
 ```javascript
-import SBConversation from '@sendbird/uikit-react/Channel';
-import SBChannelList from '@sendbird/uikit-react/ChannelList';
+import SBConversation from '@sendbird/uikit-react/GroupChannel';
+import SBChannelList from '@sendbird/uikit-react/GroupChannelList';
 import SBChannelSettings from '@sendbird/uikit-react/ChannelSettings';
 import withSendBird from '@sendbird/uikit-react/withSendbird';
 ```
@@ -80,19 +80,19 @@ This section explains what you need to know before testing the sample app.
 
 The **renderChatItem** is a `ReactElement` prop in the Channel component which you can use to customize `message` by setting a function. This prop provides three arguments: **message**, **onUpdateMessage**, and **onDeleteMessage**. The **message** represents an already sent or received message of an `BaseMessage` object; **onUpdateMessage** and **onDeleteMessage** are callback functions which you can implement with custom code for events related to the corresponding user actions.
 
-Try your [message item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-item).
+Try your [message item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-item-bnwbvi).
 
 ```javascript
-<Channel
-    renderChatItem={({
-        message,
-        onDeleteMessage,
-        onUpdateMessage,
-        onResendMessage,
-        emojiContainer,
-    }) => {
-        <CustomizedMessageItem />
-    }}
+<GroupChannel
+  renderChatItem={({
+      message,
+      onDeleteMessage,
+      onUpdateMessage,
+      onResendMessage,
+      emojiContainer,
+  }) => (
+    <CustomizedMessageItem />
+  )}
 >
 ```
 
@@ -102,7 +102,7 @@ Try your [message item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit
 
 The **queries.messageListParams** is an `instance` prop in the **channel** component which you can use to retrieve a list of messages by specifying the properties of `MessageListParams`.
 
-Try your [message list params on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-list-params).
+Try your [message list params on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-list-params-aora77).
 
 > Note: On StackBlitz preview, only the messages you sent will be displayed.
 
@@ -120,22 +120,22 @@ const queries = useMemo(() => ({
   },
 }));
 
-<Channel queries={queries} />;
+<GroupChannel queries={queries} />;
 ```
 
 ### Message params
 
 The **onBeforeSendUserMessage**, **onBeforeSendFileMessage**, and **onBeforeUpdateUserMessage** are `callback function` props in the **channel** component. The first two execute additional operations for a user message and a file message respectively; the corresponding modified messages are returned through the **text** and the **file** arguments respectively. The **onBeforeUpdateUserMessage** executes additional operations for a user message before updating it.
 
-Try your [message params on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-params)
+Try your [message params on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-params-4yemw4)
 
 > Note: On the StackBlitz preview, you can send or update a message in highlight.
 
 ```javascript
-<Channel
-    onBeforeSendUserMessage={(text) => {}}
-    onBeforeSendFileMessage={(file) => {}}
-    onBeforeUpdateUserMessage={handleUpdateUserMessage}
+<GroupChannel
+  onBeforeSendUserMessage={(text) => {}}
+  onBeforeSendFileMessage={(file) => {}}
+  onBeforeUpdateUserMessage={handleUpdateUserMessage}
 >
 ```
 
@@ -155,13 +155,13 @@ Find out more about `UserMessageCreateParams`, `UserMessageUpdateParams` and `Fi
 
 The **renderChatHeader** is a `ReactElement` prop in the **channel** component which you can use to customize the header of `channel` by setting a function. This prop provides two arguments: **channel** and **user**. The channel refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user.
 
-Try your [chat header on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-chat-header)
+Try your [chat header on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-chat-header-xjewem)
 
 ```javascript
-<Channel
-    renderChannelHeader={() => (
-        <CustomizedHeader />
-    )}
+<GroupChannel
+  renderChannelHeader={() => (
+      <CustomizedHeader />
+  )}
 >
 ```
 
@@ -171,13 +171,13 @@ Try your [chat header on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-
 
 The **renderMessageInput** is a `ReactElement` prop in the **Channel** component which allows you to customize the message input by setting a function. This prop provides three arguments: **channel**, **user**, and **disabled**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user. The **disabled** refers to whether to enable the message input box or not.
 
-Try your [message input on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-input)
+Try your [message input on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-input-mnw6qv)
 
 ```javascript
-<Channel
-    renderMessageInput={() => (
-        <CustomizedMessageInput />
-    )}
+<GroupChannel
+  renderMessageInput={() => (
+      <CustomizedMessageInput />
+  )}
 >
 ```
 
@@ -187,13 +187,13 @@ Try your [message input on StackBlitz](https://stackblitz.com/edit/sendbird-uiki
 
 The **renderChannelPreview** is a `ReactElement` prop in the **ChannelList** component which allows you to customize channel preview by setting a function. This prop provides two arguments: **channel** and **onLeaveChannel**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **onLeaveChannel** has a callback function as an argument which can be implemented with custom code for events related to the corresponding user action.
 
-Try your [channel preview item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-channel-preview)
+Try your [channel preview item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-channel-preview-uekro8)
 
 ```javascript
-<ChannelList
-    renderChannelPreview={({ channel, onLeaveChannel }) => (
-        <CustomizedChannelPreviewItem />
-    )}
+<GroupChannelList
+  renderChannelPreview={({ channel, onLeaveChannel }) => (
+      <CustomizedChannelPreviewItem />
+  )}
 >
 ```
 
@@ -203,10 +203,10 @@ You can make your own customized channel preview item component in this file. Yo
 
 ```javascript
 const CustomizedChannelPreviewItem = (props) => {
-    const { channel } = props;
-    const onLeaveChannel = sendbirdSelectors.getLeaveGroupChannel(store);
-    ...
-    onLeaveChannel(channel);
+  const { channel } = props;
+  const onLeaveChannel = sendbirdSelectors.getLeaveGroupChannel(store);
+  ...
+  onLeaveChannel(channel);
 }
 ```
 
@@ -214,29 +214,22 @@ const CustomizedChannelPreviewItem = (props) => {
 
 The **queries.channelListQuery** is an `instance` prop in the **ChannelList** component which filters channels by using its options.
 
-Try your [channel list query item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-channel-list-queries)
+Try your [channel list query item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-channel-list-queries-5ppaf9)
 
 > Note: On the StackBlitz’s preview, the empty channels that you see means that the channels are successfully created and there are no messages sent by users.
 
 ```javascript
 // Pass arguments in JSON data input format to the query instance.
   const queries = useMemo(() => ({
-    channelListQuery: {
-      // Should be an instance of GroupChannelListQueryParams
-      // https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat_groupChannel.GroupChannelListQueryParams.html
-      includeEmpty: true,
-      limit: 50,
-      order: 'chronological',
-    },
-    applicationUserListQuery: {
-      // Should be an instance of ApplicaitonUserListQuery
-      // https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat.ApplicationUserListQueryParams.html
-      nicknameStartsWithFilter: 'Jackson',
-    },
+    // Should be an instance of GroupChannelListQueryParams
+    // https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat_groupChannel.GroupChannelListQueryParams.html
+    includeEmpty: true,
+    limit: 50,
+    order: 'chronological',
   }));
 
-<ChannelList
-    queries={queries}
+<GroupChannelList
+  queries={queries}
 >
 ```
 
@@ -246,13 +239,13 @@ Find out more about `ChannelListQuery` and `ApplicationUserListQuery` on the [AP
 
 The **onBeforeCreateChannel** is a prop of the **ChannelList** component which can be implemented with custom code for events related to the corresponding user actions.
 
-Try your [channel param on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-channel-params)
+Try your [channel param on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-channel-params-lgjzsu)
 
 > Note: you can create a channel using `GroupChannelParams`.
 
 ```javascript
-<ChannelList
-    onBeforeCreateChannel={handleOnBeforeCreateChannel}
+<GroupChannelList
+  onBeforeCreateChannel={handleOnBeforeCreateChannel}
 >
 ```
 
