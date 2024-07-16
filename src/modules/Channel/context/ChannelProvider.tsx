@@ -163,7 +163,7 @@ export interface ChannelProviderInterface extends ChannelContextProps, MessageSt
 const ChannelContext = React.createContext<ChannelProviderInterface | null>(null);
 
 /**
- * @deprecated This provider is deprecated and will be removed in future releases.
+ * @deprecated This provider is deprecated and will be removed in the next major update.
  * Please use the `GroupChannelProvider` from '@sendbird/uikit-react/GroupChannel' instead.
  * For more information, please refer to the migration guide:
  * https://docs.sendbird.com/docs/chat/uikit/v3/react/introduction/group-channel-migration-guide
