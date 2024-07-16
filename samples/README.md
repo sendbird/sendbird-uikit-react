@@ -108,19 +108,17 @@ Try your [message list params on StackBlitz](https://stackblitz.com/edit/sendbir
 
 ```javascript
 // Pass arguments in JSON data input format to the query instance.
-const queries = useMemo(() => ({
+const queryParams = useMemo(() => ({
   // use object json type input, don't create sendbird query instance
   // https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat_message.MessageListParams.html
   // https://github.com/sendbird/sendbird-chat-sdk-javascript/blob/main/lib/__definition.d.ts#L764
-  messageListParams: {
-    senderUserIdsFilter: [USER_ID],
-    prevResultSize: 30,
-    includeReplies: false,
-    includeReactions: false,
-  },
+  senderUserIdsFilter: [USER_ID],
+  prevResultSize: 30,
+  includeReplies: false,
+  includeReactions: false,
 }));
 
-<GroupChannel queries={queries} />;
+<GroupChannel messageListQueryParams={queryParams} />;
 ```
 
 ### Message params
@@ -133,8 +131,8 @@ Try your [message params on StackBlitz](https://stackblitz.com/edit/sendbird-uik
 
 ```javascript
 <GroupChannel
-  onBeforeSendUserMessage={(text) => {}}
-  onBeforeSendFileMessage={(file) => {}}
+  onBeforeSendUserMessage={(params) => {}}
+  onBeforeSendFileMessage={(params) => {}}
   onBeforeUpdateUserMessage={handleUpdateUserMessage}
 >
 ```
@@ -142,9 +140,9 @@ Try your [message params on StackBlitz](https://stackblitz.com/edit/sendbird-uik
 In order to complete an operation you intend to carry out with each function, you should return `UserMessageCreateParams`, `UserMessageUpdateParams` and `FileMessageCreateParams` objects.
 
 ```javascript
-const handleUpdateUserMessage = (text) => {
+const handleUpdateUserMessage = ({ message }) => {
   const userMessageParams = {};
-  userMessageParams.message = text;
+  userMessageParams.message = message;
   return userMessageParams;
 };
 ```
@@ -160,7 +158,7 @@ Try your [chat header on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-
 ```javascript
 <GroupChannel
   renderChannelHeader={() => (
-      <CustomizedHeader />
+    <CustomizedHeader />
   )}
 >
 ```
@@ -176,7 +174,7 @@ Try your [message input on StackBlitz](https://stackblitz.com/edit/sendbird-uiki
 ```javascript
 <GroupChannel
   renderMessageInput={() => (
-      <CustomizedMessageInput />
+    <CustomizedMessageInput />
   )}
 >
 ```
@@ -192,7 +190,7 @@ Try your [channel preview item on StackBlitz](https://stackblitz.com/edit/sendbi
 ```javascript
 <GroupChannelList
   renderChannelPreview={({ channel, onLeaveChannel }) => (
-      <CustomizedChannelPreviewItem />
+    <CustomizedChannelPreviewItem />
   )}
 >
 ```
@@ -220,7 +218,7 @@ Try your [channel list query item on StackBlitz](https://stackblitz.com/edit/sen
 
 ```javascript
 // Pass arguments in JSON data input format to the query instance.
-  const queries = useMemo(() => ({
+  const queryParams = useMemo(() => ({
     // Should be an instance of GroupChannelListQueryParams
     // https://sendbird.com/docs/chat/v4/javascript/ref/interfaces/_sendbird_chat_groupChannel.GroupChannelListQueryParams.html
     includeEmpty: true,
@@ -229,7 +227,7 @@ Try your [channel list query item on StackBlitz](https://stackblitz.com/edit/sen
   }));
 
 <GroupChannelList
-  queries={queries}
+  channelListQueryParams={queryParams}
 >
 ```
 
