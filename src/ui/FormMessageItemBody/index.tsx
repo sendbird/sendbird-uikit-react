@@ -31,7 +31,6 @@ export default function FormMessageItemBody(props: Props) {
   const { stringSet } = useContext(LocalizationContext);
   const { config } = useSendbirdStateContext();
   const { logger } = config;
-
   const [submitFailed, setSubmitFailed] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [formValues, setFormValues] = useState<FormValue[]>(() => {

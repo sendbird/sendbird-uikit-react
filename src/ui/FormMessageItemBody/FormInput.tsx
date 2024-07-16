@@ -174,6 +174,15 @@ const FormInput = (props: InputProps) => {
                           />
                         </div>
                       )}
+                      {(placeHolder && !currentValue) && (
+                        <Label
+                          className='sendbird-input__placeholder'
+                          type={LabelTypography.BODY_1}
+                          color={LabelColors.ONBACKGROUND_3}
+                        >
+                          No Response
+                        </Label>
+                      )}
                     </div>
                   ) : (
                     <>
@@ -222,6 +231,15 @@ const FormInput = (props: InputProps) => {
                             height="20px"
                           />
                         </div>
+                      )}
+                      {(placeHolder && !currentValue) && (
+                        <Label
+                          className='sendbird-input__placeholder'
+                          type={LabelTypography.BODY_1}
+                          color={LabelColors.ONBACKGROUND_3}
+                        >
+                          No response
+                        </Label>
                       )}
                     </div>
                   ) : (
