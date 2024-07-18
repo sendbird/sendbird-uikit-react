@@ -1,5 +1,43 @@
 # Changelog - v3
 
+## [v3.14.13] (July 18, 2024)
+
+### Features
+- **Address RTL UI Feedback**
+  - Fixed an issue where the `htmlTextDirection` prop didn't work when using `SendbirdProvider`, but only worked in the App module.
+  - Updated the paper plane icon to point left instead of right in RTL mode.
+  - Repositioned buttons in the modal footer to the right side instead of the left in RTL mode.
+
+- **Message Menu Customization in Threads**
+  - Added `renderMessageMenu` and `renderEmojiMenu` props to the `<ParentMessageInfo />`, `<ThreadListItem />`, and `<ThreadListItemContent />` components.
+  - **Example usage:**
+    ```tsx
+    <Thread
+      renderMessage={(props) => (
+        <ThreadListItem {...props} renderMessageMenu={(props) => (
+          <MessageMenu {...props} renderMenuItems={({ items }) => (
+            <>
+              <items.CopyMenuItem />
+              <items.DeleteMenuItem />
+            </>
+          )} />
+        )} />
+      )}
+    />
+    ```
+
+### Fixes
+- **Deprecation Marks on Channel & ChannelList Modules**
+  - Marked `Channel`, `ChannelProvider`, `ChannelList`, and `ChannelListProvider` as deprecated.
+
+### Chore
+- **Improve Stability of `useMenuItems`**
+  - Improved the stability of the `useMenuItems` hook.
+  - Exported `ChannelListQueryParamsType`.
+  - Moved the `renderUserListItem` prop to the Provider from the UI component.
+  - Exported the `ChannelSettingsMenuItem` component.
+
+
 ## [v3.14.12] (July 3, 2024)
 
 ### Features
