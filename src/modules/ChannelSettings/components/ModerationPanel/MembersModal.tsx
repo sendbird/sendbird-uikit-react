@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { Role } from '@sendbird/chat';
-import { type Member, MemberListQuery } from '@sendbird/chat/groupChannel';
+import type { Member, MemberListQuery, MemberListQueryParams } from '@sendbird/chat/groupChannel';
 
 import Modal from '../../../../ui/Modal';
 import UserListItem, { type UserListItemProps } from '../../../../ui/UserListItem';
@@ -19,12 +19,14 @@ import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
 export interface MembersModalProps {
   onCancel(): void;
-  renderUserListItem?: (props: UserListItemProps) => ReactNode;
+  renderUserListItem?: (props: UserListItemProps & { index: number }) => ReactNode;
+  memberListQueryParams?: MemberListQueryParams;
 }
 
 export function MembersModal({
   onCancel,
   renderUserListItem = (props) => <UserListItem {...props} />,
+  memberListQueryParams = {},
 }: MembersModalProps): ReactElement {
   const [members, setMembers] = useState<Member[]>([]);
   const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
@@ -35,6 +37,7 @@ export function MembersModal({
   useEffect(() => {
     const memberListQuery = channel?.createMemberListQuery({
       limit: 20,
+      ...memberListQueryParams,
     });
     memberListQuery?.next().then((members) => {
       setMembers(members);
@@ -65,10 +68,12 @@ export function MembersModal({
             },
           })}
         >
-          {members.map((member: Member) => (
+          {members.map((member: Member, index) => (
             <React.Fragment key={member.userId}>
               {
                 renderUserListItem({
+                  // NOTE: This `index` is used to display the current user's user item at the top when customizing externally.
+                  index,
                   user: member,
                   channel,
                   renderListItemMenu: (props) => (

@@ -5,7 +5,7 @@ import React, {
   useCallback,
   ReactNode,
 } from 'react';
-import type { Member } from '@sendbird/chat/groupChannel';
+import type { Member, MemberListQueryParams } from '@sendbird/chat/groupChannel';
 
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
@@ -14,13 +14,15 @@ import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
-import MembersModal from './MembersModal';
+import MutedMembersModal from './MutedMembersModal';
 
 interface MutedMemberListProps {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
+  memberListQueryParams?: MemberListQueryParams;
 }
 export const MutedMemberList = ({
   renderUserListItem = (props) => <UserListItem {...props} />,
+  memberListQueryParams = {},
 }: MutedMemberListProps): ReactElement => {
   const [members, setMembers] = useState<Member[]>([]);
   const [hasNext, setHasNext] = useState(false);
@@ -36,6 +38,7 @@ export const MutedMemberList = ({
     }
     const memberUserListQuery = channel?.createMemberListQuery({
       limit: 10,
+      ...memberListQueryParams,
       // @ts-ignore
       mutedMemberFilter: 'muted',
     });
@@ -101,12 +104,13 @@ export const MutedMemberList = ({
       }
       {
         showModal && (
-          <MembersModal
+          <MutedMembersModal
             onCancel={() => {
               setShowModal(false);
               refreshList();
             }}
             renderUserListItem={renderUserListItem}
+            memberListQueryParams={memberListQueryParams}
           />
         )
       }
