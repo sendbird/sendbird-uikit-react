@@ -34,6 +34,7 @@ export default {
       chunkFileNames: 'chunks/bundle-[hash].js',
       format: "cjs",
       sourcemap: true,
+      interop: "compat",
     },
   ],
   external: [
