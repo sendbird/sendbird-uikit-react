@@ -311,10 +311,10 @@ export default function ParentMessageInfo({
         />
       </div>
       {/* context menu */}
-      <div className='sendbird-parent-message-info__menu-container'>
-        {!isMobile && (
-          <>
-            {renderMessageMenu({
+      {!isMobile && (
+        <div className='sendbird-parent-message-info__menu-container'>
+          {
+            renderMessageMenu({
               className: classnames('sendbird-parent-message-info__context-menu', isReactionEnabled && 'use-reaction', isMenuMounted && 'sendbird-mouse-hover'),
               channel: currentChannel,
               message: parentMessage,
@@ -327,21 +327,19 @@ export default function ParentMessageInfo({
                 onMoveToParentMessage?.({ message: parentMessage, channel: currentChannel });
               },
               deleteMessage: deleteMessage,
-            })}
-          </>
-        )}
-        {(isReactionEnabled && !isMobile) && (
-          <>
-            {renderEmojiMenu({
+            })
+          }
+          {isReactionEnabled && (
+            renderEmojiMenu({
               className: classnames('sendbird-parent-message-info__reaction-menu', isMenuMounted && 'sendbird-mouse-hover'),
               message: parentMessage,
               userId: userId,
               emojiContainer: emojiContainer,
               toggleReaction: toggleReaction,
-            })}
-          </>
-        )}
-      </div>
+            })
+          )}
+        </div>
+      )}
       {showRemove && (
         <RemoveMessage
           onCancel={() => setShowRemove(false)}
