@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useMemo, useState, useRef, useEffect, useLayoutEffect, ReactNode } from 'react';
 import format from 'date-fns/format';
 import type { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
 
@@ -21,6 +21,8 @@ import { SendableMessageType } from '../../../../utils';
 import { User } from '@sendbird/chat';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
 import { classnames } from '../../../../utils/utils';
+import type { MessageMenuProps } from '../../../../ui/MessageMenu';
+import type { MessageEmojiMenuProps } from '../../../../ui/MessageItemReactionMenu';
 
 export interface ThreadListItemProps {
   className?: string;
@@ -30,6 +32,8 @@ export interface ThreadListItemProps {
   hasSeparator?: boolean;
   renderCustomSeparator?: (props: { message: SendableMessageType }) => React.ReactElement;
   handleScroll?: () => void;
+  renderEmojiMenu?: (props: MessageEmojiMenuProps) => ReactNode;
+  renderMessageMenu?: (props: MessageMenuProps) => ReactNode;
 }
 
 export default function ThreadListItem({
@@ -40,6 +44,8 @@ export default function ThreadListItem({
   hasSeparator,
   renderCustomSeparator,
   handleScroll,
+  renderEmojiMenu,
+  renderMessageMenu,
 }: ThreadListItemProps): React.ReactElement {
   const { stores, config } = useSendbirdStateContext();
   const { isOnline, userMention, logger, groupChannel } = config;
@@ -247,6 +253,8 @@ export default function ThreadListItem({
         showFileViewer={setShowFileViewer}
         toggleReaction={toggleReaction}
         showEdit={setShowEdit}
+        renderEmojiMenu={renderEmojiMenu}
+        renderMessageMenu={renderMessageMenu}
       />
       {/* modal */}
       {showRemove && (
