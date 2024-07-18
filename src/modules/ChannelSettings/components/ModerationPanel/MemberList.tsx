@@ -57,6 +57,7 @@ export const MemberList = ({
           <React.Fragment key={member.userId}>
             {
               renderUserListItem({
+                // NOTE: This `index` is used to display the current user's user item at the top when customizing externally.
                 index,
                 user: member,
                 channel,
