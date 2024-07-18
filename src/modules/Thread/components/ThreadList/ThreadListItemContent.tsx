@@ -363,15 +363,13 @@ export default function ThreadListItemContent({
         {(!isByMe && !isMobile) && (
           <div className={`sendbird-thread-list-item-content-menu ${supposedHoverClassName}`}>
             {isReactionEnabledInChannel && (
-              <>
-                {renderEmojiMenu({
-                  className: 'sendbird-thread-list-item-content-menu__reaction-menu',
-                  message: message as SendableMessageType,
-                  userId: userId,
-                  emojiContainer: emojiContainer,
-                  toggleReaction: toggleReaction,
-                })}
-              </>
+              renderEmojiMenu({
+                className: 'sendbird-thread-list-item-content-menu__reaction-menu',
+                message: message as SendableMessageType,
+                userId: userId,
+                emojiContainer: emojiContainer,
+                toggleReaction: toggleReaction,
+              })
             )}
             {renderMessageMenu({
               className: 'sendbird-thread-list-item-content-menu__normal-menu',
