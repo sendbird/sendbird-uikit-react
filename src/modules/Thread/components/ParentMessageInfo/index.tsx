@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import format from 'date-fns/format';
 import { FileMessage } from '@sendbird/chat/message';
 
@@ -17,9 +17,8 @@ import SuggestedMentionList from '../SuggestedMentionList';
 import Avatar from '../../../../ui/Avatar';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import FileViewer from '../../../../ui/FileViewer';
-import MessageItemMenu from '../../../../ui/MessageItemMenu';
-import MessageItemReactionMenu from '../../../../ui/MessageItemReactionMenu';
-import ContextMenu, { MenuItems } from '../../../../ui/ContextMenu';
+import { MessageEmojiMenu, MessageEmojiMenuProps } from '../../../../ui/MessageItemReactionMenu';
+import ContextMenu, { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID, MenuItems } from '../../../../ui/ContextMenu';
 import ConnectedUserProfile from '../../../../ui/UserProfile';
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
@@ -31,13 +30,19 @@ import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions'
 import { User } from '@sendbird/chat';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
 import { classnames } from '../../../../utils/utils';
+import { MessageMenu, MessageMenuProps } from '../../../../ui/MessageMenu';
+import useElementObserver from '../../../../hooks/useElementObserver';
 
 export interface ParentMessageInfoProps {
   className?: string;
+  renderEmojiMenu?: (props: MessageEmojiMenuProps) => ReactNode;
+  renderMessageMenu?: (props: MessageMenuProps) => ReactNode;
 }
 
 export default function ParentMessageInfo({
   className,
+  renderEmojiMenu = (props) => <MessageEmojiMenu {...props} />,
+  renderMessageMenu = (props) => <MessageMenu {...props} />,
 }: ParentMessageInfoProps): React.ReactElement {
   const { stores, config } = useSendbirdStateContext();
   const { isOnline, userMention, logger, groupChannel } = config;
@@ -59,8 +64,14 @@ export default function ParentMessageInfo({
   } = useThreadContext();
   const { isMobile } = useMediaQueryContext();
 
+  const isMenuMounted = useElementObserver(
+    `#${getObservingId(parentMessage.messageId)}.${MENU_OBSERVING_CLASS_NAME}`,
+    [
+      document.getElementById(MENU_ROOT_ID),
+      document.getElementById(EMOJI_MENU_ROOT_ID),
+    ],
+  );
   const [showRemove, setShowRemove] = useState(false);
-  const [supposedHover, setSupposedHover] = useState(false);
   const [showFileViewer, setShowFileViewer] = useState(false);
   const isReactionEnabled = getIsReactionEnabled({
     channel: currentChannel,
@@ -300,32 +311,37 @@ export default function ParentMessageInfo({
         />
       </div>
       {/* context menu */}
-      {!isMobile && (
-        <MessageItemMenu
-          className={classnames('sendbird-parent-message-info__context-menu', isReactionEnabled && 'use-reaction', supposedHover && 'sendbird-mouse-hover')}
-          channel={currentChannel}
-          message={parentMessage}
-          isByMe={userId === parentMessage?.sender?.userId}
-          disableDeleteMessage={allThreadMessages.length > 0}
-          replyType={replyType}
-          showEdit={setShowEditInput}
-          showRemove={setShowRemove}
-          setSupposedHover={setSupposedHover}
-          onMoveToParentMessage={() => {
-            onMoveToParentMessage?.({ message: parentMessage, channel: currentChannel });
-          }}
-          deleteMessage={deleteMessage}
-        />
-      )}
-      {(isReactionEnabled && !isMobile) && (
-        <MessageItemReactionMenu
-          className={classnames('sendbird-parent-message-info__reaction-menu', supposedHover && 'sendbird-mouse-hover')}
-          message={parentMessage}
-          userId={userId}
-          emojiContainer={emojiContainer}
-          toggleReaction={toggleReaction}
-        />
-      )}
+      <div className='sendbird-parent-message-info__menu-container'>
+        {!isMobile && (
+          <>
+            {renderMessageMenu({
+              className: classnames('sendbird-parent-message-info__context-menu', isReactionEnabled && 'use-reaction', isMenuMounted && 'sendbird-mouse-hover'),
+              channel: currentChannel,
+              message: parentMessage,
+              isByMe: userId === parentMessage?.sender?.userId,
+              disableDeleteMessage: allThreadMessages.length > 0,
+              replyType: replyType,
+              showEdit: setShowEditInput,
+              showRemove: setShowRemove,
+              onMoveToParentMessage: () => {
+                onMoveToParentMessage?.({ message: parentMessage, channel: currentChannel });
+              },
+              deleteMessage: deleteMessage,
+            })}
+          </>
+        )}
+        {(isReactionEnabled && !isMobile) && (
+          <>
+            {renderEmojiMenu({
+              className: classnames('sendbird-parent-message-info__reaction-menu', isMenuMounted && 'sendbird-mouse-hover'),
+              message: parentMessage,
+              userId: userId,
+              emojiContainer: emojiContainer,
+              toggleReaction: toggleReaction,
+            })}
+          </>
+        )}
+      </div>
       {showRemove && (
         <RemoveMessage
           onCancel={() => setShowRemove(false)}

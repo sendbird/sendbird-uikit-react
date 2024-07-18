@@ -1,10 +1,10 @@
-import React, { RefObject, useMemo } from 'react';
+import React, { RefObject } from 'react';
 import type { UserMessage } from '@sendbird/chat/message';
 
 import './index.scss';
 
 import type { SendableMessageType } from '../../../../utils';
-import ThreadListItem from './ThreadListItem';
+import ThreadListItem, { ThreadListItemProps } from './ThreadListItem';
 import { useThreadContext } from '../../context/ThreadProvider';
 import { compareMessagesForGrouping } from '../../../../utils/messages';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
@@ -14,12 +14,7 @@ import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyTyp
 
 export interface ThreadListProps {
   className?: string;
-  renderMessage?: (props: {
-    message: SendableMessageType,
-    chainTop: boolean,
-    chainBottom: boolean,
-    hasSeparator: boolean,
-  }) => React.ReactElement;
+  renderMessage?: (props: ThreadListItemProps) => React.ReactElement;
   renderCustomSeparator?: (props: { message: SendableMessageType }) => React.ReactElement;
   scrollRef?: RefObject<HTMLDivElement>;
   scrollBottom?: number;
@@ -27,7 +22,7 @@ export interface ThreadListProps {
 
 export default function ThreadList({
   className,
-  renderMessage,
+  renderMessage = (props) => <ThreadListItem {...props} />,
   renderCustomSeparator,
   scrollRef,
   scrollBottom,
@@ -39,24 +34,6 @@ export default function ThreadList({
     allThreadMessages,
     localThreadMessages,
   } = useThreadContext();
-
-  const MemorizedMessage = useMemo(() => ({
-    message,
-    chainTop,
-    chainBottom,
-    hasSeparator,
-  }) => {
-
-    if (typeof renderMessage === 'function') {
-      return renderMessage({
-        message: message as SendableMessageType,
-        chainTop,
-        chainBottom,
-        hasSeparator,
-      });
-    }
-    return null;
-  }, [renderMessage]);
 
   return (
     <div className={`sendbird-thread-list ${className}`}>
@@ -91,43 +68,20 @@ export default function ThreadList({
         return (
           <MessageProvider message={message} isByMe={isByMe} key={message?.messageId}>
             {
-              MemorizedMessage({
-                message,
-                chainTop,
-                chainBottom,
-                hasSeparator,
-              }) || (
-                <ThreadListItem
-                  message={message as SendableMessageType}
-                  chainTop={chainTop}
-                  chainBottom={chainBottom}
-                  hasSeparator={hasSeparator}
-                  renderCustomSeparator={renderCustomSeparator}
-                  handleScroll={handleScroll}
-                />
-              )
+              renderMessage({
+                message: message as SendableMessageType,
+                chainTop: chainTop,
+                chainBottom: chainBottom,
+                hasSeparator: hasSeparator,
+                renderCustomSeparator: renderCustomSeparator,
+                handleScroll: handleScroll,
+              })
             }
           </MessageProvider>
         );
       })}
-      {localThreadMessages.map((message, idx) => {
+      {localThreadMessages.map((message) => {
         const isByMe = (message as UserMessage)?.sender?.userId === userId;
-        const prevMessage = localThreadMessages[idx - 1];
-        const nextMessage = localThreadMessages[idx + 1];
-        // eslint-disable-next-line no-constant-condition
-        const [chainTop, chainBottom] = true// isMessageGroupingEnabled
-          ? compareMessagesForGrouping(
-            prevMessage as SendableMessageType,
-            message as SendableMessageType,
-            nextMessage as SendableMessageType,
-            currentChannel,
-            getCaseResolvedReplyType(config.groupChannel.replyType).upperCase,
-          )
-          : [false, false];
-        const hasSeparator = !(prevMessage?.createdAt > 0 && (
-          isSameDay(message?.createdAt, prevMessage?.createdAt)
-        ));
-
         const handleScroll = () => {
           const current = scrollRef?.current;
           if (current) {
@@ -141,19 +95,12 @@ export default function ThreadList({
         return (
           <MessageProvider message={message} isByMe={isByMe} key={message?.messageId}>
             {
-              MemorizedMessage({
-                message,
-                chainTop,
-                chainBottom,
-                hasSeparator,
-              }) || (
-                <ThreadListItem
-                  message={message as SendableMessageType}
-                  hasSeparator={false}
-                  renderCustomSeparator={renderCustomSeparator}
-                  handleScroll={handleScroll}
-                />
-              )
+              renderMessage({
+                message: message as SendableMessageType,
+                hasSeparator: false,
+                renderCustomSeparator: renderCustomSeparator,
+                handleScroll: handleScroll,
+              })
             }
           </MessageProvider>
         );

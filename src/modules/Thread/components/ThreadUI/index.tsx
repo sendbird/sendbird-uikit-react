@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { ReactNode, useRef, useState } from 'react';
 
 import './index.scss';
 
@@ -21,7 +21,7 @@ import { SendableMessageType } from '../../../../utils';
 
 export interface ThreadUIProps {
   renderHeader?: () => React.ReactElement;
-  renderParentMessageInfo?: () => React.ReactElement;
+  renderParentMessageInfo?: () => ReactNode;
   renderMessage?: (props: {
     message: SendableMessageType,
     chainTop: boolean,
@@ -39,7 +39,7 @@ export interface ThreadUIProps {
 
 const ThreadUI: React.FC<ThreadUIProps> = ({
   renderHeader,
-  renderParentMessageInfo,
+  renderParentMessageInfo = () => <ParentMessageInfo className="sendbird-thread-ui__parent-message-info" />,
   renderMessage,
   renderMessageInput,
   renderCustomSeparator,
@@ -153,13 +153,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
         onScroll={onScroll}
       >
         <MessageProvider message={parentMessage} isByMe={isByMe}>
-          {
-            MemorizedParentMessageInfo || (
-              <ParentMessageInfo
-                className="sendbird-thread-ui__parent-message-info"
-              />
-            )
-          }
+          {MemorizedParentMessageInfo}
         </MessageProvider>
         {
           replyCount > 0 && (

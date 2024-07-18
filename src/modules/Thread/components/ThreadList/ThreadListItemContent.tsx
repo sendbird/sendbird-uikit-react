@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { ReactNode, useContext, useRef, useState } from 'react';
 import { EmojiContainer } from '@sendbird/chat';
 import { FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
@@ -6,12 +6,11 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import './ThreadListItemContent.scss';
 
 import { ReplyType } from '../../../../types';
-import ContextMenu, { MenuItems } from '../../../../ui/ContextMenu';
+import ContextMenu, { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID, MenuItems } from '../../../../ui/ContextMenu';
 import Avatar from '../../../../ui/Avatar';
 import { UserProfileContext } from '../../../../lib/UserProfileContext';
 import UserProfile from '../../../../ui/UserProfile';
-import MessageItemMenu from '../../../../ui/MessageItemMenu';
-import MessageItemReactionMenu from '../../../../ui/MessageItemReactionMenu';
+import { MessageEmojiMenu, MessageEmojiMenuProps } from '../../../../ui/MessageItemReactionMenu';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import {
   getClassName,
@@ -44,12 +43,15 @@ import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/
 import { useFileInfoListWithUploaded } from '../../../Channel/context/hooks/useFileInfoListWithUploaded';
 import { useThreadContext } from '../../context/ThreadProvider';
 import { classnames } from '../../../../utils/utils';
+import { MessageMenu, MessageMenuProps } from '../../../../ui/MessageMenu';
+import useElementObserver from '../../../../hooks/useElementObserver';
 
 export interface ThreadListItemContentProps {
   className?: string;
   userId: string;
   channel: GroupChannel;
   message: SendableMessageType;
+  /** @deprecated This prop is deprecated and no longer in use. */
   disabled?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
@@ -65,6 +67,8 @@ export interface ThreadListItemContentProps {
   resendMessage?: (message: SendableMessageType) => void;
   toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
+  renderEmojiMenu?: (props: MessageEmojiMenuProps) => ReactNode;
+  renderMessageMenu?: (props: MessageMenuProps) => ReactNode;
 }
 
 export default function ThreadListItemContent({
@@ -72,7 +76,6 @@ export default function ThreadListItemContent({
   userId,
   channel,
   message,
-  disabled = false,
   chainTop = false,
   chainBottom = false,
   isMentionEnabled = false,
@@ -87,6 +90,8 @@ export default function ThreadListItemContent({
   resendMessage,
   toggleReaction,
   onReplyInThread,
+  renderEmojiMenu = (props) => <MessageEmojiMenu {...props} />,
+  renderMessageMenu = (props) => <MessageMenu {...props} />,
 }: ThreadListItemContentProps): React.ReactElement {
   const messageTypes = getUIKitMessageTypes();
   const { isMobile } = useMediaQueryContext();
@@ -94,7 +99,13 @@ export default function ThreadListItemContent({
   const { config, eventHandlers } = useSendbirdStateContext?.() || {};
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
-  const [supposedHover, setSupposedHover] = useState(false);
+  const isMenuMounted = useElementObserver(
+    `#${getObservingId(message.messageId)}.${MENU_OBSERVING_CLASS_NAME}`,
+    [
+      document.getElementById(MENU_ROOT_ID),
+      document.getElementById(EMOJI_MENU_ROOT_ID),
+    ],
+  );
   const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
   const { deleteMessage, onBeforeDownloadFileMessage } = useThreadContext();
   const avatarRef = useRef(null);
@@ -106,7 +117,7 @@ export default function ThreadListItemContent({
     && message?.parentMessageId && message?.parentMessage
     && !disableQuoteMessage
   );
-  const supposedHoverClassName = supposedHover ? 'sendbird-mouse-hover' : '';
+  const supposedHoverClassName = isMenuMounted ? 'sendbird-mouse-hover' : '';
   const isReactionEnabledInChannel = isReactionEnabled && !channel?.isEphemeral;
   const isOgMessageEnabledInGroupChannel = channel.isGroupChannel() && config.groupChannel.enableOgtag;
 
@@ -185,28 +196,28 @@ export default function ThreadListItemContent({
               supposedHoverClassName,
             )}
           >
-            <MessageItemMenu
-              className="sendbird-thread-list-item-content-menu__normal-menu"
-              channel={channel}
-              message={message as SendableMessageType}
-              isByMe={isByMe}
-              replyType={replyType}
-              disabled={disabled}
-              showEdit={showEdit}
-              showRemove={showRemove}
-              resendMessage={resendMessage}
-              setSupposedHover={setSupposedHover}
-              onReplyInThread={onReplyInThread}
-              deleteMessage={deleteMessage}
-            />
+            {renderMessageMenu({
+              className: 'sendbird-thread-list-item-content-menu__normal-menu',
+              channel: channel,
+              message: message as SendableMessageType,
+              isByMe: isByMe,
+              replyType: replyType,
+              showEdit: showEdit,
+              showRemove: showRemove,
+              resendMessage: resendMessage,
+              onReplyInThread: onReplyInThread,
+              deleteMessage: deleteMessage,
+            })}
             {isReactionEnabledInChannel && (
-              <MessageItemReactionMenu
-                className="sendbird-thread-list-item-content-menu__reaction-menu"
-                message={message as SendableMessageType}
-                userId={userId}
-                emojiContainer={emojiContainer}
-                toggleReaction={toggleReaction}
-              />
+              <>
+                {renderEmojiMenu({
+                  className: 'sendbird-thread-list-item-content-menu__reaction-menu',
+                  message: message as SendableMessageType,
+                  userId: userId,
+                  emojiContainer: emojiContainer,
+                  toggleReaction: toggleReaction,
+                })}
+              </>
             )}
           </div>
         )}
@@ -352,27 +363,27 @@ export default function ThreadListItemContent({
         {(!isByMe && !isMobile) && (
           <div className={`sendbird-thread-list-item-content-menu ${supposedHoverClassName}`}>
             {isReactionEnabledInChannel && (
-              <MessageItemReactionMenu
-                className="sendbird-thread-list-item-content-menu__reaction-menu"
-                message={message as SendableMessageType}
-                userId={userId}
-                emojiContainer={emojiContainer}
-                toggleReaction={toggleReaction}
-              />
+              <>
+                {renderEmojiMenu({
+                  className: 'sendbird-thread-list-item-content-menu__reaction-menu',
+                  message: message as SendableMessageType,
+                  userId: userId,
+                  emojiContainer: emojiContainer,
+                  toggleReaction: toggleReaction,
+                })}
+              </>
             )}
-            <MessageItemMenu
-              className="sendbird-thread-list-item-content-menu__normal-menu"
-              channel={channel}
-              message={message as SendableMessageType}
-              isByMe={isByMe}
-              replyType={replyType}
-              disabled={disabled}
-              showRemove={showRemove}
-              resendMessage={resendMessage}
-              setSupposedHover={setSupposedHover}
-              onReplyInThread={onReplyInThread}
-              deleteMessage={deleteMessage}
-            />
+            {renderMessageMenu({
+              className: 'sendbird-thread-list-item-content-menu__normal-menu',
+              channel: channel,
+              message: message as SendableMessageType,
+              isByMe: isByMe,
+              replyType: replyType,
+              showRemove: showRemove,
+              resendMessage: resendMessage,
+              onReplyInThread: onReplyInThread,
+              deleteMessage: deleteMessage,
+            })}
           </div>
         )}
       </div>
