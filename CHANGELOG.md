@@ -29,6 +29,7 @@
 ### Fixes
 - **Deprecation Marks on Channel & ChannelList Modules**
   - Marked `Channel`, `ChannelProvider`, `ChannelList`, and `ChannelListProvider` as deprecated.
+  - For migration guidance, please refer to the [Group Channel Migration Guide](https://sendbird.com/docs/chat/uikit/v3/react/introduction/group-channel-migration-guide#1-group-channel-migration-guide).
 
 ### Chore
 - **Improve Stability of `useMenuItems`**
