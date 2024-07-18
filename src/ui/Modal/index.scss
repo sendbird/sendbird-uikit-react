@@ -57,8 +57,6 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    /*rtl:raw:
-    justify-content: flex-start;*/
     @include mobile() {
       position: sticky;
       bottom: 24px;
