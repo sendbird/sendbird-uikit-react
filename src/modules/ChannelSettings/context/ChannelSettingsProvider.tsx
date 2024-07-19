@@ -121,7 +121,7 @@ const ChannelSettingsProvider = ({
               refresh();
             }
           },
-        }
+        };
 
         const newChannelHandlerId = uuidv4();
         sdkStore.sdk.groupChannel?.addGroupChannelHandler(newChannelHandlerId, new GroupChannelHandler(channelHandler));
