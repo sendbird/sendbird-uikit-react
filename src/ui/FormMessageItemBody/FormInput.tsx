@@ -246,6 +246,7 @@ const FormInput = (props: InputProps) => {
                     <>
                       <input
                         type={layout === 'number' ? 'text' : layout}
+                        inputMode={layout === 'number' ? 'numeric' : 'text'}
                         className={`sendbird-input__input ${errorMessage ? 'error' : ''}`}
                         name={name}
                         required={required}
