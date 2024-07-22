@@ -121,6 +121,10 @@
     }
   }
   .sendbird-input__placeholder {
+    width: calc(100% - 26px); // (12px side padding + 1px border) * 2 = 26px
+    height: calc(100% - 16px); // (7px padding + 1px border) * 2 = 16px
+    overflow: hidden;
+    text-overflow: ellipsis;
     position: absolute;
     pointer-events: none;
     top: 8px;
