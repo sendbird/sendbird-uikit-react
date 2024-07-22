@@ -187,7 +187,10 @@ const FormInput = (props: InputProps) => {
                   ) : (
                     <>
                       <textarea
-                        className={classnames('sendbird-input__input', 'sendbird-form-message__input__textarea')}
+                        className={classnames(
+                          `sendbird-input__input ${errorMessage ? 'error' : ''}`,
+                          'sendbird-form-message__input__textarea'
+                        )}
                         required={required}
                         disabled={disabled}
                         value={currentValue}
