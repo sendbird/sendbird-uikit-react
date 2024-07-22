@@ -156,5 +156,8 @@
   },
   "workspaces": [
     "apps/*"
-  ]
+  ],
+  "resolutions": {
+    "@sendbird/chat": "file:/Users/liam.cho/GitHub/chat-js/dist"
+  }
 }

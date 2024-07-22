@@ -2623,9 +2623,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendbird/chat@npm:^4.13.1":
+"@sendbird/chat@file:/Users/liam.cho/GitHub/chat-js/dist::locator=%40sendbird%2Fuikit-react%40workspace%3A.":
   version: 4.13.1
-  resolution: "@sendbird/chat@npm:4.13.1"
+  resolution: "@sendbird/chat@file:/Users/liam.cho/GitHub/chat-js/dist#/Users/liam.cho/GitHub/chat-js/dist::hash=f01847&locator=%40sendbird%2Fuikit-react%40workspace%3A."
   peerDependencies:
     "@react-native-async-storage/async-storage": ^1.17.6
     react-native-mmkv: ^2.0.0
@@ -2634,7 +2634,7 @@ __metadata:
       optional: true
     react-native-mmkv:
       optional: true
-  checksum: 41497dd313c56dabdd3fb0ec466ec07ab760c62d9fb851815150710ffbea108658885093c562bf501b1562a28e2f6062b396b60cbca42761c5804f2819bdcfa3
+  checksum: 97c8248820c54395e9d160f78d635d8975b7d20979ba98baffae0b2265284cf059752f6ea30df145fc98a43271e86e2d31a1461a3e9d7310196be4273a89bb89
   languageName: node
   linkType: hard
 
