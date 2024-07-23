@@ -1,5 +1,44 @@
 # Changelog - v3
 
+## [v3.14.13] (July 18, 2024)
+
+### Features
+- **Address RTL UI Feedback**
+  - Fixed an issue where the `htmlTextDirection` prop didn't work when using `SendbirdProvider`, but only worked in the App module.
+  - Updated the paper plane icon to point left instead of right in RTL mode.
+
+- **Message Menu Customization in Threads**
+  - Added `renderMessageMenu` and `renderEmojiMenu` props to the `<ParentMessageInfo />`, `<ThreadListItem />`, and `<ThreadListItemContent />` components.
+  - **Example usage:**
+    ```tsx
+    <Thread
+      renderMessage={(props) => (
+        <ThreadListItem {...props} renderMessageMenu={(props) => (
+          <MessageMenu {...props} renderMenuItems={({ items }) => (
+            <>
+              <items.CopyMenuItem />
+              <items.DeleteMenuItem />
+            </>
+          )} />
+        )} />
+      )}
+    />
+    ```
+
+### Fixes
+- **Deprecation Marks on Channel & ChannelList Modules**
+  - Marked `Channel`, `ChannelProvider`, `ChannelList`, and `ChannelListProvider` as deprecated.
+  - For migration guidance, please refer to the [Group Channel Migration Guide](https://sendbird.com/docs/chat/uikit/v3/react/introduction/group-channel-migration-guide#1-group-channel-migration-guide).
+
+### Chore
+- **Improve Stability of `useMenuItems`**
+  - Improved the stability of the `useMenuItems` hook.
+  - Exported `ChannelListQueryParamsType`.
+  - Moved the `renderUserListItem` prop to the Provider from the UI component.
+  - Exported the `ChannelSettingsMenuItem` component.
+- Added `interop: "compat"` setting for the CommonJS output in Rollup Config to enhance the compatibility between ESM and CJS.
+
+
 ## [v3.14.12] (July 3, 2024)
 
 ### Features

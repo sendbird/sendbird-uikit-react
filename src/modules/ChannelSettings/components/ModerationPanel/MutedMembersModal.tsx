@@ -10,18 +10,20 @@ import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import { Member, MemberListQuery } from '@sendbird/chat/groupChannel';
+import { Member, MemberListQuery, MemberListQueryParams } from '@sendbird/chat/groupChannel';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
 export interface MutedMembersModalProps {
   onCancel(): void;
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
+  memberListQueryParams?: MemberListQueryParams;
 }
 
 export function MutedMembersModal({
   onCancel,
   renderUserListItem = (props) => <UserListItem {...props} />,
+  memberListQueryParams = {},
 }: MutedMembersModalProps): ReactElement {
   const [members, setMembers] = useState<Member[]>([]);
   const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
@@ -32,6 +34,7 @@ export function MutedMembersModal({
   useEffect(() => {
     const memberUserListQuery = channel?.createMemberListQuery({
       limit: 20,
+      ...memberListQueryParams,
       // @ts-ignore
       mutedMemberFilter: 'muted',
     });

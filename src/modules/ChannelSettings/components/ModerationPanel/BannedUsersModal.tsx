@@ -11,18 +11,20 @@ import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 import { noop } from '../../../../utils/utils';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import { BannedUserListQuery, RestrictedUser } from '@sendbird/chat';
+import { BannedUserListQuery, BannedUserListQueryParams, RestrictedUser } from '@sendbird/chat';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
 export interface BannedUsersModalProps {
   onCancel(): void;
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
+  bannedUserListQueryParams?: BannedUserListQueryParams;
 }
 
 export function BannedUsersModal({
   onCancel,
   renderUserListItem = (props) => <UserListItem {...props} />,
+  bannedUserListQueryParams = {},
 }: BannedUsersModalProps): ReactElement {
   const [members, setMembers] = useState<RestrictedUser[]>([]);
   const [memberQuery, setMemberQuery] = useState<BannedUserListQuery | null>(null);
@@ -30,7 +32,7 @@ export function BannedUsersModal({
   const { stringSet } = useLocalization();
 
   useEffect(() => {
-    const bannedUserListQuery = channel?.createBannedUserListQuery();
+    const bannedUserListQuery = channel?.createBannedUserListQuery({ limit: 20, ...bannedUserListQueryParams });
     if (bannedUserListQuery) {
       bannedUserListQuery.next().then((users) => {
         setMembers(users);

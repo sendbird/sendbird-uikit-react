@@ -6,7 +6,7 @@ import React, {
   useContext,
   ReactNode,
 } from 'react';
-import type { User } from '@sendbird/chat';
+import type { OperatorListQueryParams, User } from '@sendbird/chat';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
@@ -20,9 +20,11 @@ import AddOperatorsModal from './AddOperatorsModal';
 
 interface OperatorListProps {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
+  operatorListQueryParams?: OperatorListQueryParams;
 }
 export const OperatorList = ({
   renderUserListItem = (props) => <UserListItem {...props} />,
+  operatorListQueryParams = {},
 }: OperatorListProps): ReactElement => {
   const [operators, setOperators] = useState<User[]>([]);
   const [showMore, setShowMore] = useState(false);
@@ -36,7 +38,7 @@ export const OperatorList = ({
       setOperators([]);
       return;
     }
-    const operatorListQuery = channel?.createOperatorListQuery({ limit: 10 });
+    const operatorListQuery = channel?.createOperatorListQuery({ limit: 10, ...operatorListQueryParams });
     operatorListQuery.next().then((operators) => {
       setOperators(operators);
       setHasNext(operatorListQuery.hasNext);
@@ -110,6 +112,7 @@ export const OperatorList = ({
               refreshList();
             }}
             renderUserListItem={renderUserListItem}
+            operatorListQueryParams={operatorListQueryParams}
           />
         )
       }

@@ -157,6 +157,7 @@ export default function App(props: AppProps) {
       isReactionEnabled={isReactionEnabled}
       isMentionEnabled={isMentionEnabled}
       isVoiceMessageEnabled={isVoiceMessageEnabled}
+      htmlTextDirection={htmlTextDirection}
     >
       <AppLayout
         isMessageGroupingEnabled={isMessageGroupingEnabled}
@@ -169,7 +170,6 @@ export default function App(props: AppProps) {
         isReactionEnabled={isReactionEnabled}
         replyType={replyType}
         showSearchIcon={showSearchIcon}
-        htmlTextDirection={htmlTextDirection}
       />
     </Sendbird>
   );

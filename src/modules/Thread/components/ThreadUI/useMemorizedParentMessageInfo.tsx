@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 
 import { ParentMessageStateTypes } from '../../types';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -7,8 +7,8 @@ import { SendableMessageType } from '../../../../utils';
 export interface UseMemorizedParentMessageInfoProps {
   parentMessage: SendableMessageType;
   parentMessageState: ParentMessageStateTypes;
-  renderParentMessageInfo?: () => React.ReactElement;
-  renderParentMessageInfoPlaceholder?: (type: ParentMessageStateTypes) => React.ReactElement;
+  renderParentMessageInfo?: () => ReactNode;
+  renderParentMessageInfoPlaceholder?: (type: ParentMessageStateTypes) => ReactNode;
 }
 
 const useMemorizedParentMessageInfo = ({
@@ -16,7 +16,7 @@ const useMemorizedParentMessageInfo = ({
   parentMessageState,
   renderParentMessageInfo,
   renderParentMessageInfoPlaceholder,
-}: UseMemorizedParentMessageInfoProps): ReactElement => useMemo(() => {
+}: UseMemorizedParentMessageInfoProps) => useMemo(() => {
   if (parentMessageState === ParentMessageStateTypes.NIL
     || parentMessageState === ParentMessageStateTypes.LOADING
     || parentMessageState === ParentMessageStateTypes.INVALID

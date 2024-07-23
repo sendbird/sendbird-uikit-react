@@ -86,19 +86,9 @@
   height: 100%;
 }
 
+.sendbird-parent-message-info__reaction-menu,
 .sendbird-parent-message-info__context-menu {
-  position: absolute;
-  top: 6px;
-  right: 12px;
-  display: none;
-}
-.sendbird-parent-message-info__context-menu.use-reaction {
-  right: 44px;
-}
-.sendbird-parent-message-info__reaction-menu {
-  position: absolute;
-  top: 6px;
-  right: 12px;
+  position: relative;
   display: none;
 }
 
@@ -112,11 +102,19 @@
 }
 
 // display menus
+.sendbird-parent-message-info__menu-container,
 .sendbird-parent-message-info:hover .sendbird-parent-message-info__context-menu,
 .sendbird-parent-message-info:hover .sendbird-parent-message-info__reaction-menu,
 .sendbird-parent-message-info__context-menu.sendbird-mouse-hover,
 .sendbird-parent-message-info__reaction-menu.sendbird-mouse-hover {
   display: inline-flex;
+}
+
+.sendbird-parent-message-info__menu-container {
+  flex-direction: row;
+  position: absolute;
+  top: 6px;
+  right: 12px;
 }
 
 // background color

@@ -55,6 +55,7 @@ import { EmojiManager } from './emojiManager';
 import { uikitConfigStorage } from './utils/uikitConfigStorage';
 import useMessageTemplateUtils from './hooks/useMessageTemplateUtils';
 import { EmojiReactionListRoot, MenuRoot } from '../ui/ContextMenu';
+import useHTMLTextDirection from '../hooks/useHTMLTextDirection';
 
 export { useSendbirdStateContext } from '../hooks/useSendbirdStateContext';
 
@@ -284,6 +285,8 @@ const SendbirdSDK = ({
       } catch { }
     };
   }, [currentTheme]);
+
+  useHTMLTextDirection(htmlTextDirection);
 
   const isOnline = useOnlineStatus(sdkStore.sdk, logger);
 

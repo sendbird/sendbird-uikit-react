@@ -6,7 +6,7 @@ import React, {
   useContext,
   ReactNode,
 } from 'react';
-import type { Member } from '@sendbird/chat/groupChannel';
+import type { Member, MemberListQueryParams } from '@sendbird/chat/groupChannel';
 import { Role } from '@sendbird/chat';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
@@ -20,10 +20,12 @@ import MembersModal from './MembersModal';
 import { InviteUsersModal } from './InviteUsersModal';
 
 interface MemberListProps {
-  renderUserListItem?: (props: UserListItemProps) => ReactNode;
+  renderUserListItem?: (props: UserListItemProps & { index: number }) => ReactNode;
+  memberListQueryParams?: MemberListQueryParams;
 }
 export const MemberList = ({
   renderUserListItem = (props) => <UserListItem {...props} />,
+  memberListQueryParams = {},
 }: MemberListProps): ReactElement => {
   const [members, setMembers] = useState<Array<Member>>([]);
   const [hasNext, setHasNext] = useState(false);
@@ -40,7 +42,7 @@ export const MemberList = ({
       setMembers([]);
       return;
     }
-    const memberUserListQuery = channel?.createMemberListQuery({ limit: 10 });
+    const memberUserListQuery = channel?.createMemberListQuery({ limit: 10, ...memberListQueryParams });
     memberUserListQuery.next().then((members) => {
       setMembers(members);
       setHasNext(memberUserListQuery.hasNext);
@@ -51,10 +53,12 @@ export const MemberList = ({
   return (
     <div className="sendbird-channel-settings-member-list">
       {
-        members.map((member) => (
+        members.map((member, index) => (
           <React.Fragment key={member.userId}>
             {
               renderUserListItem({
+                // NOTE: This `index` is used to display the current user's user item at the top when customizing externally.
+                index,
                 user: member,
                 channel,
                 size: 'small',
@@ -122,6 +126,7 @@ export const MemberList = ({
               forceUpdateUI();
             }}
             renderUserListItem={renderUserListItem}
+            memberListQueryParams={memberListQueryParams}
           />
         )
       }

@@ -211,7 +211,13 @@ export const VoicePlayerProvider = ({
       stop,
       voicePlayerStore,
     }}>
+      {/**
+       * This empty div is also used for finding the root div element
+       * within SendbirdProvider to set the 'dir' attribute ('rtl' | 'ltr').
+       * See hooks/useHTMLTextDirection.tsx for more details.
+       */}
       <div id={VOICE_PLAYER_ROOT_ID} style={{ display: 'none' }} />
+
       {children}
     </Context.Provider>
   );

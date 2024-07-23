@@ -6,7 +6,7 @@ import React, {
   useContext,
   ReactNode,
 } from 'react';
-import type { RestrictedUser } from '@sendbird/chat';
+import type { BannedUserListQueryParams, RestrictedUser } from '@sendbird/chat';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import
@@ -23,10 +23,12 @@ import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
 interface BannedUserListProps {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
+  bannedUserListQueryParams?: BannedUserListQueryParams;
 }
 
 export const BannedUserList = ({
   renderUserListItem = (props) => <UserListItem {...props} />,
+  bannedUserListQueryParams = {},
 }: BannedUserListProps): ReactElement => {
   const [members, setMembers] = useState<RestrictedUser[]>([]);
   const [hasNext, setHasNext] = useState(false);
@@ -40,7 +42,7 @@ export const BannedUserList = ({
       setMembers([]);
       return;
     }
-    const bannedUserListQuery = channel?.createBannedUserListQuery({ limit: 10 });
+    const bannedUserListQuery = channel?.createBannedUserListQuery({ limit: 10, ...bannedUserListQueryParams });
     bannedUserListQuery.next().then((users) => {
       setMembers(users);
       setHasNext(bannedUserListQuery.hasNext);
@@ -106,6 +108,7 @@ export const BannedUserList = ({
               refreshList();
             }}
             renderUserListItem={renderUserListItem}
+            bannedUserListQueryParams={bannedUserListQueryParams}
           />
         )
       }

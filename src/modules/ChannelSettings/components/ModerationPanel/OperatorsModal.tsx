@@ -11,18 +11,20 @@ import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { OperatorListQuery, User } from '@sendbird/chat';
+import { OperatorListQuery, OperatorListQueryParams, User } from '@sendbird/chat';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
 export interface OperatorsModalProps {
   onCancel?(): void;
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
+  operatorListQueryParams?: OperatorListQueryParams;
 }
 
 export function OperatorsModal({
   onCancel,
   renderUserListItem = (props) => <UserListItem {...props} />,
+  operatorListQueryParams = {},
 }: OperatorsModalProps): ReactElement {
   const [operators, setOperators] = useState<User[]>([]);
   const [operatorQuery, setOperatorQuery] = useState<OperatorListQuery | null>(null);
@@ -31,9 +33,7 @@ export function OperatorsModal({
   const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
-    const operatorListQuery = channel?.createOperatorListQuery({
-      limit: 20,
-    });
+    const operatorListQuery = channel?.createOperatorListQuery({ limit: 20, ...operatorListQueryParams });
     operatorListQuery?.next().then((operators) => {
       setOperators(operators);
     });

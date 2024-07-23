@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useContext, useState, ReactNode } from 'react';
+import React, { useMemo, useEffect, useContext, useState } from 'react';
 
 import OperatorList from '../../ModerationPanel/OperatorList';
 import MemberList from '../../ModerationPanel/MemberList';
@@ -7,7 +7,6 @@ import MutedMemberList from '../../ModerationPanel/MutedMemberList';
 
 import { LocalizationContext } from '../../../../../lib/LocalizationContext';
 
-import type { UserListItemProps } from '../../../../../ui/UserListItem';
 import { IconColors, IconTypes, IconProps } from '../../../../../ui/Icon';
 import Badge from '../../../../../ui/Badge';
 import { Toggle } from '../../../../../ui/Toggle';
@@ -53,14 +52,10 @@ const commonLabelProps = {
   color: LabelColors.ONBACKGROUND_1,
 };
 
-interface UseMenuItemsParams {
-  renderUserListItem?: (props: UserListItemProps) => ReactNode;
-}
-export const useMenuItems = (props?: UseMenuItemsParams): MenuItems => {
-  const { renderUserListItem } = props;
+export const useMenuItems = (): MenuItems => {
   const [frozen, setFrozen] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
-  const { channel } = useChannelSettingsContext();
+  const { channel, renderUserListItem } = useChannelSettingsContext();
 
   // work around for
   // https://sendbird.slack.com/archives/G01290GCDCN/p1595922832000900
