@@ -30,6 +30,7 @@ export interface InputProps {
   isValid?: boolean;
   errorMessage: string | null;
   values: string[];
+  isInvalidated: boolean;
   placeHolder?: string;
   onFocused?: (isFocus: boolean) => void;
   onChange: (values: string[]) => void;
@@ -55,6 +56,7 @@ const FormInput = (props: InputProps) => {
     errorMessage,
     isValid,
     values,
+    isInvalidated,
     style,
     onFocused,
     onChange,
@@ -101,12 +103,6 @@ const FormInput = (props: InputProps) => {
       // Single select
       newDraftedValues = chipDataList[index].state === 'selected' ? [] : [chipDataList[index].option];
     } else {
-      /**
-       * Multi select case
-       * Upon chip click, if it is:
-       *   1. not selected and can select more -> select the chip. Keep other selected chips as is.
-       *   2. already selected ->  deselect the chip. Keep other selected chips as is.
-       */
       newDraftedValues = chipDataList.reduce((acc, chipData, i) => {
         if (i === index) {
           if (chipData.state === 'default' && values.length < max) {
@@ -189,7 +185,7 @@ const FormInput = (props: InputProps) => {
                       <textarea
                         className={classnames(
                           `sendbird-input__input ${errorMessage ? 'error' : ''}`,
-                          'sendbird-form-message__input__textarea'
+                          'sendbird-form-message__input__textarea',
                         )}
                         required={required}
                         disabled={disabled}
@@ -281,7 +277,7 @@ const FormInput = (props: InputProps) => {
             }
           }
         })()}
-        {!isFocused && errorMessage && (
+        {(isInvalidated || !isFocused) && errorMessage && (
           <Label
             className='sendbird-form-message__error-label'
             type={LabelTypography.CAPTION_3}
