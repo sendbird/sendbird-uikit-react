@@ -158,6 +158,6 @@
     "apps/*"
   ],
   "resolutions": {
-    "@sendbird/chat": "file:/Users/liam.cho/GitHub/chat-js/dist"
+    "@sendbird/chat": "file:sendbird-chat-4.13.1.tgz"
   }
 }
