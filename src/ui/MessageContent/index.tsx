@@ -194,6 +194,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     && !!message?.myFeedbackStatus
     && message.myFeedbackStatus !== SbFeedbackStatus.NOT_APPLICABLE;
   const isFeedbackEnabled = !!config?.groupChannel?.enableFeedback && isFeedbackMessage;
+  const hasFeedback = message?.myFeedback?.rating;
 
   /**
    * For TemplateMessage, do not display:
@@ -232,8 +233,8 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     setShowFeedbackModal(false);
   };
 
-  const openFeedbackFormOrMenu = () => {
-    if (isMobile) {
+  const openFeedbackFormOrMenu = (hasFeedback = false) => {
+    if (isMobile && hasFeedback) {
       setShowFeedbackOptionsMenu(true);
     } else {
       setShowFeedbackModal(true);
@@ -468,7 +469,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             <FeedbackIconButton
               isSelected={message?.myFeedback?.rating === FeedbackRating.GOOD}
               onClick={async () => {
-                if (!message?.myFeedback?.rating) {
+                if (!hasFeedback) {
                   try {
                     await message.submitFeedback({
                       rating: FeedbackRating.GOOD,
@@ -479,7 +480,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                     setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SUBMIT);
                   }
                 } else {
-                  openFeedbackFormOrMenu();
+                  openFeedbackFormOrMenu(true);
                 }
               }}
               disabled={!!message?.myFeedback && message.myFeedback.rating !== FeedbackRating.GOOD}
@@ -493,7 +494,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
             <FeedbackIconButton
               isSelected={message?.myFeedback?.rating === FeedbackRating.BAD}
               onClick={async () => {
-                if (!message?.myFeedback?.rating) {
+                if (!hasFeedback) {
                   try {
                     await message.submitFeedback({
                       rating: FeedbackRating.BAD,
@@ -504,7 +505,7 @@ export default function MessageContent(props: MessageContentProps): ReactElement
                     setFeedbackFailedText(stringSet.FEEDBACK_FAILED_SUBMIT);
                   }
                 } else {
-                  openFeedbackFormOrMenu();
+                  openFeedbackFormOrMenu(true);
                 }
               }}
               disabled={!!message?.myFeedback && message.myFeedback.rating !== FeedbackRating.BAD}
