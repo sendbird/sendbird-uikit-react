@@ -75,8 +75,8 @@ type MessageInputProps = {
   isEdit?: boolean;
   isMobile?: boolean;
   isMentionEnabled?: boolean;
-  isVoiceMessageEnabled?: boolean;
-  isSelectingMultipleFilesEnabled?: boolean;
+  // isVoiceMessageEnabled?: boolean;
+  // isSelectingMultipleFilesEnabled?: boolean;
   disabled?: boolean;
   placeholder?: string;
   maxLength?: number;
@@ -90,10 +90,10 @@ type MessageInputProps = {
   onUserMentioned?: (user: User) => void;
   onMentionStringChange?: (mentionString: string) => void;
   onMentionedUserIdsUpdated?: (mentionedUserIds: string[]) => void;
-  onVoiceMessageIconClick?: () => void;
+  // onVoiceMessageIconClick?: () => void;
   onKeyUp?: (event: React.KeyboardEvent<HTMLDivElement>) => boolean;
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => boolean;
-  renderVoiceMessageIcon?: () => React.ReactNode;
+  // renderVoiceMessageIcon?: () => React.ReactNode;
   renderFileUploadIcon?: () => React.ReactNode;
   renderSendMessageIcon?: () => React.ReactNode;
   setMentionedUsers?: React.Dispatch<React.SetStateAction<User[]>>;
@@ -107,8 +107,8 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     isEdit = false,
     isMobile = false,
     isMentionEnabled = false,
-    isVoiceMessageEnabled = true,
-    isSelectingMultipleFilesEnabled = false,
+    // isVoiceMessageEnabled = true,
+    // isSelectingMultipleFilesEnabled = false,
     disabled = false,
     message = null,
     placeholder = '',
@@ -123,11 +123,11 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     onUserMentioned = noop,
     onMentionStringChange = noop,
     onMentionedUserIdsUpdated = noop,
-    onVoiceMessageIconClick = noop,
+    // onVoiceMessageIconClick = noop,
     onKeyUp = noop,
     onKeyDown = noop,
     renderFileUploadIcon = noop,
-    renderVoiceMessageIcon = noop,
+    // renderVoiceMessageIcon = noop,
     renderSendMessageIcon = noop,
     setMentionedUsers = noop,
     acceptableMimeTypes,
@@ -539,7 +539,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
             // renderFileUploadIcon which is set in code level
             || (isFileUploadEnabled && (
               <IconButton
-                className={classnames('sendbird-message-input--attach', isVoiceMessageEnabled && 'is-voice-message-enabled')}
+                className={classnames('sendbird-message-input--attach')}
                 height="32px"
                 width="32px"
                 onClick={() => {
@@ -566,7 +566,8 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
                     event.target.value = '';
                   }}
                   accept={getMimeTypesUIKitAccepts(acceptableMimeTypes)}
-                  multiple={isSelectingMultipleFilesEnabled && isChannelTypeSupportsMultipleFilesMessage(channel)}
+                  multiple={false}
+                  // multiple={isSelectingMultipleFilesEnabled && isChannelTypeSupportsMultipleFilesMessage(channel)}
                 />
               </IconButton>
             )))}
