@@ -107,6 +107,7 @@ const ChannelSettingsProvider = ({
           setChannelHandlerId(undefined);
         }
 
+        // FIXME :: refactor below code by new state management protocol
         const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
         const channelHandler: GroupChannelHandler = {
           onUserLeft: (channel, user) => {
