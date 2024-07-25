@@ -48,7 +48,7 @@ export interface GroupChannelListContextType extends ContextBaseType, ChannelLis
 }
 export interface GroupChannelListProviderProps
   extends PartialRequired<ContextBaseType, 'onChannelSelect' | 'onChannelCreated'>,
-    Pick<UserProfileProviderProps, 'onUserProfileMessage' | 'renderUserProfile' | 'disableUserProfile'> {
+  Pick<UserProfileProviderProps, 'onUserProfileMessage' | 'renderUserProfile' | 'disableUserProfile'> {
   children?: React.ReactNode;
 }
 
@@ -102,6 +102,11 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
       if (!selectedChannelUrl) onChannelSelect(groupChannels[0] ?? null);
     }
   }, [disableAutoSelect, stores.sdkStore.initialized, initialized, selectedChannelUrl]);
+
+  // Recreates the GroupChannelCollection when `channelListQueryParams` change
+  useEffect(() => {
+    refresh();
+  }, [channelListQueryParams]);
 
   const [typingChannelUrls, setTypingChannelUrls] = useState<string[]>([]);
   useGroupChannelHandler(sdk, {
