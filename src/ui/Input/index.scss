@@ -125,6 +125,7 @@
     height: calc(100% - 16px); // (7px padding + 1px border) * 2 = 16px
     overflow: hidden;
     text-overflow: ellipsis;
+    word-break: break-word;
     position: absolute;
     pointer-events: none;
     top: 8px;
