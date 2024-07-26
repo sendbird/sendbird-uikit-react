@@ -170,7 +170,7 @@ const FormInput = (props: InputProps) => {
                           />
                         </div>
                       )}
-                      {(placeHolder && !currentValue) && (
+                      {!currentValue && (
                         <Label
                           className='sendbird-input__placeholder'
                           type={LabelTypography.BODY_1}
@@ -232,7 +232,7 @@ const FormInput = (props: InputProps) => {
                           />
                         </div>
                       )}
-                      {(placeHolder && !currentValue) && (
+                      {!currentValue && (
                         <Label
                           className='sendbird-input__placeholder'
                           type={LabelTypography.BODY_1}
