@@ -8,8 +8,7 @@ import {
   ChannelSettingsContextProps,
 } from './context/ChannelSettingsProvider';
 
-interface ChannelSettingsProps extends ChannelSettingsUIProps, ChannelSettingsContextProps {
-}
+interface ChannelSettingsProps extends ChannelSettingsContextProps, Omit<ChannelSettingsUIProps, 'renderUserListItem'> { }
 
 const ChannelSettings: React.FC<ChannelSettingsProps> = (props: ChannelSettingsProps) => {
   return (
