@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { GroupChannel, GroupChannelUpdateParams } from '@sendbird/chat/groupChannel';
+import { GroupChannel, GroupChannelHandler, GroupChannelUpdateParams } from '@sendbird/chat/groupChannel';
 
 import type { UserListItemProps } from '../../../ui/UserListItem';
 import type { RenderUserProfileProps } from '../../../types';
@@ -7,6 +7,7 @@ import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import uuidv4 from '../../../utils/uuid';
 import { useAsyncRequest } from '../../../hooks/useAsyncRequest';
+import compareIds from '../../../utils/compareIds';
 
 interface ApplicationUserListQuery {
   limit?: number;
@@ -68,6 +69,7 @@ const ChannelSettingsProvider = ({
   const { config, stores } = useSendbirdStateContext();
   const { sdkStore } = stores;
   const { logger, onUserProfileMessage } = config;
+  const [channelHandlerId, setChannelHandlerId] = useState<string>();
 
   // hack to keep track of channel updates by triggering useEffect
   const [channelUpdateId, setChannelUpdateId] = useState(() => uuidv4());
@@ -94,7 +96,39 @@ const ChannelSettingsProvider = ({
       }
 
       try {
-        return await sdkStore.sdk.groupChannel.getChannel(channelUrl);
+        if (channelHandlerId) {
+          if (sdkStore.sdk?.groupChannel?.removeGroupChannelHandler) {
+            logger.info('ChannelSettings: Removing message reciver handler', channelHandlerId);
+            sdkStore.sdk.groupChannel.removeGroupChannelHandler(channelHandlerId);
+          } else if (sdkStore.sdk?.groupChannel) {
+            logger.error('ChannelSettings: Not found the removeGroupChannelHandler');
+          }
+
+          setChannelHandlerId(undefined);
+        }
+
+        // FIXME :: refactor below code by new state management protocol
+        const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
+        const channelHandler: GroupChannelHandler = {
+          onUserLeft: (channel, user) => {
+            if (compareIds(channel?.url, channelUrl)) {
+              logger.info('ChannelSettings: onUserLeft', { channel, user });
+              refresh();
+            }
+          },
+          onUserBanned: (channel, user) => {
+            if (compareIds(channel?.url, channelUrl) && channel.isGroupChannel()) {
+              logger.info('ChannelSettings: onUserBanned', { channel, user });
+              refresh();
+            }
+          },
+        };
+
+        const newChannelHandlerId = uuidv4();
+        sdkStore.sdk.groupChannel?.addGroupChannelHandler(newChannelHandlerId, new GroupChannelHandler(channelHandler));
+        setChannelHandlerId(newChannelHandlerId);
+
+        return channel;
       } catch (error) {
         logger.error('ChannelSettings: fetching channel error:', error);
         throw error;

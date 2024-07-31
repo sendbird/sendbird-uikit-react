@@ -83,6 +83,10 @@
 
   .sendbird-channel-settings__panel-icon-left {
     left: 16px;
+    /*rtl:raw:
+    &.sendbird-channel-settings__panel-icon__leave {
+      transform: rotate(180deg);
+    }*/
   }
   .sendbird-channel-settings__panel-icon-right {
     right: 16px;
