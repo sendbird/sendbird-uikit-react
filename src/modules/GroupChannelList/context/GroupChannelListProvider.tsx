@@ -106,7 +106,12 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
   // Recreates the GroupChannelCollection when `channelListQueryParams` change
   useEffect(() => {
     refresh();
-  }, [channelListQueryParams]);
+  }, [
+    Object.keys(channelListQueryParams ?? {})
+      .sort()
+      .map((key: string) => `${key}=${encodeURIComponent(JSON.stringify(channelListQueryParams[key]))}`)
+      .join('&')
+  ]);
 
   const [typingChannelUrls, setTypingChannelUrls] = useState<string[]>([]);
   useGroupChannelHandler(sdk, {
