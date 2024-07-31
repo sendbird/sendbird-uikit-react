@@ -14,7 +14,7 @@ import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import { SendableMessage } from '@sendbird/chat/lib/__definition';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
-import { MessageContentMiddleContainerType, Nullable } from '../types';
+import { HTMLTextDirection, MessageContentMiddleContainerType, Nullable } from '../types';
 import { isSafari } from './browser';
 import { match } from 'ts-pattern';
 import isSameSecond from 'date-fns/isSameSecond';
@@ -467,6 +467,8 @@ interface UIKitStore {
   },
   config: {
     isReactionEnabled: boolean,
+    htmlTextDirection: HTMLTextDirection,
+    forceLeftToRightMessageLayout: boolean,
   }
 }
 export const getCurrentUserId = (store: UIKitStore): string => (store?.stores?.userStore?.user?.userId);

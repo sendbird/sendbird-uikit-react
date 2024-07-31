@@ -103,6 +103,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   disableMarkAsDelivered?: boolean;
   breakpoint?: string | boolean;
   htmlTextDirection?: HTMLTextDirection;
+  forceLeftToRightMessageLayout?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   onUserProfileMessage?: (channel: GroupChannel) => void;
   uikitOptions?: UIKitOptions;
@@ -178,6 +179,7 @@ const SendbirdSDK = ({
   isMultipleFilesMessageEnabled = false,
   eventHandlers,
   htmlTextDirection = 'ltr',
+  forceLeftToRightMessageLayout = false,
 }: SendbirdProviderProps): React.ReactElement => {
   const { logLevel = '', userMention = {}, isREMUnitEnabled = false, pubSub: customPubSub } = config;
   const { isMobile } = useMediaQueryContext();
@@ -400,6 +402,7 @@ const SendbirdSDK = ({
           isMessageReceiptStatusEnabledOnChannelList: configs.groupChannel.channelList.enableMessageReceiptStatus,
           showSearchIcon: sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
           htmlTextDirection,
+          forceLeftToRightMessageLayout,
         },
         eventHandlers,
         emojiManager,

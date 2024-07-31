@@ -73,6 +73,7 @@ export interface SendBirdStateConfig {
   accessToken?: string;
   theme: string;
   htmlTextDirection: HTMLTextDirection;
+  forceLeftToRightMessageLayout: boolean;
   pubSub: SBUGlobalPubSub;
   logger: Logger;
   setCurrentTheme: (theme: 'light' | 'dark') => void;

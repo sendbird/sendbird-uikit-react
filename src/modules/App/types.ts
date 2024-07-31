@@ -15,6 +15,7 @@ export interface AppLayoutProps {
   isReactionEnabled?: boolean;
   replyType?: 'NONE' | 'QUOTE_REPLY' | 'THREAD';
   htmlTextDirection?: HTMLTextDirection;
+  forceLeftToRightMessageLayout?: boolean;
   isMessageGroupingEnabled?: boolean;
   isMultipleFilesMessageEnabled?: boolean;
   allowProfileEdit?: boolean;

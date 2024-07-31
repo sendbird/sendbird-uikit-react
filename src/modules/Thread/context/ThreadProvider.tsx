@@ -33,6 +33,7 @@ import { PublishingModuleType, useSendMultipleFilesMessage } from './hooks/useSe
 import { SendableMessageType } from '../../../utils';
 import { useThreadFetchers } from './hooks/useThreadFetchers';
 import type { OnBeforeDownloadFileMessageType } from '../../GroupChannel/context/GroupChannelProvider';
+import { useMessageLayoutDirection } from '../../../hooks/useHTMLTextDirection';
 
 export type ThreadProviderProps = {
   children?: React.ReactElement;
@@ -93,7 +94,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
   const { user } = userStore;
   const sdkInit = sdkStore?.initialized;
   // // config
-  const { logger, pubSub, onUserProfileMessage } = config;
+  const { logger, pubSub, onUserProfileMessage, htmlTextDirection, forceLeftToRightMessageLayout } = config;
 
   const isMentionEnabled = config.groupChannel.enableMention;
   const isReactionEnabled = config.groupChannel.enableReactions;
@@ -166,6 +167,13 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
       initialize();
     }
   }, [stores.sdkStore.initialized, config.isOnline, initialize]);
+
+  useMessageLayoutDirection(
+    htmlTextDirection,
+    forceLeftToRightMessageLayout,
+    // we're assuming that if the thread message list is empty, it's in the loading state
+    allThreadMessages.length === 0,
+  );
 
   const toggleReaction = useToggleReactionCallback({ currentChannel }, { logger });
 
