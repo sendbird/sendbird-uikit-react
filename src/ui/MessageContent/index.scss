@@ -291,10 +291,10 @@
   flex-direction: column;
   position: relative;
   width: fit-content;
+  align-items: flex-end;
 
   .sendbird-message-content__middle__message-item-body {
     box-sizing: border-box;
-    width: 100%;
   }
 }
 
