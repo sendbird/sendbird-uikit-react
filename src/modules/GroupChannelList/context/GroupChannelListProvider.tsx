@@ -107,10 +107,9 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
   useEffect(() => {
     refresh();
   }, [
-    Object.keys(channelListQueryParams ?? {})
-      .sort()
+    Object.keys(channelListQueryParams ?? {}).sort()
       .map((key: string) => `${key}=${encodeURIComponent(JSON.stringify(channelListQueryParams[key]))}`)
-      .join('&')
+      .join('&'),
   ]);
 
   const [typingChannelUrls, setTypingChannelUrls] = useState<string[]>([]);
