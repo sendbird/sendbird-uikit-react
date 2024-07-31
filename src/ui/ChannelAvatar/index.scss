@@ -10,4 +10,10 @@
   @include themed() {
     background-color: t(secondary-3);
   }
+  /*rtl:raw:
+  .sendbird-icon {
+    &.sendbird-icon-broadcast {
+      transform: rotateY(180deg);
+    }
+  }*/
 }
