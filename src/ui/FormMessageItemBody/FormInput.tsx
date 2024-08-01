@@ -200,7 +200,7 @@ const FormInput = (props: InputProps) => {
                       />
                       {(!disabled && placeHolder && !currentValue) && (
                         <Label
-                          className='sendbird-input__placeholder'
+                          className='sendbird-input__placeholder textarea'
                           type={LabelTypography.BODY_1}
                           color={LabelColors.ONBACKGROUND_3}
                         >
