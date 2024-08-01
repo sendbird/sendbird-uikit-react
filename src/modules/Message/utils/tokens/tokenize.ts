@@ -9,6 +9,7 @@ import {
   TokenParams,
   UndeterminedToken,
 } from './types';
+import { UserMessage } from '@sendbird/chat/message';
 
 /**
  * /\[(.*?)\]\((.*?)\) is for url.
@@ -200,6 +201,26 @@ export function tokenizeMessage({
   );
   const result = combineNearbyStrings(partialsWithUrlsAndMentions);
   return result;
+}
+
+export function getChannelPreviewMessage(messageText: string): string {
+  const partialResult = [{
+    type: TOKEN_TYPES.undetermined,
+    value: messageText,
+  }];
+  const tokens = splitTokensWithMarkdowns(partialResult);
+  const result = markDownTokenResolver(tokens);
+  return result;
+}
+
+function markDownTokenResolver(tokens: Token[]): string {
+  const result = tokens.map((token) => {
+    if (token.type === TOKEN_TYPES.markdown) {
+      return markDownTokenResolver(tokenizeMarkdown({ messageText: (token as MarkdownToken).groups[1] }));
+    }
+    return token.value;
+  });
+  return result.join('');
 }
 
 export function tokenizeMarkdown({

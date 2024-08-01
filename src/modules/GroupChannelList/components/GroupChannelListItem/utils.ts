@@ -5,6 +5,7 @@ import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
 import { isAudio, isGif, isImage, isTemplateMessage, isVideo, isVoiceMessageMimeType } from '../../../../utils';
 import { LabelStringSet } from '../../../../ui/Label';
+import { getChannelPreviewMessage } from '../../../Message/utils/tokens/tokenize';
 
 export const getChannelTitle = (channel?: GroupChannel, currentUserId?: string, stringSet = LabelStringSet) => {
   if (!channel?.name && !channel?.members) {
@@ -79,6 +80,8 @@ const getPrettyLastMessage = (message = null, stringSet = LabelStringSet) => {
   return message.message ?? '';
 };
 
-export const getLastMessage = (channel?: GroupChannel, stringSet = LabelStringSet) => channel?.lastMessage ? getPrettyLastMessage(channel?.lastMessage, stringSet) : '';
+export const getLastMessage = (channel?: GroupChannel, stringSet = LabelStringSet) => {
+  return channel?.lastMessage ? getPrettyLastMessage(channel?.lastMessage, stringSet) : '';
+};
 
 export const getChannelUnreadMessageCount = (channel?: GroupChannel) => channel?.unreadMessageCount ? channel.unreadMessageCount : 0;
