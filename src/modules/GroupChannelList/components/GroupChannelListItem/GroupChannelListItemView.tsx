@@ -24,6 +24,7 @@ import MentionUserLabel from '../../../../ui/MentionUserLabel';
 import MessageStatus from '../../../../ui/MessageStatus';
 import Modal from '../../../../ui/Modal';
 import TextButton from '../../../../ui/TextButton';
+import { getChannelPreviewMessage } from '../../../Message/utils/tokens/tokenize';
 
 export interface GroupChannelListItemBasicProps {
   tabIndex: number;
@@ -56,6 +57,10 @@ export const GroupChannelListItemView = ({
   const { dateLocale, stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
   const isMentionEnabled = config.groupChannel.enableMention;
+  const lastMessage = getLastMessage(channel, stringSet);
+  const previewLastMessage = config.groupChannel.enableMarkdownForUserMessage
+    ? getChannelPreviewMessage(lastMessage)
+    : lastMessage;
 
   const [showMobileLeave, setShowMobileLeave] = useState(false);
   const onLongPress = useLongPress(
@@ -161,7 +166,7 @@ export const GroupChannelListItemView = ({
               )}
               {!isTyping
                 && !isVoiceMessage(channel.lastMessage as FileMessage | null)
-                && getLastMessage(channel, stringSet)}
+                && previewLastMessage}
               {!isTyping
                 && isVoiceMessage(channel.lastMessage as FileMessage | null)
                 && stringSet.VOICE_MESSAGE}
