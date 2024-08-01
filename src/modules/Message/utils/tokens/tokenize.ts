@@ -9,7 +9,6 @@ import {
   TokenParams,
   UndeterminedToken,
 } from './types';
-import { UserMessage } from '@sendbird/chat/message';
 
 /**
  * /\[(.*?)\]\((.*?)\) is for url.
