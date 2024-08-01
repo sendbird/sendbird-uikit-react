@@ -45,6 +45,7 @@ export interface AppProps {
   disableAutoSelect?: AppLayoutProps['disableAutoSelect'];
   onProfileEditSuccess?: AppLayoutProps['onProfileEditSuccess'];
   htmlTextDirection?: AppLayoutProps['htmlTextDirection'];
+  forceLeftToRightMessageLayout?: AppLayoutProps['forceLeftToRightMessageLayout'];
 
   /**
    * The default value is false.
@@ -102,6 +103,7 @@ export default function App(props: AppProps) {
     enableLegacyChannelModules = false,
     uikitOptions,
     htmlTextDirection = 'ltr',
+    forceLeftToRightMessageLayout = false,
     // The below configs are duplicates of the Dashboard UIKit Configs.
     // Since their default values will be set in the Sendbird component,
     // we don't need to set them here.
@@ -158,6 +160,7 @@ export default function App(props: AppProps) {
       isMentionEnabled={isMentionEnabled}
       isVoiceMessageEnabled={isVoiceMessageEnabled}
       htmlTextDirection={htmlTextDirection}
+      forceLeftToRightMessageLayout={forceLeftToRightMessageLayout}
     >
       <AppLayout
         isMessageGroupingEnabled={isMessageGroupingEnabled}

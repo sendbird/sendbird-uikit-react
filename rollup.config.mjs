@@ -16,6 +16,7 @@ import ts2 from "rollup-plugin-typescript2"
 import pkg from "./package.json" assert {type: "json"};
 import inputs from "./rollup.module-exports.mjs";
 import { readFileSync, writeFileSync } from 'fs';
+import postcssRTLOptions from "./postcssRtlOptions.mjs";
 
 const APP_VERSION_STRING = "__react_dev_mode__";
 
@@ -59,7 +60,7 @@ export default {
           const result = scss.renderSync({ file: id });
           resolvecss({ code: result.css.toString() });
         }),
-      plugins: [autoprefixer, postcssRtl({ mode: 'override' })],
+      plugins: [autoprefixer, postcssRtl(postcssRTLOptions)],
       sourceMap: false,
       extract: "dist/index.css",
       extensions: [".sass", ".scss", ".css"],

@@ -18,6 +18,7 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { isAboutSame } from '../../context/utils';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { SendableMessageType } from '../../../../utils';
+import { classnames } from '../../../../utils/utils';
 
 export interface ThreadUIProps {
   renderHeader?: () => React.ReactElement;
@@ -148,7 +149,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
         )
       }
       <div
-        className="sendbird-thread-ui--scroll"
+        className={classnames('sendbird-thread-ui--scroll, sendbird-conversation__messages')}
         ref={scrollRef}
         onScroll={onScroll}
       >

@@ -1,6 +1,7 @@
 import { mergeConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
 import { dirname, join } from 'path';
+import postcssRTLOptions from "../postcssRtlOptions.mjs";
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -22,9 +23,7 @@ export default {
       css: {
         postcss: {
           plugins: [
-            require('postcss-rtlcss')({
-              mode: 'override',
-            }),
+            require('postcss-rtlcss')(postcssRTLOptions),
           ],
         },
       },

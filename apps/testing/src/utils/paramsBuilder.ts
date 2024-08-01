@@ -30,6 +30,7 @@ export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
     isMultipleFilesMessageEnabled: parseValue(searchParams.get('enableMultipleFilesMessage')) ?? true,
     enableLegacyChannelModules: parseValue(searchParams.get('enableLegacyChannelModules')) ?? false,
     htmlTextDirection: parseValue(searchParams.get('htmlTextDirection')) ?? 'ltr',
+    forceLeftToRightMessageLayout: parseValue(searchParams.get('forceLeftToRightMessageLayout')) ?? false,
     uikitOptions: {},
   } as ParamsAsProps;
 

@@ -30,6 +30,7 @@ const meta: Meta<typeof App> = {
         'isMessageGroupingEnabled',
         'disableAutoSelect',
         'htmlTextDirection',
+        'forceLeftToRightMessageLayout',
       ],
     },
   },
@@ -142,6 +143,12 @@ const meta: Meta<typeof App> = {
       description: 'A property that sets the text direction of the HTML. `ltr` is for left-to-right, and `rtl` is for right-to-left.',
       control: 'radio',
       options: ['ltr', 'rtl'],
+    },
+    forceLeftToRightMessageLayout: {
+      type: 'boolean',
+      description:
+        'A property that forces the layout of the message to be left-to-right. This would be only useful when the htmlTextDirection is set to right-to-left, but you want to display the message layout in left-to-right.',
+      control: 'boolean',
     }
   },
 };
@@ -177,4 +184,5 @@ Default.args = {
   isMessageGroupingEnabled: true,
   disableAutoSelect: false,
   htmlTextDirection: 'ltr',
+  forceLeftToRightMessageLayout: false,
 };

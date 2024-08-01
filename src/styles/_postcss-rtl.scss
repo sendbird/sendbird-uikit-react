@@ -1,0 +1,37 @@
+// This mixin adjusts CSS properties to handle RTL (right-to-left) layout fixes especially when 
+// - htmlTextDirection='rtl'
+// - forceLeftToRightMessageLayout=true
+// for specific components to increase specificity and ensure proper alignment.
+@mixin layout-adjustments() {
+  .sendbird-avatar-img {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .sendbird-voice-message-item-body__playback-time {
+    position: absolute;
+    right: 12px;
+    left: unset;
+    top: 15px;
+  }
+  .sendbird-reaction-badge__inner {
+    padding-left: 20px;
+    padding-right: 4px;
+    .sendbird-reaction-badge__inner__icon {
+      left: 4px;
+      right: unset;
+    }
+  }
+}
+
+.sendbird-message-content {
+ @include layout-adjustments();
+}
+
+.sendbird-thread-list-item-content {
+  @include layout-adjustments();
+}
+
+.sendbird-parent-message-info {
+  @include layout-adjustments();
+}
