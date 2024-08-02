@@ -295,7 +295,13 @@
 
   .sendbird-message-content__middle__message-item-body {
     box-sizing: border-box;
+    &.reactions {
+      width: 100%;
+    }
   }
+}
+.sendbird-message-content__middle__body-container:has(.sendbird-message-content__middle__message-item-body.reactions) {
+  align-items: unset;
 }
 
 .sendbird-message-content-reactions {
