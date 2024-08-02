@@ -32,6 +32,12 @@
   }
 }
 
+.sendbird-icon-color--secondary-2 [class*='fill'] {
+  @include themed() {
+    fill: t(secondary-2);
+  }
+}
+
 .sendbird-icon-color--content [class*='fill'] {
   @include themed() {
     fill: t(on-content-1);

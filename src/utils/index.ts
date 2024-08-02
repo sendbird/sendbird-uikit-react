@@ -284,6 +284,10 @@ export const isThreadMessage = (message: CoreMessageType): boolean => (
   !!message.parentMessageId && !!message.parentMessage
 );
 
+export const isFormMessage = (message: CoreMessageType): boolean => !!(
+  message.messageForm
+);
+
 export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
   message && message.extendedMessagePayload?.['template']
 );
