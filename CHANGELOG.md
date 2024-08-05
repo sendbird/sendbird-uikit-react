@@ -1,5 +1,38 @@
 # Changelog - v3
 
+## [v3.14.14] (Aug 1, 2024)
+
+### Features
+- Added `forceLeftToRightMessageLayout` to enable LTR message layout display in RTL mode. This helps users who set `htmlTextDirection='rtl'` to keep the message layout in LTR format (outgoing messages on the right, incoming messages on the left).
+  ```tsx
+  import SendbirdProvider from ‘@sendbird/uikit-react/SendbirdProvider’;
+  import ar from 'date-fns/locale/ar';
+
+  const YourComponent() => {
+    return (
+      <SendbirdProvider
+        htmlTextDirection="rtl" // for RTL display
+        forceLeftToRightMessageLayout={true} // to enforce the message layout to Left-to-Right direction even though htmlTextDirection is set to ‘rtl’
+        dateLocale={ar} // locale setting would be necessary too
+        {…other props}
+      >
+        {...other components}
+      </SendbirdProvider>
+    )
+  }
+  ```
+- Banned members no longer affect the ChannelSettings/Profile.
+
+### Fixes
+- Fixed an issue where the `GroupChannelCollection` was not recreated when `channelListQueryParams` changed. The channel list now refreshes when the values of `channelListQueryParams` are updated.
+- Fixed a bug where replied child message width did not fit the content.
+- Corrected the direction of some icons in RTL mode. Specifically, the leave channel icon and the broadcast channel icon.
+- Fixed an issue where the feedback modal was not displayed on feedback button click in mobile view. No change in desktop view behavior.
+- Fixed an issue where banned members affected the ChannelSettings/Profile. Banned members now do not affect these settings.
+
+### Chores
+- Omitted `renderUserListItem` of `ChannelSettingsUIProps` from the `ChannelSettingsProps`.
+
 ## [v3.14.13] (July 18, 2024)
 
 ### Features
