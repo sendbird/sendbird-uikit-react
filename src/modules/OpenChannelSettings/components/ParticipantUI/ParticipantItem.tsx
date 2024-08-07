@@ -8,7 +8,7 @@ import React, {
 import { Participant, type User } from '@sendbird/chat';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
-import { UserProfileContext } from '../../../../lib/UserProfileContext';
+import { useUserProfileContext } from '../../../../lib/UserProfileContext';
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import Accordion from '../../../../ui/Accordion';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
@@ -41,7 +41,7 @@ export const UserListItem: React.FC<UserListItemProps> = ({
 }: UserListItemProps) => {
   const avatarRef = useRef(null);
   const actionRef = useRef(null);
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useUserProfileContext();
   const { stringSet } = useContext(LocalizationContext);
   return (
     <div className="sendbird-participants-accordion__member">

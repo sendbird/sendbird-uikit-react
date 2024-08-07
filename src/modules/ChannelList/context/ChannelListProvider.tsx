@@ -16,8 +16,6 @@ import {
   UnreadChannelFilter,
 } from '@sendbird/chat/groupChannel';
 
-import { RenderUserProfileProps } from '../../../types';
-
 import setupChannelList, { pubSubHandler, pubSubHandleRemover } from '../utils';
 import { uuidv4 } from '../../../utils/uuid';
 import { noop } from '../../../utils/utils';

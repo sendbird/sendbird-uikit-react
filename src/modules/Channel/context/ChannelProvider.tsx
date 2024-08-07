@@ -19,7 +19,7 @@ import type {
 } from '@sendbird/chat/message';
 import type { EmojiContainer, SendbirdError, User } from '@sendbird/chat';
 
-import { ReplyType, RenderUserProfileProps, Nullable } from '../../../types';
+import { ReplyType, Nullable } from '../../../types';
 import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CoreMessageType, SendableMessageType } from '../../../utils';
@@ -91,7 +91,7 @@ export interface ChannelContextProps extends
   onMessageHighlighted?: () => void;
   scrollBehavior?: 'smooth' | 'auto';
   reconnectOnIdle?: boolean;
-};
+}
 
 interface MessageStoreInterface {
   allMessages: CoreMessageType[];

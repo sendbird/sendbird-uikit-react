@@ -1,5 +1,4 @@
-import React, { useReducer, useMemo, useEffect, ReactElement } from 'react';
-import { User } from '@sendbird/chat';
+import React, { useReducer, useMemo, useEffect } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import type {
   BaseMessage, FileMessage,
@@ -48,7 +47,7 @@ export interface ThreadProviderProps extends
   onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
   onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
   isMultipleFilesMessageEnabled?: boolean;
-};
+}
 export interface ThreadProviderInterface extends ThreadProviderProps, ThreadContextInitialState {
   // hooks for fetching threads
   fetchPrevThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;

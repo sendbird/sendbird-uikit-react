@@ -4,7 +4,7 @@ import type { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/grou
 import type { User } from '@sendbird/chat';
 
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import { UserProfileContext } from '../../lib/UserProfileContext';
+import { useUserProfileContext } from '../../lib/UserProfileContext';
 import { getCreateGroupChannel } from '../../lib/selectors';
 import Avatar from '../Avatar/index';
 import Label, { LabelColors, LabelTypography } from '../Label';
@@ -35,7 +35,7 @@ function UserProfile({
   const logger = store?.config?.logger;
   const { stringSet } = useContext(LocalizationContext);
   const currentUserId_ = currentUserId || store?.config?.userId;
-  const { onStartDirectMessage } = useContext(UserProfileContext);
+  const { onStartDirectMessage } = useUserProfileContext();
   return (
     <div className="sendbird__user-profile">
       <section className="sendbird__user-profile-avatar">

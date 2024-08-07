@@ -2,7 +2,6 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { GroupChannel, GroupChannelHandler, GroupChannelUpdateParams } from '@sendbird/chat/groupChannel';
 
 import type { UserListItemProps } from '../../../ui/UserListItem';
-import type { RenderUserProfileProps } from '../../../types';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
 import uuidv4 from '../../../utils/uuid';

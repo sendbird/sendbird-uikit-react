@@ -42,7 +42,6 @@ import { SBUGlobalPubSub } from './pubSub/topics';
 import { EmojiManager } from './emojiManager';
 import { MessageTemplatesInfo, ProcessedMessageTemplate, WaitingTemplateKeyData } from './dux/appInfo/initialState';
 import { AppInfoActionTypes } from './dux/appInfo/actionTypes';
-import { UserProfileProviderProps } from './UserProfileContext';
 
 // note to SDK team:
 // using enum inside .d.ts won’t work for jest, but const enum will work.

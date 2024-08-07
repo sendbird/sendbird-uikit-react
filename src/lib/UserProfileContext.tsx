@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { RenderUserProfileProps } from '../types';
 import { useSendbirdStateContext } from './Sendbird';
@@ -19,7 +19,7 @@ interface UserProfileContextInterface {
  * user profile goes deep inside the component tree
  * use this context as a short circuit to send in values
  */
-const UserProfileContext = React.createContext<UserProfileContextInterface>({
+export const UserProfileContext = React.createContext<UserProfileContextInterface>({
   disableUserProfile: true,
   isOpenChannel: false,
 });
@@ -34,7 +34,9 @@ export type UserProfileProviderProps = React.PropsWithChildren<
   }
 >;
 
-const UserProfileProvider = ({
+export const useUserProfileContext = () => useContext(UserProfileContext);
+
+export const UserProfileProvider = ({
   isOpenChannel = false,
   disableUserProfile: _disableUserProfile = false,
   renderUserProfile: _renderUserProfile,
@@ -60,5 +62,3 @@ const UserProfileProvider = ({
     </UserProfileContext.Provider>
   );
 };
-
-export { UserProfileContext, UserProfileProvider };
