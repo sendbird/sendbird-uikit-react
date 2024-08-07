@@ -1,11 +1,17 @@
 import React from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { RenderUserProfileProps } from '../types';
+import { useSendbirdStateContext } from './Sendbird';
 
 interface UserProfileContextInterface {
-  disableUserProfile: boolean;
   isOpenChannel: boolean;
+  disableUserProfile: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  onStartDirectMessage?: (channel: GroupChannel) => void;
+
+  /**
+   * @deprecated This prop has been renamed to `onStartDirectMessage`.
+   */
   onUserProfileMessage?: (channel: GroupChannel) => void;
 }
 
@@ -18,27 +24,36 @@ const UserProfileContext = React.createContext<UserProfileContextInterface>({
   isOpenChannel: false,
 });
 
-export type UserProfileProviderProps = React.PropsWithChildren<{
-  disableUserProfile?: boolean;
-  isOpenChannel?: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
-  onUserProfileMessage?: (channel: GroupChannel) => void;
-}>;
+export type UserProfileProviderProps = React.PropsWithChildren<
+  Partial<UserProfileContextInterface>
+  & {
+    /** This prop is optional. It is no longer necessary to provide it because the value can be accessed through SendbirdStateContext. */
+    disableUserProfile?: boolean;
+    /** This prop is optional. It is no longer necessary to provide it because the value can be accessed through SendbirdStateContext. */
+    renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  }
+>;
 
 const UserProfileProvider = ({
   isOpenChannel = false,
-  disableUserProfile = false,
-  renderUserProfile,
-  onUserProfileMessage,
+  disableUserProfile: _disableUserProfile = false,
+  renderUserProfile: _renderUserProfile,
+  onUserProfileMessage: _onUserProfileMessage,
+  onStartDirectMessage: _onStartDirectMessage,
   children,
 }: UserProfileProviderProps) => {
+  const { config } = useSendbirdStateContext();
+  const onStartDirectMessage = _onStartDirectMessage ?? _onUserProfileMessage ?? config.onStartDirectMessage;
+
   return (
     <UserProfileContext.Provider
       value={{
         isOpenChannel,
-        disableUserProfile,
-        renderUserProfile,
-        onUserProfileMessage,
+        disableUserProfile: _disableUserProfile ?? !config.common.enableUsingDefaultUserProfile,
+        renderUserProfile: _renderUserProfile ?? config.renderUserProfile,
+        onStartDirectMessage,
+        /** legacy of onStartDirectMessage */
+        onUserProfileMessage: onStartDirectMessage,
       }}
     >
       {children}

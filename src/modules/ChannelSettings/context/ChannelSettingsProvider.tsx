@@ -4,7 +4,7 @@ import { GroupChannel, GroupChannelHandler, GroupChannelUpdateParams } from '@se
 import type { UserListItemProps } from '../../../ui/UserListItem';
 import type { RenderUserProfileProps } from '../../../types';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { UserProfileProvider } from '../../../lib/UserProfileContext';
+import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
 import uuidv4 from '../../../utils/uuid';
 import { useAsyncRequest } from '../../../hooks/useAsyncRequest';
 import compareIds from '../../../utils/compareIds';
@@ -36,12 +36,13 @@ interface CommonChannelSettingsProps {
   queries?: ChannelSettingsQueries;
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
 }
-export interface ChannelSettingsContextProps extends CommonChannelSettingsProps {
+export interface ChannelSettingsContextProps extends
+  CommonChannelSettingsProps,
+  Pick<UserProfileProviderProps, 'renderUserProfile' | 'disableUserProfile'> {
   children?: React.ReactElement;
   className?: string;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
-  disableUserProfile?: boolean;
 }
+
 interface ChannelSettingsProviderInterface extends CommonChannelSettingsProps {
   setChannelUpdateId(uniqId: string): void;
   forceUpdateUI(): void;
@@ -52,23 +53,22 @@ interface ChannelSettingsProviderInterface extends CommonChannelSettingsProps {
 
 const ChannelSettingsContext = React.createContext<ChannelSettingsProviderInterface | null>(null);
 
-const ChannelSettingsProvider = ({
-  children,
-  className,
-  channelUrl,
-  onCloseClick,
-  onLeaveChannel,
-  onChannelModified,
-  overrideInviteUser,
-  onBeforeUpdateChannel,
-  queries,
-  renderUserProfile,
-  disableUserProfile,
-  renderUserListItem,
-}: ChannelSettingsContextProps) => {
+const ChannelSettingsProvider = (props: ChannelSettingsContextProps) => {
+  const {
+    children,
+    className,
+    channelUrl,
+    onCloseClick,
+    onLeaveChannel,
+    onChannelModified,
+    overrideInviteUser,
+    onBeforeUpdateChannel,
+    queries,
+    renderUserListItem,
+  } = props;
   const { config, stores } = useSendbirdStateContext();
   const { sdkStore } = stores;
-  const { logger, onUserProfileMessage } = config;
+  const { logger } = config;
   const [channelHandlerId, setChannelHandlerId] = useState<string>();
 
   // hack to keep track of channel updates by triggering useEffect
@@ -163,11 +163,7 @@ const ChannelSettingsProvider = ({
         renderUserListItem,
       }}
     >
-      <UserProfileProvider
-        renderUserProfile={renderUserProfile}
-        disableUserProfile={disableUserProfile ?? !config.common.enableUsingDefaultUserProfile}
-        onUserProfileMessage={onUserProfileMessage}
-      >
+      <UserProfileProvider {...props}>
         <div className={`sendbird-channel-settings ${className}`}>{children}</div>
       </UserProfileProvider>
     </ChannelSettingsContext.Provider>

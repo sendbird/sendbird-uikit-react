@@ -20,7 +20,7 @@ import type {
 import type { EmojiContainer, SendbirdError, User } from '@sendbird/chat';
 
 import { ReplyType, RenderUserProfileProps, Nullable } from '../../../types';
-import { UserProfileProvider } from '../../../lib/UserProfileContext';
+import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CoreMessageType, SendableMessageType } from '../../../utils';
 import { ThreadReplySelectType } from './const';
@@ -61,7 +61,8 @@ export type ChannelQueries = {
   messageListParams?: MessageListParams;
 };
 
-export type ChannelContextProps = {
+export interface ChannelContextProps extends
+  Pick<UserProfileProviderProps, 'disableUserProfile' | 'renderUserProfile'> {
   children?: React.ReactElement;
   channelUrl: string;
   isReactionEnabled?: boolean;
@@ -82,9 +83,7 @@ export type ChannelContextProps = {
   replyType?: ReplyType;
   threadReplySelectType?: ThreadReplySelectType;
   queries?: ChannelQueries;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   filterMessageList?(messages: BaseMessage): boolean;
-  disableUserProfile?: boolean;
   disableMarkAsRead?: boolean;
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
@@ -209,7 +208,6 @@ const ChannelProvider = (props: ChannelContextProps) => {
     userId,
     isOnline,
     imageCompression,
-    onUserProfileMessage,
     markAsReadScheduler,
     groupChannel,
     htmlTextDirection,
@@ -523,11 +521,7 @@ const ChannelProvider = (props: ChannelContextProps) => {
       isScrolled,
       setIsScrolled,
     }}>
-      <UserProfileProvider
-        disableUserProfile={props?.disableUserProfile ?? !config.common.enableUsingDefaultUserProfile}
-        renderUserProfile={props?.renderUserProfile}
-        onUserProfileMessage={onUserProfileMessage}
-      >
+      <UserProfileProvider {...props}>
         {children}
       </UserProfileProvider>
     </ChannelContext.Provider>

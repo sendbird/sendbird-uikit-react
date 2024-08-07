@@ -35,7 +35,7 @@ function UserProfile({
   const logger = store?.config?.logger;
   const { stringSet } = useContext(LocalizationContext);
   const currentUserId_ = currentUserId || store?.config?.userId;
-  const { onUserProfileMessage } = useContext(UserProfileContext);
+  const { onStartDirectMessage } = useContext(UserProfileContext);
   return (
     <div className="sendbird__user-profile">
       <section className="sendbird__user-profile-avatar">
@@ -69,9 +69,7 @@ function UserProfile({
                 createChannel(params)
                   .then((groupChannel) => {
                     logger.info('UserProfile, channel create', groupChannel);
-                    if (typeof onUserProfileMessage === 'function') {
-                      onUserProfileMessage?.(groupChannel);
-                    }
+                    onStartDirectMessage?.(groupChannel);
                   });
               }}
             >

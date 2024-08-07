@@ -9,7 +9,7 @@ import type {
 } from '@sendbird/chat/message';
 
 import { getNicknamesMapFromMembers, getParentMessageFrom } from './utils';
-import { UserProfileProvider } from '../../../lib/UserProfileContext';
+import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 
@@ -35,7 +35,8 @@ import { useThreadFetchers } from './hooks/useThreadFetchers';
 import type { OnBeforeDownloadFileMessageType } from '../../GroupChannel/context/GroupChannelProvider';
 import { useMessageLayoutDirection } from '../../../hooks/useHTMLTextDirection';
 
-export type ThreadProviderProps = {
+export interface ThreadProviderProps extends
+  Pick<UserProfileProviderProps, 'disableUserProfile' | 'renderUserProfile'> {
   children?: React.ReactElement;
   channelUrl: string;
   message: SendableMessageType | null;
@@ -46,9 +47,6 @@ export type ThreadProviderProps = {
   onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
   onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
   onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
-  // User Profile
-  disableUserProfile?: boolean;
-  renderUserProfile?: (props: { user: User, close: () => void }) => ReactElement;
   isMultipleFilesMessageEnabled?: boolean;
 };
 export interface ThreadProviderInterface extends ThreadProviderProps, ThreadContextInitialState {
@@ -79,9 +77,6 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
     onBeforeSendMultipleFilesMessage,
     onBeforeDownloadFileMessage,
     isMultipleFilesMessageEnabled,
-    // User Profile
-    disableUserProfile,
-    renderUserProfile,
   } = props;
   const propsMessage = props?.message;
   const propsParentMessage = getParentMessageFrom(propsMessage);
@@ -94,7 +89,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
   const { user } = userStore;
   const sdkInit = sdkStore?.initialized;
   // // config
-  const { logger, pubSub, onUserProfileMessage, htmlTextDirection, forceLeftToRightMessageLayout } = config;
+  const { logger, pubSub, htmlTextDirection, forceLeftToRightMessageLayout } = config;
 
   const isMentionEnabled = config.groupChannel.enableMention;
   const isReactionEnabled = config.groupChannel.enableReactions;
@@ -272,11 +267,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
       }}
     >
       {/* UserProfileProvider */}
-      <UserProfileProvider
-        disableUserProfile={disableUserProfile ?? !config.common.enableUsingDefaultUserProfile}
-        renderUserProfile={renderUserProfile}
-        onUserProfileMessage={onUserProfileMessage}
-      >
+      <UserProfileProvider {...props}>
         {children}
       </UserProfileProvider>
     </ThreadContext.Provider>
