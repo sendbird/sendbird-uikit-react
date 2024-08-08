@@ -16,8 +16,6 @@ import {
   UnreadChannelFilter,
 } from '@sendbird/chat/groupChannel';
 
-import { RenderUserProfileProps } from '../../../types';
-
 import setupChannelList, { pubSubHandler, pubSubHandleRemover } from '../utils';
 import { uuidv4 } from '../../../utils/uuid';
 import { noop } from '../../../utils/utils';
@@ -26,7 +24,7 @@ import { DELIVERY_RECEIPT } from '../../../utils/consts';
 import * as channelListActions from '../dux/actionTypes';
 import { ChannelListActionTypes } from '../dux/actionTypes';
 
-import { UserProfileProvider } from '../../../lib/UserProfileContext';
+import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import channelListReducers from '../dux/reducers';
 import channelListInitialState from '../dux/initialState';
@@ -75,7 +73,8 @@ type OverrideInviteUserType = {
   channelType: CHANNEL_TYPE;
 };
 
-export interface ChannelListProviderProps {
+export interface ChannelListProviderProps extends
+  Pick<UserProfileProviderProps, 'disableUserProfile' | 'renderUserProfile'> {
   allowProfileEdit?: boolean;
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
   overrideInviteUser?(params: OverrideInviteUserType): void;
@@ -86,8 +85,6 @@ export interface ChannelListProviderProps {
   queries?: ChannelListQueries;
   children?: React.ReactElement;
   className?: string | string[];
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
-  disableUserProfile?: boolean;
   disableAutoSelect?: boolean;
   activeChannelUrl?: string;
   typingChannels?: Array<GroupChannel>;
@@ -142,7 +139,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const globalStore = useSendbirdStateContext();
   const { config, stores } = globalStore;
   const { sdkStore } = stores;
-  const { pubSub, logger, onUserProfileMessage } = config;
+  const { pubSub, logger } = config;
   const {
     markAsDeliveredScheduler,
     disableMarkAsDelivered = false,
@@ -153,8 +150,6 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
 
   // derive some variables
   // enable if it is true at least once(both are false by default)
-  const userDefinedDisableUserProfile = disableUserProfile ?? !config.common.enableUsingDefaultUserProfile;
-  const userDefinedRenderProfile = config?.renderUserProfile;
   const enableEditProfile = allowProfileEdit || config.allowProfileEdit;
 
   const userFilledChannelListQuery = queries?.channelListQuery;
@@ -384,11 +379,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         fetchChannelList,
       }}
     >
-      <UserProfileProvider
-        disableUserProfile={userDefinedDisableUserProfile ?? !config.common.enableUsingDefaultUserProfile}
-        renderUserProfile={userDefinedRenderProfile}
-        onUserProfileMessage={onUserProfileMessage}
-      >
+      <UserProfileProvider {...props}>
         <div className={`sendbird-channel-list ${className}`}>{children}</div>
       </UserProfileProvider>
     </ChannelListContext.Provider>

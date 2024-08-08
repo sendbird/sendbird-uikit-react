@@ -1,6 +1,5 @@
 import React, {
   ReactElement,
-  useContext,
   useRef,
 } from 'react';
 import '../index.scss';
@@ -9,7 +8,7 @@ import ContextMenu, { MenuItems } from '../../ContextMenu';
 import Avatar from '../../Avatar';
 import UserProfile from '../../UserProfile';
 import { MessageContentProps } from '../index';
-import { UserProfileContext } from '../../../lib/UserProfileContext';
+import { useUserProfileContext } from '../../../lib/UserProfileContext';
 import { classnames } from '../../../utils/utils';
 
 export interface MessageProfileProps extends MessageContentProps {
@@ -32,7 +31,7 @@ export default function MessageProfile(
   } = props;
   const avatarRef = useRef(null);
 
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useUserProfileContext();
 
   if (isByMe || chainBottom || !isSendableMessage(message)) {
     return null;

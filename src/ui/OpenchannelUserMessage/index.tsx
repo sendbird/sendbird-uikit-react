@@ -1,5 +1,4 @@
 import React, {
-  useContext,
   useRef,
   useState,
   ReactElement,
@@ -16,7 +15,7 @@ import IconButton from '../IconButton';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import Loader from '../Loader';
 import UserProfile from '../UserProfile';
-import { UserProfileContext } from '../../lib/UserProfileContext';
+import { useUserProfileContext } from '../../lib/UserProfileContext';
 
 import { useLocalization } from '../../lib/LocalizationContext';
 import { copyToClipboard } from './utils';
@@ -64,7 +63,7 @@ export default function OpenchannelUserMessage({
 }: OpenChannelUserMessageProps): ReactElement {
   // hooks
   const { stringSet, dateLocale } = useLocalization();
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useUserProfileContext();
   const messageRef = useRef<HTMLDivElement>();
   const avatarRef = useRef<HTMLDivElement>();
   const contextMenuRef = useRef<HTMLDivElement>();

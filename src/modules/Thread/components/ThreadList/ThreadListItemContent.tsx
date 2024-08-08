@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useRef, useState } from 'react';
+import React, { ReactNode, useRef, useState } from 'react';
 import { EmojiContainer } from '@sendbird/chat';
 import { FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
@@ -8,7 +8,7 @@ import './ThreadListItemContent.scss';
 import { ReplyType } from '../../../../types';
 import ContextMenu, { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID, MenuItems } from '../../../../ui/ContextMenu';
 import Avatar from '../../../../ui/Avatar';
-import { UserProfileContext } from '../../../../lib/UserProfileContext';
+import { useUserProfileContext } from '../../../../lib/UserProfileContext';
 import UserProfile from '../../../../ui/UserProfile';
 import { MessageEmojiMenu, MessageEmojiMenuProps } from '../../../../ui/MessageItemReactionMenu';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
@@ -106,7 +106,7 @@ export default function ThreadListItemContent({
       document.getElementById(EMOJI_MENU_ROOT_ID),
     ],
   );
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useUserProfileContext();
   const { deleteMessage, onBeforeDownloadFileMessage } = useThreadContext();
   const avatarRef = useRef(null);
 

@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import format from 'date-fns/format';
 import { FileMessage } from '@sendbird/chat/message';
 
@@ -11,7 +11,7 @@ import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useThreadContext } from '../../context/ThreadProvider';
-import { UserProfileContext } from '../../../../lib/UserProfileContext';
+import { useUserProfileContext } from '../../../../lib/UserProfileContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 
 import Avatar from '../../../../ui/Avatar';
@@ -143,7 +143,7 @@ export default function ParentMessageInfo({
 
   // User Profile
   const avatarRef = useRef(null);
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useUserProfileContext();
 
   if (showEditInput && parentMessage?.isUserMessage?.()) {
     return (

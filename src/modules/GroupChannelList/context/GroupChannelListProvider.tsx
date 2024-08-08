@@ -46,9 +46,9 @@ interface ContextBaseType {
 export interface GroupChannelListContextType extends ContextBaseType, ChannelListDataSource {
   typingChannelUrls: string[];
 }
-export interface GroupChannelListProviderProps
-  extends PartialRequired<ContextBaseType, 'onChannelSelect' | 'onChannelCreated'>,
-  Pick<UserProfileProviderProps, 'onUserProfileMessage' | 'renderUserProfile' | 'disableUserProfile'> {
+export interface GroupChannelListProviderProps extends
+  PartialRequired<ContextBaseType, 'onChannelSelect' | 'onChannelCreated'>,
+  Pick<UserProfileProviderProps, 'onUserProfileMessage' | 'onStartDirectMessage' | 'renderUserProfile' | 'disableUserProfile'> {
   children?: React.ReactNode;
 }
 
@@ -71,10 +71,6 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
     onCreateChannelClick,
     onBeforeCreateChannel,
     onUserProfileUpdated,
-
-    disableUserProfile,
-    renderUserProfile,
-    onUserProfileMessage,
   } = props;
   const globalStore = useSendbirdStateContext();
   const { config, stores } = globalStore;
@@ -147,11 +143,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
         loadMore,
       }}
     >
-      <UserProfileProvider
-        disableUserProfile={disableUserProfile ?? !config.common.enableUsingDefaultUserProfile}
-        renderUserProfile={renderUserProfile ?? config?.renderUserProfile}
-        onUserProfileMessage={onUserProfileMessage ?? config?.onUserProfileMessage}
-      >
+      <UserProfileProvider {...props}>
         <div className={`sendbird-channel-list ${className}`}>{children}</div>
       </UserProfileProvider>
     </GroupChannelListContext.Provider>

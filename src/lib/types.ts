@@ -65,7 +65,7 @@ export interface SBUEventHandlers {
 
 export interface SendBirdStateConfig {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
-  onUserProfileMessage?: (props: GroupChannel) => void;
+  onStartDirectMessage?: (props: GroupChannel) => void;
   allowProfileEdit: boolean;
   isOnline: boolean;
   userId: string;
@@ -128,21 +128,29 @@ export interface SendBirdStateConfig {
     enableOgtag: SBUConfig['openChannel']['channel']['enableOgtag'];
     enableDocument: SBUConfig['openChannel']['channel']['input']['enableDocument'];
   },
-  /** @deprecated Please use `common.enableUsingDefaultUserProfile` instead * */
+  /**
+   * @deprecated Please use `onStartDirectMessage` instead. It's renamed.
+   */
+  onUserProfileMessage?: (props: GroupChannel) => void;
+  /**
+   * @deprecated Please use `!config.common.enableUsingDefaultUserProfile` instead.
+   * Note that you should use the negation of `config.common.enableUsingDefaultUserProfile`
+   * to replace `disableUserProfile`.
+   */
   disableUserProfile: boolean;
-  /** @deprecated Please use `groupChannel.enableReactions` instead * */
+  /** @deprecated Please use `config.groupChannel.enableReactions` instead * */
   isReactionEnabled: boolean;
-  /** @deprecated Please use `groupChannel.enableMention` instead * */
+  /** @deprecated Please use `config.groupChannel.enableMention` instead * */
   isMentionEnabled: boolean;
-  /** @deprecated Please use `groupChannel.enableVoiceMessage` instead * */
+  /** @deprecated Please use `config.groupChannel.enableVoiceMessage` instead * */
   isVoiceMessageEnabled?: boolean;
-  /** @deprecated Please use `groupChannel.replyType` instead * */
+  /** @deprecated Please use `config.groupChannel.replyType` instead * */
   replyType: ReplyType;
-  /** @deprecated Please use `groupChannelSettings.enableMessageSearch` instead * */
+  /** @deprecated Please use `config.groupChannelSettings.enableMessageSearch` instead * */
   showSearchIcon?: boolean;
-  /** @deprecated Please use `groupChannelList.enableTypingIndicator` instead * */
+  /** @deprecated Please use `config.groupChannelList.enableTypingIndicator` instead * */
   isTypingIndicatorEnabledOnChannelList?: boolean;
-  /** @deprecated Please use `groupChannelList.enableMessageReceiptStatus` instead * */
+  /** @deprecated Please use `config.groupChannelList.enableMessageReceiptStatus` instead * */
   isMessageReceiptStatusEnabledOnChannelList?: boolean;
   /** @deprecated Please use setCurrentTheme instead * */
   setCurrenttheme: (theme: 'light' | 'dark') => void;
