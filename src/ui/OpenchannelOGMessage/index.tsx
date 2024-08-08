@@ -378,6 +378,7 @@ export default function OpenChannelOGMessage({
                         className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail__image"
                         url={defaultImage.url || ''}
                         alt={defaultImage.alt || ''}
+                        width="334px"
                         height="189px"
                         defaultComponent={(
                           <div className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail__image--placeholder">
