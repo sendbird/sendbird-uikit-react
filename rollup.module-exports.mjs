@@ -197,6 +197,7 @@ export default {
   'ui/MentionUserLabel': 'src/ui/MentionUserLabel/index.tsx',
   'ui/MentionLabel': 'src/ui/MentionLabel/index.tsx',
   'ui/MessageContent': 'src/ui/MessageContent/index.tsx',
+  'ui/MessageContent/MessageBody': 'src/ui/MessageContent/MessageBody/index.tsx',
   // MessageInput is a special case - shouldbe turned into a module
   'ui/MessageInput': 'src/ui/MessageInput/index.tsx',
   'ui/MessageInput/hooks/usePaste': 'src/ui/MessageInput/hooks/usePaste/index.ts',
