@@ -112,6 +112,7 @@ export interface SendBirdStateConfig {
     showSuggestedRepliesFor: SBUConfig['groupChannel']['channel']['showSuggestedRepliesFor'];
     suggestedRepliesDirection: SBUConfig['groupChannel']['channel']['suggestedRepliesDirection'];
     enableMarkdownForUserMessage: SBUConfig['groupChannel']['channel']['enableMarkdownForUserMessage'];
+    enableFormTypeMessage: SBUConfig['groupChannel']['channel']['enableFormTypeMessage'];
     /**
      * @deprecated Currently, this feature is turned off by default. If you wish to use this feature, contact us: {@link https://dashboard.sendbird.com/settings/contact_us?category=feedback_and_feature_requests&product=UIKit}
      */
