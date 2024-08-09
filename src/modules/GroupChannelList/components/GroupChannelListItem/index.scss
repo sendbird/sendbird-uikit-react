@@ -122,7 +122,9 @@
 
       .sendbird-channel-preview__content__lower__last-message {
         overflow: hidden;
-        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
       }
 
       .sendbird-channel-preview__content__lower__unread-message-count {
