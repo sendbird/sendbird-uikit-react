@@ -193,10 +193,12 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     onChannelDeleted: () => {
       setCurrentChannel(null);
       setFetchChannelError(null);
+      onBackClick?.();
     },
     onCurrentUserBanned: () => {
       setCurrentChannel(null);
       setFetchChannelError(null);
+      onBackClick?.();
     },
     onChannelUpdated: (channel) => setCurrentChannel(channel),
     logger: logger as any,
