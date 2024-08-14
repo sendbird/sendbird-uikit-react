@@ -155,7 +155,6 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
             || (config?.groupChannel?.enableTypingIndicator && config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Text) && (
               <TypingIndicator channelUrl={channelUrl} />
             ))}
-          {!isOnline && <ConnectionStatus />}
         </div>
       </div>
     </div>
