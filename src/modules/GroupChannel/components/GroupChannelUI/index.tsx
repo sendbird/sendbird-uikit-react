@@ -25,7 +25,7 @@ export const GroupChannelUI = (props: GroupChannelUIProps) => {
   } = deleteNullish(props);
 
   React.useEffect(() => {
-    if (fetchChannelError && fetchChannelError.code === SendbirdErrorCode.NOT_FOUND_IN_DATABASE) {
+    if (fetchChannelError && [SendbirdErrorCode.NON_AUTHORIZED, SendbirdErrorCode.NOT_FOUND_IN_DATABASE].includes(fetchChannelError.code)) {
       props.onChannelFetchFailed?.(fetchChannelError);
     }
   }, [fetchChannelError]);

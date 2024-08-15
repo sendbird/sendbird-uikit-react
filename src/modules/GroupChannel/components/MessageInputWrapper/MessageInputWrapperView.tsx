@@ -215,7 +215,9 @@ export const MessageInputWrapperView = React.forwardRef((
             || (isDisabledBecauseMuted(currentChannel) && (isMobile ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT : stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED))
             || (isDisabledBecauseSuggestedReplies(currentChannel, config.groupChannel.enableSuggestedReplies) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__SUGGESTED_REPLIES)
             || (isDisabledBecauseMessageForm(currentChannel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MESSAGE_FORM)
-            || (disabled && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
+            || (disabled && (config.isOnline
+              ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED
+              : stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED_FOR_OFFLINE))
             || undefined
           }
           ref={(ref || messageInputRef) as any}
