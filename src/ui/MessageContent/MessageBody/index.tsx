@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import '../index.scss';
 import {
   CoreMessageType,
@@ -41,7 +41,7 @@ export interface MessageBodyProps {
   isByMe: boolean;
 }
 
-export default function MessageBody(props: MessageBodyProps): ReactElement {
+export const MessageBody = (props: MessageBodyProps) => {
   const {
     message,
     channel,
@@ -151,4 +151,6 @@ export default function MessageBody(props: MessageBodyProps): ReactElement {
         isReactionEnabled={isReactionEnabledInChannel}
       />
     ));
-}
+};
+
+export default MessageBody;

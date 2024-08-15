@@ -18,9 +18,7 @@ export interface MessageProfileProps extends MessageContentProps {
   bottom?: string
 }
 
-export default function MessageProfile(
-  props: MessageProfileProps,
-): ReactElement | null {
+export const MessageProfile = (props: MessageProfileProps) => {
   const {
     message,
     channel,
@@ -85,4 +83,6 @@ export default function MessageProfile(
       )}
     />
   );
-}
+};
+
+export default MessageProfile;

@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import '../index.scss';
 import Label, { LabelColors, LabelTypography } from '../../Label';
 import { CoreMessageType, getSenderName, SendableMessageType } from '../../../utils';
@@ -10,7 +10,7 @@ export interface MessageHeaderProps {
   message: CoreMessageType;
 }
 
-export default function MessageHeader(props: MessageHeaderProps): ReactElement {
+export const MessageHeader = (props: MessageHeaderProps) => {
   const {
     channel,
     message,
@@ -34,4 +34,6 @@ export default function MessageHeader(props: MessageHeaderProps): ReactElement {
       }
     </Label>
   );
-}
+};
+
+export default MessageHeader;
