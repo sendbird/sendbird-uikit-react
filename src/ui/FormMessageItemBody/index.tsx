@@ -20,6 +20,7 @@ interface FormValue {
   draftValues: string[];
   required: boolean;
   errorMessage: string | null;
+  isInvalidated: boolean;
 }
 
 export default function FormMessageItemBody(props: Props) {
@@ -32,8 +33,8 @@ export default function FormMessageItemBody(props: Props) {
   const { config } = useSendbirdStateContext();
   const { logger } = config;
   const [submitFailed, setSubmitFailed] = useState(false);
-  const [isInputFocused, setIsInputFocused] = useState(false);
-  const [isInvalidated, setIsInvalidated] = useState(false);
+  const [focusedInputIndex, setFocusedInputIndex] = useState(-1);
+  const [isSubmitTried, setIsSubmitTried] = useState(false);
   const [formValues, setFormValues] = useState<FormValue[]>(() => {
     const initialFormValues: FormValue[] = [];
     items.forEach(({ required, style }) => {
@@ -42,22 +43,29 @@ export default function FormMessageItemBody(props: Props) {
         draftValues: layout === 'chip' ? defaultOptions : [],
         required,
         errorMessage: null,
+        isInvalidated: false,
       });
     });
     return initialFormValues;
   });
   const isSubmitted = form.isSubmitted;
   const hasError = formValues.some(({ errorMessage }) => !!errorMessage);
-  const isButtonDisabled = ((isInvalidated || !isInputFocused) && hasError) || isSubmitted;
+  const isFocusedInvalidated = focusedInputIndex > -1
+    ? formValues[focusedInputIndex].isInvalidated
+    : formValues.some(({ isInvalidated }) => isInvalidated);
+  const isButtonDisabled = (hasError && (isSubmitTried || isFocusedInvalidated)) || isSubmitted;
 
   const handleSubmit = useCallback(async () => {
+    setIsSubmitTried(true);
     try {
-      // If any of required fields are not valid,
+      // If any of required fields are not valid, ignore submit.
+      // Note that below code might never reach because focus out happens before submit button click
+      // and submit button becomes disabled on focus out event.
       const hasError = formValues.some(({ errorMessage }) => errorMessage);
       if (hasError) {
         return;
       }
-      // If form is empty, ignore submit
+      // If form is empty, ignore submit.
       const isMissingRequired = formValues.some(
         (formValue) => formValue.required
           && (!formValue.draftValues || formValue.draftValues.length === 0),
@@ -111,17 +119,24 @@ export default function FormMessageItemBody(props: Props) {
             style={style}
             placeHolder={placeholder}
             values={item.submittedValues ?? draftValues}
-            isInvalidated={isInvalidated}
+            isInvalidated={formValues[index].isInvalidated}
+            isSubmitTried={isSubmitTried}
             errorMessage={errorMessage}
             isValid={isSubmitted}
             disabled={isSubmitted}
             name={name}
             required={required}
             onFocused={(isFocus) => {
-              if (errorMessage && !isInvalidated) {
-                setIsInvalidated(true);
+              if (errorMessage && !isFocus && !formValues[index].isInvalidated) {
+                setFormValues(([...newInputs]) => {
+                  newInputs[index] = {
+                    ...newInputs[index],
+                    isInvalidated: true,
+                  };
+                  return newInputs;
+                });
               }
-              setIsInputFocused(isFocus);
+              setFocusedInputIndex(isFocus ? index : -1);
             }}
             onChange={(values) => {
               setFormValues(([...newInputs]) => {
