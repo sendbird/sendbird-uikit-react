@@ -59,12 +59,12 @@
         overflow: hidden;
         text-overflow: ellipsis;
         display: inline-block;
+        left: 64px;
         @include mobile() {
-          position: absolute;
-          left: 64px;
-          top: 10px;
           display: block;
           max-width: calc(100vw - 240px);
+          position: absolute;
+          top: 10px;
         }
       }
 
@@ -72,9 +72,9 @@
         display: inline-block;
         margin-left: 8px;
         padding-top: 5px;
+        left: 56px;
         @include mobile() {
           position: absolute;
-          left: 56px;
           top: 24px;
         }
       }
