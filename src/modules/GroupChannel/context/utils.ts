@@ -46,11 +46,13 @@ export const isDisabledBecauseSuggestedReplies = (
 };
 
 export const isDisabledBecauseMessageForm = (
-  channel: GroupChannel | null | undefined,
+  allMessages: BaseMessage[],
   enableFormTypeMessage: boolean,
 ) => {
   return enableFormTypeMessage
-    && !!channel?.lastMessage?.messageForm
-    && !channel?.lastMessage?.messageForm.isSubmitted
-    && !!channel?.lastMessage?.extendedMessagePayload?.disable_chat_input;
+    && allMessages.some((message) => (
+      !!message.messageForm
+      && !message.messageForm.isSubmitted
+      && !!message.extendedMessagePayload?.disable_chat_input
+    ));
 };
