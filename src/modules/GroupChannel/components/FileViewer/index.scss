@@ -112,6 +112,9 @@
     .sendbird-fileviewer__content__img {
       max-width: 90%;
       max-height: 90%;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
     .sendbird-fileviewer__content__unsupported {
       max-width: 100%;
