@@ -65,10 +65,11 @@ export const extractTextFromNodes = (nodes: HTMLSpanElement[]): string => {
   nodes.forEach((node) => {
     // to preserve space between words
     const textNodes = node.querySelectorAll(`.${TEXT_MESSAGE_CLASS}`);
-    if (textNodes.length > 0) {
+    if (textNodes.length > 1) {
       text += ((extractTextFromNodes(Array.from(textNodes) as HTMLSpanElement[])) + ' ');
+    } else {
+      text += (node.innerText + ' ');
     }
-    text += (node.innerText + ' ');
   });
   return text;
 };
