@@ -44,25 +44,42 @@ $file-viewer-img-max-width: calc(100% - #{$file-viewer-slide-buttons-side-length
       display: flex;
       flex-direction: row;
       align-items: center;
-      height: 64px;
-      padding: 16px 20px;
-  
+      padding: 0 20px;
+      overflow: hidden;
+      gap: 8px;
+      @include mobile() {
+        gap: 12px;
+      }
+      
       .sendbird-fileviewer__header__left__avatar {
-        margin-right: 8px;
+        display: flex;
       }
-  
-      .sendbird-fileviewer__header__left__filename {
-        max-width: 500px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: inline-block;
-      }
-  
-      .sendbird-fileviewer__header__left__sender-name {
-        display: inline-block;
-        margin-left: 8px;
-        padding-top: 5px;
+      
+      .sendbird-fileviewer__header__left__text-container {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        @include mobile() {
+          flex-direction: column;
+          align-items: unset;
+        }
+        .sendbird-fileviewer__header__left__filename {
+          max-width: 500px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: inline-block;
+          margin-right: 8px;
+          padding-top: 3px;
+          @include mobile() {
+            display: block;
+            max-width: calc(100vw - 240px);
+            padding-top: 0;
+          }
+        }
+        .sendbird-fileviewer__header__left__sender-name {
+          line-height: 1.1;
+        }
       }
     }
   
