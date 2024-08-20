@@ -115,6 +115,8 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 16px 12px;
+  max-width: 100%;
+  box-sizing: border-box;
   @include mobile() {
     max-width: calc(100vw - 164px); // max-width of .sendbird-message-content__middle minus side padding (12px)
   }
