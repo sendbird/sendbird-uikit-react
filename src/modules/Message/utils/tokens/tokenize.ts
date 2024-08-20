@@ -208,11 +208,10 @@ export function getChannelPreviewMessage(messageText: string): string {
     value: messageText,
   }];
   const tokens = splitTokensWithMarkdowns(partialResult);
-  const result = markDownTokenResolver(tokens);
-  return result;
+  return markDownTokenResolver(tokens);
 }
 
-function markDownTokenResolver(tokens: Token[]): string {
+export function markDownTokenResolver(tokens: Token[]): string {
   const result = tokens.map((token) => {
     if (token.type === TOKEN_TYPES.markdown) {
       return markDownTokenResolver(tokenizeMarkdown({ messageText: (token as MarkdownToken).groups[1] }));
