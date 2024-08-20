@@ -25,17 +25,16 @@ export const InputLabel = ({ children }: InputLabelProps): ReactElement => (
 export interface InputProps {
   name: string;
   style: MessageFormItemStyle;
-  required?: boolean;
-  disabled?: boolean;
-  isValid?: boolean;
+  isSubmitted: boolean;
   errorMessage: string | null;
   values: string[];
   isInvalidated: boolean;
   isSubmitTried: boolean;
+  onChange: (values: string[]) => void;
+  required?: boolean;
+  isValid?: boolean;
   placeHolder?: string;
   onFocused?: (isFocus: boolean) => void;
-  onChange: (values: string[]) => void;
-  isSubmitted: boolean;
 }
 
 type ChipState =
@@ -53,7 +52,6 @@ const FormInput = (props: InputProps) => {
   const {
     name,
     required,
-    disabled,
     errorMessage,
     isValid,
     values,
@@ -187,7 +185,7 @@ const FormInput = (props: InputProps) => {
                           'sendbird-form-message__input__textarea',
                         )}
                         required={required}
-                        disabled={disabled}
+                        disabled={isSubmitted}
                         value={currentValue}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
@@ -196,7 +194,7 @@ const FormInput = (props: InputProps) => {
                           onChange(value ? [value] : []);
                         }}
                       />
-                      {(!disabled && placeHolder && !currentValue) && (
+                      {(placeHolder && !currentValue) && (
                         <Label
                           className='sendbird-input__placeholder textarea'
                           type={LabelTypography.BODY_1}
@@ -248,7 +246,7 @@ const FormInput = (props: InputProps) => {
                         className={`sendbird-input__input ${errorMessage ? 'error' : ''}`}
                         name={name}
                         required={required}
-                        disabled={disabled}
+                        disabled={isSubmitted}
                         value={currentValue}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
@@ -257,7 +255,7 @@ const FormInput = (props: InputProps) => {
                           onChange(value ? [value] : []);
                         }}
                       />
-                      {(!disabled && placeHolder && !currentValue) && (
+                      {(placeHolder && !currentValue) && (
                         <Label
                           className='sendbird-input__placeholder'
                           type={LabelTypography.BODY_1}

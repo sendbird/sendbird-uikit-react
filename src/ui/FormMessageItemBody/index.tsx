@@ -123,7 +123,7 @@ export default function FormMessageItemBody(props: Props) {
             isSubmitTried={isSubmitTried}
             errorMessage={errorMessage}
             isValid={isSubmitted}
-            disabled={isSubmitted}
+            isSubmitted={isSubmitted}
             name={name}
             required={required}
             onFocused={(isFocus) => {
@@ -156,7 +156,6 @@ export default function FormMessageItemBody(props: Props) {
                 return newInputs; // Return the new array
               });
             }}
-            isSubmitted={isSubmitted}
           />
         );
       })}
