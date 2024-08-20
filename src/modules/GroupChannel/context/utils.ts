@@ -42,6 +42,11 @@ export const isDisabledBecauseSuggestedReplies = (channel: GroupChannel | null |
       && !!channel?.lastMessage?.extendedMessagePayload?.disable_chat_input;
 };
 
-export const isDisabledBecauseMessageForm = (channel: GroupChannel | null | undefined) => {
-  return !!channel?.lastMessage?.messageForm && !!channel?.lastMessage?.extendedMessagePayload?.disable_chat_input;
+export const isDisabledBecauseMessageForm = (allMessages: BaseMessage[]) => {
+  return allMessages.some((message) => (
+    !!message.messageForm
+    && !message.messageForm.isSubmitted
+    && !!message.extendedMessagePayload?.disable_chat_input
+  ));
 };
+
