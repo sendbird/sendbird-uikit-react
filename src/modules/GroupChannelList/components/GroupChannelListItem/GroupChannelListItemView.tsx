@@ -11,7 +11,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { noop } from '../../../../utils/utils';
 import { CoreMessageType, isVoiceMessage } from '../../../../utils';
-import { getChannelUnreadMessageCount, getLastMessage, getLastMessageCreatedAt, getTotalMembers } from './utils';
+import { getChannelUnreadMessageCount, getLastMessageText, getLastMessageCreatedAt, getTotalMembers } from './utils';
 
 import { TypingIndicatorText } from '../../../GroupChannel/components/TypingIndicator';
 import { GroupChannelPreviewActionProps } from '../GroupChannelPreviewAction';
@@ -57,7 +57,7 @@ export const GroupChannelListItemView = ({
   const { dateLocale, stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
   const isMentionEnabled = config.groupChannel.enableMention;
-  const lastMessage = getLastMessage(channel, stringSet);
+  const lastMessage = getLastMessageText(channel, stringSet);
   const previewLastMessage = config.groupChannel.enableMarkdownForUserMessage
     ? getChannelPreviewMessage(lastMessage)
     : lastMessage;

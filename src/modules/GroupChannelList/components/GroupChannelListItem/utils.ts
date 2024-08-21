@@ -79,7 +79,7 @@ const getPrettyLastMessage = (message = null, stringSet = LabelStringSet) => {
   return message.message ?? '';
 };
 
-export const getLastMessage = (channel?: GroupChannel, stringSet = LabelStringSet) => {
+export const getLastMessageText = (channel?: GroupChannel, stringSet = LabelStringSet) => {
   return channel?.lastMessage ? getPrettyLastMessage(channel?.lastMessage, stringSet) : '';
 };
 
