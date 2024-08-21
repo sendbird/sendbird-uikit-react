@@ -46,13 +46,13 @@ $file-viewer-img-max-width: calc(100% - #{$file-viewer-slide-buttons-side-length
       align-items: center;
       padding: 0 20px;
       overflow: hidden;
-      gap: 8px;
-      @include mobile() {
-        gap: 12px;
-      }
       
       .sendbird-fileviewer__header__left__avatar {
         display: flex;
+        margin-inline-end: 8px;
+        @include mobile() {
+          margin-inline-end: 12px;
+        }
       }
       
       .sendbird-fileviewer__header__left__text-container {
@@ -69,12 +69,13 @@ $file-viewer-img-max-width: calc(100% - #{$file-viewer-slide-buttons-side-length
           overflow: hidden;
           text-overflow: ellipsis;
           display: inline-block;
-          margin-right: 8px;
+          margin-inline-end: 8px;
           padding-top: 3px;
           @include mobile() {
             display: block;
             max-width: calc(100vw - 240px);
             padding-top: 0;
+            margin-inline-end: 0;
           }
         }
         .sendbird-fileviewer__header__left__sender-name {
