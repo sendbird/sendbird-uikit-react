@@ -104,13 +104,18 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   breakpoint?: string | boolean;
   htmlTextDirection?: HTMLTextDirection;
   forceLeftToRightMessageLayout?: boolean;
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
-  onUserProfileMessage?: (channel: GroupChannel) => void;
   uikitOptions?: UIKitOptions;
   isUserIdUsedForNickname?: boolean;
   sdkInitParams?: SendbirdChatInitParams;
   customExtensionParams?: CustomExtensionParams;
   isMultipleFilesMessageEnabled?: boolean;
+  // UserProfile
+  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  onStartDirectMessage?: (channel: GroupChannel) => void;
+  /**
+   * @deprecated Please use `onStartDirectMessage` instead. It's renamed.
+   */
+  onUserProfileMessage?: (channel: GroupChannel) => void;
 
   // Customer provided callbacks
   eventHandlers?: SBUEventHandlers;
@@ -171,7 +176,8 @@ const SendbirdSDK = ({
   allowProfileEdit = false,
   disableMarkAsDelivered = false,
   renderUserProfile,
-  onUserProfileMessage,
+  onUserProfileMessage: _onUserProfileMessage,
+  onStartDirectMessage: _onStartDirectMessage,
   breakpoint = false,
   isUserIdUsedForNickname = true,
   sdkInitParams,
@@ -181,6 +187,7 @@ const SendbirdSDK = ({
   htmlTextDirection = 'ltr',
   forceLeftToRightMessageLayout = false,
 }: SendbirdProviderProps): React.ReactElement => {
+  const onStartDirectMessage = _onStartDirectMessage ?? _onUserProfileMessage;
   const { logLevel = '', userMention = {}, isREMUnitEnabled = false, pubSub: customPubSub } = config;
   const { isMobile } = useMediaQueryContext();
   const [logger, setLogger] = useState(LoggerFactory(logLevel as LogLevel));
@@ -332,7 +339,8 @@ const SendbirdSDK = ({
         config: {
           disableMarkAsDelivered,
           renderUserProfile,
-          onUserProfileMessage,
+          onStartDirectMessage,
+          onUserProfileMessage: onStartDirectMessage, // legacy of onStartDirectMessage
           allowProfileEdit,
           isOnline,
           userId,

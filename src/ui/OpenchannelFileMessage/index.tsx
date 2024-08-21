@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FileMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 import './index.scss';
@@ -11,7 +11,7 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import IconButton from '../IconButton';
 import TextButton from '../TextButton';
 import UserProfile from '../UserProfile';
-import { UserProfileContext } from '../../lib/UserProfileContext';
+import { useUserProfileContext } from '../../lib/UserProfileContext';
 
 import { useLocalization } from '../../lib/LocalizationContext';
 import { checkFileType, truncate } from './utils';
@@ -57,7 +57,7 @@ export default function OpenChannelFileMessage({
   const contextMenuRef = useRef(null);
   const mobileMenuRef = useRef(null);
   const avatarRef = useRef(null);
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useUserProfileContext();
 
   const { isMobile } = useMediaQueryContext();
   const openFileUrl = () => openURL(message.url);

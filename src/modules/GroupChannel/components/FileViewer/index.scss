@@ -45,37 +45,42 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      height: 64px;
-      padding: 16px 20px;
+      padding: 0 20px;
       overflow: hidden;
 
       .sendbird-fileviewer__header__left__avatar {
-        margin-right: 8px;
-      }
-
-      .sendbird-fileviewer__header__left__filename {
-        max-width: 500px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: inline-block;
+        display: flex;
+        margin-inline-end: 8px;
         @include mobile() {
-          position: absolute;
-          left: 64px;
-          top: 10px;
-          display: block;
-          max-width: calc(100vw - 240px);
+          margin-inline-end: 12px;
         }
       }
-
-      .sendbird-fileviewer__header__left__sender-name {
-        display: inline-block;
-        margin-left: 8px;
-        padding-top: 5px;
+      
+      .sendbird-fileviewer__header__left__text-container {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
         @include mobile() {
-          position: absolute;
-          left: 56px;
-          top: 24px;
+          flex-direction: column;
+          align-items: unset;
+        }
+        .sendbird-fileviewer__header__left__filename {
+          max-width: 500px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: inline-block;
+          margin-inline-end: 8px;
+          padding-top: 3px;
+          @include mobile() {
+            display: block;
+            max-width: calc(100vw - 240px);
+            padding-top: 0;
+            margin-inline-end: 0;
+          }
+        }
+        .sendbird-fileviewer__header__left__sender-name {
+          line-height: 1.1;
         }
       }
     }
