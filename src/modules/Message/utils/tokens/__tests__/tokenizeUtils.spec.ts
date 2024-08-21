@@ -5,8 +5,85 @@ import {
   identifyUrlsAndStrings,
   combineNearbyStrings,
   getWhiteSpacePreservedText,
+  getChannelPreviewMessage,
+  markDownTokenResolver,
 } from '../tokenize';
-import { Token, UndeterminedToken } from '../types';
+import { MarkdownToken, Token, UndeterminedToken } from '../types';
+
+describe('markDownTokenResolver', () => {
+  it('when given tokens without markdown type, return original text without change.', () => {
+    const text = 'This is a channel\'s last message.';
+    const tokens = [
+      { type: 'undetermined', value: 'This is a channel\'s last message.' } as UndeterminedToken,
+    ];
+    const result = markDownTokenResolver(tokens);
+    expect(result).toEqual(text);
+  });
+
+  it('when given a tokens with markdown type, return transformed text (#1).', () => {
+    const text = 'This is a channel\'s last message with a bold url.';
+    const tokens = [
+      {
+        type: 'undetermined',
+        value: 'This is a channel\'s last message with a ',
+      } as UndeterminedToken,
+      {
+        type: 'markdown',
+        markdownType: 'url',
+        value: '[**bold url**](www.google.com)',
+        groups: [
+          '[**bold url**](www.google.com)',
+          '**bold url**',
+          'www.google.com',
+        ],
+      } as MarkdownToken,
+      { type: 'undetermined', value: '.' } as UndeterminedToken,
+    ];
+    const result = markDownTokenResolver(tokens);
+    expect(result).toEqual(text);
+  });
+
+  it('when given a tokens with markdown type, return transformed text (#2).', () => {
+    const text = 'This is a channel\'s last message with a bold url.';
+    const tokens = [
+      {
+        type: 'undetermined',
+        value: 'This is a channel\'s last message with a ',
+      } as UndeterminedToken,
+      {
+        type: 'markdown',
+        markdownType: 'bold',
+        value: '**[bold url](www.google.com)**',
+        groups: ['**[bold url](www.google.com)**', '[bold url](www.google.com)'],
+      } as MarkdownToken,
+      { type: 'undetermined', value: '.' } as UndeterminedToken,
+    ];
+    const result = markDownTokenResolver(tokens);
+    expect(result).toEqual(text);
+  });
+});
+
+describe('getChannelPreviewMessage', () => {
+  it('when given normal text, return original text without change.', () => {
+    const text = 'This is a channel\'s last message.';
+    const result = getChannelPreviewMessage(text);
+    expect(result).toEqual(text);
+  });
+
+  it('when given a text with markdown syntaxes, return transformed text (#1).', () => {
+    const text = 'This is a channel\'s last message with a [**bold url**](www.google.com).';
+    const expected = 'This is a channel\'s last message with a bold url.';
+    const result = getChannelPreviewMessage(text);
+    expect(result).toEqual(expected);
+  });
+
+  it('when given a text with markdown syntaxes, return transformed text (#2).', () => {
+    const text = 'This is a channel\'s last message with a **[bold url](www.google.com)**.';
+    const expected = 'This is a channel\'s last message with a bold url.';
+    const result = getChannelPreviewMessage(text);
+    expect(result).toEqual(expected);
+  });
+});
 
 describe('getUserMentionRegex', () => {
   it('should return a regex with the correct pattern', () => {

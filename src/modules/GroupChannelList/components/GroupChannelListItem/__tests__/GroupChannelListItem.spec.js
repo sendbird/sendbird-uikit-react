@@ -1,5 +1,5 @@
 import {
-  getLastMessage,
+  getLastMessageText,
   getChannelTitle,
   getTotalMembers,
   getChannelUnreadMessageCount,
@@ -86,28 +86,28 @@ describe('GroupChannelListItem', () => {
       }
     };
     expect(
-      getLastMessage(channel, LabelStringSet)
+      getLastMessageText(channel, LabelStringSet)
     ).toBe('');
     expect(
-      getLastMessage(channel2, LabelStringSet)
+      getLastMessageText(channel2, LabelStringSet)
     ).toBe('');
     expect(
-      getLastMessage(channel3, LabelStringSet)
+      getLastMessageText(channel3, LabelStringSet)
     ).toBe(text);
     expect(
-      getLastMessage(channel4, LabelStringSet)
+      getLastMessageText(channel4, LabelStringSet)
     ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GENERAL);
     expect(
-      getLastMessage(channel5, LabelStringSet)
+      getLastMessageText(channel5, LabelStringSet)
     ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO);
     expect(
-      getLastMessage(channel6, LabelStringSet)
+      getLastMessageText(channel6, LabelStringSet)
     ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_GIF);
     expect(
-      getLastMessage(mfmGifChannel, LabelStringSet)
+      getLastMessageText(mfmGifChannel, LabelStringSet)
     ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO);
     expect(
-        getLastMessage(mfmPhotoChannel, LabelStringSet)
+        getLastMessageText(mfmPhotoChannel, LabelStringSet)
     ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO);
   });
 

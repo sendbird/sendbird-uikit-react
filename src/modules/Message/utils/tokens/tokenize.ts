@@ -202,6 +202,25 @@ export function tokenizeMessage({
   return result;
 }
 
+export function getChannelPreviewMessage(messageText: string): string {
+  const partialResult = [{
+    type: TOKEN_TYPES.undetermined,
+    value: messageText,
+  }];
+  const tokens = splitTokensWithMarkdowns(partialResult);
+  return markDownTokenResolver(tokens);
+}
+
+export function markDownTokenResolver(tokens: Token[]): string {
+  const result = tokens.map((token) => {
+    if (token.type === TOKEN_TYPES.markdown) {
+      return markDownTokenResolver(tokenizeMarkdown({ messageText: (token as MarkdownToken).groups[1] }));
+    }
+    return token.value;
+  });
+  return result.join('');
+}
+
 export function tokenizeMarkdown({
   messageText,
 }): Token[] {
