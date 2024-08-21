@@ -17,7 +17,7 @@ import type { SendableMessageType } from '../../../utils';
 import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { ThreadReplySelectType } from './const';
-import { RenderUserProfileProps, ReplyType } from '../../../types';
+import { ReplyType } from '../../../types';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
 import { getMessageTopOffset, isContextMenuClosed } from './utils';
@@ -34,7 +34,8 @@ type MessageActions = ReturnType<typeof useMessageActions>;
 type MessageListDataSourceWithoutActions = Omit<ReturnType<typeof useGroupChannelMessages>, keyof MessageActions | `_dangerous_${string}`>;
 export type OnBeforeDownloadFileMessageType = (params: { message: FileMessage | MultipleFilesMessage; index?: number }) => Promise<boolean>;
 
-interface ContextBaseType {
+interface ContextBaseType extends
+  Pick<UserProfileProviderProps, 'renderUserProfile' | 'disableUserProfile'> {
   // Required
   channelUrl: string;
 
@@ -45,7 +46,6 @@ interface ContextBaseType {
   showSearchIcon?: boolean;
   replyType?: ReplyType;
   threadReplySelectType?: ThreadReplySelectType;
-  disableUserProfile?: boolean;
   disableMarkAsRead?: boolean;
   scrollBehavior?: 'smooth' | 'auto';
   forceLeftToRightMessageLayout?: boolean;
@@ -75,7 +75,6 @@ interface ContextBaseType {
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
 
   // Render
-  renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   renderUserMentionItem?: (props: { user: User }) => JSX.Element;
 }
 
@@ -102,9 +101,9 @@ export interface GroupChannelContextType extends ContextBaseType, MessageListDat
   toggleReaction(message: SendableMessageType, emojiKey: string, isReacted: boolean): void;
 }
 
-export interface GroupChannelProviderProps
-  extends ContextBaseType,
-    Pick<UserProfileProviderProps, 'onUserProfileMessage' | 'renderUserProfile' | 'disableUserProfile'> {
+export interface GroupChannelProviderProps extends
+  ContextBaseType,
+  Pick<UserProfileProviderProps, 'onUserProfileMessage' | 'onStartDirectMessage'> {
   children?: React.ReactNode;
 }
 
@@ -384,11 +383,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
         ...messageActions,
       }}
     >
-      <UserProfileProvider
-        disableUserProfile={props?.disableUserProfile ?? config?.disableUserProfile}
-        renderUserProfile={props?.renderUserProfile ?? config?.renderUserProfile}
-        onUserProfileMessage={props?.onUserProfileMessage ?? config?.onUserProfileMessage}
-      >
+      <UserProfileProvider {...props}>
         {children}
       </UserProfileProvider>
     </GroupChannelContext.Provider>

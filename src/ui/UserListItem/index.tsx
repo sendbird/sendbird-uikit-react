@@ -1,10 +1,10 @@
-import React, { ChangeEvent, MutableRefObject, ReactElement, ReactNode, useContext, useRef } from 'react';
+import React, { ChangeEvent, MutableRefObject, ReactElement, ReactNode, useRef } from 'react';
 import type { User } from '@sendbird/chat';
 import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import './index.scss';
 
 import { useSendbirdStateContext } from '../../lib/Sendbird';
-import { UserProfileContext } from '../../lib/UserProfileContext';
+import { useUserProfileContext } from '../../lib/UserProfileContext';
 import { useLocalization } from '../../lib/LocalizationContext';
 
 import Avatar from '../Avatar/index';
@@ -61,7 +61,7 @@ export function UserListItem({
   const actionRef = useRef(null);
   const parentRef = useRef(null);
   const avatarRef = useRef(null);
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useUserProfileContext();
   const { stringSet } = useLocalization();
   const { config } = useSendbirdStateContext();
   const currentUser = config.userId;
