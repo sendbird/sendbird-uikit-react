@@ -139,7 +139,7 @@ export default function App(props: AppProps) {
       imageCompression={imageCompression}
       isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
       voiceRecord={voiceRecord}
-      onUserProfileMessage={(channel) => {
+      onStartDirectMessage={(channel) => {
         setCurrentChannel(channel);
       }}
       uikitOptions={uikitOptions}
@@ -147,12 +147,8 @@ export default function App(props: AppProps) {
       sdkInitParams={sdkInitParams}
       customExtensionParams={customExtensionParams}
       eventHandlers={eventHandlers}
-      isTypingIndicatorEnabledOnChannelList={
-        isTypingIndicatorEnabledOnChannelList
-      }
-      isMessageReceiptStatusEnabledOnChannelList={
-        isMessageReceiptStatusEnabledOnChannelList
-      }
+      isTypingIndicatorEnabledOnChannelList={isTypingIndicatorEnabledOnChannelList}
+      isMessageReceiptStatusEnabledOnChannelList={isMessageReceiptStatusEnabledOnChannelList}
       replyType={replyType}
       showSearchIcon={showSearchIcon}
       disableUserProfile={disableUserProfile}

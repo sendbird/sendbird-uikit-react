@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { UserMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
 import './index.scss';
@@ -12,7 +12,7 @@ import LinkLabel from '../LinkLabel';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import Loader from '../Loader';
 import UserProfile from '../UserProfile';
-import { UserProfileContext } from '../../lib/UserProfileContext';
+import { useUserProfileContext } from '../../lib/UserProfileContext';
 
 import uuidv4 from '../../utils/uuid';
 import { copyToClipboard } from '../OpenchannelUserMessage/utils';
@@ -66,7 +66,7 @@ export default function OpenChannelOGMessage({
   const { stringSet, dateLocale } = useLocalization();
   const { isMobile } = useMediaQueryContext();
 
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useUserProfileContext();
   const [contextStyle, setContextStyle] = useState({});
   const [showContextMenu, setShowContextMenu] = useState(false);
 

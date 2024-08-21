@@ -51,29 +51,31 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
         <div className="sendbird-fileviewer__header">
           <div className="sendbird-fileviewer__header__left">
             <div className="sendbird-fileviewer__header__left__avatar">
-              <Avatar height="32px" width="32px" src={profileUrl} />
+              <Avatar height="32px" width="32px" src={profileUrl}/>
             </div>
-            <Label
-              className="sendbird-fileviewer__header__left__filename"
-              type={LabelTypography.H_2}
-              color={LabelColors.ONBACKGROUND_1}
-            >
-              {name}
-            </Label>
-            <Label
-              className="sendbird-fileviewer__header__left__sender-name"
-              type={LabelTypography.BODY_1}
-              color={LabelColors.ONBACKGROUND_2}
-            >
-              {nickname}
-            </Label>
+            <div className="sendbird-fileviewer__header__left__text-container">
+              <Label
+                className="sendbird-fileviewer__header__left__filename"
+                type={LabelTypography.H_2}
+                color={LabelColors.ONBACKGROUND_1}
+              >
+                {name}
+              </Label>
+              <Label
+                className="sendbird-fileviewer__header__left__sender-name"
+                type={LabelTypography.BODY_1}
+                color={LabelColors.ONBACKGROUND_2}
+              >
+                {nickname}
+              </Label>
+            </div>
           </div>
           <div
             className="sendbird-fileviewer__header__right"
           >
             {
               isSupportedFileView(type) && (
-                <div className="sendbird-fileviewer__header__right__actions" >
+                <div className="sendbird-fileviewer__header__right__actions">
                   <a
                     className="sendbird-fileviewer__header__right__actions__download"
                     rel="noopener noreferrer"

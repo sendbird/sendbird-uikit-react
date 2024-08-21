@@ -3,7 +3,6 @@ import React, {
   useMemo,
   useState,
   useEffect,
-  useContext,
 } from 'react';
 import { FileMessage } from '@sendbird/chat/message';
 import format from 'date-fns/format';
@@ -19,7 +18,7 @@ import ImageRenderer from '../ImageRenderer';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import Loader from '../Loader';
 import UserProfile from '../UserProfile';
-import { UserProfileContext } from '../../lib/UserProfileContext';
+import { useUserProfileContext } from '../../lib/UserProfileContext';
 import {
   checkIsSent,
   checkIsPending,
@@ -71,7 +70,7 @@ export default function OpenchannelThumbnailMessage({
   const status = message?.sendingStatus;
   const thumbnailUrl = (thumbnails && thumbnails.length > 0 && thumbnails[0].url) || null;
   const { stringSet, dateLocale } = useLocalization();
-  const { disableUserProfile, renderUserProfile } = useContext(UserProfileContext);
+  const { disableUserProfile, renderUserProfile } = useUserProfileContext();
   const [messageWidth, setMessageWidth] = useState(360);
   const [contextMenu, setContextMenu] = useState(false);
   const messageRef = useRef<HTMLDivElement>(null);
