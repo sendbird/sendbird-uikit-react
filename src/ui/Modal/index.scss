@@ -52,6 +52,7 @@
   }
   .sendbird-modal__body {
     height: calc(100% - 116px);
+    overflow: auto;
   }
   .sendbird-modal__footer {
     display: flex;
