@@ -14,7 +14,7 @@ export interface MessageInputWrapperProps {
 
 export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
   const context = useGroupChannelContext();
-  return <MessageInputWrapperView {...props} {...context}/>;
+  return <MessageInputWrapperView {...props} {...context} />;
 };
 
 // export {
