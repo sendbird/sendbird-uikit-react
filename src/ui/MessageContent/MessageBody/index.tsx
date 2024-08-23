@@ -71,6 +71,7 @@ export const MessageBody = (props: MessageBodyProps) => {
     .when((message) => isFormMessageEnabledInGroupChannel && isFormMessage(message),
       () => (
         <FormMessageItemBody
+          isByMe={isByMe}
           message={message as BaseMessage}
           form={message.messageForm}
         />

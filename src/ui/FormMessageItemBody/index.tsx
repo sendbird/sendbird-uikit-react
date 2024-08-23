@@ -3,17 +3,19 @@ import React, { useCallback, useContext, useState } from 'react';
 
 import './index.scss';
 import Button from '../Button';
-import { LabelColors, LabelTypography } from '../Label';
+import { Label, LabelColors, LabelTypography } from '../Label';
 import MessageFeedbackFailedModal from '../MessageFeedbackFailedModal';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import FormInput from './FormInput';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { getClassName } from '../../utils';
 import { TEXT_MESSAGE_BODY_CLASSNAME } from '../TextMessageItemBody/consts';
+import { isFormVersionCompatible } from '../../modules/GroupChannel/context/utils';
 
 interface Props {
   message: BaseMessage;
   form: MessageForm;
+  isByMe: boolean;
 }
 
 interface FormValue {
@@ -23,10 +25,31 @@ interface FormValue {
   isInvalidated: boolean;
 }
 
+const FallbackUserMessage = ({
+  isByMe,
+  text,
+}) => {
+  return (
+    <div className={getClassName([
+      'sendbird-unknown-message-item-body',
+      isByMe ? 'outgoing' : 'incoming',
+    ])}>
+      <Label
+        className="sendbird-unknown-message-item-body__description"
+        type={LabelTypography.BODY_1}
+        color={isByMe ? LabelColors.ONCONTENT_3 : LabelColors.ONBACKGROUND_3}
+      >
+        {text}
+      </Label>
+    </div>
+  );
+};
+
 export default function FormMessageItemBody(props: Props) {
   const {
     message,
     form,
+    isByMe,
   } = props;
   const { items, id: formId } = form;
   const { stringSet } = useContext(LocalizationContext);
@@ -90,6 +113,10 @@ export default function FormMessageItemBody(props: Props) {
       logger?.error(error);
     }
   }, [formValues, message.messageId, message.submitMessageForm, formId]);
+
+  if (!isFormVersionCompatible(form.version)) {
+    return <FallbackUserMessage isByMe={isByMe} text={stringSet.FORM_VERSION_ERROR} />;
+  }
 
   return (
     <div className={getClassName([

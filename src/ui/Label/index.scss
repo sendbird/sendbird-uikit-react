@@ -154,6 +154,12 @@
   }
 }
 
+.sendbird-label--color-oncontent-3 {
+  @include themed() {
+    color: t(on-content-3);
+  }
+}
+
 .sendbird-label--color-oncontent-inverse-1 {
   @include themed() {
     color: t(inverse-on-content-1);
