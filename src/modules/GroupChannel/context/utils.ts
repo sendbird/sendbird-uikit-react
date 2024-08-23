@@ -2,7 +2,7 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { BaseMessage } from '@sendbird/chat/message';
 import type { SendableMessage } from '@sendbird/chat/lib/__definition';
 
-export const uikitCompatibleFormVersion = 2;
+export const uikitCompatibleFormVersion = 1;
 
 export function getComponentKeyFromMessage(message: BaseMessage | SendableMessage): string {
   if ('sendingStatus' in message) {
