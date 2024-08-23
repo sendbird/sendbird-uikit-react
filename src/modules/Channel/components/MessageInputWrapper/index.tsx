@@ -21,6 +21,7 @@ export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
       {...props}
       {...context}
       currentChannel={currentGroupChannel}
+      messages={context.allMessages}
       sendUserMessage={(params) => {
         return sendMessage({
           message: params.message,
