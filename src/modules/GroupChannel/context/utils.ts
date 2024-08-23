@@ -1,6 +1,7 @@
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { BaseMessage } from '@sendbird/chat/message';
 import type { SendableMessage } from '@sendbird/chat/lib/__definition';
+import { UIKIT_COMPATIBLE_FORM_VERSION } from './const';
 
 export function getComponentKeyFromMessage(message: BaseMessage | SendableMessage): string {
   if ('sendingStatus' in message) {
@@ -42,6 +43,15 @@ export const isDisabledBecauseSuggestedReplies = (channel: GroupChannel | null |
       && !!channel?.lastMessage?.extendedMessagePayload?.disable_chat_input;
 };
 
-export const isDisabledBecauseMessageForm = (channel: GroupChannel | null | undefined) => {
-  return !!channel?.lastMessage?.messageForm && !!channel?.lastMessage?.extendedMessagePayload?.disable_chat_input;
+export const isFormVersionCompatible = (version: number) => {
+  return version <= UIKIT_COMPATIBLE_FORM_VERSION;
+};
+
+export const isDisabledBecauseMessageForm = (allMessages: BaseMessage[]) => {
+  return allMessages.some((message) => (
+    !!message.messageForm
+    && !message.messageForm.isSubmitted
+    && !!message.extendedMessagePayload?.disable_chat_input
+    && isFormVersionCompatible(message.messageForm.version)
+  ));
 };
