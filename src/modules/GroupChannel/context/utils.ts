@@ -1,7 +1,7 @@
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { BaseMessage } from '@sendbird/chat/message';
 import type { SendableMessage } from '@sendbird/chat/lib/__definition';
-import {UIKIT_COMPATIBLE_FORM_VERSION} from "./const";
+import { UIKIT_COMPATIBLE_FORM_VERSION } from './const';
 
 export function getComponentKeyFromMessage(message: BaseMessage | SendableMessage): string {
   if ('sendingStatus' in message) {
