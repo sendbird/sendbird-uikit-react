@@ -49,6 +49,10 @@ import { MobileBottomSheetProps } from '../MobileMenu/types';
 import useElementObserver from '../../hooks/useElementObserver';
 import { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '../ContextMenu';
 
+export { MessageBody } from './MessageBody';
+export { MessageHeader } from './MessageHeader';
+export { MessageProfile } from './MessageProfile';
+
 export interface MessageContentProps {
   className?: string | Array<string>;
   userId: string;
@@ -88,7 +92,7 @@ export interface MessageContentProps {
   renderMobileMenuOnLongPress?: (props: MobileBottomSheetProps) => React.ReactElement;
 }
 
-export default function MessageContent(props: MessageContentProps): ReactElement {
+export function MessageContent(props: MessageContentProps): ReactElement {
   const {
     // Internal props
     className,
@@ -674,3 +678,5 @@ export default function MessageContent(props: MessageContentProps): ReactElement
     </div>
   );
 }
+
+export default MessageContent;
