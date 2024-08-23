@@ -102,6 +102,7 @@ const stringSet = {
     UNKNOWN__UNKNOWN_MESSAGE_TYPE: '(Unknown message type)',
     UNKNOWN__CANNOT_READ_MESSAGE: 'Cannot read this message.',
     UNKNOWN__TEMPLATE_ERROR: '(Template error)',
+    FORM_VERSION_ERROR: 'Form type messages are not available in this version.',
     UNKNOWN__CANNOT_READ_TEMPLATE: 'Cannot read this template.',
     MESSAGE_EDITED: '(edited)',
     // Channel - Modal
