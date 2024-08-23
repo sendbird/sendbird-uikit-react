@@ -33,7 +33,6 @@ export default function FormMessageItemBody(props: Props) {
   const { config } = useSendbirdStateContext();
   const { logger } = config;
   const [submitFailed, setSubmitFailed] = useState(false);
-  const [focusedInputIndex, setFocusedInputIndex] = useState(-1);
   const [isSubmitTried, setIsSubmitTried] = useState(false);
   const [formValues, setFormValues] = useState<FormValue[]>(() => {
     const initialFormValues: FormValue[] = [];
@@ -50,10 +49,8 @@ export default function FormMessageItemBody(props: Props) {
   });
   const isSubmitted = form.isSubmitted;
   const hasError = formValues.some(({ errorMessage }) => !!errorMessage);
-  const isFocusedInvalidated = focusedInputIndex > -1
-    ? formValues[focusedInputIndex].isInvalidated
-    : formValues.some(({ isInvalidated }) => isInvalidated);
-  const isButtonDisabled = (hasError && (isSubmitTried || isFocusedInvalidated)) || isSubmitted;
+  const hasInvalidated = formValues.some(({ isInvalidated }) => isInvalidated);
+  const isButtonDisabled = (hasError && (isSubmitTried || hasInvalidated)) || isSubmitted;
 
   const handleSubmit = useCallback(async () => {
     setIsSubmitTried(true);
@@ -135,8 +132,15 @@ export default function FormMessageItemBody(props: Props) {
                   };
                   return newInputs;
                 });
+              } else if (!errorMessage) {
+                setFormValues(([...newInputs]) => {
+                  newInputs[index] = {
+                    ...newInputs[index],
+                    isInvalidated: false,
+                  };
+                  return newInputs;
+                });
               }
-              setFocusedInputIndex(isFocus ? index : -1);
             }}
             onChange={(values) => {
               setFormValues(([...newInputs]) => {
