@@ -50,8 +50,8 @@ export const isFormVersionCompatible = (version: number) => {
 export const isDisabledBecauseMessageForm = (allMessages: BaseMessage[]) => {
   return allMessages.some((message) => (
     !!message.messageForm
-    && isFormVersionCompatible(message.messageForm.version)
     && !message.messageForm.isSubmitted
     && !!message.extendedMessagePayload?.disable_chat_input
+    && isFormVersionCompatible(message.messageForm.version)
   ));
 };
