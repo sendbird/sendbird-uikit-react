@@ -44,7 +44,7 @@ export const isDisabledBecauseSuggestedReplies = (channel: GroupChannel | null |
 };
 
 export const isFormVersionCompatible = (version: number) => {
-  return version === UIKIT_COMPATIBLE_FORM_VERSION;
+  return version <= UIKIT_COMPATIBLE_FORM_VERSION;
 };
 
 export const isDisabledBecauseMessageForm = (allMessages: BaseMessage[]) => {
