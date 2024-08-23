@@ -17,7 +17,6 @@ import { ThreadContextActionTypes } from './dux/actionTypes';
 import threadInitialState, { ThreadContextInitialState } from './dux/initialState';
 
 import type { OnBeforeDownloadFileMessageType } from '../../GroupChannel/context/GroupChannelProvider';
-import type { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../types';
 import useGetChannel from './hooks/useGetChannel';
 import useGetAllEmoji from './hooks/useGetAllEmoji';
 import useGetParentMessage from './hooks/useGetParentMessage';
@@ -34,6 +33,7 @@ import { PublishingModuleType, useSendMultipleFilesMessage } from './hooks/useSe
 import { SendableMessageType } from '../../../utils';
 import { useThreadFetchers } from './hooks/useThreadFetchers';
 import { useMessageLayoutDirection } from '../../../hooks/useHTMLTextDirection';
+import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../types';
 
 export interface ThreadProviderProps extends
   Pick<UserProfileProviderProps, 'disableUserProfile' | 'renderUserProfile'> {
