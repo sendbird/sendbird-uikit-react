@@ -53,7 +53,7 @@ export { MessageBody } from './MessageBody';
 export { MessageHeader } from './MessageHeader';
 export { MessageProfile } from './MessageProfile';
 
-export interface MessageContentProps extends MessageContentRenderSubComponentProps {
+export interface MessageContentProps extends MessageComponentRenderers {
   className?: string | Array<string>;
   userId: string;
   channel: Nullable<GroupChannel>;
@@ -83,7 +83,7 @@ export interface MessageContentProps extends MessageContentRenderSubComponentPro
   onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 }
 
-export interface MessageContentRenderSubComponentProps {
+export interface MessageComponentRenderers {
   renderSenderProfile?: (props: MessageProfileProps) => ReactNode;
   renderMessageBody?: (props: MessageBodyProps) => ReactNode;
   renderMessageHeader?: (props: MessageHeaderProps) => ReactNode;
@@ -337,7 +337,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
         ref={contentRef}
       >
         {
-          !isByMe && !chainTop && !useReplying && renderMessageHeader(props)
+          (!isByMe && !chainTop && !useReplying) && renderMessageHeader(props)
         }
         {/* quote message */}
         {(useReplying) ? (

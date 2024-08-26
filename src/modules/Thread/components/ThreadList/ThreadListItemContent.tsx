@@ -31,13 +31,13 @@ import { useThreadContext } from '../../context/ThreadProvider';
 import { classnames, deleteNullish } from '../../../../utils/utils';
 import { MessageMenu, MessageMenuProps } from '../../../../ui/MessageMenu';
 import useElementObserver from '../../../../hooks/useElementObserver';
-import type { MessageContentRenderSubComponentProps } from '../../../../ui/MessageContent';
+import type { MessageComponentRenderers } from '../../../../ui/MessageContent';
 import MessageProfile, { MessageProfileProps } from '../../../../ui/MessageContent/MessageProfile';
 import MessageBody, { CustomSubcomponentsProps, MessageBodyProps } from '../../../../ui/MessageContent/MessageBody';
 import { MessageHeaderProps, MessageHeader } from '../../../../ui/MessageContent/MessageHeader';
 import { MobileBottomSheetProps } from '../../../../ui/MobileMenu/types';
 
-export interface ThreadListItemContentProps extends MessageContentRenderSubComponentProps {
+export interface ThreadListItemContentProps extends MessageComponentRenderers {
   className?: string;
   userId: string;
   channel: GroupChannel;
