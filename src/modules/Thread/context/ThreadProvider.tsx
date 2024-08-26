@@ -1,5 +1,5 @@
 import React, { useReducer, useMemo, useEffect } from 'react';
-import { type EmojiCategory, User } from '@sendbird/chat';
+import { type EmojiCategory } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import type {
   BaseMessage, FileMessage,
