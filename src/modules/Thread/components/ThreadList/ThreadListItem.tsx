@@ -243,7 +243,6 @@ export default function ThreadListItem({
         chainTop={chainTop}
         chainBottom={chainBottom}
         isReactionEnabled={isReactionEnabled}
-        isMentionEnabled={isMentionEnabled}
         disableQuoteMessage
         replyType={replyType}
         nicknamesMap={nicknamesMap}

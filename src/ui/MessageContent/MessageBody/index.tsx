@@ -23,10 +23,16 @@ import { match } from 'ts-pattern';
 import TemplateMessageItemBody from '../../TemplateMessageItemBody';
 import type { OnBeforeDownloadFileMessageType } from '../../../modules/GroupChannel/context/GroupChannelProvider';
 
+export type CustomSubcomponentsProps = Record<
+  'ThumbnailMessageItemBody' | 'MultipleFilesMessageItemBody',
+  Record<string, any>
+>;
+
 const MESSAGE_ITEM_BODY_CLASSNAME = 'sendbird-message-content__middle__message-item-body';
 export type RenderedTemplateBodyType = 'failed' | 'composite' | 'simple';
 
 export interface MessageBodyProps {
+  className?: string;
   channel: Nullable<GroupChannel>;
   message: CoreMessageType;
   showFileViewer?: (bool: boolean) => void;
@@ -43,6 +49,7 @@ export interface MessageBodyProps {
 
 export const MessageBody = (props: MessageBodyProps) => {
   const {
+    className = MESSAGE_ITEM_BODY_CLASSNAME,
     message,
     channel,
     showFileViewer,
@@ -56,6 +63,8 @@ export const MessageBody = (props: MessageBodyProps) => {
     isReactionEnabledInChannel,
     isByMe,
   } = props;
+  // Private props for internal customization.
+  const customSubcomponentsProps: CustomSubcomponentsProps = props['customSubcomponentsProps'] ?? {};
 
   const threadMessageKindKey = useThreadMessageKindKeySelector({
     isMobile,
@@ -68,7 +77,7 @@ export const MessageBody = (props: MessageBodyProps) => {
   return match(message)
     .when(isTemplateMessage, () => (
       <TemplateMessageItemBody
-        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        className={className}
         message={message as BaseMessage}
         isByMe={isByMe}
         theme={config?.theme as SendbirdTheme}
@@ -78,20 +87,20 @@ export const MessageBody = (props: MessageBodyProps) => {
     .when((message) => isOgMessageEnabledInGroupChannel
       && isSendableMessage(message)
       && isOGMessage(message), () => (
-      <OGMessageItemBody
-        className={MESSAGE_ITEM_BODY_CLASSNAME}
-        message={message as UserMessage}
-        isByMe={isByMe}
-        mouseHover={mouseHover}
-        isMentionEnabled={config.groupChannel.enableMention ?? false}
-        isReactionEnabled={isReactionEnabledInChannel}
-        onMessageHeightChange={onMessageHeightChange}
-        isMarkdownEnabled={config.groupChannel.enableMarkdownForUserMessage}
-      />
+        <OGMessageItemBody
+          className={className}
+          message={message as UserMessage}
+          isByMe={isByMe}
+          mouseHover={mouseHover}
+          isMentionEnabled={config.groupChannel.enableMention ?? false}
+          isReactionEnabled={isReactionEnabledInChannel}
+          onMessageHeightChange={onMessageHeightChange}
+          isMarkdownEnabled={config.groupChannel.enableMarkdownForUserMessage}
+        />
     ))
     .when(isTextMessage, () => (
       <TextMessageItemBody
-        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        className={className}
         message={message as UserMessage}
         isByMe={isByMe}
         mouseHover={mouseHover}
@@ -102,7 +111,7 @@ export const MessageBody = (props: MessageBodyProps) => {
     ))
     .when((message) => getUIKitMessageType(message) === messageTypes.FILE, () => (
       <FileMessageItemBody
-        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        className={className}
         message={message as FileMessage}
         isByMe={isByMe}
         mouseHover={mouseHover}
@@ -112,7 +121,7 @@ export const MessageBody = (props: MessageBodyProps) => {
     ))
     .when(isMultipleFilesMessage, () => (
       <MultipleFilesMessageItemBody
-        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        className={className}
         message={message as MultipleFilesMessage}
         isByMe={isByMe}
         mouseHover={mouseHover}
@@ -120,11 +129,12 @@ export const MessageBody = (props: MessageBodyProps) => {
         threadMessageKindKey={threadMessageKindKey}
         statefulFileInfoList={statefulFileInfoList}
         onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
+        {...customSubcomponentsProps['MultipleFilesMessageItemBody'] ?? {}}
       />
     ))
     .when(isVoiceMessage, () => (
       <VoiceMessageItemBody
-        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        className={className}
         message={message as FileMessage}
         channelUrl={channel?.url ?? ''}
         isByMe={isByMe}
@@ -133,18 +143,19 @@ export const MessageBody = (props: MessageBodyProps) => {
     ))
     .when(isThumbnailMessage, () => (
       <ThumbnailMessageItemBody
-        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        className={className}
         message={message as FileMessage}
         isByMe={isByMe}
         mouseHover={mouseHover}
         isReactionEnabled={isReactionEnabledInChannel}
         showFileViewer={showFileViewer}
         style={isMobile ? { width: '100%' } : {}}
+        {...customSubcomponentsProps['ThumbnailMessageItemBody'] ?? {}}
       />
     ))
     .otherwise((message) => (
       <UnknownMessageItemBody
-        className={MESSAGE_ITEM_BODY_CLASSNAME}
+        className={className}
         message={message}
         isByMe={isByMe}
         mouseHover={mouseHover}

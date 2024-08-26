@@ -1,61 +1,49 @@
-import React, { ReactNode, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { EmojiContainer } from '@sendbird/chat';
-import { FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
+import { FileMessage, UserMessage } from '@sendbird/chat/message';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import './ThreadListItemContent.scss';
 
 import { ReplyType } from '../../../../types';
-import ContextMenu, { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID, MenuItems } from '../../../../ui/ContextMenu';
-import Avatar from '../../../../ui/Avatar';
-import { useUserProfileContext } from '../../../../lib/UserProfileContext';
-import UserProfile from '../../../../ui/UserProfile';
-import { MessageEmojiMenu, MessageEmojiMenuProps } from '../../../../ui/MessageItemReactionMenu';
+import { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '../../../../ui/ContextMenu';
+import { MessageEmojiMenu } from '../../../../ui/MessageItemReactionMenu';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import {
   getClassName,
-  getSenderName,
-  getUIKitMessageType,
-  getUIKitMessageTypes,
   isMultipleFilesMessage,
   isOGMessage,
-  isTextMessage,
   isThumbnailMessage,
-  isVoiceMessage,
   SendableMessageType,
 } from '../../../../utils';
 import MessageStatus from '../../../../ui/MessageStatus';
-import EmojiReactions from '../../../../ui/EmojiReactions';
+import EmojiReactions, { EmojiReactionsProps } from '../../../../ui/EmojiReactions';
 import format from 'date-fns/format';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import TextMessageItemBody from '../../../../ui/TextMessageItemBody';
-import OGMessageItemBody from '../../../../ui/OGMessageItemBody';
-import FileMessageItemBody from '../../../../ui/FileMessageItemBody';
-import ThumbnailMessageItemBody from '../../../../ui/ThumbnailMessageItemBody';
-import UnknownMessageItemBody from '../../../../ui/UnknownMessageItemBody';
-import VoiceMessageItemBody from '../../../../ui/VoiceMessageItemBody';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 import MobileMenu from '../../../../ui/MobileMenu';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import MultipleFilesMessageItemBody, { ThreadMessageKind } from '../../../../ui/MultipleFilesMessageItemBody';
+import { ThreadMessageKind } from '../../../../ui/MultipleFilesMessageItemBody';
 import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/useThreadMessageKindKeySelector';
 import { useFileInfoListWithUploaded } from '../../../Channel/context/hooks/useFileInfoListWithUploaded';
 import { useThreadContext } from '../../context/ThreadProvider';
-import { classnames } from '../../../../utils/utils';
+import { classnames, deleteNullish } from '../../../../utils/utils';
 import { MessageMenu, MessageMenuProps } from '../../../../ui/MessageMenu';
 import useElementObserver from '../../../../hooks/useElementObserver';
+import type { MessageContentRenderSubComponentProps } from '../../../../ui/MessageContent';
+import MessageProfile, { MessageProfileProps } from '../../../../ui/MessageContent/MessageProfile';
+import MessageBody, { CustomSubcomponentsProps, MessageBodyProps } from '../../../../ui/MessageContent/MessageBody';
+import { MessageHeaderProps, MessageHeader } from '../../../../ui/MessageContent/MessageHeader';
+import { MobileBottomSheetProps } from '../../../../ui/MobileMenu/types';
 
-export interface ThreadListItemContentProps {
+export interface ThreadListItemContentProps extends MessageContentRenderSubComponentProps {
   className?: string;
   userId: string;
   channel: GroupChannel;
   message: SendableMessageType;
-  /** @deprecated This prop is deprecated and no longer in use. */
-  disabled?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
-  isMentionEnabled?: boolean;
   isReactionEnabled?: boolean;
   disableQuoteMessage?: boolean;
   replyType?: ReplyType;
@@ -67,33 +55,48 @@ export interface ThreadListItemContentProps {
   resendMessage?: (message: SendableMessageType) => void;
   toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
-  renderEmojiMenu?: (props: MessageEmojiMenuProps) => ReactNode;
-  renderMessageMenu?: (props: MessageMenuProps) => ReactNode;
+  /** @deprecated This prop is deprecated and no longer in use. */
+  disabled?: boolean;
+  /** @deprecated This props is deprecated and no longer in use. */
+  isMentionEnabled?: boolean;
 }
 
-export default function ThreadListItemContent({
-  className,
-  userId,
-  channel,
-  message,
-  chainTop = false,
-  chainBottom = false,
-  isMentionEnabled = false,
-  isReactionEnabled = false,
-  disableQuoteMessage = false,
-  replyType,
-  nicknamesMap,
-  emojiContainer,
-  showEdit,
-  showRemove,
-  showFileViewer,
-  resendMessage,
-  toggleReaction,
-  onReplyInThread,
-  renderEmojiMenu = (props) => <MessageEmojiMenu {...props} />,
-  renderMessageMenu = (props) => <MessageMenu {...props} />,
-}: ThreadListItemContentProps): React.ReactElement {
-  const messageTypes = getUIKitMessageTypes();
+interface CustomMessageItemBodyType {
+  customSubcomponentsProps?: CustomSubcomponentsProps;
+}
+
+export default function ThreadListItemContent(props: ThreadListItemContentProps): React.ReactElement {
+  // Internal props
+  const {
+    className,
+    userId,
+    channel,
+    message,
+    chainTop = false,
+    chainBottom = false,
+    isReactionEnabled = false,
+    disableQuoteMessage = false,
+    replyType,
+    nicknamesMap,
+    emojiContainer,
+    showEdit,
+    showRemove,
+    showFileViewer,
+    resendMessage,
+    toggleReaction,
+    onReplyInThread,
+  } = props;
+  // Public props for customization
+  const {
+    renderSenderProfile = (props: MessageProfileProps) => <MessageProfile {...props} />,
+    renderMessageBody = (props: MessageBodyProps & CustomMessageItemBodyType) => <MessageBody {...props} />,
+    renderMessageHeader = (props: MessageHeaderProps) => <MessageHeader {...props} />,
+    renderMessageMenu = (props: MessageMenuProps) => <MessageMenu {...props} />,
+    renderEmojiMenu = () => <MessageEmojiMenu {...props} />,
+    renderEmojiReactions = (props: EmojiReactionsProps) => <EmojiReactions {...props} />,
+    renderMobileMenuOnLongPress = (props: MobileBottomSheetProps) => <MobileMenu {...props} />,
+  } = deleteNullish(props);
+
   const { isMobile } = useMediaQueryContext();
   const { dateLocale } = useLocalization();
   const { config, eventHandlers } = useSendbirdStateContext?.() || {};
@@ -106,9 +109,7 @@ export default function ThreadListItemContent({
       document.getElementById(EMOJI_MENU_ROOT_ID),
     ],
   );
-  const { disableUserProfile, renderUserProfile } = useUserProfileContext();
   const { deleteMessage, onBeforeDownloadFileMessage } = useThreadContext();
-  const avatarRef = useRef(null);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
@@ -148,44 +149,12 @@ export default function ThreadListItemContent({
     >
       <div className={classnames('sendbird-thread-list-item-content__left', isReactionEnabledInChannel && 'use-reaction', isByMe ? 'outgoing' : 'incoming')}>
         {(!isByMe && !chainBottom) && (
-          <ContextMenu
-            menuTrigger={(toggleDropdown) => (
-              <Avatar
-                className="sendbird-thread-list-item-content__left__avatar"
-                src={channel?.members?.find((member) => member?.userId === message?.sender?.userId)?.profileUrl || message?.sender?.profileUrl || ''}
-                ref={avatarRef}
-                width="28px"
-                height="28px"
-                onClick={() => {
-                  if (!disableUserProfile) {
-                    toggleDropdown?.();
-                  }
-                }}
-              />
-            )}
-            menuItems={(closeDropdown) => (
-              renderUserProfile
-                ? renderUserProfile({
-                  user: message?.sender,
-                  close: closeDropdown,
-                  currentUserId: userId,
-                  avatarRef,
-                })
-                : (
-                  <MenuItems
-                    parentRef={avatarRef}
-                    parentContainRef={avatarRef}
-                    closeDropdown={closeDropdown}
-                    style={{ paddingTop: '0px', paddingBottom: '0px' }}
-                  >
-                    <UserProfile
-                      user={message?.sender}
-                      onSuccess={closeDropdown}
-                    />
-                  </MenuItems>
-                )
-            )}
-          />
+          renderSenderProfile({
+            ...props,
+            className: 'sendbird-thread-list-item-content__left__avatar',
+            isByMe,
+            displayThreadReplies: false,
+          })
         )}
         {(isByMe && !isMobile) && (
           <div
@@ -226,19 +195,9 @@ export default function ThreadListItemContent({
         className="sendbird-thread-list-item-content__middle"
         {...(isMobile) ? { ...longPress } : {}}
       >
-        {(!isByMe && !chainTop && !useReplying) && (
-          <Label
-            className="sendbird-thread-list-item-content__middle__sender-name"
-            type={LabelTypography.CAPTION_2}
-            color={LabelColors.ONBACKGROUND_2}
-          >
-            {
-              channel?.members?.find((member) => member?.userId === message?.sender?.userId)?.nickname
-              || getSenderName(message as SendableMessageType)
-              // TODO: Divide getting profileUrl logic to utils
-            }
-          </Label>
-        )}
+        {
+          (!isByMe && !chainTop && !useReplying) && renderMessageHeader(props)
+        }
         <div className={getClassName(['sendbird-thread-list-item-content__middle__body-container'])} >
           {/* message status component */}
           {(isByMe && !chainBottom) && (
@@ -252,77 +211,34 @@ export default function ThreadListItemContent({
             </div>
           )}
           {/* message item body components */}
-          {isOgMessageEnabledInGroupChannel && isOGMessage(message as UserMessage)
-            ? (<OGMessageItemBody
-              className="sendbird-thread-list-item-content__middle__message-item-body"
-              message={message as UserMessage}
-              isByMe={isByMe}
-              isMentionEnabled={isMentionEnabled}
-              isReactionEnabled={isReactionEnabledInChannel}
-              isMarkdownEnabled={config.groupChannel.enableMarkdownForUserMessage}
-            />
-            ) : isTextMessage(message as UserMessage) && (
-              <TextMessageItemBody
-                className="sendbird-thread-list-item-content__middle__message-item-body"
-                message={message as UserMessage}
-                isByMe={isByMe}
-                isMentionEnabled={isMentionEnabled}
-                isReactionEnabled={isReactionEnabledInChannel}
-                isMarkdownEnabled={config.groupChannel.enableMarkdownForUserMessage}
-              />
-            )}
-          {isVoiceMessage(message as FileMessage) && (
-            <VoiceMessageItemBody
-              className="sendbird-thread-list-item-content__middle__message-item-body"
-              message={message as FileMessage}
-              channelUrl={channel?.url}
-              isByMe={isByMe}
-              isReactionEnabled={isReactionEnabledInChannel}
-            />
-          )}
-          {(getUIKitMessageType((message as FileMessage)) === messageTypes.FILE) && (
-            <FileMessageItemBody
-              className="sendbird-thread-list-item-content__middle__message-item-body"
-              message={message as FileMessage}
-              isByMe={isByMe}
-              isReactionEnabled={isReactionEnabledInChannel}
-              truncateLimit={isByMe ? 18 : 14}
-              onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
-            />
-          )}
-          {
-            isMultipleFilesMessage(message) && (
-              <MultipleFilesMessageItemBody
-                className="sendbird-thread-list-item-content__middle__message-item-body"
-                message={message as MultipleFilesMessage}
-                isByMe={isByMe}
-                isReactionEnabled={isReactionEnabled}
-                threadMessageKindKey={threadMessageKindKey}
-                statefulFileInfoList={statefulFileInfoList}
-              />
-            )
-          }
-          {(isThumbnailMessage(message as FileMessage)) && (
-            <ThumbnailMessageItemBody
-              className="sendbird-thread-list-item-content__middle__message-item-body"
-              message={message as FileMessage}
-              isByMe={isByMe}
-              isReactionEnabled={isReactionEnabledInChannel}
-              showFileViewer={showFileViewer}
-              style={{
-                width: isMobile ? '100%' : '200px',
-                height: '148px',
-              }}
-            />
-          )}
-          {(getUIKitMessageType((message as FileMessage)) === messageTypes.UNKNOWN) && (
-            <UnknownMessageItemBody
-              className="sendbird-thread-list-item-content__middle__message-item-body"
-              message={message}
-              isByMe={isByMe}
-              isReactionEnabled={isReactionEnabledInChannel}
-            />
-          )}
+          {renderMessageBody({
+            className: 'sendbird-thread-list-item-content__middle__message-item-body',
+            message,
+            channel,
+            showFileViewer,
+            mouseHover: false,
+            isMobile,
+            config,
+            isReactionEnabledInChannel,
+            isByMe,
+            onBeforeDownloadFileMessage,
+            /** This is for internal customization to keep the legacy */
+            customSubcomponentsProps: {
+              ThumbnailMessageItemBody: {
+                style: {
+                  width: isMobile ? '100%' : '200px',
+                  height: '148px',
+                },
+              },
+              MultipleFilesMessageItemBody: {
+                threadMessageKindKey,
+                statefulFileInfoList,
+              },
+            },
+            // TODO: Support these props in Thread
+            // onMessageHeightChange,
+            // onTemplateMessageRenderedCallback,
+          })}
           {/* reactions */}
           {(isReactionEnabledInChannel && message?.reactions?.length > 0) && (
             <div className={getClassName([
@@ -334,16 +250,18 @@ export default function ThreadListItemContent({
                 || isMultipleFilesMessage(message)
               ) ? '' : 'primary',
             ])}>
-              <EmojiReactions
-                userId={userId}
-                message={message as SendableMessageType}
-                channel={channel}
-                isByMe={isByMe}
-                emojiContainer={emojiContainer}
-                memberNicknamesMap={nicknamesMap}
-                toggleReaction={toggleReaction}
-                onPressUserProfile={onPressUserProfileHandler}
-              />
+              {
+                renderEmojiReactions({
+                  userId,
+                  message: message as SendableMessageType,
+                  channel,
+                  isByMe,
+                  emojiContainer,
+                  memberNicknamesMap: nicknamesMap,
+                  toggleReaction,
+                  onPressUserProfile: onPressUserProfileHandler,
+                })
+              }
             </div>
           )}
           {(!isByMe && !chainBottom) && (
@@ -386,24 +304,24 @@ export default function ThreadListItemContent({
         )}
       </div>
       {showMobileMenu && (
-        <MobileMenu
-          parentRef={mobileMenuRef}
-          channel={channel}
-          message={message}
-          userId={userId}
-          replyType={replyType}
-          hideMenu={() => {
+        renderMobileMenuOnLongPress({
+          parentRef: mobileMenuRef,
+          channel,
+          message,
+          userId,
+          replyType,
+          hideMenu: () => {
             setShowMobileMenu(false);
-          }}
-          isReactionEnabled={isReactionEnabled}
-          isByMe={isByMe}
-          emojiContainer={emojiContainer}
-          showEdit={showEdit}
-          showRemove={showRemove}
-          toggleReaction={toggleReaction}
-          isOpenedFromThread
-          deleteMessage={deleteMessage}
-          onDownloadClick={async (e) => {
+          },
+          isReactionEnabled,
+          isByMe,
+          emojiContainer,
+          showEdit,
+          showRemove,
+          toggleReaction,
+          isOpenedFromThread: true,
+          deleteMessage,
+          onDownloadClick: async (e) => {
             if (!onBeforeDownloadFileMessage) return;
 
             try {
@@ -415,8 +333,8 @@ export default function ThreadListItemContent({
             } catch (err) {
               logger?.error?.('ThreadListItemContent: Error occurred while determining download continuation:', err);
             }
-          }}
-        />
+          },
+        })
       )}
     </div>
   );
