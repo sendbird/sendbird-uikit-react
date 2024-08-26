@@ -107,7 +107,7 @@ export default function ThreadListItemContent({
     ],
   );
   const { disableUserProfile, renderUserProfile } = useUserProfileContext();
-  const { deleteMessage, onBeforeDownloadFileMessage } = useThreadContext();
+  const { deleteMessage, onBeforeDownloadFileMessage, filterEmojiCategoryIds } = useThreadContext();
   const avatarRef = useRef(null);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
@@ -216,6 +216,7 @@ export default function ThreadListItemContent({
                   userId: userId,
                   emojiContainer: emojiContainer,
                   toggleReaction: toggleReaction,
+                  filterEmojiCategoryIds,
                 })}
               </>
             )}
@@ -369,6 +370,7 @@ export default function ThreadListItemContent({
                 userId: userId,
                 emojiContainer: emojiContainer,
                 toggleReaction: toggleReaction,
+                filterEmojiCategoryIds,
               })
             )}
             {renderMessageMenu({

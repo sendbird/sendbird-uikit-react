@@ -25,6 +25,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
     nicknamesMap,
     setQuoteMessage,
     renderUserMentionItem,
+    filterEmojiCategoryIds,
     onQuoteMessageClick,
     onReplyInThreadClick,
     onMessageAnimated,
@@ -66,6 +67,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
       threadReplySelectType={threadReplySelectType ?? ThreadReplySelectType.PARENT}
       nicknamesMap={nicknamesMap}
       renderUserMentionItem={renderUserMentionItem}
+      filterEmojiCategoryIds={filterEmojiCategoryIds}
       scrollToMessage={scrollToMessage}
       toggleReaction={toggleReaction}
       setQuoteMessage={setQuoteMessage}

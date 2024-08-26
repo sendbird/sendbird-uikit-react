@@ -1,6 +1,6 @@
 import type { EveryMessage, RenderCustomSeparatorProps, RenderMessageParamsType, ReplyType } from '../../../../types';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { EmojiContainer, User } from '@sendbird/chat';
+import { type EmojiCategory, EmojiContainer, User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { FileMessage, UserMessage, UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
 import format from 'date-fns/format';
@@ -68,6 +68,7 @@ export interface MessageViewProps extends MessageProps {
   nicknamesMap: Map<string, string>;
 
   renderUserMentionItem?: (props: { user: User }) => React.ReactElement;
+  filterEmojiCategoryIds?: (message: SendableMessageType) => EmojiCategory['id'][];
   scrollToMessage: (createdAt: number, messageId: number) => void;
   toggleReaction: (message: SendableMessageType, emojiKey: string, isReacted: boolean) => void;
   setQuoteMessage: React.Dispatch<React.SetStateAction<SendableMessageType | null>>;
@@ -147,6 +148,7 @@ const MessageView = (props: MessageViewProps) => {
     renderEditInput,
     renderFileViewer,
     renderRemoveMessageModal,
+    filterEmojiCategoryIds,
   } = deleteNullish(props);
 
   const { dateLocale, stringSet } = useLocalization();
@@ -285,6 +287,7 @@ const MessageView = (props: MessageViewProps) => {
           onQuoteMessageClick: onQuoteMessageClick,
           onMessageHeightChange: handleScroll,
           onBeforeDownloadFileMessage,
+          filterEmojiCategoryIds,
         })}
         { /* Suggested Replies */ }
         {

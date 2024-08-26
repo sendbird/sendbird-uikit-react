@@ -1,4 +1,5 @@
 import React, { useReducer, useMemo, useEffect } from 'react';
+import { type EmojiCategory, User } from '@sendbird/chat';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import type {
   BaseMessage, FileMessage,
@@ -47,6 +48,7 @@ export interface ThreadProviderProps extends
   onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
   onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
   isMultipleFilesMessageEnabled?: boolean;
+  filterEmojiCategoryIds?: (message: SendableMessageType) => EmojiCategory['id'][];
 }
 export interface ThreadProviderInterface extends ThreadProviderProps, ThreadContextInitialState {
   // hooks for fetching threads
@@ -76,6 +78,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
     onBeforeSendMultipleFilesMessage,
     onBeforeDownloadFileMessage,
     isMultipleFilesMessageEnabled,
+    filterEmojiCategoryIds,
   } = props;
   const propsMessage = props?.message;
   const propsParentMessage = getParentMessageFrom(propsMessage);
@@ -263,6 +266,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
         isChannelFrozen,
         currentUserId,
         typingMembers,
+        filterEmojiCategoryIds,
       }}
     >
       {/* UserProfileProvider */}
