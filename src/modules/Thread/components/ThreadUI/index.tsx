@@ -149,7 +149,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
         )
       }
       <div
-        className={classnames('sendbird-thread-ui--scroll, sendbird-conversation__messages')}
+        className={classnames('sendbird-thread-ui--scroll', 'sendbird-conversation__messages')}
         ref={scrollRef}
         onScroll={onScroll}
       >
