@@ -18,6 +18,7 @@ import { HTMLTextDirection, MessageContentMiddleContainerType, Nullable } from '
 import { isSafari } from './browser';
 import { match } from 'ts-pattern';
 import isSameSecond from 'date-fns/isSameSecond';
+import { MessageTemplateData, TemplateType } from '../ui/TemplateMessageItemBody/types';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 export const SUPPORTED_MIMES = {
@@ -293,25 +294,22 @@ export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
 );
 export enum UI_CONTAINER_TYPES {
   DEFAULT = '',
-  WIDE = 'ui_container_type__wide',
-  DEFAULT_CAROUSEL = 'ui_container_type__default-carousel',
+  DEFAULT_CAROUSEL = 'ui_container_type__default',
 }
 
 export const getMessageContentMiddleClassNameByContainerType = ({
   message,
-  isMobile,
 }: {
   message: CoreMessageType,
-  isMobile: boolean,
 }): UI_CONTAINER_TYPES => {
   /**
    * FULL: template message only.
    * WIDE: all message types.
    */
-  const containerType: string | undefined = message.extendedMessagePayload?.['ui']?.['container_type'];
-  if (!isMobile) return UI_CONTAINER_TYPES.DEFAULT;
-  if (containerType === MessageContentMiddleContainerType.WIDE) {
-    return UI_CONTAINER_TYPES.WIDE;
+  const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
+  const containerType: TemplateType | undefined = templateData?.type;
+  if (containerType === MessageContentMiddleContainerType.DEFAULT || templateData) {
+    return UI_CONTAINER_TYPES.DEFAULT_CAROUSEL;
   }
   return UI_CONTAINER_TYPES.DEFAULT;
 };

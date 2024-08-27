@@ -84,7 +84,6 @@ export default function ContextMenu({
   return (
     <div
       className="sendbird-context-menu"
-      style={{ display: 'inline' }}
       onClick={onClick}
     >
       {menuTrigger?.(() => setShowMenu(!showMenu))}

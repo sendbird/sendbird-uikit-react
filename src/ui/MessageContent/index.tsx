@@ -162,18 +162,10 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const [feedbackFailedText, setFeedbackFailedText] = useState('');
   const [uiContainerType, setUiContainerType] = useState<UI_CONTAINER_TYPES>(getMessageContentMiddleClassNameByContainerType({
     message,
-    isMobile,
   }));
 
-  const onTemplateMessageRenderedCallback = (renderedTemplateType: 'failed' | 'composite' | 'simple') => {
-    if (renderedTemplateType === 'failed') {
-      setUiContainerType(UI_CONTAINER_TYPES.DEFAULT);
-    } else if (renderedTemplateType === 'composite') {
-      /**
-       * Composite templates must have default carousel view irregardless of given containerType.
-       */
-      setUiContainerType(UI_CONTAINER_TYPES.DEFAULT_CAROUSEL);
-    }
+  const onTemplateMessageRenderedCallback = (renderedTemplateType: UI_CONTAINER_TYPES) => {
+    setUiContainerType(renderedTemplateType);
   };
 
   const { stringSet } = useContext(LocalizationContext);
@@ -268,6 +260,67 @@ export function MessageContent(props: MessageContentProps): ReactElement {
 
   if (isAdminMessage(message)) {
     return (<AdminMessage message={message} />);
+  }
+
+  const senderProfile = renderSenderProfile({
+    ...props,
+    isByMe,
+    displayThreadReplies,
+  });
+  const messageHeader = renderMessageHeader(props);
+  const messageBody = renderMessageBody({
+    message,
+    channel,
+    showFileViewer,
+    onMessageHeightChange,
+    mouseHover,
+    isMobile,
+    config,
+    isReactionEnabledInChannel,
+    isByMe,
+    onTemplateMessageRenderedCallback,
+    onBeforeDownloadFileMessage,
+  });
+  const timeStamp = <Label
+    className={classnames(
+      'sendbird-message-content__middle__body-container__created-at',
+      'right',
+      hoveredMenuClassName,
+      uiContainerType,
+    )}
+    type={LabelTypography.CAPTION_3}
+    color={LabelColors.ONBACKGROUND_2}
+    ref={timestampRef}
+  >
+    {format(message?.createdAt || 0, 'p', {
+      locale: dateLocale,
+    })}
+  </Label>;
+
+  if (uiContainerType === UI_CONTAINER_TYPES.DEFAULT_CAROUSEL) {
+    return (
+      <div className="sendbird-message-content__sendbird-ui-container-type__default__root">
+        {
+          !isByMe
+          && !chainTop
+          && !useReplying
+          && !chainBottom
+          && <div className="sendbird-message-content__sendbird-ui-container-type__default__header-container">
+              <div className="sendbird-message-content__sendbird-ui-container-type__default__header-container__left__profile">
+                {senderProfile}
+              </div>
+              {messageHeader}
+          </div>
+        }
+        {messageBody}
+        {
+          (!isByMe && !chainBottom)
+          && <div className="sendbird-message-content__sendbird-ui-container-type__default__bottom">
+            {timeStamp}
+          </div>
+        }
+      </div>
+    );
   }
 
   return (

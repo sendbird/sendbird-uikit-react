@@ -4,6 +4,10 @@
   display: inline;
 }
 
+.sendbird-message-content__sendbird-ui-container-type__default__header-container .sendbird-context-menu {
+  display: flex;
+}
+
 .sendbird__offline {
   .sendbird-dropdown__menu .sendbird-dropdown__menu-item {
     cursor: not-allowed;

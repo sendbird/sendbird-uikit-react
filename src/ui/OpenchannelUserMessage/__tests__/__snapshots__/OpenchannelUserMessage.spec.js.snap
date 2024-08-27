@@ -10,7 +10,6 @@ exports[`ui/OpenchannelUserMessage should do a snapshot test of the OpenchannelU
     >
       <div
         class="sendbird-context-menu"
-        style="display: inline;"
       >
         <div
           class="sendbird-openchannel-user-message__left__avatar sendbird-avatar"
@@ -68,7 +67,6 @@ exports[`ui/OpenchannelUserMessage should do a snapshot test of the OpenchannelU
     >
       <div
         class="sendbird-context-menu"
-        style="display: inline;"
       >
         <button
           class="sendbird-openchannel-user-message__context-menu--icon sendbird-iconbutton "

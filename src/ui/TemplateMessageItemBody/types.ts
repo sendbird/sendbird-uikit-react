@@ -92,7 +92,10 @@ export type MessageTemplateData = SimpleTemplateData & {
   view_variables?: Record<string, SimpleTemplateData[]>; // Reference: https://sendbird.atlassian.net/wiki/spaces/UK/pages/2265484095/UIKit+message+template+syntax+extension+proposal#View-variables-in-message-payload
 };
 
+export type TemplateType = 'default';
+
 export type SimpleTemplateData = {
+  type?: TemplateType;
   key: string;
   variables?: Record<string, any>;
 };

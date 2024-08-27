@@ -1,7 +1,7 @@
 import './index.scss';
 import React, { ReactElement, useEffect, useState } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
-import { getClassName, removeAtAndBraces, startsWithAtAndEndsWithBraces } from '../../utils';
+import { getClassName, removeAtAndBraces, startsWithAtAndEndsWithBraces, UI_CONTAINER_TYPES } from '../../utils';
 import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateWrapper';
 import {
   CarouselItem,
@@ -19,7 +19,6 @@ import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/dux/
 import FallbackTemplateMessageItemBody from './FallbackTemplateMessageItemBody';
 import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
 import MessageTemplateErrorBoundary from '../MessageTemplate/messageTemplateErrorBoundary';
-import { RenderedTemplateBodyType } from '../MessageContent/MessageBody';
 import { CompositeComponentType } from '@sendbird/uikit-message-template';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
@@ -36,7 +35,7 @@ interface TemplateMessageItemBodyProps {
   message: BaseMessage;
   isByMe?: boolean;
   theme?: SendbirdTheme;
-  onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: RenderedTemplateBodyType) => void;
+  onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: UI_CONTAINER_TYPES) => void;
 }
 
 /**
@@ -78,7 +77,7 @@ export function TemplateMessageItemBody({
   const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
 
   const getFailedBody = () => {
-    onTemplateMessageRenderedCallback('failed');
+    onTemplateMessageRenderedCallback(UI_CONTAINER_TYPES.DEFAULT);
     return <FallbackTemplateMessageItemBody
       className={className}
       message={message}
