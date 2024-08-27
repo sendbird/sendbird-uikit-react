@@ -11,7 +11,6 @@ export interface InputLabelProps {
 }
 
 export const InputLabel = ({ children }: InputLabelProps): ReactElement => (
-  <div style={{ marginBottom: '6px' }}>
     <Label
       className='sendbird-form-message__input__label'
       type={LabelTypography.CAPTION_2}
@@ -19,7 +18,6 @@ export const InputLabel = ({ children }: InputLabelProps): ReactElement => (
     >
       {children}
     </Label>
-  </div>
 );
 
 export interface InputProps {
