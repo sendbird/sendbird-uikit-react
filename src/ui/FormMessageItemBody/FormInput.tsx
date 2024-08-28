@@ -1,10 +1,11 @@
 import { MessageFormItemStyle } from '@sendbird/chat/message';
-import React, { ReactElement, ReactNode } from 'react';
+import React, { ReactElement, ReactNode, useContext } from 'react';
 
 import './index.scss';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import { classnames } from '../../utils/utils';
+import { LocalizationContext } from '../../lib/LocalizationContext';
 
 export interface InputLabelProps {
   children: ReactNode;
@@ -65,6 +66,7 @@ const FormInput = (props: InputProps) => {
   const { layout, options = [], resultCount }: MessageFormItemStyle = style;
   const { min = 1, max = 1 } = resultCount ?? {};
   const chipDataList: ChipData[] = getInitialChipDataList();
+  const { stringSet } = useContext(LocalizationContext);
 
   const handleFocus = () => {
     onFocused?.(true);
@@ -170,7 +172,7 @@ const FormInput = (props: InputProps) => {
                           type={LabelTypography.BODY_1}
                           color={LabelColors.ONBACKGROUND_3}
                         >
-                          No Response
+                          {stringSet.FORM_ITEM_OPTIONAL_EMPTY}
                         </Label>
                       )}
                     </div>
@@ -232,7 +234,7 @@ const FormInput = (props: InputProps) => {
                           type={LabelTypography.BODY_1}
                           color={LabelColors.ONBACKGROUND_3}
                         >
-                          No response
+                          {stringSet.FORM_ITEM_OPTIONAL_EMPTY}
                         </Label>
                       )}
                     </div>

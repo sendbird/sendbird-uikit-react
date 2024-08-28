@@ -237,6 +237,7 @@ const stringSet = {
     // Form submit failed error messages
     FORM_ITEM_REQUIRED: 'This field is required',
     FORM_ITEM_INVALID: 'Please check the value',
+    FORM_ITEM_OPTIONAL_EMPTY: 'No Response',
   },
 };
 
