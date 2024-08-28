@@ -53,7 +53,7 @@ export { MessageBody } from './MessageBody';
 export { MessageHeader } from './MessageHeader';
 export { MessageProfile } from './MessageProfile';
 
-export interface MessageContentProps {
+export interface MessageContentProps extends MessageComponentRenderers {
   className?: string | Array<string>;
   userId: string;
   channel: Nullable<GroupChannel>;
@@ -81,8 +81,9 @@ export interface MessageContentProps {
   onQuoteMessageClick?: (props: { message: SendableMessageType }) => void;
   onMessageHeightChange?: () => void;
   onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
+}
 
-  // For injecting customizable subcomponents
+export interface MessageComponentRenderers {
   renderSenderProfile?: (props: MessageProfileProps) => ReactNode;
   renderMessageBody?: (props: MessageBodyProps) => ReactNode;
   renderMessageHeader?: (props: MessageHeaderProps) => ReactNode;
@@ -285,6 +286,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
         {
           renderSenderProfile({
             ...props,
+            className: 'sendbird-message-content__left__avatar',
             isByMe,
             displayThreadReplies,
             bottom: totalBottom > 0 ? totalBottom + 'px' : '',
@@ -335,7 +337,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
         ref={contentRef}
       >
         {
-          !isByMe && !chainTop && !useReplying && renderMessageHeader(props)
+          (!isByMe && !chainTop && !useReplying) && renderMessageHeader(props)
         }
         {/* quote message */}
         {(useReplying) ? (
