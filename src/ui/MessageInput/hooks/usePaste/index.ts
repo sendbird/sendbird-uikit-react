@@ -27,7 +27,7 @@ export function usePaste({
     // simple text, continue as normal
     if (!html) {
       const text = e.clipboardData.getData('text') || getURIListText(e);
-      document.execCommand('insertHTML', false, sanitizeString(text));
+      document.execCommand('insertText', false, sanitizeString(text));
       setIsInput(true);
       setHeight();
       return;
@@ -43,7 +43,7 @@ export function usePaste({
       if (!hasMention(pasteNode)) {
         // to preserve space between words
         const text = extractTextFromNodes(Array.from(pasteNode.children) as HTMLSpanElement[]);
-        document.execCommand('insertHTML', false, sanitizeString(text));
+        document.execCommand('insertText', false, sanitizeString(text));
         pasteNode.remove();
         setIsInput(true);
         setHeight();
