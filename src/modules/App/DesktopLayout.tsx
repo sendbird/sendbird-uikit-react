@@ -109,7 +109,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
     animatedMessageId: highlightedMessage,
     onReplyInThreadClick: onClickThreadReply,
     filterEmojiCategoryIds: (message) => {
-      if (message instanceof UserMessage && message.message.includes('category')) {
+      if (message instanceof UserMessage && message.sender.userId === 'junyoung') {
         return [2];
       }
     },

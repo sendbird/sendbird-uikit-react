@@ -18,6 +18,9 @@ import useLongPress from '../../hooks/useLongPress';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { useMessageContext } from '../../modules/Message/context/MessageProvider';
+import { ModalFooter } from '../Modal';
+import { ButtonTypes } from '../Button';
+import { useGlobalModalContext } from '../../hooks/useModal';
 
 type Props = {
   reaction: Reaction;
@@ -27,6 +30,7 @@ type Props = {
   emojisMap: Map<string, Emoji>;
   channel: Nullable<GroupChannel | OpenChannel>;
   message?: SendableMessageType;
+  isFiltered?: boolean;
 };
 
 export default function ReactionItem({
@@ -37,7 +41,9 @@ export default function ReactionItem({
   emojisMap,
   channel,
   message,
+  isFiltered,
 }: Props) {
+  const { openModal } = useGlobalModalContext();
   const store = useSendbirdStateContext();
   const { isMobile } = useMediaQueryContext();
   const messageStore = useMessageContext();
@@ -49,6 +55,27 @@ export default function ReactionItem({
     && (channel?.isGroupChannel() && !channel.isSuper);
 
   const handleOnClick = () => {
+    if (isFiltered && !reactedByMe) {
+      openModal({
+        modalProps: {
+          titleText: 'Add reaction failed',
+          hideFooter: true,
+          isCloseOnClickOutside: true,
+        },
+        childElement: ({ closeModal }) => (
+          <ModalFooter
+            type={ButtonTypes.PRIMARY}
+            submitText={stringSet.BUTTON__OK}
+            hideCancelButton
+            onCancel={closeModal}
+            onSubmit={closeModal}
+          />
+        ),
+      });
+
+      return;
+    }
+
     setEmojiKey('');
     toggleReaction?.((message ?? messageStore?.message as UserMessage), reaction.key, reactedByMe);
   };

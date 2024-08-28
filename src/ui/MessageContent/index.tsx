@@ -427,6 +427,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
                   memberNicknamesMap: nicknamesMap ?? new Map(),
                   toggleReaction,
                   onPressUserProfile: onPressUserProfileHandler,
+                  filterEmojiCategoryIds,
                 })
               }
             </div>

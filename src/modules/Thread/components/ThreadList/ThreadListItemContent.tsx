@@ -344,6 +344,7 @@ export default function ThreadListItemContent({
                 memberNicknamesMap={nicknamesMap}
                 toggleReaction={toggleReaction}
                 onPressUserProfile={onPressUserProfileHandler}
+                filterEmojiCategoryIds={filterEmojiCategoryIds}
               />
             </div>
           )}

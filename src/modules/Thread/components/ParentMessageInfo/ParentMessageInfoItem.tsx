@@ -63,6 +63,7 @@ export default function ParentMessageInfoItem({
     emojiContainer,
     nicknamesMap,
     toggleReaction,
+    filterEmojiCategoryIds,
   } = useThreadContext();
   const { isMobile } = useMediaQueryContext();
 
@@ -343,6 +344,7 @@ export default function ParentMessageInfoItem({
             memberNicknamesMap={nicknamesMap}
             toggleReaction={toggleReaction}
             onPressUserProfile={onPressUserProfileHandler}
+            filterEmojiCategoryIds={filterEmojiCategoryIds}
           />
         </div>
       )}

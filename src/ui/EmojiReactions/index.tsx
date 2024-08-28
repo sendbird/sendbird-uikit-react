@@ -1,6 +1,6 @@
 import './index.scss';
 import React, { ReactElement, useRef, useState } from 'react';
-import type { Emoji, EmojiContainer, User } from '@sendbird/chat';
+import type { Emoji, EmojiCategory, EmojiContainer, User } from '@sendbird/chat';
 import type { Reaction } from '@sendbird/chat/message';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
@@ -11,7 +11,13 @@ import Icon, { IconTypes, IconColors } from '../Icon';
 import ContextMenu, { EmojiListItems } from '../ContextMenu';
 import { Nullable, SpaceFromTriggerType } from '../../types';
 
-import { getClassName, getEmojiListAll, getEmojiMapAll, SendableMessageType } from '../../utils';
+import {
+  getClassName,
+  getEmojiListAll,
+  getEmojiListByCategoryIds,
+  getEmojiMapAll,
+  SendableMessageType,
+} from '../../utils';
 import { ReactedMembersBottomSheet } from '../MobileMenu/ReactedMembersBottomSheet';
 import ReactionItem from './ReactionItem';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
@@ -31,6 +37,7 @@ export interface EmojiReactionsProps {
   isByMe?: boolean;
   toggleReaction?: (message: SendableMessageType, key: string, byMe: boolean) => void;
   onPressUserProfile?: (member: User) => void;
+  filterEmojiCategoryIds?: (message: SendableMessageType) => EmojiCategory['id'][];
 }
 
 const EmojiReactions = ({
@@ -44,6 +51,7 @@ const EmojiReactions = ({
   isByMe = false,
   toggleReaction,
   onPressUserProfile,
+  filterEmojiCategoryIds,
 }: EmojiReactionsProps): ReactElement => {
   let showTheReactedMembers = false;
   try {
@@ -81,6 +89,10 @@ const EmojiReactions = ({
               emojisMap={emojisMap}
               channel={channel}
               message={message}
+              isFiltered={
+                getEmojiListByCategoryIds(emojiContainer, filterEmojiCategoryIds?.(message))
+                  .every(elem => elem.key !== reaction?.key)
+              }
             />
           );
         })
