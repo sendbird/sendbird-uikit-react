@@ -81,7 +81,7 @@ export const MessageBody = (props: MessageBodyProps) => {
       () => (
         <FormMessageItemBody
           isByMe={isByMe}
-          message={message as BaseMessage}
+          message={message}
           form={message.messageForm}
         />
       ))
