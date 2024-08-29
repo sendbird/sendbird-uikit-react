@@ -1,5 +1,79 @@
 # Changelog - v3
 
+## [v3.15.0] (Aug 29, 2024)
+
+### Features
+- UIKit now supports form messages! Messages with `messageForm` will be displayed as form messages.
+  - Added `enableFormTypeMessage` global option
+    - How to use?
+    ```tsx
+    <App
+      appId={appId}
+      userId={userId}
+      uikitOptions={{
+        groupChannel: {
+          // Below turns on the form message feature. Default value is false.
+          enableFormTypeMessage: true,
+        }
+      }}
+    />
+    ```
+  - `MessageInput` is now being disabled if a channel has a form message that is not submitted and its `extendedMessagePayload['disable_chat_input']` value is true
+  - Added `FormMessageItemBody`, and `FormInput`
+- Added support for EmojiCategory. You can now filter emojis for different messages when adding Reactions to a message.
+- Added `filterEmojiCategoryIds` to `GroupChannelProvider` and `ThreadProvider`.
+  - How to Use
+  ```tsx
+  const filterEmojiCategoryIds = (message: SendableMessage) => {
+      if (message.customType === 'emoji_category_2') return [2];
+
+      return [1];
+  }
+
+  <GroupChannel 
+    filterEmojiCategoryIds={filterEmojiCategoryIds}
+  />
+  ```
+  - Note: You need to set your custom EmojiCategory using [Sendbird Platform API](https://sendbird.com/docs/chat/platform-api/v3/message/reactions-and-emojis/reactions-and-emojis-overview) in advance. 
+- Added sub-rendering props to the `ThreadListItem` and `ThreadListItemContent` components.
+  - Added props list: `renderSenderProfile`, `renderMessageBody`, `renderMessageHeader`, `renderEmojiReactions`, and `renderMobileMenuOnLongPress`.
+  - How to use:
+  ```tsx
+  const CustomThread = () => (
+    <ThreadProvider>
+      <ThreadUI
+        renderMessage={(props) => (
+          <ThreadListItem
+            {...props}
+            renderSenderProfile={() => <></>}
+          />
+        )}
+      />
+    </ThreadProvider>
+  );
+  ```
+
+- Exported subcomponents of `MessageContent`:
+  ```tsx
+  import { MessageBody, MessageHeader, MessageProfile } from '@sendbird/uikit-react/ui/MessageContent';
+  ```
+
+### Fixes
+- Fixed broken CSS in Thread:
+  - Style was not applied to `ParentMessageInfo` until the first message was received on the thread list.
+  - Scroll functionality was not working on the thread list.
+- Fixed an issue where HTML entities like `&sect` or `&lt` were automatically converted to symbols when pasted into a contentEditable element, ensuring they are now preserved as plain text.
+- Fixed an issue where the style was breaking in messages due to emoji reactions.
+- Fixed a bug where y-scroll was not working in `EditUserProfileUIView` when the app was displayed in horizontal view on mobile devices.
+- Fixed a bug where an offline banned user was not leaving the channel upon reconnecting in mobile view.
+- Fixed thumbnail image overflow in OG messages in open channels.
+- Fixed broken file viewer title in mobile view.
+- Fixed a bug where markdown messages were incorrectly displayed in channel previews.
+- Renamed the prop `onUserProfileMessage` to `onStartDirectMessage`.
+  - Deprecated the `onUserProfileMessage` prop in `SendbirdProvider` and `UserProfileProvider`.
+  - Deprecated the `onUserProfileMessage` interface in `SendbirdStateContext` and `UserProfileContext`.
+  - Use `onStartDirectMessage` instead.
+
 ## [v3.14.14] (Aug 1, 2024)
 
 ### Features
