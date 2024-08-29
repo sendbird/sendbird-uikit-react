@@ -17,6 +17,7 @@
   display: inline-flex;
   width: 100%;
 }
+
 .sendbird-voice-message-input__indicator__progress-bar {
   position: relative;
   display: inline-flex;
@@ -24,11 +25,13 @@
   border-radius: 28px;
   overflow: hidden;
 }
+
 .sendbird-voice-message-input__indicator__on-rec {
   position: absolute;
   top: 14px;
   right: 53px;
 }
+
 .sendbird-voice-message-input__indicator__playback-time {
   position: absolute;
   top: 10px;
@@ -45,6 +48,7 @@
   height: 34px;
   min-height: 34px;
 }
+
 .sendbird-voice-message-input__controler__main {
   position: relative;
   display: inline-flex;
@@ -56,6 +60,7 @@
   min-width: 34px;
   min-height: 34px;
   border-radius: 50%;
+
   @include themed() {
     background-color: t(bg-1);
   }
@@ -75,17 +80,21 @@
   min-width: 34px;
   min-height: 34px;
   border-radius: 50%;
+
   @include themed() {
     background-color: t(primary-3);
   }
+
   &:hover {
     cursor: pointer;
   }
 }
+
 .sendbird-voice-message-input__controler__submit.voice-message--disabled {
   @include themed() {
     background-color: t(bg-1);
   }
+
   &:hover {
     cursor: default;
   }
@@ -93,38 +102,75 @@
 
 // Flicker
 @keyframes flickerAnimation {
-  0%   { opacity:0; }
-  50%  { opacity:1; }
-  100% { opacity:0; }
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
+
 @-o-keyframes flickerAnimation {
-  0%   { opacity:0; }
-  50%  { opacity:1; }
-  100% { opacity:0; }
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
+
 @-moz-keyframes flickerAnimation {
-  0%   { opacity:0; }
-  50%  { opacity:1; }
-  100% { opacity:0; }
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
+
 @-webkit-keyframes flickerAnimation {
-  0%   { opacity:0; }
-  50%  { opacity:1; }
-  100% { opacity:0; }
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
+
 .sendbird-voice-message-input__indicator__on-rec {
   width: 12px;
   height: 12px;
   min-width: 12px;
   min-height: 12px;
   border-radius: 50%;
+  -webkit-animation: flickerAnimation 1s infinite;
+  -moz-animation: flickerAnimation 1s infinite;
+  -o-animation: flickerAnimation 1s infinite;
+  animation: flickerAnimation 1s infinite;
+
   @include themed() {
     background-color: t(error-3);
   }
-   -webkit-animation: flickerAnimation 1s infinite;
-   -moz-animation: flickerAnimation 1s infinite;
-   -o-animation: flickerAnimation 1s infinite;
-    animation: flickerAnimation 1s infinite;
 }
 
 // Progress bar
@@ -137,26 +183,31 @@
   position: relative;
   display: inline-block;
 }
+
 .sendbird-controler-icon.record-icon {
   width: 20px;
   height: 20px;
   min-width: 20px;
   min-height: 20px;
   border-radius: 50%;
+
   @include themed() {
     background-color: t(error-3);
   }
 }
+
 .sendbird-controler-icon.stop-icon {
   width: 14px;
   height: 14px;
   min-width: 14px;
   min-height: 14px;
   border-radius: 2px;
+
   @include themed() {
     background-color: t(on-bg-1);
   }
 }
+
 .sendbird-controler-icon.pause-icon {
   display: inline-flex;
   width: 100%;
@@ -166,10 +217,12 @@
   min-width: 13.75px;
   min-height: 13.75px;
 }
+
 .sendbird-controler-icon.pause-icon-inner {
   display: inline-flex;
   min-width: 4.38px;
   border-radius: 2px;
+
   @include themed() {
     background-color: t(on-bg-1);
   }

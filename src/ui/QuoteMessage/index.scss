@@ -5,8 +5,15 @@
   display: inline-flex;
   box-sizing: border-box;
   flex-direction: column;
-  &.incoming { align-items: flex-start; }
-  &.outgoing { align-items: flex-end; }
+
+  &.incoming {
+    align-items: flex-start;
+  }
+
+  &.outgoing {
+    align-items: flex-end;
+  }
+
   width: 100%;
   max-width: 400px;
 
@@ -18,11 +25,13 @@
     height: 16px;
     padding: 0px 12px;
     width: 100%;
+
     .sendbird-quote-message__replied-to__icon {
       position: relative;
       margin-bottom: 4px;
       margin-right: 4px;
     }
+
     .sendbird-quote-message__replied-to__text {
       position: relative;
       max-width: 360px;
@@ -36,12 +45,14 @@
       display: inline-flex;
       flex-direction: row;
       align-items: center;
+
       .sendbird-quote-message__replied-to__text__nickname {
         display: inline-block;
         max-width: 148px;
         overflow: hidden;
         text-overflow: ellipsis;
       }
+
       .sendbird-quote-message__replied-to__text__text {
         margin: 0px 4px;
       }
@@ -61,9 +72,11 @@
       padding: 8px 12px 16px 12px;
       border-radius: 16px;
       opacity: 0.5;
+
       @include themed() {
         background-color: t(bg-1);
       }
+
       .sendbird-quote-message__replied-message__text-message__word {
         position: relative;
         display: inline-flex;
@@ -72,6 +85,7 @@
         text-overflow: ellipsis;
       }
     }
+
     // thumbnail message
     .sendbird-quote-message__replied-message__thumbnail-message {
       position: relative;
@@ -79,9 +93,11 @@
       height: 108px;
       border-radius: 6.4px;
       overflow: hidden;
+
       @include themed() {
         background-color: t(bg-1);
       }
+
       .sendbird-quote-message__replied-message__thumbnail-message__video,
       .sendbird-quote-message__replied-message__thumbnail-message__image {
         position: absolute;
@@ -91,6 +107,7 @@
         height: 100%;
         opacity: 0.5;
       }
+
       .sendbird-quote-message__replied-message__thumbnail-message__placeholder {
         position: absolute;
         display: inline-flex;
@@ -98,6 +115,7 @@
         height: 100%;
         justify-content: center;
         align-items: center;
+
         .sendbird-quote-message__replied-message__thumbnail-message__placeholder__icon {
           display: inline-flex;
           justify-content: center;
@@ -107,6 +125,7 @@
           border-radius: 50%;
         }
       }
+
       .sendbird-quote-message__replied-message__thumbnail-message__cover {
         position: absolute;
         display: inline-flex;
@@ -115,9 +134,11 @@
         justify-content: center;
         align-items: center;
         top: 0px;
+
         @include themed() {
           background-color: rgba(256, 256, 256, 0.4);
         }
+
         .sendbird-quote-message__replied-message__thumbnail-message__cover__icon {
           position: relative;
           display: inline-flex;
@@ -126,12 +147,14 @@
           width: 22px;
           height: 22px;
           border-radius: 50%;
+
           @include themed() {
             background-color: rgba(256, 256, 256, 1);
           }
         }
       }
     }
+
     // file message
     .sendbird-quote-message__replied-message__file-message {
       position: relative;
@@ -140,16 +163,18 @@
       font-size: 12px;
       padding: 8px 12px 16px 12px;
       border-radius: 16px;
+
       @include themed() {
         background-color: t(bg-1);
       }
+
       opacity: 0.5;
+
       .sendbird-quote-message__replied-message__file-message__type-icon {
         margin-right: 2px;
       }
-      .sendbird-quote-message__replied-message__file-message__file-name {
 
-      }
+      .sendbird-quote-message__replied-message__file-message__file-name {}
     }
   }
 }
@@ -157,6 +182,7 @@
 .sendbird-quote-message:hover {
   cursor: pointer;
 }
+
 .sendbird-quote-message.unavailable:hover {
   cursor: default;
 }

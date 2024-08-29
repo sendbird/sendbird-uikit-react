@@ -4,6 +4,7 @@
   &:hover {
     cursor: pointer;
   }
+
   display: inline-block;
   font-family: var(--sendbird-font-family-default);
   font-size: 14px;
@@ -16,14 +17,17 @@
   width: fit-content;
   max-width: 100%;
   height: 16px;
+
   @include themed() {
     color: t(on-bg-1);
   }
+
   &.reverse {
     @include themed() {
       color: t(on-content-1);
     }
   }
+
   &.purple {
     font-family: Roboto;
     font-size: 18px;
@@ -32,6 +36,7 @@
     font-style: normal;
     line-height: normal;
     letter-spacing: normal;
+
     @include themed() {
       color: t(primary-3);
     }

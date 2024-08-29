@@ -38,10 +38,10 @@
 .sendbird-input-toggle-button__inner-dot {
   position: absolute;
   border-radius: 50%;
+  animation-iteration-count: 1;
   @include themed() {
     background-color: t(bg-0);
   }
-  animation-iteration-count: 1;
 }
 
 /* Manage animation and position by status */
