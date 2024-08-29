@@ -17,6 +17,7 @@ import threadReducer from './dux/reducer';
 import { ThreadContextActionTypes } from './dux/actionTypes';
 import threadInitialState, { ThreadContextInitialState } from './dux/initialState';
 
+import type { OnBeforeDownloadFileMessageType } from '../../GroupChannel/context/GroupChannelProvider';
 import useGetChannel from './hooks/useGetChannel';
 import useGetAllEmoji from './hooks/useGetAllEmoji';
 import useGetParentMessage from './hooks/useGetParentMessage';
@@ -32,8 +33,8 @@ import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { PublishingModuleType, useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 import { SendableMessageType } from '../../../utils';
 import { useThreadFetchers } from './hooks/useThreadFetchers';
-import type { OnBeforeDownloadFileMessageType } from '../../GroupChannel/context/GroupChannelProvider';
 import { useMessageLayoutDirection } from '../../../hooks/useHTMLTextDirection';
+import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../types';
 
 export interface ThreadProviderProps extends
   Pick<UserProfileProviderProps, 'disableUserProfile' | 'renderUserProfile'> {
@@ -168,8 +169,9 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
   useMessageLayoutDirection(
     htmlTextDirection,
     forceLeftToRightMessageLayout,
-    // we're assuming that if the thread message list is empty, it's in the loading state
-    allThreadMessages.length === 0,
+    channelState === ChannelStateTypes.LOADING
+    || threadListState === ThreadListStateTypes.LOADING
+    || parentMessageState === ParentMessageStateTypes.LOADING,
   );
 
   const toggleReaction = useToggleReactionCallback({ currentChannel }, { logger });

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef, useEffect, useLayoutEffect, ReactNode } from 'react';
+import React, { useMemo, useState, useRef, useEffect, useLayoutEffect } from 'react';
 import format from 'date-fns/format';
 import type { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
 
@@ -21,10 +21,9 @@ import { SendableMessageType } from '../../../../utils';
 import { User } from '@sendbird/chat';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
 import { classnames } from '../../../../utils/utils';
-import type { MessageMenuProps } from '../../../../ui/MessageMenu';
-import type { MessageEmojiMenuProps } from '../../../../ui/MessageItemReactionMenu';
+import { MessageComponentRenderers } from '../../../../ui/MessageContent';
 
-export interface ThreadListItemProps {
+export interface ThreadListItemProps extends MessageComponentRenderers {
   className?: string;
   message: SendableMessageType;
   chainTop?: boolean;
@@ -32,21 +31,18 @@ export interface ThreadListItemProps {
   hasSeparator?: boolean;
   renderCustomSeparator?: (props: { message: SendableMessageType }) => React.ReactElement;
   handleScroll?: () => void;
-  renderEmojiMenu?: (props: MessageEmojiMenuProps) => ReactNode;
-  renderMessageMenu?: (props: MessageMenuProps) => ReactNode;
 }
 
-export default function ThreadListItem({
-  className,
-  message,
-  chainTop,
-  chainBottom,
-  hasSeparator,
-  renderCustomSeparator,
-  handleScroll,
-  renderEmojiMenu,
-  renderMessageMenu,
-}: ThreadListItemProps): React.ReactElement {
+export default function ThreadListItem(props: ThreadListItemProps): React.ReactElement {
+  const {
+    className,
+    message,
+    chainTop,
+    chainBottom,
+    hasSeparator,
+    renderCustomSeparator,
+    handleScroll,
+  } = props;
   const { stores, config } = useSendbirdStateContext();
   const { isOnline, userMention, logger, groupChannel } = config;
   const userId = stores?.userStore?.user?.userId;
@@ -237,13 +233,13 @@ export default function ThreadListItem({
         ))
       }
       <ThreadListItemContent
+        {...props}
         userId={userId}
         channel={currentChannel}
         message={message}
         chainTop={chainTop}
         chainBottom={chainBottom}
         isReactionEnabled={isReactionEnabled}
-        isMentionEnabled={isMentionEnabled}
         disableQuoteMessage
         replyType={replyType}
         nicknamesMap={nicknamesMap}
@@ -253,8 +249,6 @@ export default function ThreadListItem({
         showFileViewer={setShowFileViewer}
         toggleReaction={toggleReaction}
         showEdit={setShowEdit}
-        renderEmojiMenu={renderEmojiMenu}
-        renderMessageMenu={renderMessageMenu}
       />
       {/* modal */}
       {showRemove && (

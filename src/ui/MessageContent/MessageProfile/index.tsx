@@ -1,7 +1,4 @@
-import React, {
-  ReactElement,
-  useRef,
-} from 'react';
+import React, { ReactElement, useRef } from 'react';
 import '../index.scss';
 import { isSendableMessage } from '../../../utils';
 import ContextMenu, { MenuItems } from '../../ContextMenu';
@@ -12,21 +9,24 @@ import { useUserProfileContext } from '../../../lib/UserProfileContext';
 import { classnames } from '../../../utils/utils';
 
 export interface MessageProfileProps extends MessageContentProps {
+  className?: string;
   isByMe?: boolean;
   displayThreadReplies?: boolean;
   bottom?: string
 }
 
-export const MessageProfile = (props: MessageProfileProps) => {
-  const {
-    message,
-    channel,
-    userId,
-    chainBottom = false,
-    isByMe,
-    displayThreadReplies,
-    bottom,
-  } = props;
+export function MessageProfile({
+  // Internal props
+  className = '',
+  isByMe,
+  displayThreadReplies,
+  bottom,
+  // MessageContentProps
+  message,
+  channel,
+  userId,
+  chainBottom = false,
+}: MessageProfileProps) {
   const avatarRef = useRef(null);
 
   const { disableUserProfile, renderUserProfile } = useUserProfileContext();
@@ -39,11 +39,9 @@ export const MessageProfile = (props: MessageProfileProps) => {
     <ContextMenu
       menuTrigger={(toggleDropdown: () => void): ReactElement => (
         <Avatar
-          className={classnames('sendbird-message-content__left__avatar', displayThreadReplies && 'use-thread-replies')}
+          className={classnames(className, displayThreadReplies && 'use-thread-replies')}
           src={
-            channel?.members?.find(
-              (member) => member?.userId === message.sender.userId,
-            )?.profileUrl
+            channel?.members?.find((member) => member?.userId === message.sender.userId)?.profileUrl
             || message.sender.profileUrl
             || ''
           }
@@ -82,6 +80,6 @@ export const MessageProfile = (props: MessageProfileProps) => {
       )}
     />
   );
-};
+}
 
 export default MessageProfile;
