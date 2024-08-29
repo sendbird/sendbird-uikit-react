@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { ReactElement, useRef } from 'react';
+import React, { ReactElement, useMemo, useRef } from 'react';
 import type { Reaction } from '@sendbird/chat/message';
 import type { Emoji, EmojiCategory, EmojiContainer } from '@sendbird/chat';
 
@@ -38,6 +38,9 @@ export function MessageEmojiMenu({
 }: MessageEmojiMenuProps): ReactElement | null {
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
+  const filteredEmojis = useMemo(() => {
+    return getEmojiListByCategoryIds(emojiContainer, filterEmojiCategoryIds?.(message));
+  }, [emojiContainer, filterEmojiCategoryIds]);
 
   if (isPendingMessage(message) || isFailedMessage(message)) {
     return null;
@@ -70,6 +73,8 @@ export function MessageEmojiMenu({
           </IconButton>
         )}
         menuItems={(closeDropdown: () => void): ReactElement => {
+          if (filteredEmojis.length === 0) return null;
+
           return (
             <EmojiListItems
               id={getObservingId(message.messageId)}
@@ -78,39 +83,39 @@ export function MessageEmojiMenu({
               closeDropdown={closeDropdown}
               spaceFromTrigger={spaceFromTrigger}
             >
-              {emojiContainer && getEmojiListByCategoryIds(emojiContainer, filterEmojiCategoryIds?.(message)).map((emoji: Emoji): ReactElement => {
+              {filteredEmojis.map((emoji: Emoji): ReactElement => {
                 const isReacted: boolean = message?.reactions
                   ?.find((reaction: Reaction) => reaction.key === emoji.key)
                   ?.userIds
                   ?.some((reactorId: string) => reactorId === userId) || false;
                 return (
-                  <ReactionButton
-                    key={emoji.key}
-                    width="36px"
-                    height="36px"
-                    selected={isReacted}
-                    onClick={() => {
-                      closeDropdown();
-                      toggleReaction?.(message, emoji.key, isReacted);
-                    }}
-                    testID={`ui_emoji_reactions_menu_${emoji.key}`}
-                  >
-                    <ImageRenderer
-                      url={emoji.url}
-                      width="28px"
-                      height="28px"
-                      placeHolder={({ style }) => (
-                        <div style={style}>
-                          <Icon
-                            type={IconTypes.QUESTION}
-                            fillColor={IconColors.ON_BACKGROUND_3}
-                            width="28px"
-                            height="28px"
-                          />
-                        </div>
-                      )}
-                    />
-                  </ReactionButton>
+                    <ReactionButton
+                      key={emoji.key}
+                      width="36px"
+                      height="36px"
+                      selected={isReacted}
+                      onClick={() => {
+                        closeDropdown();
+                        toggleReaction?.(message, emoji.key, isReacted);
+                      }}
+                      testID={`ui_emoji_reactions_menu_${emoji.key}`}
+                    >
+                      <ImageRenderer
+                        url={emoji.url}
+                        width="28px"
+                        height="28px"
+                        placeHolder={({ style }) => (
+                          <div style={style}>
+                            <Icon
+                              type={IconTypes.QUESTION}
+                              fillColor={IconColors.ON_BACKGROUND_3}
+                              width="28px"
+                              height="28px"
+                            />
+                          </div>
+                        )}
+                      />
+                    </ReactionButton>
                 );
               })}
             </EmojiListItems>
