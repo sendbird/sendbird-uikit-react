@@ -3,20 +3,20 @@
 .sendbird-theme--light {
   --form__chip__color__selected-focus: var(--sendbird-light-primary-300);
   --form__chip__color__submitted-default: var(--sendbird-light-onlight-02);
-  
+
   --form__chip__bg-color__default: var(--sendbird-light-background-50);
   --form__chip__bg-color__selected: var(--sendbird-light-primary-100);
   --form__chip__bg-color__selected-hover: var(--sendbird-light-background-50);
   --form__chip__bg-color__selected-focus: var(--sendbird-light-background-50);
   --form__chip__bg-color__submitted-default: var(--sendbird-dark-ondark-02);
   --form__chip__bg-color__submitted-selected: var(--sendbird-dark-ondark-02);
-  
+
   --form__chip__bd-color__default-focus: var(--sendbird-light-primary-300);
   --form__chip__bd-color__selected-focus: var(--sendbird-light-primary-300);
-  
+
   --form__submitted-input-box__color: var(--sendbird-dark-onlight-01);
   --form__submitted-input-box__bg-color: var(--sendbird-dark-ondark-02);
-  
+
   --form__submit-button__color__disabled: var(--sendbird-light-background-50);
   --form__submit-button__bg-color__disabled: var(--sendbird-light-onlight-04);
 }
@@ -24,35 +24,38 @@
 .sendbird-theme--dark {
   --form__chip__color__selected-focus: var(--sendbird-dark-ondark-02);
   --form__chip__color__submitted-default: var(--sendbird-dark-ondark-04);
-  
+
   --form__chip__bg-color__default: var(--sendbird-light-onlight-03);
   --form__chip__bg-color__selected: var(--sendbird-dark-background-600);
   --form__chip__bg-color__selected-hover: var(--sendbird-light-onlight-03);
   --form__chip__bg-color__selected-focus: var(--sendbird-light-onlight-03);
   --form__chip__bg-color__submitted-default: var(--sendbird-light-onlight-04);
   --form__chip__bg-color__submitted-selected: var(--sendbird-light-onlight-04);
-  
+
   --form__chip__bd-color__default-focus: var(--sendbird-dark-ondark-02);
   --form__chip__bd-color__selected-focus: var(--sendbird-dark-ondark-02);
-  
+
   --form__submitted-input-box__color: var(--sendbird-dark-ondark-01);
   --form__submitted-input-box__bg-color: var(--sendbird-light-onlight-04);
-  
+
   --form__submit-button__color__disabled: var(--sendbird-light-onlight-01);
   --form__submit-button__bg-color__disabled: var(--sendbird-dark-ondark-04);
 }
 
 .sendbird-form-message__submit-button {
   width: 100%;
-  
+
   &.sendbird-button__disabled {
     cursor: not-allowed;
+
     &.sendbird-button--primary .sendbird-button__text {
       color: var(--form__submit-button__color__disabled);
     }
+
     @include themed() {
       background-color: var(--form__submit-button__bg-color__disabled);
       border: none;
+
       &:hover {
         background-color: var(--form__submit-button__bg-color__disabled);
       }
@@ -90,14 +93,16 @@
 
 .sendbird-form-message__input__textarea {
   display: block; // Without this, parent height does not fit this height.
+
+  resize: none;
+  height: 96px !important;
+  padding: 7px 12px !important;
+
   ::placeholder {
     @include themed() {
       color: t(inverse-on-content-3);
     }
   }
-  resize: none;
-  height: 96px !important;
-  padding: 7px 12px !important;
 }
 
 .sendbird-form-message__error-label {
@@ -117,12 +122,14 @@
   padding: 16px 12px;
   max-width: 100%;
   box-sizing: border-box;
-  @include mobile() {
-    max-width: calc(100vw - 164px); // max-width of .sendbird-message-content__middle minus side padding (12px)
-  }
+
   min-width: calc(244px - 24px);
   border-radius: 16px;
   overflow: hidden;
+
+  @include mobile() {
+    max-width: calc(100vw - 164px); // max-width of .sendbird-message-content__middle minus side padding (12px)
+  }
 }
 
 .sendbird-form-message__input__chip-container {
@@ -163,6 +170,7 @@
   white-space: pre-wrap;
   padding: 8px 12px;
   min-height: 20px;
+
   &.textarea {
     padding: 9px 12px;
     min-height: 78px;
@@ -187,17 +195,19 @@
   justify-content: center;
   align-items: center;
   max-width: calc(100% - 32px);
-  
+
   &.default {
     @include themed() {
       color: t(on-bg-2);
       border: 1px solid t(on-bg-4);
       cursor: pointer;
       background-color: var(--form__chip__bg-color__default);
+
       &:hover {
         color: t(primary--3-2);
         border: 1px solid t(primary--3-2);
       }
+
       &:focus {
         color: t(on-bg-2);
         border: 1px solid var(--form__chip__bd-color__default-focus);
@@ -206,17 +216,20 @@
       }
     }
   }
+
   &.selected {
     @include themed() {
       color: t(primary--3-2);
       background-color: var(--form__chip__bg-color__selected);
       border: 1px solid t(primary--3-2);
       cursor: pointer;
+
       &:hover {
         color: t(primary--3-2);
         background-color: var(--form__chip__bg-color__selected-hover);
         border: 1px solid t(primary--3-2);
       }
+
       &:focus {
         color: var(--form__chip__color__selected-focus);
         background-color: var(--form__chip__bg-color__selected-focus);
@@ -226,19 +239,23 @@
       }
     }
   }
+
   &.submittedDefault {
     border: none;
     cursor: default;
     padding: 6px 12px;
+
     @include themed() {
       color: var(--form__chip__color__submitted-default);
       background-color: var(--form__chip__bg-color__submitted-default);
     }
   }
+
   &.submittedSelected {
     border: none;
     cursor: default;
     padding: 6px 12px;
+
     @include themed() {
       color: t(on-bg-1);
       background-color: var(--form__chip__bg-color__submitted-selected);

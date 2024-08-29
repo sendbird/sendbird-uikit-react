@@ -3,10 +3,10 @@
 .sendbird-word {
   white-space: break-spaces;
   .sendbird-word__mention {
+    display: inline-block;
     &:hover {
       cursor: pointer;
     }
-    display: inline-block;
     &.sendbird-word__mention--me {
       @include themed() {
         background-color: t(highlight--1);

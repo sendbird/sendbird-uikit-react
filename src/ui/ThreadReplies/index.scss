@@ -14,15 +14,16 @@
   gap: 4px;
 
   border-radius: 16px;
+
   @include themed() {
     background-color: t(bg-0);
   }
 
   &:hover {
+    cursor: pointer;
     @include themed() {
       background-color: t(bg-1);
     }
-    cursor: pointer;
   }
 }
 
@@ -35,6 +36,7 @@
   display: inline-flex;
   flex-direction: row;
 }
+
 .sendbird-ui-thread-replies__user-profiles__avatar {
   position: relative;
   width: 20px;
@@ -44,6 +46,7 @@
   justify-content: center;
   align-items: center;
 }
+
 .sendbird-ui-thread-replies__user-profiles__avatar__image {
   position: absolute;
   top: 0px;
@@ -51,6 +54,7 @@
   width: 20px;
   height: 20px;
 }
+
 .sendbird-ui-thread-replies__user-profiles__avatar__cover {
   position: absolute;
   top: 0px;
@@ -61,6 +65,7 @@
   border-radius: 50%;
   background-color: var(--sendbird-light-overlay-01);
 }
+
 .sendbird-ui-thread-replies__user-profiles__avatar__plus {
   position: absolute;
   top: 0px;
@@ -85,6 +90,7 @@
 
   white-space: nowrap;
 }
+
 .sendbird-ui-thread-replies__icon {
   position: relative;
   display: inline-flex;

@@ -80,9 +80,6 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        &.frozen {
-          max-width: calc(100% - 20px);
-        }
         box-sizing: border-box;
 
         overflow-x: hidden;
@@ -90,6 +87,9 @@
         word-break: keep-all;
         @include mobile() {
           overflow-y: hidden;
+        }
+        &.frozen {
+          max-width: calc(100% - 20px);
         }
       }
 
