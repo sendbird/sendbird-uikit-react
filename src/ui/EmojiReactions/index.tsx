@@ -13,7 +13,6 @@ import { Nullable, SpaceFromTriggerType } from '../../types';
 
 import {
   getClassName,
-  getEmojiListAll,
   getEmojiListByCategoryIds,
   getEmojiMapAll,
   SendableMessageType,
@@ -125,7 +124,7 @@ const EmojiReactions = ({
               closeDropdown={closeDropdown}
               spaceFromTrigger={spaceFromTrigger}
             >
-              {getEmojiListAll(emojiContainer).map((emoji: Emoji): ReactElement => {
+              {getEmojiListByCategoryIds(emojiContainer, filterEmojiCategoryIds?.(message)).map((emoji: Emoji): ReactElement => {
                 const isReacted: boolean = (message?.reactions
                   ?.find((reaction: Reaction): boolean => reaction.key === emoji.key)?.userIds
                   ?.some((reactorId: string): boolean => reactorId === userId)) || false;
