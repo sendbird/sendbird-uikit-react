@@ -1,5 +1,10 @@
 # Changelog - v3
 
+## [v3.15.1] (Aug 29, 2024)
+
+### Fixes
+- Fixed unread count badge position on the ChannelPreview item component.
+
 ## [v3.15.0] (Aug 29, 2024)
 
 ### Features
