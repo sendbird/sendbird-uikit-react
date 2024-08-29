@@ -1,7 +1,7 @@
 import './mobile.scss';
 
 import React, { useState, useEffect } from 'react';
-import { BaseMessage, UserMessage } from '@sendbird/chat/message';
+import { BaseMessage } from '@sendbird/chat/message';
 import { GroupChannelHandler, GroupChannel as GroupChannelClass } from '@sendbird/chat/groupChannel';
 
 import type { MobileLayoutProps } from './types';
@@ -163,11 +163,6 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
         setThreadTargetMessage(message);
       }
     },
-    filterEmojiCategoryIds: (message) => {
-      if (message instanceof UserMessage && message.message.includes('category')) {
-        return [2];
-      }
-    },
   };
 
   return (
@@ -227,7 +222,6 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
                 setHighlightedMessage?.(messageId);
               });
             }}
-            filterEmojiCategoryIds={channelProps.filterEmojiCategoryIds}
           />
         </div>
       )}

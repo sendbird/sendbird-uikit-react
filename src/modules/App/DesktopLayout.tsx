@@ -14,7 +14,6 @@ import Thread from '../Thread';
 import { SendableMessageType } from '../../utils';
 import { classnames } from '../../utils/utils';
 import { APP_LAYOUT_ROOT } from './const';
-import { UserMessage } from '@sendbird/chat/message';
 
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayoutProps) => {
   const {
@@ -108,11 +107,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
     // for GroupChannel
     animatedMessageId: highlightedMessage,
     onReplyInThreadClick: onClickThreadReply,
-    filterEmojiCategoryIds: (message) => {
-      if (message instanceof UserMessage && message.sender.userId === 'junyoung') {
-        return [2];
-      }
-    },
   };
 
   return (
@@ -181,7 +175,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
               setHighlightedMessage?.(message?.messageId);
             }, 500);
           }}
-          filterEmojiCategoryIds={channelProps.filterEmojiCategoryIds}
         />
       )}
     </div>
