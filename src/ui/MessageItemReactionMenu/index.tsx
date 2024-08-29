@@ -89,33 +89,33 @@ export function MessageEmojiMenu({
                   ?.userIds
                   ?.some((reactorId: string) => reactorId === userId) || false;
                 return (
-                    <ReactionButton
-                      key={emoji.key}
-                      width="36px"
-                      height="36px"
-                      selected={isReacted}
-                      onClick={() => {
-                        closeDropdown();
-                        toggleReaction?.(message, emoji.key, isReacted);
-                      }}
-                      testID={`ui_emoji_reactions_menu_${emoji.key}`}
-                    >
-                      <ImageRenderer
-                        url={emoji.url}
-                        width="28px"
-                        height="28px"
-                        placeHolder={({ style }) => (
-                          <div style={style}>
-                            <Icon
-                              type={IconTypes.QUESTION}
-                              fillColor={IconColors.ON_BACKGROUND_3}
-                              width="28px"
-                              height="28px"
-                            />
-                          </div>
-                        )}
-                      />
-                    </ReactionButton>
+                  <ReactionButton
+                    key={emoji.key}
+                    width="36px"
+                    height="36px"
+                    selected={isReacted}
+                    onClick={() => {
+                      closeDropdown();
+                      toggleReaction?.(message, emoji.key, isReacted);
+                    }}
+                    testID={`ui_emoji_reactions_menu_${emoji.key}`}
+                  >
+                    <ImageRenderer
+                      url={emoji.url}
+                      width="28px"
+                      height="28px"
+                      placeHolder={({ style }) => (
+                        <div style={style}>
+                          <Icon
+                            type={IconTypes.QUESTION}
+                            fillColor={IconColors.ON_BACKGROUND_3}
+                            width="28px"
+                            height="28px"
+                          />
+                        </div>
+                      )}
+                    />
+                  </ReactionButton>
                 );
               })}
             </EmojiListItems>
