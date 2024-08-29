@@ -109,7 +109,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
       document.getElementById(EMOJI_MENU_ROOT_ID),
     ],
   );
-  const { deleteMessage, onBeforeDownloadFileMessage } = useThreadContext();
+  const { deleteMessage, onBeforeDownloadFileMessage, filterEmojiCategoryIds } = useThreadContext();
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
@@ -185,6 +185,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
                   userId: userId,
                   emojiContainer: emojiContainer,
                   toggleReaction: toggleReaction,
+                  filterEmojiCategoryIds,
                 })}
               </>
             )}
@@ -260,6 +261,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
                   memberNicknamesMap: nicknamesMap,
                   toggleReaction,
                   onPressUserProfile: onPressUserProfileHandler,
+                  filterEmojiCategoryIds,
                 })
               }
             </div>
@@ -287,6 +289,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
                 userId: userId,
                 emojiContainer: emojiContainer,
                 toggleReaction: toggleReaction,
+                filterEmojiCategoryIds,
               })
             )}
             {renderMessageMenu({

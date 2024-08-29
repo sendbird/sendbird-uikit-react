@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import type { SendbirdError, User } from '@sendbird/chat';
+import type { EmojiCategory, SendbirdError, User } from '@sendbird/chat';
 import {
   type FileMessage,
   FileMessageCreateParams,
@@ -58,6 +58,7 @@ interface ContextBaseType extends
 
   // Custom
   messageListQueryParams?: MessageListQueryParamsType;
+  filterEmojiCategoryIds?: (message: SendableMessageType) => EmojiCategory['id'][];
 
   // Handlers
   onBeforeSendUserMessage?: OnBeforeHandler<UserMessageCreateParams>;
@@ -136,6 +137,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     onSearchClick,
     onQuoteMessageClick,
     renderUserMentionItem,
+    filterEmojiCategoryIds,
   } = props;
 
   // Global context
@@ -358,6 +360,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
         onQuoteMessageClick,
         // ## Custom render
         renderUserMentionItem,
+        filterEmojiCategoryIds,
 
         // Internal Interface
         currentChannel,

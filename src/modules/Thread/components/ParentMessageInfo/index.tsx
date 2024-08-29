@@ -61,6 +61,7 @@ export default function ParentMessageInfo({
     isMuted,
     isChannelFrozen,
     onBeforeDownloadFileMessage,
+    filterEmojiCategoryIds,
   } = useThreadContext();
   const { isMobile } = useMediaQueryContext();
 
@@ -336,6 +337,7 @@ export default function ParentMessageInfo({
               userId: userId,
               emojiContainer: emojiContainer,
               toggleReaction: toggleReaction,
+              filterEmojiCategoryIds,
             })
           )}
         </div>

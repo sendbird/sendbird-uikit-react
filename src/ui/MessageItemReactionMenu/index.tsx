@@ -1,14 +1,20 @@
 import './index.scss';
-import React, { ReactElement, useRef } from 'react';
+import React, { ReactElement, useMemo, useRef } from 'react';
 import type { Reaction } from '@sendbird/chat/message';
-import type { Emoji, EmojiContainer } from '@sendbird/chat';
+import type { Emoji, EmojiCategory, EmojiContainer } from '@sendbird/chat';
 
 import ContextMenu, { EmojiListItems, getObservingId } from '../ContextMenu';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import IconButton from '../IconButton';
 import ImageRenderer from '../ImageRenderer';
 import ReactionButton from '../ReactionButton';
-import { getClassName, getEmojiListAll, isPendingMessage, isFailedMessage, SendableMessageType } from '../../utils';
+import {
+  getClassName,
+  isPendingMessage,
+  isFailedMessage,
+  SendableMessageType,
+  getEmojiListByCategoryIds,
+} from '../../utils';
 import { SpaceFromTriggerType } from '../../types';
 
 export interface MessageEmojiMenuProps {
@@ -17,6 +23,7 @@ export interface MessageEmojiMenuProps {
   userId: string;
   spaceFromTrigger?: SpaceFromTriggerType;
   emojiContainer?: EmojiContainer;
+  filterEmojiCategoryIds?: (message: SendableMessageType) => EmojiCategory['id'][];
   toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
 }
 
@@ -26,10 +33,14 @@ export function MessageEmojiMenu({
   userId,
   spaceFromTrigger = { x: 0, y: 0 },
   emojiContainer,
+  filterEmojiCategoryIds,
   toggleReaction,
 }: MessageEmojiMenuProps): ReactElement | null {
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
+  const filteredEmojis = useMemo(() => {
+    return getEmojiListByCategoryIds(emojiContainer, filterEmojiCategoryIds?.(message));
+  }, [emojiContainer, filterEmojiCategoryIds]);
 
   if (isPendingMessage(message) || isFailedMessage(message)) {
     return null;
@@ -62,6 +73,8 @@ export function MessageEmojiMenu({
           </IconButton>
         )}
         menuItems={(closeDropdown: () => void): ReactElement => {
+          if (filteredEmojis.length === 0) return null;
+
           return (
             <EmojiListItems
               id={getObservingId(message.messageId)}
@@ -70,7 +83,7 @@ export function MessageEmojiMenu({
               closeDropdown={closeDropdown}
               spaceFromTrigger={spaceFromTrigger}
             >
-              {emojiContainer && getEmojiListAll(emojiContainer).map((emoji: Emoji): ReactElement => {
+              {filteredEmojis.map((emoji: Emoji): ReactElement => {
                 const isReacted: boolean = message?.reactions
                   ?.find((reaction: Reaction) => reaction.key === emoji.key)
                   ?.userIds

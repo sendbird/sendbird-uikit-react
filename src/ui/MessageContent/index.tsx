@@ -28,7 +28,7 @@ import {
 import { LocalizationContext, useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { EmojiContainer } from '@sendbird/chat';
+import { type EmojiCategory, EmojiContainer } from '@sendbird/chat';
 import { Feedback, FeedbackRating } from '@sendbird/chat/message';
 import useLongPress from '../../hooks/useLongPress';
 import MobileMenu from '../MobileMenu';
@@ -92,6 +92,7 @@ export interface MessageComponentRenderers {
   renderEmojiMenu?: (props: MessageEmojiMenuProps) => ReactNode;
   renderEmojiReactions?: (props: EmojiReactionsProps) => ReactNode;
   renderMobileMenuOnLongPress?: (props: MobileBottomSheetProps) => React.ReactElement;
+  filterEmojiCategoryIds?: (message: SendableMessageType) => EmojiCategory['id'][];
 }
 
 export function MessageContent(props: MessageContentProps): ReactElement {
@@ -122,6 +123,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     onQuoteMessageClick,
     onMessageHeightChange,
     onBeforeDownloadFileMessage,
+    filterEmojiCategoryIds,
   } = props;
 
   // Public props for customization
@@ -320,6 +322,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
                 userId,
                 emojiContainer,
                 toggleReaction,
+                filterEmojiCategoryIds,
               })
             )}
           </div>
@@ -427,6 +430,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
                   memberNicknamesMap: nicknamesMap ?? new Map(),
                   toggleReaction,
                   onPressUserProfile: onPressUserProfileHandler,
+                  filterEmojiCategoryIds,
                 })
               }
             </div>
@@ -541,6 +545,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
                 userId,
                 emojiContainer,
                 toggleReaction,
+                filterEmojiCategoryIds,
               })
             )}
             {renderMessageMenu({
