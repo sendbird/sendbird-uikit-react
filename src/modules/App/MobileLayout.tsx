@@ -1,7 +1,7 @@
 import './mobile.scss';
 
 import React, { useState, useEffect } from 'react';
-import { BaseMessage } from '@sendbird/chat/message';
+import type { BaseMessage } from '@sendbird/chat/message';
 import { GroupChannelHandler, GroupChannel as GroupChannelClass } from '@sendbird/chat/groupChannel';
 
 import type { MobileLayoutProps } from './types';
