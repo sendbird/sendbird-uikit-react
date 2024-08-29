@@ -6,6 +6,9 @@
   box-sizing: border-box;
   flex-direction: column;
 
+  width: 100%;
+  max-width: 400px;
+
   &.incoming {
     align-items: flex-start;
   }
@@ -13,9 +16,6 @@
   &.outgoing {
     align-items: flex-end;
   }
-
-  width: 100%;
-  max-width: 400px;
 
   .sendbird-quote-message__replied-to {
     position: relative;
@@ -164,11 +164,11 @@
       padding: 8px 12px 16px 12px;
       border-radius: 16px;
 
+      opacity: 0.5;
+
       @include themed() {
         background-color: t(bg-1);
       }
-
-      opacity: 0.5;
 
       .sendbird-quote-message__replied-message__file-message__type-icon {
         margin-right: 2px;

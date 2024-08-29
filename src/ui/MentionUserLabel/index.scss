@@ -1,10 +1,6 @@
 @import '../../styles/variables';
 
 .sendbird-mention-user-label {
-  &:hover {
-    cursor: pointer;
-  }
-
   display: inline-block;
   font-family: var(--sendbird-font-family-default);
   font-size: 14px;
@@ -20,6 +16,10 @@
 
   @include themed() {
     color: t(on-bg-1);
+  }
+
+  &:hover {
+    cursor: pointer;
   }
 
   &.reverse {

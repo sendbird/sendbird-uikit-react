@@ -20,11 +20,10 @@
   }
 
   &:hover {
+    cursor: pointer;
     @include themed() {
       background-color: t(bg-1);
     }
-
-    cursor: pointer;
   }
 }
 

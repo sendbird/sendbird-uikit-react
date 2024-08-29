@@ -94,15 +94,15 @@
 .sendbird-form-message__input__textarea {
   display: block; // Without this, parent height does not fit this height.
 
+  resize: none;
+  height: 96px !important;
+  padding: 7px 12px !important;
+
   ::placeholder {
     @include themed() {
       color: t(inverse-on-content-3);
     }
   }
-
-  resize: none;
-  height: 96px !important;
-  padding: 7px 12px !important;
 }
 
 .sendbird-form-message__error-label {
@@ -123,13 +123,13 @@
   max-width: 100%;
   box-sizing: border-box;
 
-  @include mobile() {
-    max-width: calc(100vw - 164px); // max-width of .sendbird-message-content__middle minus side padding (12px)
-  }
-
   min-width: calc(244px - 24px);
   border-radius: 16px;
   overflow: hidden;
+
+  @include mobile() {
+    max-width: calc(100vw - 164px); // max-width of .sendbird-message-content__middle minus side padding (12px)
+  }
 }
 
 .sendbird-form-message__input__chip-container {

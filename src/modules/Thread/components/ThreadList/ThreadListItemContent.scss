@@ -104,12 +104,12 @@
     display: inline-flex;
     width: 50px;
 
+    margin-left: 4px;
+    padding-top: 18px;
+
     &.use-reactions {
       width: 70px;
     }
-
-    margin-left: 4px;
-    padding-top: 18px;
 
     &.chain-top {
       padding-top: 2px;
