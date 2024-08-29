@@ -4,7 +4,7 @@ import {
   CoreMessageType,
   getUIKitMessageType, getUIKitMessageTypes, isTemplateMessage, isMultipleFilesMessage,
   isOGMessage, isSendableMessage,
-  isTextMessage, isThumbnailMessage, isVoiceMessage,
+  isTextMessage, isThumbnailMessage, isVoiceMessage, isFormMessage,
 } from '../../../utils';
 import { BaseMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 import OGMessageItemBody from '../../OGMessageItemBody';
@@ -22,6 +22,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { match } from 'ts-pattern';
 import TemplateMessageItemBody from '../../TemplateMessageItemBody';
 import type { OnBeforeDownloadFileMessageType } from '../../../modules/GroupChannel/context/GroupChannelProvider';
+import FormMessageItemBody from '../../FormMessageItemBody';
 
 export type CustomSubcomponentsProps = Record<
   'ThumbnailMessageItemBody' | 'MultipleFilesMessageItemBody',
@@ -73,8 +74,17 @@ export const MessageBody = (props: MessageBodyProps) => {
 
   const messageTypes = getUIKitMessageTypes();
   const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
+  const isFormMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableFormTypeMessage;
 
   return match(message)
+    .when((message) => isFormMessageEnabledInGroupChannel && isFormMessage(message),
+      () => (
+        <FormMessageItemBody
+          isByMe={isByMe}
+          message={message}
+          form={message.messageForm}
+        />
+      ))
     .when(isTemplateMessage, () => (
       <TemplateMessageItemBody
         className={className}

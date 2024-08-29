@@ -70,6 +70,7 @@
     position: relative;
 
     .sendbird-message-content__middle__body-container {
+      max-width: 100%;
       .sendbird-message-content__middle__body-container__created-at {
         bottom: 6px;
         display: flex;

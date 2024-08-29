@@ -61,6 +61,88 @@
   }
 }
 
+.sendbird-theme--light {
+  --form__input__bg-color_default: var(--sendbird-light-background-50);
+  
+  --form__input__bg-color_disabled: var(--sendbird-dark-ondark-02);
+  --form__input__bd-color_error: var(--sendbird-light-error-300);
+}
+
+.sendbird-theme--dark {
+  --form__input__bg-color_default: var(--sendbird-light-onlight-03);
+  
+  --form__input__bg-color_disabled: var(--sendbird-light-onlight-04);
+  --form__input__bd-color_error: var(--sendbird-dark-error-200);
+}
+
+.sendbird-input_for_form {
+  display: inline-block;
+  width: 100%;
+  height: unset;
+  position: relative;
+  .sendbird-input__input {
+    width: 100%;
+    height: fit-content;
+    border-radius: 4px;
+    font-family: var(--sendbird-font-family-default);
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    padding: 7px 12px;
+    box-sizing: border-box;
+    background-color: inherit;
+    @include themed() {
+      caret-color: t(primary-3);
+      color: t(inverse-on-content-1);
+      background-color: var(--form__input__bg-color_default);
+      border: solid 1px t(on-bg-4);
+      &:disabled {
+        pointer-events: none;
+        border: none;
+        cursor: not-allowed;
+        background-color: var(--form__input__bg-color_disabled);
+        color: t(on-bg-3);
+      }
+      &:focus {
+        border: solid 1px t(primary--3-2) !important; // This is for when focus and error are being applied at the same time.
+        outline: none;
+        box-shadow: 0 0 0 1px t(primary--3-2);
+      }
+      &:active {
+        box-shadow: none;
+        border: solid 1px t(primary--3-2);
+      }
+      &.error {
+        border: solid 1px var(--form__input__bd-color_error);
+      }
+    }
+  }
+  .sendbird-input__placeholder {
+    width: calc(100% - 26px); // (12px side padding + 1px border) * 2 = 26px
+    height: calc(100% - 16px); // (7px padding + 1px border) * 2 = 16px
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    &.textarea {
+      -webkit-line-clamp: 4;
+    }
+    -webkit-box-orient: vertical;
+    position: absolute;
+    pointer-events: none;
+    top: 8px;
+    left: 13px;
+    font-family: var(--sendbird-font-family-default);
+    font-size: 14px;
+    line-height: 1.43;
+    @include themed() {
+      color: t(on-bg-3);
+    }
+  }
+}
+
 .sendbird-input-label {
   margin: 4px 0;
 }

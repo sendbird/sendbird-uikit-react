@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import type { User } from '@sendbird/chat';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type {
+  BaseMessage,
   FileMessage,
   FileMessageCreateParams,
   MultipleFilesMessage,
@@ -15,6 +16,7 @@ import {
   isDisabledBecauseFrozen,
   isDisabledBecauseMuted,
   isDisabledBecauseSuggestedReplies,
+  isDisabledBecauseMessageForm,
 } from '../../context/utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
@@ -34,6 +36,7 @@ export interface MessageInputWrapperViewProps {
   disabled?: boolean;
   // ChannelContext
   currentChannel: GroupChannel | null;
+  messages: BaseMessage[];
   isMultipleFilesMessageEnabled?: boolean;
   loading: boolean;
   quoteMessage: SendableMessageType | null;
@@ -58,6 +61,7 @@ export const MessageInputWrapperView = React.forwardRef((
   // Props
   const {
     currentChannel,
+    messages,
     loading,
     quoteMessage,
     setQuoteMessage,
@@ -103,6 +107,7 @@ export const MessageInputWrapperView = React.forwardRef((
     || isDisabledBecauseFrozen(currentChannel)
     || isDisabledBecauseMuted(currentChannel)
     || isDisabledBecauseSuggestedReplies(currentChannel, config.groupChannel.enableSuggestedReplies)
+    || isDisabledBecauseMessageForm(messages, config.groupChannel.enableFormTypeMessage)
     || disabled;
 
   const showSuggestedMentionList = !isMessageInputDisabled
@@ -210,7 +215,14 @@ export const MessageInputWrapperView = React.forwardRef((
           placeholder={
             (quoteMessage && stringSet.MESSAGE_INPUT__QUOTE_REPLY__PLACE_HOLDER)
             || (isDisabledBecauseFrozen(currentChannel) && stringSet.MESSAGE_INPUT__PLACE_HOLDER__FROZEN)
-            || (isDisabledBecauseMuted(currentChannel) && (isMobile ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT : stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED))
+            || (isDisabledBecauseMuted(currentChannel)
+              && (isMobile
+                ? stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED_SHORT
+                : stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED))
+            || (isDisabledBecauseSuggestedReplies(currentChannel, config.groupChannel.enableSuggestedReplies)
+              && stringSet.MESSAGE_INPUT__PLACE_HOLDER__SUGGESTED_REPLIES)
+            || (isDisabledBecauseMessageForm(messages, config.groupChannel.enableFormTypeMessage)
+              && stringSet.MESSAGE_INPUT__PLACE_HOLDER__MESSAGE_FORM)
             || (disabled && stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED)
             || undefined
           }

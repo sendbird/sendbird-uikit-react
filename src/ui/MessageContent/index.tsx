@@ -17,6 +17,7 @@ import {
   getClassName,
   getMessageContentMiddleClassNameByContainerType,
   isAdminMessage,
+  isFormMessage,
   isMultipleFilesMessage,
   isOGMessage, isSendableMessage,
   isTemplateMessage,
@@ -210,11 +211,11 @@ export function MessageContent(props: MessageContentProps): ReactElement {
    *   - in mobile view:
    *     - bottom sheet on long click
    */
-  const isNotTemplateMessage = !isTemplateMessage(message);
-  const showLongPressMenu = isNotTemplateMessage && isMobile;
-  const showOutgoingMenu = isNotTemplateMessage && isByMe && !isMobile;
-  const showThreadReplies = isNotTemplateMessage && displayThreadReplies;
-  const showRightContent = isNotTemplateMessage && !isByMe && !isMobile;
+  const isNotSpecialMessage = !(isTemplateMessage(message) || isFormMessage(message));
+  const showLongPressMenu = isNotSpecialMessage && isMobile;
+  const showOutgoingMenu = isNotSpecialMessage && isByMe && !isMobile;
+  const showThreadReplies = isNotSpecialMessage && displayThreadReplies;
+  const showRightContent = isNotSpecialMessage && !isByMe && !isMobile;
 
   const isTimestampBottom = !!uiContainerType;
 
