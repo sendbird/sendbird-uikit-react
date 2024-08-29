@@ -184,10 +184,3 @@
     }
   }
 }
-
-.sendbird-channel-preview__content__lower__unread-message-count {
-  @include mobile() {
-    position: absolute;
-    right: 0;
-  }
-}
