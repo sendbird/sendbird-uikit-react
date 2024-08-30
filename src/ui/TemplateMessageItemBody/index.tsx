@@ -1,7 +1,12 @@
 import './index.scss';
 import React, { ReactElement, useEffect, useState } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
-import { getClassName, removeAtAndBraces, startsWithAtAndEndsWithBraces, UI_CONTAINER_TYPES } from '../../utils';
+import {
+  getClassName,
+  removeAtAndBraces,
+  startsWithAtAndEndsWithBraces,
+  UI_CONTAINER_TYPES,
+} from '../../utils';
 import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateWrapper';
 import {
   CarouselItem,
@@ -9,6 +14,7 @@ import {
   MessageTemplateItem,
   SendbirdUiTemplate,
   SimpleTemplateData,
+  TemplateType,
 } from './types';
 import restoreNumbersFromMessageTemplateObject from './utils/restoreNumbersFromMessageTemplateObject';
 import mapData from './utils/mapData';
@@ -74,10 +80,11 @@ export function TemplateMessageItemBody({
   theme = 'light',
   onTemplateMessageRenderedCallback = () => { /* noop */ },
 }: TemplateMessageItemBodyProps): ReactElement {
+  // FIXME: change to message_template once server changes
   const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
 
   const getFailedBody = () => {
-    onTemplateMessageRenderedCallback(UI_CONTAINER_TYPES.DEFAULT);
+    onTemplateMessageRenderedCallback(UI_CONTAINER_TYPES.NON_TEMPLATE);
     return <FallbackTemplateMessageItemBody
       className={className}
       message={message}
@@ -94,13 +101,25 @@ export function TemplateMessageItemBody({
   if (!globalState) {
     return getFailedBody();
   }
+  const logger = globalState.config.logger;
+
+  /**
+   * If no type given, draw default.
+   * If wrong type given, render fallback message and log error.
+   */
+  const containerType: TemplateType | undefined = templateData?.type;
+  if (containerType && containerType !== 'default') {
+    logger?.error?.(
+      'TemplateMessageItemBody: invalid type value in message.extendedMessagePayload.message_template.',
+      containerType,
+    );
+    return getFailedBody();
+  }
 
   const {
     getCachedTemplate,
     updateMessageTemplatesInfo,
   } = globalState.utils;
-
-  const logger = globalState.config.logger;
 
   const waitingTemplateKeysMap = globalState.stores.appInfoStore.waitingTemplateKeysMap;
 
