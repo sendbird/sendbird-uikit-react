@@ -88,7 +88,7 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
 
   // FIXME: change to message_template once server changes
   const templateData: MessageTemplateData = message.extendedMessagePayload?.['template'] as MessageTemplateData;
-  const { profile = true, time = true, nickname = true } = templateData.container_options;
+  const { profile = true, time = true, nickname = true } = templateData?.container_options ?? {};
   return (
     <div className="sendbird-message-content__sendbird-ui-container-type__default__root">
       {
