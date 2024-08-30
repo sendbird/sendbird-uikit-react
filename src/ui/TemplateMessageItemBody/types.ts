@@ -87,9 +87,9 @@ export interface CarouselItem {
   items: string | SendbirdUiTemplate[]; // Reservation key. ex. "{@some_key}"
 }
 
-// FIXME: This needs to be updated in the future.
 export type MessageTemplateData = SimpleTemplateData & {
-  view_variables?: Record<string, SimpleTemplateData[]>; // Reference: https://sendbird.atlassian.net/wiki/spaces/UK/pages/2265484095/UIKit+message+template+syntax+extension+proposal#View-variables-in-message-payload
+  // Reference: https://sendbird.atlassian.net/wiki/spaces/UK/pages/2265484095/UIKit+message+template+syntax+extension+proposal#View-variables-in-message-payload
+  view_variables?: Record<string, SimpleTemplateData[]>;
 };
 
 export type TemplateType = 'default';

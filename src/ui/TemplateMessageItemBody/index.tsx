@@ -29,11 +29,13 @@ import { CompositeComponentType } from '@sendbird/uikit-message-template';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
 
-interface RenderData {
-  filledMessageTemplateItemsList: MessageTemplateItem[];
+export interface RenderData {
+  filledMessageTemplateItemsList: {
+    version: number;
+    isComposite: boolean;
+    items: MessageTemplateItem[];
+  }[];
   isErrored: boolean;
-  isComposite?: boolean;
-  templateVersion?: number;
 }
 
 interface TemplateMessageItemBodyProps {
@@ -243,63 +245,68 @@ export function TemplateMessageItemBody({
           logger.error('TemplateMessageItemBody | parsed template is missing ui_template: ', parsedUiTemplate);
           throw new Error('TemplateMessageItemBody | parsed template is missing ui_template. See error log in console for details');
         }
-        /**
-         * Composite template validation
-         */
-        if (parsedUiTemplate[0].type === CompositeComponentType.Carousel) {
-          const carouselItem = parsedUiTemplate[0] as unknown as CarouselItem;
-          if (parsedUiTemplate.length > 1) { // TODO: in future, support multiple templates
-            logger.error('TemplateMessageItemBody | composite template currently does not support multiple items: ', parsedUiTemplate);
-            throw new Error('TemplateMessageItemBody | composite template currently does not support multiple items. See error log in console for details');
+        parsedUiTemplate.forEach((templateItem) => {
+          /**
+           * Composite template validation
+           */
+          if (templateItem.type === CompositeComponentType.Carousel) {
+            const carouselItem = templateItem as unknown as CarouselItem;
+            if (typeof carouselItem.items === 'string') {
+              if (!startsWithAtAndEndsWithBraces(carouselItem.items)) {
+                logger.error('TemplateMessageItemBody | composite template with reservation key must follow the following string format "{@your-reservation-key}": ', templateKey, carouselItem);
+                throw new Error('TemplateMessageItemBody | composite template with reservation key must follow the following string format "{@your-reservation-key}". See error log in console for details');
+              }
+              if (!templateData?.view_variables) {
+                logger.error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables: ', templateKey, templateData);
+                throw new Error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables. See error log in console for details');
+              }
+              const reservationKey = removeAtAndBraces(carouselItem.items);
+              const simpleTemplateDataList: SimpleTemplateData[] | undefined = templateData.view_variables[reservationKey];
+              if (!simpleTemplateDataList) {
+                logger.error('TemplateMessageItemBody | no reservation key found in view_variables: ', reservationKey, templateData.view_variables);
+                throw new Error('TemplateMessageItemBody | no reservation key found in view_variables. See error log in console for details');
+              }
+              const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplateByMessagePayload(
+                simpleTemplateDataList,
+              );
+              result.filledMessageTemplateItemsList.push({
+                version: Math.max(cachedTemplate.version, maxVersion),
+                isComposite: true,
+                items: [{
+                  type: carouselItem.type as CompositeComponentType,
+                  spacing: carouselItem.spacing,
+                  items: filledTemplates,
+                }],
+              });
+            } else if (Array.isArray(carouselItem.items)) {
+              const simpleTemplates: SendbirdUiTemplate[] = carouselItem.items;
+              const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplate(
+                simpleTemplates,
+              );
+              result.filledMessageTemplateItemsList.push({
+                version: Math.max(cachedTemplate.version, maxVersion),
+                isComposite: true,
+                items: [{
+                  type: carouselItem.type as CompositeComponentType,
+                  spacing: carouselItem.spacing,
+                  items: filledTemplates,
+                }],
+              });
+            } else {
+              logger.error('TemplateMessageItemBody | composite template is malformed: ', templateKey, carouselItem);
+              throw new Error('TemplateMessageItemBody | composite template is malformed. See error log in console for details');
+            }
+          } else { // Non-composite template
+            result.filledMessageTemplateItemsList.push({
+              version: cachedTemplate.version,
+              isComposite: false,
+              items: getFilledMessageTemplateItemsForSimpleTemplate(
+                parsedUiTemplate,
+                cachedTemplate.colorVariables,
+              ),
+            });
           }
-          if (typeof carouselItem.items === 'string') {
-            if (!startsWithAtAndEndsWithBraces(carouselItem.items)) {
-              logger.error('TemplateMessageItemBody | composite template with reservation key must follow the following string format "{@your-reservation-key}": ', templateKey, carouselItem);
-              throw new Error('TemplateMessageItemBody | composite template with reservation key must follow the following string format "{@your-reservation-key}". See error log in console for details');
-            }
-            if (!templateData?.view_variables) {
-              logger.error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables: ', templateKey, templateData);
-              throw new Error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables. See error log in console for details');
-            }
-            const reservationKey = removeAtAndBraces(carouselItem.items);
-            const simpleTemplateDataList: SimpleTemplateData[] | undefined = templateData.view_variables[reservationKey];
-            if (!simpleTemplateDataList) {
-              logger.error('TemplateMessageItemBody | no reservation key found in view_variables: ', reservationKey, templateData.view_variables);
-              throw new Error('TemplateMessageItemBody | no reservation key found in view_variables. See error log in console for details');
-            }
-            const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplateByMessagePayload(
-              simpleTemplateDataList,
-            );
-            result.isComposite = true;
-            result.templateVersion = Math.max(cachedTemplate.version, maxVersion);
-            result.filledMessageTemplateItemsList = [{
-              type: carouselItem.type as CompositeComponentType,
-              spacing: carouselItem.spacing,
-              items: filledTemplates,
-            }];
-          } else if (Array.isArray(carouselItem.items)) {
-            const simpleTemplates: SendbirdUiTemplate[] = carouselItem.items;
-            const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplate(
-              simpleTemplates,
-            );
-            result.isComposite = true;
-            result.templateVersion = Math.max(cachedTemplate.version, maxVersion);
-            result.filledMessageTemplateItemsList = [{
-              type: carouselItem.type as CompositeComponentType,
-              spacing: carouselItem.spacing,
-              items: filledTemplates,
-            }];
-          } else {
-            logger.error('TemplateMessageItemBody | composite template is malformed: ', templateKey, carouselItem);
-            throw new Error('TemplateMessageItemBody | composite template is malformed. See error log in console for details');
-          }
-        } else {
-          result.templateVersion = cachedTemplate.version;
-          result.filledMessageTemplateItemsList = getFilledMessageTemplateItemsForSimpleTemplate(
-            parsedUiTemplate,
-            cachedTemplate.colorVariables,
-          );
-        }
+        });
       }
     } catch (e) {
       result.isErrored = true;
@@ -370,16 +377,18 @@ export function TemplateMessageItemBody({
           />
         }
         onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
-        isComposite={renderData.isComposite}
         logger={logger}
       >
-        <MessageTemplateWrapper
-          message={message}
-          templateVersion={renderData.templateVersion ?? 0}
-          templateItems={
-            renderData.filledMessageTemplateItemsList as MessageTemplateItem[]
-          }
-        />
+        {
+          renderData.filledMessageTemplateItemsList.map((filledMessageTemplateItem, i) => (
+            <MessageTemplateWrapper
+              key={i}
+              message={message}
+              templateVersion={filledMessageTemplateItem.version ?? 0}
+              templateItems={filledMessageTemplateItem.items}
+            />
+          ))
+        }
       </MessageTemplateErrorBoundary>
     </div>
   );

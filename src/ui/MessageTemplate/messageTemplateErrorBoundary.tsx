@@ -6,7 +6,6 @@ interface ErrorBoundaryProps {
   children: ReactNode;
   fallbackMessage: ReactNode;
   onTemplateMessageRenderedCallback: (renderedTemplateBodyType: UI_CONTAINER_TYPES) => void;
-  isComposite?: boolean;
   logger?: LoggerInterface;
 }
 

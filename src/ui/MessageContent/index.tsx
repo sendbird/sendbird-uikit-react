@@ -208,7 +208,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const showThreadReplies = isNotSpecialMessage && displayThreadReplies;
   const showRightContent = isNotSpecialMessage && !isByMe && !isMobile;
 
-  const isTimestampBottom = !!uiContainerType;
+  const isTimestampBottom = uiContainerType === UI_CONTAINER_TYPES.DEFAULT;
 
   const getTotalBottom = (): number => {
     let sum = 2;
