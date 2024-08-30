@@ -48,6 +48,7 @@ import MessageFeedbackFailedModal from '../MessageFeedbackFailedModal';
 import { MobileBottomSheetProps } from '../MobileMenu/types';
 import useElementObserver from '../../hooks/useElementObserver';
 import { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '../ContextMenu';
+import { MessageContentForTemplateMessage } from './messageContentForTemplateMessage';
 
 export { MessageBody } from './MessageBody';
 export { MessageHeader } from './MessageHeader';
@@ -259,66 +260,23 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     return (<AdminMessage message={message} />);
   }
 
-  const senderProfile = renderSenderProfile({
-    ...props,
-    className: '',
-    isByMe,
-    displayThreadReplies,
-  });
-  const messageHeader = renderMessageHeader(props);
-  const messageBody = renderMessageBody({
-    message,
-    channel,
-    showFileViewer,
-    onMessageHeightChange,
-    mouseHover,
-    isMobile,
-    config,
-    isReactionEnabledInChannel,
-    isByMe,
-    onTemplateMessageRenderedCallback,
-    onBeforeDownloadFileMessage,
-  });
-  const timeStamp = <Label
-    className={classnames(
-      'sendbird-message-content__middle__body-container__created-at',
-      'right',
-      hoveredMenuClassName,
-      uiContainerType,
-    )}
-    type={LabelTypography.CAPTION_3}
-    color={LabelColors.ONBACKGROUND_2}
-    ref={timestampRef}
-  >
-    {format(message?.createdAt || 0, 'p', {
-      locale: dateLocale,
-    })}
-  </Label>;
-
   if (uiContainerType === UI_CONTAINER_TYPES.DEFAULT) {
-    return (
-      <div className="sendbird-message-content__sendbird-ui-container-type__default__root">
-        {
-          !isByMe
-          && !chainTop
-          && !useReplying
-          && !chainBottom
-          && <div className="sendbird-message-content__sendbird-ui-container-type__default__header-container">
-              <div className="sendbird-message-content__sendbird-ui-container-type__default__header-container__left__profile">
-                {senderProfile}
-              </div>
-              {messageHeader}
-          </div>
-        }
-        {messageBody}
-        {
-          (!isByMe && !chainBottom)
-          && <div className="sendbird-message-content__sendbird-ui-container-type__default__bottom">
-            {timeStamp}
-          </div>
-        }
-      </div>
-    );
+    return <MessageContentForTemplateMessage
+      {...props}
+      renderSenderProfile={renderSenderProfile}
+      renderMessageHeader={renderMessageHeader}
+      renderMessageBody={renderMessageBody}
+      isByMe={isByMe}
+      displayThreadReplies={displayThreadReplies}
+      mouseHover={mouseHover}
+      isMobile={isMobile}
+      isReactionEnabledInChannel={isReactionEnabledInChannel}
+      onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
+      hoveredMenuClassName={hoveredMenuClassName}
+      uiContainerType={uiContainerType}
+      timestampRef={timestampRef}
+      useReplying={useReplying}
+    />;
   }
 
   return (

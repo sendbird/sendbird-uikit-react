@@ -18,7 +18,6 @@ import { HTMLTextDirection, Nullable } from '../types';
 import { isSafari } from './browser';
 import { match } from 'ts-pattern';
 import isSameSecond from 'date-fns/isSameSecond';
-import { MessageTemplateData, TemplateType } from '../ui/TemplateMessageItemBody/types';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 export const SUPPORTED_MIMES = {

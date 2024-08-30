@@ -90,6 +90,12 @@ export interface CarouselItem {
 export type MessageTemplateData = SimpleTemplateData & {
   // Reference: https://sendbird.atlassian.net/wiki/spaces/UK/pages/2265484095/UIKit+message+template+syntax+extension+proposal#View-variables-in-message-payload
   view_variables?: Record<string, SimpleTemplateData[]>;
+  // Ref: https://sendbird.atlassian.net/wiki/spaces/UK/pages/2476900424/Refactor+MessageTemplateView#extended_message_payload.message_template
+  container_options?: {
+    profile?: boolean; // default is true
+    time?: boolean; // default is true
+    nickname?: boolean; // default is true
+  };
 };
 
 export type TemplateType = 'default';
