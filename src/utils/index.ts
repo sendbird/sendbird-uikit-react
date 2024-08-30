@@ -14,7 +14,7 @@ import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import { SendableMessage } from '@sendbird/chat/lib/__definition';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
-import { HTMLTextDirection, MessageContentMiddleContainerType, Nullable } from '../types';
+import { HTMLTextDirection, Nullable } from '../types';
 import { isSafari } from './browser';
 import { match } from 'ts-pattern';
 import isSameSecond from 'date-fns/isSameSecond';
@@ -290,29 +290,15 @@ export const isFormMessage = (message: CoreMessageType): boolean => !!(
 );
 
 export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
+  // FIXME: change to message_template once server changes
   message && message.extendedMessagePayload?.['template']
 );
-export enum UI_CONTAINER_TYPES {
-  DEFAULT = '',
-  DEFAULT_CAROUSEL = 'ui_container_type__default',
-}
 
-export const getMessageContentMiddleClassNameByContainerType = ({
-  message,
-}: {
-  message: CoreMessageType,
-}): UI_CONTAINER_TYPES => {
-  /**
-   * FULL: template message only.
-   * WIDE: all message types.
-   */
-  const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
-  const containerType: TemplateType | undefined = templateData?.type;
-  if (containerType === MessageContentMiddleContainerType.DEFAULT || templateData) {
-    return UI_CONTAINER_TYPES.DEFAULT_CAROUSEL;
-  }
-  return UI_CONTAINER_TYPES.DEFAULT;
-};
+export enum UI_CONTAINER_TYPES {
+  NON_TEMPLATE = '', // For normal base messages
+  // Below are for template messages
+  DEFAULT = 'ui_container_type__default',
+}
 
 export const isOGMessage = (message: CoreMessageType): message is UserMessage => {
   if (!message || !isUserMessage(message)) return false;

@@ -15,7 +15,6 @@ import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel
 import {
   CoreMessageType,
   getClassName,
-  getMessageContentMiddleClassNameByContainerType,
   isAdminMessage,
   isFormMessage,
   isMultipleFilesMessage,
@@ -160,9 +159,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackFailedText, setFeedbackFailedText] = useState('');
-  const [uiContainerType, setUiContainerType] = useState<UI_CONTAINER_TYPES>(getMessageContentMiddleClassNameByContainerType({
-    message,
-  }));
+  const [uiContainerType, setUiContainerType] = useState<UI_CONTAINER_TYPES>(UI_CONTAINER_TYPES.NON_TEMPLATE);
 
   const onTemplateMessageRenderedCallback = (renderedTemplateType: UI_CONTAINER_TYPES) => {
     setUiContainerType(renderedTemplateType);
@@ -264,6 +261,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
 
   const senderProfile = renderSenderProfile({
     ...props,
+    className: '',
     isByMe,
     displayThreadReplies,
   });
@@ -297,7 +295,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     })}
   </Label>;
 
-  if (uiContainerType === UI_CONTAINER_TYPES.DEFAULT_CAROUSEL) {
+  if (uiContainerType === UI_CONTAINER_TYPES.DEFAULT) {
     return (
       <div className="sendbird-message-content__sendbird-ui-container-type__default__root">
         {
@@ -386,7 +384,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
       <div
         className={classnames(
           'sendbird-message-content__middle',
-          isTemplateMessage(message) && 'sendbird-message-content__middle__for_template_message',
           uiContainerType,
         )}
         data-testid="sendbird-message-content__middle"
@@ -427,7 +424,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
         <div
           className={classnames(
             'sendbird-message-content__middle__body-container',
-            isTemplateMessage(message) && 'sendbird-message-content__middle__for_template_message',
           )}
         >
           {/* message status component when sent by me */}

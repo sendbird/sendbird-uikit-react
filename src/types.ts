@@ -87,8 +87,4 @@ export interface UploadedFileInfoWithUpload {
 
 export type SendbirdTheme = 'light' | 'dark';
 
-export enum MessageContentMiddleContainerType {
-  DEFAULT = 'default',
-}
-
 export type HTMLTextDirection = 'ltr' | 'rtl';

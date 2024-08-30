@@ -30,10 +30,10 @@ export class MessageTemplateErrorBoundary extends Component<ErrorBoundaryProps, 
 
   render() {
     if (this.state.hasError) {
-      this.props.onTemplateMessageRenderedCallback(UI_CONTAINER_TYPES.DEFAULT);
+      this.props.onTemplateMessageRenderedCallback(UI_CONTAINER_TYPES.NON_TEMPLATE);
       return this.props.fallbackMessage;
     }
-    this.props.onTemplateMessageRenderedCallback(UI_CONTAINER_TYPES.DEFAULT_CAROUSEL);
+    this.props.onTemplateMessageRenderedCallback(UI_CONTAINER_TYPES.DEFAULT);
     return this.props.children;
   }
 }
