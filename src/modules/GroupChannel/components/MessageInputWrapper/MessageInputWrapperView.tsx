@@ -75,7 +75,7 @@ export const MessageInputWrapperView = React.forwardRef((
     renderFileUploadIcon,
     // renderVoiceMessageIcon,
     renderSendMessageIcon,
-    acceptableMimeTypes,
+    acceptableMimeTypes = ['application/pdf', 'image/*'],
     disabled,
   } = props;
   const { stringSet } = useLocalization();
