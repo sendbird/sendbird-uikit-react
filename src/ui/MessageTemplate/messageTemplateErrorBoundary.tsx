@@ -1,11 +1,12 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { LoggerInterface } from '../../lib/Logger';
-import { UI_CONTAINER_TYPES } from '../../utils';
+import { MessageTemplateTypes } from '../../utils';
+import { TemplateType } from '../TemplateMessageItemBody/types';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallbackMessage: ReactNode;
-  onTemplateMessageRenderedCallback: (renderedTemplateBodyType: UI_CONTAINER_TYPES) => void;
+  onTemplateMessageRenderedCallback: (renderedTemplateBodyType: TemplateType | null) => void;
   logger?: LoggerInterface;
 }
 
@@ -29,10 +30,10 @@ export class MessageTemplateErrorBoundary extends Component<ErrorBoundaryProps, 
 
   render() {
     if (this.state.hasError) {
-      this.props.onTemplateMessageRenderedCallback(UI_CONTAINER_TYPES.NON_TEMPLATE);
+      this.props.onTemplateMessageRenderedCallback(null);
       return this.props.fallbackMessage;
     }
-    this.props.onTemplateMessageRenderedCallback(UI_CONTAINER_TYPES.DEFAULT);
+    this.props.onTemplateMessageRenderedCallback(MessageTemplateTypes.default);
     return this.props.children;
   }
 }

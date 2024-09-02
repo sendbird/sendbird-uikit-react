@@ -2,10 +2,9 @@ import './index.scss';
 import React, { ReactElement, useEffect, useState } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
 import {
-  getClassName,
+  getClassName, MessageTemplateTypes,
   removeAtAndBraces,
   startsWithAtAndEndsWithBraces,
-  UI_CONTAINER_TYPES,
 } from '../../utils';
 import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateWrapper';
 import {
@@ -26,6 +25,7 @@ import FallbackTemplateMessageItemBody from './FallbackTemplateMessageItemBody';
 import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
 import MessageTemplateErrorBoundary from '../MessageTemplate/messageTemplateErrorBoundary';
 import { CompositeComponentType } from '@sendbird/uikit-message-template';
+import { MESSAGE_TEMPLATE_KEY } from '../../utils/consts';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
 
@@ -43,7 +43,7 @@ interface TemplateMessageItemBodyProps {
   message: BaseMessage;
   isByMe?: boolean;
   theme?: SendbirdTheme;
-  onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: UI_CONTAINER_TYPES) => void;
+  onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: TemplateType | null) => void;
 }
 
 /**
@@ -82,11 +82,10 @@ export function TemplateMessageItemBody({
   theme = 'light',
   onTemplateMessageRenderedCallback = () => { /* noop */ },
 }: TemplateMessageItemBodyProps): ReactElement {
-  // FIXME: change to message_template once server changes
-  const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.['template'] as MessageTemplateData;
+  const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.[MESSAGE_TEMPLATE_KEY] as MessageTemplateData;
 
   const getFailedBody = () => {
-    onTemplateMessageRenderedCallback(UI_CONTAINER_TYPES.NON_TEMPLATE);
+    onTemplateMessageRenderedCallback(null);
     return <FallbackTemplateMessageItemBody
       className={className}
       message={message}
@@ -109,11 +108,10 @@ export function TemplateMessageItemBody({
    * If no type given, draw default.
    * If wrong type given, render fallback message and log error.
    */
-  const containerType: TemplateType | undefined = templateData?.type;
-  if (containerType && containerType !== 'default') {
+  if (templateData && templateData?.type !== MessageTemplateTypes.default) {
     logger?.error?.(
       'TemplateMessageItemBody: invalid type value in message.extendedMessagePayload.message_template.',
-      containerType,
+      templateData,
     );
     return getFailedBody();
   }

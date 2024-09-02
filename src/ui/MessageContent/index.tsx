@@ -21,8 +21,8 @@ import {
   isOGMessage, isSendableMessage,
   isTemplateMessage,
   isThumbnailMessage,
-  SendableMessageType,
-  UI_CONTAINER_TYPES,
+  MessageTemplateTypes,
+  SendableMessageType, uiContainerType,
 } from '../../utils';
 import { LocalizationContext, useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
@@ -49,6 +49,7 @@ import { MobileBottomSheetProps } from '../MobileMenu/types';
 import useElementObserver from '../../hooks/useElementObserver';
 import { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '../ContextMenu';
 import { MessageContentForTemplateMessage } from './messageContentForTemplateMessage';
+import { TemplateType } from '../TemplateMessageItemBody/types';
 
 export { MessageBody } from './MessageBody';
 export { MessageHeader } from './MessageHeader';
@@ -160,10 +161,10 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackFailedText, setFeedbackFailedText] = useState('');
-  const [uiContainerType, setUiContainerType] = useState<UI_CONTAINER_TYPES>(UI_CONTAINER_TYPES.NON_TEMPLATE);
+  const [templateType, setTemplateType] = useState<TemplateType | null>(null);
 
-  const onTemplateMessageRenderedCallback = (renderedTemplateType: UI_CONTAINER_TYPES) => {
-    setUiContainerType(renderedTemplateType);
+  const onTemplateMessageRenderedCallback = (renderedTemplateType: TemplateType | null) => {
+    setTemplateType(renderedTemplateType);
   };
 
   const { stringSet } = useContext(LocalizationContext);
@@ -209,7 +210,8 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const showThreadReplies = isNotSpecialMessage && displayThreadReplies;
   const showRightContent = isNotSpecialMessage && !isByMe && !isMobile;
 
-  const isTimestampBottom = uiContainerType === UI_CONTAINER_TYPES.DEFAULT;
+  const isTimestampBottom = !!MessageTemplateTypes[templateType];
+  const uiContainerTypeClassName = uiContainerType[templateType] ?? '';
 
   const getTotalBottom = (): number => {
     let sum = 2;
@@ -260,7 +262,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     return (<AdminMessage message={message} />);
   }
 
-  if (uiContainerType === UI_CONTAINER_TYPES.DEFAULT) {
+  if (MessageTemplateTypes[templateType]) {
     return <MessageContentForTemplateMessage
       {...props}
       renderSenderProfile={renderSenderProfile}
@@ -273,7 +275,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
       isReactionEnabledInChannel={isReactionEnabledInChannel}
       onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
       hoveredMenuClassName={hoveredMenuClassName}
-      uiContainerType={uiContainerType}
+      templateType={templateType}
       timestampRef={timestampRef}
       useReplying={useReplying}
     />;
@@ -285,7 +287,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
         className ?? '',
         'sendbird-message-content',
         isByMeClassName,
-        uiContainerType,
+        uiContainerTypeClassName,
       ])}
       onMouseOver={() => setMouseHover(true)}
       onMouseLeave={() => setMouseHover(false)}
@@ -342,7 +344,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
       <div
         className={classnames(
           'sendbird-message-content__middle',
-          uiContainerType,
+          uiContainerTypeClassName,
         )}
         data-testid="sendbird-message-content__middle"
         {...(isMobile ? { ...longPress } : {})}
@@ -391,7 +393,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
                 'sendbird-message-content__middle__body-container__created-at',
                 'left',
                 hoveredMenuClassName,
-                uiContainerType,
+                uiContainerTypeClassName,
               )}
               ref={timestampRef}
             >
@@ -449,7 +451,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
                 'sendbird-message-content__middle__body-container__created-at',
                 'right',
                 hoveredMenuClassName,
-                uiContainerType,
+                uiContainerTypeClassName,
               )}
               type={LabelTypography.CAPTION_3}
               color={LabelColors.ONBACKGROUND_2}

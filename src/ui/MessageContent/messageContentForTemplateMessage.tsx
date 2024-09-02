@@ -2,11 +2,12 @@ import React, { ReactElement } from 'react';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import { classnames } from '../../utils/utils';
 import format from 'date-fns/format';
-import { MessageTemplateData } from '../TemplateMessageItemBody/types';
+import { MessageTemplateData, TemplateType } from '../TemplateMessageItemBody/types';
 import { MessageComponentRenderers, MessageContentProps } from './index';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
-import { UI_CONTAINER_TYPES } from '../../utils';
+import { uiContainerType } from '../../utils';
 import { useLocalization } from '../../lib/LocalizationContext';
+import { MESSAGE_TEMPLATE_KEY } from '../../utils/consts';
 
 type MessageContentForTemplateMessageProps = MessageContentProps & MessageComponentRenderers & {
   isByMe: boolean;
@@ -14,9 +15,9 @@ type MessageContentForTemplateMessageProps = MessageContentProps & MessageCompon
   mouseHover: boolean;
   isMobile: boolean;
   isReactionEnabledInChannel: boolean;
-  onTemplateMessageRenderedCallback: (renderedTemplateType: UI_CONTAINER_TYPES) => void;
+  onTemplateMessageRenderedCallback: (renderedTemplateType: TemplateType | null) => void;
   hoveredMenuClassName: string;
-  uiContainerType: UI_CONTAINER_TYPES;
+  templateType: TemplateType | null;
   timestampRef: React.LegacyRef<HTMLDivElement>;
   useReplying: boolean;
 };
@@ -42,13 +43,15 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
     isReactionEnabledInChannel,
     onTemplateMessageRenderedCallback,
     hoveredMenuClassName,
-    uiContainerType,
+    templateType,
     timestampRef,
     useReplying,
   } = props;
 
   const { config } = useSendbirdStateContext();
   const { dateLocale } = useLocalization();
+
+  const uiContainerTypeClassName = uiContainerType[templateType] ?? '';
 
   const senderProfile = renderSenderProfile({
     ...props,
@@ -75,7 +78,7 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
       'sendbird-message-content__middle__body-container__created-at',
       'right',
       hoveredMenuClassName,
-      uiContainerType,
+      uiContainerTypeClassName,
     )}
     type={LabelTypography.CAPTION_3}
     color={LabelColors.ONBACKGROUND_2}
@@ -86,8 +89,7 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
     })}
   </Label>;
 
-  // FIXME: change to message_template once server changes
-  const templateData: MessageTemplateData = message.extendedMessagePayload?.['template'] as MessageTemplateData;
+  const templateData: MessageTemplateData = message.extendedMessagePayload?.[MESSAGE_TEMPLATE_KEY] as MessageTemplateData;
   const { profile = true, time = true, nickname = true } = templateData?.container_options ?? {};
   return (
     <div className="sendbird-message-content__sendbird-ui-container-type__default__root">

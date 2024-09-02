@@ -18,6 +18,8 @@ import { HTMLTextDirection, Nullable } from '../types';
 import { isSafari } from './browser';
 import { match } from 'ts-pattern';
 import isSameSecond from 'date-fns/isSameSecond';
+import { MESSAGE_TEMPLATE_KEY } from './consts';
+import { TemplateType } from '../ui/TemplateMessageItemBody/types';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 export const SUPPORTED_MIMES = {
@@ -289,15 +291,16 @@ export const isFormMessage = (message: CoreMessageType): boolean => !!(
 );
 
 export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
-  // FIXME: change to message_template once server changes
-  message && message.extendedMessagePayload?.['template']
+  message && message.extendedMessagePayload?.[MESSAGE_TEMPLATE_KEY]
 );
 
-export enum UI_CONTAINER_TYPES {
-  NON_TEMPLATE = '', // For normal base messages
-  // Below are for template messages
-  DEFAULT = 'ui_container_type__default',
-}
+export const MessageTemplateTypes: Record<TemplateType, TemplateType> = {
+  default: 'default',
+};
+
+export const uiContainerType = {
+  [MessageTemplateTypes.default]: 'ui_container_type__default',
+};
 
 export const isOGMessage = (message: CoreMessageType): message is UserMessage => {
   if (!message || !isUserMessage(message)) return false;

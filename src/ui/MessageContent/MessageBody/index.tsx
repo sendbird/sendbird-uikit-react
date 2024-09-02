@@ -4,7 +4,7 @@ import {
   CoreMessageType,
   getUIKitMessageType, getUIKitMessageTypes, isTemplateMessage, isMultipleFilesMessage,
   isOGMessage, isSendableMessage,
-  isTextMessage, isThumbnailMessage, isVoiceMessage, isFormMessage, UI_CONTAINER_TYPES,
+  isTextMessage, isThumbnailMessage, isVoiceMessage, isFormMessage,
 } from '../../../utils';
 import { BaseMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 import OGMessageItemBody from '../../OGMessageItemBody';
@@ -36,7 +36,7 @@ export interface MessageBodyProps {
   channel: Nullable<GroupChannel>;
   message: CoreMessageType;
   showFileViewer?: (bool: boolean) => void;
-  onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: UI_CONTAINER_TYPES) => void;
+  onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: string) => void;
   onMessageHeightChange?: () => void;
   onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 
