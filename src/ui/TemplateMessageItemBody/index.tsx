@@ -32,7 +32,6 @@ const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms
 export interface RenderData {
   filledMessageTemplateItemsList: {
     version: number;
-    isComposite: boolean;
     items: MessageTemplateItem[];
   }[];
   isErrored: boolean;
@@ -269,7 +268,6 @@ export function TemplateMessageItemBody({
               );
               result.filledMessageTemplateItemsList.push({
                 version: Math.max(cachedTemplate.version, maxVersion),
-                isComposite: true,
                 items: [{
                   type: carouselItem.type as CompositeComponentType,
                   spacing: carouselItem.spacing,
@@ -283,7 +281,6 @@ export function TemplateMessageItemBody({
               );
               result.filledMessageTemplateItemsList.push({
                 version: Math.max(cachedTemplate.version, maxVersion),
-                isComposite: true,
                 items: [{
                   type: carouselItem.type as CompositeComponentType,
                   spacing: carouselItem.spacing,
@@ -297,7 +294,6 @@ export function TemplateMessageItemBody({
           } else { // Non-composite template
             result.filledMessageTemplateItemsList.push({
               version: cachedTemplate.version,
-              isComposite: false,
               items: getFilledMessageTemplateItemsForSimpleTemplate(
                 parsedUiTemplate,
                 cachedTemplate.colorVariables,
