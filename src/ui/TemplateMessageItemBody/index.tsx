@@ -3,20 +3,14 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
 import {
   getClassName, MessageTemplateTypes,
-  removeAtAndBraces,
-  startsWithAtAndEndsWithBraces,
 } from '../../utils';
 import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateWrapper';
 import {
-  CarouselItem,
   MessageTemplateData,
   MessageTemplateItem,
-  SendbirdUiTemplate,
   SimpleTemplateData,
   TemplateType,
 } from './types';
-import restoreNumbersFromMessageTemplateObject from './utils/restoreNumbersFromMessageTemplateObject';
-import mapData from './utils/mapData';
 import selectColorVariablesByTheme from './utils/selectColorVariablesByTheme';
 import { SendbirdTheme } from '../../types';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
@@ -24,8 +18,8 @@ import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/dux/
 import FallbackTemplateMessageItemBody from './FallbackTemplateMessageItemBody';
 import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
 import MessageTemplateErrorBoundary from '../MessageTemplate/messageTemplateErrorBoundary';
-import { CompositeComponentType } from '@sendbird/uikit-message-template';
 import { MESSAGE_TEMPLATE_KEY } from '../../utils/consts';
+import flattenObject from './utils/flattenObject';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
 
@@ -45,20 +39,17 @@ interface TemplateMessageItemBodyProps {
   onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: TemplateType | null) => void;
 }
 
-/**
- * Returns copied message template object filled with given template data and color variables.
- */
-const getFilledMessageTemplateWithData = ({
+export const replaceVariablesInTemplateString = ({
   template,
   templateData = {},
   colorVariables,
   theme,
 }: {
-  template: MessageTemplateItem[],
+  template: string,
   templateData?: Record<string, any>,
   colorVariables?: Record<string, string>,
   theme?: SendbirdTheme,
-}): MessageTemplateItem[] => {
+}): string => {
   let selectedThemeColorVariables = {};
   if (colorVariables && theme) {
     selectedThemeColorVariables = selectColorVariablesByTheme({
@@ -67,11 +58,15 @@ const getFilledMessageTemplateWithData = ({
     });
   }
   const source = { ...templateData, ...selectedThemeColorVariables };
-  const parsedTemplate: MessageTemplateItem[] = mapData({
-    template: restoreNumbersFromMessageTemplateObject(template) as any,
-    source,
-  }) as any;
-  return parsedTemplate;
+  const flattenedSource = flattenObject(source);
+
+  let replaced = template;
+  Object.entries(flattenedSource).forEach(([key, val]) => {
+    const pattern = `\\{${key}\\}`;
+    const regex = new RegExp(pattern, 'g');
+    replaced = replaced.replace(regex, val);
+  });
+  return replaced;
 };
 
 export function TemplateMessageItemBody({
@@ -132,73 +127,91 @@ export function TemplateMessageItemBody({
     setRenderData,
   ] = useState<RenderData>(getFilledMessageTemplateItems());
 
-  function getFilledMessageTemplateItemsForCarouselTemplateByMessagePayload(simpleTemplateDataList: SimpleTemplateData[]): {
-    maxVersion: number,
-    filledTemplates: MessageTemplateItem[][],
-  } {
-    const cachedSimpleTemplates: ProcessedMessageTemplate[] = [];
-    const simpleTemplatesVariables: Array<Record<string, any> | undefined> = [];
-    let maxVersion = 0;
-    simpleTemplateDataList.forEach((simpleTemplateData: SimpleTemplateData) => {
-      const simpleTemplateKey = simpleTemplateData.key;
-      if (!simpleTemplateKey) {
-        logger.error('TemplateMessageItemBody | simple template keys are not found in view_variables: ', simpleTemplateDataList);
-        throw new Error('TemplateMessageItemBody | simple template keys are not found in view_variables.');
-      }
-      const simpleCachedTemplate = getCachedTemplate(simpleTemplateKey);
-      if (simpleCachedTemplate) {
-        cachedSimpleTemplates.push(simpleCachedTemplate);
-        simpleTemplatesVariables.push(simpleTemplateData.variables);
-        maxVersion = Math.max(maxVersion, simpleCachedTemplate.version);
-      }
+  interface IndexPair {
+    start: number;
+    end: number;
+  }
+
+  function findSubstrings(input: string, matchString: string): IndexPair[] {
+    const indices: IndexPair[] = [];
+    let startIndex = 0;
+    while ((startIndex = input.indexOf(matchString, startIndex)) !== -1) {
+      indices.push({ start: startIndex, end: startIndex + matchString.length });
+      startIndex += matchString.length;
+    }
+    return indices;
+  }
+
+  function replaceAtIndices(input: string, indices: IndexPair[], replacement: string): string {
+    let result = '';
+    let lastIndex = 0;
+    indices.forEach(({ start, end }) => {
+      result += input.slice(lastIndex, start) + replacement;
+      lastIndex = end;
     });
-    const filledMessageTemplateItemsList: MessageTemplateItem[][] = cachedSimpleTemplates
-      .map((cachedSimpleTemplate, index) => {
-        const templateItems: MessageTemplateItem[] = JSON.parse(cachedSimpleTemplate.uiTemplate);
-        const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData({
-          template: templateItems,
-          templateData: simpleTemplatesVariables[index],
-          colorVariables: cachedSimpleTemplate.colorVariables,
-          theme,
+    // Add any remaining part of the string after the last match
+    result += input.slice(lastIndex);
+    return result;
+  }
+  function replaceReservationKeys(templateString: string, reservationKey: string, replacement: string): string {
+    const indices = findSubstrings(templateString, reservationKey);
+    return replaceAtIndices(templateString, indices, replacement);
+  }
+
+  /**
+   * Returns filled rootTemplate. Given rootTemplate,
+   * 1. replace any reservation key with matching cached template,
+   * 2. fill variables and view_variables.
+   *
+   * Assume below facts:
+   * - carousel type template cannot have a carousel typed template in any
+   * depth of items.
+   * - However, box type template can have a carousel typed template in any
+   * depth of items.
+   *
+   * @param rootTemplate
+   */
+  function getFilledRootTemplate(rootTemplate: ProcessedMessageTemplate): MessageTemplateItem[] {
+    let rootTemplateString = replaceVariablesInTemplateString({
+      template: rootTemplate.uiTemplate,
+      templateData: templateData.variables,
+      colorVariables: rootTemplate.colorVariables,
+      theme: theme,
+    });
+    // 카루셀 템플릿이 (한개 이상) 암시된 경우
+    if (templateData.view_variables) {
+      const reservationKeyToItems: Record<string, string> = {};
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      Object.entries(templateData.view_variables).forEach(([reservationKey, simpleTemplateDataList]) => {
+        const filledSimpleTemplates = [];
+        simpleTemplateDataList.forEach((simpleTemplateData: SimpleTemplateData) => {
+          const simpleTemplateKey = simpleTemplateData?.key;
+          if (simpleTemplateKey) {
+            const cachedTemplate = getCachedTemplate(simpleTemplateKey);
+            if (!cachedTemplate) {
+              logger.error('TemplateMessageItemBody | simple template is expected to be cached: ', simpleTemplateKey);
+            }
+            const items = replaceVariablesInTemplateString({
+              template: cachedTemplate.uiTemplate,
+              templateData: simpleTemplateData.variables,
+              colorVariables: cachedTemplate.colorVariables,
+              theme: theme,
+            });
+            filledSimpleTemplates.push({
+              version: cachedTemplate.version,
+              body: {
+                items: JSON.parse(items),
+              },
+            });
+            reservationKeyToItems[reservationKey] = JSON.stringify(filledSimpleTemplates);
+          }
         });
-        return filledMessageTemplateItems;
       });
-    return {
-      maxVersion,
-      filledTemplates: filledMessageTemplateItemsList,
-    };
-  }
-
-  function getFilledMessageTemplateItemsForCarouselTemplate(uiTemplates: SendbirdUiTemplate[]): {
-    maxVersion: number,
-    filledTemplates: MessageTemplateItem[][],
-  } {
-    let maxVersion = 0;
-    const filledTemplates: MessageTemplateItem[][] = [];
-    uiTemplates.forEach((uiTemplate: SendbirdUiTemplate) => {
-      maxVersion = Math.max(maxVersion, uiTemplate.version);
-      const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData({
-        template: uiTemplate.body.items,
+      Object.entries(reservationKeyToItems).forEach(([reservationKey, filledSimpleTemplates]) => {
+        rootTemplateString = replaceReservationKeys(rootTemplateString, `"{@${reservationKey}}"`, filledSimpleTemplates);
       });
-      filledTemplates.push(filledMessageTemplateItems);
-    });
-    return {
-      maxVersion,
-      filledTemplates,
-    };
-  }
-
-  function getFilledMessageTemplateItemsForSimpleTemplate(
-    templateItems: MessageTemplateItem[],
-    colorVariables?: Record<string, string>,
-  ): MessageTemplateItem[] {
-    const filledMessageTemplateItems: MessageTemplateItem[] = getFilledMessageTemplateWithData({
-      template: templateItems,
-      templateData: templateData?.variables ?? {},
-      colorVariables,
-      theme,
-    });
-    return filledMessageTemplateItems;
+    }
+    return JSON.parse(rootTemplateString);
   }
 
   function getFilledMessageTemplateItems(): RenderData {
@@ -237,69 +250,10 @@ export function TemplateMessageItemBody({
       if (nonCachedTemplateKeys.length > 0) {
         tryFetchTemplateByKey(nonCachedTemplateKeys);
       } else if (cachedTemplate) {
-        const parsedUiTemplate: MessageTemplateItem[] = JSON.parse(cachedTemplate.uiTemplate);
-        if (!Array.isArray(parsedUiTemplate) || parsedUiTemplate.length === 0) {
-          logger.error('TemplateMessageItemBody | parsed template is missing ui_template: ', parsedUiTemplate);
-          throw new Error('TemplateMessageItemBody | parsed template is missing ui_template. See error log in console for details');
-        }
-        parsedUiTemplate.forEach((templateItem) => {
-          /**
-           * Composite template validation
-           */
-          if (templateItem.type === CompositeComponentType.Carousel) {
-            const carouselItem = templateItem as unknown as CarouselItem;
-            if (typeof carouselItem.items === 'string') {
-              if (!startsWithAtAndEndsWithBraces(carouselItem.items)) {
-                logger.error('TemplateMessageItemBody | composite template with reservation key must follow the following string format "{@your-reservation-key}": ', templateKey, carouselItem);
-                throw new Error('TemplateMessageItemBody | composite template with reservation key must follow the following string format "{@your-reservation-key}". See error log in console for details');
-              }
-              if (!templateData?.view_variables) {
-                logger.error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables: ', templateKey, templateData);
-                throw new Error('TemplateMessageItemBody | template key suggests composite template but template data is missing view_variables. See error log in console for details');
-              }
-              const reservationKey = removeAtAndBraces(carouselItem.items);
-              const simpleTemplateDataList: SimpleTemplateData[] | undefined = templateData.view_variables[reservationKey];
-              if (!simpleTemplateDataList) {
-                logger.error('TemplateMessageItemBody | no reservation key found in view_variables: ', reservationKey, templateData.view_variables);
-                throw new Error('TemplateMessageItemBody | no reservation key found in view_variables. See error log in console for details');
-              }
-              const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplateByMessagePayload(
-                simpleTemplateDataList,
-              );
-              result.filledMessageTemplateItemsList.push({
-                version: Math.max(cachedTemplate.version, maxVersion),
-                items: [{
-                  type: carouselItem.type as CompositeComponentType,
-                  spacing: carouselItem.spacing,
-                  items: filledTemplates,
-                }],
-              });
-            } else if (Array.isArray(carouselItem.items)) {
-              const simpleTemplates: SendbirdUiTemplate[] = carouselItem.items;
-              const { maxVersion, filledTemplates } = getFilledMessageTemplateItemsForCarouselTemplate(
-                simpleTemplates,
-              );
-              result.filledMessageTemplateItemsList.push({
-                version: Math.max(cachedTemplate.version, maxVersion),
-                items: [{
-                  type: carouselItem.type as CompositeComponentType,
-                  spacing: carouselItem.spacing,
-                  items: filledTemplates,
-                }],
-              });
-            } else {
-              logger.error('TemplateMessageItemBody | composite template is malformed: ', templateKey, carouselItem);
-              throw new Error('TemplateMessageItemBody | composite template is malformed. See error log in console for details');
-            }
-          } else { // Non-composite template
-            result.filledMessageTemplateItemsList.push({
-              version: cachedTemplate.version,
-              items: getFilledMessageTemplateItemsForSimpleTemplate(
-                parsedUiTemplate,
-                cachedTemplate.colorVariables,
-              ),
-            });
-          }
+        const items = getFilledRootTemplate(cachedTemplate);
+        result.filledMessageTemplateItemsList.push({
+          version: cachedTemplate.version,
+          items,
         });
       }
     } catch (e) {

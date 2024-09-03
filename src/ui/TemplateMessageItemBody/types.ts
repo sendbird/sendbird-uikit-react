@@ -81,6 +81,13 @@ export type MessageTemplateTheme = {
 
 export type MessageTemplateItem = ComponentsUnion['properties'];
 
+export type FilledMessageTemplate = {
+  version: number,
+  body: {
+    items: MessageTemplateItem[];
+  },
+};
+
 export interface CarouselItem {
   type: CompositeComponentType.Carousel;
   spacing: number;
