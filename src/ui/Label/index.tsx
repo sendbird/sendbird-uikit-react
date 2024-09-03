@@ -12,6 +12,7 @@ type LabelProps = {
   color?: ObjectValues<typeof Colors>;
   children?: React.ReactNode;
   testID?: string;
+  title?: string;
 };
 
 export const Label = forwardRef(({
@@ -20,12 +21,14 @@ export const Label = forwardRef(({
   color,
   children = null,
   testID,
+  title,
 }: LabelProps, ref?: RefObject<HTMLDivElement>) => {
   return (
     // Donot make this into div
     // Mention uses Label. If we use div, it would break the mention detection on Paste
     // https://github.com/sendbird/sendbird-uikit-react/pull/479
     <span
+      title={title}
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-label',

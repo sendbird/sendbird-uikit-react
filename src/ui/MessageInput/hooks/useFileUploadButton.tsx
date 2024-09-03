@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import IconButton from '../../IconButton';
 import Icon, { IconColors, IconTypes } from '../../Icon';
 import Label from '../../Label';
@@ -11,24 +11,38 @@ interface Params {
 
 export function useFileUploadButton({ accept, multiple, disabled }: Params) {
   const [files, setFiles] = useState<File[]>([]);
+  const [filePreview, setFilePreview] = useState<{ url: string; type: string; name: string }[]>([]);
+
   const [focus, setFocus] = useState<number>();
-
   const input = useRef<HTMLInputElement>();
-  const fileUrls = useMemo(() => files.map((it) => ({ url: URL.createObjectURL(it), type: it.type, name: it.name })), [files]);
 
-  useEffect(() => {
-    return () => {
-      fileUrls.forEach((it) => URL.revokeObjectURL(it.url));
-    };
-  });
+  const addFiles = (newFiles: File[]) => {
+    setFiles((prev) => [...prev, ...newFiles]);
+    setFilePreview((prev) => [...prev, ...newFiles.map((it) => ({ url: URL.createObjectURL(it), type: it.type, name: it.name }))]);
+  };
 
   const removeFile = (index: number) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
+    setFilePreview((prev) => {
+      return prev.filter((it, i) => {
+        if (i !== index) {
+          URL.revokeObjectURL(it.url);
+          return true;
+        }
+        return false;
+      });
+    });
+
     setFocus(undefined);
   };
 
   const clearFiles = () => {
     setFiles([]);
+    setFilePreview((prev) => {
+      prev.forEach((it) => URL.revokeObjectURL(it.url));
+      return [];
+    });
+
     setFocus(undefined);
   };
 
@@ -56,7 +70,7 @@ export function useFileUploadButton({ accept, multiple, disabled }: Params) {
           onChange={(event) => {
             const fileList = event.currentTarget.files;
             if (fileList) {
-              setFiles(Array.from(fileList));
+              addFiles(Array.from(fileList));
             }
             event.target.value = '';
           }}
@@ -68,11 +82,11 @@ export function useFileUploadButton({ accept, multiple, disabled }: Params) {
   };
 
   const renderFilePreview = () => {
-    if (fileUrls.length === 0) return null;
+    if (filePreview.length === 0) return null;
 
     return (
       <div className={'sendbird-message-input--file-preview'}>
-        {fileUrls.map((it, i) => {
+        {filePreview.map((it, i) => {
           return (
             <div
               className={'sendbird-message-input--file'}
@@ -102,7 +116,7 @@ export function useFileUploadButton({ accept, multiple, disabled }: Params) {
                         <Icon type={IconTypes.FILE_DOCUMENT} width={'24px'} height={'24px'} />
                       </div>
                       <div className={'pdf-info'}>
-                        <Label type={'BUTTON_1'} className={'pdf-name'}>
+                        <Label type={'BUTTON_1'} className={'pdf-name'} title={it.name}>
                           {it.name}
                         </Label>
                         <Label type={'CAPTION_3'} className={'pdf-type'}>
@@ -122,7 +136,7 @@ export function useFileUploadButton({ accept, multiple, disabled }: Params) {
 
   return {
     files,
-    fileUrls,
+    filePreview,
     clearFiles,
     renderFileButton,
     renderFilePreview,
@@ -131,7 +145,7 @@ export function useFileUploadButton({ accept, multiple, disabled }: Params) {
 
 const RemoveButton = () => {
   return (
-    <div className={'sendbird-message-input--file-remove'}>
+    <div className={'sendbird-message-input--file-remove'} title={'Remove file'}>
       <Icon type={IconTypes.REMOVE} width={'22px'} height={'22px'} />
     </div>
   );
