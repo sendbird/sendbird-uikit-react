@@ -61,6 +61,11 @@ export interface SBUEventHandlers {
   modal?: {
     onMounted?(params: { id: string; close(): void; }): void | (() => void);
   };
+  message?: {
+    onSendMessageFailed?: (message: CoreMessageType, error: unknown) => void;
+    onUpdateMessageFailed?: (message: CoreMessageType, error: unknown) => void;
+    onFileUploadFailed?: (error: unknown) => void;
+  }
 }
 
 export interface SendBirdStateConfig {

@@ -238,3 +238,122 @@ describe('ui/MessageInput', () => {
     ).toBe(1);
   });
 });
+
+describe('MessageInput error handling', () => {
+  beforeEach(() => {
+    const stateContextValue = {
+      config: {
+        groupChannel: {
+          enableDocument: true,
+        },
+      },
+      eventHandlers: {
+        message: {
+          onSendMessageFailed: jest.fn(),
+          onUpdateMessageFailed: jest.fn(),
+          onFileUploadFailed: jest.fn(),
+        },
+      },
+    };
+    const localeContextValue = {
+      stringSet: {},
+    };
+
+    useContext.mockReturnValue(stateContextValue);
+    useLocalization.mockReturnValue(localeContextValue);
+
+    renderHook(() => useSendbirdStateContext());
+    renderHook(() => useLocalization());
+  });
+
+  it('should call onSendMessageFailed when sendMessage throws an error by onKeyDown event', async () => {
+    const mockErrorMessage = 'Send message failed';
+    const onSendMessage = jest.fn(() => {
+      throw new Error(mockErrorMessage);
+    });
+    const { eventHandlers } = useSendbirdStateContext();
+    const textRef = { current: { innerText: null } };
+    const mockText = 'Test Value';
+
+    render(<MessageInput onSendMessage={onSendMessage} ref={textRef} />);
+
+    const input = screen.getByRole('textbox');
+    await userEvent.type(input, mockText);
+
+    fireEvent.keyDown(input, { key: 'Enter' });
+
+    expect(onSendMessage).toThrow(mockErrorMessage);
+    expect(eventHandlers.message.onSendMessageFailed).toHaveBeenCalled();
+  });
+
+  it('should call onSendMessageFailed when sendMessage throws an error by onClick event', async () => {
+    const mockErrorMessage = 'Send message failed';
+    const onSendMessage = jest.fn(() => {
+      throw new Error(mockErrorMessage);
+    });
+    const { eventHandlers } = useSendbirdStateContext();
+    const textRef = { current: { innerText: null } };
+    const mockText = 'Test Value';
+
+    render(<MessageInput onSendMessage={onSendMessage} ref={textRef} />);
+
+    const input = screen.getByRole('textbox');
+    await userEvent.type(input, mockText);
+
+    const sendIcon = document.getElementsByClassName('sendbird-message-input--send')[0];
+    fireEvent.click(sendIcon);
+
+    expect(onSendMessage).toThrow(mockErrorMessage);
+    expect(eventHandlers.message.onSendMessageFailed).toHaveBeenCalled();
+  });
+
+  it('should call onUpdateMessageFailed when editMessage throws an error', async () => {
+    const mockErrorMessage = 'Update message failed';
+    const onUpdateMessage = jest.fn(() => {
+      throw new Error(mockErrorMessage);
+    });
+    const { eventHandlers } = useSendbirdStateContext();
+    const messageId = 123;
+    const textRef = { current: { innerText: null } };
+    const mockText = 'Updated Text';
+
+    render(
+      <MessageInput
+        isEdit
+        message={{ messageId }}
+        onUpdateMessage={onUpdateMessage}
+        ref={textRef}
+      />
+    );
+
+    const input = screen.getByRole('textbox');
+    await userEvent.type(input, mockText);
+
+    const editButton = document.getElementsByClassName('sendbird-message-input--edit-action__save')[0];
+
+    fireEvent.click(editButton);
+
+    expect(onUpdateMessage).toThrow(mockErrorMessage);
+    expect(eventHandlers.message.onUpdateMessageFailed).toHaveBeenCalled();
+  });
+
+  it('should call onFileUploadFailed when file upload throws an error', async () => {
+    const mockErrorMessage = 'File upload failed';
+    const onFileUpload = jest.fn(() => {
+      throw new Error(mockErrorMessage);
+    });
+    const { eventHandlers } = useSendbirdStateContext();
+    const file = new File(['dummy content'], 'example.txt', { type: 'text/plain' });
+
+    render(<MessageInput onFileUpload={onFileUpload} />);
+
+    const fileInput = document.getElementsByClassName('sendbird-message-input--attach-input')[0];
+  
+    fireEvent.change(fileInput, { currentTarget: { files: [file] } });
+
+    expect(onFileUpload).toThrow(mockErrorMessage);
+    expect(eventHandlers.message.onFileUploadFailed).toHaveBeenCalled();
+  });
+});
+
+
