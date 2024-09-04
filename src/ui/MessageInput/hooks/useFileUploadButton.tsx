@@ -17,8 +17,9 @@ export function useFileUploadButton({ accept, multiple, disabled }: Params) {
   const input = useRef<HTMLInputElement>();
 
   const addFiles = (newFiles: File[]) => {
-    setFiles((prev) => [...prev, ...newFiles]);
-    setFilePreview((prev) => [...prev, ...newFiles.map((it) => ({ url: URL.createObjectURL(it), type: it.type, name: it.name }))]);
+    const filtered = newFiles.filter((it) => (accept ? accept.includes(it.type) : true));
+    setFiles((prev) => [...prev, ...filtered]);
+    setFilePreview((prev) => [...prev, ...filtered.map((it) => ({ url: URL.createObjectURL(it), type: it.type, name: it.name }))]);
   };
 
   const removeFile = (index: number) => {
@@ -136,8 +137,9 @@ export function useFileUploadButton({ accept, multiple, disabled }: Params) {
 
   return {
     files,
-    filePreview,
+    addFiles,
     clearFiles,
+    filePreview,
     renderFileButton,
     renderFilePreview,
   };

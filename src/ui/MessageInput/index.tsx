@@ -100,6 +100,8 @@ type MessageInputProps = {
   setMentionedUsers?: React.Dispatch<React.SetStateAction<User[]>>;
   acceptableMimeTypes?: string[];
 };
+
+const multiselect = false;
 const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((props, externalRef) => {
   const {
     channel,
@@ -146,10 +148,10 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     config,
   });
 
-  const { files, clearFiles, renderFileButton, renderFilePreview } = useFileUploadButton({
+  const { files, addFiles, clearFiles, renderFileButton, renderFilePreview } = useFileUploadButton({
     disabled,
     accept: getMimeTypesUIKitAccepts(acceptableMimeTypes),
-    multiple: false, // isSelectingMultipleFilesEnabled && isChannelTypeSupportsMultipleFilesMessage(channel)
+    multiple: multiselect, // isSelectingMultipleFilesEnabled && isChannelTypeSupportsMultipleFilesMessage(channel)
   });
   const [isInput, setIsInput] = useState(false);
   const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
@@ -449,6 +451,17 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     channel,
     setIsInput,
     setHeight,
+    onPaste: (type, data) => {
+      if (type === 'file') {
+        if (!multiselect && data.length > 1) {
+          // FIXME(file-support): multiple not allowed alert
+          addFiles(data.slice(0, 1));
+          return;
+        }
+
+        addFiles(data);
+      }
+    },
   });
 
   return (
