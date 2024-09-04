@@ -102,7 +102,7 @@ export function TemplateMessageItemBody({
    * If no type given, draw default.
    * If wrong type given, render fallback message and log error.
    */
-  if (templateData && templateData?.type !== MessageTemplateTypes.default) {
+  if (templateData?.type && templateData?.type !== MessageTemplateTypes.default) {
     logger?.error?.(
       'TemplateMessageItemBody: invalid type value in message.extendedMessagePayload.message_template.',
       templateData,
