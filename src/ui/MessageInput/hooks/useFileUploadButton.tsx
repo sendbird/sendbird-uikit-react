@@ -18,6 +18,10 @@ export function useFileUploadButton({ accept, multiple, disabled }: Params) {
 
   const addFiles = (newFiles: File[]) => {
     const filtered = newFiles.filter((it) => (accept ? accept.includes(it.type) : true));
+    if (!multiple && files.length >= 1 && filtered.length >= 1) {
+      // FIXME(file-support): alert file limit
+      return;
+    }
     setFiles((prev) => [...prev, ...filtered]);
     setFilePreview((prev) => [...prev, ...filtered.map((it) => ({ url: URL.createObjectURL(it), type: it.type, name: it.name }))]);
   };

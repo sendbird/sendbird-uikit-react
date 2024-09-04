@@ -27,6 +27,7 @@ import { User } from '@sendbird/chat';
 import { OpenChannel } from '@sendbird/chat/openChannel';
 import { BaseMessageCreateParams, UserMessage } from '@sendbird/chat/message';
 import { useFileUploadButton } from './hooks/useFileUploadButton';
+import { useDragDropFiles } from '../../../../../src/tools/hooks/useDragDropFiles';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const LINE_HEIGHT = 76;
@@ -461,6 +462,18 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
 
         addFiles(data);
       }
+    },
+  });
+
+  useDragDropFiles({
+    onDropFiles: (files) => {
+      if (!multiselect && files.length > 1) {
+        // FIXME(file-support): multiple not allowed alert
+        addFiles(files.slice(0, 1));
+        return;
+      }
+
+      addFiles(files);
     },
   });
 
