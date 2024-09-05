@@ -90,7 +90,7 @@ export function useMessageActions(params: Params): MessageActions {
         const internalParams = buildInternalMessageParams<FileMessageCreateParams>(params);
         const processedParams = await onBeforeSendFileMessage(internalParams);
 
-        return sendFileMessage(processedParams, () => scrollToBottom());
+        return sendFileMessage(processedParams, () => { setTimeout(scrollToBottom, 0); });
       },
       [buildInternalMessageParams, sendFileMessage, scrollToBottom],
     ),
@@ -99,7 +99,7 @@ export function useMessageActions(params: Params): MessageActions {
         const internalParams = buildInternalMessageParams<MultipleFilesMessageCreateParams>(params);
         const processedParams = await onBeforeSendMultipleFilesMessage(internalParams);
 
-        return sendMultipleFilesMessage(processedParams, () => scrollToBottom());
+        return sendMultipleFilesMessage(processedParams, () => { setTimeout(scrollToBottom, 0); });
       },
       [buildInternalMessageParams, sendMultipleFilesMessage, scrollToBottom],
     ),
@@ -122,7 +122,7 @@ export function useMessageActions(params: Params): MessageActions {
         });
         const processedParams = await onBeforeSendVoiceMessage(internalParams);
 
-        return sendFileMessage(processedParams, () => scrollToBottom());
+        return sendFileMessage(processedParams, () => { setTimeout(scrollToBottom, 0); });
       },
       [buildInternalMessageParams, sendFileMessage, scrollToBottom],
     ),
