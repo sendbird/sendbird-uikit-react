@@ -81,7 +81,7 @@ export function useMessageActions(params: Params): MessageActions {
         const internalParams = buildInternalMessageParams<UserMessageCreateParams>(params);
         const processedParams = await onBeforeSendUserMessage(internalParams);
 
-        return sendUserMessage(processedParams, () => scrollToBottom());
+        return sendUserMessage(processedParams, () => { setTimeout(scrollToBottom, 0); });
       },
       [buildInternalMessageParams, sendUserMessage, scrollToBottom],
     ),
