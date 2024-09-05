@@ -29,7 +29,7 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto', deps: Dependen
   const scrollPositionRef = useRef(0);
   const scrollDistanceFromBottomRef = useRef(0);
 
-  const [scrollPubSub] = useState(() => pubSubFactory<ScrollTopics, ScrollTopicUnion>({ publishSynchronous: false }));
+  const [scrollPubSub] = useState(() => pubSubFactory<ScrollTopics, ScrollTopicUnion>({ publishSynchronous: true }));
   const [isScrollBottomReached, setIsScrollBottomReached] = useState(true);
 
   // SideEffect: Reset scroll state
