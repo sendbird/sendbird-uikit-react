@@ -12,7 +12,7 @@ export type PubSubTypes<
     topic: K,
     subscriber: (data: PayloadByTopic<K, U>) => void
   ) => { remove: () => void };
-  publish: <K extends T>(topic: K, data: PayloadByTopic<K, U>, options: PublishOptions) => void;
+  publish: <K extends T>(topic: K, data: PayloadByTopic<K, U>) => void;
 };
 
 type PayloadByTopic<T extends keyof any, U> = U extends {
@@ -24,10 +24,6 @@ type PayloadByTopic<T extends keyof any, U> = U extends {
 
 type Options = {
   publishSynchronous?: boolean;
-};
-
-type PublishOptions = {
-  forceAsync?: boolean;
 };
 
 const pubSubFactory = <
@@ -47,10 +43,10 @@ const pubSubFactory = <
         },
       };
     },
-    publish: (topic, info, publishOptions) => {
+    publish: (topic, info) => {
       if (topics[topic]) {
         topics[topic].forEach((fn) => {
-          if (opts?.publishSynchronous && !publishOptions.forceAsync) {
+          if (opts?.publishSynchronous) {
             fn(info !== undefined ? info : {});
           } else {
             setTimeout(() => fn(info !== undefined ? info : {}), 0);
