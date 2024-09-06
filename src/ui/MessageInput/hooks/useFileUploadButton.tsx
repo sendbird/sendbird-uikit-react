@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import IconButton from '../../IconButton';
 import Icon, { IconColors, IconTypes } from '../../Icon';
 import Label from '../../Label';
@@ -16,15 +16,25 @@ export function useFileUploadButton({ accept, multiple, disabled }: Params) {
   const [focus, setFocus] = useState<number>();
   const input = useRef<HTMLInputElement>();
 
-  const addFiles = (newFiles: File[]) => {
-    const filtered = newFiles.filter((it) => (accept ? accept.includes(it.type) : true));
-    if (!multiple && files.length >= 1 && filtered.length >= 1) {
-      // FIXME(file-support): alert file limit
-      return;
-    }
-    setFiles((prev) => [...prev, ...filtered]);
-    setFilePreview((prev) => [...prev, ...filtered.map((it) => ({ url: URL.createObjectURL(it), type: it.type, name: it.name }))]);
-  };
+  const addFiles = useCallback(
+    (newFiles: File[]) => {
+      const filtered = newFiles.filter((it) => (accept ? accept.includes(it.type) : true));
+
+      setFiles((prev) => {
+        if (!multiple && prev.length >= 1 && filtered.length >= 1) {
+          return prev;
+        }
+        return [...prev, ...filtered];
+      });
+      setFilePreview((prev) => {
+        if (!multiple && prev.length >= 1 && filtered.length >= 1) {
+          return prev;
+        }
+        return [...prev, ...filtered.map((it) => ({ url: URL.createObjectURL(it), type: it.type, name: it.name }))];
+      });
+    },
+    [accept, multiple],
+  );
 
   const removeFile = (index: number) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));

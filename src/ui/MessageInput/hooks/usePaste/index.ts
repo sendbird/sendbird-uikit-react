@@ -72,7 +72,7 @@ export function usePaste({
 
     setIsInput(true);
     setHeight();
-  }, [ref, setIsInput, setHeight, channel, setMentionedUsers]);
+  }, [ref, setIsInput, setHeight, channel, setMentionedUsers, onPaste]);
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types#dragging_links
