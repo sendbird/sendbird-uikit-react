@@ -75,13 +75,22 @@ export function useMessageActions(params: Params): MessageActions {
     [replyType, quoteMessage],
   );
 
+  // This is a hack for the hotfix of following issue
+  // https://sendbird.atlassian.net/browse/SBISSUE-17029
+  const asyncScrollToBottom = useCallback(
+    () => {
+      setTimeout(scrollToBottom, 0);
+    },
+    [],
+  );
+
   return {
     sendUserMessage: useCallback(
       async (params) => {
         const internalParams = buildInternalMessageParams<UserMessageCreateParams>(params);
         const processedParams = await onBeforeSendUserMessage(internalParams);
 
-        return sendUserMessage(processedParams, () => scrollToBottom());
+        return sendUserMessage(processedParams, asyncScrollToBottom);
       },
       [buildInternalMessageParams, sendUserMessage, scrollToBottom],
     ),
@@ -90,7 +99,7 @@ export function useMessageActions(params: Params): MessageActions {
         const internalParams = buildInternalMessageParams<FileMessageCreateParams>(params);
         const processedParams = await onBeforeSendFileMessage(internalParams);
 
-        return sendFileMessage(processedParams, () => scrollToBottom());
+        return sendFileMessage(processedParams, asyncScrollToBottom);
       },
       [buildInternalMessageParams, sendFileMessage, scrollToBottom],
     ),
@@ -99,7 +108,7 @@ export function useMessageActions(params: Params): MessageActions {
         const internalParams = buildInternalMessageParams<MultipleFilesMessageCreateParams>(params);
         const processedParams = await onBeforeSendMultipleFilesMessage(internalParams);
 
-        return sendMultipleFilesMessage(processedParams, () => scrollToBottom());
+        return sendMultipleFilesMessage(processedParams, asyncScrollToBottom);
       },
       [buildInternalMessageParams, sendMultipleFilesMessage, scrollToBottom],
     ),
@@ -122,7 +131,7 @@ export function useMessageActions(params: Params): MessageActions {
         });
         const processedParams = await onBeforeSendVoiceMessage(internalParams);
 
-        return sendFileMessage(processedParams, () => scrollToBottom());
+        return sendFileMessage(processedParams, asyncScrollToBottom);
       },
       [buildInternalMessageParams, sendFileMessage, scrollToBottom],
     ),

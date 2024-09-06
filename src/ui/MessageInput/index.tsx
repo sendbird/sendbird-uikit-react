@@ -138,7 +138,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
 
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useLocalization();
-  const { config } = useSendbirdStateContext();
+  const { config, eventHandlers } = useSendbirdStateContext();
 
   const isFileUploadEnabled = checkIfFileUploadEnabled({
     channel,
@@ -391,38 +391,45 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   }, [isMentionEnabled]);
 
   const sendMessage = () => {
-    const textField = internalRef?.current;
-    if (!isEdit && textField?.textContent) {
-      const { messageText, mentionTemplate } = extractTextAndMentions(textField.childNodes);
-      const params = { message: messageText, mentionTemplate };
-      onSendMessage(params);
-      resetInput(internalRef);
+    try {
+      const textField = internalRef?.current;
+      if (!isEdit && textField?.textContent) {
+        const { messageText, mentionTemplate } = extractTextAndMentions(textField.childNodes);
+        const params = { message: messageText, mentionTemplate };
+        onSendMessage(params);
+        resetInput(internalRef);
+        /**
+         * Note: contentEditable does not work as expected in mobile WebKit (Safari).
+         * @see https://github.com/sendbird/sendbird-uikit-react/pull/1108
+         */
+        if (isMobileIOS(navigator.userAgent)) {
+          if (ghostInputRef.current) ghostInputRef.current.focus();
+          requestAnimationFrame(() => textField.focus());
+        } else {
+          // important: keeps the keyboard open -> must add test on refactor
+          textField.focus();
+        }
 
-      /**
-       * Note: contentEditable does not work as expected in mobile WebKit (Safari).
-       * @see https://github.com/sendbird/sendbird-uikit-react/pull/1108
-       */
-      if (isMobileIOS(navigator.userAgent)) {
-        if (ghostInputRef.current) ghostInputRef.current.focus();
-        requestAnimationFrame(() => textField.focus());
-      } else {
-        // important: keeps the keyboard open -> must add test on refactor
-        textField.focus();
+        setIsInput(false);
+        setHeight();
       }
-
-      setIsInput(false);
-      setHeight();
+    } catch (error) {
+      eventHandlers?.message?.onSendMessageFailed?.(message, error);
     }
   };
   const isEditDisabled = !internalRef?.current?.textContent?.trim();
   const editMessage = () => {
-    const textField = internalRef?.current;
-    const messageId = message?.messageId;
-    if (isEdit && messageId && textField) {
-      const { messageText, mentionTemplate } = extractTextAndMentions(textField.childNodes);
-      const params = { messageId, message: messageText, mentionTemplate };
-      onUpdateMessage(params);
-      resetInput(internalRef);
+    try {
+      const textField = internalRef?.current;
+      const messageId = message?.messageId;
+      if (isEdit && messageId && textField) {
+        const { messageText, mentionTemplate } = extractTextAndMentions(textField.childNodes);
+        const params = { messageId, message: messageText, mentionTemplate };
+        onUpdateMessage(params);
+        resetInput(internalRef);
+      }
+    } catch (error) {
+      eventHandlers?.message?.onUpdateMessageFailed?.(message, error);
     }
   };
   const onPaste = usePaste({
@@ -432,6 +439,19 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     setIsInput,
     setHeight,
   });
+
+  const uploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = event.currentTarget;
+    try {
+      if (files) {
+        onFileUpload(Array.from(files));
+      }
+    } catch (error) {
+      eventHandlers?.message?.onFileUploadFailed?.(error);
+    } finally {
+      event.target.value = '';
+    }
+  };
 
   return (
     <form className={classnames(
@@ -559,13 +579,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
                   type="file"
                   ref={fileInputRef}
                   // It will affect to <Channel /> and <Thread />
-                  onChange={(event) => {
-                    const { files } = event.currentTarget;
-                    if (files) {
-                      onFileUpload(files && files.length === 1 ? [files[0]] : Array.from(files));
-                    }
-                    event.target.value = '';
-                  }}
+                  onChange={(event) => uploadFile(event)}
                   accept={getMimeTypesUIKitAccepts(acceptableMimeTypes)}
                   multiple={isSelectingMultipleFilesEnabled && isChannelTypeSupportsMultipleFilesMessage(channel)}
                 />
