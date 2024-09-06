@@ -1,5 +1,34 @@
 # Changelog - v3
 
+## [v3.15.2] (Sep 6th, 2024)
+
+### Features
+- Introduced new `message` event handlers for `onSendMessageFailed`, `onUpdateMessageFailed`, and `onFileUploadFailed` in the `eventHandlers` prop of the message input component. These handlers allow developers to respond to message send, update, and file upload failures.
+  * How to use?
+  ```tsx
+  <Sendbird
+    eventHandlers={{
+      message: {
+        onSendMessageFailed: (message, error) => {
+          // You can use the message parameter to create specific conditions
+          if (message.isUserMessage()) {
+            alert(`Message failed to send: ${error?.message}`);
+          }
+        },
+        onUpdateMessageFailed: (message, error) => {
+          console.log(`Failed to update message: ${message.messageId}, Error: ${error}`);
+        },
+        onFileUploadFailed: (error) => {
+          console.error('File upload failed', error);
+        },
+      },
+    }}
+  ```
+
+### Fixes
+- Fixed an issue where the channel UI's scroll did not work after sending a new message. This issue was specific to the NextJS environment.
+
+
 ## [v3.15.1] (Aug 29, 2024)
 
 ### Fixes
