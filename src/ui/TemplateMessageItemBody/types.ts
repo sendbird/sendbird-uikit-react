@@ -1,4 +1,4 @@
-import { ComponentsUnion, CompositeComponentType } from '@sendbird/uikit-message-template';
+import { ComponentsUnion } from '@sendbird/uikit-message-template';
 
 type SendbirdFontWeight = 'bold' | 'normal';
 
@@ -80,19 +80,6 @@ export type MessageTemplateTheme = {
 };
 
 export type MessageTemplateItem = ComponentsUnion['properties'];
-
-export type FilledMessageTemplate = {
-  version: number,
-  body: {
-    items: MessageTemplateItem[];
-  },
-};
-
-export interface CarouselItem {
-  type: CompositeComponentType.Carousel;
-  spacing: number;
-  items: string | SendbirdUiTemplate[]; // Reservation key. ex. "{@some_key}"
-}
 
 export type MessageTemplateData = SimpleTemplateData & {
   // Reference: https://sendbird.atlassian.net/wiki/spaces/UK/pages/2265484095/UIKit+message+template+syntax+extension+proposal#View-variables-in-message-payload
