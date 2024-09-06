@@ -444,7 +444,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     const { files } = event.currentTarget;
     try {
       if (files) {
-        onFileUpload(files && files.length === 1 ? [files[0]] : Array.from(files));
+        onFileUpload(Array.from(files));
       }
     } catch (error) {
       eventHandlers?.message?.onFileUploadFailed?.(error);
