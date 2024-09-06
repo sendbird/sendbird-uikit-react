@@ -100,6 +100,7 @@ type MessageInputProps = {
   renderSendMessageIcon?: () => React.ReactNode;
   setMentionedUsers?: React.Dispatch<React.SetStateAction<User[]>>;
   acceptableMimeTypes?: string[];
+  onFileLimitError?: () => void;
 };
 
 const multiselect = false;
@@ -135,6 +136,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     renderSendMessageIcon = noop,
     setMentionedUsers = noop,
     acceptableMimeTypes,
+    onFileLimitError,
   } = props;
 
   const internalRef = externalRef && 'current' in externalRef ? externalRef : null;
@@ -455,8 +457,8 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     onPaste: (type, data) => {
       if (type === 'file') {
         if (!multiselect && data.length > 1) {
-          // FIXME(file-support): multiple not allowed alert
-          addFiles(data.slice(0, 1));
+          onFileLimitError?.();
+          // addFiles(data.slice(0, 1));
           return;
         }
 
@@ -468,8 +470,8 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   useDragDropFiles({
     onDropFiles: (files) => {
       if (!multiselect && files.length > 1) {
-        // FIXME(file-support): multiple not allowed alert
-        addFiles(files.slice(0, 1));
+        onFileLimitError?.();
+        // addFiles(files.slice(0, 1));
         return;
       }
 

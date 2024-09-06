@@ -52,6 +52,7 @@ export interface MessageInputWrapperViewProps {
   // renderVoiceMessageIcon?: () => React.ReactElement;
   renderSendMessageIcon?: () => React.ReactElement;
   acceptableMimeTypes?: string[];
+  onFileLimitError?: () => void;
 }
 
 export const MessageInputWrapperView = React.forwardRef((
@@ -77,6 +78,7 @@ export const MessageInputWrapperView = React.forwardRef((
     renderSendMessageIcon,
     acceptableMimeTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
     disabled,
+    onFileLimitError,
   } = props;
   const { stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
@@ -272,6 +274,7 @@ export const MessageInputWrapperView = React.forwardRef((
             }
             return false;
           }}
+          onFileLimitError={onFileLimitError}
         />
       {/* )} */}
     </div>
