@@ -91,26 +91,28 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
 
   const templateData: MessageTemplateData = message.extendedMessagePayload?.[MESSAGE_TEMPLATE_KEY] as MessageTemplateData;
   const { profile = true, time = true, nickname = true } = templateData?.container_options ?? {};
+  const hasContainerHeader = profile || nickname;
   return (
     <div className="sendbird-message-content__sendbird-ui-container-type__default__root">
       {
         !isByMe
+        && hasContainerHeader
         && !chainTop
         && !useReplying
         && !chainBottom
         && (
           <div className="sendbird-message-content__sendbird-ui-container-type__default__header-container">
-            {profile && <div
+            <div
               className="sendbird-message-content__sendbird-ui-container-type__default__header-container__left__profile">
-              {senderProfile}
-            </div>}
+              {profile && senderProfile}
+            </div>
             {nickname && messageHeader}
           </div>
         )
       }
       {messageBody}
       {
-        (!isByMe && !chainBottom && time)
+        (!isByMe && time && !chainBottom)
         && <div className="sendbird-message-content__sendbird-ui-container-type__default__bottom">
           {timeStamp}
         </div>
