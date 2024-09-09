@@ -7,9 +7,10 @@ interface Params {
   disabled?: boolean;
   accept?: string;
   multiple?: boolean;
+  onLimitReached?: () => void;
 }
 
-export function useFileUploadButton({ accept, multiple, disabled }: Params) {
+export function useFileUploadButton({ accept, multiple, disabled, onLimitReached }: Params) {
   const [files, setFiles] = useState<File[]>([]);
   const [filePreview, setFilePreview] = useState<{ url: string; type: string; name: string }[]>([]);
 
@@ -19,21 +20,20 @@ export function useFileUploadButton({ accept, multiple, disabled }: Params) {
   const addFiles = useCallback(
     (newFiles: File[]) => {
       const filtered = newFiles.filter((it) => (accept ? accept.includes(it.type) : true));
+      if (filtered.length === 0) return;
+      if (!multiple && filtered.length > 1) {
+        onLimitReached?.();
+        return;
+      }
+      if (!multiple && filtered.length > 0 && files.length > 0) {
+        onLimitReached?.();
+        return;
+      }
 
-      setFiles((prev) => {
-        if (!multiple && prev.length >= 1 && filtered.length >= 1) {
-          return prev;
-        }
-        return [...prev, ...filtered];
-      });
-      setFilePreview((prev) => {
-        if (!multiple && prev.length >= 1 && filtered.length >= 1) {
-          return prev;
-        }
-        return [...prev, ...filtered.map((it) => ({ url: URL.createObjectURL(it), type: it.type, name: it.name }))];
-      });
+      setFiles((prev) => [...prev, ...filtered]);
+      setFilePreview((prev) => [...prev, ...filtered.map((it) => ({ url: URL.createObjectURL(it), type: it.type, name: it.name }))]);
     },
-    [accept, multiple],
+    [accept, files, multiple, onLimitReached],
   );
 
   const removeFile = (index: number) => {

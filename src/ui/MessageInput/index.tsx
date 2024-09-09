@@ -155,6 +155,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     disabled,
     accept: getMimeTypesUIKitAccepts(acceptableMimeTypes),
     multiple: multiselect, // isSelectingMultipleFilesEnabled && isChannelTypeSupportsMultipleFilesMessage(channel)
+    onLimitReached: onFileLimitError,
   });
   const [isInput, setIsInput] = useState(false);
   const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
@@ -456,12 +457,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     setHeight,
     onPaste: (type, data) => {
       if (type === 'file') {
-        if (!multiselect && data.length > 1) {
-          onFileLimitError?.();
-          // addFiles(data.slice(0, 1));
-          return;
-        }
-
         addFiles(data);
       }
     },
@@ -469,12 +464,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
 
   useDragDropFiles({
     onDropFiles: (files) => {
-      if (!multiselect && files.length > 1) {
-        onFileLimitError?.();
-        // addFiles(files.slice(0, 1));
-        return;
-      }
-
       addFiles(files);
     },
   });
