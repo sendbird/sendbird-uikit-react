@@ -15,7 +15,7 @@ import Modal from '../../../../ui/Modal';
 
 type DeleteMessageTypeLegacy = (message: CoreMessageType) => Promise<void>;
 export interface FileViewerViewProps extends FileViewerProps {
-  deleteMessage: ((message: SendableMessageType) => Promise<void>) | DeleteMessageTypeLegacy;
+  deleteMessage?: ((message: SendableMessageType) => Promise<void>) | DeleteMessageTypeLegacy;
   onDownloadClick?: (e: MouseEvent) => Promise<void>;
   profile?: ReactNode;
 }
@@ -23,7 +23,6 @@ export interface FileViewerViewProps extends FileViewerProps {
 export const FileViewerView = ({
   message,
   onCancel,
-  deleteMessage,
   onDownloadClick,
   profile,
 }: FileViewerViewProps) => {
@@ -41,7 +40,6 @@ export const FileViewerView = ({
       url={url}
       name={name}
       onCancel={onCancel}
-      onDelete={() => deleteMessage(message).then(() => onCancel())}
       isByMe={config.userId === userId}
       disableDelete={threadInfo?.replyCount ? threadInfo.replyCount > 0 : false}
       onDownloadClick={onDownloadClick}
@@ -61,7 +59,7 @@ export interface FileViewerUIProps {
   // others
   isByMe: boolean;
   onCancel: () => void;
-  onDelete: () => void;
+  onDelete?: () => void;
   disableDelete: boolean;
   onDownloadClick?: (e: MouseEvent) => Promise<void>;
   profile?: ReactNode;
