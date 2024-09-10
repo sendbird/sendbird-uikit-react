@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import type { Logger } from '../../../../lib/SendbirdState';
-import * as messageActionTypes from '../dux/actionTypes';
 import { SdkStore } from '../../../../lib/types';
+import useMessageSearchActions from './useMessageSearchActions';
 
 interface MainProps {
   channelUrl: string;
@@ -10,27 +10,24 @@ interface MainProps {
 interface ToolProps {
   sdk: SdkStore['sdk'];
   logger: Logger;
-  messageSearchDispatcher: (param: { type: string, payload: any }) => void;
 }
 
 function useSetChannel(
   { channelUrl, sdkInit }: MainProps,
-  { sdk, logger, messageSearchDispatcher }: ToolProps,
+  { sdk, logger }: ToolProps,
 ): void {
+  const { setCurrentChannel, setChannelInvalid } = useMessageSearchActions();
+
   useEffect(() => {
-    if (channelUrl && sdkInit && (sdk?.groupChannel)) {
-      sdk.groupChannel.getChannel(channelUrl).then((groupChannel) => {
-        logger.info('MessageSearch | useSetChannel group channel', groupChannel);
-        messageSearchDispatcher({
-          type: messageActionTypes.SET_CURRENT_CHANNEL,
-          payload: groupChannel,
+    if (channelUrl && sdkInit && sdk?.groupChannel) {
+      sdk.groupChannel.getChannel(channelUrl)
+        .then((groupChannel) => {
+          logger.info('MessageSearch | useSetChannel group channel', groupChannel);
+          setCurrentChannel(groupChannel);
+        })
+        .catch(() => {
+          setChannelInvalid();
         });
-      }).catch(() => {
-        messageSearchDispatcher({
-          type: messageActionTypes.CHANNEL_INVALID,
-          payload: null,
-        });
-      });
     }
   }, [channelUrl, sdkInit]);
 }

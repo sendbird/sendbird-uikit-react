@@ -3,7 +3,8 @@ import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 import './index.scss';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { useMessageSearchContext } from '../../context/MessageSearchProvider';
+import { useMessageSearchStore } from '../../context/_MessageSearchProvider';
+import useMessageSearchActions from '../../context/hooks/useMessageSearchActions';
 
 import MessageSearchItem from '../../../../ui/MessageSearchItem';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -33,13 +34,11 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
   renderPlaceHolderEmptyList,
   renderSearchItem,
 }: MessageSearchUIProps) => {
-  const {
+  const { state: {
     isInvalid,
     searchString,
     requestString,
     currentChannel,
-    retryCount,
-    setRetryCount,
     loading,
     scrollRef,
     hasMoreResult,
@@ -47,14 +46,14 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
     allMessages,
     onResultClick,
     selectedMessageId,
+  } } = useMessageSearchStore();
+
+  const {
     setSelectedMessageId,
-  } = useMessageSearchContext();
+    handleRetryToConnect,
+  } = useMessageSearchActions();
 
   const { stringSet } = useContext(LocalizationContext);
-
-  const handleRetryToConnect = () => {
-    setRetryCount(retryCount + 1);
-  };
 
   const handleOnScroll = (e) => {
     const scrollElement = e.target;

@@ -1,38 +1,42 @@
-import { useState, useEffect } from 'react';
-import * as messageActionTypes from '../dux/actionTypes';
+import { useState, useEffect, useCallback } from 'react';
+import useMessageSearchActions from './useMessageSearchActions';
 
 interface DynamicParams {
   searchString: string;
 }
 
-interface StaticParams {
-  messageSearchDispatcher: (param: { type: string, payload: any }) => void;
-}
-
 const DEBOUNCING_TIME = 500;
 
-function useSearchStringEffect(
-  { searchString }: DynamicParams,
-  { messageSearchDispatcher }: StaticParams,
-): string {
+function useSearchStringEffect({ searchString }: DynamicParams): string {
   const [requestString, setRequestString] = useState<string>('');
   const [debouncingTimer, setDebouncingTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => {
-    clearTimeout(debouncingTimer ?? undefined);
+
+  const { resetSearchString } = useMessageSearchActions();
+
+  const handleSearchStringChange = useCallback(() => {
     if (searchString) {
-      setDebouncingTimer(
-        setTimeout(() => {
-          setRequestString(searchString);
-        }, DEBOUNCING_TIME),
-      );
+      setRequestString(searchString);
     } else {
       setRequestString('');
-      messageSearchDispatcher({
-        type: messageActionTypes.RESET_SEARCH_STRING,
-        payload: '',
-      });
+      resetSearchString();
     }
-  }, [searchString]);
+  }, [searchString, resetSearchString]);
+
+  useEffect(() => {
+    if (debouncingTimer) {
+      clearTimeout(debouncingTimer);
+    }
+
+    const timer = setTimeout(handleSearchStringChange, DEBOUNCING_TIME);
+    setDebouncingTimer(timer);
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [searchString, handleSearchStringChange]);
+
   return requestString;
 }
 

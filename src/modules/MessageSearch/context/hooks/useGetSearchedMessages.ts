@@ -1,14 +1,13 @@
-import { useEffect } from 'react';
-
+import { useEffect, useCallback } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
-
 import type { SendbirdError } from '@sendbird/chat';
-
 import type { Logger } from '../../../../lib/SendbirdState';
-import * as messageActionTypes from '../dux/actionTypes';
 import { CoreMessageType } from '../../../../utils';
 import { SdkStore } from '../../../../lib/types';
+import { useMessageSearchStore } from '../_MessageSearchProvider';
+import useMessageSearchActions from '../../context/hooks/useMessageSearchActions';
+import { ClientSentMessages } from '../../../../types';
 
 enum MessageSearchOrder {
   SCORE = 'score',
@@ -24,75 +23,61 @@ interface MainProps {
     messages?: Array<CoreMessageType>,
     error?: SendbirdError,
   ) => void;
-  retryCount: number;
 }
 interface ToolProps {
   sdk: SdkStore['sdk'];
   logger: Logger;
-  messageSearchDispatcher: (props: { type: string, payload: any }) => void;
 }
 
 function useGetSearchedMessages(
-  { currentChannel, channelUrl, requestString, messageSearchQuery, onResultLoaded, retryCount }: MainProps,
-  { sdk, logger, messageSearchDispatcher }: ToolProps,
+  { currentChannel, channelUrl, requestString, messageSearchQuery, onResultLoaded }: MainProps,
+  { sdk, logger }: ToolProps,
 ): void {
+  const {
+    startMessageSearch,
+    getSearchedMessages,
+    setQueryInvalid,
+    startGettingSearchedMessages,
+  } = useMessageSearchActions();
+  const { state: { retryCount } } = useMessageSearchStore();
+
+  const handleSearchError = useCallback((error: SendbirdError) => {
+    logger.warning('MessageSearch | useGetSearchedMessages: failed getting search messages.', error);
+    setQueryInvalid();
+    if (onResultLoaded && typeof onResultLoaded === 'function') {
+      onResultLoaded(undefined, error);
+    }
+  }, [logger, setQueryInvalid, onResultLoaded]);
+
   useEffect(() => {
-    messageSearchDispatcher({
-      type: messageActionTypes.START_MESSAGE_SEARCH,
-      payload: null,
-    });
-    if (sdk && channelUrl && sdk.createMessageSearchQuery && currentChannel) {
-      if (requestString) {
-        currentChannel.refresh()
-          .then((channel) => {
-            const inputSearchMessageQueryObject: MessageSearchQueryParams = {
-              order: MessageSearchOrder.TIMESTAMP,
-              channelUrl,
-              messageTimestampFrom: channel.invitedAt,
-              keyword: requestString,
-              ...messageSearchQuery,
-            };
-            const createdQuery = sdk.createMessageSearchQuery(inputSearchMessageQueryObject);
-            createdQuery.next().then((messages) => {
-              logger.info('MessageSearch | useGetSearchedMessages: succeeded getting messages', messages);
-              messageSearchDispatcher({
-                type: messageActionTypes.GET_SEARCHED_MESSAGES,
-                payload: {
-                  messages,
-                  createdQuery,
-                },
-              });
-              if (onResultLoaded && typeof onResultLoaded === 'function') {
-                onResultLoaded(messages as CoreMessageType[], undefined);
-              }
-            }).catch((error) => {
-              logger.warning('MessageSearch | useGetSearchedMessages: failed getting search messages.', error);
-              messageSearchDispatcher({
-                type: messageActionTypes.SET_QUERY_INVALID,
-                payload: null,
-              });
-              if (onResultLoaded && typeof onResultLoaded === 'function') {
-                onResultLoaded(undefined, error);
-              }
-            });
-            messageSearchDispatcher({
-              type: messageActionTypes.START_GETTING_SEARCHED_MESSAGES,
-              payload: createdQuery,
-            });
-          })
-          .catch((error) => {
-            logger.warning('MessageSearch | useGetSearchedMessages: failed getting channel.', error);
-            messageSearchDispatcher({
-              type: messageActionTypes.SET_QUERY_INVALID,
-              payload: null,
-            });
+    startMessageSearch();
+    if (sdk && channelUrl && sdk.createMessageSearchQuery && currentChannel && requestString) {
+      currentChannel.refresh()
+        .then((channel) => {
+          const inputSearchMessageQueryObject: MessageSearchQueryParams = {
+            order: MessageSearchOrder.TIMESTAMP,
+            channelUrl,
+            messageTimestampFrom: channel.invitedAt,
+            keyword: requestString,
+            ...messageSearchQuery,
+          };
+          const createdQuery = sdk.createMessageSearchQuery(inputSearchMessageQueryObject);
+          startGettingSearchedMessages(createdQuery);
+
+          createdQuery.next().then((messages) => {
+            logger.info('MessageSearch | useGetSearchedMessages: succeeded getting messages', messages);
+            getSearchedMessages(messages as ClientSentMessages[], createdQuery);
             if (onResultLoaded && typeof onResultLoaded === 'function') {
-              onResultLoaded(undefined, error);
+              onResultLoaded(messages as CoreMessageType[], undefined);
             }
-          });
-      } else {
-        logger.info('MessageSearch | useGetSeasrchedMessages: search string is empty');
-      }
+          }).catch(handleSearchError);
+        })
+        .catch((error) => {
+          logger.warning('MessageSearch | useGetSearchedMessages: failed getting channel.', error);
+          handleSearchError(error);
+        });
+    } else if (!requestString) {
+      logger.info('MessageSearch | useGetSearchedMessages: search string is empty');
     }
   }, [channelUrl, messageSearchQuery, requestString, currentChannel, retryCount]);
 }

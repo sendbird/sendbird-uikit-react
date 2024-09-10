@@ -101,19 +101,19 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: Mess
 
   useSetChannel(
     { channelUrl, sdkInit },
-    { sdk, logger, messageSearchDispatcher },
+    { sdk, logger },
   );
 
-  const requestString = useSearchStringEffect({ searchString: searchString ?? '' }, { messageSearchDispatcher });
+  const requestString = useSearchStringEffect({ searchString: searchString ?? '' });
 
   useGetSearchMessages(
-    { currentChannel, channelUrl, requestString, messageSearchQuery, onResultLoaded, retryCount },
-    { sdk, logger, messageSearchDispatcher },
+    { currentChannel, channelUrl, requestString, messageSearchQuery, onResultLoaded },
+    { sdk, logger },
   );
 
   const onScroll = useScrollCallback(
-    { currentMessageSearchQuery, hasMoreResult, onResultLoaded },
-    { logger, messageSearchDispatcher },
+    { onResultLoaded },
+    { logger },
   );
 
   const handleRetryToConnect = () => {

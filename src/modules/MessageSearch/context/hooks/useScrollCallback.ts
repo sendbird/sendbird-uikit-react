@@ -1,29 +1,32 @@
-import type { SendbirdError } from '@sendbird/chat';
-import type { BaseMessage, MessageSearchQuery } from '@sendbird/chat/message';
 import { useCallback } from 'react';
-import * as messageActionTypes from '../dux/actionTypes';
+import type { SendbirdError } from '@sendbird/chat';
+import type { BaseMessage } from '@sendbird/chat/message';
 import { CoreMessageType } from '../../../../utils';
 import { LoggerInterface } from '../../../../lib/Logger';
+import { useMessageSearchStore } from '../_MessageSearchProvider';
+import useMessageSearchActions from './useMessageSearchActions';
+import { ClientSentMessages } from '../../../../types';
 
 interface MainProps {
-  currentMessageSearchQuery: MessageSearchQuery | null;
-  hasMoreResult: boolean;
   onResultLoaded?: (messages?: Array<CoreMessageType> | null, error?: SendbirdError | null) => void;
 }
 
-type MessageSearchDispatcherType = { type: string; payload: any };
-
 interface ToolProps {
   logger: LoggerInterface;
-  messageSearchDispatcher: (payload: MessageSearchDispatcherType) => void;
 }
 
 export type CallbackReturn = (callback: (...args: [messages: BaseMessage[], error: null] | [messages: null, error: any]) => void) => void;
 
 function useScrollCallback(
-  { currentMessageSearchQuery, hasMoreResult, onResultLoaded }: MainProps,
-  { logger, messageSearchDispatcher }: ToolProps,
+  { onResultLoaded }: MainProps,
+  { logger }: ToolProps,
 ): CallbackReturn {
+  const { getNextSearchedMessages } = useMessageSearchActions();
+  const { state: {
+    currentMessageSearchQuery,
+    hasMoreResult,
+  } } = useMessageSearchStore();
+
   return useCallback((cb) => {
     if (!hasMoreResult) {
       logger.warning('MessageSearch | useScrollCallback: no more searched results', hasMoreResult);
@@ -33,10 +36,7 @@ function useScrollCallback(
         .next()
         .then((messages) => {
           logger.info('MessageSearch | useScrollCallback: succeeded getting searched messages', messages);
-          messageSearchDispatcher({
-            type: messageActionTypes.GET_NEXT_SEARCHED_MESSAGES,
-            payload: messages,
-          });
+          getNextSearchedMessages(messages as ClientSentMessages[]);
           cb(messages, null);
           if (onResultLoaded && typeof onResultLoaded === 'function') {
             onResultLoaded(messages as CoreMessageType[], null);
@@ -52,9 +52,7 @@ function useScrollCallback(
     } else {
       logger.warning('MessageSearch | useScrollCallback: no currentMessageSearchQuery');
     }
-  },
-  [currentMessageSearchQuery, hasMoreResult],
-  );
+  }, [currentMessageSearchQuery, hasMoreResult]);
 }
 
 export default useScrollCallback;
