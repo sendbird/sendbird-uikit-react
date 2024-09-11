@@ -10,10 +10,17 @@ interface Params {
   onLimitReached?: () => void;
 }
 
-export function useFileUploadButton({ accept, multiple, disabled, onLimitReached }: Params) {
-  const [files, setFiles] = useState<File[]>([]);
-  const [filePreview, setFilePreview] = useState<{ url: string; type: string; name: string }[]>([]);
+interface AttachedFile {
+  file: File;
+  preview: {
+    url: string;
+    type: string;
+    name: string;
+  };
+}
 
+export function useFileUploadButton({ accept, multiple, disabled, onLimitReached }: Params) {
+  const [files, setFiles] = useState<AttachedFile[]>([]);
   const [focus, setFocus] = useState<number>();
   const input = useRef<HTMLInputElement>();
 
@@ -30,18 +37,19 @@ export function useFileUploadButton({ accept, multiple, disabled, onLimitReached
         return;
       }
 
-      setFiles((prev) => [...prev, ...filtered]);
-      setFilePreview((prev) => [...prev, ...filtered.map((it) => ({ url: URL.createObjectURL(it), type: it.type, name: it.name }))]);
+      setFiles((prev) => [
+        ...prev,
+        ...filtered.map((file) => ({ file, preview: { url: URL.createObjectURL(file), type: file.type, name: file.name } })),
+      ]);
     },
     [accept, files, multiple, onLimitReached],
   );
 
   const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
-    setFilePreview((prev) => {
+    setFiles((prev) => {
       return prev.filter((it, i) => {
         if (i !== index) {
-          URL.revokeObjectURL(it.url);
+          URL.revokeObjectURL(it.preview.url);
           return true;
         }
         return false;
@@ -52,9 +60,8 @@ export function useFileUploadButton({ accept, multiple, disabled, onLimitReached
   };
 
   const clearFiles = () => {
-    setFiles([]);
-    setFilePreview((prev) => {
-      prev.forEach((it) => URL.revokeObjectURL(it.url));
+    setFiles(() => {
+      files.forEach((it) => URL.revokeObjectURL(it.preview.url));
       return [];
     });
 
@@ -97,15 +104,15 @@ export function useFileUploadButton({ accept, multiple, disabled, onLimitReached
   };
 
   const renderFilePreview = () => {
-    if (filePreview.length === 0) return null;
+    if (files.length === 0) return null;
 
     return (
       <div className={'sendbird-message-input--file-preview'}>
-        {filePreview.map((it, i) => {
+        {files.map(({ preview }, i) => {
           return (
             <div
               className={'sendbird-message-input--file'}
-              key={it.url}
+              key={preview.url}
               onMouseOver={() => setFocus(i)}
               onMouseLeave={() => setFocus(undefined)}
             >
@@ -118,21 +125,21 @@ export function useFileUploadButton({ accept, multiple, disabled, onLimitReached
                 </span>
               )}
               {(() => {
-                if (it.type.startsWith('image/')) {
+                if (preview.type.startsWith('image/')) {
                   {
                     /** FIXME(file-support): support open file previewer */
                   }
-                  return <img className={'image'} alt={'file-image'} src={it.url} />;
+                  return <img className={'image'} alt={'file-image'} src={preview.url} />;
                 }
-                if (it.type.startsWith('application/pdf')) {
+                if (preview.type.startsWith('application/pdf')) {
                   return (
                     <div className={'pdf'}>
                       <div className={'pdf-icon'}>
                         <Icon type={IconTypes.FILE_DOCUMENT} width={'24px'} height={'24px'} />
                       </div>
                       <div className={'pdf-info'}>
-                        <Label type={'BUTTON_1'} className={'pdf-name'} title={it.name}>
-                          {it.name}
+                        <Label type={'BUTTON_1'} className={'pdf-name'} title={preview.name}>
+                          {preview.name}
                         </Label>
                         <Label type={'CAPTION_3'} className={'pdf-type'}>
                           {'PDF'}
@@ -153,7 +160,6 @@ export function useFileUploadButton({ accept, multiple, disabled, onLimitReached
     files,
     addFiles,
     clearFiles,
-    filePreview,
     renderFileButton,
     renderFilePreview,
   };

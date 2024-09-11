@@ -413,7 +413,10 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     const params = { message: messageText, mentionTemplate };
 
     if (hasFiles) {
-      onFileUpload(files, params);
+      onFileUpload(
+        files.map((it) => it.file),
+        params,
+      );
     } else if (hasText) {
       onSendMessage(params);
     } else {
