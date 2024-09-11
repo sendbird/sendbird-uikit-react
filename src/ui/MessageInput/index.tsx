@@ -471,92 +471,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     },
   });
 
-  const renderTextArea = () => {
-    return (
-      <div style={{ position: 'relative', flex: 1, overflow: 'auto' }}>
-        {isMobileIOS(navigator.userAgent) && (
-          <input
-            id={'ghost-input-reset-ime-cjk'}
-            ref={ghostInputRef}
-            style={{ opacity: 0, padding: 0, margin: 0, height: 0, border: 'none', position: 'absolute', top: -9999 }}
-            defaultValue={'_'}
-          />
-        )}
-        <div
-          id={`${textFieldId}${isEdit ? message?.messageId : ''}`}
-          className={`sendbird-message-input--textarea ${textFieldId}`}
-          contentEditable={!disabled}
-          role="textbox"
-          aria-label="Text Input"
-          ref={externalRef}
-          // @ts-ignore
-          disabled={disabled}
-          maxLength={maxLength}
-          onKeyDown={(e) => {
-            const preventEvent = onKeyDown(e);
-            if (preventEvent) {
-              e.preventDefault();
-            } else {
-              if (
-                !e.shiftKey &&
-                e.key === MessageInputKeys.Enter &&
-                !isMobile &&
-                internalRef?.current?.textContent &&
-                internalRef.current.textContent.trim().length > 0 &&
-                e?.nativeEvent?.isComposing !== true
-                /**
-                 * NOTE: What isComposing does?
-                 * Check if the user has finished composing characters
-                 * (e.g., for languages like Korean, Japanese, where characters are composed from multiple keystrokes)
-                 * Prevents executing the code while the user is still composing characters.
-                 */
-              ) {
-                e.preventDefault();
-                sendMessage();
-              }
-              if (
-                e.key === MessageInputKeys.Backspace &&
-                internalRef?.current?.childNodes?.length === 2 &&
-                !internalRef.current.childNodes[0].textContent &&
-                internalRef.current.childNodes[1].nodeType === NodeTypes.ElementNode
-              ) {
-                internalRef.current.removeChild(internalRef.current.childNodes[1]);
-              }
-            }
-          }}
-          onKeyUp={(e) => {
-            const preventEvent = onKeyUp(e);
-            if (preventEvent) {
-              e.preventDefault();
-            } else {
-              useMentionInputDetection();
-            }
-          }}
-          onClick={() => {
-            useMentionInputDetection();
-          }}
-          onInput={() => {
-            setHeight();
-            onStartTyping();
-            setIsInput(internalRef?.current?.textContent ? internalRef.current.textContent.trim().length > 0 : false);
-            useMentionedLabelDetection();
-          }}
-          onPaste={onPaste}
-        />
-        {/* placeholder */}
-        {(internalRef?.current?.textContent?.length ?? 0) === 0 && (
-          <Label
-            className="sendbird-message-input--placeholder"
-            type={LabelTypography.BODY_1}
-            color={disabled ? LabelColors.ONBACKGROUND_4 : LabelColors.ONBACKGROUND_3}
-          >
-            {placeholder || stringSet.MESSAGE_INPUT__PLACE_HOLDER}
-          </Label>
-        )}
-      </div>
-    );
-  };
-
   return (
     <form
       className={classnames(
@@ -571,17 +485,95 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
       >
         <div className={'sendbird-message-input--area'}>
           {renderFilePreview()}
-          <div style={{ display: 'flex', flexDirection: 'row' }}>
-            {renderTextArea()}
-            <div style={{ paddingInlineEnd: 12, display: 'flex', alignItems: 'flex-end' }}>
-              {!isEdit &&
-                files.length === 0 &&
-                (renderFileUploadIcon?.() ||
-                  // UIKit Dashboard configuration should have lower priority than
-                  // renderFileUploadIcon which is set in code level
-                  (isFileUploadEnabled && renderFileButton()))}
-            </div>
+          <div style={{ position: 'relative' }}>
+            {isMobileIOS(navigator.userAgent) && (
+              <input
+                id={'ghost-input-reset-ime-cjk'}
+                ref={ghostInputRef}
+                style={{ opacity: 0, padding: 0, margin: 0, height: 0, border: 'none', position: 'absolute', top: -9999 }}
+                defaultValue={'_'}
+              />
+            )}
+            <div
+              id={`${textFieldId}${isEdit ? message?.messageId : ''}`}
+              className={`sendbird-message-input--textarea ${textFieldId}`}
+              contentEditable={!disabled}
+              role="textbox"
+              aria-label="Text Input"
+              ref={externalRef}
+              // @ts-ignore
+              disabled={disabled}
+              maxLength={maxLength}
+              onKeyDown={(e) => {
+                const preventEvent = onKeyDown(e);
+                if (preventEvent) {
+                  e.preventDefault();
+                } else {
+                  if (
+                    !e.shiftKey &&
+                    e.key === MessageInputKeys.Enter &&
+                    !isMobile &&
+                    internalRef?.current?.textContent &&
+                    internalRef.current.textContent.trim().length > 0 &&
+                    e?.nativeEvent?.isComposing !== true
+                    /**
+                     * NOTE: What isComposing does?
+                     * Check if the user has finished composing characters
+                     * (e.g., for languages like Korean, Japanese, where characters are composed from multiple keystrokes)
+                     * Prevents executing the code while the user is still composing characters.
+                     */
+                  ) {
+                    e.preventDefault();
+                    sendMessage();
+                  }
+                  if (
+                    e.key === MessageInputKeys.Backspace &&
+                    internalRef?.current?.childNodes?.length === 2 &&
+                    !internalRef.current.childNodes[0].textContent &&
+                    internalRef.current.childNodes[1].nodeType === NodeTypes.ElementNode
+                  ) {
+                    internalRef.current.removeChild(internalRef.current.childNodes[1]);
+                  }
+                }
+              }}
+              onKeyUp={(e) => {
+                const preventEvent = onKeyUp(e);
+                if (preventEvent) {
+                  e.preventDefault();
+                } else {
+                  useMentionInputDetection();
+                }
+              }}
+              onClick={() => {
+                useMentionInputDetection();
+              }}
+              onInput={() => {
+                setHeight();
+                onStartTyping();
+                setIsInput(internalRef?.current?.textContent ? internalRef.current.textContent.trim().length > 0 : false);
+                useMentionedLabelDetection();
+              }}
+              onPaste={onPaste}
+            />
+            {/* placeholder */}
+            {(internalRef?.current?.textContent?.length ?? 0) === 0 && (
+              <Label
+                className="sendbird-message-input--placeholder"
+                type={LabelTypography.BODY_1}
+                color={disabled ? LabelColors.ONBACKGROUND_4 : LabelColors.ONBACKGROUND_3}
+              >
+                {placeholder || stringSet.MESSAGE_INPUT__PLACE_HOLDER}
+              </Label>
+            )}
           </div>
+
+          {/* file upload icon */}
+          {!isEdit &&
+            files.length === 0 &&
+            (renderFileUploadIcon?.() ||
+              // UIKit Dashboard configuration should have lower priority than
+              // renderFileUploadIcon which is set in code level
+              (isFileUploadEnabled && renderFileButton()))}
         </div>
         {/* send icon */}
         {!isEdit && (isInput || files.length > 0) && (
