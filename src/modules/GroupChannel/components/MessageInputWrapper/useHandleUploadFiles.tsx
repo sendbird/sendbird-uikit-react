@@ -96,7 +96,7 @@ export const useHandleUploadFiles = (
       if (sendingFiles.length === 1) {
         logger.info('Channel|useHandleUploadFiles: sending one file.');
         const [file] = sendingFiles;
-        return sendFileMessage({ file, parentMessageId: quoteMessage?.messageId, ...params });
+        return sendFileMessage({ ...params, file, parentMessageId: quoteMessage?.messageId });
       } else if (sendingFiles.length > 1) {
         logger.info('Channel|useHandleUploadFiles: sending multiple files.');
 
@@ -114,16 +114,17 @@ export const useHandleUploadFiles = (
         return otherFiles.reduce(
           (previousPromise: Promise<MultipleFilesMessage | FileMessage | void>, item: File) => {
             return previousPromise.then(() => {
-              return sendFileMessage({ file: item, parentMessageId: quoteMessage?.messageId, ...params });
+              return sendFileMessage({ ...params, file: item, parentMessageId: quoteMessage?.messageId });
             });
           },
           (() => {
             if (imageFiles.length === 0) {
               return Promise.resolve();
             } else if (imageFiles.length === 1) {
-              return sendFileMessage({ file: imageFiles[0], ...params });
+              return sendFileMessage({ ...params, file: imageFiles[0] });
             } else {
               return sendMultipleFilesMessage?.({
+                ...params,
                 fileInfoList: imageFiles.map((file) => ({
                   file,
                   fileName: file.name,
@@ -131,7 +132,6 @@ export const useHandleUploadFiles = (
                   mimeType: file.type,
                 })),
                 parentMessageId: quoteMessage?.messageId,
-                ...params,
               });
             }
           })(),
