@@ -563,6 +563,14 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
               </Label>
             )}
           </div>
+
+          {/* file upload icon */}
+          {!isEdit &&
+            files.length === 0 &&
+            (renderFileUploadIcon?.() ||
+              // UIKit Dashboard configuration should have lower priority than
+              // renderFileUploadIcon which is set in code level
+              (isFileUploadEnabled && renderFileButton()))}
         </div>
         {/* send icon */}
         {!isEdit && (isInput || files.length > 0) && (
@@ -583,14 +591,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
             )}
           </IconButton>
         )}
-        {/* file upload icon */}
-        {!isEdit &&
-          !isInput &&
-          files.length === 0 &&
-          (renderFileUploadIcon?.() ||
-            // UIKit Dashboard configuration should have lower priority than
-            // renderFileUploadIcon which is set in code level
-            (isFileUploadEnabled && renderFileButton()))}
         {/* voice message input trigger */}
         {/* {isVoiceMessageEnabled && !isEdit && !isInput && (
           <IconButton
