@@ -74,9 +74,9 @@ export function useFileUploadButton({ accept, multiple, disabled, onLimitReached
       >
         <Icon
           type={IconTypes.ATTACH}
-          fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.CONTENT_INVERSE}
-          width={'20px'}
-          height={'20px'}
+          fillColor={disabled ? IconColors.ON_BACKGROUND_4 : IconColors.ON_BACKGROUND_2}
+          width={'16px'}
+          height={'16px'}
         />
         <input
           className={'sendbird-message-input--attach-input'}
