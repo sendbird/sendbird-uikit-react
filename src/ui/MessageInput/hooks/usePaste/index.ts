@@ -6,6 +6,10 @@ import { sanitizeString } from '../../utils';
 import { DynamicProps } from './types';
 import { createPasteNode, domToMessageTemplate, extractTextFromNodes, getLeafNodes, getUsersFromWords, hasMention } from './utils';
 
+interface UsePasteProps extends DynamicProps {
+  onPaste?(type: 'file', data: File[]): void;
+}
+
 // exported, should be backward compatible
 // conditions to test:
 // 1. paste simple text
@@ -20,9 +24,14 @@ export function usePaste({
   setHeight,
   channel,
   setMentionedUsers,
-}: DynamicProps): (e: React.ClipboardEvent<HTMLDivElement>) => void {
+  onPaste,
+}: UsePasteProps): (e: React.ClipboardEvent<HTMLDivElement>) => void {
   return useCallback((e) => {
     e.preventDefault();
+
+    const imgFiles = Array.from(e.clipboardData.files);
+    if (imgFiles.length > 0) onPaste?.('file', imgFiles);
+
     const html = e.clipboardData.getData('text/html');
     // simple text, continue as normal
     if (!html) {
@@ -63,7 +72,7 @@ export function usePaste({
 
     setIsInput(true);
     setHeight();
-  }, [ref, setIsInput, setHeight, channel, setMentionedUsers]);
+  }, [ref, setIsInput, setHeight, channel, setMentionedUsers, onPaste]);
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types#dragging_links

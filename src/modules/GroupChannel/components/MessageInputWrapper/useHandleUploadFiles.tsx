@@ -7,7 +7,7 @@ import { useGlobalModalContext } from '../../../../hooks/useModal';
 import { ButtonTypes } from '../../../../ui/Button';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { ModalFooter } from '../../../../ui/Modal';
-import { FileMessage, MultipleFilesMessage, MultipleFilesMessageCreateParams } from '@sendbird/chat/message';
+import { BaseMessageCreateParams, FileMessage, MultipleFilesMessage, MultipleFilesMessageCreateParams } from '@sendbird/chat/message';
 import { compressImages } from '../../../../utils/compressImages';
 import { FileMessageCreateParams } from '@sendbird/chat/lib/__definition';
 
@@ -17,7 +17,7 @@ import { FileMessageCreateParams } from '@sendbird/chat/lib/__definition';
  */
 interface useHandleUploadFilesDynamicProps {
   sendFileMessage: (params: FileMessageCreateParams) => Promise<FileMessage>;
-  sendMultipleFilesMessage: (params: MultipleFilesMessageCreateParams) => Promise<MultipleFilesMessage>;
+  sendMultipleFilesMessage?: (params: MultipleFilesMessageCreateParams) => Promise<MultipleFilesMessage>;
   quoteMessage?: SendableMessageType;
 }
 interface useHandleUploadFilesStaticProps {
@@ -36,7 +36,7 @@ export const useHandleUploadFiles = (
   const { openModal } = useGlobalModalContext();
 
   return useCallback(
-    async (files: File[]) => {
+    async (files: File[], params: BaseMessageCreateParams & { message: string }) => {
       if (files.length === 0) {
         logger.warning('Channel|useHandleUploadFiles: given file list is empty.', { files });
         return;
@@ -96,7 +96,7 @@ export const useHandleUploadFiles = (
       if (sendingFiles.length === 1) {
         logger.info('Channel|useHandleUploadFiles: sending one file.');
         const [file] = sendingFiles;
-        return sendFileMessage({ file, parentMessageId: quoteMessage?.messageId });
+        return sendFileMessage({ ...params, file, parentMessageId: quoteMessage?.messageId });
       } else if (sendingFiles.length > 1) {
         logger.info('Channel|useHandleUploadFiles: sending multiple files.');
 
@@ -114,16 +114,17 @@ export const useHandleUploadFiles = (
         return otherFiles.reduce(
           (previousPromise: Promise<MultipleFilesMessage | FileMessage | void>, item: File) => {
             return previousPromise.then(() => {
-              return sendFileMessage({ file: item, parentMessageId: quoteMessage?.messageId });
+              return sendFileMessage({ ...params, file: item, parentMessageId: quoteMessage?.messageId });
             });
           },
           (() => {
             if (imageFiles.length === 0) {
               return Promise.resolve();
             } else if (imageFiles.length === 1) {
-              return sendFileMessage({ file: imageFiles[0] });
+              return sendFileMessage({ ...params, file: imageFiles[0] });
             } else {
-              return sendMultipleFilesMessage({
+              return sendMultipleFilesMessage?.({
+                ...params,
                 fileInfoList: imageFiles.map((file) => ({
                   file,
                   fileName: file.name,

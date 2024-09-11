@@ -35,7 +35,7 @@ import IconEmojiMore from '../../svgs/icon-emoji-more.svg';
 import IconError from '../../svgs/icon-error.svg';
 import IconExpand from '../../svgs/icon-expand.svg';
 // import IconFileAudio from '../../svgs/icon-file-audio.svg';
-// import IconFileDocument from '../../svgs/icon-file-document.svg';
+import IconFileDocument from '../../svgs/icon-file-document.svg';
 // import IconFreeze from '../../svgs/icon-freeze.svg';
 // import IconGif from '../../svgs/icon-gif.svg';
 import IconInfo from '../../svgs/icon-info.svg';
@@ -100,7 +100,7 @@ function changeTypeToIconComponent(type: Types) {
     case Types.ERROR: return <IconError />;
     case Types.EXPAND: return <IconExpand />;
     // case Types.FILE_AUDIO: return <IconFileAudio />;
-    // case Types.FILE_DOCUMENT: return <IconFileDocument />;
+    case Types.FILE_DOCUMENT: return <IconFileDocument />;
     // case Types.FREEZE: return <IconFreeze />;
     // case Types.GIF: return <IconGif />;
     case Types.INFO: return <IconInfo />;

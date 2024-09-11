@@ -127,3 +127,139 @@
     }
   }
 }
+
+// new styles
+.sendbird-message-input--area {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  border-radius: 20px;
+}
+
+.sendbird-message-input--file-preview {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  overflow-x: auto;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 8px 16px;
+}
+
+.sendbird-message-input--file {
+  display: flex;
+  flex-shrink: 0;
+  position: relative;
+  margin-block-start: 8px;
+  border-radius: 12px;
+  height: 64px;
+  .sendbird-theme--light & {
+    background-color: var(--sendbird-light-background-200);
+  }
+  .sendbird-theme--dark & {
+    background-color: var(--sendbird-dark-background-500);
+  }
+
+  .image {
+    border-radius: 12px;
+    object-fit: cover;
+    width: 64px;
+    -webkit-user-drag: none;
+  }
+
+  .pdf {
+    border-radius: 12px;
+    gap: 8px;
+    width: 244px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    box-sizing: border-box;
+    .sendbird-theme--light & {
+      border: 1px solid var(--sendbird-light-onlight-04);
+      background-color: var(--sendbird-light-background-50);
+    }
+    .sendbird-theme--dark & {
+      border: 1px solid var(--sendbird-dark-ondark-04);
+      background-color: var(--sendbird-dark-background-600);
+    }
+
+    .pdf-icon {
+      border-radius: 8px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--sendbird-light-error-300);
+      path {
+        fill: white;
+      }
+    }
+
+    .pdf-info {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+
+      .pdf-name {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        .sendbird-theme--light & {
+          color: var(--sendbird-light-onlight-01);
+        }
+        .sendbird-theme--dark & {
+          color: var(--sendbird-dark-ondark-01);
+        }
+      }
+      .pdf-type {
+        .sendbird-theme--light & {
+          color: var(--sendbird-light-onlight-02);
+        }
+        .sendbird-theme--dark & {
+          color: var(--sendbird-dark-ondark-02);
+        }
+      }
+    }
+  }
+}
+
+.sendbird-message-input--file-remove {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .sendbird-theme--light & {
+    background-color: var(--sendbird-light-background-50);
+    path {
+      fill: var(--sendbird-light-onlight-02);
+    }
+    :hover {
+      path {
+        fill: var(--sendbird-light-onlight-01);
+      }
+    }
+  }
+
+  .sendbird-theme--dark & {
+    background-color: var(--sendbird-dark-background-500);
+    path {
+      fill: var(--sendbird-dark-ondark-02);
+    }
+    :hover {
+      path {
+        fill: var(--sendbird-dark-ondark-01);
+      }
+    }
+  }
+}

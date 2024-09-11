@@ -6,8 +6,8 @@ import type {
   BaseMessage,
   FileMessage,
   FileMessageCreateParams,
-  MultipleFilesMessage,
-  MultipleFilesMessageCreateParams,
+  // MultipleFilesMessage,
+  // MultipleFilesMessageCreateParams,
   UserMessage,
   UserMessageCreateParams,
 } from '@sendbird/chat/message';
@@ -22,7 +22,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
-import { SendableMessageType } from '../../../../utils';
+// import { SendableMessageType } from '../../../../utils';
 // import QuoteMessageInput from '../../../../ui/QuoteMessageInput';
 // import VoiceMessageInputWrapper from './VoiceMessageInputWrapper';
 import MessageInput from '../../../../ui/MessageInput';
@@ -52,6 +52,7 @@ export interface MessageInputWrapperViewProps {
   // renderVoiceMessageIcon?: () => React.ReactElement;
   renderSendMessageIcon?: () => React.ReactElement;
   acceptableMimeTypes?: string[];
+  onFileLimitError?: () => void;
 }
 
 export const MessageInputWrapperView = React.forwardRef((
@@ -75,8 +76,9 @@ export const MessageInputWrapperView = React.forwardRef((
     renderFileUploadIcon,
     // renderVoiceMessageIcon,
     renderSendMessageIcon,
-    acceptableMimeTypes,
+    acceptableMimeTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
     disabled,
+    onFileLimitError,
   } = props;
   const { stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
@@ -89,7 +91,7 @@ export const MessageInputWrapperView = React.forwardRef((
   // const isOperator = currentChannel?.myRole === 'operator';
   // const isMultipleFilesMessageEnabled = props.isMultipleFilesMessageEnabled ?? config.isMultipleFilesMessageEnabled;
   const isMentionEnabled = groupChannel.enableMention;
-  const isVoiceMessageEnabled = groupChannel.enableVoiceMessage;
+  // const isVoiceMessageEnabled = groupChannel.enableVoiceMessage;
 
   // States
   const [mentionNickname, setMentionNickname] = useState('');
@@ -142,11 +144,11 @@ export const MessageInputWrapperView = React.forwardRef((
   }, [mentionedUserIds]);
 
   // Callbacks
-  // const handleUploadFiles = useHandleUploadFiles({
-  //   sendFileMessage,
-  //   sendMultipleFilesMessage,
-  //   quoteMessage: quoteMessage ?? undefined,
-  // }, { logger });
+  const handleUploadFiles = useHandleUploadFiles({
+    sendFileMessage,
+    // sendMultipleFilesMessage,
+    // quoteMessage: quoteMessage ?? undefined,
+  }, { logger });
 
   // if (isBroadcast && !isOperator) {
   //   /* Only `Operator` can send messages in the Broadcast channel */
@@ -206,7 +208,7 @@ export const MessageInputWrapperView = React.forwardRef((
           acceptableMimeTypes={acceptableMimeTypes}
           mentionSelectedUser={selectedUser}
           isMentionEnabled={isMentionEnabled}
-          isVoiceMessageEnabled={isVoiceMessageEnabled}
+          // isVoiceMessageEnabled={isVoiceMessageEnabled}
           // isSelectingMultipleFilesEnabled={isMultipleFilesMessageEnabled}
           // onVoiceMessageIconClick={() => {
           //   setShowVoiceMessageInput(true);
@@ -243,10 +245,10 @@ export const MessageInputWrapperView = React.forwardRef((
             // setQuoteMessage(null);
             currentChannel?.endTyping?.();
           }}
-          // onFileUpload={(fileList) => {
-          //   handleUploadFiles(fileList);
-          //   setQuoteMessage(null);
-          // }}
+          onFileUpload={(fileList, params) => {
+            handleUploadFiles(fileList, params);
+            // setQuoteMessage(null);
+          }}
           onUserMentioned={(user) => {
             if (selectedUser?.userId === user?.userId) {
               setSelectedUser(null);
@@ -272,6 +274,7 @@ export const MessageInputWrapperView = React.forwardRef((
             }
             return false;
           }}
+          onFileLimitError={onFileLimitError}
         />
       {/* )} */}
     </div>
