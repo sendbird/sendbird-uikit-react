@@ -497,6 +497,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
             <div
               id={`${textFieldId}${isEdit ? message?.messageId : ''}`}
               className={`sendbird-message-input--textarea ${textFieldId}`}
+              style={{ paddingInlineEnd: 12 + (!multiselect && files.length > 0 ? 0 : 40) }}
               contentEditable={!disabled}
               role="textbox"
               aria-label="Text Input"

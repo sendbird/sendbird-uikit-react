@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import IconButton from '../../IconButton';
 import Icon, { IconColors, IconTypes } from '../../Icon';
 import Label from '../../Label';
@@ -22,7 +22,7 @@ interface AttachedFile {
 export function useFileUploadButton({ accept, multiple, disabled, onLimitReached }: Params) {
   const [files, setFiles] = useState<AttachedFile[]>([]);
   const [focus, setFocus] = useState<number>();
-  const input = useRef<HTMLInputElement>();
+  const input = useRef<HTMLInputElement>(null);
 
   const addFiles = useCallback(
     (newFiles: File[]) => {
@@ -76,7 +76,7 @@ export function useFileUploadButton({ accept, multiple, disabled, onLimitReached
         width={'32px'}
         onClick={() => {
           clearFiles();
-          input.current.click();
+          input.current?.click();
         }}
       >
         <Icon
