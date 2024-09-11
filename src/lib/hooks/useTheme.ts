@@ -3,11 +3,11 @@ import { type ColorSet, mapColorKeys } from '../utils/colorMapper';
 import cssVars from 'css-vars-ponyfill';
 
 const DEFAULT_COLOR_SET = {
-  '--sendbird-dark-primary-500': '#4d2aa6',
-  '--sendbird-dark-primary-400': '#6440C4',
-  '--sendbird-dark-primary-300': '#7B53EF',
-  '--sendbird-dark-primary-200': '#9E8CF5',
-  '--sendbird-dark-primary-100': '#E2DFFF',
+  '--sendbird-dark-primary-500': '#491389',
+  '--sendbird-dark-primary-400': '#6211c8',
+  '--sendbird-dark-primary-300': '#742ddd',
+  '--sendbird-dark-primary-200': '#c2a9fa',
+  '--sendbird-dark-primary-100': '#dbd1ff',
 
   '--sendbird-dark-secondary-500': '#007A7A',
   '--sendbird-dark-secondary-400': '#189A8D',
@@ -17,11 +17,11 @@ const DEFAULT_COLOR_SET = {
 
   '--sendbird-dark-information-100': '#b2d9ff',
 
-  '--sendbird-dark-error-500': '#A30E2D',
-  '--sendbird-dark-error-400': '#C11F41',
-  '--sendbird-dark-error-300': '#E53157',
-  '--sendbird-dark-error-200': '#FF6183',
-  '--sendbird-dark-error-100': '#FFABBD',
+  '--sendbird-dark-error-500': '#9d091e',
+  '--sendbird-dark-error-400': '#bf0711',
+  '--sendbird-dark-error-300': '#de360b',
+  '--sendbird-dark-error-200': '#f66161',
+  '--sendbird-dark-error-100': '#fdaaaa',
 
   '--sendbird-dark-background-700': '#000000',
   '--sendbird-dark-background-600': '#161616',
@@ -51,11 +51,11 @@ const DEFAULT_COLOR_SET = {
 
   '--sendbird-dark-shadow-message-input': '0 1px 5px 0 rgba(33, 34, 66, 0.12), 0 0 1px 0 rgba(33, 34, 66, 0.16), 0 2px 1px 0 rgba(33, 34, 66, 0.08), 0 1px 5px 0 rgba(0, 0, 0, 0.12)',
 
-  '--sendbird-light-primary-500': '#4d2aa6',
-  '--sendbird-light-primary-400': '#6440C4',
-  '--sendbird-light-primary-300': '#7B53EF',
-  '--sendbird-light-primary-200': '#9E8CF5',
-  '--sendbird-light-primary-100': '#E2DFFF',
+  '--sendbird-light-primary-500': '#491389',
+  '--sendbird-light-primary-400': '#6211c8',
+  '--sendbird-light-primary-300': '#742ddd',
+  '--sendbird-light-primary-200': '#c2a9fa',
+  '--sendbird-light-primary-100': '#dbd1ff',
 
   '--sendbird-light-secondary-500': '#007A7A',
   '--sendbird-light-secondary-400': '#189A8D',
@@ -65,11 +65,11 @@ const DEFAULT_COLOR_SET = {
 
   '--sendbird-light-information-100': '#b2d9ff',
 
-  '--sendbird-light-error-500': '#A30E2D',
-  '--sendbird-light-error-400': '#C11F41',
-  '--sendbird-light-error-300': '#E53157',
-  '--sendbird-light-error-200': '#FF6183',
-  '--sendbird-light-error-100': '#FFABBD',
+  '--sendbird-light-error-500': '#9d091e',
+  '--sendbird-light-error-400': '#bf0711',
+  '--sendbird-light-error-300': '#de360b',
+  '--sendbird-light-error-200': '#f66161',
+  '--sendbird-light-error-100': '#fdaaaa',
 
   '--sendbird-light-background-700': '#000000',
   '--sendbird-light-background-600': '#161616',
