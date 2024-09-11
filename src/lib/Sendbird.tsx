@@ -252,7 +252,7 @@ const SendbirdSDK = ({
         sdk,
       });
     }
-  }, [sdk.disconnect]);
+  }, [sdk.disconnectWebSocket]);
 
   // to create a pubsub to communicate between parent and child
   useEffect(() => {
