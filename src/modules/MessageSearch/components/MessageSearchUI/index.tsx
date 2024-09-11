@@ -3,8 +3,7 @@ import type { FileMessage, UserMessage } from '@sendbird/chat/message';
 import './index.scss';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { useMessageSearchStore } from '../../context/_MessageSearchProvider';
-import useMessageSearchActions from '../../context/hooks/useMessageSearchActions';
+import useMessageSearch from '../../context/hooks/useMessageSearch';
 
 import MessageSearchItem from '../../../../ui/MessageSearchItem';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -34,24 +33,25 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
   renderPlaceHolderEmptyList,
   renderSearchItem,
 }: MessageSearchUIProps) => {
-  const { state: {
-    isInvalid,
-    searchString,
-    requestString,
-    currentChannel,
-    loading,
-    scrollRef,
-    hasMoreResult,
-    onScroll,
-    allMessages,
-    onResultClick,
-    selectedMessageId,
-  } } = useMessageSearchStore();
-
   const {
-    setSelectedMessageId,
-    handleRetryToConnect,
-  } = useMessageSearchActions();
+    state: {
+      isInvalid,
+      searchString,
+      requestString,
+      currentChannel,
+      loading,
+      scrollRef,
+      hasMoreResult,
+      onScroll,
+      allMessages,
+      onResultClick,
+      selectedMessageId,
+    },
+    actions: {
+      setSelectedMessageId,
+      handleRetryToConnect,
+    },
+  } = useMessageSearch();
 
   const { stringSet } = useContext(LocalizationContext);
 

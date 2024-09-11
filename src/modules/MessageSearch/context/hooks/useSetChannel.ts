@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import type { Logger } from '../../../../lib/SendbirdState';
 import { SdkStore } from '../../../../lib/types';
-import useMessageSearchActions from './useMessageSearchActions';
+import useMessageSearch from '../hooks/useMessageSearch';
 
 interface MainProps {
   channelUrl: string;
@@ -16,7 +16,12 @@ function useSetChannel(
   { channelUrl, sdkInit }: MainProps,
   { sdk, logger }: ToolProps,
 ): void {
-  const { setCurrentChannel, setChannelInvalid } = useMessageSearchActions();
+  const {
+    actions: {
+      setCurrentChannel,
+      setChannelInvalid,
+    },
+  } = useMessageSearch();
 
   useEffect(() => {
     if (channelUrl && sdkInit && sdk?.groupChannel) {

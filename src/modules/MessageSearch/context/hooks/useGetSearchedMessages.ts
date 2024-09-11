@@ -5,8 +5,7 @@ import type { SendbirdError } from '@sendbird/chat';
 import type { Logger } from '../../../../lib/SendbirdState';
 import { CoreMessageType } from '../../../../utils';
 import { SdkStore } from '../../../../lib/types';
-import { useMessageSearchStore } from '../_MessageSearchProvider';
-import useMessageSearchActions from '../../context/hooks/useMessageSearchActions';
+import useMessageSearch from '../hooks/useMessageSearch';
 import { ClientSentMessages } from '../../../../types';
 
 enum MessageSearchOrder {
@@ -34,12 +33,14 @@ function useGetSearchedMessages(
   { sdk, logger }: ToolProps,
 ): void {
   const {
-    startMessageSearch,
-    getSearchedMessages,
-    setQueryInvalid,
-    startGettingSearchedMessages,
-  } = useMessageSearchActions();
-  const { state: { retryCount } } = useMessageSearchStore();
+    state: { retryCount },
+    actions: {
+      startMessageSearch,
+      getSearchedMessages,
+      setQueryInvalid,
+      startGettingSearchedMessages,
+    },
+  } = useMessageSearch();
 
   const handleSearchError = useCallback((error: SendbirdError) => {
     logger.warning('MessageSearch | useGetSearchedMessages: failed getting search messages.', error);

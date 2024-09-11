@@ -3,8 +3,7 @@ import type { SendbirdError } from '@sendbird/chat';
 import type { BaseMessage } from '@sendbird/chat/message';
 import { CoreMessageType } from '../../../../utils';
 import { LoggerInterface } from '../../../../lib/Logger';
-import { useMessageSearchStore } from '../_MessageSearchProvider';
-import useMessageSearchActions from './useMessageSearchActions';
+import useMessageSearch from '../hooks/useMessageSearch';
 import { ClientSentMessages } from '../../../../types';
 
 interface MainProps {
@@ -21,11 +20,15 @@ function useScrollCallback(
   { onResultLoaded }: MainProps,
   { logger }: ToolProps,
 ): CallbackReturn {
-  const { getNextSearchedMessages } = useMessageSearchActions();
-  const { state: {
-    currentMessageSearchQuery,
-    hasMoreResult,
-  } } = useMessageSearchStore();
+  const {
+    state: {
+      currentMessageSearchQuery,
+      hasMoreResult,
+    },
+    actions: {
+      getNextSearchedMessages,
+    },
+  } = useMessageSearch();
 
   return useCallback((cb) => {
     if (!hasMoreResult) {

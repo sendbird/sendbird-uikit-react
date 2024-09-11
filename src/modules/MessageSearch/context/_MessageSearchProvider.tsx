@@ -12,8 +12,8 @@ import useGetSearchMessages from './hooks/useGetSearchedMessages';
 import useScrollCallback from './hooks/useScrollCallback';
 import useSearchStringEffect from './hooks/useSearchStringEffect';
 import { CoreMessageType } from '../../../utils';
-import { useStore } from '../../../hooks/useStore';
 import { createStore } from '../../../utils/storeManager';
+import { useStore } from '../../../hooks/useStore';
 
 export interface MessageSearchProviderProps {
   channelUrl: string;
@@ -24,7 +24,7 @@ export interface MessageSearchProviderProps {
   onResultClick?(message: ClientSentMessages): void;
 }
 
-interface MessageSearchState extends MessageSearchProviderProps {
+export interface MessageSearchState extends MessageSearchProviderProps {
   channelUrl: string;
   allMessages: ClientSentMessages[];
   loading: boolean;
@@ -57,7 +57,7 @@ const initialState: MessageSearchState = {
   requestString: '',
 };
 
-const MessageSearchContext = createContext<ReturnType<typeof createStore<MessageSearchState>> | null>(null);
+export const MessageSearchContext = createContext<ReturnType<typeof createStore<MessageSearchState>> | null>(null);
 
 const MessageSearchManager: React.FC<MessageSearchProviderProps> = ({
   channelUrl,
@@ -66,11 +66,11 @@ const MessageSearchManager: React.FC<MessageSearchProviderProps> = ({
   onResultLoaded,
   onResultClick,
 }) => {
+  const { state, updateState } = useMessageSearchStore();
   const { config, stores } = useSendbirdStateContext();
   const sdk = stores?.sdkStore?.sdk;
   const sdkInit = stores?.sdkStore?.initialized;
   const { logger } = config;
-  const { state, updateState } = useMessageSearchStore();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useSetChannel(
@@ -155,6 +155,6 @@ export {
  * A specialized hook for MessageSearch state management
  * @returns {ReturnType<typeof createStore<MessageSearchState>>}
  */
-export const useMessageSearchStore = () => {
+const useMessageSearchStore = () => {
   return useStore(MessageSearchContext, state => state, initialState);
 };

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import useMessageSearchActions from './useMessageSearchActions';
+import useMessageSearch from '../hooks/useMessageSearch';
 
 interface DynamicParams {
   searchString: string;
@@ -11,7 +11,7 @@ function useSearchStringEffect({ searchString }: DynamicParams): string {
   const [requestString, setRequestString] = useState<string>('');
   const [debouncingTimer, setDebouncingTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
 
-  const { resetSearchString } = useMessageSearchActions();
+  const { actions: { resetSearchString } } = useMessageSearch();
 
   const handleSearchStringChange = useCallback(() => {
     if (searchString) {
