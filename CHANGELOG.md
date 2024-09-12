@@ -1,5 +1,11 @@
 # Changelog - v3
 
+## [v3.15.3] (Sep 12th, 2024)
+
+### Fixes
+- Fixed incorrect styling for `Checkbox`.
+- Fixed the issue where the channel list appears empty when the UIKit is rendered for the first time.
+
 ## [v3.15.2] (Sep 6th, 2024)
 
 ### Features
