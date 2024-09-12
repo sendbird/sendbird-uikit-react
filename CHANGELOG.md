@@ -1,5 +1,10 @@
 # Changelog - v3
 
+## [v3.15.3] (Sep 12th, 2024)
+
+### Fixes
+- Fixed incorrect styling for `Checkbox`.
+
 ## [v3.15.2] (Sep 6th, 2024)
 
 ### Features
