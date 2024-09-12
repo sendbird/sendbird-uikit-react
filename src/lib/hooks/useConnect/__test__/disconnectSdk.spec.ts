@@ -7,7 +7,7 @@ describe('useConnect/disconnectSdk', () => {
   it('should call disconnectSdk when there is proper SDK', async () => {
     // setup
     const disconnectProps = generateDisconnectSdkParams();
-    const mockDisconnect = disconnectProps.sdk.disconnect as jest.Mock;
+    const mockDisconnect = disconnectProps.sdk.disconnectWebSocket as jest.Mock;
 
     // execute
     await disconnectSdk(disconnectProps);
@@ -15,7 +15,7 @@ describe('useConnect/disconnectSdk', () => {
     // verify
     expect(disconnectProps.sdkDispatcher).toHaveBeenCalledBefore(mockDisconnect);
     expect(disconnectProps.sdkDispatcher).toBeCalledWith({ type: SDK_ACTIONS.SET_SDK_LOADING, payload: true });
-    expect(disconnectProps.sdk.disconnect).toHaveBeenCalled();
+    expect(disconnectProps.sdk.disconnectWebSocket).toHaveBeenCalled();
     expect(disconnectProps.sdkDispatcher).toBeCalledWith({ type: SDK_ACTIONS.RESET_SDK });
     expect(disconnectProps.userDispatcher).toBeCalledWith({ type: USER_ACTIONS.RESET_USER });
   });

@@ -28,6 +28,7 @@ export const mockSdk = {
     return Promise.reject();
   }),
   disconnect: jest.fn().mockImplementation(() => Promise.resolve(true)),
+  disconnectWebSocket: jest.fn().mockImplementation(() => Promise.resolve(true)),
   updateCurrentUserInfo: jest.fn().mockImplementation((user) => Promise.resolve(user)),
   setSessionHandler: jest.fn(),
   addExtension: jest.fn(),

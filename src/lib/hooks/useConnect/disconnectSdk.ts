@@ -9,8 +9,8 @@ export async function disconnectSdk({
 }: DisconnectSdkTypes): Promise<boolean> {
   return new Promise((resolve) => {
     sdkDispatcher({ type: SDK_ACTIONS.SET_SDK_LOADING, payload: true });
-    if (sdk?.disconnect) {
-      sdk.disconnect()
+    if (sdk?.disconnectWebSocket) {
+      sdk.disconnectWebSocket()
         .then(() => {
           sdkDispatcher({ type: SDK_ACTIONS.RESET_SDK });
           userDispatcher({ type: USER_ACTIONS.RESET_USER });
