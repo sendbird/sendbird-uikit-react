@@ -5,7 +5,7 @@ import MessageSearch, { MessageSearchUIProps } from './components/MessageSearchU
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors, IconProps } from '../../ui/Icon';
 import Loader from '../../ui/Loader';
-import { MessageSearchProvider, MessageSearchProviderProps, MessageSearchManager } from './context/_MessageSearchProvider';
+import { MessageSearchProvider, MessageSearchProviderProps } from './context/_MessageSearchProvider';
 import Header from '../../ui/Header';
 
 export interface MessageSearchPannelProps extends MessageSearchUIProps, MessageSearchProviderProps {
@@ -118,14 +118,13 @@ function MessageSearchPannel(props: MessageSearchPannelProps): JSX.Element {
         </div>
       </div>
       <div className="sendbird-message-search-pannel__message-search">
-        <MessageSearchProvider>
-          <MessageSearchManager
-            channelUrl={channelUrl}
-            searchString={searchString}
-            onResultClick={onResultClick}
-            onResultLoaded={handleOnResultLoaded}
-            messageSearchQuery={messageSearchQuery}
-          />
+        <MessageSearchProvider
+          channelUrl={channelUrl}
+          searchString={searchString}
+          onResultClick={onResultClick}
+          onResultLoaded={handleOnResultLoaded}
+          messageSearchQuery={messageSearchQuery}
+        >
           <MessageSearch
             renderPlaceHolderError={renderPlaceHolderError}
             renderPlaceHolderLoading={renderPlaceHolderLoading}

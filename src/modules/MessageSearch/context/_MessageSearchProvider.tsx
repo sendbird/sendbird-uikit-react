@@ -129,13 +129,36 @@ const MessageSearchManager: React.FC<MessageSearchProviderProps> = ({
 };
 
 const createMessageSearchStore = () => createStore(initialState);
-const MessageSearchProvider: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
+const _MessageSearchProvider: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const storeRef = useRef(createMessageSearchStore());
 
   return (
     <MessageSearchContext.Provider value={storeRef.current}>
       {children}
     </MessageSearchContext.Provider>
+  );
+};
+
+const MessageSearchProvider: React.FC<MessageSearchProviderProps> = ({
+  children,
+  channelUrl,
+  searchString,
+  messageSearchQuery,
+  onResultLoaded,
+  onResultClick,
+}) => {
+
+  return (
+    <_MessageSearchProvider>
+      <MessageSearchManager
+        channelUrl={channelUrl}
+        searchString={searchString}
+        messageSearchQuery={messageSearchQuery}
+        onResultLoaded={onResultLoaded}
+        onResultClick={onResultClick}
+      />
+      {children}
+    </_MessageSearchProvider>
   );
 };
 
