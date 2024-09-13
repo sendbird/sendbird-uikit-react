@@ -5,7 +5,7 @@ import MessageSearch, { MessageSearchUIProps } from './components/MessageSearchU
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors, IconProps } from '../../ui/Icon';
 import Loader from '../../ui/Loader';
-import { MessageSearchProvider, MessageSearchProviderProps } from './context/_MessageSearchProvider';
+import { MessageSearchProvider, MessageSearchProviderProps } from './context/MessageSearchProvider';
 import Header from '../../ui/Header';
 
 export interface MessageSearchPannelProps extends MessageSearchUIProps, MessageSearchProviderProps {

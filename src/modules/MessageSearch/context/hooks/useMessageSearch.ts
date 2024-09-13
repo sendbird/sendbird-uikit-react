@@ -3,7 +3,7 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { MessageSearchQuery } from '@sendbird/chat/message';
 
 import { ClientSentMessages } from '../../../../types';
-import { MessageSearchContext } from '../_MessageSearchProvider';
+import { MessageSearchContext } from '../MessageSearchProvider';
 
 const useMessageSearch = () => {
   const store = useContext(MessageSearchContext);
