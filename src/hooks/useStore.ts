@@ -1,4 +1,5 @@
-import { useContext, useRef, useSyncExternalStore, useCallback } from 'react';
+import { useContext, useRef, useCallback } from 'react';
+import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { type Store } from '../utils/storeManager';
 
 type StoreSelector<T, U> = (state: T) => U;
@@ -23,6 +24,7 @@ export function useStore<T, U>(
   selectorRef.current = selector;
   /**
    * useSyncExternalStore - a new API introduced in React18
+   * but we're using a shim for now since it's only available in 18 >= version.
    * useSyncExternalStore simply tracks changes in an external store that is not dependent on React
    * through useState and useEffect
    * and helps with re-rendering and state sync through the setter of useState
