@@ -15,7 +15,6 @@ type MessageContentForTemplateMessageProps = MessageContentProps & MessageCompon
   mouseHover: boolean;
   isMobile: boolean;
   isReactionEnabledInChannel: boolean;
-  onTemplateMessageRenderedCallback: (renderedTemplateType: TemplateType | null) => void;
   hoveredMenuClassName: string;
   templateType: TemplateType | null;
   timestampRef: React.LegacyRef<HTMLDivElement>;
@@ -26,8 +25,6 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
   const {
     channel,
     message,
-    chainTop = false,
-    chainBottom = false,
     showFileViewer,
     onMessageHeightChange,
     onBeforeDownloadFileMessage,
@@ -41,7 +38,6 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
     mouseHover,
     isMobile,
     isReactionEnabledInChannel,
-    onTemplateMessageRenderedCallback,
     hoveredMenuClassName,
     templateType,
     timestampRef,
@@ -55,6 +51,7 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
 
   const senderProfile = renderSenderProfile({
     ...props,
+    chainBottom: false,
     className: '',
     isByMe,
     displayThreadReplies,
@@ -70,9 +67,9 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
     config,
     isReactionEnabledInChannel,
     isByMe,
-    onTemplateMessageRenderedCallback,
     onBeforeDownloadFileMessage,
   });
+
   const timeStamp = <Label
     className={classnames(
       'sendbird-message-content__middle__body-container__created-at',
@@ -92,14 +89,13 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
   const templateData: MessageTemplateData = message.extendedMessagePayload?.[MESSAGE_TEMPLATE_KEY] as MessageTemplateData;
   const { profile = true, time = true, nickname = true } = templateData?.container_options ?? {};
   const hasContainerHeader = profile || nickname;
+
   return (
     <div className="sendbird-message-content__sendbird-ui-container-type__default__root">
       {
         !isByMe
         && hasContainerHeader
-        && !chainTop
         && !useReplying
-        && !chainBottom
         && (
           <div className="sendbird-message-content__sendbird-ui-container-type__default__header-container">
             <div
@@ -112,7 +108,7 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
       }
       {messageBody}
       {
-        (!isByMe && time && !chainBottom)
+        (!isByMe && time)
         && <div className="sendbird-message-content__sendbird-ui-container-type__default__bottom">
           {timeStamp}
         </div>

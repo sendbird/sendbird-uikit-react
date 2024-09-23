@@ -1,10 +1,10 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useIsElementInViewport } from './useIsElementInViewport';
 
-export const useLazyImageLoader = (elementRef: React.MutableRefObject<any>) => {
+export const useLazyImageLoader = () => {
   const isLoaded = useRef(false);
-  const isVisible = useIsElementInViewport(elementRef);
+  const [ref, isVisible] = useIsElementInViewport();
 
   if (isVisible) isLoaded.current = true;
-  return isLoaded.current;
+  return [ref, isLoaded.current];
 };

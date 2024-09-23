@@ -61,9 +61,9 @@ const ImageRenderer = ({
   shadeOnHover,
   isUploaded = true,
 }: ImageRendererProps): ReactElement => {
-  const ref = useRef(null);
-  const isLoaded = useLazyImageLoader(ref);
-  const internalUrl = isLoaded ? url : null;
+  const [ref, isVisible] = useLazyImageLoader();
+  if (!ref) return null;
+  const internalUrl = isVisible ? url : null;
 
   const [defaultComponentVisible, setDefaultComponentVisible] = useState(false);
   const [placeholderVisible, setPlaceholderVisible] = useState(true);
@@ -125,7 +125,6 @@ const ImageRenderer = ({
     dynamicMinWidth
     && dynamicMinHeight && (
       <div
-        ref={ref}
         className={[...(Array.isArray(className) ? className : [className]), 'sendbird-image-renderer'].join(' ')}
         style={{
           width: '100%',

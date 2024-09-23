@@ -20,9 +20,8 @@ import {
   isMultipleFilesMessage,
   isOGMessage, isSendableMessage,
   isTemplateMessage,
-  isThumbnailMessage,
-  MessageTemplateTypes,
-  SendableMessageType, uiContainerType,
+  isThumbnailMessage, isValidTemplateMessageType,
+  SendableMessageType,
 } from '../../utils';
 import { LocalizationContext, useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
@@ -49,7 +48,7 @@ import { MobileBottomSheetProps } from '../MobileMenu/types';
 import useElementObserver from '../../hooks/useElementObserver';
 import { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '../ContextMenu';
 import { MessageContentForTemplateMessage } from './messageContentForTemplateMessage';
-import { TemplateType } from '../TemplateMessageItemBody/types';
+import { MESSAGE_TEMPLATE_KEY } from '../../utils/consts';
 
 export { MessageBody } from './MessageBody';
 export { MessageHeader } from './MessageHeader';
@@ -161,11 +160,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackFailedText, setFeedbackFailedText] = useState('');
-  const [templateType, setTemplateType] = useState<TemplateType | null>(null);
-
-  const onTemplateMessageRenderedCallback = (renderedTemplateType: TemplateType | null) => {
-    setTemplateType(renderedTemplateType);
-  };
 
   const { stringSet } = useContext(LocalizationContext);
 
@@ -210,14 +204,8 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const showThreadReplies = isNotSpecialMessage && displayThreadReplies;
   const showRightContent = isNotSpecialMessage && !isByMe && !isMobile;
 
-  const isTimestampBottom = !!MessageTemplateTypes[templateType];
-  const uiContainerTypeClassName = uiContainerType[templateType] ?? '';
-
   const getTotalBottom = (): number => {
     let sum = 2;
-    if (timestampRef.current && isTimestampBottom) {
-      sum += 4 + timestampRef.current.clientHeight;
-    }
     if (threadRepliesRef.current) {
       sum += 4 + threadRepliesRef.current.clientHeight;
     }
@@ -227,7 +215,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     return sum;
   };
 
-  const totalBottom = useMemo(() => getTotalBottom(), [isTimestampBottom]);
+  const totalBottom = useMemo(() => getTotalBottom(), []);
 
   const onCloseFeedbackForm = () => {
     setShowFeedbackModal(false);
@@ -262,23 +250,30 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     return (<AdminMessage message={message} />);
   }
 
-  if (MessageTemplateTypes[templateType]) {
-    return <MessageContentForTemplateMessage
-      {...props}
-      renderSenderProfile={renderSenderProfile}
-      renderMessageHeader={renderMessageHeader}
-      renderMessageBody={renderMessageBody}
-      isByMe={isByMe}
-      displayThreadReplies={displayThreadReplies}
-      mouseHover={mouseHover}
-      isMobile={isMobile}
-      isReactionEnabledInChannel={isReactionEnabledInChannel}
-      onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
-      hoveredMenuClassName={hoveredMenuClassName}
-      templateType={templateType}
-      timestampRef={timestampRef}
-      useReplying={useReplying}
-    />;
+  if (isTemplateMessage(message)) {
+    const templatePayload = message.extendedMessagePayload[MESSAGE_TEMPLATE_KEY];
+    if (isValidTemplateMessageType(templatePayload)) {
+      return <MessageContentForTemplateMessage
+        {...props}
+        renderSenderProfile={renderSenderProfile}
+        renderMessageHeader={renderMessageHeader}
+        renderMessageBody={renderMessageBody}
+        isByMe={isByMe}
+        displayThreadReplies={displayThreadReplies}
+        mouseHover={mouseHover}
+        isMobile={isMobile}
+        isReactionEnabledInChannel={isReactionEnabledInChannel}
+        hoveredMenuClassName={hoveredMenuClassName}
+        templateType={templatePayload['type']}
+        timestampRef={timestampRef}
+        useReplying={useReplying}
+      />;
+    } else {
+      logger?.error?.(
+        'TemplateMessageItemBody: invalid type value in message.extendedMessagePayload.message_template.',
+        templatePayload,
+      );
+    }
   }
 
   return (
@@ -287,7 +282,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
         className ?? '',
         'sendbird-message-content',
         isByMeClassName,
-        uiContainerTypeClassName,
       ])}
       onMouseOver={() => setMouseHover(true)}
       onMouseLeave={() => setMouseHover(false)}
@@ -344,7 +338,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
       <div
         className={classnames(
           'sendbird-message-content__middle',
-          uiContainerTypeClassName,
         )}
         data-testid="sendbird-message-content__middle"
         {...(isMobile ? { ...longPress } : {})}
@@ -393,7 +386,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
                 'sendbird-message-content__middle__body-container__created-at',
                 'left',
                 hoveredMenuClassName,
-                uiContainerTypeClassName,
               )}
               ref={timestampRef}
             >
@@ -416,7 +408,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
               config,
               isReactionEnabledInChannel,
               isByMe,
-              onTemplateMessageRenderedCallback,
               onBeforeDownloadFileMessage,
             })
           }
@@ -451,7 +442,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
                 'sendbird-message-content__middle__body-container__created-at',
                 'right',
                 hoveredMenuClassName,
-                uiContainerTypeClassName,
               )}
               type={LabelTypography.CAPTION_3}
               color={LabelColors.ONBACKGROUND_2}
@@ -463,14 +453,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
             </Label>
           )}
         </div>
-        {/* bottom timestamp empty container */}
-        {isTimestampBottom && <div
-          style={{
-            width: '100%',
-            height: (timestampRef.current?.clientHeight ?? 0) + 'px',
-            marginTop: '4px',
-          }}
-        />}
         {/* thread replies */}
         {showThreadReplies && message?.threadInfo && (
           <ThreadReplies

@@ -2,14 +2,13 @@ import './index.scss';
 import React, { ReactElement, useEffect, useState } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
 import {
-  getClassName, MessageTemplateTypes,
+  getClassName,
 } from '../../utils';
 import MessageTemplateWrapper from '../../modules/GroupChannel/components/MessageTemplateWrapper';
 import {
   MessageTemplateData,
   MessageTemplateItem,
   SimpleTemplateData,
-  TemplateType,
 } from './types';
 import selectColorVariablesByTheme from './utils/selectColorVariablesByTheme';
 import { SendbirdTheme } from '../../types';
@@ -36,7 +35,6 @@ interface TemplateMessageItemBodyProps {
   message: BaseMessage;
   isByMe?: boolean;
   theme?: SendbirdTheme;
-  onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: TemplateType | null) => void;
 }
 
 export const replaceVariablesInTemplateString = ({
@@ -74,12 +72,10 @@ export function TemplateMessageItemBody({
   message,
   isByMe = false,
   theme = 'light',
-  onTemplateMessageRenderedCallback = () => { /* noop */ },
 }: TemplateMessageItemBodyProps): ReactElement {
   const templateData: MessageTemplateData | undefined = message.extendedMessagePayload?.[MESSAGE_TEMPLATE_KEY] as MessageTemplateData;
 
   const getFailedBody = () => {
-    onTemplateMessageRenderedCallback(null);
     return <FallbackTemplateMessageItemBody
       className={className}
       message={message}
@@ -97,19 +93,6 @@ export function TemplateMessageItemBody({
     return getFailedBody();
   }
   const logger = globalState.config.logger;
-
-  /**
-   * If no type given, draw default.
-   * If wrong type given, render fallback message and log error.
-   */
-  if (templateData?.type && templateData?.type !== MessageTemplateTypes.default) {
-    logger?.error?.(
-      'TemplateMessageItemBody: invalid type value in message.extendedMessagePayload.message_template.',
-      templateData,
-    );
-    return getFailedBody();
-  }
-
   const {
     getCachedTemplate,
     updateMessageTemplatesInfo,
@@ -208,7 +191,7 @@ export function TemplateMessageItemBody({
         });
       });
       Object.entries(reservationKeyToItems).forEach(([reservationKey, filledSimpleTemplates]) => {
-        rootTemplateString = replaceReservationKeys(rootTemplateString, `"{@${reservationKey}}"`, filledSimpleTemplates);
+        rootTemplateString = replaceReservationKeys(rootTemplateString, `"@{${reservationKey}}"`, filledSimpleTemplates);
       });
     }
     return JSON.parse(rootTemplateString);
@@ -257,6 +240,7 @@ export function TemplateMessageItemBody({
         });
       }
     } catch (e) {
+      logger.error('TemplateMessageItemBody | fetching non-cached templates by given template keys failed: ', e);
       result.isErrored = true;
     }
     return result;
@@ -324,7 +308,6 @@ export function TemplateMessageItemBody({
             isByMe={isByMe}
           />
         }
-        onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
         logger={logger}
       >
         {
