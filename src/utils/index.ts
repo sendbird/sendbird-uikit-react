@@ -294,6 +294,11 @@ export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
   message && message.extendedMessagePayload?.[MESSAGE_TEMPLATE_KEY]
 );
 
+export const isValidTemplateMessageType = (templatePayload: unknown): boolean => {
+  const type = templatePayload['type'];
+  return !(type && !MessageTemplateTypes[type]);
+};
+
 export const MessageTemplateTypes: Record<TemplateType, TemplateType> = {
   default: 'default',
 };
