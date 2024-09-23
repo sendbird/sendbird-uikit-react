@@ -66,6 +66,8 @@
   display: block;
 }
 
+// Rotating is not necessary in RTL so ignore it
+/*rtl:begin:ignore*/
 .sendbird-checkbox .sendbird-checkbox--checkmark:after {
   @include themed() {
     left: 5px;
@@ -77,3 +79,4 @@
     transform: rotate(45deg);
   }
 }
+/**rtl:end:ignore**/
