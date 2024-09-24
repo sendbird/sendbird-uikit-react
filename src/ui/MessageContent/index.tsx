@@ -268,11 +268,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
         timestampRef={timestampRef}
         useReplying={useReplying}
       />;
-    } else {
-      logger?.error?.(
-        'TemplateMessageItemBody: invalid type value in message.extendedMessagePayload.message_template.',
-        templatePayload,
-      );
     }
   }
 

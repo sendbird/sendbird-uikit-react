@@ -1,7 +1,7 @@
-import { useRef } from 'react';
+import { RefCallback, useRef } from 'react';
 import { useIsElementInViewport } from './useIsElementInViewport';
 
-export const useLazyImageLoader = () => {
+export const useLazyImageLoader = (): [RefCallback<HTMLDivElement>, boolean] => {
   const isLoaded = useRef(false);
   const [ref, isVisible] = useIsElementInViewport();
 

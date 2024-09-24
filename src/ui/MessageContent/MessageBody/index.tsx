@@ -84,7 +84,12 @@ export const MessageBody = (props: MessageBodyProps) => {
         />
       ))
     .when(isTemplateMessage, () => {
-      if (!isValidTemplateMessageType(message.extendedMessagePayload[MESSAGE_TEMPLATE_KEY])) {
+      const templatePayload = message.extendedMessagePayload[MESSAGE_TEMPLATE_KEY];
+      if (!isValidTemplateMessageType(templatePayload)) {
+        config.logger?.error?.(
+          'TemplateMessageItemBody: invalid type value in message.extendedMessagePayload.message_template.',
+          templatePayload,
+        );
         return <UnknownMessageItemBody
           className={className}
           message={message}
