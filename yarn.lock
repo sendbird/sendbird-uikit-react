@@ -2550,7 +2550,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendbird/uikit-message-template@npm:0.0.2, @sendbird/uikit-message-template@npm:^0.0.2":
+"@sendbird/uikit-message-template@npm:^0.0.2":
   version: 0.0.2
   resolution: "@sendbird/uikit-message-template@npm:0.0.2"
   peerDependencies:
@@ -2579,7 +2579,6 @@ __metadata:
     "@rollup/plugin-typescript": ^11.1.5
     "@sendbird/chat": ^4.14.2
     "@sendbird/react-uikit-message-template-view": 0.0.2
-    "@sendbird/uikit-message-template": 0.0.2
     "@sendbird/uikit-tools": 0.0.2
     "@storybook/addon-essentials": ^8.0.9
     "@storybook/react-vite": ^8.0.9
