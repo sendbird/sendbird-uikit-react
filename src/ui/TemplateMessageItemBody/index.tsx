@@ -163,7 +163,6 @@ export function TemplateMessageItemBody({
     });
     if (templateData.view_variables) {
       const reservationKeyToItems: Record<string, string> = {};
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       Object.entries(templateData.view_variables).forEach(([reservationKey, simpleTemplateDataList]) => {
         const filledSimpleTemplates = [];
         simpleTemplateDataList.forEach((simpleTemplateData: SimpleTemplateData) => {
