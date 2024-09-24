@@ -161,7 +161,6 @@ export function TemplateMessageItemBody({
       colorVariables: rootTemplate.colorVariables,
       theme: theme,
     });
-    // 카루셀 템플릿이 (한개 이상) 암시된 경우
     if (templateData.view_variables) {
       const reservationKeyToItems: Record<string, string> = {};
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
