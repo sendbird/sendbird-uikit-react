@@ -22,18 +22,14 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
             style="width: 100%; min-width: min(400px, 28px); max-width: 400px;"
           >
             <div
-              class="sendbird-avatar-img--default"
-              style="width: 28px; height: 28px;"
-            >
-              <div
-                class=" sendbird-icon sendbird-icon-user sendbird-icon-color--content"
-                role="button"
-                style="width: 16.099999999999998px; min-width: 16.099999999999998px; height: 16.099999999999998px; min-height: 16.099999999999998px;"
-                tabindex="0"
-              >
-                <test-file-stub />
-              </div>
-            </div>
+              class="sendbird-image-renderer__image"
+              style="width: 100%; min-width: min(400px, 28px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/profiles/profile_15_512px.png);"
+            />
+            <img
+              alt=""
+              class="sendbird-image-renderer__hidden-image-loader"
+              src="https://static.sendbird.com/sample/profiles/profile_15_512px.png"
+            />
           </div>
         </div>
       </div>
@@ -82,6 +78,15 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
                 <test-file-stub />
               </div>
             </div>
+            <div
+              class="sendbird-image-renderer__image"
+              style="width: 100%; min-width: min(400px, -80px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://sendbird-staging.s3.amazonaws.com/26FA710D-A7F6-4483-ABEA-1F07A07A112E/upload/n/e49e0a4111d4445a8840bd51f3c9d933.png);"
+            />
+            <img
+              alt="image"
+              class="sendbird-image-renderer__hidden-image-loader"
+              src="https://sendbird-staging.s3.amazonaws.com/26FA710D-A7F6-4483-ABEA-1F07A07A112E/upload/n/e49e0a4111d4445a8840bd51f3c9d933.png"
+            />
           </div>
         </div>
       </div>

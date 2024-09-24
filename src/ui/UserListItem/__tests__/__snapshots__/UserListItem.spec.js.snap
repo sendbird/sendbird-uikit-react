@@ -19,18 +19,14 @@ exports[`ui/UserListItem should do a snapshot test of the UserListItem DOM 1`] =
           style="width: 100%; min-width: min(400px, 40px); max-width: 400px;"
         >
           <div
-            class="sendbird-avatar-img--default"
-            style="width: 40px; height: 40px;"
-          >
-            <div
-              class=" sendbird-icon sendbird-icon-user sendbird-icon-color--content"
-              role="button"
-              style="width: 23px; min-width: 23px; height: 23px; min-height: 23px;"
-              tabindex="0"
-            >
-              <test-file-stub />
-            </div>
-          </div>
+            class="sendbird-image-renderer__image"
+            style="width: 100%; min-width: min(400px, 40px); max-width: 400px; position: absolute; background-repeat: no-repeat; background-position: center; background-size: cover; background-image: url(https://static.sendbird.com/sample/profiles/profile_12_512px.png);"
+          />
+          <img
+            alt=""
+            class="sendbird-image-renderer__hidden-image-loader"
+            src="https://static.sendbird.com/sample/profiles/profile_12_512px.png"
+          />
         </div>
       </div>
     </div>
