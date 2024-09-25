@@ -5,8 +5,12 @@ import format from 'date-fns/format';
 
 import { Logger } from '../../../lib/SendbirdState';
 import { SendableMessageType } from '../../../utils';
+import { useLocalization } from '../../../lib/LocalizationContext';
 
-export const getMessageCreatedAt = (message: SendableMessageType): string => format(message.createdAt, 'p');
+export const getMessageCreatedAt = (message: SendableMessageType): string => {
+  const { stringSet } = useLocalization();
+  return format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT);
+};
 
 export const shouldFetchMore = (messageLength: number, maxMessages?: number): boolean => {
   if (typeof maxMessages !== 'number') {

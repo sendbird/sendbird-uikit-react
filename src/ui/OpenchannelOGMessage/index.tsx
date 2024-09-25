@@ -191,7 +191,7 @@ export default function OpenChannelOGMessage({
                   >
                     {
                       message?.createdAt && (
-                        format(message?.createdAt, 'p', {
+                        format(message?.createdAt, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT, {
                           locale: dateLocale,
                         })
                       )

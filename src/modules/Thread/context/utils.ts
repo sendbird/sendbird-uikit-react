@@ -2,6 +2,7 @@ import format from 'date-fns/format';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { getOutgoingMessageState, OutgoingMessageStates } from '../../../utils/exports/getOutgoingMessageState';
 import { SendableMessageType } from '../../../utils';
+import { useLocalization } from '../../../lib/LocalizationContext';
 
 export const getNicknamesMapFromMembers = (members: Member[] = []): Map<string, string> => {
   const nicknamesMap = new Map();
@@ -57,7 +58,10 @@ export function compareIds(a: number | string, b: number | string): boolean {
   return aString === bString;
 }
 
-export const getMessageCreatedAt = (message: SendableMessageType): string => format(message.createdAt, 'p');
+export const getMessageCreatedAt = (message: SendableMessageType): string => {
+  const { stringSet } = useLocalization();
+  return format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT);
+};
 export const isReadMessage = (channel: GroupChannel, message: SendableMessageType): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );

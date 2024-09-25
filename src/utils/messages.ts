@@ -5,6 +5,7 @@ import format from 'date-fns/format';
 import { ReplyType } from '../types';
 import type { CoreMessageType } from '.';
 import { isReadMessage } from '.';
+import { useLocalization } from '../lib/LocalizationContext';
 
 /**
  * exported, should be backward compatible
@@ -35,7 +36,10 @@ export const compareMessagesForGrouping = (
   ];
 };
 
-export const getMessageCreatedAt = (message: BaseMessage) => format(message.createdAt, 'p');
+export const getMessageCreatedAt = (message: BaseMessage) => {
+  const { stringSet } = useLocalization();
+  return format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT);
+};
 
 export const isSameGroup = (
   message: CoreMessageType,

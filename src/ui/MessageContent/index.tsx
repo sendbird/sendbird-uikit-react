@@ -137,7 +137,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     renderMobileMenuOnLongPress = (props: MobileBottomSheetProps) => <MobileMenu {...props} />,
   } = deleteNullish(props);
 
-  const { dateLocale } = useLocalization();
+  const { dateLocale, stringSet } = useLocalization();
   const { config, eventHandlers } = useSendbirdStateContext();
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
@@ -175,8 +175,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
       setUiContainerType(UI_CONTAINER_TYPES.DEFAULT_CAROUSEL);
     }
   };
-
-  const { stringSet } = useContext(LocalizationContext);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
@@ -448,7 +446,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
               color={LabelColors.ONBACKGROUND_2}
               ref={timestampRef}
             >
-              {format(message?.createdAt || 0, 'p', {
+              {format(message?.createdAt || 0, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT, {
                 locale: dateLocale,
               })}
             </Label>
