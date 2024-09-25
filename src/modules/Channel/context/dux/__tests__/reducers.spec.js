@@ -7,6 +7,12 @@ import * as actionTypes from '../actionTypes';
 import reducers from '../reducers';
 import initialState from '../initialState';
 import { uuidv4 } from '../../../../../utils/uuid';
+import { useLocalization } from '../../../../../lib/LocalizationContext';
+
+jest.mock('../../../../../lib/LocalizationContext', () => ({
+  ...jest.requireActual('../../../../../lib/LocalizationContext'),
+  useLocalization: jest.fn(),
+}));
 
 const getLastMessageOf = (messageList) => messageList[messageList.length - 1];
 
@@ -15,6 +21,16 @@ describe('Messages-Reducers', () => {
     ...initialState,
     currentGroupChannel: { url: generateMockChannel().currentGroupChannel.url },
   };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    useLocalization.mockReturnValue({
+      stringSet: {
+        DATE_FORMAT__UNREAD_SINCE: 'p MMM dd',
+      },
+    });
+  });
+
   it('should setloading true FETCH_INITIAL_MESSAGES_START', () => {
     const nextState = reducers(initialState, {
       type: actionTypes.FETCH_INITIAL_MESSAGES_START,

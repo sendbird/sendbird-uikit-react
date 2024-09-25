@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useContext, useMemo, useRef, useState } from 'react';
+import React, { ReactElement, ReactNode, useMemo, useRef, useState } from 'react';
 import format from 'date-fns/format';
 import './index.scss';
 
@@ -25,7 +25,7 @@ import {
   SendableMessageType,
   UI_CONTAINER_TYPES,
 } from '../../utils';
-import { LocalizationContext, useLocalization } from '../../lib/LocalizationContext';
+import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { type EmojiCategory, EmojiContainer } from '@sendbird/chat';

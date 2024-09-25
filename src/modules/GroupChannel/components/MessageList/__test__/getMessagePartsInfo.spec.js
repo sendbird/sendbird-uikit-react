@@ -1,4 +1,10 @@
+import { useLocalization } from "../../../../../lib/LocalizationContext";
 import { getMessagePartsInfo } from "../getMessagePartsInfo";
+
+jest.mock('../../../../../lib/LocalizationContext', () => ({
+  ...jest.requireActual('../../../../../lib/LocalizationContext'),
+  useLocalization: jest.fn(),
+}));
 
 const mockChannel = {
   isGroupChannel: () => true,
@@ -40,6 +46,14 @@ const messageGroup3 = [1, 2, 3].map((n, i) => ({
 }));
 
 describe('getMessagePartsInfo', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    useLocalization.mockReturnValue({
+      stringSet: {
+        DATE_FORMAT__MESSAGE_CREATED_AT: 'p',
+      },
+    });
+  });
   it('should group messages that are sent at same time', () => {
     const defaultSetting = {
       allMessages: messageGroup1,
