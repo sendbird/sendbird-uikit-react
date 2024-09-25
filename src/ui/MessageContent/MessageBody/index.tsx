@@ -74,6 +74,14 @@ export const MessageBody = (props: MessageBodyProps) => {
   const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
   const isFormMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableFormTypeMessage;
 
+  const renderUnknownMessageItemBody = () => <UnknownMessageItemBody
+    className={className}
+    message={message}
+    isByMe={isByMe}
+    mouseHover={mouseHover}
+    isReactionEnabled={isReactionEnabledInChannel}
+  />;
+
   return match(message)
     .when((message) => isFormMessageEnabledInGroupChannel && isFormMessage(message),
       () => (
@@ -90,13 +98,7 @@ export const MessageBody = (props: MessageBodyProps) => {
           'TemplateMessageItemBody: invalid type value in message.extendedMessagePayload.message_template.',
           templatePayload,
         );
-        return <UnknownMessageItemBody
-          className={className}
-          message={message}
-          isByMe={isByMe}
-          mouseHover={mouseHover}
-          isReactionEnabled={isReactionEnabledInChannel}
-        />;
+        return renderUnknownMessageItemBody();
       }
       return <TemplateMessageItemBody
         className={className}
@@ -174,15 +176,9 @@ export const MessageBody = (props: MessageBodyProps) => {
         {...customSubcomponentsProps['ThumbnailMessageItemBody'] ?? {}}
       />
     ))
-    .otherwise((message) => (
-      <UnknownMessageItemBody
-        className={className}
-        message={message}
-        isByMe={isByMe}
-        mouseHover={mouseHover}
-        isReactionEnabled={isReactionEnabledInChannel}
-      />
-    ));
+    .otherwise(() => {
+      return renderUnknownMessageItemBody();
+    });
 };
 
 export default MessageBody;
