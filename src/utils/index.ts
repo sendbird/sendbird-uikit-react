@@ -14,10 +14,12 @@ import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import { SendableMessage } from '@sendbird/chat/lib/__definition';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
-import { HTMLTextDirection, MessageContentMiddleContainerType, Nullable } from '../types';
+import { HTMLTextDirection, Nullable } from '../types';
 import { isSafari } from './browser';
 import { match } from 'ts-pattern';
 import isSameSecond from 'date-fns/isSameSecond';
+import { MESSAGE_TEMPLATE_KEY } from './consts';
+import { TemplateType } from '../ui/TemplateMessageItemBody/types';
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
 export const SUPPORTED_MIMES = {
@@ -289,31 +291,20 @@ export const isFormMessage = (message: CoreMessageType): boolean => !!(
 );
 
 export const isTemplateMessage = (message: CoreMessageType): boolean => !!(
-  message && message.extendedMessagePayload?.['template']
+  message && message.extendedMessagePayload?.[MESSAGE_TEMPLATE_KEY]
 );
-export enum UI_CONTAINER_TYPES {
-  DEFAULT = '',
-  WIDE = 'ui_container_type__wide',
-  DEFAULT_CAROUSEL = 'ui_container_type__default-carousel',
-}
 
-export const getMessageContentMiddleClassNameByContainerType = ({
-  message,
-  isMobile,
-}: {
-  message: CoreMessageType,
-  isMobile: boolean,
-}): UI_CONTAINER_TYPES => {
-  /**
-   * FULL: template message only.
-   * WIDE: all message types.
-   */
-  const containerType: string | undefined = message.extendedMessagePayload?.['ui']?.['container_type'];
-  if (!isMobile) return UI_CONTAINER_TYPES.DEFAULT;
-  if (containerType === MessageContentMiddleContainerType.WIDE) {
-    return UI_CONTAINER_TYPES.WIDE;
-  }
-  return UI_CONTAINER_TYPES.DEFAULT;
+export const isValidTemplateMessageType = (templatePayload: unknown): boolean => {
+  const type = templatePayload['type'];
+  return !(type && !MessageTemplateTypes[type]);
+};
+
+export const MessageTemplateTypes: Record<TemplateType, TemplateType> = {
+  default: 'default',
+};
+
+export const uiContainerType = {
+  [MessageTemplateTypes.default]: 'ui_container_type__default',
 };
 
 export const isOGMessage = (message: CoreMessageType): message is UserMessage => {

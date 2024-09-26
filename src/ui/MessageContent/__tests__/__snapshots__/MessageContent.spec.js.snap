@@ -3,7 +3,7 @@
 exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1`] = `
 <DocumentFragment>
   <div
-    class="classname-for-snapshot sendbird-message-content incoming "
+    class="classname-for-snapshot sendbird-message-content incoming"
   >
     <div
       class="sendbird-message-content__left incoming"
@@ -11,7 +11,6 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
     >
       <div
         class="sendbird-context-menu"
-        style="display: inline;"
       >
         <div
           class="sendbird-message-content__left__avatar sendbird-avatar"

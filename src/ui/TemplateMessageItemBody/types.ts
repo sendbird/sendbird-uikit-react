@@ -1,4 +1,4 @@
-import { ComponentsUnion, CompositeComponentType } from '@sendbird/uikit-message-template';
+import { ComponentsUnion } from '@sendbird/uikit-message-template';
 
 type SendbirdFontWeight = 'bold' | 'normal';
 
@@ -81,18 +81,21 @@ export type MessageTemplateTheme = {
 
 export type MessageTemplateItem = ComponentsUnion['properties'];
 
-export interface CarouselItem {
-  type: CompositeComponentType.Carousel;
-  spacing: number;
-  items: string | SendbirdUiTemplate[]; // Reservation key. ex. "{@some_key}"
-}
-
-// FIXME: This needs to be updated in the future.
 export type MessageTemplateData = SimpleTemplateData & {
-  view_variables?: Record<string, SimpleTemplateData[]>; // Reference: https://sendbird.atlassian.net/wiki/spaces/UK/pages/2265484095/UIKit+message+template+syntax+extension+proposal#View-variables-in-message-payload
+  // Reference: https://sendbird.atlassian.net/wiki/spaces/UK/pages/2265484095/UIKit+message+template+syntax+extension+proposal#View-variables-in-message-payload
+  view_variables?: Record<string, SimpleTemplateData[]>;
+  // Ref: https://sendbird.atlassian.net/wiki/spaces/UK/pages/2476900424/Refactor+MessageTemplateView#extended_message_payload.message_template
+  container_options?: {
+    profile?: boolean; // default is true
+    time?: boolean; // default is true
+    nickname?: boolean; // default is true
+  };
 };
 
+export type TemplateType = 'default';
+
 export type SimpleTemplateData = {
+  type?: TemplateType;
   key: string;
   variables?: Record<string, any>;
 };

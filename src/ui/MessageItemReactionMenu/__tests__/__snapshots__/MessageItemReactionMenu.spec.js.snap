@@ -7,7 +7,6 @@ exports[`ui/MessageItemReactionMenu should do a snapshot test of the MessageItem
   >
     <div
       class="sendbird-context-menu"
-      style="display: inline;"
     >
       <button
         class="sendbird-message-item-reaction-menu__trigger sendbird-iconbutton "

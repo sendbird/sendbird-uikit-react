@@ -1,17 +1,27 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-export const useIsElementInViewport = (elementRef: React.MutableRefObject<any>) => {
+export const useIsElementInViewport = (): [React.RefCallback<HTMLDivElement>, boolean] => {
   const [isVisible, setIsVisible] = useState(false);
+  const [element, setElement] = useState(null);
 
-  useLayoutEffect(() => {
-    const observer = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+  const ref = useCallback((node) => {
+    if (node !== null) setElement(node);
+  }, []);
+
+  useEffect(() => {
+    if (!element) return;
+
+    const observer = new IntersectionObserver((entries) => {
       const [entry] = entries;
-      if (entry) setIsVisible(entry.isIntersecting);
+      setIsVisible(entry.isIntersecting);
     });
 
-    if (elementRef.current) observer.observe(elementRef.current);
-    return () => observer.disconnect();
-  }, [elementRef.current]);
+    observer.observe(element);
 
-  return isVisible;
+    return () => {
+      observer.disconnect();
+    };
+  }, [element]);
+
+  return [ref, isVisible];
 };

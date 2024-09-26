@@ -9,7 +9,6 @@ exports[`ui/Word should do a snapshot test of the Word DOM 1`] = `
     hello
     <div
       class="sendbird-context-menu"
-      style="display: inline;"
     >
       <a
         class="sendbird-word__mention"

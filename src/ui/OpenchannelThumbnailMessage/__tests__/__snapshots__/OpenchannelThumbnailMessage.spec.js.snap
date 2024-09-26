@@ -10,7 +10,6 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
     >
       <div
         class="sendbird-context-menu"
-        style="display: inline;"
       >
         <div
           class="sendbird-openchannel-thumbnail-message__left__avatar sendbird-avatar"
@@ -97,7 +96,6 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
     >
       <div
         class="sendbird-context-menu"
-        style="display: inline;"
       >
         <button
           class="sendbird-openchannel-thumbnail-message__context-menu--icon sendbird-iconbutton "

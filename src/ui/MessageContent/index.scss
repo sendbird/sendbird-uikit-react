@@ -21,12 +21,6 @@
     }
   }
 
-  .ui_container_type__wide {
-    @include mobile() {
-      max-width: 100%;
-    }
-  }
-
   .sendbird-message-content__middle {
     .sendbird-message-content__middle__quote-message.use-quote {
       bottom: -8px;
@@ -84,15 +78,10 @@
           display: none;
         }
       }
-      .ui_container_type__default-carousel {
+      .ui_container_type__default {
         min-width: fit-content;
         bottom: -16px;
         left: 2px;
-      }
-      .ui_container_type__wide {
-        min-width: fit-content;
-        bottom: -16px;
-        right: 2px;
       }
     }
 
@@ -168,7 +157,7 @@
         .sendbird-message-content__middle__body-container__created-at {
           display: none;
         }
-        .ui_container_type__default-carousel {
+        .ui_container_type__default {
           display: flex;
         }
       }
@@ -243,12 +232,7 @@
           position: relative;
         }
       }
-      .ui_container_type__default-carousel {
-        min-width: fit-content;
-        bottom: -20px;
-        left: 2px;
-      }
-      .ui_container_type__wide {
+      .ui_container_type__default {
         min-width: fit-content;
         bottom: -20px;
         left: 2px;
@@ -352,7 +336,22 @@
   gap: 4px;
 }
 
-// Template message's default width should be 100% (fills empty space as much as possible)
-.sendbird-message-content__middle__for_template_message {
-  width: 100%;
+.sendbird-message-content__sendbird-ui-container-type__default__root {
+  max-width: 400px;
+
+  .sendbird-message-content__sendbird-ui-container-type__default__header-container {
+    display: flex;
+    align-items: center;
+    margin: 8px 0 6px;
+
+    .sendbird-message-content__sendbird-ui-container-type__default__header-container__left__profile {
+      width: 28px;
+      height: 28px;
+      margin-inline-end: 24px;
+    }
+  }
+
+  .sendbird-message-content__sendbird-ui-container-type__default__bottom {
+    padding-inline-start: 52px;
+  }
 }
