@@ -20,7 +20,8 @@ import {
   isMultipleFilesMessage,
   isOGMessage, isSendableMessage,
   isTemplateMessage,
-  isThumbnailMessage, isValidTemplateMessageType,
+  isThumbnailMessage,
+  isValidTemplateMessageType,
   SendableMessageType,
 } from '../../utils';
 import { LocalizationContext, useLocalization } from '../../lib/LocalizationContext';
