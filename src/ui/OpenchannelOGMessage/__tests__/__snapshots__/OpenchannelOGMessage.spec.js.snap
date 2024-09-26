@@ -13,7 +13,6 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
       >
         <div
           class="sendbird-context-menu"
-          style="display: inline;"
         >
           <div
             class="sendbird-openchannel-og-message__top__left__avatar sendbird-avatar"
@@ -71,7 +70,6 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
       >
         <div
           class="sendbird-context-menu"
-          style="display: inline;"
         >
           <button
             class="sendbird-openchannel-og-message__top__context-menu--icon sendbird-iconbutton "

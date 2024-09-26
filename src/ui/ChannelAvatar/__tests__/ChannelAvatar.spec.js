@@ -17,7 +17,7 @@ describe('ui/ChannelAvatar', () => {
     expect(container.getElementsByClassName(targetClassName)[0].className).toContain(targetClassName);
   });
 
-  it('should render an avatar broadcastChannel with url', function() {
+  it('should render an avatar broadcastChannel with non default url', function() {
     const targetClassName = "sendbird-chat-header--avatar--broadcast-channel";
     const coverUrl = '123';
     render(<ChannelAvatar channel={{ isBroadcast: true, coverUrl }} />);

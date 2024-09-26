@@ -49,3 +49,5 @@ export const CACHED_MESSAGE_TEMPLATES_TOKEN_KEY = 'sendbird_message_templates_to
 
 // Local storage item key for templates in JSON string form
 export const CACHED_MESSAGE_TEMPLATES_KEY = 'sendbird_message_templates_key';
+
+export const MESSAGE_TEMPLATE_KEY = 'message_template';

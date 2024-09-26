@@ -15,15 +15,14 @@ import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel
 import {
   CoreMessageType,
   getClassName,
-  getMessageContentMiddleClassNameByContainerType,
   isAdminMessage,
   isFormMessage,
   isMultipleFilesMessage,
   isOGMessage, isSendableMessage,
   isTemplateMessage,
   isThumbnailMessage,
+  isValidTemplateMessageType,
   SendableMessageType,
-  UI_CONTAINER_TYPES,
 } from '../../utils';
 import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
@@ -49,6 +48,8 @@ import MessageFeedbackFailedModal from '../MessageFeedbackFailedModal';
 import { MobileBottomSheetProps } from '../MobileMenu/types';
 import useElementObserver from '../../hooks/useElementObserver';
 import { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '../ContextMenu';
+import { MessageContentForTemplateMessage } from './MessageContentForTemplateMessage';
+import { MESSAGE_TEMPLATE_KEY } from '../../utils/consts';
 
 export { MessageBody } from './MessageBody';
 export { MessageHeader } from './MessageHeader';
@@ -142,7 +143,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const contentRef = useRef<HTMLDivElement>();
-  const timestampRef = useRef<HTMLDivElement>();
   const threadRepliesRef = useRef<HTMLDivElement>();
   const feedbackButtonsRef = useRef<HTMLDivElement>();
   const { isMobile } = useMediaQueryContext();
@@ -160,21 +160,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const [showFeedbackOptionsMenu, setShowFeedbackOptionsMenu] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackFailedText, setFeedbackFailedText] = useState('');
-  const [uiContainerType, setUiContainerType] = useState<UI_CONTAINER_TYPES>(getMessageContentMiddleClassNameByContainerType({
-    message,
-    isMobile,
-  }));
-
-  const onTemplateMessageRenderedCallback = (renderedTemplateType: 'failed' | 'composite' | 'simple') => {
-    if (renderedTemplateType === 'failed') {
-      setUiContainerType(UI_CONTAINER_TYPES.DEFAULT);
-    } else if (renderedTemplateType === 'composite') {
-      /**
-       * Composite templates must have default carousel view irregardless of given containerType.
-       */
-      setUiContainerType(UI_CONTAINER_TYPES.DEFAULT_CAROUSEL);
-    }
-  };
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
@@ -217,13 +202,8 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const showThreadReplies = isNotSpecialMessage && displayThreadReplies;
   const showRightContent = isNotSpecialMessage && !isByMe && !isMobile;
 
-  const isTimestampBottom = !!uiContainerType;
-
   const getTotalBottom = (): number => {
     let sum = 2;
-    if (timestampRef.current && isTimestampBottom) {
-      sum += 4 + timestampRef.current.clientHeight;
-    }
     if (threadRepliesRef.current) {
       sum += 4 + threadRepliesRef.current.clientHeight;
     }
@@ -233,7 +213,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     return sum;
   };
 
-  const totalBottom = useMemo(() => getTotalBottom(), [isTimestampBottom]);
+  const totalBottom = useMemo(() => getTotalBottom(), []);
 
   const onCloseFeedbackForm = () => {
     setShowFeedbackModal(false);
@@ -268,13 +248,34 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     return (<AdminMessage message={message} />);
   }
 
+  if (isTemplateMessage(message)) {
+    const templatePayload = message.extendedMessagePayload[MESSAGE_TEMPLATE_KEY];
+    if (isValidTemplateMessageType(templatePayload)) {
+      return (
+        <MessageContentForTemplateMessage
+          {...props}
+          renderSenderProfile={renderSenderProfile}
+          renderMessageHeader={renderMessageHeader}
+          renderMessageBody={renderMessageBody}
+          isByMe={isByMe}
+          displayThreadReplies={displayThreadReplies}
+          mouseHover={mouseHover}
+          isMobile={isMobile}
+          isReactionEnabledInChannel={isReactionEnabledInChannel}
+          hoveredMenuClassName={hoveredMenuClassName}
+          templateType={templatePayload['type']}
+          useReplying={useReplying}
+        />
+      );
+    }
+  }
+
   return (
     <div
       className={getClassName([
         className ?? '',
         'sendbird-message-content',
         isByMeClassName,
-        uiContainerType,
       ])}
       onMouseOver={() => setMouseHover(true)}
       onMouseLeave={() => setMouseHover(false)}
@@ -331,8 +332,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
       <div
         className={classnames(
           'sendbird-message-content__middle',
-          isTemplateMessage(message) && 'sendbird-message-content__middle__for_template_message',
-          uiContainerType,
         )}
         data-testid="sendbird-message-content__middle"
         {...(isMobile ? { ...longPress } : {})}
@@ -372,7 +371,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
         <div
           className={classnames(
             'sendbird-message-content__middle__body-container',
-            isTemplateMessage(message) && 'sendbird-message-content__middle__for_template_message',
           )}
         >
           {/* message status component when sent by me */}
@@ -382,9 +380,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
                 'sendbird-message-content__middle__body-container__created-at',
                 'left',
                 hoveredMenuClassName,
-                uiContainerType,
               )}
-              ref={timestampRef}
             >
               <div className="sendbird-message-content__middle__body-container__created-at__component-container">
                 <MessageStatus
@@ -405,7 +401,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
               config,
               isReactionEnabledInChannel,
               isByMe,
-              onTemplateMessageRenderedCallback,
               onBeforeDownloadFileMessage,
             })
           }
@@ -440,11 +435,9 @@ export function MessageContent(props: MessageContentProps): ReactElement {
                 'sendbird-message-content__middle__body-container__created-at',
                 'right',
                 hoveredMenuClassName,
-                uiContainerType,
               )}
               type={LabelTypography.CAPTION_3}
               color={LabelColors.ONBACKGROUND_2}
-              ref={timestampRef}
             >
               {format(message?.createdAt || 0, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT, {
                 locale: dateLocale,
@@ -452,14 +445,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
             </Label>
           )}
         </div>
-        {/* bottom timestamp empty container */}
-        {isTimestampBottom && <div
-          style={{
-            width: '100%',
-            height: (timestampRef.current?.clientHeight ?? 0) + 'px',
-            marginTop: '4px',
-          }}
-        />}
         {/* thread replies */}
         {showThreadReplies && message?.threadInfo && (
           <ThreadReplies

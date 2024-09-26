@@ -61,9 +61,8 @@ const ImageRenderer = ({
   shadeOnHover,
   isUploaded = true,
 }: ImageRendererProps): ReactElement => {
-  const ref = useRef(null);
-  const isLoaded = useLazyImageLoader(ref);
-  const internalUrl = isLoaded ? url : null;
+  const [ref, isVisible] = useLazyImageLoader();
+  const internalUrl = isVisible ? url : null;
 
   const [defaultComponentVisible, setDefaultComponentVisible] = useState(false);
   const [placeholderVisible, setPlaceholderVisible] = useState(true);

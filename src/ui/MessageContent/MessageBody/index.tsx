@@ -4,7 +4,7 @@ import {
   CoreMessageType,
   getUIKitMessageType, getUIKitMessageTypes, isTemplateMessage, isMultipleFilesMessage,
   isOGMessage, isSendableMessage,
-  isTextMessage, isThumbnailMessage, isVoiceMessage, isFormMessage,
+  isTextMessage, isThumbnailMessage, isVoiceMessage, isFormMessage, isValidTemplateMessageType,
 } from '../../../utils';
 import { BaseMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 import OGMessageItemBody from '../../OGMessageItemBody';
@@ -23,6 +23,7 @@ import { match } from 'ts-pattern';
 import TemplateMessageItemBody from '../../TemplateMessageItemBody';
 import type { OnBeforeDownloadFileMessageType } from '../../../modules/GroupChannel/context/GroupChannelProvider';
 import FormMessageItemBody from '../../FormMessageItemBody';
+import { MESSAGE_TEMPLATE_KEY } from '../../../utils/consts';
 
 export type CustomSubcomponentsProps = Record<
   'ThumbnailMessageItemBody' | 'MultipleFilesMessageItemBody',
@@ -30,14 +31,12 @@ export type CustomSubcomponentsProps = Record<
 >;
 
 const MESSAGE_ITEM_BODY_CLASSNAME = 'sendbird-message-content__middle__message-item-body';
-export type RenderedTemplateBodyType = 'failed' | 'composite' | 'simple';
 
 export interface MessageBodyProps {
   className?: string;
   channel: Nullable<GroupChannel>;
   message: CoreMessageType;
   showFileViewer?: (bool: boolean) => void;
-  onTemplateMessageRenderedCallback?: (renderedTemplateBodyType: RenderedTemplateBodyType) => void;
   onMessageHeightChange?: () => void;
   onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
 
@@ -55,7 +54,6 @@ export const MessageBody = (props: MessageBodyProps) => {
     channel,
     showFileViewer,
     onMessageHeightChange,
-    onTemplateMessageRenderedCallback,
     onBeforeDownloadFileMessage,
 
     mouseHover,
@@ -76,6 +74,14 @@ export const MessageBody = (props: MessageBodyProps) => {
   const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
   const isFormMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableFormTypeMessage;
 
+  const renderUnknownMessageItemBody = () => <UnknownMessageItemBody
+    className={className}
+    message={message}
+    isByMe={isByMe}
+    mouseHover={mouseHover}
+    isReactionEnabled={isReactionEnabledInChannel}
+  />;
+
   return match(message)
     .when((message) => isFormMessageEnabledInGroupChannel && isFormMessage(message),
       () => (
@@ -85,15 +91,22 @@ export const MessageBody = (props: MessageBodyProps) => {
           form={message.messageForm}
         />
       ))
-    .when(isTemplateMessage, () => (
-      <TemplateMessageItemBody
+    .when(isTemplateMessage, () => {
+      const templatePayload = message.extendedMessagePayload[MESSAGE_TEMPLATE_KEY];
+      if (!isValidTemplateMessageType(templatePayload)) {
+        config.logger?.error?.(
+          'TemplateMessageItemBody: invalid type value in message.extendedMessagePayload.message_template.',
+          templatePayload,
+        );
+        return renderUnknownMessageItemBody();
+      }
+      return <TemplateMessageItemBody
         className={className}
         message={message as BaseMessage}
         isByMe={isByMe}
         theme={config?.theme as SendbirdTheme}
-        onTemplateMessageRenderedCallback={onTemplateMessageRenderedCallback}
-      />
-    ))
+      />;
+    })
     .when((message) => isOgMessageEnabledInGroupChannel
       && isSendableMessage(message)
       && isOGMessage(message), () => (
@@ -163,15 +176,9 @@ export const MessageBody = (props: MessageBodyProps) => {
         {...customSubcomponentsProps['ThumbnailMessageItemBody'] ?? {}}
       />
     ))
-    .otherwise((message) => (
-      <UnknownMessageItemBody
-        className={className}
-        message={message}
-        isByMe={isByMe}
-        mouseHover={mouseHover}
-        isReactionEnabled={isReactionEnabledInChannel}
-      />
-    ));
+    .otherwise(() => {
+      return renderUnknownMessageItemBody();
+    });
 };
 
 export default MessageBody;

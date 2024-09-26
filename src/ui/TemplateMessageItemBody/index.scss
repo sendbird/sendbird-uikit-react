@@ -1,6 +1,7 @@
 @import '../../styles/variables';
 
 .sendbird-template-message-item-body {
+  max-width: 100%;
   position: relative;
   display: inline-block;
   box-sizing: content-box;
