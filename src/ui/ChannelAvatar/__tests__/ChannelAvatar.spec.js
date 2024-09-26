@@ -21,7 +21,7 @@ describe('ui/ChannelAvatar', () => {
     const targetClassName = "sendbird-chat-header--avatar--broadcast-channel";
     const coverUrl = '123';
     render(<ChannelAvatar channel={{ isBroadcast: true, coverUrl }} />);
-    expect(screen.getAllByRole('button')[0].className).toContain(targetClassName);
+    expect(screen.getByRole('button').className).toContain(targetClassName);
   });
 });
 
