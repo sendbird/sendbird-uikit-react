@@ -143,7 +143,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const contentRef = useRef<HTMLDivElement>();
-  const timestampRef = useRef<HTMLDivElement>();
   const threadRepliesRef = useRef<HTMLDivElement>();
   const feedbackButtonsRef = useRef<HTMLDivElement>();
   const { isMobile } = useMediaQueryContext();
@@ -267,7 +266,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
           isReactionEnabledInChannel={isReactionEnabledInChannel}
           hoveredMenuClassName={hoveredMenuClassName}
           templateType={templatePayload['type']}
-          timestampRef={timestampRef}
           useReplying={useReplying}
         />
       );
@@ -385,7 +383,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
                 'left',
                 hoveredMenuClassName,
               )}
-              ref={timestampRef}
             >
               <div className="sendbird-message-content__middle__body-container__created-at__component-container">
                 <MessageStatus
@@ -443,7 +440,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
               )}
               type={LabelTypography.CAPTION_3}
               color={LabelColors.ONBACKGROUND_2}
-              ref={timestampRef}
             >
               {format(message?.createdAt || 0, 'p', {
                 locale: dateLocale,

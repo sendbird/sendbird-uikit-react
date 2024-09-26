@@ -17,7 +17,6 @@ type MessageContentForTemplateMessageProps = MessageContentProps & MessageCompon
   isReactionEnabledInChannel: boolean;
   hoveredMenuClassName: string;
   templateType: TemplateType | null;
-  timestampRef: React.LegacyRef<HTMLDivElement>;
   useReplying: boolean;
 };
 
@@ -40,7 +39,6 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
     isReactionEnabledInChannel,
     hoveredMenuClassName,
     templateType,
-    timestampRef,
     useReplying,
   } = props;
 
@@ -79,7 +77,6 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
     )}
     type={LabelTypography.CAPTION_3}
     color={LabelColors.ONBACKGROUND_2}
-    ref={timestampRef}
   >
     {format(message?.createdAt || 0, 'p', {
       locale: dateLocale,
