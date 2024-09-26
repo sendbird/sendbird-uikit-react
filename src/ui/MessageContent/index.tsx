@@ -254,21 +254,23 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   if (isTemplateMessage(message)) {
     const templatePayload = message.extendedMessagePayload[MESSAGE_TEMPLATE_KEY];
     if (isValidTemplateMessageType(templatePayload)) {
-      return <MessageContentForTemplateMessage
-        {...props}
-        renderSenderProfile={renderSenderProfile}
-        renderMessageHeader={renderMessageHeader}
-        renderMessageBody={renderMessageBody}
-        isByMe={isByMe}
-        displayThreadReplies={displayThreadReplies}
-        mouseHover={mouseHover}
-        isMobile={isMobile}
-        isReactionEnabledInChannel={isReactionEnabledInChannel}
-        hoveredMenuClassName={hoveredMenuClassName}
-        templateType={templatePayload['type']}
-        timestampRef={timestampRef}
-        useReplying={useReplying}
-      />;
+      return (
+        <MessageContentForTemplateMessage
+          {...props}
+          renderSenderProfile={renderSenderProfile}
+          renderMessageHeader={renderMessageHeader}
+          renderMessageBody={renderMessageBody}
+          isByMe={isByMe}
+          displayThreadReplies={displayThreadReplies}
+          mouseHover={mouseHover}
+          isMobile={isMobile}
+          isReactionEnabledInChannel={isReactionEnabledInChannel}
+          hoveredMenuClassName={hoveredMenuClassName}
+          templateType={templatePayload['type']}
+          timestampRef={timestampRef}
+          useReplying={useReplying}
+        />
+      );
     }
   }
 
