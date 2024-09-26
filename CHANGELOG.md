@@ -1,5 +1,17 @@
 # Changelog - v3
 
+## [v3.15.4] (Sep 26th, 2024)
+
+### Features
+- Added stringSet for date format and applied them
+  | Key | Value |
+  | --- | ----- |
+  | DATE_FORMAT__MESSAGE_CREATED_AT | `'p'` |
+  | DATE_FORMAT__UNREAD_SINCE | `'p MMM dd'` |
+  | DATE_FORMAT__LAST_MESSAGE_CREATED_AT__TODAY | `'p'` |
+  | DATE_FORMAT__LAST_MESSAGE_CREATED_AT__THIS_YEAR | `'MMM d'` |
+  | DATE_FORMAT__LAST_MESSAGE_CREATED_AT__PREVIOUS_YEAR | `'yyyy/M/d'` |
+
 ## [v3.15.3] (Sep 12th, 2024)
 
 ### Fixes
