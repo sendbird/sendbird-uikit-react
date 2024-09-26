@@ -98,7 +98,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
   } = deleteNullish(props);
 
   const { isMobile } = useMediaQueryContext();
-  const { dateLocale } = useLocalization();
+  const { dateLocale, stringSet } = useLocalization();
   const { config, eventHandlers } = useSendbirdStateContext?.() || {};
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
@@ -272,7 +272,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
               type={LabelTypography.CAPTION_3}
               color={LabelColors.ONBACKGROUND_2}
             >
-              {format(message?.createdAt || 0, 'p', {
+              {format(message?.createdAt || 0, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT, {
                 locale: dateLocale,
               })}
             </Label>

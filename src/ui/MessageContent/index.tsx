@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useContext, useMemo, useRef, useState } from 'react';
+import React, { ReactElement, ReactNode, useMemo, useRef, useState } from 'react';
 import format from 'date-fns/format';
 import './index.scss';
 
@@ -25,7 +25,7 @@ import {
   SendableMessageType,
   UI_CONTAINER_TYPES,
 } from '../../utils';
-import { LocalizationContext, useLocalization } from '../../lib/LocalizationContext';
+import { useLocalization } from '../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { type EmojiCategory, EmojiContainer } from '@sendbird/chat';
@@ -137,7 +137,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     renderMobileMenuOnLongPress = (props: MobileBottomSheetProps) => <MobileMenu {...props} />,
   } = deleteNullish(props);
 
-  const { dateLocale } = useLocalization();
+  const { dateLocale, stringSet } = useLocalization();
   const { config, eventHandlers } = useSendbirdStateContext();
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
@@ -175,8 +175,6 @@ export function MessageContent(props: MessageContentProps): ReactElement {
       setUiContainerType(UI_CONTAINER_TYPES.DEFAULT_CAROUSEL);
     }
   };
-
-  const { stringSet } = useContext(LocalizationContext);
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
@@ -448,7 +446,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
               color={LabelColors.ONBACKGROUND_2}
               ref={timestampRef}
             >
-              {format(message?.createdAt || 0, 'p', {
+              {format(message?.createdAt || 0, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT, {
                 locale: dateLocale,
               })}
             </Label>

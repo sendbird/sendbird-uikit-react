@@ -94,7 +94,7 @@ export default function MessageStatus({
         >
           {
             isDateSeparatorConsidered
-              ? format(message?.createdAt || 0, 'p', { locale: dateLocale })
+              ? format(message?.createdAt || 0, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT, { locale: dateLocale })
               : getLastMessageCreatedAt({ channel, locale: dateLocale, stringSet })
           }
         </Label>

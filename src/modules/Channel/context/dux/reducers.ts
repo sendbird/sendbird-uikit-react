@@ -17,6 +17,7 @@ import {
   isSendableMessage,
 } from '../../../../utils';
 import { ChannelInitialStateType } from './initialState';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 const getOldestMessageTimeStamp = (messages: CoreMessageType[] = []) => {
   const oldestMessage = messages[0];
@@ -37,6 +38,8 @@ export default function channelReducer(
   state: ChannelInitialStateType,
   action: ChannelActionTypes,
 ): ChannelInitialStateType {
+  const { stringSet } = useLocalization();
+
   return match(action)
     .with({ type: channelActions.RESET_MESSAGES }, () => {
       return {
@@ -268,7 +271,7 @@ export default function channelReducer(
       return {
         ...state,
         currentGroupChannel: channel,
-        unreadSince: state.unreadSince ?? format(new Date(), 'p MMM dd'),
+        unreadSince: state.unreadSince ?? format(new Date(), stringSet.DATE_FORMAT__UNREAD_SINCE),
         unreadSinceDate: state.unreadSinceDate ?? new Date(),
         allMessages: passUnsuccessfullMessages(state.allMessages, message),
       };

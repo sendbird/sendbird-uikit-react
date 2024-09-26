@@ -71,6 +71,9 @@ describe('ui/MessageContent', () => {
     };
     const localeContextValue = {
       dateLocale: {},
+      stringSet: {
+        DATE_FORMAT__MESSAGE_CREATED_AT: 'p',
+      },
     };
     const messageContextValue = {
       message: {},

@@ -14,6 +14,13 @@ import { getCreatedAt } from '../utils';
 jest.useFakeTimers();
 jest.setSystemTime(new Date('January 23, 2022 17:17:52'));
 
+const stringSet = {
+  DATE_FORMAT__LAST_MESSAGE_CREATED_AT__TODAY: 'p',
+  MESSAGE_STATUS__YESTERDAY: 'Yesterday',
+  DATE_FORMAT__LAST_MESSAGE_CREATED_AT__THIS_YEAR: 'MMM d',
+  DATE_FORMAT__LAST_MESSAGE_CREATED_AT__PREVIOUS_YEAR: 'yyyy/M/dd',
+};
+
 describe('ui/MessageSearchFileItem', () => {
   // should add test cases for each file types
   // define id for each icon svg files first
@@ -34,7 +41,7 @@ describe('ui/MessageSearchFileItem', () => {
     const nowTime = new Date(Date.now());
     const isPM = nowTime?.getHours() > 12;
     expect(
-      getCreatedAt({ createdAt: nowTime })
+      getCreatedAt({ createdAt: nowTime, stringSet })
     ).toBe(`${nowTime?.getHours() - (isPM ? 12 : 0)}:${nowTime?.getMinutes()} ${isPM ? 'PM' : 'AM'}`);
   });
 
@@ -42,7 +49,7 @@ describe('ui/MessageSearchFileItem', () => {
     const nowTime = new Date(Date.now());
     nowTime.setDate(nowTime.getDate() - 1);
     expect(
-      getCreatedAt({ createdAt: nowTime })
+      getCreatedAt({ createdAt: nowTime, stringSet })
     ).toBe("Yesterday");
   })
 
@@ -51,10 +58,10 @@ describe('ui/MessageSearchFileItem', () => {
     nowTime.setDate(nowTime.getDate() - 2);
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     expect(
-      getCreatedAt({ createdAt: nowTime })
+      getCreatedAt({ createdAt: nowTime, stringSet })
     ).toBe(`${months[nowTime?.getMonth()]} ${nowTime?.getDate()}`);
     expect(
-      getCreatedAt({ createdAt: nowTime })
+      getCreatedAt({ createdAt: nowTime, stringSet })
     ).toBe('Jan 21');
   });
 
@@ -62,10 +69,10 @@ describe('ui/MessageSearchFileItem', () => {
     const nowTime = new Date(Date.now());
     nowTime.setFullYear(nowTime.getFullYear() - 1);
     expect(
-      getCreatedAt({ createdAt: nowTime })
+      getCreatedAt({ createdAt: nowTime, stringSet })
     ).toBe(`${nowTime?.getFullYear()}/${nowTime?.getMonth() + 1}/${nowTime?.getDate()}`);
     expect(
-      getCreatedAt({ createdAt: nowTime })
+      getCreatedAt({ createdAt: nowTime, stringSet })
     ).toBe('2021/1/23');
   });
 });

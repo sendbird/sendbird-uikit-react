@@ -7,7 +7,7 @@ import isYesterday from 'date-fns/isYesterday';
 interface GetCreatedAtProps {
   createdAt: number;
   locale?: Locale;
-  stringSet?: Record<string, string>;
+  stringSet: Record<string, string>;
 }
 
 // getCreatedAt
@@ -21,13 +21,13 @@ export default function ({
     return '';
   }
   if (isToday(createdAt)) {
-    return format(createdAt, 'p', optionalParam);
+    return format(createdAt, stringSet.DATE_FORMAT__LAST_MESSAGE_CREATED_AT__TODAY, optionalParam);
   }
   if (isYesterday(createdAt)) {
-    return stringSet?.MESSAGE_STATUS__YESTERDAY || 'Yesterday';
+    return stringSet.MESSAGE_STATUS__YESTERDAY;
   }
   if (isThisYear(createdAt)) {
-    return format(createdAt, 'MMM d', optionalParam);
+    return format(createdAt, stringSet.DATE_FORMAT__LAST_MESSAGE_CREATED_AT__THIS_YEAR, optionalParam);
   }
-  return format(createdAt, 'yyyy/M/d', optionalParam);
+  return format(createdAt, stringSet.DATE_FORMAT__LAST_MESSAGE_CREATED_AT__PREVIOUS_YEAR, optionalParam);
 }

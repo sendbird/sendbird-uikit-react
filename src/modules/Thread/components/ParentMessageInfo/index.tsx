@@ -47,7 +47,7 @@ export default function ParentMessageInfo({
   const { stores, config } = useSendbirdStateContext();
   const { isOnline, userMention, logger, groupChannel } = config;
   const userId = stores.userStore.user?.userId ?? '';
-  const { dateLocale } = useLocalization();
+  const { dateLocale, stringSet } = useLocalization();
   const {
     currentChannel,
     parentMessage,
@@ -301,7 +301,7 @@ export default function ParentMessageInfo({
             type={LabelTypography.CAPTION_3}
             color={LabelColors.ONBACKGROUND_2}
           >
-            {format(parentMessage?.createdAt || 0, 'p', { locale: dateLocale })}
+            {format(parentMessage?.createdAt || 0, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT, { locale: dateLocale })}
           </Label>
         </div>
         {/* message content body */}

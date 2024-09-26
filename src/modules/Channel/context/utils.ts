@@ -5,6 +5,7 @@ import format from 'date-fns/format';
 
 import { CoreMessageType, SendableMessageType } from '../../../utils';
 import { BaseMessage, SendingStatus } from '@sendbird/chat/message';
+import { useLocalization } from '../../../lib/LocalizationContext';
 
 export const scrollToRenderedMessage = (
   scrollRef: React.RefObject<HTMLElement>,
@@ -115,7 +116,10 @@ export const mergeAndSortMessages = (oldMessages: BaseMessage[], newMessages: Ba
   return sortByCreatedAt(unique);
 };
 
-export const getMessageCreatedAt = (message: BaseMessage) => format(message.createdAt, 'p');
+export const getMessageCreatedAt = (message: BaseMessage) => {
+  const { stringSet } = useLocalization();
+  return format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT);
+};
 
 export const passUnsuccessfullMessages = (
   allMessages: (CoreMessageType | SendableMessageType)[],
