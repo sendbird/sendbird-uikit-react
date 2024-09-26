@@ -3,19 +3,18 @@ import format from 'date-fns/format';
 import isToday from 'date-fns/isToday';
 import isThisYear from 'date-fns/isThisYear';
 import isYesterday from 'date-fns/isYesterday';
-import getStringSet from '../Label/stringSet';
 
 interface GetCreatedAtProps {
   createdAt: number;
   locale?: Locale;
-  stringSet?: Record<string, string>;
+  stringSet: Record<string, string>;
 }
 
 // getCreatedAt
 export default function ({
   createdAt,
   locale,
-  stringSet = getStringSet('en'),
+  stringSet,
 }: GetCreatedAtProps): string {
   const optionalParam = { locale };
   if (!createdAt) {
