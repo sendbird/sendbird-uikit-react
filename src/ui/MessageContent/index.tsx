@@ -48,7 +48,7 @@ import MessageFeedbackFailedModal from '../MessageFeedbackFailedModal';
 import { MobileBottomSheetProps } from '../MobileMenu/types';
 import useElementObserver from '../../hooks/useElementObserver';
 import { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '../ContextMenu';
-import { MessageContentForTemplateMessage } from './messageContentForTemplateMessage';
+import { MessageContentForTemplateMessage } from './MessageContentForTemplateMessage';
 import { MESSAGE_TEMPLATE_KEY } from '../../utils/consts';
 
 export { MessageBody } from './MessageBody';
