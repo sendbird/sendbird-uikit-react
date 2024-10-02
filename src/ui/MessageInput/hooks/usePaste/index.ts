@@ -17,7 +17,6 @@ import { createPasteNode, domToMessageTemplate, extractTextFromNodes, getLeafNod
 export function usePaste({
   ref,
   setIsInput,
-  setHeight,
   channel,
   setMentionedUsers,
 }: DynamicProps): (e: React.ClipboardEvent<HTMLDivElement>) => void {
@@ -29,7 +28,6 @@ export function usePaste({
       const text = e.clipboardData.getData('text') || getURIListText(e);
       document.execCommand('insertText', false, sanitizeString(text));
       setIsInput(true);
-      setHeight();
       return;
     }
 
@@ -46,7 +44,6 @@ export function usePaste({
         document.execCommand('insertText', false, sanitizeString(text));
         pasteNode.remove();
         setIsInput(true);
-        setHeight();
         return;
       }
 
@@ -62,8 +59,7 @@ export function usePaste({
     }
 
     setIsInput(true);
-    setHeight();
-  }, [ref, setIsInput, setHeight, channel, setMentionedUsers]);
+  }, [ref, setIsInput, channel, setMentionedUsers]);
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types#dragging_links

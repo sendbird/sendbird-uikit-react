@@ -12,5 +12,4 @@ export type DynamicProps = {
   channel: OpenChannel | GroupChannel;
   setMentionedUsers: React.Dispatch<React.SetStateAction<User[]>>;
   setIsInput: React.Dispatch<React.SetStateAction<boolean>>;
-  setHeight: () => void;
 };

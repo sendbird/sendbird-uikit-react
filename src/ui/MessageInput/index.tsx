@@ -28,8 +28,6 @@ import { OpenChannel } from '@sendbird/chat/openChannel';
 import { UserMessage } from '@sendbird/chat/message';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
-const LINE_HEIGHT = 76;
-const DEFAULT_CHAT_VIEW_HEIGHT = 92;
 const noop = () => {
   return null;
 };
@@ -160,28 +158,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   const [isInput, setIsInput] = useState(false);
   const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
   const [targetStringInfo, setTargetStringInfo] = useState({ ...initialTargetStringInfo });
-  const setHeight = useCallback(
-    () => {
-      const elem = internalRef?.current;
-      if (!elem) return;
-
-      try {
-        const estimatedChatViewHeight = window.document.body.offsetHeight || DEFAULT_CHAT_VIEW_HEIGHT;
-        const MAX_HEIGHT = estimatedChatViewHeight * 0.6;
-        if (elem.scrollHeight >= LINE_HEIGHT) {
-          if (MAX_HEIGHT < elem.scrollHeight) {
-            elem.style.height = 'auto';
-            elem.style.height = `${MAX_HEIGHT}px`;
-          } else {
-            elem.style.height = '';
-          }
-        }
-      } catch (error) {
-        // error
-      }
-    },
-    [],
-  );
 
   // #Edit mode
   // for easily initialize input value from outside, but
@@ -191,7 +167,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     const textField = internalRef?.current;
     setMentionedUserIds([]);
     setIsInput(textField?.textContent ? textField.textContent.trim().length > 0 : false);
-    setHeight();
   }, [initialValue]);
 
   // #Mention | Clear input value when channel changes
@@ -246,7 +221,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         setMentionedUserIds([]);
       }
       setIsInput(textField?.textContent ? textField?.textContent?.trim().length > 0 : false);
-      setHeight();
     }
   }, [isEdit, message]);
 
@@ -317,7 +291,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           textField.focus();
         }
         setTargetStringInfo({ ...initialTargetStringInfo });
-        setHeight();
+        // setHeight();
         useMentionedLabelDetection();
       }
     }
@@ -414,7 +388,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         }
 
         setIsInput(false);
-        setHeight();
       }
     } catch (error) {
       eventHandlers?.message?.onSendMessageFailed?.(message, error);
@@ -440,7 +413,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     setMentionedUsers,
     channel,
     setIsInput,
-    setHeight,
   });
 
   const uploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -531,7 +503,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
             useMentionInputDetection();
           })}
           onInput={handleCommonBehavior(() => {
-            setHeight();
             onStartTyping();
             setIsInput(internalRef?.current?.textContent ? internalRef.current.textContent.trim().length > 0 : false);
             useMentionedLabelDetection();
