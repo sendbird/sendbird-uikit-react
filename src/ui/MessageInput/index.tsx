@@ -29,19 +29,30 @@ import { UserMessage } from '@sendbird/chat/message';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const LINE_HEIGHT = 76;
-const DEFAULT_CHAT_VIEW_HEIGHT = 600;
+const DEFAULT_CHAT_VIEW_HEIGHT = 92;
 const noop = () => {
   return null;
 };
 
-const displayCaret = (element: HTMLInputElement, position: number) => {
-  const range = document.createRange();
-  const sel = window.getSelection();
-  range.setStart(element.childNodes[0], position);
-  range.collapse(true);
-  sel?.removeAllRanges();
-  sel?.addRange(range);
-  element.focus();
+const scrollToCaret = () => {
+  const selection = window.getSelection();
+  if (selection && selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    const caretNode = range.endContainer;
+
+    // Ensure the caret is in a text node
+    if (caretNode.nodeType === NodeTypes.TextNode) {
+      const parentElement = caretNode.parentElement;
+
+      if (parentElement && parentElement.scrollIntoView) {
+        // Scroll the parent element of the caret into view
+        parentElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+        });
+      }
+    }
+  }
 };
 
 const resetInput = (ref: MutableRefObject<HTMLInputElement | null> | null) => {
@@ -133,7 +144,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     acceptableMimeTypes,
   } = props;
 
-  const internalRef = (externalRef && 'current' in externalRef) ? externalRef : null;
+  const internalRef = (externalRef && 'current' in externalRef) ? externalRef : useRef(null);
   const ghostInputRef = useRef<HTMLInputElement>(null);
 
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
@@ -173,19 +184,11 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   );
 
   // #Edit mode
-  // for easilly initialize input value from outside, but
+  // for easily initialize input value from outside, but
   // useEffect(_, [channelUrl]) erase it
   const initialValue = props?.value;
   useEffect(() => {
     const textField = internalRef?.current;
-    try {
-      if (textField && initialValue) {
-        textField.innerHTML = initialValue;
-        displayCaret(textField, initialValue?.length);
-      }
-    } catch {
-      //
-    }
     setMentionedUserIds([]);
     setIsInput(textField?.textContent ? textField.textContent.trim().length > 0 : false);
     setHeight();
@@ -453,6 +456,12 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     }
   };
 
+  const handleCommonBehavior = (handleEvent) => {
+    scrollToCaret();
+    type CommonEvent<T> = React.KeyboardEvent<T> | React.MouseEvent<T> | React.ClipboardEvent<T>;
+    return (e: CommonEvent<HTMLDivElement>) => handleEvent(e);
+  };
+
   return (
     <form className={classnames(
       ...(Array.isArray(className) ? className : [className]),
@@ -474,11 +483,11 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           contentEditable={!disabled}
           role="textbox"
           aria-label="Text Input"
-          ref={externalRef}
+          ref={internalRef}
           // @ts-ignore
           disabled={disabled}
           maxLength={maxLength}
-          onKeyDown={(e) => {
+          onKeyDown={handleCommonBehavior((e) => {
             const preventEvent = onKeyDown(e);
             if (preventEvent) {
               e.preventDefault();
@@ -509,25 +518,25 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
                 internalRef.current.removeChild(internalRef.current.childNodes[1]);
               }
             }
-          }}
-          onKeyUp={(e) => {
+          })}
+          onKeyUp={handleCommonBehavior((e) => {
             const preventEvent = onKeyUp(e);
             if (preventEvent) {
               e.preventDefault();
             } else {
               useMentionInputDetection();
             }
-          }}
-          onClick={() => {
+          })}
+          onClick={handleCommonBehavior(() => {
             useMentionInputDetection();
-          }}
-          onInput={() => {
+          })}
+          onInput={handleCommonBehavior(() => {
             setHeight();
             onStartTyping();
             setIsInput(internalRef?.current?.textContent ? internalRef.current.textContent.trim().length > 0 : false);
             useMentionedLabelDetection();
-          }}
-          onPaste={onPaste}
+          })}
+          onPaste={handleCommonBehavior(onPaste)}
         />
         {/* placeholder */}
         {(internalRef?.current?.textContent?.length ?? 0) === 0 && (
