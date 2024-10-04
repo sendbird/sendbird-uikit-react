@@ -1,5 +1,16 @@
 # Changelog - v3
 
+## [v3.15.5] (Oct 4th, 2024)
+
+### Updates
+- Usage of template message feature:
+  1. Template data in message
+    - removed: A message with valid `extendedMessagePayload.template` value will be displayed with `TemplateMessageItemBody`.
+    - added: A message with valid `extendedMessagePayload.message_template` value will be displayed with `TemplateMessageItemBody`.
+  2. Container type data in message
+    - removed: Added 'wide' width support for `MessageContent` when value exists in `message.extendedMessagePayload['ui']['container_type']`
+    - added: Added support for template message rendering options (boolean type): `profile`, `time`, and `nickname` in `extendedMessagePayload['message_template']['container_options']`
+
 ## [v3.15.4] (Sep 26th, 2024)
 
 ### Features
