@@ -64,19 +64,22 @@ export const MenuItemAction = ({
   accordionOpened,
   children,
 }: MenuItemActionProps) => {
-
-  return useAccordion
-    ? <Icon
+  if (useAccordion) {
+    return (
+      <Icon
         type={IconTypes.CHEVRON_RIGHT}
         className={[
           'sendbird-accordion__panel-icon-right',
           'sendbird-accordion__panel-icon--chevron',
-          (accordionOpened ? 'sendbird-accordion__panel-icon--open' : ''),
+          accordionOpened ? 'sendbird-accordion__panel-icon--open' : '',
         ].join(' ')}
         height="24px"
         width="24px"
       />
-    : children;
+    );
+  }
+
+  return children || null;
 };
 
 export default MenuItem;
