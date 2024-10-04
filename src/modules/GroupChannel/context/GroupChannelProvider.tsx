@@ -28,6 +28,8 @@ import { useMessageActions } from './hooks/useMessageActions';
 import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
 import { useMessageLayoutDirection } from '../../../hooks/useHTMLTextDirection';
 
+export { ThreadReplySelectType } from './const'; // export for external usage
+
 type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
 type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
 type MessageActions = ReturnType<typeof useMessageActions>;
