@@ -12,14 +12,14 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './snapshot-tests',
-  /* Run snapshot-tests in files in parallel */
+  testDir: './__visual_tests__',
+  /* Run __visual_tests__ in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel snapshot-tests on CI. */
+  /* Opt out of parallel __visual_tests__ on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
@@ -38,16 +38,14 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
 
     /* Test against mobile viewports. */
     // {
@@ -70,10 +68,10 @@ export default defineConfig({
     // },
   ],
 
-  /* Run your local dev server before starting the snapshot-tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  /* Run your local dev server before starting the __visual_tests__ */
+  webServer: {
+    command: 'yarn workspace @sendbird/visual-test dev',
+    url: 'http://localhost:5273',
+    reuseExistingServer: !process.env.CI,
+  },
 });
