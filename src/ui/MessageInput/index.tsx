@@ -42,13 +42,11 @@ const scrollToCaret = () => {
     if (caretNode.nodeType === NodeTypes.TextNode) {
       const parentElement = caretNode.parentElement;
 
-      if (parentElement && parentElement.scrollIntoView) {
-        // Scroll the parent element of the caret into view
-        parentElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-        });
-      }
+      // Scroll the parent element of the caret into view
+      parentElement?.scrollIntoView?.({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
     }
   }
 };
@@ -291,7 +289,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           textField.focus();
         }
         setTargetStringInfo({ ...initialTargetStringInfo });
-        // setHeight();
         useMentionedLabelDetection();
       }
     }
