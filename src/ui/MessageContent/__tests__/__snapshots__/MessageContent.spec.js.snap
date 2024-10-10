@@ -66,38 +66,6 @@ exports[`ui/MessageContent should do a snapshot test of the MessageContent DOM 1
           mock-date
         </span>
       </div>
-      0
-    </div>
-    <div
-      class="sendbird-message-content__right"
-      data-testid="sendbird-message-content__right"
-    >
-      <div
-        class="sendbird-message-content-menu incoming"
-      >
-        <div
-          class="sendbird-message-menu sendbird-message-content-menu__normal-menu"
-        >
-          <button
-            class=" sendbird-iconbutton "
-            style="height: 32px; width: 32px;"
-            type="button"
-          >
-            <span
-              class="sendbird-iconbutton__inner"
-            >
-              <div
-                class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
-                role="button"
-                style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
-                tabindex="0"
-              >
-                <test-file-stub />
-              </div>
-            </span>
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </DocumentFragment>
