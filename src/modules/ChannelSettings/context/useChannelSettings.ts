@@ -1,9 +1,9 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
-import type { GroupChannel } from "@sendbird/chat/groupChannel";
+import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
-import { useChannelSettingsContext } from "./ChannelSettingsProvider";
-import { ChannelSettingsState } from "./types";
+import { useChannelSettingsContext } from './ChannelSettingsProvider';
+import { ChannelSettingsState } from './types';
 
 export const useChannelSettings = () => {
   const store = useChannelSettingsContext();
@@ -17,7 +17,7 @@ export const useChannelSettings = () => {
     })),
 
     setLoading: (loading: boolean) => store.setState((state): ChannelSettingsState => ({
-      ...state, 
+      ...state,
       loading,
     })),
 

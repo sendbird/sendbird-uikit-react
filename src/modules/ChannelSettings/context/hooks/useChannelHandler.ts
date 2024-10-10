@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { GroupChannelHandler } from "@sendbird/chat/groupChannel";
+import { useEffect, useState } from 'react';
+import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 
-import uuidv4 from "../../../../utils/uuid";
-import compareIds from "../../../../utils/compareIds";
-import type { SdkStore } from "../../../../lib/types";
-import type { Logger } from "../../../../lib/SendbirdState";
+import uuidv4 from '../../../../utils/uuid';
+import compareIds from '../../../../utils/compareIds';
+import type { SdkStore } from '../../../../lib/types';
+import type { Logger } from '../../../../lib/SendbirdState';
 
 interface UseChannelHandlerProps {
   sdk: SdkStore['sdk'];
@@ -25,20 +25,20 @@ export const useChannelHandler = ({
 
   useEffect(() => {
     if (!sdk || !sdk.groupChannel) {
-      logger.warning("ChannelSettings: SDK or GroupChannelModule is not available");
+      logger.warning('ChannelSettings: SDK or GroupChannelModule is not available');
       return;
     }
 
     const channelHandler = new GroupChannelHandler({
       onUserLeft: (channel, user) => {
         if (compareIds(channel?.url, channelUrl)) {
-          logger.info("ChannelSettings: onUserLeft", { channel, user });
+          logger.info('ChannelSettings: onUserLeft', { channel, user });
           forceUpdateUI();
         }
       },
       onUserBanned: (channel, user) => {
         if (compareIds(channel?.url, channelUrl) && channel.isGroupChannel()) {
-          logger.info("ChannelSettings: onUserBanned", { channel, user });
+          logger.info('ChannelSettings: onUserBanned', { channel, user });
           forceUpdateUI();
         }
       },
@@ -50,7 +50,7 @@ export const useChannelHandler = ({
 
     return () => {
       if (sdk.groupChannel && channelHandlerId) {
-        logger.info("ChannelSettings: Removing message receiver handler", channelHandlerId);
+        logger.info('ChannelSettings: Removing message receiver handler', channelHandlerId);
         sdk.groupChannel.removeGroupChannelHandler(channelHandlerId);
       }
     };
