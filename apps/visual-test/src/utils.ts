@@ -1,19 +1,6 @@
-export interface GetMockMessageFormItemProps {
-  name: string;
-  required?: boolean;
-  sortOrder: number;
-  placeholder?: string;
-  style: object;
-  submittedValues?: string[];
-  validators?: object[];
-}
+import { MockMessageFormProps } from '../../../__visual_tests__/__fixtures__/form/interface.ts';
 
-export interface GetMockMessageFormProps {
-  name?: string;
-  items: GetMockMessageFormItemProps[];
-}
-
-export const getMockMessageForm = (props: GetMockMessageFormProps) => {
+export const getMockMessageForm = (props: MockMessageFormProps) => {
   return {
     "id": 75,
     "name": props.name,
@@ -21,11 +8,11 @@ export const getMockMessageForm = (props: GetMockMessageFormProps) => {
     "updated_at": 1724815262.717879,
     "items": props.items.map((item, index) => {
       return {
-        'id': index,
+        id: index,
         name: item.name,
         required: item.required,
-        'sort_order': item.sortOrder,
-        'placeholder': item.placeholder,
+        sort_order: item.sort_order,
+        placeholder: item.placeholder,
         style: item.style,
         validators: item.validators ?? [],
       };
