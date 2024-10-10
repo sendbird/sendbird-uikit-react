@@ -111,7 +111,7 @@ test('103', async ({ page }) => {
     ],
   };
   await fillForm(page, JSON.stringify(form));
-  await testDraftValues(page, form);
+  await testDraftValues(page, form, true);
   await assertScreenshot(page);
 });
 
