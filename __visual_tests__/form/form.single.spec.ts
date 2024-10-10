@@ -56,7 +56,7 @@ test('101', async ({ page }) => {
     ],
   };
   await fillForm(page, JSON.stringify(form));
-  await testDraftValues(page, form);
+  await testDraftValues(page, form, true);
   await assertScreenshot(page);
 });
 
@@ -137,7 +137,7 @@ test('104', async ({ page }) => {
     ],
   };
   await fillForm(page, JSON.stringify(form));
-  await testDraftValues(page, form);
+  await testDraftValues(page, form, true);
   await assertScreenshot(page);
 });
 
@@ -273,6 +273,151 @@ test('109', async ({ page }) => {
         draft_values: [
           'testtesttesttesttest',
         ],
+      },
+    ],
+  };
+  await fillForm(page, JSON.stringify(form));
+  await testDraftValues(page, form, true);
+  await assertScreenshot(page);
+});
+
+test('110', async ({ page }) => {
+  const form: MockMessageFormProps = {
+    name: 'test form',
+    items: [
+      {
+        name: 'text input',
+        required: true,
+        sort_order: 0,
+        style: {
+          layout: 'textarea',
+        },
+        validators: [
+          {
+            key: 'text',
+            min_length: 0,
+            max_length: 10,
+          },
+        ],
+        draft_values: [
+          'long text test long text test long text test long text test long text test long '
+          + 'text test long text test long text test long text test long text test long text '
+          + 'test long text test long text test long text test long text test long text test '
+          + 'long text test long text test long text test long text test',
+        ],
+      },
+    ],
+  };
+  await fillForm(page, JSON.stringify(form));
+  await testDraftValues(page, form, true);
+  await assertScreenshot(page);
+});
+
+test('111', async ({ page }) => {
+  const form: MockMessageFormProps = {
+    name: 'test form',
+    items: [
+      {
+        name: 'text input',
+        required: true,
+        sort_order: 0,
+        style: {
+          layout: 'textarea',
+        },
+        validators: [
+          {
+            key: 'text',
+            min_length: 0,
+            max_length: 10,
+          },
+        ],
+        values: [
+          'long text test long text test long text test long text test long text test long '
+          + 'text test long text test long text test long text test long text test long text '
+          + 'test long text test long text test long text test long text test long text test '
+          + 'long text test long text test long text test long text test',
+        ],
+      },
+    ],
+  };
+  await fillForm(page, JSON.stringify(form));
+  await testDraftValues(page, form);
+  await assertScreenshot(page);
+});
+
+test('112', async ({ page }) => {
+  const form: MockMessageFormProps = {
+    name: 'test form',
+    items: [
+      {
+        name: 'text input',
+        required: true,
+        sort_order: 0,
+        style: {
+          layout: 'chip',
+          options: [
+            'Chip1',
+            'Chip2',
+            'Chip3',
+            'Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4'
+            + 'Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4',
+          ],
+        },
+      },
+    ],
+  };
+  await fillForm(page, JSON.stringify(form));
+  await testDraftValues(page, form);
+  await assertScreenshot(page);
+});
+
+test('113', async ({ page }) => {
+  const form: MockMessageFormProps = {
+    name: 'test form',
+    items: [
+      {
+        name: 'text input',
+        required: true,
+        sort_order: 0,
+        style: {
+          layout: 'chip',
+          options: [
+            'Chip1',
+            'Chip2',
+            'Chip3',
+            'Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4'
+            + 'Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4',
+          ],
+        },
+        draft_values: [
+          'Chip3',
+        ],
+      },
+    ],
+  };
+  await fillForm(page, JSON.stringify(form));
+  await testDraftValues(page, form, true);
+  await assertScreenshot(page);
+});
+
+test('114', async ({ page }) => {
+  const form: MockMessageFormProps = {
+    name: 'test form',
+    items: [
+      {
+        name: 'text input',
+        required: true,
+        sort_order: 0,
+        style: {
+          layout: 'chip',
+          options: [
+            'Chip1',
+            'Chip2',
+            'Chip3',
+            'Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4'
+            + 'Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4',
+          ],
+        },
       },
     ],
   };
