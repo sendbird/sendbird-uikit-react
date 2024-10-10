@@ -8,8 +8,8 @@ import Icon from '../../../../ui/Icon';
 import { isOperator } from '../../../Channel/context/utils';
 
 import MenuItem from './MenuItem';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import useMenuItems from './hooks/useMenuItems';
+import useChannelSettings from '../../context/useChannelSettings';
 
 interface MenuListByRoleProps {
   menuItems: ReturnType<typeof useMenuItems>;
@@ -17,7 +17,7 @@ interface MenuListByRoleProps {
 export const MenuListByRole = ({
   menuItems,
 }: MenuListByRoleProps) => {
-  const { channel } = useChannelSettingsContext();
+  const { state: { channel } } = useChannelSettings();
   const menuItemsByRole = isOperator(channel) ? menuItems.operator : menuItems.nonOperator;
   // State to track the open accordion key
   const [openAccordionKey, setOpenAccordionKey] = useState<string | null>(null);

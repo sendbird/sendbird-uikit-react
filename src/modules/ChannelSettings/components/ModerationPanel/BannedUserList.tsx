@@ -17,9 +17,9 @@ Label, {
 
 import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 import BannedUsersModal from './BannedUsersModal';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
+import useChannelSettings from '../../context/useChannelSettings';
 
 interface BannedUserListProps {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
@@ -35,7 +35,7 @@ export const BannedUserList = ({
   const [showModal, setShowModal] = useState(false);
 
   const { stringSet } = useContext(LocalizationContext);
-  const { channel } = useChannelSettingsContext();
+  const { state: { channel } } = useChannelSettings();
 
   const refreshList = useCallback(() => {
     if (!channel) {

@@ -1,9 +1,9 @@
 import './channel-profile.scss';
 import React, { useState, useContext, useMemo } from 'react';
 
-import { LocalizationContext } from '../../../../lib/LocalizationContext';
+import useChannelSettings from '../../context/useChannelSettings';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
+import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 import ChannelAvatar from '../../../../ui/ChannelAvatar';
 import TextButton from '../../../../ui/TextButton';
@@ -11,12 +11,11 @@ import Label, {
   LabelTypography,
   LabelColors,
 } from '../../../../ui/Label';
-
 import EditDetailsModal from '../EditDetailsModal';
 
 const ChannelProfile: React.FC = () => {
   const state = useSendbirdStateContext();
-  const channelSettingStore = useChannelSettingsContext();
+  const { state: { channel } } = useChannelSettings();
   const { stringSet } = useContext(LocalizationContext);
   const [showModal, setShowModal] = useState(false);
 
@@ -24,8 +23,6 @@ const ChannelProfile: React.FC = () => {
   const theme = state?.config?.theme || 'light';
   const isOnline = state?.config?.isOnline;
   const disabled = !isOnline;
-
-  const channel = channelSettingStore?.channel;
 
   const channelName = useMemo(() => {
     if (channel?.name && channel.name !== 'Group Channel') {

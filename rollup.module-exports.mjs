@@ -56,7 +56,7 @@ export default {
 
   // ChannelSettings
   ChannelSettings: 'src/modules/ChannelSettings/index.tsx',
-  'ChannelSettings/context': 'src/modules/ChannelSettings/context/ChannelSettingsProvider.tsx',
+  'ChannelSettings/context': 'src/modules/ChannelSettings/context/index.tsx',
   'ChannelSettings/hooks/useMenuList': 'src/modules/ChannelSettings/components/ChannelSettingsUI/hooks/useMenuItems.tsx',
   'ChannelSettings/components/ChannelProfile': 'src/modules/ChannelSettings/components/ChannelProfile/index.tsx',
   'ChannelSettings/components/ChannelSettingsUI': 'src/modules/ChannelSettings/components/ChannelSettingsUI/index.tsx',

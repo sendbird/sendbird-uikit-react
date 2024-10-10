@@ -10,7 +10,6 @@ import type { Member, MemberListQueryParams } from '@sendbird/chat/groupChannel'
 import { Role } from '@sendbird/chat';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
@@ -18,6 +17,7 @@ import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 import MembersModal from './MembersModal';
 import { InviteUsersModal } from './InviteUsersModal';
+import useChannelSettings from '../../context/useChannelSettings';
 
 interface MemberListProps {
   renderUserListItem?: (props: UserListItemProps & { index: number }) => ReactNode;
@@ -31,10 +31,7 @@ export const MemberList = ({
   const [hasNext, setHasNext] = useState(false);
   const [showAllMembers, setShowAllMembers] = useState(false);
   const [showInviteUsers, setShowInviteUsers] = useState(false);
-  const {
-    channel,
-    forceUpdateUI,
-  } = useChannelSettingsContext();
+  const { state: { channel, forceUpdateUI } } = useChannelSettings();
   const { stringSet } = useContext(LocalizationContext);
 
   const refreshList = useCallback(() => {
