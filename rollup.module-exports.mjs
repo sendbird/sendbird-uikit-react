@@ -32,6 +32,7 @@ export default {
   'pubSub/topics': 'src/lib/pubSub/topics.ts',
   // hooks
   'hooks/useModal': 'src/hooks/useModal/index.tsx',
+  'hooks/useLocalization': 'src/hooks/useLocalization.ts',
   // utils
   'utils/message/getOutgoingMessageState': 'src/utils/exports/getOutgoingMessageState.ts',
   'utils/message/isVoiceMessage': 'src/utils/isVoiceMessage.ts',
