@@ -4,7 +4,6 @@ import React from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { noop } from '../../../../utils/utils';
 
 import Modal from '../../../../ui/Modal';
@@ -15,6 +14,7 @@ import Label, {
   LabelTypography,
   LabelColors,
 } from '../../../../ui/Label';
+import useChannelSettings from '../../context/useChannelSettings';
 
 export type LeaveChannelProps = {
   onSubmit: () => void;
@@ -27,7 +27,7 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
     onCancel = noop,
   } = props;
 
-  const { channel, onLeaveChannel } = useChannelSettingsContext();
+  const { state: { channel, onLeaveChannel } } = useChannelSettings();
   const { stringSet } = useLocalization();
   const state = useSendbirdStateContext();
   const logger = state?.config?.logger;

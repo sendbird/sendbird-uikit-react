@@ -1,17 +1,16 @@
 import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
-import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 
 import type { ChannelSettingsContextProps, ChannelSettingsState } from './types';
 
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { useAsyncRequest } from '../../../hooks/useAsyncRequest';
 import { useStore } from '../../../hooks/useStore';
 
 import uuidv4 from '../../../utils/uuid';
-import compareIds from '../../../utils/compareIds';
 import { createStore } from '../../../utils/storeManager';
+import useSetChannel from './hooks/useSetChannel';
+import { useChannelHandler } from './hooks/useChannelHandler';
 
-const ChannelSettingsContext = createContext<ReturnType<typeof createStore<ChannelSettingsState>> | null>(null);
+export const ChannelSettingsContext = createContext<ReturnType<typeof createStore<ChannelSettingsState>> | null>(null);
 
 const initialState: ChannelSettingsState = {
   // Props
@@ -27,10 +26,16 @@ const initialState: ChannelSettingsState = {
   channel: null,
   loading: false,
   invalidChannel: false,
-  forceUpdateUI: () => {},
-  setChannelUpdateId: () => {},
+  forceUpdateUI: () => { },
+  setChannelUpdateId: () => { },
 };
-const useChannelSettingsStore = () => useStore(ChannelSettingsContext, state => state, initialState);
+
+/**
+ * @returns {ReturnType<typeof createStore<ChannelSettingsState>>}
+ */
+const useChannelSettingsStore = () => {
+  return useStore(ChannelSettingsContext, state => state, initialState);
+};
 
 const ChannelSettingsManager = ({
   channelUrl,
@@ -47,74 +52,24 @@ const ChannelSettingsManager = ({
   const { logger } = config;
   const { sdk, initialized } = stores?.sdkStore ?? {};
 
-  const [channelHandlerId, setChannelHandlerId] = useState<string | undefined>();
   const [channelUpdateId, setChannelUpdateId] = useState(() => uuidv4());
   const forceUpdateUI = useCallback(() => setChannelUpdateId(uuidv4()), []);
 
-  const {
-    response: channel = null,
-    loading,
-    error,
-    refresh,
-  } = useAsyncRequest(
-    async () => {
-      logger.info('ChannelSettings: fetching channel');
-      if (!channelUrl) {
-        logger.warning('ChannelSettings: channel url is required');
-        return;
-      } else if (!initialized || !sdk) {
-        logger.warning('ChannelSettings: SDK is not initialized');
-        return;
-      } else if (!sdk.groupChannel) {
-        logger.warning('ChannelSettings: GroupChannelModule is not specified in the SDK');
-        return;
-      }
-
-      try {
-        if (channelHandlerId) {
-          if (sdk.groupChannel.removeGroupChannelHandler) {
-            logger.info('ChannelSettings: Removing message receiver handler', channelHandlerId);
-            sdk.groupChannel.removeGroupChannelHandler(channelHandlerId);
-          } else {
-            logger.error('ChannelSettings: removeGroupChannelHandler not found');
-          }
-          setChannelHandlerId(undefined);
-        }
-
-        const fetchedChannel = await sdk.groupChannel.getChannel(channelUrl);
-        const channelHandler: GroupChannelHandler = {
-          onUserLeft: (channel, user) => {
-            if (compareIds(channel?.url, channelUrl)) {
-              logger.info('ChannelSettings: onUserLeft', { channel, user });
-              refresh();
-            }
-          },
-          onUserBanned: (channel, user) => {
-            if (compareIds(channel?.url, channelUrl) && channel.isGroupChannel()) {
-              logger.info('ChannelSettings: onUserBanned', { channel, user });
-              refresh();
-            }
-          },
-        };
-        const newChannelHandlerId = uuidv4();
-        sdk.groupChannel.addGroupChannelHandler(newChannelHandlerId, new GroupChannelHandler(channelHandler));
-        setChannelHandlerId(newChannelHandlerId);
-        return fetchedChannel;
-      } catch (error) {
-        logger.error('ChannelSettings: error fetching channel', error);
-        throw error;
-      }
-    },
-    {
-      resetResponseOnRefresh: true,
-      persistLoadingIfNoResponse: true,
-      deps: [initialized, sdk?.groupChannel],
-    },
-  );
-
-  useEffect(() => {
-    refresh();
-  }, [channelUrl, channelUpdateId]);
+  const dependencies = [channelUpdateId];
+  useSetChannel({
+    channelUrl,
+    sdk,
+    logger,
+    initialized,
+    dependencies,
+  });
+  useChannelHandler({
+    sdk,
+    channelUrl,
+    logger,
+    forceUpdateUI,
+    dependencies,
+  });
 
   useEffect(() => {
     updateState({
@@ -126,9 +81,6 @@ const ChannelSettingsManager = ({
       renderUserListItem,
       queries,
       overrideInviteUser,
-      channel,
-      loading,
-      invalidChannel: Boolean(error),
       forceUpdateUI,
       setChannelUpdateId,
     });
@@ -141,20 +93,18 @@ const ChannelSettingsManager = ({
     renderUserListItem,
     queries,
     overrideInviteUser,
-    channel,
-    loading,
-    error,
     forceUpdateUI,
   ]);
 
   return null;
 };
 
+const createChannelSettingsStore = () => createStore(initialState);
 const InternalChannelSettingsProvider = ({ children }) => {
-  const storeRef = useRef((() => createStore(initialState))());
+  const storeRef = useRef(createChannelSettingsStore());
   return (
     <ChannelSettingsContext.Provider value={storeRef.current}>
-        {children}
+      {children}
     </ChannelSettingsContext.Provider>
   );
 };
@@ -163,7 +113,7 @@ const ChannelSettingsProvider = (props: ChannelSettingsContextProps) => {
   const { children } = props;
   return (
     <InternalChannelSettingsProvider>
-      <ChannelSettingsManager {...props}/>
+      <ChannelSettingsManager {...props} />
       {children}
     </InternalChannelSettingsProvider>
   );
