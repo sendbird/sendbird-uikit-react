@@ -28,20 +28,27 @@ import { OpenChannel } from '@sendbird/chat/openChannel';
 import { UserMessage } from '@sendbird/chat/message';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
-const LINE_HEIGHT = 76;
-const DEFAULT_CHAT_VIEW_HEIGHT = 600;
 const noop = () => {
   return null;
 };
 
-const displayCaret = (element: HTMLInputElement, position: number) => {
-  const range = document.createRange();
-  const sel = window.getSelection();
-  range.setStart(element.childNodes[0], position);
-  range.collapse(true);
-  sel?.removeAllRanges();
-  sel?.addRange(range);
-  element.focus();
+const scrollToCaret = () => {
+  const selection = window.getSelection();
+  if (selection && selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    const caretNode = range.endContainer;
+
+    // Ensure the caret is in a text node
+    if (caretNode.nodeType === NodeTypes.TextNode) {
+      const parentElement = caretNode.parentElement;
+
+      // Scroll the parent element of the caret into view
+      parentElement?.scrollIntoView?.({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    }
+  }
 };
 
 const resetInput = (ref: MutableRefObject<HTMLInputElement | null> | null) => {
@@ -133,7 +140,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     acceptableMimeTypes,
   } = props;
 
-  const internalRef = (externalRef && 'current' in externalRef) ? externalRef : null;
+  const internalRef = (externalRef && 'current' in externalRef) ? externalRef : useRef(null);
   const ghostInputRef = useRef<HTMLInputElement>(null);
 
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
@@ -149,46 +156,15 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   const [isInput, setIsInput] = useState(false);
   const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
   const [targetStringInfo, setTargetStringInfo] = useState({ ...initialTargetStringInfo });
-  const setHeight = useCallback(
-    () => {
-      const elem = internalRef?.current;
-      if (!elem) return;
-
-      try {
-        const estimatedChatViewHeight = window.document.body.offsetHeight || DEFAULT_CHAT_VIEW_HEIGHT;
-        const MAX_HEIGHT = estimatedChatViewHeight * 0.6;
-        if (elem.scrollHeight >= LINE_HEIGHT) {
-          if (MAX_HEIGHT < elem.scrollHeight) {
-            elem.style.height = 'auto';
-            elem.style.height = `${MAX_HEIGHT}px`;
-          } else {
-            elem.style.height = '';
-          }
-        }
-      } catch (error) {
-        // error
-      }
-    },
-    [],
-  );
 
   // #Edit mode
-  // for easilly initialize input value from outside, but
+  // for easily initialize input value from outside, but
   // useEffect(_, [channelUrl]) erase it
   const initialValue = props?.value;
   useEffect(() => {
     const textField = internalRef?.current;
-    try {
-      if (textField && initialValue) {
-        textField.innerHTML = initialValue;
-        displayCaret(textField, initialValue?.length);
-      }
-    } catch {
-      //
-    }
     setMentionedUserIds([]);
     setIsInput(textField?.textContent ? textField.textContent.trim().length > 0 : false);
-    setHeight();
   }, [initialValue]);
 
   // #Mention | Clear input value when channel changes
@@ -243,7 +219,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         setMentionedUserIds([]);
       }
       setIsInput(textField?.textContent ? textField?.textContent?.trim().length > 0 : false);
-      setHeight();
     }
   }, [isEdit, message]);
 
@@ -314,7 +289,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           textField.focus();
         }
         setTargetStringInfo({ ...initialTargetStringInfo });
-        setHeight();
         useMentionedLabelDetection();
       }
     }
@@ -411,7 +385,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         }
 
         setIsInput(false);
-        setHeight();
       }
     } catch (error) {
       eventHandlers?.message?.onSendMessageFailed?.(message, error);
@@ -437,7 +410,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     setMentionedUsers,
     channel,
     setIsInput,
-    setHeight,
   });
 
   const uploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -451,6 +423,12 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     } finally {
       event.target.value = '';
     }
+  };
+
+  const handleCommonBehavior = (handleEvent) => {
+    scrollToCaret();
+    type CommonEvent<T> = React.KeyboardEvent<T> | React.MouseEvent<T> | React.ClipboardEvent<T>;
+    return (e: CommonEvent<HTMLDivElement>) => handleEvent(e);
   };
 
   return (
@@ -474,11 +452,11 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           contentEditable={!disabled}
           role="textbox"
           aria-label="Text Input"
-          ref={externalRef}
+          ref={internalRef}
           // @ts-ignore
           disabled={disabled}
           maxLength={maxLength}
-          onKeyDown={(e) => {
+          onKeyDown={handleCommonBehavior((e) => {
             const preventEvent = onKeyDown(e);
             if (preventEvent) {
               e.preventDefault();
@@ -509,25 +487,24 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
                 internalRef.current.removeChild(internalRef.current.childNodes[1]);
               }
             }
-          }}
-          onKeyUp={(e) => {
+          })}
+          onKeyUp={handleCommonBehavior((e) => {
             const preventEvent = onKeyUp(e);
             if (preventEvent) {
               e.preventDefault();
             } else {
               useMentionInputDetection();
             }
-          }}
-          onClick={() => {
+          })}
+          onClick={handleCommonBehavior(() => {
             useMentionInputDetection();
-          }}
-          onInput={() => {
-            setHeight();
+          })}
+          onInput={handleCommonBehavior(() => {
             onStartTyping();
             setIsInput(internalRef?.current?.textContent ? internalRef.current.textContent.trim().length > 0 : false);
             useMentionedLabelDetection();
-          }}
-          onPaste={onPaste}
+          })}
+          onPaste={handleCommonBehavior(onPaste)}
         />
         {/* placeholder */}
         {(internalRef?.current?.textContent?.length ?? 0) === 0 && (

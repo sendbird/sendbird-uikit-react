@@ -21,5 +21,11 @@ const LocalizationProvider = (props: LocalizationProviderProps): React.ReactElem
   return <LocalizationContext.Provider value={{ ...LocalizationContextDefault, ...props }}>{children}</LocalizationContext.Provider>;
 };
 
-const useLocalization = () => React.useContext(LocalizationContext);
+const useLocalization = () => {
+  const context = React.useContext(LocalizationContext);
+  if (!context) {
+    throw new Error('`useLocalization` hook must be used within `SendbirdProvider` that includes `LocalizationProvider`.');
+  }
+  return context;
+};
 export { LocalizationContext, LocalizationProvider, useLocalization };

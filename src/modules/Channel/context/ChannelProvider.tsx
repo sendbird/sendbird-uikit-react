@@ -53,6 +53,8 @@ import { PublishingModuleType } from '../../internalInterfaces';
 import { ChannelActionTypes } from './dux/actionTypes';
 import { useMessageLayoutDirection } from '../../../hooks/useHTMLTextDirection';
 
+export { ThreadReplySelectType } from './const'; // export for external usage
+
 export interface MessageListParams extends Partial<SDKMessageListParams> { // make `prevResultSize` and `nextResultSize` to optional
   /** @deprecated It won't work even if you activate this props */
   reverse?: boolean;
