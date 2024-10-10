@@ -31,6 +31,7 @@ const App = () => {
         },
       };
       const built: UserMessage = chat.message.buildMessageFromSerializedData(mockedMessage) as UserMessage;
+      built.submitMessageForm = async () => {};
       setMessage(built);
     } catch (e) {
       console.warn('## error: ', e);

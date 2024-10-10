@@ -167,6 +167,120 @@ test('105', async ({ page }) => {
   await assertScreenshot(page);
 });
 
+test('106', async ({ page }) => {
+  const form: MockMessageFormProps = {
+    name: 'test form',
+    items: [
+      {
+        name: 'text input',
+        required: true,
+        sort_order: 0,
+        placeholder: 'hint',
+        style: {
+          layout: 'textarea',
+        },
+        validators: [
+          {
+            key: 'text',
+            min_length: 0,
+            max_length: 10,
+          },
+        ],
+      },
+    ],
+  };
+  await fillForm(page, JSON.stringify(form));
+  await testDraftValues(page, form);
+  await assertScreenshot(page);
+});
+
+test('107', async ({ page }) => {
+  const form: MockMessageFormProps = {
+    name: 'test form',
+    items: [
+      {
+        name: 'text input',
+        required: true,
+        sort_order: 0,
+        placeholder: 'hint',
+        style: {
+          layout: 'textarea',
+        },
+        validators: [
+          {
+            key: 'text',
+            min_length: 0,
+            max_length: 10,
+          },
+        ],
+        draft_values: [
+          'test test',
+        ],
+      },
+    ],
+  };
+  await fillForm(page, JSON.stringify(form));
+  await testDraftValues(page, form, true);
+  await assertScreenshot(page);
+});
+
+test('108', async ({ page }) => {
+  const form: MockMessageFormProps = {
+    name: 'test form',
+    items: [
+      {
+        name: 'text input',
+        required: true,
+        sort_order: 0,
+        placeholder: 'hint',
+        style: {
+          layout: 'textarea',
+        },
+        validators: [
+          {
+            key: 'text',
+            min_length: 0,
+            max_length: 10,
+          },
+        ],
+      },
+    ],
+  };
+  await fillForm(page, JSON.stringify(form));
+  await testDraftValues(page, form, true);
+  await assertScreenshot(page);
+});
+
+test('109', async ({ page }) => {
+  const form: MockMessageFormProps = {
+    name: 'test form',
+    items: [
+      {
+        name: 'text input',
+        required: true,
+        sort_order: 0,
+        placeholder: 'hint',
+        style: {
+          layout: 'textarea',
+        },
+        validators: [
+          {
+            key: 'text',
+            min_length: 0,
+            max_length: 10,
+          },
+        ],
+        draft_values: [
+          'testtesttesttesttest',
+        ],
+      },
+    ],
+  };
+  await fillForm(page, JSON.stringify(form));
+  await testDraftValues(page, form, true);
+  await assertScreenshot(page);
+});
+
 async function testDraftValues(page: Page, form: MockMessageFormProps, clickSubmit = false) {
   let numPriorChips = 0;
   await Promise.all(form.items.map(async (item, index) => {
