@@ -79,7 +79,7 @@ const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
   }
 
   return (
-    <>
+    <div className="sendbird-channel-settings">
       {renderHeader(headerProps)}
       <div className="sendbird-channel-settings__scroll-area">
         {renderChannelProfile?.() || <ChannelProfile />}
@@ -123,7 +123,7 @@ const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
           />
         )}
       </div>
-    </>
+    </div>
   );
 };
 
