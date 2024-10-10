@@ -115,6 +115,58 @@ test('103', async ({ page }) => {
   await assertScreenshot(page);
 });
 
+test('104', async ({ page }) => {
+  const form: MockMessageFormProps = {
+    name: 'test form',
+    items: [
+      {
+        name: 'text input',
+        required: true,
+        sort_order: 0,
+        placeholder: 'hint',
+        style: {
+          layout: 'text',
+        },
+        draft_values: [
+          'long text test long text test long text test long text test long text test long text test long '
+          + 'text test long text test long text test long text test long text test long text test long text '
+          + 'test long text test long text test long text test long text test long text test long text test '
+          + 'long text test',
+        ],
+      },
+    ],
+  };
+  await fillForm(page, JSON.stringify(form));
+  await testDraftValues(page, form);
+  await assertScreenshot(page);
+});
+
+test('105', async ({ page }) => {
+  const form: MockMessageFormProps = {
+    name: 'test form',
+    items: [
+      {
+        name: 'text input',
+        required: true,
+        sort_order: 0,
+        placeholder: 'hint',
+        style: {
+          layout: 'text',
+        },
+        values: [
+          'long text test long text test long text test long text test long text test long text test long '
+          + 'text test long text test long text test long text test long text test long text test long text '
+          + 'test long text test long text test long text test long text test long text test long text test '
+          + 'long text test',
+        ],
+      },
+    ],
+  };
+  await fillForm(page, JSON.stringify(form));
+  await testDraftValues(page, form);
+  await assertScreenshot(page);
+});
+
 async function testDraftValues(page: Page, form: MockMessageFormProps, clickSubmit = false) {
   let numPriorChips = 0;
   await Promise.all(form.items.map(async (item, index) => {

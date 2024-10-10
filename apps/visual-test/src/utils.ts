@@ -15,6 +15,7 @@ export const getMockMessageForm = (props: MockMessageFormProps) => {
         placeholder: item.placeholder,
         style: item.style,
         validators: item.validators ?? [],
+        values: item.values,
       };
     }),
   };
