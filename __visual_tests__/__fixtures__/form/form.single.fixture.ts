@@ -86,6 +86,25 @@ const formExample = {
 export const formSingleFixture: FormFixtureProps[] = [
   {
     name: '100',
-    form: formExample,
+    form: {
+      name: 'test form',
+      items: [
+        {
+          name: 'text input',
+          required: true,
+          sort_order: 0,
+          placeholder: 'hint',
+          style: {
+            layout: 'text',
+          },
+          validators: [
+            {
+              key: 'regex',
+              regex: '^[0-9]+$',
+            },
+          ],
+        },
+      ],
+    },
   },
 ];

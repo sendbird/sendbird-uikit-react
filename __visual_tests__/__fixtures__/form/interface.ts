@@ -6,6 +6,7 @@ export interface MockMessageFormItemProps {
   style: object;
   values?: string[];
   validators?: object[];
+  draft_values?: string[];
 }
 
 export interface MockMessageFormProps {
