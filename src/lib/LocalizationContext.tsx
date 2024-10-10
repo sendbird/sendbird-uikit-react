@@ -24,7 +24,7 @@ const LocalizationProvider = (props: LocalizationProviderProps): React.ReactElem
 const useLocalization = () => {
   const context = React.useContext(LocalizationContext);
   if (!context) {
-    throw new Error('The `useLocalization` hook requires the `SendbirdProvider`, which includes `LocalizationProvider`. Please ensure that your component is wrapped with `SendbirdProvider`.');
+    throw new Error('`useLocalization` hook must be used within `SendbirdProvider` that includes `LocalizationProvider`.');
   }
   return context;
 };

@@ -1,6 +1,6 @@
 /**
- * This `useLocalization is only for exportation purposes. It is not used in the project.
- * It shouldn't be used internally.
+ * This file is only for re-exporting the `useLocalization` hook.
+ * It should not be used internally within the project.
  */
 import { useLocalization } from '../lib/LocalizationContext';
 
