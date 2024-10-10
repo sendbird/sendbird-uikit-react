@@ -445,7 +445,6 @@ async function testDraftValues(page: Page, form: MockMessageFormProps, clickSubm
 }
 
 async function fillDraftValue(page: Page, layout: string, index: number, values: string[]) {
-  // Locate the input field using its className
   switch (layout) {
     case 'text':
     case 'textarea':
