@@ -11,9 +11,9 @@ import { IconColors, IconTypes, IconProps } from '../../../../../ui/Icon';
 import Badge from '../../../../../ui/Badge';
 import { Toggle } from '../../../../../ui/Toggle';
 import { LabelColors, LabelTypography, type LabelProps } from '../../../../../ui/Label';
-import { useChannelSettingsContext } from '../../../context/ChannelSettingsProvider';
 
 import { MenuItemAction, type MenuItemActionProps } from '../MenuItem';
+import useChannelSettings from '../../../context/useChannelSettings';
 
 const kFormatter = (num: number): string | number => {
   return Math.abs(num) > 999
@@ -55,7 +55,7 @@ const commonLabelProps = {
 export const useMenuItems = (): MenuItems => {
   const [frozen, setFrozen] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
-  const { channel, renderUserListItem } = useChannelSettingsContext();
+  const { state: { channel, renderUserListItem } } = useChannelSettings();
 
   // work around for
   // https://sendbird.slack.com/archives/G01290GCDCN/p1595922832000900

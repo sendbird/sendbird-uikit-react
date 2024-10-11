@@ -12,10 +12,10 @@ import Modal from '../../../../ui/Modal';
 import UserListItem, { type UserListItemProps } from '../../../../ui/UserListItem';
 import { noop } from '../../../../utils/utils';
 
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
+import useChannelSettings from '../../context/useChannelSettings';
 
 export interface MembersModalProps {
   onCancel(): void;
@@ -31,7 +31,7 @@ export function MembersModal({
   const [members, setMembers] = useState<Member[]>([]);
   const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
 
-  const { channel } = useChannelSettingsContext();
+  const { state: { channel } } = useChannelSettings();
   const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {
