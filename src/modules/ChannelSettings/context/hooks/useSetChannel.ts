@@ -3,13 +3,13 @@ import type { Logger } from '../../../../lib/SendbirdState';
 import { SdkStore } from '../../../../lib/types';
 import useChannelSettings from '../useChannelSettings';
 
-  interface Props {
-    channelUrl: string;
-    sdk: SdkStore['sdk'];
-    logger: Logger;
-    initialized: boolean;
-    dependencies?: any[];
-  }
+interface Props {
+  channelUrl: string;
+  sdk: SdkStore['sdk'];
+  logger: Logger;
+  initialized: boolean;
+  dependencies?: any[];
+}
 
 function useSetChannel({
   channelUrl,

@@ -2,13 +2,15 @@ import React, { createContext, useCallback, useEffect, useRef, useState } from '
 
 import type { ChannelSettingsContextProps, ChannelSettingsState } from './types';
 
+import useSetChannel from './hooks/useSetChannel';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { useStore } from '../../../hooks/useStore';
+import { useChannelHandler } from './hooks/useChannelHandler';
 
 import uuidv4 from '../../../utils/uuid';
+import { classnames } from '../../../utils/utils';
 import { createStore } from '../../../utils/storeManager';
-import useSetChannel from './hooks/useSetChannel';
-import { useChannelHandler } from './hooks/useChannelHandler';
+import { UserProfileProvider } from '../../../lib/UserProfileContext';
 
 export const ChannelSettingsContext = createContext<ReturnType<typeof createStore<ChannelSettingsState>> | null>(null);
 
@@ -110,11 +112,15 @@ const InternalChannelSettingsProvider = ({ children }) => {
 };
 
 const ChannelSettingsProvider = (props: ChannelSettingsContextProps) => {
-  const { children } = props;
+  const { children, className } = props;
   return (
     <InternalChannelSettingsProvider>
       <ChannelSettingsManager {...props} />
-      {children}
+      <UserProfileProvider {...props}>
+        <div className={classnames('sendbird-channel-settings', className)}>
+          {children}
+        </div>
+      </UserProfileProvider>
     </InternalChannelSettingsProvider>
   );
 };
