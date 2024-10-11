@@ -5,8 +5,8 @@ import type { SendableMessageType } from '../../../../utils';
 import * as utils from './utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import { useGroupChannelListContext } from '../../context/GroupChannelListProvider';
 import { GroupChannelListItemBasicProps, GroupChannelListItemView } from './GroupChannelListItemView';
+import { useGroupChannelList } from '../../context/useGroupChannelList';
 
 export interface GroupChannelListItemProps extends GroupChannelListItemBasicProps {}
 
@@ -21,7 +21,12 @@ export const GroupChannelListItem = ({
 }: GroupChannelListItemProps) => {
   const { config } = useSendbirdStateContext();
   const { stringSet } = useLocalization();
-  const { isTypingIndicatorEnabled = false, isMessageReceiptStatusEnabled = false } = useGroupChannelListContext();
+  const {
+    state: {
+      isTypingIndicatorEnabled = false,
+      isMessageReceiptStatusEnabled = false,
+    },
+  } = useGroupChannelList();
 
   const userId = config.userId;
   const isMessageStatusEnabled = isMessageReceiptStatusEnabled
