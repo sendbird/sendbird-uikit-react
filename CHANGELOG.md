@@ -1,5 +1,22 @@
 # Changelog - v3
 
+## [v3.15.6] (Oct 11th, 2024)
+
+### Features:
+- Exported `useLocalization` Hook:
+  - Provided access to stringSet and dateLocale.
+  - Note: Required SendbirdProvider to wrap your component for proper usage.
+  - Import Path: `"@sendbird/uikit-react/hooks/useLocalization"`
+- Exported `ThreadReplySelectType`:
+  - Import Paths:
+    - `"@sendbird/uikit-react/Channel/context"`
+    - `"@sendbird/uikit-react/GroupChannel/context"`
+
+### Fixes
+- Modified the `MessageInput` to scroll to the caret position when pasting text.
+- The maximum height of the `MessageInput` has been extended to `'92px'`
+- Fixed an `error message` on `MenuItemAction` when the children prop is `undefined`
+
 ## [v3.15.5] (Oct 4th, 2024)
 
 ### Updates
