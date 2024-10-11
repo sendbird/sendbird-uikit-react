@@ -35,7 +35,7 @@ describe('useMessageSearch', () => {
     expect(result.current.state).toEqual(expect.objectContaining({
       allMessages: [],
       loading: false,
-      isInvalid: false,
+      isQueryInvalid: false,
       initialized: false,
       currentChannel: null,
       currentMessageSearchQuery: null,
@@ -61,7 +61,7 @@ describe('useMessageSearch', () => {
       result.current.actions.startMessageSearch();
     });
 
-    expect(result.current.state.isInvalid).toBe(false);
+    expect(result.current.state.isQueryInvalid).toBe(false);
     expect(result.current.state.loading).toBe(false);
   });
 
@@ -87,7 +87,7 @@ describe('useMessageSearch', () => {
       result.current.actions.setQueryInvalid();
     });
 
-    expect(result.current.state.isInvalid).toBe(true);
+    expect(result.current.state.isQueryInvalid).toBe(true);
   });
 
   it('updates state when getNextSearchedMessages is called', () => {

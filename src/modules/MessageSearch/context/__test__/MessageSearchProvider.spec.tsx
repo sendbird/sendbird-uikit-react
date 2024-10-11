@@ -55,7 +55,7 @@ describe('MessageSearchProvider', () => {
       channelUrl: 'test-channel',
       allMessages: [],
       loading: false,
-      isInvalid: false,
+      isQueryInvalid: false,
       initialized: false,
       currentChannel: null,
       currentMessageSearchQuery: null,
@@ -111,7 +111,7 @@ describe('MessageSearchProvider', () => {
       result.current.actions.startMessageSearch();
       await waitFor(() => {
         expect(result.current.state.loading).toBe(false);
-        expect(result.current.state.isInvalid).toBe(false);
+        expect(result.current.state.isQueryInvalid).toBe(false);
       });
     });
   });

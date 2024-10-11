@@ -28,7 +28,7 @@ export interface MessageSearchState extends MessageSearchProviderProps {
   channelUrl: string;
   allMessages: ClientSentMessages[];
   loading: boolean;
-  isInvalid: boolean;
+  isQueryInvalid: boolean;
   initialized: boolean;
   currentChannel: GroupChannel | null;
   currentMessageSearchQuery: MessageSearchQuery | null;
@@ -45,7 +45,7 @@ const initialState: MessageSearchState = {
   channelUrl: '',
   allMessages: [],
   loading: false,
-  isInvalid: false,
+  isQueryInvalid: false,
   initialized: false,
   currentChannel: null,
   currentMessageSearchQuery: null,
