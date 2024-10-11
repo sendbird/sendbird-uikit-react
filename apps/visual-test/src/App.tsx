@@ -2,8 +2,6 @@ import { ChangeEvent, useState } from 'react';
 import FormMessageItemBody from '../../../src/ui/FormMessageItemBody';
 import { UserMessage } from '@sendbird/chat/message';
 import SendbirdChat from '@sendbird/chat';
-import { GroupChannelModule } from '@sendbird/chat/groupChannel';
-import { OpenChannelModule } from '@sendbird/chat/openChannel';
 import { mockUserMessage } from '../mock-data/form.ts';
 import { getMockMessageForm } from './utils.ts';
 // TODO: Need to change below imports into a single import later.
@@ -11,6 +9,10 @@ import '../../../src/ui/TextMessageItemBody/index.scss';
 import '../../../src/ui/Input/index.scss';
 import '../../../src/ui/FormMessageItemBody/index.scss';
 
+const chat = SendbirdChat.init({
+  appId: '',
+  modules: [],
+});
 
 const App = () => {
   const [theme, setTheme] = useState('light');
@@ -27,7 +29,6 @@ const App = () => {
         ...mockUserMessage,
         'extendedMessagePayload': {
           'message_form': getMockMessageForm(parsedJson),
-          'disable_chat_input': true
         },
       };
       const built: UserMessage = chat.message.buildMessageFromSerializedData(mockedMessage) as UserMessage;
@@ -38,11 +39,6 @@ const App = () => {
       setMessage(undefined);
     }
   };
-
-  const chat = SendbirdChat.init({
-    appId: '5D27A98C-D935-4EDA-846A-BCCD90E8E55B',
-    modules: [new GroupChannelModule, new OpenChannelModule],
-  });
 
   return (
     <div dir={'ltr'} style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 24 }}>
