@@ -1,8 +1,8 @@
 import React, { useState, useRef, useContext } from 'react';
 
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import useChannelSettings from '../../context/useChannelSettings';
 
 import Modal from '../../../../ui/Modal';
 import Input, { InputLabel } from '../../../../ui/Input';
@@ -26,11 +26,13 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
   } = props;
 
   const {
-    channel,
-    onChannelModified,
-    onBeforeUpdateChannel,
-    setChannelUpdateId,
-  } = useChannelSettingsContext();
+    state: {
+      channel,
+      onChannelModified,
+      onBeforeUpdateChannel,
+      setChannelUpdateId,
+    },
+  } = useChannelSettings();
   const title = channel?.name;
 
   const state = useSendbirdStateContext();

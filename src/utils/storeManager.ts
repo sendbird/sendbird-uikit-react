@@ -9,12 +9,12 @@ export type Store<T> = {
  * A custom store creation utility
  */
 export function createStore<T extends object>(initialState: T): Store<T> {
-  const state = { ...initialState };
+  let state = { ...initialState };
   const listeners = new Set<() => void>();
 
   const setState = (partial: Partial<T> | ((state: T) => Partial<T>)) => {
     const nextState = typeof partial === 'function' ? partial(state) : partial;
-    Object.assign(state, nextState);
+    state = { ...state, ...nextState };
     listeners.forEach((listener) => listener());
   };
 
