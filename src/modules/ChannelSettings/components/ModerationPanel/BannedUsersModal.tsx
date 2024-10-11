@@ -4,15 +4,15 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { BannedUserListQuery, BannedUserListQueryParams, RestrictedUser } from '@sendbird/chat';
+
+import useChannelSettings from '../../context/useChannelSettings';
+import { useLocalization } from '../../../../lib/LocalizationContext';
+import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
+import { noop } from '../../../../utils/utils';
 
 import Modal from '../../../../ui/Modal';
 import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
-
-import { noop } from '../../../../utils/utils';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
-import { useLocalization } from '../../../../lib/LocalizationContext';
-import { BannedUserListQuery, BannedUserListQueryParams, RestrictedUser } from '@sendbird/chat';
-import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
 export interface BannedUsersModalProps {
@@ -28,7 +28,7 @@ export function BannedUsersModal({
 }: BannedUsersModalProps): ReactElement {
   const [members, setMembers] = useState<RestrictedUser[]>([]);
   const [memberQuery, setMemberQuery] = useState<BannedUserListQuery | null>(null);
-  const { channel } = useChannelSettingsContext();
+  const { state: { channel } } = useChannelSettings();
   const { stringSet } = useLocalization();
 
   useEffect(() => {
