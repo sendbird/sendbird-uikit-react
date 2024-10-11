@@ -92,6 +92,22 @@ jobs:
           path: coverage
           destination: coverage
 
+  run-visual-test:
+    executor: default
+    steps:
+      - attach_project
+      - run:
+          name: Install Playwright Browsers
+          command: |
+            npx playwright install --with-deps
+      - run:
+          name: Run Playwright Tests
+          command: |
+            npx playwright test
+      - store_artifacts:
+          path: playwright-report/
+          destination: playwright-report
+
   create-ticket:
     executor: default
     steps:
@@ -157,6 +173,9 @@ workflows:
           requires:
             - prepare
       - run-test:
+          requires:
+            - prepare
+      - run-visual-test:
           requires:
             - prepare
 
