@@ -22,7 +22,7 @@ import MemberList from './MemberList';
 import BannedUserList from './BannedUserList';
 import MutedMemberList from './MutedMemberList';
 
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
+import useChannelSettings from '../../context/useChannelSettings';
 
 const kFormatter = (num: number): string | number => {
   return Math.abs(num) > 999
@@ -39,7 +39,7 @@ export default function ModerationPanel(): ReactElement {
   const [frozen, setFrozen] = useState(false);
 
   const { stringSet } = useContext(LocalizationContext);
-  const { channel } = useChannelSettingsContext();
+  const { state: { channel } } = useChannelSettings();
 
   // work around for
   // https://sendbird.slack.com/archives/G01290GCDCN/p1595922832000900

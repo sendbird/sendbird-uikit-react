@@ -9,11 +9,11 @@ import React, {
 import Modal from '../../../../ui/Modal';
 import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { OperatorListQuery, OperatorListQueryParams, User } from '@sendbird/chat';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
+import useChannelSettings from '../../context/useChannelSettings';
 
 export interface OperatorsModalProps {
   onCancel?(): void;
@@ -29,7 +29,7 @@ export function OperatorsModal({
   const [operators, setOperators] = useState<User[]>([]);
   const [operatorQuery, setOperatorQuery] = useState<OperatorListQuery | null>(null);
 
-  const { channel } = useChannelSettingsContext();
+  const { state: { channel } } = useChannelSettings();
   const { stringSet } = useContext(LocalizationContext);
 
   useEffect(() => {

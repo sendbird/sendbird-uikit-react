@@ -1,18 +1,15 @@
 import './user-panel.scss';
 
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
-import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import
-Label, {
-  LabelTypography,
-  LabelColors,
-} from '../../../../ui/Label';
-import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
+import useChannelSettings from '../../context/useChannelSettings';
+import { useLocalization } from '../../../../lib/LocalizationContext';
+
 import Badge from '../../../../ui/Badge';
+import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
+import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 
 import MemberList from '../ModerationPanel/MemberList';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 
 const kFormatter = (num: number): string|number => {
   return Math.abs(num) > 999
@@ -21,9 +18,9 @@ const kFormatter = (num: number): string|number => {
 };
 
 const UserPanel: React.FC = () => {
-  const { stringSet } = useContext(LocalizationContext);
+  const { stringSet } = useLocalization();
   const [showAccordion, setShowAccordion] = useState(false);
-  const { channel } = useChannelSettingsContext();
+  const { state: { channel } } = useChannelSettings();
   return (
     <div className='sendbird-channel-settings__user-panel'>
       <div

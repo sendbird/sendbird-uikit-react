@@ -4,14 +4,15 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { Member, MemberListQuery, MemberListQueryParams } from '@sendbird/chat/groupChannel';
+
+import useChannelSettings from '../../context/useChannelSettings';
+import { useLocalization } from '../../../../lib/LocalizationContext';
+import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 
 import Modal from '../../../../ui/Modal';
 import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 import { noop } from '../../../../utils/utils';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
-import { useLocalization } from '../../../../lib/LocalizationContext';
-import { Member, MemberListQuery, MemberListQueryParams } from '@sendbird/chat/groupChannel';
-import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 
 export interface MutedMembersModalProps {
@@ -28,7 +29,7 @@ export function MutedMembersModal({
   const [members, setMembers] = useState<Member[]>([]);
   const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
 
-  const { channel } = useChannelSettingsContext();
+  const { state: { channel } } = useChannelSettings();
   const { stringSet } = useLocalization();
 
   useEffect(() => {
