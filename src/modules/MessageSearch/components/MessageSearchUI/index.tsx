@@ -35,7 +35,7 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
 }: MessageSearchUIProps) => {
   const {
     state: {
-      isInvalid,
+      isQueryInvalid,
       searchString,
       requestString,
       currentChannel,
@@ -83,7 +83,7 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
     return stringSet.NO_TITLE;
   };
 
-  if (isInvalid && searchString && requestString) {
+  if (isQueryInvalid && searchString && requestString) {
     return renderPlaceHolderError?.() || (
       <div className="sendbird-message-search">
         <PlaceHolder
