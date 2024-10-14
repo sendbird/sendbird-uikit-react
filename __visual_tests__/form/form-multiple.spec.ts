@@ -5,7 +5,8 @@ import { MockMessageFormProps } from '../__fixtures__/form/interface';
 
 runBeforeEach();
 
-test('201: Form with one text input (no fill), one text area input (no fill), and one chip input (no select)', async ({ page }) => {
+// 201: Form with one text input (no fill), one text area input (no fill), and one chip input (no select)
+test('201', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -50,7 +51,8 @@ test('201: Form with one text input (no fill), one text area input (no fill), an
   await assertScreenshot(page);
 });
 
-test('202: Form with one text input (no fill), one text input (no fill, not required)', async ({ page }) => {
+// 202: Form with one text input (no fill), one text input (no fill, not required)
+test('202', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -79,7 +81,8 @@ test('202: Form with one text input (no fill), one text input (no fill, not requ
   await assertScreenshot(page);
 });
 
-test('203: Form with one text area input (no fill), one text area input (no fill, not required) and one chip input (no select)', async ({ page }) => {
+// 203: Form with one text area input (no fill), one text area input (no fill, not required) and one chip input (no select)
+test('203', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -108,7 +111,8 @@ test('203: Form with one text area input (no fill), one text area input (no fill
   await assertScreenshot(page);
 });
 
-test('204: Form with one chip input (no select), one chip input (select one chip), '
+// 204: Form with one chip input (no select), and one chip input (select one chip)
+test('204'
   + 'and one chip input (no select)', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
