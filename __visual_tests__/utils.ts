@@ -46,6 +46,7 @@ export async function testDraftValues(page: Page, form: MockMessageFormProps, cl
 async function submitForm(page: Page) {
   const submitButton = page.locator('.sendbird-form-message__submit-button');
   await submitButton.click();
+  await submitButton.blur();
 }
 
 async function fillDraftValue(page: Page, layout: string, index: number, values: string[]) {
