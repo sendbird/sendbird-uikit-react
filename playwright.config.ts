@@ -5,7 +5,7 @@ import { defineConfig, devices } from '@playwright/test';
  * https://github.com/motdotla/dotenv
  */
 // import dotenv from 'dotenv';
-// import path from 'path';
+import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 /**
@@ -31,7 +31,6 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
-
   /* Configure projects for major browsers */
   projects: [
     {
@@ -67,6 +66,7 @@ export default defineConfig({
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
   ],
+  snapshotDir: path.join(__dirname, '__visual_tests__'), // Explicit snapshot path
 
   /* Run your local dev server before starting the __visual_tests__ */
   webServer: {

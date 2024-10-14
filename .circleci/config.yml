@@ -101,7 +101,11 @@ jobs:
           command: |
             npx playwright install --with-deps
       - run:
-          name: Run Playwright Tests
+          name: Run Playwright Tests (First run for creating snapshots)
+          command: |
+            npx playwright test
+      - run:
+          name: Run Playwright Tests (Second run to check the snapsho)
           command: |
             npx playwright test
       - store_test_results:  # Store the JUnit test results for CircleCI UI
