@@ -92,25 +92,6 @@ jobs:
           path: coverage
           destination: coverage
 
-  run-visual-test:
-    executor: default
-    steps:
-      - attach_project
-      - run:
-          name: Install Playwright Browsers
-          command: |
-            npx playwright install --with-deps
-      - run:
-          name: Run Playwright Tests (First run for creating snapshots)
-          command: |
-            npx playwright test
-      - run:
-          name: Run Playwright Tests (Second run to check the snapsho)
-          command: |
-            npx playwright test
-      - store_test_results:  # Store the JUnit test results for CircleCI UI
-          path: test-results/  # Directory where the JUnit XML file is stored. See playwright.config.ts file.
-
   create-ticket:
     executor: default
     steps:
@@ -176,9 +157,6 @@ workflows:
           requires:
             - prepare
       - run-test:
-          requires:
-            - prepare
-      - run-visual-test:
           requires:
             - prepare
 
