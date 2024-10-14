@@ -5,7 +5,7 @@ import { MockMessageFormProps } from '../__fixtures__/form/interface';
 
 runBeforeEach();
 
-test('100 - Form with one text input with number only regex (no fill)', async ({ page }) => {
+test('100: Form with one text input with number only regex (no fill)', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -31,7 +31,7 @@ test('100 - Form with one text input with number only regex (no fill)', async ({
   await assertScreenshot(page);
 });
 
-test('101 - Form with one text input with number only regex (fill number)', async ({ page }) => {
+test('101: Form with one text input with number only regex (fill number)', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -60,7 +60,7 @@ test('101 - Form with one text input with number only regex (fill number)', asyn
   await assertScreenshot(page);
 });
 
-test('102 - Form with one text input with number only regex (no fill). Click submit', async ({ page }) => {
+test('102: Form with one text input with number only regex (no fill). Click submit', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -86,7 +86,7 @@ test('102 - Form with one text input with number only regex (no fill). Click sub
   await assertScreenshot(page);
 });
 
-test('103 - Form with one text input with number only regex (fill text). Click submit', async ({ page }) => {
+test('103: Form with one text input with number only regex (fill text). Click submit', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -115,7 +115,7 @@ test('103 - Form with one text input with number only regex (fill text). Click s
   await assertScreenshot(page);
 });
 
-test('104 - Form with one text input (fill long text). Click submit', async ({ page }) => {
+test('104: Form with one text input (fill long text). Click submit', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -141,7 +141,7 @@ test('104 - Form with one text input (fill long text). Click submit', async ({ p
   await assertScreenshot(page);
 });
 
-test('105 - Submitted form with one text input (long text)', async ({ page }) => {
+test('105: Submitted form with one text input (long text)', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -167,7 +167,7 @@ test('105 - Submitted form with one text input (long text)', async ({ page }) =>
   await assertScreenshot(page);
 });
 
-test('106 - Form with one text area input with max length 10 regex (no fill)', async ({ page }) => {
+test('106: Form with one text area input with max length 10 regex (no fill)', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -194,7 +194,7 @@ test('106 - Form with one text area input with max length 10 regex (no fill)', a
   await assertScreenshot(page);
 });
 
-test('107 - Form with one text area input with max length 10 regex (fill short text). Click submit', async ({ page }) => {
+test('107: Form with one text area input with max length 10 regex (fill short text). Click submit', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -224,7 +224,7 @@ test('107 - Form with one text area input with max length 10 regex (fill short t
   await assertScreenshot(page);
 });
 
-test('108 - Form with one text area input with max length 10 regex (no fill). Click submit', async ({ page }) => {
+test('108: Form with one text area input with max length 10 regex (no fill). Click submit', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -251,7 +251,7 @@ test('108 - Form with one text area input with max length 10 regex (no fill). Cl
   await assertScreenshot(page);
 });
 
-test('109 - Form with one text area input with max length 10 regex (fill long text). Click submit', async ({ page }) => {
+test('109: Form with one text area input with max length 10 regex (fill long text). Click submit', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -281,7 +281,7 @@ test('109 - Form with one text area input with max length 10 regex (fill long te
   await assertScreenshot(page);
 });
 
-test('110 - Form with one text area input with max length 10 regex (fill very long text). Click submit', async ({ page }) => {
+test('110: Form with one text area input with max length 10 regex (fill very long text). Click submit', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -313,7 +313,7 @@ test('110 - Form with one text area input with max length 10 regex (fill very lo
   await assertScreenshot(page);
 });
 
-test('111 - Submitted form with one text area input with max length 10 regex (fill short text)', async ({ page }) => {
+test('111: Submitted form with one text area input with max length 10 regex (fill short text)', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -345,7 +345,7 @@ test('111 - Submitted form with one text area input with max length 10 regex (fi
   await assertScreenshot(page);
 });
 
-test('112 - Form with one chip input', async ({ page }) => {
+test('112: Form with one chip input', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -371,7 +371,7 @@ test('112 - Form with one chip input', async ({ page }) => {
   await assertScreenshot(page);
 });
 
-test('113 - Form with one chip input (select one chip). Click submit', async ({ page }) => {
+test('113: Form with one chip input (select one chip). Click submit', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
@@ -400,7 +400,7 @@ test('113 - Form with one chip input (select one chip). Click submit', async ({ 
   await assertScreenshot(page);
 });
 
-test('114 - Form with one chip input (no select). Click submit', async ({ page }) => {
+test('114: Form with one chip input (no select). Click submit', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [

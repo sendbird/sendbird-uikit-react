@@ -31,6 +31,7 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
+  snapshotPathTemplate: '{testDir}/{testFileName}-snapshots/{arg}-chromium.png',
   /* Configure projects for major browsers */
   projects: [
     {
@@ -66,7 +67,6 @@ export default defineConfig({
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
   ],
-  snapshotDir: path.join(__dirname, '__visual_tests__'), // Explicit snapshot path
 
   /* Run your local dev server before starting the __visual_tests__ */
   webServer: {
