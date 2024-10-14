@@ -104,9 +104,8 @@ jobs:
           name: Run Playwright Tests
           command: |
             npx playwright test
-      - store_artifacts:
-          path: playwright-report/
-          destination: playwright-report
+      - store_test_results:  # Store the JUnit test results for CircleCI UI
+          path: test-results/  # Directory where the JUnit XML file is stored. See playwright.config.ts file.
 
   create-ticket:
     executor: default
