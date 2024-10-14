@@ -21,6 +21,11 @@ export function runBeforeEach() {
   });
 }
 
+/**
+ * This function takes form json object, fills draft_values (it is not defined in SDK nor server) as if
+ * a user fills out input values. Afterward, if clickSubmit argument is given as true, the function clicks
+ * submit button.
+ */
 export async function testDraftValues(page: Page, form: MockMessageFormProps, clickSubmit = false) {
   let numPriorChips = 0;
   await Promise.all(form.items.map(async (item, index) => {
