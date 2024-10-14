@@ -31,7 +31,7 @@ const useMessageSearch = () => {
           return {
             ...state,
             loading: false,
-            isInvalid: false,
+            isQueryInvalid: false,
             allMessages: messages,
             hasMoreResult: state.currentMessageSearchQuery.hasNext,
           };
@@ -40,11 +40,11 @@ const useMessageSearch = () => {
       });
     },
 
-    setQueryInvalid: () => store.setState(state => ({ ...state, isInvalid: true })),
+    setQueryInvalid: () => store.setState(state => ({ ...state, isQueryInvalid: true })),
 
     startMessageSearch: () => store.setState(state => ({
       ...state,
-      isInvalid: false,
+      isQueryInvalid: false,
       loading: false,
     })),
 
