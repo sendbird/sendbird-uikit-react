@@ -112,8 +112,7 @@ test('203', async ({ page }) => {
 });
 
 // 204: Form with one chip input (no select), and one chip input (select one chip)
-test('204'
-  + 'and one chip input (no select)', async ({ page }) => {
+test('204', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
     items: [
