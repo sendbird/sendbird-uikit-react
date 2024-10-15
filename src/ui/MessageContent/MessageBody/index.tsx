@@ -89,6 +89,7 @@ export const MessageBody = (props: MessageBodyProps) => {
           isByMe={isByMe}
           message={message}
           form={message.messageForm}
+          logger={config.logger}
         />
       ))
     .when(isTemplateMessage, () => {

@@ -188,7 +188,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const hasFeedback = message?.myFeedback?.rating;
 
   /**
-   * For TemplateMessage, do not display:
+   * For TemplateMessage or FormMessage, do not display:
    *   - in web view:
    *     - message menu
    *     - reaction menu
@@ -196,7 +196,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
    *   - in mobile view:
    *     - bottom sheet on long click
    */
-  const isNotSpecialMessage = !(isTemplateMessage(message) || isFormMessage(message));
+  const isNotSpecialMessage = !isTemplateMessage(message) && !isFormMessage(message);
   const showLongPressMenu = isNotSpecialMessage && isMobile;
   const showOutgoingMenu = isNotSpecialMessage && isByMe && !isMobile;
   const showThreadReplies = isNotSpecialMessage && displayThreadReplies;
