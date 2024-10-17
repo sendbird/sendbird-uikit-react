@@ -59,6 +59,7 @@ export const SUPPORTED_MIMES = {
     'text/calendar',
     'text/javascript',
     'text/xml',
+    'text/x-log',
     'video/quicktime', // NOTE: Assume this video is a normal file, not video
   ],
   APPLICATION: [
@@ -102,21 +103,29 @@ export const SUPPORTED_MIMES = {
   ],
 };
 
-export const getMimeTypesUIKitAccepts = (acceptableMimeTypes?: string[]): string => {
-  if (Array.isArray(acceptableMimeTypes) && acceptableMimeTypes.length > 0) {
-    return acceptableMimeTypes
+export const SUPPORTED_FILE_EXTENSIONS = {
+  IMAGE: ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'],
+  VIDEO: ['.mp4', '.mpeg', '.ogg', '.webm', '.quicktime'],
+  AUDIO: ['.aac', '.midi', '.mp3', '.mpeg', '.ogg', '.opus', '.wav', '.webm', '.3gpp', '.3gpp2'],
+  DOCUMENT: ['.txt', '.log', '.csv', '.rtf', '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx'],
+};
+
+export const getMimeTypesUIKitAccepts = (acceptableTypes?: string[]): string => {
+  if (Array.isArray(acceptableTypes) && acceptableTypes.length > 0) {
+    const uniqueTypes = acceptableTypes
       .reduce((prev, curr) => {
-        switch (curr) {
+        const lowerCurr = curr.toLowerCase();
+        switch (lowerCurr) {
           case 'image': {
-            prev.push(...SUPPORTED_MIMES.IMAGE);
+            prev.push(...SUPPORTED_MIMES.IMAGE, ...SUPPORTED_FILE_EXTENSIONS.IMAGE);
             break;
           }
           case 'video': {
-            prev.push(...SUPPORTED_MIMES.VIDEO);
+            prev.push(...SUPPORTED_MIMES.VIDEO, ...SUPPORTED_FILE_EXTENSIONS.VIDEO);
             break;
           }
           case 'audio': {
-            prev.push(...SUPPORTED_MIMES.AUDIO);
+            prev.push(...SUPPORTED_MIMES.AUDIO, ...SUPPORTED_FILE_EXTENSIONS.AUDIO);
             break;
           }
           default: {
@@ -124,13 +133,17 @@ export const getMimeTypesUIKitAccepts = (acceptableMimeTypes?: string[]): string
             break;
           }
         }
-
         return prev;
-      }, [] as string[])
-      .join();
+      }, [] as string[]);
+
+    // To remove duplicates
+    return Array.from(new Set(uniqueTypes)).join(',');
   }
 
-  return Object.values(SUPPORTED_MIMES).reduce((prev, curr) => (prev.concat(curr)), []).join();
+  return [
+    ...Object.values(SUPPORTED_MIMES).flat(),
+    ...Object.values(SUPPORTED_FILE_EXTENSIONS).flat(),
+  ].join(',');
 };
 
 /* eslint-disable no-redeclare */
