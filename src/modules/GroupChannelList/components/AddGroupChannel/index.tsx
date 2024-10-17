@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import AddGroupChannelView from './AddGroupChannelView';
-import { useGroupChannelListContext } from '../../context/GroupChannelListProvider';
+import { useGroupChannelList } from '../../context/useGroupChannelList';
 
 export const AddGroupChannel = () => {
   const [createChannelVisible, setCreateChannelVisible] = useState(false);
-  const { onChannelCreated, onBeforeCreateChannel, onCreateChannelClick } = useGroupChannelListContext();
+  const {
+    state: {
+      onChannelCreated,
+      onBeforeCreateChannel,
+      onCreateChannelClick,
+    },
+  } = useGroupChannelList();
 
   return (
     <AddGroupChannelView
