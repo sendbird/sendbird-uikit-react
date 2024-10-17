@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import type { User } from '@sendbird/chat';
 import type { GroupChannel, GroupChannelCreateParams, GroupChannelFilterParams } from '@sendbird/chat/groupChannel';
@@ -14,6 +14,8 @@ import useOnlineStatus from '../../../lib/hooks/useOnlineStatus';
 import { noop } from '../../../utils/utils';
 import type { SdkStore } from '../../../lib/types';
 import { PartialRequired } from '../../../utils/typeHelpers/partialRequired';
+import { createStore } from '../../../utils/storeManager';
+import { useStore } from '../../../hooks/useStore';
 
 type OnCreateChannelClickParams = { users: Array<string>; onClose: () => void; channelType: CHANNEL_TYPE };
 type ChannelListDataSource = ReturnType<typeof useGroupChannelList>;
@@ -52,10 +54,41 @@ export interface GroupChannelListProviderProps extends
   children?: React.ReactNode;
 }
 
-export const GroupChannelListContext = React.createContext<GroupChannelListContextType | null>(null);
-export const GroupChannelListProvider = (props: GroupChannelListProviderProps) => {
+export const GroupChannelListContext = React.createContext<ReturnType<typeof createStore<GroupChannelListState>> | null>(null);
+
+export interface GroupChannelListState extends GroupChannelListContextType {
+}
+
+const initialState: GroupChannelListState = {
+  className: '',
+  selectedChannelUrl: '',
+  disableAutoSelect: false,
+  allowProfileEdit: false,
+  isTypingIndicatorEnabled: false,
+  isMessageReceiptStatusEnabled: false,
+  onChannelSelect: noop,
+  onChannelCreated: noop,
+  onThemeChange: noop,
+  onCreateChannelClick: noop,
+  onBeforeCreateChannel: null,
+  onUserProfileUpdated: noop,
+  typingChannelUrls: [],
+  refreshing: false,
+  initialized: false,
+  groupChannels: [],
+  refresh: null,
+  loadMore: null,
+};
+
+/**
+ * @returns {ReturnType<typeof createStore<GroupChannelListState>>}
+ */
+const useGroupChannelListStore = () => {
+  return useStore(GroupChannelListContext, state => state, initialState);
+};
+
+export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = (props: GroupChannelListProviderProps) => {
   const {
-    children,
     className = '',
     selectedChannelUrl,
 
@@ -72,8 +105,9 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
     onBeforeCreateChannel,
     onUserProfileUpdated,
   } = props;
-  const globalStore = useSendbirdStateContext();
-  const { config, stores } = globalStore;
+
+  const { config, stores } = useSendbirdStateContext();
+  const { updateState } = useGroupChannelListStore();
   const { sdkStore } = stores;
 
   const sdk = sdkStore.sdk;
@@ -120,33 +154,71 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
     },
   });
 
+  useEffect(() => {
+    updateState({
+      className,
+      selectedChannelUrl,
+      disableAutoSelect,
+      allowProfileEdit,
+      isTypingIndicatorEnabled,
+      isMessageReceiptStatusEnabled,
+      onChannelSelect,
+      onChannelCreated,
+      onThemeChange,
+      onCreateChannelClick,
+      onBeforeCreateChannel,
+      onUserProfileUpdated,
+      typingChannelUrls,
+      refreshing,
+      initialized,
+      groupChannels,
+      refresh,
+      loadMore,
+    });
+  }, [
+    className,
+    selectedChannelUrl,
+    disableAutoSelect,
+    allowProfileEdit,
+    isTypingIndicatorEnabled,
+    isMessageReceiptStatusEnabled,
+    onChannelSelect,
+    onChannelCreated,
+    onThemeChange,
+    onCreateChannelClick,
+    onBeforeCreateChannel,
+    onUserProfileUpdated,
+    typingChannelUrls,
+    refreshing,
+    initialized,
+    groupChannels,
+    refresh,
+    loadMore,
+  ]);
+
+  return null;
+};
+
+const createGroupChannelListStore = () => createStore(initialState);
+const InternalGroupChannelListStoreProvider = ({ children }) => {
+  const storeRef = useRef(createGroupChannelListStore());
   return (
-    <GroupChannelListContext.Provider
-      value={{
-        className,
-        selectedChannelUrl,
-        disableAutoSelect,
-        allowProfileEdit: allowProfileEdit ?? config.allowProfileEdit ?? true,
-        isTypingIndicatorEnabled: isTypingIndicatorEnabled ?? config.groupChannelList.enableTypingIndicator ?? false,
-        isMessageReceiptStatusEnabled: isMessageReceiptStatusEnabled ?? config.groupChannelList.enableMessageReceiptStatus ?? false,
-        onChannelSelect,
-        onChannelCreated,
-        onThemeChange,
-        onCreateChannelClick,
-        onBeforeCreateChannel,
-        onUserProfileUpdated,
-        typingChannelUrls,
-        refreshing,
-        initialized,
-        groupChannels,
-        refresh,
-        loadMore,
-      }}
-    >
+    <GroupChannelListContext.Provider value={storeRef.current}>
+      {children}
+    </GroupChannelListContext.Provider>
+  );
+};
+
+export const GroupChannelListProvider = (props: GroupChannelListProviderProps) => {
+  const { children, className } = props;
+
+  return (
+    <InternalGroupChannelListStoreProvider>
+      <GroupChannelListManager {...props} />
       <UserProfileProvider {...props}>
         <div className={`sendbird-channel-list ${className}`}>{children}</div>
       </UserProfileProvider>
-    </GroupChannelListContext.Provider>
+    </InternalGroupChannelListStoreProvider>
   );
 };
 
