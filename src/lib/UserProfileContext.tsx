@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { RenderUserProfileProps } from '../types';
-import { useSendbirdStateContext } from './Sendbird';
+import useSendbirdStateContext from '../hooks/useSendbirdStateContext';
 
 interface UserProfileContextInterface {
   isOpenChannel: boolean;
