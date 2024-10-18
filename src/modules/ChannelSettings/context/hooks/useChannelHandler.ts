@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 
 import uuidv4 from '../../../../utils/uuid';
@@ -21,13 +21,12 @@ export const useChannelHandler = ({
   forceUpdateUI,
   dependencies = [],
 }: UseChannelHandlerProps) => {
-  const [channelHandlerId, setChannelHandlerId] = useState<string | null>(null);
-
   useEffect(() => {
     if (!sdk || !sdk.groupChannel) {
       logger.warning('ChannelSettings: SDK or GroupChannelModule is not available');
       return;
     }
+    const newChannelHandlerId = uuidv4();
 
     const channelHandler = new GroupChannelHandler({
       onUserLeft: (channel, user) => {
@@ -44,14 +43,12 @@ export const useChannelHandler = ({
       },
     });
 
-    const newChannelHandlerId = uuidv4();
     sdk.groupChannel.addGroupChannelHandler(newChannelHandlerId, channelHandler);
-    setChannelHandlerId(newChannelHandlerId);
 
     return () => {
-      if (sdk.groupChannel && channelHandlerId) {
-        logger.info('ChannelSettings: Removing message receiver handler', channelHandlerId);
-        sdk.groupChannel.removeGroupChannelHandler(channelHandlerId);
+      if (sdk.groupChannel && newChannelHandlerId) {
+        logger.info('ChannelSettings: Removing message receiver handler', newChannelHandlerId);
+        sdk.groupChannel.removeGroupChannelHandler(newChannelHandlerId);
       }
     };
   }, [sdk, channelUrl, logger, ...dependencies]);
