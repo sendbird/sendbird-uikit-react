@@ -29,6 +29,17 @@ describe('Global-utils/getMimeTypesUIKitAccepts', () => {
     expect(getMimeTypesUIKitAccepts(['audio'])).toBe(expected);
   });
 
+  it('should return ARCHIVE mime types and extensions when [archive] is provided', () => {
+    const expected = [...SUPPORTED_MIMES.ARCHIVE, ...SUPPORTED_FILE_EXTENSIONS.ARCHIVE].join();
+    expect(getMimeTypesUIKitAccepts(['archive'])).toBe(expected);
+  });
+
+  it('should not include archive types when not specified', () => {
+    const result = getMimeTypesUIKitAccepts(['image', 'video']);
+    expect(result).not.toContain('application/zip');
+    expect(result).not.toContain('.7z');
+  });
+
   it('should return combined IMAGE and VIDEO mime types and extensions when [image, video] is provided', () => {
     const expected = [
       ...SUPPORTED_MIMES.IMAGE,

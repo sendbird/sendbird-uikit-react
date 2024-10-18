@@ -101,13 +101,25 @@ export const SUPPORTED_MIMES = {
     'application/zip',
     'application/x-7z-compressed',
   ],
+  ARCHIVE: [
+    'application/zip',
+    'application/x-rar-compressed',
+    'application/x-7z-compressed',
+    'application/x-tar',
+    'application/gzip',
+    'application/x-bzip',
+    'application/x-bzip2',
+    'application/x-xz',
+    'application/x-iso9660-image',
+  ],
 };
 
 export const SUPPORTED_FILE_EXTENSIONS = {
-  IMAGE: ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'],
-  VIDEO: ['.mp4', '.mpeg', '.ogg', '.webm', '.quicktime'],
-  AUDIO: ['.aac', '.midi', '.mp3', '.mpeg', '.ogg', '.opus', '.wav', '.webm', '.3gpp', '.3gpp2'],
+  IMAGE: ['.apng', '.avif', '.gif', '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png', '.svg', '.webp', '.bmp', '.ico', '.cur', '.tif', '.tiff'],
+  VIDEO: ['.mp4', '.webm', '.ogv', '.3gp', '.3g2', '.avi', '.mov', '.wmv', '.mpg', '.mpeg', '.m4v', '.mkv'],
+  AUDIO: ['.aac', '.midi', '.mp3', '.oga', '.opus', '.wav', '.weba', '.3gp', '.3g2'],
   DOCUMENT: ['.txt', '.log', '.csv', '.rtf', '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx'],
+  ARCHIVE: ['.zip', '.rar', '.7z', '.tar', '.gz', '.bz2', '.xz', '.iso'],
 };
 
 export const getMimeTypesUIKitAccepts = (acceptableTypes?: string[]): string => {
@@ -126,6 +138,10 @@ export const getMimeTypesUIKitAccepts = (acceptableTypes?: string[]): string => 
           }
           case 'audio': {
             prev.push(...SUPPORTED_MIMES.AUDIO, ...SUPPORTED_FILE_EXTENSIONS.AUDIO);
+            break;
+          }
+          case 'archive': {
+            prev.push(...SUPPORTED_MIMES.ARCHIVE, ...SUPPORTED_FILE_EXTENSIONS.ARCHIVE);
             break;
           }
           default: {
