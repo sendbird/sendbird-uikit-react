@@ -34,17 +34,6 @@ jest.mock('../../../../../hooks/useSendbirdStateContext', () => ({
   })),
 }));
 jest.mock('../../../context/useGroupChannelList');
-jest.mock('@sendbird/uikit-tools', () => ({
-  useGroupChannelList: jest.fn(() => ({
-    refreshing: false,
-    initialized: false,
-    groupChannels: [],
-    refresh: null,
-    loadMore: null,
-  })),
-  useGroupChannelHandler: jest.fn(() => {}),
-  usePreservedCallback: jest.requireActual('@sendbird/uikit-tools').usePreservedCallback,
-}));
 
 const mockStringSet = {
   PLACE_HOLDER__NO_CHANNEL: 'No channels',

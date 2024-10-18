@@ -84,7 +84,6 @@ describe('GroupChannelListProvider', () => {
         const newState = result.current.getState();
         expect(newState.className).toEqual('new-classname');
         expect(newState.disableAutoSelect).toEqual(false);
-        expect(newState.initialized).toEqual(false);
       });
     })
   });

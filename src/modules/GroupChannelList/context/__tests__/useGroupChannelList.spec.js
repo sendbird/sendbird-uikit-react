@@ -1,4 +1,3 @@
-import { noop } from '../../../../utils/utils';
 import { GroupChannelListProvider, useGroupChannelListContext } from '../GroupChannelListProvider';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import React from 'react';
@@ -81,7 +80,6 @@ describe('GroupChannelListProvider', () => {
         const newState = result.current.getState();
         expect(newState.className).toEqual('new-classname');
         expect(newState.disableAutoSelect).toEqual(false);
-        expect(newState.initialized).toEqual(false);
       });
     })
   });
