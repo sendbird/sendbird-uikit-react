@@ -100,7 +100,6 @@ describe('Global-utils/getMimeTypesUIKitAccepts', () => {
   it('should handle case-insensitive category names', () => {
     const result = getMimeTypesUIKitAccepts(['IMAGE', 'Video', 'AuDiO']);
 
-    // 각 카테고리의 MIME 타입과 확장자가 포함되어 있는지 확인
     SUPPORTED_MIMES.IMAGE.forEach(mime => expect(result).toContain(mime));
     SUPPORTED_FILE_EXTENSIONS.IMAGE.forEach(ext => expect(result).toContain(ext));
 
@@ -110,11 +109,11 @@ describe('Global-utils/getMimeTypesUIKitAccepts', () => {
     SUPPORTED_MIMES.AUDIO.forEach(mime => expect(result).toContain(mime));
     SUPPORTED_FILE_EXTENSIONS.AUDIO.forEach(ext => expect(result).toContain(ext));
 
-    // 결과에 중복이 없는지 확인
+    // assert if there are any duplicates
     const uniqueResult = new Set(result.split(','));
     expect(uniqueResult.size).toBe(result.split(',').length);
 
-    // 대소문자 구분 없이 처리되었는지 확인
+    // assert if there are no other types
     expect(result).not.toContain('IMAGE');
     expect(result).not.toContain('Video');
     expect(result).not.toContain('AuDiO');
