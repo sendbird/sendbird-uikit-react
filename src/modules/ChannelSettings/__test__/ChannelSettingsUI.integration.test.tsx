@@ -93,20 +93,4 @@ describe('ChannelSettings Integration Tests', () => {
 
     expect(setChannel).toHaveBeenCalledWith(newChannel);
   });
-
-  it('calls setLoading with true', () => {
-    const setLoading = jest.fn();
-    renderComponent({}, { setLoading });
-
-    setLoading(true);
-    expect(setLoading).toHaveBeenCalledWith(true);
-  });
-
-  it('calls setInvalid with true', () => {
-    const setInvalid = jest.fn();
-    renderComponent({}, { setInvalid });
-
-    setInvalid(true);
-    expect(setInvalid).toHaveBeenCalledWith(true);
-  });
 });
