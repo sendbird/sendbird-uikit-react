@@ -18,46 +18,52 @@ function useSetChannel({
   initialized,
   dependencies = [],
 }: Props) {
-  const {
-    actions: {
-      setChannel,
-      setInvalid,
-      setLoading,
-    },
-  } = useChannelSettings();
-  const logAndStopLoading = (message): void => {
-    logger.warning(message);
-    setLoading(false);
-    return null;
-  };
+  const { actions: { setChannel, setInvalid, setLoading } } = useChannelSettings();
 
   useEffect(() => {
-    if (!channelUrl) {
-      return logAndStopLoading('ChannelSettings: channel url is required');
-    }
-    if (!initialized || !sdk) {
-      return logAndStopLoading('ChannelSettings: SDK is not initialized');
-    }
-    if (!sdk.groupChannel) {
-      return logAndStopLoading('ChannelSettings: GroupChannelModule is not specified in the SDK');
-    }
+    const controller = new AbortController();
+    const { signal } = controller;
 
-    if (channelUrl && sdk?.groupChannel) {
-      setLoading(true);
-      sdk.groupChannel.getChannel(channelUrl)
-        .then((groupChannel) => {
+    const fetchChannel = async () => {
+      try {
+        if (!channelUrl) {
+          logger.warning('ChannelSettings: channel url is required');
+          setLoading(false);
+          return;
+        }
+        if (!initialized || !sdk) {
+          logger.warning('ChannelSettings: SDK is not initialized');
+          setLoading(false);
+          return;
+        }
+        if (!sdk.groupChannel) {
+          logger.warning('ChannelSettings: GroupChannelModule is not specified in the SDK');
+          setLoading(false);
+          return;
+        }
+
+        setLoading(true);
+        const groupChannel = await sdk.groupChannel.getChannel(channelUrl);
+        if (!signal.aborted) {
           logger.info('ChannelSettings | useSetChannel: fetched group channel', groupChannel);
           setChannel(groupChannel);
-        })
-        .catch((err) => {
-          logger.error('ChannelSettings | useSetChannel: failed fetching channel', err);
+        }
+      } catch (error) {
+        if (!signal.aborted) {
+          logger.error('ChannelSettings | useSetChannel: failed fetching channel', error);
           setInvalid(true);
-        })
-        .finally(() => {
+        }
+      } finally {
+        if (!signal.aborted) {
           setLoading(false);
-        });
-    }
-  }, [channelUrl, initialized, ...dependencies]);
+        }
+      }
+    };
+
+    fetchChannel();
+
+    return () => controller.abort(); // Cleanup with AbortController
+  }, [channelUrl, initialized, sdk, ...dependencies]);
 }
 
 export default useSetChannel;
