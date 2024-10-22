@@ -126,7 +126,7 @@ test('204', async ({ page }) => {
             'Chip1',
             'Chip2',
             'Chip3',
-            'Chip4',
+            'Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4Chip4',
           ],
         },
       },

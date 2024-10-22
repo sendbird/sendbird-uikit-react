@@ -291,7 +291,7 @@ test('109', async ({ page }) => {
   await assertScreenshot(page);
 });
 
-// 110: Form with one text area input with max length 10 regex (fill very long text). Click submit
+// 110: Form with one text area input (fill very long text). Click submit
 test('110', async ({ page }) => {
   const form: MockMessageFormProps = {
     name: 'test form',
@@ -303,13 +303,6 @@ test('110', async ({ page }) => {
         style: {
           layout: 'textarea',
         },
-        validators: [
-          {
-            key: 'text',
-            min_length: 0,
-            max_length: 10,
-          },
-        ],
         draft_values: [
           'long text test long text test long text test long text test long text test long '
           + 'text test long text test long text test long text test long text test long text '
