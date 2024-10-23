@@ -39,8 +39,7 @@ export const scrollIntoLast = (
       scrollDOM.style.overflow = 'auto';
       scrollDOM.scrollTop = scrollDOM.scrollHeight;
     };
-
-    window.requestAnimationFrame(applyScroll);
+    setTimeout(applyScroll);
   } else {
     setTimeout(() => {
       scrollIntoLast(initialTry + 1, scrollRef);
