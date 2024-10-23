@@ -23,7 +23,7 @@ export const shouldFetchMore = (messageLength: number, maxMessages?: number): bo
 /* eslint-disable default-param-last */
 export const scrollIntoLast = (
   initialTry = 0,
-  scrollRef: React.RefObject<HTMLElement>
+  scrollRef: React.RefObject<HTMLElement>,
 ): void => {
   const MAX_TRIES = 10;
 
@@ -31,8 +31,8 @@ export const scrollIntoLast = (
     return;
   }
 
-  const scrollDOM = scrollRef?.current ||
-    document.querySelector('.sendbird-openchannel-conversation-scroll__container__item-container');
+  const scrollDOM = scrollRef?.current
+    || document.querySelector('.sendbird-openchannel-conversation-scroll__container__item-container');
 
   if (scrollDOM) {
     const applyScroll = () => {
