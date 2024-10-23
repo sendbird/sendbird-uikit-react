@@ -9,7 +9,7 @@ export const sanitizeString = (str: string = ''): string => {
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
-    "'": '&#39;',
+    '\'': '&#39;',
   };
 
   return str.replace(/[&<>"']/g, (char) => map[char]);
