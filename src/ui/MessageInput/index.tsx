@@ -14,7 +14,7 @@ import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 import { extractTextAndMentions, isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
 import { arrayEqual, getMimeTypesUIKitAccepts } from '../../utils';
-import usePaste from './hooks/usePaste';
+import { usePaste } from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
 import { TOKEN_TYPES } from '../../modules/Message/utils/tokens/types';
@@ -406,6 +406,35 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     }
   };
 
+  const adjustScrollToCaret = () => {
+    const inputRef = internalRef;
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+
+    // Get the last range (caret or selected text position) from the selection
+    const range = selection.getRangeAt(selection.rangeCount - 1);
+    const rect = range.getBoundingClientRect();
+    const container = inputRef.current?.getBoundingClientRect();
+    if (!container || !inputRef.current) return;
+
+    // If the caret (or selection) is below the visible container area, scroll down
+    if (rect.bottom > container.bottom) {
+      const scrollAmount = Math.min(
+        rect.bottom - container.bottom, // Calculate how much we need to scroll
+        inputRef.current.scrollHeight - inputRef.current.clientHeight, // Prevent over-scrolling
+      );
+      inputRef.current.scrollTop += scrollAmount; // Adjust the scroll position downward
+    }
+    // If the caret (or selection) is above the visible container area, scroll up
+    else if (rect.top < container.top) {
+      const scrollAmount = Math.min(
+        container.top - rect.top, // Calculate how much we need to scroll
+        inputRef.current.scrollTop, // Prevent scrolling beyond the top of the container
+      );
+      inputRef.current.scrollTop -= scrollAmount; // Adjust the scroll position upward
+    }
+  };
+
   return (
     <form className={classnames(
       ...(Array.isArray(className) ? className : [className]),
@@ -481,6 +510,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           }}
           onPaste={(e) => {
             onPaste(e);
+            setTimeout(adjustScrollToCaret);
           }}
         />
         {/* placeholder */}
