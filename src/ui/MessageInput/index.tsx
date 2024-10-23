@@ -32,25 +32,6 @@ const noop = () => {
   return null;
 };
 
-const scrollToCaret = () => {
-  const selection = window.getSelection();
-  if (selection && selection.rangeCount > 0) {
-    const range = selection.getRangeAt(0);
-    const caretNode = range.endContainer;
-
-    // Ensure the caret is in a text node
-    if (caretNode.nodeType === NodeTypes.TextNode) {
-      const parentElement = caretNode.parentElement;
-
-      // Scroll the parent element of the caret into view
-      parentElement?.scrollIntoView?.({
-        behavior: 'smooth',
-        block: 'nearest',
-      });
-    }
-  }
-};
-
 const resetInput = (ref: MutableRefObject<HTMLInputElement | null> | null) => {
   if (ref && ref.current) {
     ref.current.innerHTML = '';
@@ -425,12 +406,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     }
   };
 
-  const handleCommonBehavior = (handleEvent) => {
-    scrollToCaret();
-    type CommonEvent<T> = React.KeyboardEvent<T> | React.MouseEvent<T> | React.ClipboardEvent<T>;
-    return (e: CommonEvent<HTMLDivElement>) => handleEvent(e);
-  };
-
   return (
     <form className={classnames(
       ...(Array.isArray(className) ? className : [className]),
@@ -456,7 +431,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           // @ts-ignore
           disabled={disabled}
           maxLength={maxLength}
-          onKeyDown={handleCommonBehavior((e) => {
+          onKeyDown={(e) => {
             const preventEvent = onKeyDown(e);
             if (preventEvent) {
               e.preventDefault();
@@ -487,24 +462,26 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
                 internalRef.current.removeChild(internalRef.current.childNodes[1]);
               }
             }
-          })}
-          onKeyUp={handleCommonBehavior((e) => {
+          }}
+          onKeyUp={(e) => {
             const preventEvent = onKeyUp(e);
             if (preventEvent) {
               e.preventDefault();
             } else {
               useMentionInputDetection();
             }
-          })}
-          onClick={handleCommonBehavior(() => {
+          }}
+          onClick={() => {
             useMentionInputDetection();
-          })}
-          onInput={handleCommonBehavior(() => {
+          }}
+          onInput={() => {
             onStartTyping();
             setIsInput(internalRef?.current?.textContent ? internalRef.current.textContent.trim().length > 0 : false);
             useMentionedLabelDetection();
-          })}
-          onPaste={handleCommonBehavior(onPaste)}
+          }}
+          onPaste={(e) => {
+            onPaste(e);
+          }}
         />
         {/* placeholder */}
         {(internalRef?.current?.textContent?.length ?? 0) === 0 && (
