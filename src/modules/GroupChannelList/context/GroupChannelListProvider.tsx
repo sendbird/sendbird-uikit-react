@@ -15,6 +15,7 @@ import type { SdkStore } from '../../../lib/types';
 import { PartialRequired } from '../../../utils/typeHelpers/partialRequired';
 import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
+import { noop } from '../../../utils/utils';
 
 type OnCreateChannelClickParams = { users: Array<string>; onClose: () => void; channelType: CHANNEL_TYPE };
 type ChannelListDataSource = ReturnType<typeof useGroupChannelList>;
@@ -65,12 +66,12 @@ const initialState: GroupChannelListState = {
   allowProfileEdit: false,
   isTypingIndicatorEnabled: false,
   isMessageReceiptStatusEnabled: false,
-  onChannelSelect: undefined,
-  onChannelCreated: undefined,
-  onThemeChange: undefined,
-  onCreateChannelClick: undefined,
-  onBeforeCreateChannel: undefined,
-  onUserProfileUpdated: undefined,
+  onChannelSelect: expect.any(Function),
+  onChannelCreated: expect.any(Function),
+  onThemeChange: noop,
+  onCreateChannelClick: noop,
+  onBeforeCreateChannel: null,
+  onUserProfileUpdated: noop,
   typingChannelUrls: [],
   refreshing: false,
   initialized: false,
@@ -193,7 +194,7 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
     typingChannelUrls,
     refreshing,
     initialized,
-    // groupChannels,
+    groupChannels.map(channel => channel.url).join(),
     refresh,
     loadMore,
   ]);
