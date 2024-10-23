@@ -92,9 +92,9 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
   selectedChannelUrl = '',
 
   disableAutoSelect = false,
-  allowProfileEdit = false,
-  isTypingIndicatorEnabled = false,
-  isMessageReceiptStatusEnabled = false,
+  allowProfileEdit,
+  isTypingIndicatorEnabled,
+  isMessageReceiptStatusEnabled,
 
   channelListQueryParams,
   onThemeChange,
