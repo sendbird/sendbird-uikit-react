@@ -3,8 +3,16 @@ import { BaseChannel } from '@sendbird/chat';
 import { NodeNames, NodeTypes } from './const';
 import { USER_MENTION_TEMP_CHAR } from '../../modules/GroupChannel/context/const';
 
-export const sanitizeString = (str?: string) => {
-  return str?.replace(/[\u00A0-\u9999<>]/gim, (i) => ''.concat('&#', String(i.charCodeAt(0)), ';'));
+export const sanitizeString = (str: string = ''): string => {
+  const map: { [key: string]: string } = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  };
+
+  return str.replace(/[&<>"']/g, (char) => map[char]);
 };
 
 /**
