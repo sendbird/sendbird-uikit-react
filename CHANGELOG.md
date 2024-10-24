@@ -14,7 +14,7 @@
 
 ### Fixes:
 - Fixed an issue where the `OpenChannel` message list scroll would not move upon initialization **on mobile browsers**.
-- Fixed an issue where the `MessageInput` scroll would not move when pasting text.
+- Fixed an issue where the `MessageInput` failed to auto-scroll when pasting text.
 - Fixed an issue where ASCII characters appeared in the `MessageInput` when pasting non-English text.
 
 ## [v3.15.6] (Oct 11th, 2024)
