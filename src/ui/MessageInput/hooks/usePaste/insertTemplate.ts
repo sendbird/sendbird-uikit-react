@@ -2,7 +2,7 @@ import { Word } from './types';
 import { sanitizeString } from '../../utils';
 import renderMentionLabelToString from '../../../MentionUserLabel/renderToString';
 
-export function inserTemplateToDOM(templateList: Word[]): void {
+export function insertTemplateToDOM(templateList: Word[]): void {
   const nodes = templateList.map((template) => {
     const { text, userId } = template;
     if (userId) {
