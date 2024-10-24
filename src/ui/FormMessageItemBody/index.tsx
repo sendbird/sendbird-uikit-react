@@ -7,15 +7,16 @@ import { Label, LabelColors, LabelTypography } from '../Label';
 import MessageFeedbackFailedModal from '../MessageFeedbackFailedModal';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import FormInput from './FormInput';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { getClassName } from '../../utils';
 import { TEXT_MESSAGE_BODY_CLASSNAME } from '../TextMessageItemBody/consts';
 import { isFormVersionCompatible } from '../../modules/GroupChannel/context/utils';
+import { LoggerInterface } from '../../lib/Logger';
 
 interface Props {
   message: BaseMessage;
   form: MessageForm;
   isByMe: boolean;
+  logger?: LoggerInterface;
 }
 
 interface FormValue {
@@ -50,16 +51,15 @@ export default function FormMessageItemBody(props: Props) {
     message,
     form,
     isByMe,
+    logger,
   } = props;
   const { items, id: formId } = form;
   const { stringSet } = useContext(LocalizationContext);
-  const { config } = useSendbirdStateContext();
-  const { logger } = config;
   const [submitFailed, setSubmitFailed] = useState(false);
   const [isSubmitTried, setIsSubmitTried] = useState(false);
   const [formValues, setFormValues] = useState<FormValue[]>(() => {
     const initialFormValues: FormValue[] = [];
-    items.forEach(({ required, style }) => {
+    items.forEach(({ required, style = {} }) => {
       const { layout, defaultOptions = [] } = style;
       initialFormValues.push({
         draftValues: layout === 'chip' ? defaultOptions : [],
