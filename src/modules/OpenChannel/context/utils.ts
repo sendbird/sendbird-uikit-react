@@ -21,22 +21,29 @@ export const shouldFetchMore = (messageLength: number, maxMessages?: number): bo
 };
 
 /* eslint-disable default-param-last */
-export const scrollIntoLast = (initialTry = 0, scrollRef: React.RefObject<HTMLElement>): void => {
+export const scrollIntoLast = (
+  initialTry = 0,
+  scrollRef: React.RefObject<HTMLElement>,
+): void => {
   const MAX_TRIES = 10;
-  const currentTry = initialTry;
-  if (currentTry > MAX_TRIES) {
+
+  if (initialTry > MAX_TRIES) {
     return;
   }
-  try {
-    const scrollDOM = scrollRef?.current || document.querySelector('.sendbird-openchannel-conversation-scroll__container__item-container');
-    // eslint-disable-next-line no-multi-assign
-    if (scrollDOM) {
+
+  const scrollDOM = scrollRef?.current
+    || document.querySelector('.sendbird-openchannel-conversation-scroll__container__item-container');
+
+  if (scrollDOM) {
+    const applyScroll = () => {
+      scrollDOM.style.overflow = 'auto';
       scrollDOM.scrollTop = scrollDOM.scrollHeight;
-    }
-  } catch (error) {
+    };
+    setTimeout(applyScroll);
+  } else {
     setTimeout(() => {
-      scrollIntoLast(currentTry + 1, scrollRef);
-    }, 500 * currentTry);
+      scrollIntoLast(initialTry + 1, scrollRef);
+    }, 500 * initialTry);
   }
 };
 
