@@ -32,6 +32,7 @@ const Message = (props: MessageProps) => {
     onMessageAnimated,
     sendMessage,
     localMessages,
+    allMessages,
   } = useChannelContext();
 
   const { message } = props;
@@ -51,7 +52,7 @@ const Message = (props: MessageProps) => {
         && (
           config?.groupChannel?.showSuggestedRepliesFor === 'all_messages'
             ? true
-            : message.messageId === currentGroupChannel?.lastMessage?.messageId
+            : message.messageId === allMessages[allMessages.length - 1].messageId
         )
         // the options should appear only when there's no failed or pending messages
         && localMessages?.length === 0
