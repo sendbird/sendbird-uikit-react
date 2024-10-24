@@ -11,6 +11,9 @@
     - **Audio:** `'.aac', '.midi', '.mp3', '.oga', '.opus', '.wav', '.weba', '.3gp', '.3g2'`
     - **Document:** `'.txt', '.log', '.csv', '.rtf', '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx'`
     - **Archive:** `'.zip', '.rar', '.7z', '.tar', '.gz', '.bz2', '.xz', '.iso'`
+- **Enhanced MessageBody rendering support:**
+  - Added support for `.bmp` files as `ThumbnailMessage`
+  - Added support for `.heic` files as `FileMessage` for cross-browser consistency
 
 ### Fixes:
 - Fixed an issue where the `OpenChannel` message list scroll would not move upon initialization **on mobile browsers**.
