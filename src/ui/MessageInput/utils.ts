@@ -3,16 +3,13 @@ import { BaseChannel } from '@sendbird/chat';
 import { NodeNames, NodeTypes } from './const';
 import { USER_MENTION_TEMP_CHAR } from '../../modules/GroupChannel/context/const';
 
+/**
+ * - Converts `<` and `>` characters to their HTML entities (`&#60;` and `&#62;`).
+ * - All other characters (including special symbols, emojis, and non-English text) remain unchanged.
+ */
 export const sanitizeString = (str: string = ''): string => {
-  const map: { [key: string]: string } = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    '\'': '&#39;',
-  };
-
-  return str.replace(/[&<>"']/g, (char) => map[char]);
+  if (!str) return '';
+  return str.replace(/[<>]/g, (char) => (char === '<' ? '&#60;' : '&#62;'));
 };
 
 /**
