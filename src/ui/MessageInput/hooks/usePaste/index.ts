@@ -4,16 +4,36 @@ import DOMPurify from 'dompurify';
 import { inserTemplateToDOM } from './insertTemplate';
 import { sanitizeString } from '../../utils';
 import { DynamicProps } from './types';
-import { createPasteNode, domToMessageTemplate, extractTextFromNodes, getLeafNodes, getUsersFromWords, hasMention } from './utils';
+import { domToMessageTemplate, extractTextFromNodes, getLeafNodes, getUsersFromWords, hasMention } from './utils';
 
-// exported, should be backward compatible
-// conditions to test:
-// 1. paste simple text
-// 2. paste text with mention
-// 3. paste text with mention and text
-// 4. paste text with mention and text and paste again before and after
-// 5. copy message with mention(only one mention, no other text) and paste
-// 6. copy message with mention from input and paste(before and after)
+function pasteContentAtCaret(content: string) {
+  const selection = window.getSelection(); // Get the current selection
+  if (selection && selection.rangeCount > 0) {
+    const range = selection.getRangeAt(selection.rangeCount - 1); // Get the last range
+
+    range.deleteContents(); // Clear any existing content
+
+    // Create a new text node with the content and a Zero-width space
+    const textNode = document.createTextNode(content + '\u200B');
+    range.insertNode(textNode); // Insert the new text node at the caret position
+
+    // Move the caret to the end of the inserted content
+    range.setStart(textNode, textNode.length);
+    range.collapse(true); // Collapse the range (no text selection)
+
+    // Reset the selection with the updated range
+    selection.removeAllRanges();
+    selection.addRange(range); // Apply the updated selection
+  }
+}
+
+function createPasteNodeWithContent(html: string): HTMLDivElement {
+  const pasteNode = document.createElement('div');
+  pasteNode.innerHTML = html;
+  return pasteNode;
+}
+
+// usePaste Hook
 export function usePaste({
   ref,
   setIsInput,
@@ -22,41 +42,39 @@ export function usePaste({
 }: DynamicProps): (e: React.ClipboardEvent<HTMLDivElement>) => void {
   return useCallback((e) => {
     e.preventDefault();
+
     const html = e.clipboardData.getData('text/html');
-    // simple text, continue as normal
+    const text = e.clipboardData.getData('text') || getURIListText(e);
+
+    // 1. Simple text paste: no HTML present
     if (!html) {
-      const text = e.clipboardData.getData('text') || getURIListText(e);
-      document.execCommand('insertText', false, sanitizeString(text));
+      pasteContentAtCaret(sanitizeString(text));
       setIsInput(true);
       return;
     }
 
-    // has html, check if there are mentions, sanitize and insert
+    // 2. HTML paste: process mentions and sanitized content
     const purifier = DOMPurify(window);
-    const clean = purifier.sanitize(html);
-    const pasteNode = createPasteNode();
-    if (pasteNode) {
-      pasteNode.innerHTML = clean;
-      // does not have mention, continue as normal
-      if (!hasMention(pasteNode)) {
-        // to preserve space between words
-        const text = extractTextFromNodes(Array.from(pasteNode.children) as HTMLSpanElement[]);
-        document.execCommand('insertText', false, sanitizeString(text));
-        pasteNode.remove();
-        setIsInput(true);
-        return;
-      }
+    const cleanHtml = purifier.sanitize(html);
+    const pasteNode = createPasteNodeWithContent(cleanHtml);
 
-      // has mention, collect leaf nodes and parse words
-      const leafNodes = getLeafNodes(pasteNode);
-      const words = domToMessageTemplate(leafNodes);
-      const mentionedUsers = channel.isGroupChannel() ? getUsersFromWords(words, channel) : [];
-
-      // side effects
-      setMentionedUsers(mentionedUsers);
-      inserTemplateToDOM(words);
+    if (!hasMention(pasteNode)) {
+      // No mention, paste as plain text
+      const extractedText = extractTextFromNodes(Array.from(pasteNode.children) as HTMLSpanElement[]);
+      pasteContentAtCaret(sanitizeString(extractedText));
       pasteNode.remove();
+      setIsInput(true);
+      return;
     }
+
+    // 3. Mentions present: process mentions and update state
+    const leafNodes = getLeafNodes(pasteNode);
+    const words = domToMessageTemplate(leafNodes);
+    const mentionedUsers = channel.isGroupChannel() ? getUsersFromWords(words, channel) : [];
+
+    setMentionedUsers(mentionedUsers); // Update mentioned users state
+    inserTemplateToDOM(words); // Insert mentions and content into the DOM
+    pasteNode.remove();
 
     setIsInput(true);
   }, [ref, setIsInput, channel, setMentionedUsers]);
@@ -78,5 +96,5 @@ function getURIListText(e: React.ClipboardEvent<HTMLDivElement>) {
     }, '');
 }
 
-// to do -> In the future donot export default
+// to do -> In the future don't export default
 export default usePaste;

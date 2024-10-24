@@ -30,6 +30,7 @@ export const SUPPORTED_MIMES = {
     'image/gif',
     'image/svg+xml',
     'image/webp', // not supported in IE
+    'image/bmp',
   ],
   VIDEO: [
     'video/mpeg',
@@ -115,7 +116,7 @@ export const SUPPORTED_MIMES = {
 };
 
 export const SUPPORTED_FILE_EXTENSIONS = {
-  IMAGE: ['.apng', '.avif', '.gif', '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png', '.svg', '.webp', '.bmp', '.ico', '.cur', '.tif', '.tiff'],
+  IMAGE: ['.apng', '.avif', '.gif', '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png', '.svg', '.webp', '.bmp', '.ico', '.cur', '.tif', '.tiff', '.heic', '.heif'],
   VIDEO: ['.mp4', '.webm', '.ogv', '.3gp', '.3g2', '.avi', '.mov', '.wmv', '.mpg', '.mpeg', '.m4v', '.mkv'],
   AUDIO: ['.aac', '.midi', '.mp3', '.oga', '.opus', '.wav', '.weba', '.3gp', '.3g2'],
   DOCUMENT: ['.txt', '.log', '.csv', '.rtf', '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx'],

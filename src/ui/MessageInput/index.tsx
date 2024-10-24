@@ -14,7 +14,7 @@ import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 import { extractTextAndMentions, isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
 import { arrayEqual, getMimeTypesUIKitAccepts } from '../../utils';
-import usePaste from './hooks/usePaste';
+import { usePaste } from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
 import { USER_MENTION_PREFIX } from '../../modules/Message/consts';
 import { TOKEN_TYPES } from '../../modules/Message/utils/tokens/types';
@@ -30,25 +30,6 @@ import { UserMessage } from '@sendbird/chat/message';
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const noop = () => {
   return null;
-};
-
-const scrollToCaret = () => {
-  const selection = window.getSelection();
-  if (selection && selection.rangeCount > 0) {
-    const range = selection.getRangeAt(0);
-    const caretNode = range.endContainer;
-
-    // Ensure the caret is in a text node
-    if (caretNode.nodeType === NodeTypes.TextNode) {
-      const parentElement = caretNode.parentElement;
-
-      // Scroll the parent element of the caret into view
-      parentElement?.scrollIntoView?.({
-        behavior: 'smooth',
-        block: 'nearest',
-      });
-    }
-  }
 };
 
 const resetInput = (ref: MutableRefObject<HTMLInputElement | null> | null) => {
@@ -425,10 +406,33 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     }
   };
 
-  const handleCommonBehavior = (handleEvent) => {
-    scrollToCaret();
-    type CommonEvent<T> = React.KeyboardEvent<T> | React.MouseEvent<T> | React.ClipboardEvent<T>;
-    return (e: CommonEvent<HTMLDivElement>) => handleEvent(e);
+  const adjustScrollToCaret = () => {
+    const inputRef = internalRef;
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+
+    // Get the last range (caret or selected text position) from the selection
+    const range = selection.getRangeAt(selection.rangeCount - 1);
+    const rect = range.getBoundingClientRect();
+    const container = inputRef.current?.getBoundingClientRect();
+    if (!container || !inputRef.current) return;
+
+    // If the caret (or selection) is below the visible container area, scroll down
+    if (rect.bottom > container.bottom) {
+      const scrollAmount = Math.min(
+        rect.bottom - container.bottom, // Calculate how much we need to scroll
+        inputRef.current.scrollHeight - inputRef.current.clientHeight, // Prevent over-scrolling
+      );
+      inputRef.current.scrollTop += scrollAmount; // Adjust the scroll position downward
+    }
+    // If the caret (or selection) is above the visible container area, scroll up
+    else if (rect.top < container.top) {
+      const scrollAmount = Math.min(
+        container.top - rect.top, // Calculate how much we need to scroll
+        inputRef.current.scrollTop, // Prevent scrolling beyond the top of the container
+      );
+      inputRef.current.scrollTop -= scrollAmount; // Adjust the scroll position upward
+    }
   };
 
   return (
@@ -456,7 +460,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           // @ts-ignore
           disabled={disabled}
           maxLength={maxLength}
-          onKeyDown={handleCommonBehavior((e) => {
+          onKeyDown={(e) => {
             const preventEvent = onKeyDown(e);
             if (preventEvent) {
               e.preventDefault();
@@ -487,24 +491,27 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
                 internalRef.current.removeChild(internalRef.current.childNodes[1]);
               }
             }
-          })}
-          onKeyUp={handleCommonBehavior((e) => {
+          }}
+          onKeyUp={(e) => {
             const preventEvent = onKeyUp(e);
             if (preventEvent) {
               e.preventDefault();
             } else {
               useMentionInputDetection();
             }
-          })}
-          onClick={handleCommonBehavior(() => {
+          }}
+          onClick={() => {
             useMentionInputDetection();
-          })}
-          onInput={handleCommonBehavior(() => {
+          }}
+          onInput={() => {
             onStartTyping();
             setIsInput(internalRef?.current?.textContent ? internalRef.current.textContent.trim().length > 0 : false);
             useMentionedLabelDetection();
-          })}
-          onPaste={handleCommonBehavior(onPaste)}
+          }}
+          onPaste={(e) => {
+            onPaste(e);
+            setTimeout(adjustScrollToCaret);
+          }}
         />
         {/* placeholder */}
         {(internalRef?.current?.textContent?.length ?? 0) === 0 && (
