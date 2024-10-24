@@ -1,5 +1,22 @@
 # Changelog - v3
 
+## [v3.15.7] (Oct 24th, 2024)
+
+### Features:
+- **Added support for new file types and extensions.**
+  - **Added mime types:** `'application/zip', 'application/x-rar-compressed', 'application/x-7z-compressed', 'application/x-tar', 'application/gzip', 'application/x-bzip', 'application/x-bzip2', 'application/x-xz', 'application/x-iso9660-image'`
+  - **Added extensions:**
+    - **Image:** `'.apng', '.avif', '.gif', '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png', '.svg', '.webp', '.bmp', '.ico', '.cur', '.tif', '.tiff'`
+    - **Video:** `'.mp4', '.webm', '.ogv', '.3gp', '.3g2', '.avi', '.mov', '.wmv', '.mpg', '.mpeg', '.m4v', '.mkv'`
+    - **Audio:** `'.aac', '.midi', '.mp3', '.oga', '.opus', '.wav', '.weba', '.3gp', '.3g2'`
+    - **Document:** `'.txt', '.log', '.csv', '.rtf', '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx'`
+    - **Archive:** `'.zip', '.rar', '.7z', '.tar', '.gz', '.bz2', '.xz', '.iso'`
+
+### Fixes:
+- Fixed an issue where the `OpenChannel` message list scroll would not move upon initialization **on mobile browsers**.
+- Fixed an issue where the `MessageInput` scroll would not move when pasting text.
+- Fixed an issue where ASCII characters appeared in the `MessageInput` when pasting non-English text.
+
 ## [v3.15.6] (Oct 11th, 2024)
 
 ### Features:
