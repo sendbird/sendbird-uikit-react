@@ -53,6 +53,8 @@ const Message = (props: MessageProps) => {
           config?.groupChannel?.showSuggestedRepliesFor === 'all_messages'
             ? true
             : message.messageId === allMessages[allMessages.length - 1].messageId
+            // Use `allMessages[allMessages.length - 1]` instead of `currentGroupChannel.lastMessage`
+            // because lastMessage is not updated when **Bot** sends messages
         )
         // the options should appear only when there's no failed or pending messages
         && localMessages?.length === 0
