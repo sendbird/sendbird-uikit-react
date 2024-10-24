@@ -60,6 +60,8 @@ export interface GroupChannelListQueryParamsInternal {
   unreadChannelFilter?: UnreadChannelFilter;
   includeFrozen?: boolean;
   userIdsFilter?: GroupChannelUserIdsFilter;
+  metadataKey?: string;
+  metadataValues?: Array<string>;
 }
 
 interface ChannelListQueries {
