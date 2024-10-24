@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import DOMPurify from 'dompurify';
 
-import { inserTemplateToDOM } from './insertTemplate';
+import { insertTemplateToDOM } from './insertTemplate';
 import { sanitizeString } from '../../utils';
 import { DynamicProps } from './types';
 import { domToMessageTemplate, extractTextFromNodes, getLeafNodes, getUsersFromWords, hasMention } from './utils';
@@ -73,7 +73,7 @@ export function usePaste({
     const mentionedUsers = channel.isGroupChannel() ? getUsersFromWords(words, channel) : [];
 
     setMentionedUsers(mentionedUsers); // Update mentioned users state
-    inserTemplateToDOM(words); // Insert mentions and content into the DOM
+    insertTemplateToDOM(words); // Insert mentions and content into the DOM
     pasteNode.remove();
 
     setIsInput(true);
