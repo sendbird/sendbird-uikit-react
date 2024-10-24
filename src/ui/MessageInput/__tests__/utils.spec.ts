@@ -44,8 +44,7 @@ describe('Utils/sanitizeString', () => {
 
   it('should handle mixed content with HTML tags and non-English characters', () => {
     const input = '<p>안녕 & Hello 🙂</p>';
-    const expectedOutput =
-      '&#60;p&#62;안녕 & Hello 🙂&#60;/p&#62;';
+    const expectedOutput = '&#60;p&#62;안녕 & Hello 🙂&#60;/p&#62;';
     expect(sanitizeString(input)).toBe(expectedOutput);
   });
 
