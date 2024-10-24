@@ -43,10 +43,13 @@ export const Message = (props: MessageProps): React.ReactElement => {
   const shouldRenderSuggestedReplies = useIIFE(() => {
     const { enableSuggestedReplies, showSuggestedRepliesFor } = config.groupChannel;
 
+    // Use `allMessages[allMessages.length - 1]` instead of `currentGroupChannel.lastMessage`
+    // because lastMessage is not updated when **Bot** sends messages
     const lastMessageInView = messages[messages.length - 1];
     const hasUnsentMessage = isSendableMessage(lastMessageInView) && lastMessageInView.sendingStatus !== 'succeeded';
-    const showSuggestedReplies = showSuggestedRepliesFor === 'all_messages' ? true : message.messageId === currentChannel?.lastMessage?.messageId;
-
+    const showSuggestedReplies = showSuggestedRepliesFor === 'all_messages'
+      ? true
+      : message.messageId === lastMessageInView.messageId;
     return enableSuggestedReplies && getSuggestedReplies(message).length > 0 && !hasUnsentMessage && showSuggestedReplies;
   });
 
