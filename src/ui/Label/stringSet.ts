@@ -217,6 +217,8 @@ const stringSet = {
     DATE_FORMAT__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE: 'p \'on\' MMM dd',
     DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR: 'MMMM dd, yyyy',
     DATE_FORMAT__THREAD_LIST__DATE_SEPARATOR: 'MMM dd, yyyy',
+    // Message timestamp format
+    MESSAGE_TIMESTAMP_FORMAT: 'p',
     // File upload
     FILE_UPLOAD_NOTIFICATION__COUNT_LIMIT: 'Up to %d files can be attached.',
     FILE_UPLOAD_NOTIFICATION__SIZE_LIMIT: 'The maximum size per file is %d MB.',
