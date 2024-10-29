@@ -51,7 +51,6 @@ import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage
 import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEvents';
 import { PublishingModuleType } from '../../internalInterfaces';
 import { ChannelActionTypes } from './dux/actionTypes';
-import { useMessageLayoutDirection } from '../../../hooks/useHTMLTextDirection';
 
 export { ThreadReplySelectType } from './const'; // export for external usage
 
@@ -212,8 +211,6 @@ const ChannelProvider = (props: ChannelContextProps) => {
     imageCompression,
     markAsReadScheduler,
     groupChannel,
-    htmlTextDirection,
-    forceLeftToRightMessageLayout,
   } = config;
   const sdk = globalStore?.stores?.sdkStore?.sdk;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
@@ -380,12 +377,6 @@ const ChannelProvider = (props: ChannelContextProps) => {
     userFilledMessageListQuery,
     markAsReadScheduler,
   });
-
-  useMessageLayoutDirection(
-    htmlTextDirection,
-    forceLeftToRightMessageLayout,
-    loading,
-  );
 
   // callbacks for Message CURD actions
   const deleteMessage = useDeleteMessageCallback(

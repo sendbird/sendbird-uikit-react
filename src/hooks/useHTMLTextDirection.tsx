@@ -15,18 +15,4 @@ const useHTMLTextDirection = (direction: HTMLTextDirection) => {
   }, [direction]);
 };
 
-export const useMessageLayoutDirection = (direction: HTMLTextDirection, forceLeftToRightMessageLayout: boolean, loading: boolean) => {
-  useEffect(() => {
-    if (loading) return;
-    const messageListElements = document.getElementsByClassName('sendbird-conversation__messages');
-    if (messageListElements.length > 0) {
-      Array.from(messageListElements).forEach((elem: HTMLElement) => {
-        elem.dir = forceLeftToRightMessageLayout
-          ? 'ltr'
-          : direction;
-      });
-    }
-  }, [direction, forceLeftToRightMessageLayout, loading]);
-};
-
 export default useHTMLTextDirection;

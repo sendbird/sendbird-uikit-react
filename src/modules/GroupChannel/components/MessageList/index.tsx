@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import type { Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
-import { CoreMessageType, isSendableMessage } from '../../../../utils';
+import { CoreMessageType, isSendableMessage, getHTMLTextDirection } from '../../../../utils';
 import { EveryMessage, RenderMessageParamsType, TypingIndicatorType } from '../../../../types';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -160,7 +160,13 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
 
   return (
     <>
-      <div className={`sendbird-conversation__messages ${className}`}>
+      <div
+        className={`sendbird-conversation__messages ${className}`}
+        dir={getHTMLTextDirection(
+          store?.config?.htmlTextDirection,
+          store?.config?.forceLeftToRightMessageLayout,
+        )}
+      >
         <InfiniteList
           ref={scrollRef}
           initDeps={[channelUrl]}
