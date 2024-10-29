@@ -33,8 +33,6 @@ import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { PublishingModuleType, useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 import { SendableMessageType } from '../../../utils';
 import { useThreadFetchers } from './hooks/useThreadFetchers';
-import { useMessageLayoutDirection } from '../../../hooks/useHTMLTextDirection';
-import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../types';
 
 export interface ThreadProviderProps extends
   Pick<UserProfileProviderProps, 'disableUserProfile' | 'renderUserProfile'> {
@@ -92,7 +90,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
   const { user } = userStore;
   const sdkInit = sdkStore?.initialized;
   // // config
-  const { logger, pubSub, htmlTextDirection, forceLeftToRightMessageLayout } = config;
+  const { logger, pubSub } = config;
 
   const isMentionEnabled = config.groupChannel.enableMention;
   const isReactionEnabled = config.groupChannel.enableReactions;
@@ -165,14 +163,6 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
       initialize();
     }
   }, [stores.sdkStore.initialized, config.isOnline, initialize]);
-
-  useMessageLayoutDirection(
-    htmlTextDirection,
-    forceLeftToRightMessageLayout,
-    channelState === ChannelStateTypes.LOADING
-    || threadListState === ThreadListStateTypes.LOADING
-    || parentMessageState === ParentMessageStateTypes.LOADING,
-  );
 
   const toggleReaction = useToggleReactionCallback({ currentChannel }, { logger });
 

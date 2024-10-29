@@ -25,6 +25,7 @@ import { getMessagePartsInfo } from '../../../GroupChannel/components/MessageLis
 import { GroupChannelMessageListProps } from '../../../GroupChannel/components/MessageList';
 import { GroupChannelUIBasicProps } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
 import { deleteNullish } from '../../../../utils/utils';
+import { getHTMLTextDirection } from '../../../../utils';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
@@ -175,7 +176,13 @@ export const MessageList = (props: MessageListProps) => {
   return (
     <>
       {!isScrolled && <PlaceHolder type={PlaceHolderTypes.LOADING} />}
-      <div className={`sendbird-conversation__messages ${className}`}>
+      <div
+        className={`sendbird-conversation__messages ${className}`}
+        dir={getHTMLTextDirection(
+          store?.config?.htmlTextDirection,
+          store?.config?.forceLeftToRightMessageLayout,
+        )}
+      >
         <div className="sendbird-conversation__scroll-container">
           <div className="sendbird-conversation__padding" />
           <div

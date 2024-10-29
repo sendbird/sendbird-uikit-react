@@ -26,7 +26,6 @@ import PUBSUB_TOPICS, { PubSubSendMessagePayload } from '../../../lib/pubSub/top
 import { PubSubTypes } from '../../../lib/pubSub';
 import { useMessageActions } from './hooks/useMessageActions';
 import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
-import { useMessageLayoutDirection } from '../../../hooks/useHTMLTextDirection';
 
 export { ThreadReplySelectType } from './const'; // export for external usage
 
@@ -146,7 +145,7 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const { config, stores } = useSendbirdStateContext();
 
   const { sdkStore } = stores;
-  const { markAsReadScheduler, logger, htmlTextDirection, forceLeftToRightMessageLayout } = config;
+  const { markAsReadScheduler, logger } = config;
 
   // State
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType | null>(null);
@@ -261,12 +260,6 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   useEffect(() => {
     if (_animatedMessageId) setAnimatedMessageId(_animatedMessageId);
   }, [_animatedMessageId]);
-
-  useMessageLayoutDirection(
-    htmlTextDirection,
-    forceLeftToRightMessageLayout,
-    messageDataSource.loading,
-  );
 
   const scrollToBottom = usePreservedCallback(async (animated?: boolean) => {
     if (!scrollRef.current) return;

@@ -17,7 +17,7 @@ import useMemorizedThreadList from './useMemorizedThreadList';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { isAboutSame } from '../../context/utils';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
-import { SendableMessageType } from '../../../../utils';
+import { SendableMessageType, getHTMLTextDirection } from '../../../../utils';
 import { classnames } from '../../../../utils/utils';
 
 export interface ThreadUIProps {
@@ -52,6 +52,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
 }: ThreadUIProps): React.ReactElement => {
   const {
     stores,
+    config,
   } = useSendbirdStateContext();
   const currentUserId = stores?.sdkStore?.sdk?.currentUser?.userId;
   const {
@@ -152,6 +153,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
         className={classnames('sendbird-thread-ui--scroll', 'sendbird-conversation__messages')}
         ref={scrollRef}
         onScroll={onScroll}
+        dir={getHTMLTextDirection(config?.htmlTextDirection, config?.forceLeftToRightMessageLayout)}
       >
         <MessageProvider message={parentMessage} isByMe={isByMe}>
           {MemorizedParentMessageInfo}

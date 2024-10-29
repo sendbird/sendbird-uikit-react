@@ -990,3 +990,7 @@ export const isSendableMessage = (message?: BaseMessage | null): message is Send
 export const isChannelJustCreated = (channel: GroupChannel): boolean => {
   return isSameSecond(channel.createdAt, channel.invitedAt) && !channel.lastMessage;
 };
+
+export const getHTMLTextDirection = (direction: HTMLTextDirection, forceLeftToRightMessageLayout: boolean): string => {
+  return forceLeftToRightMessageLayout ? 'ltr' : direction;
+};
