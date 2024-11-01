@@ -6,8 +6,6 @@ export interface InitialParams {
   userId?: string;
   nickname?: string;
   accessToken?: string;
-  customApiHost?: string;
-  customWebSocketHost?: string;
 }
 
 interface ParamsAsProps {
@@ -18,18 +16,24 @@ interface ParamsAsProps {
   allowProfileEdit: boolean;
   isMultipleFilesMessageEnabled: boolean;
   uikitOptions: UIKitOptions;
+  customApiHost?: string;
+  customWebSocketHost?: string;
 }
 
 export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
   const [searchParams] = useSearchParams();
+
+  const { customApiHost = searchParams.get('customApiHost'), customWebSocketHost = searchParams.get('customWebSocketHost') } = getHostBy(
+    searchParams.get('region'),
+  );
 
   const response = {
     appId: searchParams.get('appId') || initParams.appId,
     userId: searchParams.get('userId') || initParams.userId,
     nickname: searchParams.get('nickname') || initParams.nickname || initParams.userId,
     accessToken: searchParams.get('accessToken') || initParams.accessToken,
-    customApiHost: searchParams.get('customApiHost') || initParams.customApiHost,
-    customWebSocketHost: searchParams.get('customWebSocketHost') || initParams.customWebSocketHost,
+    customApiHost,
+    customWebSocketHost,
     allowProfileEdit: parseValue(searchParams.get('enableProfileEdit')) ?? true,
     isMultipleFilesMessageEnabled: parseValue(searchParams.get('enableMultipleFilesMessage')) ?? true,
     enableLegacyChannelModules: parseValue(searchParams.get('enableLegacyChannelModules')) ?? false,
@@ -69,6 +73,17 @@ export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
 
   return response;
 };
+
+function getHostBy(region?: string | null) {
+  if (region?.startsWith('no')) {
+    return {
+      customApiHost: `https://api-${region}.sendbirdtest.com`,
+      customWebSocketHost: `wss://ws-${region}.sendbirdtest.com`,
+    };
+  }
+
+  return { customApiHost: undefined, customWebSocketHost: undefined };
+}
 
 function parseValue(value?: string | null) {
   if (!value) return value;
