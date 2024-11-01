@@ -21,9 +21,7 @@ const initialState = {
   onChannelCreated: undefined,
   onBeforeCreateChannel: undefined,
   step: 0,
-  setStep: () => {},
   type: CHANNEL_TYPE.GROUP,
-  setType: () => {},
   onCreateChannel: undefined,
   overrideInviteUser: undefined,
 };

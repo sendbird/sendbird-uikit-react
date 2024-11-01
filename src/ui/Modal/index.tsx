@@ -12,8 +12,8 @@ import IconButton from '../IconButton';
 import Button, { ButtonTypes } from '../Button';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import { useSendbirdStateContext } from '../../lib/Sendbird';
 import uuidv4 from '../../utils/uuid';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 export interface ModalHeaderProps {
   titleText: string;

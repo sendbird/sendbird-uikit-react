@@ -13,6 +13,7 @@ export const useCreateChannel = () => {
       ...state,
       step,
     })),
+
     setType: (type: CHANNEL_TYPE) => store.setState(state => ({
       ...state,
       type,
@@ -21,3 +22,5 @@ export const useCreateChannel = () => {
 
   return { state, actions };
 };
+
+export default useCreateChannel;
