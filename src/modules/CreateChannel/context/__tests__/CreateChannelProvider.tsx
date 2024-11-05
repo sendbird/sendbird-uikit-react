@@ -28,7 +28,7 @@ describe('CreateChannelProvider', () => {
     createChannel: undefined,
     userListQuery: undefined,
     onCreateChannelClick: undefined,
-    onChannelCreated: () => {},
+    onChannelCreated: expect.any(Function),
     onBeforeCreateChannel: undefined,
     step: 0,
     type: CHANNEL_TYPE.GROUP,
@@ -38,19 +38,19 @@ describe('CreateChannelProvider', () => {
 
   it('provide the correct initial state', () => {
     const wrapper = ({ children }) => (
-      <CreateChannelProvider onChannelCreated={() => jest.fn()}>
+      <CreateChannelProvider onChannelCreated={jest.fn()}>
         {children}
       </CreateChannelProvider>
     );
 
     const { result } = renderHook(() => useCreateChannelContext(), { wrapper });
 
-    expect(result.current.getState()).toMatchObject(initialState);
+    expect(result.current.getState()).toEqual(initialState);
   });
 
   it('update state correctly', async () => {
     const wrapper = ({ children }) => (
-      <CreateChannelProvider onChannelCreated={() => jest.fn()}>
+      <CreateChannelProvider onChannelCreated={jest.fn()}>
         {children}
       </CreateChannelProvider>
     );
@@ -71,7 +71,7 @@ describe('CreateChannelProvider', () => {
 
   it('provides correct actions through useCreateChannel hook', () => {
     const wrapper = ({ children }) => (
-      <CreateChannelProvider onChannelCreated={() => jest.fn()}>
+      <CreateChannelProvider onChannelCreated={jest.fn()}>
         {children}
       </CreateChannelProvider>
     );
@@ -84,7 +84,7 @@ describe('CreateChannelProvider', () => {
 
   it('update state correctly when setStep is called', async () => {
     const wrapper = ({ children }) => (
-      <CreateChannelProvider onChannelCreated={() => jest.fn()}>
+      <CreateChannelProvider onChannelCreated={jest.fn()}>
         {children}
       </CreateChannelProvider>
     );
@@ -101,7 +101,7 @@ describe('CreateChannelProvider', () => {
 
   it('update state correctly when setType is called', async () => {
     const wrapper = ({ children }) => (
-      <CreateChannelProvider onChannelCreated={() => jest.fn()}>
+      <CreateChannelProvider onChannelCreated={jest.fn()}>
         {children}
       </CreateChannelProvider>
     );
