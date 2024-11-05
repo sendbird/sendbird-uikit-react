@@ -68,10 +68,10 @@ const defaultMockActions = {
 };
 
 describe('CreateChannelUI Integration Tests', () => {
-  const mockUseMessageSearch = useCreateChannelModule.default as jest.Mock;
+  const mockUseCreateChannel = useCreateChannelModule.default as jest.Mock;
 
   const renderComponent = (mockState = {}, mockActions = {}) => {
-    mockUseMessageSearch.mockReturnValue({
+    mockUseCreateChannel.mockReturnValue({
       state: { ...defaultMockState, ...mockState },
       actions: { ...defaultMockActions, ...mockActions },
     });
