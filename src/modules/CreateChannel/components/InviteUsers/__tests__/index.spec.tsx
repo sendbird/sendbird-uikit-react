@@ -42,9 +42,9 @@ describe('InviteUsers', () => {
 
     render(
       <CreateChannelProvider onChannelCreated={jest.fn()}>
-      <SendbirdSdkContext.Provider value={{} as SendBirdState}>
-        <InviteUsers userListQuery={userListQuery} />
-      </SendbirdSdkContext.Provider>,
+        <SendbirdSdkContext.Provider value={{} as SendBirdState}>
+          <InviteUsers userListQuery={userListQuery} />
+        </SendbirdSdkContext.Provider>,
       </CreateChannelProvider>,
     );
 
