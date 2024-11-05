@@ -6,14 +6,22 @@ import InviteUsers from '../index';
 import { ApplicationUserListQuery } from '@sendbird/chat';
 import { SendbirdSdkContext } from '../../../../../lib/SendbirdSdkContext';
 import { SendBirdState } from '../../../../../lib/types';
+import { CreateChannelProvider } from '../../../context/CreateChannelProvider';
 
-jest.mock('../../../context/CreateChannelProvider', () => ({
-  useCreateChannelContext: jest.fn(() => ({
-    onBeforeCreateChannel: jest.fn(),
-    onCreateChannel: jest.fn(),
-    overrideInviteUser: jest.fn(),
-    createChannel: jest.fn().mockResolvedValue({}),
-    type: 'group',
+jest.mock('../../../../../hooks/useSendbirdStateContext', () => ({
+  __esModule: true,
+  default: jest.fn(() => ({
+    stores: {
+      sdkStore: {
+        sdk: {
+          currentUser: {
+            userId: 'test-user-id',
+          },
+        },
+        initialized: true,
+      },
+    },
+    config: { logger: console },
   })),
 }));
 
@@ -33,9 +41,11 @@ describe('InviteUsers', () => {
     );
 
     render(
+      <CreateChannelProvider onChannelCreated={jest.fn()}>
       <SendbirdSdkContext.Provider value={{} as SendBirdState}>
         <InviteUsers userListQuery={userListQuery} />
       </SendbirdSdkContext.Provider>,
+      </CreateChannelProvider>,
     );
 
     expect(await screen.findByText('Create')).toBeEnabled();
