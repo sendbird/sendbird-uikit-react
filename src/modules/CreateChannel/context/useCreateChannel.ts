@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { CreateChannelState, useCreateChannelContext } from './CreateChannelProvider';
 import { CHANNEL_TYPE } from '../types';
 
-export const useCreateChannel = () => {
+const useCreateChannel = () => {
   const store = useCreateChannelContext();
   if (!store) throw new Error('useCreateChannel must be used within a CreateChannelProvider');
 

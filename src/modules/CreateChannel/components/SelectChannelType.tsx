@@ -14,7 +14,7 @@ import {
   isSuperGroupChannelEnabled,
 } from '../utils';
 import { CHANNEL_TYPE } from '../types';
-import { useCreateChannel } from '../context/useCreateChannel';
+import useCreateChannel from '../context/useCreateChannel';
 
 export interface SelectChannelTypeProps {
   onCancel?(): void;

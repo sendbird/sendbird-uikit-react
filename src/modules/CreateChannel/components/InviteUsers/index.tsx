@@ -14,7 +14,7 @@ import UserListItem from '../../../../ui/UserListItem';
 import { createDefaultUserListQuery, filterUser, setChannelType } from './utils';
 import { noop } from '../../../../utils/utils';
 import { UserListQuery } from '../../../../types';
-import { useCreateChannel } from '../../context/useCreateChannel';
+import useCreateChannel from '../../context/useCreateChannel';
 
 export interface InviteUsersProps {
   onCancel?: () => void;

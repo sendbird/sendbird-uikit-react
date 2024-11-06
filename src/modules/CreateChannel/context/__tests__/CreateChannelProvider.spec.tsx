@@ -2,7 +2,7 @@ import React from 'react';
 import { act, waitFor } from '@testing-library/react';
 import { CreateChannelProvider, useCreateChannelContext, UserListQuery } from '../CreateChannelProvider';
 import { CHANNEL_TYPE } from '../../types';
-import { useCreateChannel } from '../useCreateChannel';
+import useCreateChannel from '../useCreateChannel';
 import { renderHook } from '@testing-library/react-hooks';
 
 jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
@@ -35,6 +35,12 @@ describe('CreateChannelProvider', () => {
     onCreateChannel: undefined,
     overrideInviteUser: undefined,
   };
+
+  it('throw error if useCreateChannelContext() is not used in provider', () => {
+    const { result } = renderHook(() => useCreateChannelContext());
+
+    expect(result.error).toEqual(new Error('CreateChannelContext not found. Use within the CreateChannel module.'));
+  });
 
   it('provide the correct initial state', () => {
     const wrapper = ({ children }) => (

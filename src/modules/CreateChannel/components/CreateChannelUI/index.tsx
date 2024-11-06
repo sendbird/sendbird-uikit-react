@@ -5,7 +5,7 @@ import React from 'react';
 import InviteUsers from '../InviteUsers';
 
 import SelectChannelType from '../SelectChannelType';
-import { useCreateChannel } from '../../context/useCreateChannel';
+import useCreateChannel from '../../context/useCreateChannel';
 
 export interface CreateChannelUIProps {
   onCancel?(): void;

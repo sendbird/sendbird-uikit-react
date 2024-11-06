@@ -3,7 +3,7 @@ import React from 'react';
 import { CHANNEL_TYPE } from '../../types';
 import { CreateChannelProvider, useCreateChannelContext } from '../CreateChannelProvider';
 import { renderHook } from '@testing-library/react';
-import { useCreateChannel } from '../useCreateChannel';
+import useCreateChannel from '../useCreateChannel';
 
 jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
   __esModule: true,
