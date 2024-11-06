@@ -1,10 +1,10 @@
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
-import { useMemo } from 'react';
-import { CreateChannelState, useCreateChannelContext } from './CreateChannelProvider';
+import { useContext, useMemo } from 'react';
+import { CreateChannelContext, CreateChannelState } from './CreateChannelProvider';
 import { CHANNEL_TYPE } from '../types';
 
 const useCreateChannel = () => {
-  const store = useCreateChannelContext();
+  const store = useContext(CreateChannelContext);
   if (!store) throw new Error('useCreateChannel must be used within a CreateChannelProvider');
 
   const state: CreateChannelState = useSyncExternalStore(store.subscribe, store.getState);

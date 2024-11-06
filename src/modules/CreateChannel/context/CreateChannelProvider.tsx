@@ -10,6 +10,7 @@ import { CHANNEL_TYPE } from '../types';
 import { SendbirdChatType } from '../../../lib/types';
 import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
+import useCreateChannel from './useCreateChannel';
 
 const CreateChannelContext = React.createContext<ReturnType<typeof createStore<CreateChannelState>> | null>(null);
 
@@ -165,12 +166,12 @@ const useCreateChannelStore = () => {
 };
 
 const useCreateChannelContext = () => {
-  const context = React.useContext(CreateChannelContext);
-  if (!context) throw new Error('CreateChannelContext not found. Use within the CreateChannel module.');
-  return context;
+  const { state, actions } = useCreateChannel();
+  return { ...state, ...actions };
 };
 
 export {
   CreateChannelProvider,
+  CreateChannelContext,
   useCreateChannelContext,
 };

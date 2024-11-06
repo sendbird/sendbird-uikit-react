@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, waitFor } from '@testing-library/react';
-import { CreateChannelProvider, useCreateChannelContext, UserListQuery } from '../CreateChannelProvider';
+import { CreateChannelProvider } from '../CreateChannelProvider';
 import { CHANNEL_TYPE } from '../../types';
 import useCreateChannel from '../useCreateChannel';
 import { renderHook } from '@testing-library/react-hooks';
@@ -36,12 +36,6 @@ describe('CreateChannelProvider', () => {
     overrideInviteUser: undefined,
   };
 
-  it('throw error if useCreateChannelContext() is not used in provider', () => {
-    const { result } = renderHook(() => useCreateChannelContext());
-
-    expect(result.error).toEqual(new Error('CreateChannelContext not found. Use within the CreateChannel module.'));
-  });
-
   it('provide the correct initial state', () => {
     const wrapper = ({ children }) => (
       <CreateChannelProvider onChannelCreated={jest.fn()}>
@@ -49,30 +43,9 @@ describe('CreateChannelProvider', () => {
       </CreateChannelProvider>
     );
 
-    const { result } = renderHook(() => useCreateChannelContext(), { wrapper });
+    const { result } = renderHook(() => useCreateChannel(), { wrapper });
 
-    expect(result.current.getState()).toEqual(initialState);
-  });
-
-  it('update state correctly', async () => {
-    const wrapper = ({ children }) => (
-      <CreateChannelProvider onChannelCreated={jest.fn()}>
-        {children}
-      </CreateChannelProvider>
-    );
-
-    const { result } = renderHook(() => useCreateChannelContext(), { wrapper });
-    expect(result.current.getState().userListQuery).toEqual(undefined);
-
-    const userListQuery = { hasNext: true, next: () => jest.fn(), isLoading: false } as unknown as UserListQuery;
-
-    await act(async () => {
-      result.current.setState({ userListQuery: () => userListQuery });
-      await waitFor(() => {
-        const newState = result.current.getState();
-        expect(newState.userListQuery()).toEqual(userListQuery);
-      });
-    });
+    expect(result.current.state).toEqual(initialState);
   });
 
   it('provides correct actions through useCreateChannel hook', () => {
