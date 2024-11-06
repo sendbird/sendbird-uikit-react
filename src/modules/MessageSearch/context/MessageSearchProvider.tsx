@@ -1,4 +1,4 @@
-import React, { createContext, useRef, useContext, useCallback, useEffect } from 'react';
+import React, { createContext, useRef, useCallback, useEffect } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { MessageSearchQuery } from '@sendbird/chat/message';
 import { ClientSentMessages } from '../../../types';
@@ -14,6 +14,7 @@ import useSearchStringEffect from './hooks/useSearchStringEffect';
 import { CoreMessageType } from '../../../utils';
 import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
+import useMessageSearch from './hooks/useMessageSearch';
 
 export interface MessageSearchProviderProps {
   channelUrl: string;
@@ -164,12 +165,10 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = ({
 
 /**
  * Keep this function for backward compatibility.
- * @returns {ReturnType<typeof createStore<MessageSearchState>>}
  */
 const useMessageSearchContext = () => {
-  const store = useContext(MessageSearchContext);
-  if (!store) throw new Error('MessageSearchContext not found. Use within the MessageSearch module.');
-  return store.getState();
+  const { state, actions } = useMessageSearch();
+  return { ...state, ...actions };
 };
 
 export {

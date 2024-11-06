@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useRef, createContext, useContext } from 'react';
+import React, { useMemo, useEffect, useRef, createContext } from 'react';
 import {
   ReplyType as ChatReplyType,
 } from '@sendbird/chat/message';
@@ -336,12 +336,10 @@ const useGroupChannelStore = () => {
 };
 /**
  * Keep this function for backward compatibility.
- * @returns {ReturnType<typeof createStore<GroupChannelState>>}
  */
 const useGroupChannelContext = () => {
-  const store = useContext(GroupChannelContext);
-  if (!store) throw new Error('GroupChannelContext not found. Use within the GroupChannel module.');
-  return store.getState();
+  const { state, actions } = useGroupChannel();
+  return { ...state, ...actions };
 };
 
 export {
