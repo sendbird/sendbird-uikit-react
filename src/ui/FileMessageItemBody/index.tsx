@@ -9,7 +9,7 @@ import { getClassName, getUIKitFileType, truncateString } from '../../utils';
 import { Colors } from '../../utils/color';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
-import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/GroupChannelProvider';
+import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/types';
 import { LoggerInterface } from '../../lib/Logger';
 import { openURL } from '../../utils/utils';
 

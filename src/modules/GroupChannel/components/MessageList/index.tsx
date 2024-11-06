@@ -14,13 +14,13 @@ import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
-import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { GroupChannelUIBasicProps } from '../GroupChannelUI/GroupChannelUIView';
 import { deleteNullish } from '../../../../utils/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { getComponentKeyFromMessage } from '../../context/utils';
 import { InfiniteList } from './InfiniteList';
+import { useGroupChannel } from '../../context/hooks/useGroupChannel';
 
 export interface GroupChannelMessageListProps {
   className?: string;
@@ -67,25 +67,29 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   } = deleteNullish(props);
 
   const {
-    channelUrl,
-    hasNext,
-    loading,
-    messages,
-    newMessages,
-    scrollToBottom,
-    isScrollBottomReached,
-    isMessageGroupingEnabled,
-    scrollRef,
-    scrollDistanceFromBottomRef,
-    scrollPositionRef,
-    currentChannel,
-    replyType,
-    scrollPubSub,
-    loadNext,
-    loadPrevious,
-    setIsScrollBottomReached,
-    resetNewMessages,
-  } = useGroupChannelContext();
+    state: {
+      channelUrl,
+      hasNext,
+      loading,
+      messages,
+      newMessages,
+      isScrollBottomReached,
+      isMessageGroupingEnabled,
+      currentChannel,
+      replyType,
+      scrollPubSub,
+      loadNext,
+      loadPrevious,
+      resetNewMessages,
+      scrollRef,
+      scrollPositionRef,
+      scrollDistanceFromBottomRef,
+    },
+    actions: {
+      scrollToBottom,
+      setIsScrollBottomReached,
+    },
+  } = useGroupChannel();
 
   const store = useSendbirdStateContext();
 

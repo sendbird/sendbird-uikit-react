@@ -4,38 +4,42 @@ import { useIIFE } from '@sendbird/uikit-tools';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { getSuggestedReplies, isSendableMessage } from '../../../../utils';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
-import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import MessageView, { MessageProps } from './MessageView';
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
 import { ThreadReplySelectType } from '../../context/const';
+import { useGroupChannel } from '../../context/hooks/useGroupChannel';
 
 export const Message = (props: MessageProps): React.ReactElement => {
   const { config, emojiManager } = useSendbirdStateContext();
   const {
-    loading,
-    currentChannel,
-    animatedMessageId,
-    setAnimatedMessageId,
-    scrollToMessage,
-    replyType,
-    threadReplySelectType,
-    isReactionEnabled,
-    toggleReaction,
-    nicknamesMap,
-    setQuoteMessage,
-    renderUserMentionItem,
-    filterEmojiCategoryIds,
-    onQuoteMessageClick,
-    onReplyInThreadClick,
-    onMessageAnimated,
-    onBeforeDownloadFileMessage,
-    messages,
-    updateUserMessage,
-    sendUserMessage,
-    resendMessage,
-    deleteMessage,
-  } = useGroupChannelContext();
+    state: {
+      loading,
+      currentChannel,
+      animatedMessageId,
+      replyType,
+      threadReplySelectType,
+      isReactionEnabled,
+      nicknamesMap,
+      renderUserMentionItem,
+      filterEmojiCategoryIds,
+      onQuoteMessageClick,
+      onReplyInThreadClick,
+      onMessageAnimated,
+      onBeforeDownloadFileMessage,
+      updateUserMessage,
+      sendUserMessage,
+      resendMessage,
+      messages,
+    },
+    actions: {
+      toggleReaction,
+      setQuoteMessage,
+      setAnimatedMessageId,
+      scrollToMessage,
+      deleteMessage,
+    },
+  } = useGroupChannel();
 
   const { message } = props;
   const initialized = !loading && Boolean(currentChannel);

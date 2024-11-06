@@ -21,7 +21,7 @@ import {
 } from '../../../../utils/consts';
 import type { SendableMessageType } from '../../../../utils';
 import type { ReplyType } from '../../../../types';
-import type { GroupChannelProviderProps } from '../GroupChannelProvider';
+import type { GroupChannelProviderProps } from '../types';
 
 type MessageListDataSource = ReturnType<typeof useGroupChannelMessages>;
 type MessageActions = {

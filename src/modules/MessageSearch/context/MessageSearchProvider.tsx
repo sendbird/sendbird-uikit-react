@@ -162,10 +162,14 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = ({
   );
 };
 
+/**
+ * Keep this function for backward compatibility.
+ * @returns {ReturnType<typeof createStore<MessageSearchState>>}
+ */
 const useMessageSearchContext = () => {
-  const context = useContext(MessageSearchContext);
-  if (!context) throw new Error('MessageSearchContext not found. Use within the MessageSearch module.');
-  return context;
+  const store = useContext(MessageSearchContext);
+  if (!store) throw new Error('MessageSearchContext not found. Use within the MessageSearch module.');
+  return store.getState();
 };
 
 export {

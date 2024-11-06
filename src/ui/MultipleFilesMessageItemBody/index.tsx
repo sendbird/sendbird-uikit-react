@@ -1,7 +1,7 @@
 import React, { ReactElement, useState } from 'react';
 import { MultipleFilesMessage, SendingStatus } from '@sendbird/chat/message';
 
-import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/GroupChannelProvider';
+import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/types';
 import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import ImageRenderer, { getBorderRadiusForMultipleImageRenderer } from '../ImageRenderer';
