@@ -173,6 +173,7 @@ export function initSDK({
   sdkInitParams?: SendbirdChatInitParams;
   customExtensionParams?: CustomExtensionParams;
 }) {
+  // eslint-disable-next-line  prefer-object-spread -- not to break the existing types
   const params = Object.assign({}, {
     appId,
     modules: [new GroupChannelModule(), new OpenChannelModule()],
