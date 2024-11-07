@@ -14,7 +14,6 @@ import {
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { useMessageListScroll } from './hooks/useMessageListScroll';
-import { useMessageActions } from './hooks/useMessageActions';
 import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
 import {
   getCaseResolvedReplyType,
@@ -161,15 +160,6 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     logger: logger as any,
   });
 
-  // Message actions initialization
-  const messageActions = useMessageActions({
-    ...props,
-    ...messageDataSource,
-    scrollToBottom: actions.scrollToBottom,
-    quoteMessage: state.quoteMessage,
-    replyType: resolvedReplyType,
-  });
-
   // Channel initialization
   useAsyncEffect(async () => {
     if (sdkStore.initialized && channelUrl) {
@@ -300,12 +290,13 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
       // Message data source & actions
       ...messageDataSource,
-      ...messageActions,
     });
   }, [
     channelUrl,
-    state.currentChannel?.url,
-    messageDataSource.messages?.map((it) => it?.messageId).join(),
+    state.currentChannel,
+    messageDataSource.initialized,
+    messageDataSource.loading,
+    messageDataSource.messages,
     configurations,
     scrollState,
     eventHandlers,

@@ -27,9 +27,6 @@ export const Message = (props: MessageProps): React.ReactElement => {
       onReplyInThreadClick,
       onMessageAnimated,
       onBeforeDownloadFileMessage,
-      updateUserMessage,
-      sendUserMessage,
-      resendMessage,
       messages,
     },
     actions: {
@@ -37,6 +34,9 @@ export const Message = (props: MessageProps): React.ReactElement => {
       setQuoteMessage,
       setAnimatedMessageId,
       scrollToMessage,
+      updateUserMessage,
+      sendUserMessage,
+      resendMessage,
       deleteMessage,
     },
   } = useGroupChannel();

@@ -19,9 +19,7 @@ import { ThreadReplySelectType } from './const';
 
 // Message data source types
 type MessageDataSource = ReturnType<typeof useGroupChannelMessages>;
-type MessageActions = ReturnType<typeof useMessageActions>;
-type MessageListDataSourceWithoutActions =
-  Omit<MessageDataSource, keyof MessageActions | `_dangerous_${string}`>;
+export type MessageActions = ReturnType<typeof useMessageActions>;
 export type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
 
 // Handler types
@@ -36,8 +34,7 @@ export interface GroupChannelState extends GroupChannelProviderProps,
   Omit<InternalGroupChannelState, keyof GroupChannelProviderProps> {
 }
 // Only include the states
-interface InternalGroupChannelState extends
-  MessageListDataSourceWithoutActions, MessageActions {
+interface InternalGroupChannelState extends MessageDataSource {
   // Channel state
   currentChannel: GroupChannel | null;
   channelUrl: string;

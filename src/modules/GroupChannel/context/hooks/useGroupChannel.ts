@@ -3,25 +3,38 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { SendbirdError } from '@sendbird/chat';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 
+import type {
+  FileMessage,
+  FileMessageCreateParams,
+  MultipleFilesMessage,
+  MultipleFilesMessageCreateParams,
+  UserMessage,
+  UserMessageCreateParams,
+  UserMessageUpdateParams,
+} from '@sendbird/chat/message';
+
 import { SendableMessageType } from '../../../../utils';
 import { getMessageTopOffset } from '../utils';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { GroupChannelContext } from '../GroupChannelProvider';
-import type { GroupChannelState } from '../types';
+import type { GroupChannelState, MessageActions } from '../types';
+import { useMessageActions } from './useMessageActions';
 
-export interface GroupChannelActions {
+export interface GroupChannelActions extends MessageActions {
   // Channel actions
   setCurrentChannel: (channel: GroupChannel) => void;
   handleChannelError: (error: SendbirdError) => void;
+
+  // Message actions
+  sendUserMessage: (params: UserMessageCreateParams) => Promise<UserMessage>;
+  sendFileMessage: (params: FileMessageCreateParams) => Promise<FileMessage>;
+  sendMultipleFilesMessage: (params: MultipleFilesMessageCreateParams) => Promise<MultipleFilesMessage>;
+  updateUserMessage: (messageId: number, params: UserMessageUpdateParams) => Promise<UserMessage>;
 
   // UI actions
   setQuoteMessage: (message: SendableMessageType | null) => void;
   setAnimatedMessageId: (messageId: number | null) => void;
   setIsScrollBottomReached: (isReached: boolean) => void;
-
-  // Message actions
-  updateMessage: (message: SendableMessageType, updatedMessage: SendableMessageType) => Promise<void>;
-  deleteMessage: (message: SendableMessageType) => Promise<void>;
 
   // Scroll actions
   scrollToBottom: (animated?: boolean) => Promise<void>;
@@ -43,6 +56,41 @@ export const useGroupChannel = () => {
   const { config } = useSendbirdStateContext();
   const { markAsReadScheduler } = config;
   const state: GroupChannelState = useSyncExternalStore(store.subscribe, store.getState);
+
+  const flagActions = {
+    setAnimatedMessageId: (messageId: number | null) => {
+      store.setState(state => ({ ...state, animatedMessageId: messageId }));
+    },
+
+    setIsScrollBottomReached: (isReached: boolean) => {
+      store.setState(state => ({ ...state, isScrollBottomReached: isReached }));
+    },
+  };
+
+  const scrollToBottom = async (animated?: boolean) => {
+    if (!state.scrollRef.current) return;
+
+    flagActions.setAnimatedMessageId(null);
+    flagActions.setIsScrollBottomReached(true);
+
+    if (config.isOnline && state.hasNext()) {
+      await state.resetWithStartingPoint(Number.MAX_SAFE_INTEGER);
+      state.scrollPubSub.publish('scrollToBottom', { animated });
+    } else {
+      state.scrollPubSub.publish('scrollToBottom', { animated });
+    }
+
+    if (state.currentChannel && !state.hasNext()) {
+      state.resetNewMessages();
+      if (!state.disableMarkAsRead) {
+        markAsReadScheduler.push(state.currentChannel);
+      }
+    }
+  };
+  const messageActions = useMessageActions({
+    ...state,
+    scrollToBottom,
+  });
 
   const actions: GroupChannelActions = useMemo(() => ({
     setCurrentChannel: (channel: GroupChannel) => {
@@ -68,54 +116,11 @@ export const useGroupChannel = () => {
       }));
     },
 
-    updateMessage: async (message: SendableMessageType, updatedMessage: SendableMessageType) => {
-      store.setState(state => ({
-        ...state,
-        messages: state.messages.map(msg => msg.messageId === message.messageId ? updatedMessage : msg,
-        ),
-      }));
-    },
-
-    deleteMessage: async (message: SendableMessageType) => {
-      store.setState(state => ({
-        ...state,
-        messages: state.messages.filter(msg => msg.messageId !== message.messageId),
-      }));
-    },
-
     setQuoteMessage: (message: SendableMessageType | null) => {
       store.setState(state => ({ ...state, quoteMessage: message }));
     },
 
-    setAnimatedMessageId: (messageId: number | null) => {
-      store.setState(state => ({ ...state, animatedMessageId: messageId }));
-    },
-
-    setIsScrollBottomReached: (isReached: boolean) => {
-      store.setState(state => ({ ...state, isScrollBottomReached: isReached }));
-    },
-
-    scrollToBottom: async (animated?: boolean) => {
-      if (!state.scrollRef.current) return;
-
-      actions.setAnimatedMessageId(null);
-      actions.setIsScrollBottomReached(true);
-
-      if (config.isOnline && state.hasNext()) {
-        await state.resetWithStartingPoint(Number.MAX_SAFE_INTEGER);
-        state.scrollPubSub.publish('scrollToBottom', { animated });
-      } else {
-        state.scrollPubSub.publish('scrollToBottom', { animated });
-      }
-
-      if (state.currentChannel && !state.hasNext()) {
-        state.resetNewMessages();
-        if (!state.disableMarkAsRead) {
-          markAsReadScheduler.push(state.currentChannel);
-        }
-      }
-    },
-
+    scrollToBottom,
     scrollToMessage: async (
       createdAt: number,
       messageId: number,
@@ -139,7 +144,7 @@ export const useGroupChannel = () => {
 
       clickHandler.deactivate();
 
-      actions.setAnimatedMessageId(null);
+      flagActions.setAnimatedMessageId(null);
       const message = state.messages.find(
         (it) => it.messageId === messageId || it.createdAt === createdAt,
       );
@@ -147,7 +152,7 @@ export const useGroupChannel = () => {
       if (message) {
         const topOffset = getMessageTopOffset(message.createdAt);
         if (topOffset) state.scrollPubSub.publish('scroll', { top: topOffset, animated: scrollAnimated });
-        if (messageFocusAnimated ?? true) actions.setAnimatedMessageId(messageId);
+        if (messageFocusAnimated ?? true) flagActions.setAnimatedMessageId(messageId);
       } else {
         await state.resetWithStartingPoint(createdAt);
         setTimeout(() => {
@@ -159,7 +164,7 @@ export const useGroupChannel = () => {
               animated: scrollAnimated,
             });
           }
-          if (messageFocusAnimated ?? true) actions.setAnimatedMessageId(messageId);
+          if (messageFocusAnimated ?? true) flagActions.setAnimatedMessageId(messageId);
         });
       }
 
@@ -181,6 +186,8 @@ export const useGroupChannel = () => {
           });
       }
     },
+    ...flagActions,
+    ...messageActions,
   }), [store, state, config.isOnline, markAsReadScheduler]);
 
   return { state, actions };
