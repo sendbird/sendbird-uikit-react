@@ -1,5 +1,17 @@
 # Changelog - v3
 
+## [v3.15.8] (Nov 7th, 2024)
+
+### Fixes:
+- Fixed an issue where the `dir` attribute was not being properly applied to message containers:
+  * Removed `useMessageLayoutDirection` hook in favor of a more React-friendly solution
+  * Updated `MessageList` component to directly handle text direction through the `dir` attribute
+- Fixed an issue in TypingIndicatorBubble component where null was returned before hook execution
+- Fixed SDK initialization parameter override issue:
+  * Modified Object.assign order to allow proper parameter override
+  * Added test case to verify `localCacheEnabled` override functionality
+  * Ensures `sdkInitParams.localCacheEnabled` properly overrides default settings; `localCacheEnabled: true`
+
 ## [v3.15.7] (Oct 24th, 2024)
 
 ### Features:
