@@ -265,4 +265,27 @@ describe('useConnect/setupConnection/initSDK', () => {
     });
     expect(newSdk).toEqual(mockSdk);
   });
+  it('should override default localCacheEnabled when provided in sdkInitParams', async () => {
+    const setUpConnectionProps = generateSetUpConnectionParams();
+    const { appId } = setUpConnectionProps;
+    const sdkInitParams = {
+      localCacheEnabled: false,
+    };
+
+    const newSdk = initSDK({ appId, sdkInitParams });
+
+    // @ts-ignore
+    expect(require('@sendbird/chat').init).toBeCalledWith({
+      appId,
+      newInstance: false,
+      modules: [
+        // @ts-ignore
+        new (require('@sendbird/chat/groupChannel').GroupChannelModule)(),
+        // @ts-ignore
+        new (require('@sendbird/chat/openChannel').OpenChannelModule)(),
+      ],
+      localCacheEnabled: false,
+    });
+    expect(newSdk).toEqual(mockSdk);
+  });
 });
