@@ -80,6 +80,7 @@ export const useSendVoiceMessageCallback = ({
           ...pendingMessage,
           url: URL.createObjectURL(file),
           // pending thumbnail message seems to be failed
+          // @ts-ignore
           requestState: 'pending',
           isUserMessage: pendingMessage.isUserMessage,
           isFileMessage: pendingMessage.isFileMessage,
