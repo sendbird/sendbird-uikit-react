@@ -247,20 +247,18 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
 
   return (
     <InternalThreadProvider>
-      <ThreadManager {...props}>
+      <ThreadManager {...props} />
         {/* UserProfileProvider */}
         <UserProfileProvider {...props}>
           {children}
         </UserProfileProvider>
-      </ThreadManager>
     </InternalThreadProvider>
   );
 };
 
 export const useThreadContext = () => {
-  const context = React.useContext(ThreadContext);
-  if (!context) throw new Error('ThreadContext not found. Use within the Thread module');
-  return context;
+  const { state, actions } = useThread();
+  return { ...state, ...actions };
 };
 
 const useThreadStore = () => {

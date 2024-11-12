@@ -1,24 +1,31 @@
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
-import { useContext, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { ThreadContext, ThreadState } from './ThreadProvider';
 import { ChannelStateTypes, FileUploadInfoParams, ParentMessageStateTypes, ThreadListStateTypes } from '../types';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { CoreMessageType, SendableMessageType } from '../../../utils';
 import { EmojiContainer, User } from '@sendbird/chat';
-import { compareIds } from './utils';
-import { BaseMessage, MultipleFilesMessage, ReactionEvent, UserMessage } from '@sendbird/chat/message';
+import { compareIds, scrollIntoLast as scrollIntoLastForThread, scrollIntoLast } from './utils';
+import {
+  BaseMessage, FileMessage, FileMessageCreateParams, MessageMetaArray, MessageType,
+  MultipleFilesMessage, type MultipleFilesMessageCreateParams,
+  ReactionEvent, SendingStatus, ThreadedMessageListParams, type UploadableFileInfo,
+  UserMessage,
+  UserMessageCreateParams, UserMessageUpdateParams,
+} from '@sendbird/chat/message';
 import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from '../consts';
 import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import useSendUserMessageCallback from './hooks/useSendUserMessageCallback';
-import useSendFileMessageCallback from './hooks/useSendFileMessage';
-import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
-import { useSendMultipleFilesMessage } from '../../Channel/context/hooks/useSendMultipleFilesMessage';
-import { PublishingModuleType } from '../../internalInterfaces';
-import useResendMessageCallback from './hooks/useResendMessageCallback';
-import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
-import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
-import { useThreadFetchers } from './hooks/useThreadFetchers';
+import { SendMessageParams } from './hooks/useSendUserMessageCallback';
+import topics, { PUBSUB_TOPICS, PublishingModuleType } from '../../../lib/pubSub/topics';
+import {
+  META_ARRAY_MESSAGE_TYPE_KEY, META_ARRAY_MESSAGE_TYPE_VALUE__VOICE,
+  META_ARRAY_VOICE_DURATION_KEY,
+  SCROLL_BOTTOM_DELAY_FOR_SEND,
+  VOICE_MESSAGE_FILE_NAME,
+  VOICE_MESSAGE_MIME_TYPE,
+} from '../../../utils/consts';
+import { shouldPubSubPublishToThread } from '../../internalInterfaces';
 
 function hasReqId<T extends object>(
   message: T,
@@ -26,94 +33,554 @@ function hasReqId<T extends object>(
   return 'reqId' in message;
 }
 
+interface LocalFileMessage extends FileMessage {
+  localUrl: string;
+  file: File;
+}
+
+function getThreadMessageListParams(params?: Partial<ThreadedMessageListParams>): ThreadedMessageListParams {
+  return {
+    prevResultSize: PREV_THREADS_FETCH_SIZE,
+    nextResultSize: NEXT_THREADS_FETCH_SIZE,
+    includeMetaArray: true,
+    ...params,
+  };
+}
+
 const useThread = () => {
   const store = useContext(ThreadContext);
   if (!store) throw new Error('useCreateChannel must be used within a CreateChannelProvider');
 
   // SendbirdStateContext config
-  const { config } = useSendbirdStateContext();
+  const { stores, config } = useSendbirdStateContext();
   const { logger, pubSub } = config;
   const isMentionEnabled = config.groupChannel.enableMention;
   const isReactionEnabled = config.groupChannel.enableReactions;
 
   const state: ThreadState = useSyncExternalStore(store.subscribe, store.getState);
-
   const {
-    initialize: initializeThreadFetcher,
-    loadPrevious: fetchPrevThreads,
-    loadNext: fetchNextThreads,
-  } = useThreadFetchers({
-    parentMessage: state.parentMessage,
-    // anchorMessage should be null when parentMessage doesn't exist
-    anchorMessage: state.message?.messageId !== state.parentMessage?.messageId ? state.message || undefined : undefined,
-    logger,
-    isReactionEnabled,
-    threadListState: state.threadListState,
-    oldestMessageTimeStamp: state.allThreadMessages[0]?.createdAt || 0,
-    latestMessageTimeStamp: state.allThreadMessages[state.allThreadMessages.length - 1]?.createdAt || 0,
-  });
+    message,
+    parentMessage,
+    currentChannel,
+    threadListState,
+    allThreadMessages,
+    onBeforeSendUserMessage,
+    onBeforeSendFileMessage,
+    onBeforeSendVoiceMessage,
+    onBeforeSendMultipleFilesMessage,
+  } = state;
+
+  const toggleReaction = useToggleReactionCallback({ currentChannel }, { logger });
+
+  const sendMessage = useCallback((props: SendMessageParams) => {
+    const {
+      message,
+      quoteMessage,
+      mentionTemplate,
+      mentionedUsers,
+    } = props;
+
+    const createDefaultParams = () => {
+      const params = {} as UserMessageCreateParams;
+      params.message = message;
+      const mentionedUsersLength = mentionedUsers?.length || 0;
+      if (isMentionEnabled && mentionedUsersLength) {
+        params.mentionedUsers = mentionedUsers;
+      }
+      if (isMentionEnabled && mentionTemplate && mentionedUsersLength) {
+        params.mentionedMessageTemplate = mentionTemplate;
+      }
+      if (quoteMessage) {
+        params.isReplyToChannel = true;
+        params.parentMessageId = quoteMessage.messageId;
+      }
+      return params;
+    };
+
+    const params = onBeforeSendUserMessage?.(message, quoteMessage) ?? createDefaultParams();
+    logger.info('Thread | useSendUserMessageCallback: Sending user message start.', params);
+
+    if (currentChannel?.sendUserMessage) {
+      currentChannel?.sendUserMessage(params)
+        .onPending((pendingMessage) => {
+          actions.sendMessageStart(pendingMessage as SendableMessageType);
+        })
+        .onFailed((error, message) => {
+          logger.info('Thread | useSendUserMessageCallback: Sending user message failed.', { message, error });
+          actions.sendMessageFailure(message as SendableMessageType);
+        })
+        .onSucceeded((message) => {
+          logger.info('Thread | useSendUserMessageCallback: Sending user message succeeded.', message);
+          // because Thread doesn't subscribe SEND_USER_MESSAGE
+          pubSub.publish(topics.SEND_USER_MESSAGE, {
+            channel: currentChannel,
+            message: message as UserMessage,
+            publishingModules: [PublishingModuleType.THREAD],
+          });
+        });
+    }
+  }, [isMentionEnabled, currentChannel]);
+
+  const sendFileMessage = useCallback((file, quoteMessage): Promise<FileMessage> => {
+    return new Promise((resolve, reject) => {
+      const createParamsDefault = () => {
+        const params = {} as FileMessageCreateParams;
+        params.file = file;
+        if (quoteMessage) {
+          params.isReplyToChannel = true;
+          params.parentMessageId = quoteMessage.messageId;
+        }
+        return params;
+      };
+      const params = onBeforeSendFileMessage?.(file, quoteMessage) ?? createParamsDefault();
+      logger.info('Thread | useSendFileMessageCallback: Sending file message start.', params);
+
+      currentChannel?.sendFileMessage(params)
+        .onPending((pendingMessage) => {
+          actions.sendMessageStart({
+            ...pendingMessage,
+            url: URL.createObjectURL(file),
+            // pending thumbnail message seems to be failed
+            // @ts-ignore
+            requestState: 'pending',
+            isUserMessage: pendingMessage.isUserMessage,
+            isFileMessage: pendingMessage.isFileMessage,
+            isAdminMessage: pendingMessage.isAdminMessage,
+            isMultipleFilesMessage: pendingMessage.isMultipleFilesMessage,
+          });
+          setTimeout(() => scrollIntoLast(), SCROLL_BOTTOM_DELAY_FOR_SEND);
+        })
+        .onFailed((error, message) => {
+          (message as LocalFileMessage).localUrl = URL.createObjectURL(file);
+          (message as LocalFileMessage).file = file;
+          logger.info('Thread | useSendFileMessageCallback: Sending file message failed.', { message, error });
+          actions.sendMessageFailure(message as SendableMessageType);
+          reject(error);
+        })
+        .onSucceeded((message) => {
+          logger.info('Thread | useSendFileMessageCallback: Sending file message succeeded.', message);
+          pubSub.publish(topics.SEND_FILE_MESSAGE, {
+            channel: currentChannel,
+            message: message as FileMessage,
+            publishingModules: [PublishingModuleType.THREAD],
+          });
+          resolve(message as FileMessage);
+        });
+    });
+  }, [currentChannel]);
+
+  const sendVoiceMessage = useCallback((file: File, duration: number, quoteMessage: SendableMessageType) => {
+    const messageParams: FileMessageCreateParams = (
+      onBeforeSendVoiceMessage
+      && typeof onBeforeSendVoiceMessage === 'function'
+    )
+      ? onBeforeSendVoiceMessage(file, quoteMessage)
+      : {
+        file,
+        fileName: VOICE_MESSAGE_FILE_NAME,
+        mimeType: VOICE_MESSAGE_MIME_TYPE,
+        metaArrays: [
+          new MessageMetaArray({
+            key: META_ARRAY_VOICE_DURATION_KEY,
+            value: [`${duration}`],
+          }),
+          new MessageMetaArray({
+            key: META_ARRAY_MESSAGE_TYPE_KEY,
+            value: [META_ARRAY_MESSAGE_TYPE_VALUE__VOICE],
+          }),
+        ],
+      };
+    if (quoteMessage) {
+      messageParams.isReplyToChannel = true;
+      messageParams.parentMessageId = quoteMessage.messageId;
+    }
+    logger.info('Thread | useSendVoiceMessageCallback:  Start sending voice message', messageParams);
+    currentChannel?.sendFileMessage(messageParams)
+      .onPending((pendingMessage) => {
+        actions.sendMessageStart({
+          /* pubSub is used instead of messagesDispatcher
+            to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
+          // TODO: remove data pollution
+          ...pendingMessage,
+          url: URL.createObjectURL(file),
+          // pending thumbnail message seems to be failed
+          // @ts-ignore
+          requestState: 'pending',
+          isUserMessage: pendingMessage.isUserMessage,
+          isFileMessage: pendingMessage.isFileMessage,
+          isAdminMessage: pendingMessage.isAdminMessage,
+          isMultipleFilesMessage: pendingMessage.isMultipleFilesMessage,
+        });
+        setTimeout(() => scrollIntoLast(), SCROLL_BOTTOM_DELAY_FOR_SEND);
+      })
+      .onFailed((error, message) => {
+        (message as LocalFileMessage).localUrl = URL.createObjectURL(file);
+        (message as LocalFileMessage).file = file;
+        logger.info('Thread | useSendVoiceMessageCallback: Sending voice message failed.', { message, error });
+        actions.sendMessageFailure(message as SendableMessageType);
+      })
+      .onSucceeded((message) => {
+        logger.info('Thread | useSendVoiceMessageCallback: Sending voice message succeeded.', message);
+        pubSub.publish(topics.SEND_FILE_MESSAGE, {
+          channel: currentChannel,
+          message: message as FileMessage,
+          publishingModules: [PublishingModuleType.THREAD],
+        });
+      });
+  }, [
+    currentChannel,
+    onBeforeSendVoiceMessage,
+  ]);
+
+  const sendMultipleFilesMessage = useCallback((
+    files: Array<File>,
+    quoteMessage?: SendableMessageType,
+  ): Promise<MultipleFilesMessage> => {
+    return new Promise((resolve, reject) => {
+      if (!currentChannel) {
+        logger.warning('Channel: Sending MFm failed, because currentChannel is null.', { currentChannel });
+        reject();
+      }
+      if (files.length <= 1) {
+        logger.warning('Channel: Sending MFM failed, because there are no multiple files.', { files });
+        reject();
+      }
+      let messageParams: MultipleFilesMessageCreateParams = {
+        fileInfoList: files.map((file: File): UploadableFileInfo => ({
+          file,
+          fileName: file.name,
+          fileSize: file.size,
+          mimeType: file.type,
+        })),
+      };
+      if (quoteMessage) {
+        messageParams.isReplyToChannel = true;
+        messageParams.parentMessageId = quoteMessage.messageId;
+      }
+      if (typeof onBeforeSendMultipleFilesMessage === 'function') {
+        messageParams = onBeforeSendMultipleFilesMessage(files, quoteMessage);
+      }
+      logger.info('Channel: Start sending MFM', { messageParams });
+      try {
+        currentChannel?.sendMultipleFilesMessage(messageParams)
+          .onFileUploaded((requestId, index, uploadableFileInfo: UploadableFileInfo, error) => {
+            logger.info('Channel: onFileUploaded during sending MFM', {
+              requestId,
+              index,
+              error,
+              uploadableFileInfo,
+            });
+            pubSub.publish(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, {
+              response: {
+                channelUrl: currentChannel.url,
+                requestId,
+                index,
+                uploadableFileInfo,
+                error,
+              },
+              publishingModules: [PublishingModuleType.THREAD],
+            });
+          })
+          .onPending((pendingMessage: MultipleFilesMessage) => {
+            logger.info('Channel: in progress of sending MFM', { pendingMessage, fileInfoList: messageParams.fileInfoList });
+            pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_START, {
+              message: pendingMessage,
+              channel: currentChannel,
+              publishingModules: [PublishingModuleType.THREAD],
+            });
+            setTimeout(() => {
+              if (shouldPubSubPublishToThread([PublishingModuleType.THREAD])) {
+                scrollIntoLastForThread(0);
+              }
+            }, SCROLL_BOTTOM_DELAY_FOR_SEND);
+          })
+          .onFailed((error, failedMessage: MultipleFilesMessage) => {
+            logger.error('Channel: Sending MFM failed.', { error, failedMessage });
+            pubSub.publish(PUBSUB_TOPICS.SEND_MESSAGE_FAILED, {
+              channel: currentChannel,
+              message: failedMessage,
+              publishingModules: [PublishingModuleType.THREAD],
+              error,
+            });
+            reject(error);
+          })
+          .onSucceeded((succeededMessage: MultipleFilesMessage) => {
+            logger.info('Channel: Sending voice message success!', { succeededMessage });
+            pubSub.publish(PUBSUB_TOPICS.SEND_FILE_MESSAGE, {
+              channel: currentChannel,
+              message: succeededMessage,
+              publishingModules: [PublishingModuleType.THREAD],
+            });
+            resolve(succeededMessage);
+          });
+      } catch (error) {
+        logger.error('Channel: Sending MFM failed.', { error });
+        reject(error);
+      }
+    });
+  }, [
+    currentChannel,
+    onBeforeSendMultipleFilesMessage,
+  ]);
+
+  const resendMessage = useCallback((failedMessage: SendableMessageType) => {
+    if ((failedMessage as SendableMessageType)?.isResendable) {
+      logger.info('Thread | useResendMessageCallback: Resending failedMessage start.', failedMessage);
+      if (failedMessage?.isUserMessage?.() || failedMessage?.messageType === MessageType.USER) {
+        try {
+          currentChannel?.resendMessage(failedMessage as UserMessage)
+            .onPending((message) => {
+              logger.info('Thread | useResendMessageCallback: Resending user message started.', message);
+              actions.resendMessageStart(message);
+            })
+            .onSucceeded((message) => {
+              logger.info('Thread | useResendMessageCallback: Resending user message succeeded.', message);
+              actions.sendMessageSuccess(message);
+              pubSub.publish(topics.SEND_USER_MESSAGE, {
+                channel: currentChannel,
+                message: message,
+                publishingModules: [PublishingModuleType.THREAD],
+              });
+            })
+            .onFailed((error) => {
+              logger.warning('Thread | useResendMessageCallback: Resending user message failed.', error);
+              failedMessage.sendingStatus = SendingStatus.FAILED;
+              actions.sendMessageFailure(failedMessage);
+            });
+        } catch (err) {
+          logger.warning('Thread | useResendMessageCallback: Resending user message failed.', err);
+          failedMessage.sendingStatus = SendingStatus.FAILED;
+          actions.sendMessageFailure(failedMessage);
+        }
+      } else if (failedMessage?.isFileMessage?.()) {
+        try {
+          currentChannel?.resendMessage?.(failedMessage as FileMessage)
+            .onPending((message) => {
+              logger.info('Thread | useResendMessageCallback: Resending file message started.', message);
+              actions.resendMessageStart(message);
+            })
+            .onSucceeded((message) => {
+              logger.info('Thread | useResendMessageCallback: Resending file message succeeded.', message);
+              actions.sendMessageSuccess(message);
+              pubSub.publish(topics.SEND_FILE_MESSAGE, {
+                channel: currentChannel,
+                message: failedMessage,
+                publishingModules: [PublishingModuleType.THREAD],
+              });
+            })
+            .onFailed((error) => {
+              logger.warning('Thread | useResendMessageCallback: Resending file message failed.', error);
+              failedMessage.sendingStatus = SendingStatus.FAILED;
+              actions.sendMessageFailure(failedMessage);
+            });
+        } catch (err) {
+          logger.warning('Thread | useResendMessageCallback: Resending file message failed.', err);
+          failedMessage.sendingStatus = SendingStatus.FAILED;
+          actions.sendMessageFailure(failedMessage);
+        }
+      } else if (failedMessage?.isMultipleFilesMessage?.()) {
+        try {
+          currentChannel?.resendMessage?.(failedMessage as MultipleFilesMessage)
+            .onPending((message) => {
+              logger.info('Thread | useResendMessageCallback: Resending multiple files message started.', message);
+              actions.resendMessageStart(message);
+            })
+            .onFileUploaded((requestId, index, uploadableFileInfo: UploadableFileInfo, error) => {
+              logger.info('Thread | useResendMessageCallback: onFileUploaded during resending multiple files message.', {
+                requestId,
+                index,
+                error,
+                uploadableFileInfo,
+              });
+              pubSub.publish(topics.ON_FILE_INFO_UPLOADED, {
+                response: {
+                  channelUrl: currentChannel.url,
+                  requestId,
+                  index,
+                  uploadableFileInfo,
+                  error,
+                },
+                publishingModules: [PublishingModuleType.THREAD],
+              });
+            })
+            .onSucceeded((message: MultipleFilesMessage) => {
+              logger.info('Thread | useResendMessageCallback: Resending MFM succeeded.', message);
+              actions.sendMessageSuccess(message);
+              pubSub.publish(topics.SEND_FILE_MESSAGE, {
+                channel: currentChannel,
+                message,
+                publishingModules: [PublishingModuleType.THREAD],
+              });
+            })
+            .onFailed((error, message) => {
+              logger.warning('Thread | useResendMessageCallback: Resending MFM failed.', error);
+              actions.sendMessageFailure(message);
+            });
+        } catch (err) {
+          logger.warning('Thread | useResendMessageCallback: Resending MFM failed.', err);
+          actions.sendMessageFailure(failedMessage);
+        }
+      } else {
+        logger.warning('Thread | useResendMessageCallback: Message is not resendable.', failedMessage);
+        failedMessage.sendingStatus = SendingStatus.FAILED;
+        actions.sendMessageFailure(failedMessage);
+      }
+    }
+  }, [currentChannel]);
+
+  const anchorMessage = message?.messageId !== parentMessage?.messageId ? message || undefined : undefined;
+  const timestamp = anchorMessage?.createdAt || 0;
+  const oldestMessageTimeStamp = allThreadMessages[0]?.createdAt || 0;
+  const latestMessageTimeStamp = allThreadMessages[allThreadMessages.length - 1]?.createdAt || 0;
+
+  const initializeThreadFetcher = useCallback(
+    async (callback?: (messages: BaseMessage[]) => void) => {
+      const staleParentMessage = parentMessage;
+
+      if (!stores.sdkStore.initialized || !staleParentMessage) return;
+
+      actions.initializeThreadListStart();
+
+      try {
+        const params = getThreadMessageListParams({ includeReactions: isReactionEnabled });
+        logger.info('Thread | useGetThreadList: Initialize thread list start.', { timestamp, params });
+
+        const { threadedMessages, parentMessage } = await staleParentMessage.getThreadedMessagesByTimestamp(timestamp, params);
+        logger.info('Thread | useGetThreadList: Initialize thread list succeeded.', { staleParentMessage, threadedMessages });
+        actions.initializeThreadListSuccess(parentMessage, anchorMessage, threadedMessages);
+        setTimeout(() => callback?.(threadedMessages));
+      } catch (error) {
+        logger.info('Thread | useGetThreadList: Initialize thread list failed.', error);
+        actions.initializeThreadListFailure();
+      }
+    },
+    [stores.sdkStore.initialized, parentMessage, anchorMessage, isReactionEnabled],
+  );
+
+  const fetchPrevThreads = useCallback(
+    async (callback?: (messages: BaseMessage[]) => void) => {
+      const staleParentMessage = parentMessage;
+
+      if (threadListState !== ThreadListStateTypes.INITIALIZED || oldestMessageTimeStamp === 0 || !staleParentMessage) return;
+
+      actions.getPrevMessagesStart();
+
+      try {
+        const params = getThreadMessageListParams({ nextResultSize: 0, includeReactions: isReactionEnabled });
+
+        const { threadedMessages, parentMessage } = await staleParentMessage.getThreadedMessagesByTimestamp(oldestMessageTimeStamp, params);
+
+        logger.info('Thread | useGetPrevThreadsCallback: Fetch prev threads succeeded.', { parentMessage, threadedMessages });
+        actions.getPrevMessagesSuccess(threadedMessages as CoreMessageType[]);
+        setTimeout(() => callback?.(threadedMessages));
+      } catch (error) {
+        logger.info('Thread | useGetPrevThreadsCallback: Fetch prev threads failed.', error);
+        actions.getPrevMessagesFailure();
+      }
+    },
+    [threadListState, oldestMessageTimeStamp, isReactionEnabled, parentMessage],
+  );
+
+  const fetchNextThreads = useCallback(
+    async (callback?: (messages: BaseMessage[]) => void) => {
+      const staleParentMessage = parentMessage;
+
+      if (threadListState !== ThreadListStateTypes.INITIALIZED || latestMessageTimeStamp === 0 || !staleParentMessage) return;
+
+      actions.getNextMessagesStart();
+
+      try {
+        const params = getThreadMessageListParams({ prevResultSize: 0, includeReactions: isReactionEnabled });
+
+        const { threadedMessages, parentMessage } = await staleParentMessage.getThreadedMessagesByTimestamp(latestMessageTimeStamp, params);
+        logger.info('Thread | useGetNextThreadsCallback: Fetch next threads succeeded.', { parentMessage, threadedMessages });
+        actions.getNextMessagesSuccess(threadedMessages as CoreMessageType[]);
+        setTimeout(() => callback?.(threadedMessages));
+      } catch (error) {
+        logger.info('Thread | useGetNextThreadsCallback: Fetch next threads failed.', error);
+        actions.getNextMessagesFailure();
+      }
+    },
+    [threadListState, latestMessageTimeStamp, isReactionEnabled, parentMessage],
+  );
+
+  const updateMessage = useCallback((props: {
+    messageId: number;
+    message: string;
+    mentionedUsers?: User[];
+    mentionTemplate?: string;
+  }) => {
+    const {
+      messageId,
+      message,
+      mentionedUsers,
+      mentionTemplate,
+    } = props;
+
+    const createParamsDefault = () => {
+      const params = {} as UserMessageUpdateParams;
+      params.message = message;
+      if (isMentionEnabled && mentionedUsers && mentionedUsers?.length > 0) {
+        params.mentionedUsers = mentionedUsers;
+      }
+      if (isMentionEnabled && mentionTemplate) {
+        params.mentionedMessageTemplate = mentionTemplate;
+      } else {
+        params.mentionedMessageTemplate = message;
+      }
+      return params;
+    };
+
+    const params = createParamsDefault();
+    logger.info('Thread | useUpdateMessageCallback: Message update start.', params);
+
+    currentChannel?.updateUserMessage?.(messageId, params)
+      .then((message: UserMessage) => {
+        logger.info('Thread | useUpdateMessageCallback: Message update succeeded.', message);
+        actions.onMessageUpdated(currentChannel, message);
+        pubSub.publish(
+          topics.UPDATE_USER_MESSAGE,
+          {
+            fromSelector: true,
+            channel: currentChannel,
+            message: message,
+            publishingModules: [PublishingModuleType.THREAD],
+          },
+        );
+      });
+  }, [currentChannel, isMentionEnabled]);
+
+  const deleteMessage = useCallback((message: SendableMessageType): Promise<void> => {
+    logger.info('Thread | useDeleteMessageCallback: Deleting message.', message);
+    const { sendingStatus } = message;
+    return new Promise((resolve, reject) => {
+      logger.info('Thread | useDeleteMessageCallback: Deleting message requestState:', sendingStatus);
+      // Message is only on local
+      if (sendingStatus === 'failed' || sendingStatus === 'pending') {
+        logger.info('Thread | useDeleteMessageCallback: Deleted message from local:', message);
+        actions.onMessageDeletedByReqId(message.reqId);
+        resolve();
+      }
+
+      logger.info('Thread | useDeleteMessageCallback: Deleting message from remote:', sendingStatus);
+      currentChannel?.deleteMessage?.(message)
+        .then(() => {
+          logger.info('Thread | useDeleteMessageCallback: Deleting message success!', message);
+          actions.onMessageDeleted(currentChannel, message.messageId);
+          resolve();
+        })
+        .catch((err) => {
+          logger.warning('Thread | useDeleteMessageCallback: Deleting message failed!', err);
+          reject(err);
+        });
+    });
+  }, [currentChannel]);
 
   const actions = useMemo(() => ({
     setCurrentUserId: (currentUserId: string) => store.setState(state => ({
       ...state,
       currentUserId: currentUserId,
     })),
-
-    toggleReaction: useToggleReactionCallback({ currentChannel: state.currentChannel }, { logger }),
-
-    sendMessage: useSendUserMessageCallback({
-      isMentionEnabled: isMentionEnabled,
-      currentChannel: state.currentChannel,
-      onBeforeSendUserMessage: state.onBeforeSendUserMessage,
-    }, {
-      logger,
-      pubSub,
-    }),
-
-    sendFileMessage: useSendFileMessageCallback({
-      currentChannel: state.currentChannel,
-      onBeforeSendFileMessage: state.onBeforeSendFileMessage,
-    }, {
-      logger,
-      pubSub,
-    }),
-
-    sendVoiceMessage: useSendVoiceMessageCallback({
-      currentChannel: state.currentChannel,
-      onBeforeSendVoiceMessage: state.onBeforeSendVoiceMessage,
-    }, {
-      logger,
-      pubSub,
-    }),
-
-    sendMultipleFilesMessage: useSendMultipleFilesMessage({
-      currentChannel: state.currentChannel,
-      onBeforeSendMultipleFilesMessage: state.onBeforeSendMultipleFilesMessage,
-      publishingModules: [PublishingModuleType.THREAD],
-    }, {
-      logger,
-      pubSub,
-    })[0],
-
-    resendMessage: useResendMessageCallback({
-      currentChannel: state.currentChannel,
-    }, { logger, pubSub }),
-
-    updateMessage: useUpdateMessageCallback({
-      currentChannel: state.currentChannel,
-      isMentionEnabled,
-    }, { logger, pubSub }),
-
-    deleteMessage: useDeleteMessageCallback(
-      { currentChannel: state.currentChannel },
-      { logger },
-    ),
-
-    initializeThreadFetcher: initializeThreadFetcher,
-
-    fetchPrevThreads: fetchPrevThreads,
-
-    fetchNextThreads: fetchNextThreads,
 
     getChannelStart: () => store.setState(state => ({
       ...state,
@@ -486,6 +953,18 @@ const useThread = () => {
         hasMoreNext: false,
       };
     }),
+
+    toggleReaction,
+    sendMessage,
+    sendFileMessage,
+    sendVoiceMessage,
+    sendMultipleFilesMessage,
+    resendMessage,
+    updateMessage,
+    deleteMessage,
+    initializeThreadFetcher,
+    fetchPrevThreads,
+    fetchNextThreads,
 
   }), [store]);
 

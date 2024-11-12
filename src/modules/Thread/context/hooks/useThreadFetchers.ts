@@ -117,8 +117,8 @@ export const useThreadFetchers = ({
   );
 
   return {
-    initialize,
-    loadPrevious,
-    loadNext,
+    initializeThreadFetcher: initialize,
+    fetchPrevThreads: loadPrevious,
+    fetchNextThreads: loadNext,
   };
 };
