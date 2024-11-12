@@ -3,11 +3,11 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { UserMessage, UserMessageCreateParams } from '@sendbird/chat/message';
 import { User } from '@sendbird/chat';
 
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
-import { ThreadContextActionTypes } from '../dux/actionTypes';
+import { Logger } from '../../../../lib/SendbirdState';
 import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';
+import useThread from '../useThread';
 
 export type OnBeforeSendUserMessageType = (message: string, quoteMessage?: SendableMessageType) => UserMessageCreateParams;
 interface DynamicProps {
@@ -18,7 +18,6 @@ interface DynamicProps {
 interface StaticProps {
   logger: Logger;
   pubSub: SBUGlobalPubSub;
-  threadDispatcher: CustomUseReducerDispatcher;
 }
 
 export type SendMessageParams = {
@@ -35,7 +34,6 @@ export default function useSendUserMessageCallback({
 }: DynamicProps, {
   logger,
   pubSub,
-  threadDispatcher,
 }: StaticProps): (props: SendMessageParams) => void {
   const sendMessage = useCallback((props: SendMessageParams) => {
     const {
@@ -44,6 +42,14 @@ export default function useSendUserMessageCallback({
       mentionTemplate,
       mentionedUsers,
     } = props;
+
+    const {
+      actions: {
+        sendMessageStart,
+        sendMessageFailure,
+      },
+    } = useThread();
+
     const createDefaultParams = () => {
       const params = {} as UserMessageCreateParams;
       params.message = message;
@@ -67,17 +73,11 @@ export default function useSendUserMessageCallback({
     if (currentChannel?.sendUserMessage) {
       currentChannel?.sendUserMessage(params)
         .onPending((pendingMessage) => {
-          threadDispatcher({
-            type: ThreadContextActionTypes.SEND_MESSAGE_START,
-            payload: { message: pendingMessage },
-          });
+          sendMessageStart(pendingMessage as SendableMessageType);
         })
         .onFailed((error, message) => {
           logger.info('Thread | useSendUserMessageCallback: Sending user message failed.', { message, error });
-          threadDispatcher({
-            type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
-            payload: { error, message },
-          });
+          sendMessageFailure(message as SendableMessageType);
         })
         .onSucceeded((message) => {
           logger.info('Thread | useSendUserMessageCallback: Sending user message succeeded.', message);

@@ -5,12 +5,12 @@ import './index.scss';
 
 import type { SendableMessageType } from '../../../../utils';
 import ThreadListItem, { ThreadListItemProps } from './ThreadListItem';
-import { useThreadContext } from '../../context/ThreadProvider';
 import { compareMessagesForGrouping } from '../../../../utils/messages';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { isSameDay } from 'date-fns';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
+import useThread from '../../context/useThread';
 
 export interface ThreadListProps {
   className?: string;
@@ -30,10 +30,12 @@ export default function ThreadList({
   const { config } = useSendbirdStateContext();
   const { userId } = config;
   const {
-    currentChannel,
-    allThreadMessages,
-    localThreadMessages,
-  } = useThreadContext();
+    state: {
+      currentChannel,
+      allThreadMessages,
+      localThreadMessages,
+    },
+  } = useThread();
 
   return (
     <div className={`sendbird-thread-list ${className}`}>
