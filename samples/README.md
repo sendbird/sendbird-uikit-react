@@ -100,7 +100,7 @@ Try your [message item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit
 
 ### Message list params
 
-The **queries.messageListParams** is an `instance` prop in the **channel** component which you can use to retrieve a list of messages by specifying the properties of `MessageListParams`.
+The **messageListQueryParams** is an `instance` prop in the `<GroupChannel/>` component which you can use to retrieve a list of messages by specifying the properties of `MessageListParams`.
 
 Try your [message list params on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-list-params-aora77).
 
@@ -123,7 +123,7 @@ const queryParams = useMemo(() => ({
 
 ### Message params
 
-The **onBeforeSendUserMessage**, **onBeforeSendFileMessage**, and **onBeforeUpdateUserMessage** are `callback function` props in the **channel** component. The first two execute additional operations for a user message and a file message respectively; the corresponding modified messages are returned through the **text** and the **file** arguments respectively. The **onBeforeUpdateUserMessage** executes additional operations for a user message before updating it.
+The **onBeforeSendUserMessage**, **onBeforeSendFileMessage**, and **onBeforeUpdateUserMessage** are `callback function` props in the **<GroupChannel />** component. The first two execute additional operations for a user message and a file message respectively; the corresponding modified messages are returned through the **text** and the **file** arguments respectively. The **onBeforeUpdateUserMessage** executes additional operations for a user message before updating it.
 
 Try your [message params on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-params-4yemw4)
 
@@ -151,7 +151,7 @@ Find out more about `UserMessageCreateParams`, `UserMessageUpdateParams` and `Fi
 
 ### Chat header
 
-The **renderChatHeader** is a `ReactElement` prop in the **channel** component which you can use to customize the header of `channel` by setting a function. This prop provides two arguments: **channel** and **user**. The channel refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user.
+The **renderChatHeader** is a `ReactElement` prop in the **<GroupChannel />** component which you can use to customize the header of `channel` by setting a function. This prop provides two arguments: **channel** and **user**. The channel refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user.
 
 Try your [chat header on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-chat-header-xjewem)
 
@@ -167,7 +167,7 @@ Try your [chat header on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-
 
 ### Message input
 
-The **renderMessageInput** is a `ReactElement` prop in the **Channel** component which allows you to customize the message input by setting a function. This prop provides three arguments: **channel**, **user**, and **disabled**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user. The **disabled** refers to whether to enable the message input box or not.
+The **renderMessageInput** is a `ReactElement` prop in the **<GroupChannel />** component which allows you to customize the message input by setting a function. This prop provides three arguments: **channel**, **user**, and **disabled**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user. The **disabled** refers to whether to enable the message input box or not.
 
 Try your [message input on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-message-input-mnw6qv)
 
@@ -183,7 +183,7 @@ Try your [message input on StackBlitz](https://stackblitz.com/edit/sendbird-uiki
 
 ### Channel preview item
 
-The **renderChannelPreview** is a `ReactElement` prop in the **ChannelList** component which allows you to customize channel preview by setting a function. This prop provides two arguments: **channel** and **onLeaveChannel**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **onLeaveChannel** has a callback function as an argument which can be implemented with custom code for events related to the corresponding user action.
+The **renderChannelPreview** is a `ReactElement` prop in the **<GroupChannelList />** component which allows you to customize channel preview by setting a function. This prop provides two arguments: **channel** and **onLeaveChannel**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **onLeaveChannel** has a callback function as an argument which can be implemented with custom code for events related to the corresponding user action.
 
 Try your [channel preview item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-channel-preview-uekro8)
 
@@ -210,7 +210,7 @@ const CustomizedChannelPreviewItem = (props) => {
 
 ### Channel list query
 
-The **queries.channelListQuery** is an `instance` prop in the **ChannelList** component which filters channels by using its options.
+The **channelListQueryParams** is an `instance` prop in the **<GroupChannelList />** component which filters channels by using its options.
 
 Try your [channel list query item on StackBlitz](https://stackblitz.com/edit/sendbird-uikit-react-custom-channel-list-queries-5ppaf9)
 
