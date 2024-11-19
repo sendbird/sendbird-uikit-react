@@ -11,7 +11,7 @@ import EmojiReactions, { EmojiReactionsProps } from '../EmojiReactions';
 import AdminMessage from '../AdminMessage';
 import QuoteMessage from '../QuoteMessage';
 
-import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/GroupChannelProvider';
+import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/types';
 import {
   CoreMessageType,
   getClassName,

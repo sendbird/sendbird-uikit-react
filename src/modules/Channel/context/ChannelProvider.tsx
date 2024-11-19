@@ -43,7 +43,7 @@ import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useSendMessageCallback from './hooks/useSendMessageCallback';
 import useSendFileMessageCallback from './hooks/useSendFileMessageCallback';
-import useToggleReactionCallback from '../../GroupChannel/context/hooks/useToggleReactionCallback';
+import useToggleReactionCallback from './hooks/useToggleReactionCallback';
 import useScrollToMessage from './hooks/useScrollToMessage';
 import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { getCaseResolvedReplyType, getCaseResolvedThreadReplySelectType } from '../../../lib/utils/resolvedReplyType';
