@@ -1,9 +1,9 @@
 import React from 'react';
-import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import RemoveMessageModalView, { RemoveMessageModalProps } from './RemoveMessageModalView';
+import { useGroupChannel } from '../../context/hooks/useGroupChannel';
 
 export const RemoveMessageModal = (props: RemoveMessageModalProps) => {
-  const { deleteMessage } = useGroupChannelContext();
+  const { actions: { deleteMessage } } = useGroupChannel();
   return <RemoveMessageModalView {...props} deleteMessage={deleteMessage} />;
 };
 
