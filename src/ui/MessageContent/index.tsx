@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useMemo, useRef, useState } from 'react';
+import React, { ReactElement, ReactNode, useRef, useState } from 'react';
 import format from 'date-fns/format';
 import './index.scss';
 
@@ -213,7 +213,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     return sum;
   };
 
-  const totalBottom = useMemo(() => getTotalBottom(), []);
+  const totalBottom = getTotalBottom();
 
   const onCloseFeedbackForm = () => {
     setShowFeedbackModal(false);
