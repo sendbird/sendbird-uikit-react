@@ -17,7 +17,7 @@ import threadReducer from './dux/reducer';
 import { ThreadContextActionTypes } from './dux/actionTypes';
 import threadInitialState, { ThreadContextInitialState } from './dux/initialState';
 
-import type { OnBeforeDownloadFileMessageType } from '../../GroupChannel/context/GroupChannelProvider';
+import type { OnBeforeDownloadFileMessageType } from '../../GroupChannel/context/types';
 import useGetChannel from './hooks/useGetChannel';
 import useGetAllEmoji from './hooks/useGetAllEmoji';
 import useGetParentMessage from './hooks/useGetParentMessage';

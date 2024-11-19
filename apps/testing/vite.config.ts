@@ -9,6 +9,11 @@ import postcssRtlOptions from '../../postcssRtlOptions.mjs';
 export default defineConfig({
   plugins: [react(), vitePluginSvgr({ include: '**/*.svg' })],
   css: {
+    preprocessorOptions: {
+      scss: {
+        silenceDeprecations: ['legacy-js-api'],
+      },
+    },
     postcss: {
       plugins: [postcssRtl(postcssRtlOptions)],
     },

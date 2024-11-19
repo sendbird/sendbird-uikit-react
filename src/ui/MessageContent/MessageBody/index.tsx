@@ -21,7 +21,7 @@ import { Nullable, SendbirdTheme } from '../../../types';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { match } from 'ts-pattern';
 import TemplateMessageItemBody from '../../TemplateMessageItemBody';
-import type { OnBeforeDownloadFileMessageType } from '../../../modules/GroupChannel/context/GroupChannelProvider';
+import type { OnBeforeDownloadFileMessageType } from '../../../modules/GroupChannel/context/types';
 import FormMessageItemBody from '../../FormMessageItemBody';
 import { MESSAGE_TEMPLATE_KEY } from '../../../utils/consts';
 
