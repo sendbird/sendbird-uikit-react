@@ -202,7 +202,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const showThreadReplies = isNotSpecialMessage && displayThreadReplies;
   const showRightContent = isNotSpecialMessage && !isByMe && !isMobile;
 
-  const getTotalBottom = (): number => {
+  const getTotalBottom = (): string => {
     let sum = 2;
     if (threadRepliesRef.current) {
       sum += 4 + threadRepliesRef.current.clientHeight;
@@ -210,10 +210,8 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     if (feedbackButtonsRef.current) {
       sum += 4 + feedbackButtonsRef.current.clientHeight;
     }
-    return sum;
+    return sum > 0 ? sum + 'px' : '';
   };
-
-  const totalBottom = getTotalBottom();
 
   const onCloseFeedbackForm = () => {
     setShowFeedbackModal(false);
@@ -291,7 +289,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
             className: 'sendbird-message-content__left__avatar',
             isByMe,
             displayThreadReplies,
-            bottom: totalBottom > 0 ? totalBottom + 'px' : '',
+            bottom: getTotalBottom(),
           })
         }
         {/* outgoing menu */}
