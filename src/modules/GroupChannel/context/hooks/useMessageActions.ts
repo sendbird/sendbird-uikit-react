@@ -1,3 +1,4 @@
+import { match } from 'ts-pattern';
 import { useCallback } from 'react';
 import { useGroupChannelMessages } from '@sendbird/uikit-tools';
 import { MessageMetaArray } from '@sendbird/chat/message';
@@ -19,9 +20,10 @@ import {
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
-import type { SendableMessageType } from '../../../../utils';
+import type { SendableMessageType, CoreMessageType } from '../../../../utils';
 import type { ReplyType } from '../../../../types';
-import type { GroupChannelProviderProps } from '../GroupChannelProvider';
+import type { GroupChannelProviderProps, OnBeforeHandler } from '../GroupChannelProvider';
+import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 
 type MessageListDataSource = ReturnType<typeof useGroupChannelMessages>;
 type MessageActions = {
@@ -39,6 +41,13 @@ interface Params extends GroupChannelProviderProps, MessageListDataSource {
 }
 
 const pass = <T>(value: T) => value;
+type MessageParamsByType = {
+  user: UserMessageCreateParams;
+  file: FileMessageCreateParams;
+  multipleFiles: MultipleFilesMessageCreateParams;
+  voice: FileMessageCreateParams;
+  update: UserMessageUpdateParams;
+};
 
 /**
  * @description This hook controls common processes related to message sending, updating.
@@ -60,7 +69,7 @@ export function useMessageActions(params: Params): MessageActions {
     quoteMessage,
     replyType,
   } = params;
-
+  const { eventHandlers } = useSendbirdStateContext();
   const buildInternalMessageParams = useCallback(
     <T extends BaseMessageCreateParams>(basicParams: T): T => {
       const messageParams = { ...basicParams } as T;
@@ -84,33 +93,71 @@ export function useMessageActions(params: Params): MessageActions {
     [],
   );
 
+  const processParams = useCallback(async <T extends keyof MessageParamsByType>(
+    handler: OnBeforeHandler<MessageParamsByType[T]>,
+    params: ReturnType<typeof buildInternalMessageParams>,
+    type: keyof MessageParamsByType,
+  ): Promise<MessageParamsByType[T]> => {
+    try {
+      const result = await handler(params as MessageParamsByType[T]);
+      return (result === undefined ? params : result) as MessageParamsByType[T];
+    } catch (error) {
+      if (typeof eventHandlers?.message === 'object') {
+        match(type)
+          .with('file', 'voice', () => {
+            if ((params as any).file) {
+              eventHandlers.message.onFileUploadFailed?.(error);
+            }
+            eventHandlers.message.onSendMessageFailed?.(params as CoreMessageType, error);
+          })
+          .with('multipleFiles', () => {
+            if ((params as MultipleFilesMessageCreateParams).fileInfoList) {
+              eventHandlers.message.onFileUploadFailed?.(error);
+            }
+            eventHandlers.message.onSendMessageFailed?.(params as CoreMessageType, error);
+          })
+          .with('user', () => {
+            eventHandlers.message.onSendMessageFailed?.(
+              params as CoreMessageType,
+              error,
+            );
+          })
+          .with('update', () => {
+            eventHandlers.message.onUpdateMessageFailed?.(
+              params as CoreMessageType,
+              error,
+            );
+          })
+          .exhaustive();
+      }
+      throw error;
+    }
+  }, [eventHandlers]);
+
   return {
     sendUserMessage: useCallback(
       async (params) => {
         const internalParams = buildInternalMessageParams<UserMessageCreateParams>(params);
-        const processedParams = await onBeforeSendUserMessage(internalParams);
-
+        const processedParams = await processParams(onBeforeSendUserMessage, internalParams, 'user') as UserMessageCreateParams;
         return sendUserMessage(processedParams, asyncScrollToBottom);
       },
-      [buildInternalMessageParams, sendUserMessage, scrollToBottom],
+      [buildInternalMessageParams, sendUserMessage, scrollToBottom, processParams],
     ),
     sendFileMessage: useCallback(
       async (params) => {
         const internalParams = buildInternalMessageParams<FileMessageCreateParams>(params);
-        const processedParams = await onBeforeSendFileMessage(internalParams);
-
+        const processedParams = await processParams(onBeforeSendFileMessage, internalParams, 'file') as FileMessageCreateParams;
         return sendFileMessage(processedParams, asyncScrollToBottom);
       },
-      [buildInternalMessageParams, sendFileMessage, scrollToBottom],
+      [buildInternalMessageParams, sendFileMessage, scrollToBottom, processParams],
     ),
     sendMultipleFilesMessage: useCallback(
       async (params) => {
         const internalParams = buildInternalMessageParams<MultipleFilesMessageCreateParams>(params);
-        const processedParams = await onBeforeSendMultipleFilesMessage(internalParams);
-
+        const processedParams = await processParams(onBeforeSendMultipleFilesMessage, internalParams, 'multipleFiles') as MultipleFilesMessageCreateParams;
         return sendMultipleFilesMessage(processedParams, asyncScrollToBottom);
       },
-      [buildInternalMessageParams, sendMultipleFilesMessage, scrollToBottom],
+      [buildInternalMessageParams, sendMultipleFilesMessage, scrollToBottom, processParams],
     ),
     sendVoiceMessage: useCallback(
       async (params: FileMessageCreateParams, duration: number) => {
@@ -129,20 +176,18 @@ export function useMessageActions(params: Params): MessageActions {
             }),
           ],
         });
-        const processedParams = await onBeforeSendVoiceMessage(internalParams);
-
+        const processedParams = await processParams(onBeforeSendVoiceMessage, internalParams, 'voice');
         return sendFileMessage(processedParams, asyncScrollToBottom);
       },
-      [buildInternalMessageParams, sendFileMessage, scrollToBottom],
+      [buildInternalMessageParams, sendFileMessage, scrollToBottom, processParams],
     ),
     updateUserMessage: useCallback(
       async (messageId: number, params: UserMessageUpdateParams) => {
         const internalParams = buildInternalMessageParams<UserMessageUpdateParams>(params);
-        const processedParams = await onBeforeUpdateUserMessage(internalParams);
-
+        const processedParams = await processParams(onBeforeUpdateUserMessage, internalParams, 'update');
         return updateUserMessage(messageId, processedParams);
       },
-      [buildInternalMessageParams, updateUserMessage],
+      [buildInternalMessageParams, updateUserMessage, processParams],
     ),
   };
 }
