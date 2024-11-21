@@ -29,7 +29,7 @@ import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
 
 export { ThreadReplySelectType } from './const'; // export for external usage
 
-type OnBeforeHandler<T> = (params: T) => T | Promise<T>;
+export type OnBeforeHandler<T> = (params: T) => T | Promise<T> | void | Promise<void>;
 type MessageListQueryParamsType = Omit<MessageCollectionParams, 'filter'> & MessageFilterParams;
 type MessageActions = ReturnType<typeof useMessageActions>;
 type MessageListDataSourceWithoutActions = Omit<ReturnType<typeof useGroupChannelMessages>, keyof MessageActions | `_dangerous_${string}`>;
