@@ -1,5 +1,19 @@
 # Changelog - v3
 
+## [v3.15.9] (Nov 21 2024)
+
+### Fixes:
+* Fixed error handling in message handlers:
+  * Allow void return type in `onBefore-` handlers
+  * Add proper error handling via `eventHandlers.message` for:
+    * onSendMessageFailed
+    * onUpdateMessageFailed
+    * onFileUploadFailed
+  * Users no longer need to return an empty object from `onBefore-` due to type constraints
+* Fixed a bug where profile bottom position was not updating correctly for messages with feedback and replies:
+  * Profile bottom position now updates properly when messages contain feedback and reply components
+  * Ensures consistent profile positioning across all message types and states
+
 ## [v3.15.8] (Nov 7th, 2024)
 
 ### Fixes:
