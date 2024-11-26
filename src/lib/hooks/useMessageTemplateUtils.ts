@@ -1,11 +1,10 @@
-import React from 'react';
 import { AppInfoStateType, MessageTemplatesInfo, ProcessedMessageTemplate } from '../dux/appInfo/initialState';
 import { SendbirdMessageTemplate } from '../../ui/TemplateMessageItemBody/types';
 import { getProcessedTemplate, getProcessedTemplatesMap } from '../dux/appInfo/utils';
 import SendbirdChat from '@sendbird/chat';
-import { APP_INFO_ACTIONS, AppInfoActionTypes } from '../dux/appInfo/actionTypes';
 import { CACHED_MESSAGE_TEMPLATES_KEY, CACHED_MESSAGE_TEMPLATES_TOKEN_KEY } from '../../utils/consts';
 import { LoggerInterface } from '../Logger';
+import useSendbird from '../Sendbird/context/hooks/useSendbird';
 
 const MESSAGE_TEMPLATES_FETCH_LIMIT = 20;
 
@@ -13,7 +12,7 @@ interface UseMessageTemplateUtilsProps {
   sdk: SendbirdChat,
   logger: LoggerInterface,
   appInfoStore: AppInfoStateType,
-  appInfoDispatcher: React.Dispatch<AppInfoActionTypes>,
+  actions: ReturnType<typeof useSendbird>['actions'],
 }
 
 export interface UseMessageTemplateUtilsWrapper {
@@ -22,18 +21,11 @@ export interface UseMessageTemplateUtilsWrapper {
   initializeMessageTemplatesInfo: (readySdk: SendbirdChat) => Promise<void>;
 }
 
-const {
-  INITIALIZE_MESSAGE_TEMPLATES_INFO,
-  UPSERT_MESSAGE_TEMPLATES,
-  UPSERT_WAITING_TEMPLATE_KEYS,
-  MARK_ERROR_WAITING_TEMPLATE_KEYS,
-} = APP_INFO_ACTIONS;
-
 export default function useMessageTemplateUtils({
   sdk,
   logger,
   appInfoStore,
-  appInfoDispatcher,
+  actions,
 }: UseMessageTemplateUtilsProps): UseMessageTemplateUtilsWrapper {
   const messageTemplatesInfo: MessageTemplatesInfo | undefined = appInfoStore?.messageTemplatesInfo;
 
@@ -107,7 +99,7 @@ export default function useMessageTemplateUtils({
         token: sdkMessageTemplateToken,
         templatesMap: getProcessedTemplatesMap(parsedTemplates),
       };
-      appInfoDispatcher({ type: INITIALIZE_MESSAGE_TEMPLATES_INFO, payload: newMessageTemplatesInfo });
+      actions.initMessageTemplateInfo({ payload: newMessageTemplatesInfo });
       localStorage.setItem(CACHED_MESSAGE_TEMPLATES_TOKEN_KEY, sdkMessageTemplateToken);
       localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify(parsedTemplates));
     } else if (
@@ -120,7 +112,7 @@ export default function useMessageTemplateUtils({
         token: sdkMessageTemplateToken,
         templatesMap: getProcessedTemplatesMap(parsedTemplates),
       };
-      appInfoDispatcher({ type: INITIALIZE_MESSAGE_TEMPLATES_INFO, payload: newMessageTemplatesInfo });
+      actions.initMessageTemplateInfo({ payload: newMessageTemplatesInfo });
     }
   };
 
@@ -133,65 +125,53 @@ export default function useMessageTemplateUtils({
     messageId: number,
     requestedAt: number,
   ): Promise<void> => {
-    if (appInfoDispatcher) {
-      appInfoDispatcher({
-        type: UPSERT_WAITING_TEMPLATE_KEYS,
-        payload: {
+    actions.upsertWaitingTemplateKeys({ keys: templateKeys, requestedAt } as any);
+    const newParsedTemplates: SendbirdMessageTemplate[] | null = [];
+    try {
+      let hasMore = true;
+      let token = null;
+      while (hasMore) {
+        const result = await sdk.message.getMessageTemplatesByToken(token, {
           keys: templateKeys,
-          requestedAt,
-        },
-      });
-      const newParsedTemplates: SendbirdMessageTemplate[] | null = [];
-      try {
-        let hasMore = true;
-        let token = null;
-        while (hasMore) {
-          const result = await sdk.message.getMessageTemplatesByToken(token, {
-            keys: templateKeys,
-          });
-          result.templates.forEach((newTemplate) => {
-            newParsedTemplates.push(JSON.parse(newTemplate.template));
-          });
-          hasMore = result.hasMore;
-          token = result.token;
-        }
-      } catch (e) {
-        logger?.error?.('Sendbird | fetchProcessedMessageTemplates failed', e, templateKeys);
-      }
-      if (newParsedTemplates.length > 0) {
-        // Update cache
-        const cachedMessageTemplates: string | null = localStorage.getItem(CACHED_MESSAGE_TEMPLATES_KEY);
-        if (cachedMessageTemplates) {
-          const parsedTemplates: SendbirdMessageTemplate[] = JSON.parse(cachedMessageTemplates);
-          const existingKeys = parsedTemplates.map((parsedTemplate) => parsedTemplate.key);
-          newParsedTemplates.forEach((newParsedTemplate) => {
-            if (!existingKeys.includes(newParsedTemplate.key)) {
-              parsedTemplates.push(newParsedTemplate);
-            }
-          });
-          localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify(parsedTemplates));
-        } else {
-          localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify([newParsedTemplates]));
-        }
-        // Update memory
-        appInfoDispatcher({
-          type: UPSERT_MESSAGE_TEMPLATES,
-          payload: newParsedTemplates.map((newParsedTemplate) => {
-            return {
-              key: newParsedTemplate.key,
-              template: getProcessedTemplate(newParsedTemplate),
-            };
-          }),
         });
+        result.templates.forEach((newTemplate) => {
+          newParsedTemplates.push(JSON.parse(newTemplate.template));
+        });
+        hasMore = result.hasMore;
+        token = result.token;
+      }
+    } catch (e) {
+      logger?.error?.('Sendbird | fetchProcessedMessageTemplates failed', e, templateKeys);
+    }
+    if (newParsedTemplates.length > 0) {
+      // Update cache
+      const cachedMessageTemplates: string | null = localStorage.getItem(CACHED_MESSAGE_TEMPLATES_KEY);
+      if (cachedMessageTemplates) {
+        const parsedTemplates: SendbirdMessageTemplate[] = JSON.parse(cachedMessageTemplates);
+        const existingKeys = parsedTemplates.map((parsedTemplate) => parsedTemplate.key);
+        newParsedTemplates.forEach((newParsedTemplate) => {
+          if (!existingKeys.includes(newParsedTemplate.key)) {
+            parsedTemplates.push(newParsedTemplate);
+          }
+        });
+        localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify(parsedTemplates));
       } else {
-        appInfoDispatcher({
-          type: MARK_ERROR_WAITING_TEMPLATE_KEYS,
-          payload: {
-            keys: templateKeys,
-            messageId,
-          },
-        });
+        localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify([newParsedTemplates]));
       }
+      // Update memory
+      actions.upsertMessageTemplates({
+        payload: newParsedTemplates.map((newParsedTemplate) => {
+          return {
+            key: newParsedTemplate.key,
+            template: getProcessedTemplate(newParsedTemplate),
+          };
+        })
+      } as any);
+    } else {
+      actions.markErrorWaitingTemplateKeys({
+        keys: templateKeys,
+        messageId,
+      } as any);
     }
   };
   return {

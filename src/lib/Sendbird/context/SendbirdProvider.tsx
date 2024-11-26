@@ -20,9 +20,7 @@ import PUBSUB_TOPICS, { SBUGlobalPubSubTopicPayloadUnion } from '../../pubSub/to
 /* Hooks */
 import useTheme from '../../hooks/useTheme';
 import useMessageTemplateUtils from '../../hooks/useMessageTemplateUtils';
-import useConnect from '../../hooks/useConnect';
 import { useUnmount } from '../../../hooks/useUnmount';
-import { disconnectSdk } from '../../hooks/useConnect/disconnectSdk';
 import useHTMLTextDirection from '../../../hooks/useHTMLTextDirection';
 import useOnlineStatus from '../../hooks/useOnlineStatus';
 import { useMarkAsReadScheduler } from '../../hooks/useMarkAsReadScheduler';
@@ -35,9 +33,9 @@ import { DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, DEFAULT_UPLOAD_SIZE_LIMIT, VOICE_
 import { EmojiReactionListRoot, MenuRoot } from '../../../ui/ContextMenu';
 
 // TODO: remove
-import { useReducer } from 'react';
 import { createStore } from '../../../utils/storeManager';
 import { initialState } from './initialState';
+import useSendbird from './hooks/useSendbird';
 
 /**
  * SendbirdContext
@@ -84,9 +82,9 @@ const SendbirdContextManager = ({
   const { isMobile } = useMediaQueryContext();
   const [logger, setLogger] = useState(LoggerFactory(logLevel as LogLevel));
   const [pubSub] = useState(() => customPubSub ?? pubSubFactory<PUBSUB_TOPICS, SBUGlobalPubSubTopicPayloadUnion>());
-  const [sdkStore, sdkDispatcher] = useReducer(sdkReducers, sdkInitialState);
-  const [userStore, userDispatcher] = useReducer(userReducers, userInitialState);
-  const [appInfoStore, appInfoDispatcher] = useReducer(appInfoReducers, appInfoInitialState);
+
+  const { state, actions } = useSendbird();
+  const { sdkStore, userStore, appInfoStore } = state.stores;
 
   const { configs, configsWithAppAttr, initDashboardConfigs } = useUIKitConfig();
 
@@ -100,7 +98,7 @@ const SendbirdContextManager = ({
     sdk,
     logger,
     appInfoStore,
-    appInfoDispatcher,
+    actions,
   });
 
   const utils: SendbirdProviderUtils = {
@@ -108,43 +106,34 @@ const SendbirdContextManager = ({
     getCachedTemplate,
   };
 
-  const reconnect = useConnect(
-    {
-      appId,
-      userId,
-      accessToken,
-      isUserIdUsedForNickname,
-      isMobile,
-    },
-    {
-      logger,
-      nickname,
-      profileUrl,
-      configureSession,
-      customApiHost,
-      customWebSocketHost,
-      sdkInitParams,
-      customExtensionParams,
-      sdk,
-      sdkDispatcher,
-      userDispatcher,
-      appInfoDispatcher,
-      initDashboardConfigs,
-      eventHandlers,
-      initializeMessageTemplatesInfo,
-    },
-  );
-
-  useUnmount(() => {
-    if (typeof sdk.disconnect === 'function') {
-      disconnectSdk({
+  // Reconnect when necessary
+  useEffect(() => {
+    if (sdkStore.sdk) {
+      actions.connect({
+        appId,
+        userId,
+        accessToken,
+        isUserIdUsedForNickname,
+        isMobile,
         logger,
-        sdkDispatcher,
-        userDispatcher,
-        sdk,
+        nickname,
+        profileUrl,
+        configureSession,
+        customApiHost,
+        customWebSocketHost,
+        sdkInitParams,
+        customExtensionParams,
+        initDashboardConfigs,
+        eventHandlers,
+        initializeMessageTemplatesInfo,
       });
     }
-  }, [sdk.disconnectWebSocket]);
+  }, [appId, userId]);
+
+  // Disconnect on unmount
+  useUnmount(() => {
+    actions.disconnect({ logger });
+  });
 
   // to create a pubsub to communicate between parent and child
   useEffect(() => {
@@ -217,16 +206,13 @@ const SendbirdContextManager = ({
   return (
     <SendbirdContext.Provider
       value={{
-        stores: {
-          sdkStore,
-          userStore,
-          appInfoStore,
-        },
+        stores: state.stores,
+        actions,
         // dispatchers: {
         //   sdkDispatcher,
         //   userDispatcher,
         //   appInfoDispatcher,
-        //   reconnect,
+        //   reconnect, -> actions.connect
         // },
         config: {
           disableMarkAsDelivered,
