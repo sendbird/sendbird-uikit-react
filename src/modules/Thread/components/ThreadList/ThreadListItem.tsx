@@ -47,7 +47,6 @@ export default function ThreadListItem(props: ThreadListItemProps): React.ReactE
   const { isOnline, userMention, logger, groupChannel } = config;
   const userId = stores?.userStore?.user?.userId;
   const { dateLocale, stringSet } = useLocalization();
-  const threadContext = useThread?.();
   const {
     state: {
       message: openingMessage,
@@ -65,7 +64,7 @@ export default function ThreadListItem(props: ThreadListItemProps): React.ReactE
       resendMessage,
       deleteMessage,
     },
-  } = threadContext;
+  } = useThread();
 
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);

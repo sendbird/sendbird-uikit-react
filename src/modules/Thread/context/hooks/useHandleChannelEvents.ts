@@ -38,6 +38,7 @@ export default function useHandleChannelEvents({
       onTypingStatusUpdated,
     },
   } = useThread();
+
   useEffect(() => {
     const handlerId = uuidv4();
     // validation check

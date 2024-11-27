@@ -35,6 +35,7 @@ export default function useGetChannel({
   useEffect(() => {
     // validation check
     if (sdkInit && channelUrl && sdk?.groupChannel) {
+      logger.info('Thread | useInitialize: Get channel started');
       getChannelStart();
       sdk.groupChannel.getChannel?.(channelUrl)
         .then((groupChannel) => {

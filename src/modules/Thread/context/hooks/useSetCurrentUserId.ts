@@ -17,7 +17,7 @@ function useSetCurrentUserId(
 
   useEffect(() => {
     setCurrentUserId(user?.userId);
-  }, [user]);
+  }, [user?.userId]);
 }
 
 export default useSetCurrentUserId;
