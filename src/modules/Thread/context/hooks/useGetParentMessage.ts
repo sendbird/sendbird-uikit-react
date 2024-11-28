@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import { Logger } from '../../../../lib/SendbirdState';
 import { BaseMessage, MessageRetrievalParams } from '@sendbird/chat/message';
-import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { ChannelType } from '@sendbird/chat';
 import { SdkStore } from '../../../../lib/types';
+import useThread from '../useThread';
 
 interface DynamicProps {
   channelUrl: string;
@@ -15,7 +15,6 @@ interface DynamicProps {
 interface StaticProps {
   sdk: SdkStore['sdk'];
   logger: Logger;
-  threadDispatcher: CustomUseReducerDispatcher;
 }
 
 export default function useGetParentMessage({
@@ -25,15 +24,19 @@ export default function useGetParentMessage({
 }: DynamicProps, {
   sdk,
   logger,
-  threadDispatcher,
 }: StaticProps): void {
+  const {
+    actions: {
+      getParentMessageStart,
+      getParentMessageSuccess,
+      getParentMessageFailure,
+    },
+  } = useThread();
+
   useEffect(() => {
     // validation check
     if (sdkInit && sdk?.message?.getMessage && parentMessage) {
-      threadDispatcher({
-        type: ThreadContextActionTypes.GET_PARENT_MESSAGE_START,
-        payload: null,
-      });
+      getParentMessageStart();
       const params: MessageRetrievalParams = {
         channelUrl,
         channelType: ChannelType.GROUP,
@@ -49,17 +52,12 @@ export default function useGetParentMessage({
           logger.info('Thread | useGetParentMessage: Get parent message succeeded.', parentMessage);
           // @ts-ignore
           parentMsg.ogMetaData = parentMessage?.ogMetaData || null;// ogMetaData is not included for now
-          threadDispatcher({
-            type: ThreadContextActionTypes.GET_PARENT_MESSAGE_SUCCESS,
-            payload: { parentMessage: parentMsg },
-          });
+          // @ts-ignore
+          getParentMessageSuccess(parentMsg);
         })
         .catch((error) => {
           logger.info('Thread | useGetParentMessage: Get parent message failed.', error);
-          threadDispatcher({
-            type: ThreadContextActionTypes.GET_PARENT_MESSAGE_FAILURE,
-            payload: error,
-          });
+          getParentMessageFailure();
         });
     }
   }, [sdkInit, parentMessage?.messageId]);

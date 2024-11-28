@@ -5,7 +5,6 @@ import './index.scss';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
-import { useThreadContext } from '../../context/ThreadProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 
 import MessageInput from '../../../../ui/MessageInput';
@@ -19,6 +18,7 @@ import { useHandleUploadFiles } from '../../../Channel/context/hooks/useHandleUp
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channel/context/utils';
 import { User } from '@sendbird/chat';
 import { classnames } from '../../../../utils/utils';
+import useThread from '../../context/useThread';
 
 export interface ThreadMessageInputProps {
   className?: string;
@@ -45,23 +45,27 @@ const ThreadMessageInput = (
   const { isMobile } = useMediaQueryContext();
   const { stringSet } = useLocalization();
   const { isOnline, userMention, logger, groupChannel } = config;
-  const threadContext = useThreadContext();
+  const threadContext = useThread();
   const {
-    currentChannel,
-    parentMessage,
-    sendMessage,
-    sendFileMessage,
-    sendVoiceMessage,
-    sendMultipleFilesMessage,
-    isMuted,
-    isChannelFrozen,
-    allThreadMessages,
+    state: {
+      currentChannel,
+      parentMessage,
+      isMuted,
+      isChannelFrozen,
+      allThreadMessages,
+    },
+    actions: {
+      sendMessage,
+      sendFileMessage,
+      sendVoiceMessage,
+      sendMultipleFilesMessage,
+    },
   } = threadContext;
   const messageInputRef = useRef();
 
   const isMentionEnabled = groupChannel.enableMention;
   const isVoiceMessageEnabled = groupChannel.enableVoiceMessage;
-  const isMultipleFilesMessageEnabled = threadContext.isMultipleFilesMessageEnabled ?? config.isMultipleFilesMessageEnabled;
+  const isMultipleFilesMessageEnabled = threadContext.state.isMultipleFilesMessageEnabled ?? config.isMultipleFilesMessageEnabled;
 
   const threadInputDisabled = props.disabled
     || !isOnline
