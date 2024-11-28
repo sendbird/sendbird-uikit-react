@@ -10,7 +10,6 @@ import { getSenderName, SendableMessageType } from '../../../../utils';
 import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useThreadContext } from '../../context/ThreadProvider';
 import { useUserProfileContext } from '../../../../lib/UserProfileContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 
@@ -32,6 +31,7 @@ import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyTyp
 import { classnames } from '../../../../utils/utils';
 import { MessageMenu, MessageMenuProps } from '../../../../ui/MessageMenu';
 import useElementObserver from '../../../../hooks/useElementObserver';
+import useThread from '../../context/useThread';
 
 export interface ParentMessageInfoProps {
   className?: string;
@@ -49,20 +49,24 @@ export default function ParentMessageInfo({
   const userId = stores.userStore.user?.userId ?? '';
   const { dateLocale, stringSet } = useLocalization();
   const {
-    currentChannel,
-    parentMessage,
-    allThreadMessages,
-    emojiContainer,
-    toggleReaction,
-    updateMessage,
-    deleteMessage,
-    onMoveToParentMessage,
-    onHeaderActionClick,
-    isMuted,
-    isChannelFrozen,
-    onBeforeDownloadFileMessage,
-    filterEmojiCategoryIds,
-  } = useThreadContext();
+    state: {
+      currentChannel,
+      parentMessage,
+      allThreadMessages,
+      emojiContainer,
+      onMoveToParentMessage,
+      onHeaderActionClick,
+      isMuted,
+      isChannelFrozen,
+      onBeforeDownloadFileMessage,
+      filterEmojiCategoryIds,
+    },
+    actions: {
+      toggleReaction,
+      updateMessage,
+      deleteMessage,
+    },
+  } = useThread();
   const { isMobile } = useMediaQueryContext();
 
   const isMenuMounted = useElementObserver(

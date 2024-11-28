@@ -7,7 +7,6 @@ import DateSeparator from '../../../../ui/DateSeparator';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import RemoveMessage from '../RemoveMessageModal';
 import FileViewer from '../../../../ui/FileViewer';
-import { useThreadContext } from '../../context/ThreadProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 import MessageInput from '../../../../ui/MessageInput';
@@ -22,6 +21,7 @@ import { User } from '@sendbird/chat';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
 import { classnames } from '../../../../utils/utils';
 import { MessageComponentRenderers } from '../../../../ui/MessageContent';
+import useThread from '../../context/useThread';
 
 export interface ThreadListItemProps extends MessageComponentRenderers {
   className?: string;
@@ -47,21 +47,24 @@ export default function ThreadListItem(props: ThreadListItemProps): React.ReactE
   const { isOnline, userMention, logger, groupChannel } = config;
   const userId = stores?.userStore?.user?.userId;
   const { dateLocale, stringSet } = useLocalization();
-  const threadContext = useThreadContext?.();
   const {
-    currentChannel,
-    nicknamesMap,
-    emojiContainer,
-    toggleReaction,
-    threadListState,
-    updateMessage,
-    resendMessage,
-    deleteMessage,
-    isMuted,
-    isChannelFrozen,
-    onBeforeDownloadFileMessage,
-  } = threadContext;
-  const openingMessage = threadContext?.message;
+    state: {
+      message: openingMessage,
+      currentChannel,
+      nicknamesMap,
+      emojiContainer,
+      threadListState,
+      isMuted,
+      isChannelFrozen,
+      onBeforeDownloadFileMessage,
+    },
+    actions: {
+      toggleReaction,
+      updateMessage,
+      resendMessage,
+      deleteMessage,
+    },
+  } = useThread();
 
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
