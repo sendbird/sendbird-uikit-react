@@ -2,7 +2,8 @@ import { SendbirdState } from "../../types";
 import useSendbird from "./useSendbird";
 
 /**
- * This hook is exported to support backward compatibility. Do not use this hook internally.
+ * NOTE: Do not use this hook internally.
+ * This hook is exported to support backward compatibility.
  */
 /**
  * @deprecated This hook has been deprecated, please use `useSendbird` instead.

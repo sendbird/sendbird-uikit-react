@@ -14,10 +14,13 @@ export const useSendbird = () => {
   
   const state = useSyncExternalStore(store.subscribe, store.getState);
   const actions = useMemo(() => ({
-    // actionExample: () => store.setState((state): SendbirdState => ({
-    //   ...state,
-    //   example: true,
-    // })),
+    /* Example: How to set the state basically */
+    // exampleAction: () => {
+    //   store.setState((state): SendbirdState => ({
+    //     ...state,
+    //     example: true,
+    //   })),
+    // },
     
     /* AppInfo */
     initMessageTemplateInfo: ({ payload }: { payload: MessageTemplatesInfo }) => {

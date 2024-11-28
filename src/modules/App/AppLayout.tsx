@@ -21,8 +21,8 @@ export const AppLayout = (props: AppLayoutProps) => {
     enableLegacyChannelModules,
   } = props;
 
-  // const { state } = useSendbird();
-  // const globalConfigs = state.config;
+  const { state } = useSendbird();
+  const globalConfigs = state.config;
 
   const [showThread, setShowThread] = useState(false);
   const [threadTargetMessage, setThreadTargetMessage] = useState<SendableMessageType | null>(null);
@@ -36,12 +36,9 @@ export const AppLayout = (props: AppLayoutProps) => {
    * Below configs can be set via Dashboard UIKit config setting but as a lower priority than App props.
    * So need to be have fallback value \w global configs even though each prop values are undefined
    */
-  const replyType = props.replyType;
-  const isReactionEnabled = props.isReactionEnabled;
-  const showSearchIcon = props.showSearchIcon;
-  // const replyType = props.replyType ?? getCaseResolvedReplyType(globalConfigs.groupChannel.replyType).upperCase;
-  // const isReactionEnabled = props.isReactionEnabled ?? globalConfigs.groupChannel.enableReactions;
-  // const showSearchIcon = props.showSearchIcon ?? globalConfigs.groupChannelSettings.enableMessageSearch;
+  const replyType = props.replyType ?? getCaseResolvedReplyType(globalConfigs.groupChannel.replyType).upperCase;
+  const isReactionEnabled = props.isReactionEnabled ?? globalConfigs.groupChannel.enableReactions;
+  const showSearchIcon = props.showSearchIcon ?? globalConfigs.groupChannelSettings.enableMessageSearch;
 
   return (
     <>

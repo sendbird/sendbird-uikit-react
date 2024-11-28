@@ -101,7 +101,7 @@ const stores: SendbirdStateStore = {
   },
   appInfoStore: {
     messageTemplatesInfo: undefined,
-    waitingTemplateKeysMap: undefined,
+    waitingTemplateKeysMap: {},
   },
 };
 
