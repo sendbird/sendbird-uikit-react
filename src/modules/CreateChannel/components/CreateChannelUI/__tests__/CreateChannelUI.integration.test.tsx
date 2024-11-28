@@ -51,19 +51,18 @@ const mockLocalizationContext = {
 
 const defaultMockState = {
   sdk: undefined,
-  createChannel: undefined,
   userListQuery: undefined,
   onCreateChannelClick: undefined,
   onChannelCreated: undefined,
   onBeforeCreateChannel: undefined,
-  step: 0,
+  pageStep: 0,
   type: CHANNEL_TYPE.GROUP,
   onCreateChannel: undefined,
   overrideInviteUser: undefined,
 };
 
 const defaultMockActions = {
-  setStep: jest.fn(),
+  setPageStep: jest.fn(),
   setType: jest.fn(),
 };
 
@@ -96,15 +95,15 @@ describe('CreateChannelUI Integration Tests', () => {
     expect(screen.getByText('CREATE_CHANNEL')).toBeInTheDocument();
   });
 
-  it('display SelectChannelType when step is 0', () => {
-    renderComponent({ step: 0 });
+  it('display SelectChannelType when pageStep is 0', () => {
+    renderComponent({ pageStep: 0 });
 
     expect(screen.getByText('CREATE_CHANNEL')).toBeInTheDocument();
   });
 
-  it('display InviteUsers when step is 1', async () => {
+  it('display InviteUsers when pageStep is 1', async () => {
     await act(async () => {
-      renderComponent({ step: 1 });
+      renderComponent({ pageStep: 1 });
     });
 
     expect(screen.getByText('0 USERS_SELECTED')).toBeInTheDocument();
