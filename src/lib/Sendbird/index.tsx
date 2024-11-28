@@ -10,6 +10,8 @@ import { uikitConfigStorage } from '../utils/uikitConfigStorage';
 import { SendbirdContextProvider } from './context/SendbirdProvider';
 import useSendbird from './context/hooks/useSendbird';
 
+export { SendbirdProviderProps } from './types';
+
 // For Exportation
 export const SendbirdProvider = (props: SendbirdProviderProps) => {
   const localConfigs: UIKitOptions = uikitConfigMapper({
