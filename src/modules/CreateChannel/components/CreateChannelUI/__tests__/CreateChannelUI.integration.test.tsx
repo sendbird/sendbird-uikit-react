@@ -1,40 +1,48 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
-import InviteUsers from '../index';
-import { ApplicationUserListQuery } from '@sendbird/chat';
-import { CHANNEL_TYPE } from '../../../types';
 import * as useCreateChannelModule from '../../../context/useCreateChannel';
+import { CHANNEL_TYPE } from '../../../types';
+import { act, render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 import { LocalizationContext } from '../../../../../lib/LocalizationContext';
+import CreateChannelUI from '../index';
 
 jest.mock('../../../../../hooks/useSendbirdStateContext', () => ({
   __esModule: true,
   default: jest.fn(() => ({
     stores: {
+      userStore: {
+        user: {
+          userId: ' test-user-id',
+        },
+      },
       sdkStore: {
         sdk: {
           currentUser: {
             userId: 'test-user-id',
           },
+          createApplicationUserListQuery: () => ({
+            next: () => Promise.resolve([{ userId: 'test-user-id' }]),
+            isLoading: false,
+          }),
         },
         initialized: true,
       },
     },
-    config: { logger: console },
+    config: {
+      logger: console,
+      userId: 'test-user-id',
+      groupChannel: {
+        enableMention: true,
+      },
+      isOnline: true,
+    },
   })),
 }));
 jest.mock('../../../context/useCreateChannel');
 
-// Mock createPortal function to render content directly without portal
-jest.mock('react-dom', () => ({
-  ...jest.requireActual('react-dom'),
-  createPortal: (node) => node,
-}));
-
 const mockStringSet = {
   MODAL__CREATE_CHANNEL__TITLE: 'CREATE_CHANNEL',
   MODAL__INVITE_MEMBER__SELECTED: 'USERS_SELECTED',
-  BUTTON__CREATE: 'CREATE',
 };
 
 const mockLocalizationContext = {
@@ -43,62 +51,62 @@ const mockLocalizationContext = {
 
 const defaultMockState = {
   sdk: undefined,
-  createChannel: undefined,
   userListQuery: undefined,
   onCreateChannelClick: undefined,
   onChannelCreated: undefined,
   onBeforeCreateChannel: undefined,
-  step: 0,
+  pageStep: 0,
   type: CHANNEL_TYPE.GROUP,
   onCreateChannel: undefined,
   overrideInviteUser: undefined,
 };
 
 const defaultMockActions = {
-  setStep: jest.fn(),
+  setPageStep: jest.fn(),
   setType: jest.fn(),
 };
 
-const defaultMockInvitUserState = {
-  user: { userId: 'test-user-id' },
-};
-
-describe('InviteUsers', () => {
+describe('CreateChannelUI Integration Tests', () => {
   const mockUseCreateChannel = useCreateChannelModule.default as jest.Mock;
 
-  const renderComponent = (mockState = {}, mockActions = {}, mockInviteUsersState = {}) => {
+  const renderComponent = (mockState = {}, mockActions = {}) => {
     mockUseCreateChannel.mockReturnValue({
       state: { ...defaultMockState, ...mockState },
       actions: { ...defaultMockActions, ...mockActions },
     });
 
-    const inviteUserProps = { ...defaultMockInvitUserState, ...mockInviteUsersState };
-
     return render(
       <LocalizationContext.Provider value={mockLocalizationContext as any}>
-        <InviteUsers {...inviteUserProps}/>
+        <CreateChannelUI />
       </LocalizationContext.Provider>,
     );
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
+    document.body.innerHTML = `
+      <div id='sendbird-modal-root' />
+    `;
   });
 
-  it('should enable the modal submit button when there is only the logged-in user is in the user list', async () => {
-    const userListQuery = jest.fn(
-      () => ({
-        hasNext: false,
-        next: jest.fn().mockResolvedValue([{ userId: 'user1' }]),
-      } as unknown as ApplicationUserListQuery),
-    );
+  it('display initial state correctly', () => {
+    renderComponent();
 
-    renderComponent({}, {}, { userListQuery });
-
-    expect(await screen.findByText('CREATE')).toBeEnabled();
+    expect(screen.getByText('CREATE_CHANNEL')).toBeInTheDocument();
   });
 
-  // TODO: add this case too
-  // it('should disable the modal submit button when there are users on the list but none are checked', () => {
-  // })
+  it('display SelectChannelType when pageStep is 0', () => {
+    renderComponent({ pageStep: 0 });
+
+    expect(screen.getByText('CREATE_CHANNEL')).toBeInTheDocument();
+  });
+
+  it('display InviteUsers when pageStep is 1', async () => {
+    await act(async () => {
+      renderComponent({ pageStep: 1 });
+    });
+
+    expect(screen.getByText('0 USERS_SELECTED')).toBeInTheDocument();
+  });
+
 });
