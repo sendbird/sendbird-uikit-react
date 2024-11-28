@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import {
   FileMessage,
@@ -7,8 +8,8 @@ import {
   UploadableFileInfo,
   UserMessage,
 } from '@sendbird/chat/message';
-import { useCallback } from 'react';
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+
+import type { CustomUseReducerDispatcher, Logger } from '../../../../lib/Sendbird/types';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import type { Logger } from '../../../../lib/SendbirdState';
-import { SdkStore } from '../../../../lib/types';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import useChannelSettings from '../useChannelSettings';
 
 interface Props {

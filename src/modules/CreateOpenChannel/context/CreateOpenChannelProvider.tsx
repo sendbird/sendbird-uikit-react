@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { OpenChannel, OpenChannelCreateParams } from '@sendbird/chat/openChannel';
-import { Logger } from '../../../lib/SendbirdState';
-import { SdkStore } from '../../../lib/types';
+import { SdkStore, Logger } from '../../../lib/Sendbird/types';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface CreateNewOpenChannelCallbackProps {

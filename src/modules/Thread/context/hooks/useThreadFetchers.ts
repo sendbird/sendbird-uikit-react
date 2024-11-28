@@ -1,8 +1,9 @@
-import { ThreadContextActionTypes } from '../dux/actionTypes';
-import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from '../../consts';
 import { BaseMessage, ThreadedMessageListParams } from '@sendbird/chat/message';
+import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from '../../consts';
+import { ThreadContextActionTypes } from '../dux/actionTypes';
+
+import type { CustomUseReducerDispatcher } from '../../../../lib/Sendbird/types';
 import { SendableMessageType } from '../../../../utils';
-import { CustomUseReducerDispatcher } from '../../../../lib/SendbirdState';
 import { LoggerInterface } from '../../../../lib/Logger';
 import { useCallback } from 'react';
 import { ThreadListStateTypes } from '../../types';

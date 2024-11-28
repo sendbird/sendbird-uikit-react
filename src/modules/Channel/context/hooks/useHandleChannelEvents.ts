@@ -9,7 +9,7 @@ import * as messageActions from '../dux/actionTypes';
 import { SendableMessageType } from '../../../../utils';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import { LoggerInterface } from '../../../../lib/Logger';
-import { SdkStore } from '../../../../lib/types';
+import type { SdkStore } from '../../../../lib/Sendbird/types';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 /**

@@ -45,6 +45,11 @@ import { StringSet } from '../../ui/Label/stringSet';
 
 export type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
 export type ConfigureSessionTypes = (sdk: SendbirdChat | SendbirdGroupChat | SendbirdOpenChat) => SessionHandler;
+// Sendbird state dispatcher
+export type CustomUseReducerDispatcher = React.Dispatch<{
+  type: string;
+  payload: any;
+}>;
 
 /* -------------------------------------------------------------------------- */
 /*                            Common Types                                    */
@@ -62,12 +67,6 @@ export interface ImageCompressionOptions {
 
 // Logger type
 export type Logger = LoggerInterface;
-
-// Sendbird state dispatcher
-export type CustomUseReducerDispatcher = React.Dispatch<{
-  type: string;
-  payload: any;
-}>;
 
 // Roles for a user in a channel
 export const Role = {
@@ -112,16 +111,6 @@ export type ProcessedMessageTemplate = {
   uiTemplate: string; // This is stringified ui_template.body.items
   colorVariables?: Record<string, string>;
 };
-
-export interface MessageTemplatesInfo {
-  token: string; // This server-side token gets updated on every CRUD operation on message template table.
-  templatesMap: Record<string, ProcessedMessageTemplate>;
-}
-
-export interface WaitingTemplateKeyData {
-  requestedAt: number;
-  erroredMessageIds: number[];
-}
 
 export interface AppInfoStateType {
   messageTemplatesInfo?: MessageTemplatesInfo;

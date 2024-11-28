@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import ChannelSettingsUI from '../components/ChannelSettingsUI';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import * as useChannelSettingsModule from '../context/useChannelSettings';
-import { SendbirdSdkContext } from '../../../lib/SendbirdSdkContext';
+import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
 
 jest.mock('../context/useChannelSettings');
 
@@ -46,11 +46,11 @@ describe('ChannelSettings Integration Tests', () => {
     });
 
     return render(
-      <SendbirdSdkContext.Provider value={{ config: { isOnline: true } } as any}>
+      <SendbirdContext.Provider value={{ config: { isOnline: true } } as any}>
         <LocalizationContext.Provider value={mockLocalizationContext as any}>
           <ChannelSettingsUI />
         </LocalizationContext.Provider>
-      </SendbirdSdkContext.Provider>,
+      </SendbirdContext.Provider>,
     );
   };
 

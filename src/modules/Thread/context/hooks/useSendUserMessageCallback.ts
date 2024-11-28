@@ -3,7 +3,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { UserMessage, UserMessageCreateParams } from '@sendbird/chat/message';
 import { User } from '@sendbird/chat';
 
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import type { CustomUseReducerDispatcher, Logger } from '../../../../lib/Sendbird/types';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';

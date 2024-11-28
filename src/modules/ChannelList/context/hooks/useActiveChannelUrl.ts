@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import * as messageActionTypes from '../../dux/actionTypes';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { Logger } from '../../../../lib/SendbirdState';
-import { SdkStore } from '../../../../lib/types';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 
 export type DynamicProps = {
   activeChannelUrl?: string;

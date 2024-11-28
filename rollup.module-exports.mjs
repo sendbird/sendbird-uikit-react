@@ -10,7 +10,7 @@ export default {
   App: 'src/modules/App/index.tsx',
 
   // SendbirdProvider
-  SendbirdProvider: 'src/lib/Sendbird.tsx',
+  SendbirdProvider: 'src/lib/Sendbird/index.tsx',
   sendbirdSelectors: 'src/lib/selectors.ts',
   // TODO: Support below legacy exports
   // useSendbirdStateContext: 'src/hooks/useSendbirdStateContext.tsx',

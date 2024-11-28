@@ -52,7 +52,8 @@ type ContextAwareComponentType = {
   (props: any): JSX.Element;
   displayName: string;
 };
-const withSendbirdContext = (OriginalComponent: any, mapStoreToProps: Record<string, any>): ContextAwareComponentType => {
+type PropsType = Record<string, any>;
+const withSendbirdContext = (OriginalComponent: any, mapStoreToProps: (props: any) => PropsType): ContextAwareComponentType => {
   const ContextAwareComponent = (props) => {
     const { state, actions } = useSendbird();
     const context = { ...state, ...actions };

@@ -1,6 +1,6 @@
 import type { UserMessageUpdateParams } from '@sendbird/chat/message';
 
-import type { Logger } from '../../../../lib/SendbirdState';
+import type { Logger } from '../../../../lib/Sendbird/types';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 import { useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';

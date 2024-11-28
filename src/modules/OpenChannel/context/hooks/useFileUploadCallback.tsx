@@ -2,11 +2,9 @@ import React, { useCallback } from 'react';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 import type { FileMessageCreateParams } from '@sendbird/chat/message';
 
-import type { Logger } from '../../../../lib/SendbirdState';
-import type { ImageCompressionOptions } from '../../../../lib/Sendbird/types';
+import type { Logger, SdkStore, ImageCompressionOptions } from '../../../../lib/Sendbird/types';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
-import { SdkStore } from '../../../../lib/types';
 import { compressImages } from '../../../../utils/compressImages';
 import { useGlobalModalContext } from '../../../../hooks/useModal';
 import { useLocalization } from '../../../../lib/LocalizationContext';

@@ -4,8 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom/matchers';
 import InviteUsers from '../index';
 import { ApplicationUserListQuery } from '@sendbird/chat';
-import { SendbirdSdkContext } from '../../../../../lib/SendbirdSdkContext';
-import { SendBirdState } from '../../../../../lib/types';
+import { SendbirdContext } from '../../../../../lib/Sendbird/context/SendbirdContext';
 
 jest.mock('../../../context/CreateChannelProvider', () => ({
   useCreateChannelContext: jest.fn(() => ({
@@ -33,9 +32,9 @@ describe('InviteUsers', () => {
     );
 
     render(
-      <SendbirdSdkContext.Provider value={{} as SendBirdState}>
+      <SendbirdContext.Provider value={{} as any}>
         <InviteUsers userListQuery={userListQuery} />
-      </SendbirdSdkContext.Provider>,
+      </SendbirdContext.Provider>,
     );
 
     expect(await screen.findByText('Create')).toBeEnabled();

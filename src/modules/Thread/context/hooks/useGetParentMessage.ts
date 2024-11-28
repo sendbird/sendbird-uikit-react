@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
 
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import type { CustomUseReducerDispatcher, Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import { BaseMessage, MessageRetrievalParams } from '@sendbird/chat/message';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { ChannelType } from '@sendbird/chat';
-import { SdkStore } from '../../../../lib/types';
 
 interface DynamicProps {
   channelUrl: string;

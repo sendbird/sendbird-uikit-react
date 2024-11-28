@@ -1,10 +1,9 @@
 import { useCallback } from 'react';
 
-import { Logger } from '../../../../lib/SendbirdState';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import createChannelListQuery from './createChannelListQuery';
 import { OpenChannelListDispatcherType, UserFilledOpenChannelListQuery } from '../OpenChannelListInterfaces';
 import OpenChannelListActionTypes from '../dux/actionTypes';
-import { SdkStore } from '../../../../lib/types';
 
 interface DynamicParams {
   sdk: SdkStore['sdk'];
