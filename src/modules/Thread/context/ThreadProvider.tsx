@@ -2,8 +2,7 @@ import React, { useMemo, useEffect, useRef } from 'react';
 import { type EmojiCategory, EmojiContainer } from '@sendbird/chat';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import type {
-  BaseMessage, FileMessage,
-  FileMessageCreateParams, MultipleFilesMessage,
+  FileMessageCreateParams,
   MultipleFilesMessageCreateParams,
   UserMessageCreateParams,
 } from '@sendbird/chat/message';
@@ -12,18 +11,12 @@ import { getNicknamesMapFromMembers, getParentMessageFrom } from './utils';
 import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
 import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 
-import { ThreadContextInitialState } from './dux/initialState';
-
 import type { OnBeforeDownloadFileMessageType } from '../../GroupChannel/context/types';
 import useGetChannel from './hooks/useGetChannel';
 import useGetAllEmoji from './hooks/useGetAllEmoji';
 import useGetParentMessage from './hooks/useGetParentMessage';
 import useHandleThreadPubsubEvents from './hooks/useHandleThreadPubsubEvents';
 import useHandleChannelEvents from './hooks/useHandleChannelEvents';
-import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
-import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
-import { SendMessageParams } from './hooks/useSendUserMessageCallback';
-import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { CoreMessageType, SendableMessageType } from '../../../utils';
 import { createStore } from '../../../utils/storeManager';
 import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../types';
@@ -45,22 +38,6 @@ export interface ThreadProviderProps extends
   onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
   isMultipleFilesMessageEnabled?: boolean;
   filterEmojiCategoryIds?: (message: SendableMessageType) => EmojiCategory['id'][];
-}
-
-// actions
-export interface ThreadProviderInterface extends ThreadProviderProps, ThreadContextInitialState {
-  // hooks for fetching threads
-  fetchPrevThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
-  fetchNextThreads: (callback?: (messages?: Array<BaseMessage>) => void) => void;
-  toggleReaction: ReturnType<typeof useToggleReactionCallback>;
-  sendMessage: (props: SendMessageParams) => void;
-  sendFileMessage: (file: File, quoteMessage?: SendableMessageType) => Promise<FileMessage>;
-  sendVoiceMessage: ReturnType<typeof useSendVoiceMessageCallback>;
-  sendMultipleFilesMessage: (files: Array<File>, quoteMessage?: SendableMessageType) => Promise<MultipleFilesMessage>,
-  resendMessage: (failedMessage: SendableMessageType) => void;
-  updateMessage: ReturnType<typeof useUpdateMessageCallback>;
-  deleteMessage: (message: SendableMessageType) => Promise<void>;
-  nicknamesMap: Map<string, string>;
 }
 
 export interface ThreadState {
