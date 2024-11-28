@@ -1,6 +1,6 @@
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { useCallback } from 'react';
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import type { CustomUseReducerDispatcher, Logger } from '../../../../lib/Sendbird/types';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { SendableMessageType } from '../../../../utils';
 

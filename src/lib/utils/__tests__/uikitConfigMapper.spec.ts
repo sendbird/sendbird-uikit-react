@@ -1,6 +1,6 @@
+import type { CommonUIKitConfigProps, UIKitOptions } from '../../Sendbird/types';
 import { getCaseResolvedReplyType } from '../resolvedReplyType';
 import { uikitConfigMapper } from '../uikitConfigMapper';
-import { CommonUIKitConfigProps, UIKitOptions } from '../../types';
 
 const mockLegacyConfig = {
   // common related

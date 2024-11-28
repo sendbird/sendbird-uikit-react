@@ -1,8 +1,8 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { ChannelSettingsProvider, useChannelSettingsContext } from '../context/ChannelSettingsProvider';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { SendbirdSdkContext } from '../../../lib/SendbirdSdkContext';
+import useSendbirdStateContext from '../../../lib/Sendbird/context/hooks/useSendbirdStateContext';
+import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
 
 jest.mock('../../../hooks/useSendbirdStateContext');
 jest.mock('../context/hooks/useSetChannel');
@@ -39,11 +39,11 @@ describe('ChannelSettingsProvider', () => {
     });
 
     wrapper = ({ children }) => (
-      <SendbirdSdkContext.Provider value={{ config: { logger: mockLogger } } as any}>
+      <SendbirdContext.Provider value={{ config: { logger: mockLogger } } as any}>
         <ChannelSettingsProvider channelUrl="test-channel">
           {children}
         </ChannelSettingsProvider>
-      </SendbirdSdkContext.Provider>
+      </SendbirdContext.Provider>
     );
 
     jest.clearAllMocks();

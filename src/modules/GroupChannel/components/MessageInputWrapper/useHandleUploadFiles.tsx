@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 
-import { Logger } from '../../../../lib/SendbirdState';
+import type { Logger } from '../../../../lib/Sendbird/types';
 import { isImage, SendableMessageType } from '../../../../utils';
 import { useGlobalModalContext } from '../../../../hooks/useModal';
 import { ButtonTypes } from '../../../../ui/Button';

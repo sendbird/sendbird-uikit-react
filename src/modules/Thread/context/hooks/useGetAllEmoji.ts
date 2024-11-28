@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import type { CustomUseReducerDispatcher, Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
-import { SdkStore } from '../../../../lib/types';
 
 interface DanamicPrpos {
   sdk: SdkStore['sdk'];

@@ -7,7 +7,7 @@ import type {
 
 import { getCreateGroupChannel } from '../../../lib/selectors';
 import { CHANNEL_TYPE } from '../types';
-import { SendbirdChatType } from '../../../lib/types';
+import { SendbirdChatType } from '../../../lib/Sendbird/types';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 const CreateChannelContext = React.createContext<CreateChannelContextInterface | null>(null);

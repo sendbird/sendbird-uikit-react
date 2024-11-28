@@ -12,7 +12,7 @@ import type {
   OpenChannelListQuery,
   SendbirdOpenChat,
 } from '@sendbird/chat/openChannel';
-import withSendBird from '../../../lib/SendbirdSdkContext';
+import { withSendBird } from '../../../lib/Sendbird/index';
 import * as sendbirdSelectors from '../../../lib/selectors';
 
 import './community-channel-list.scss';

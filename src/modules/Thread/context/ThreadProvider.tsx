@@ -10,7 +10,7 @@ import type {
 
 import { getNicknamesMapFromMembers, getParentMessageFrom } from './utils';
 import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
-import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
+import { CustomUseReducerDispatcher } from '../../../lib/Sendbird/types';
 
 import threadReducer from './dux/reducer';
 import { ThreadContextActionTypes } from './dux/actionTypes';

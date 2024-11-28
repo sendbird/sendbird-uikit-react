@@ -16,7 +16,7 @@ import ThumbnailMessageItemBody from '../../ThumbnailMessageItemBody';
 import UnknownMessageItemBody from '../../UnknownMessageItemBody';
 import { useThreadMessageKindKeySelector } from '../../../modules/Channel/context/hooks/useThreadMessageKindKeySelector';
 import { useFileInfoListWithUploaded } from '../../../modules/Channel/context/hooks/useFileInfoListWithUploaded';
-import { SendBirdStateConfig } from '../../../lib/types';
+import type { SendbirdStateConfig } from '../../../lib/Sendbird/types';
 import { Nullable, SendbirdTheme } from '../../../types';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { match } from 'ts-pattern';
@@ -42,7 +42,7 @@ export interface MessageBodyProps {
 
   mouseHover: boolean;
   isMobile: boolean;
-  config: SendBirdStateConfig;
+  config: SendbirdStateConfig;
   isReactionEnabledInChannel: boolean;
   isByMe: boolean;
 }

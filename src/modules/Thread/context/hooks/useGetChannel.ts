@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
 
-import { Logger } from '../../../../lib/SendbirdState';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { SendableMessageType } from '../../../../utils';
-import { SdkStore } from '../../../../lib/types';
 
 interface DynamicProps {
   channelUrl: string;

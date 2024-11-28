@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 
-import withSendBird from '../../../lib/SendbirdSdkContext';
+import { withSendBird } from '../../../lib/Sendbird/index';
 import * as sendbirdSelectors from '../../../lib/selectors';
 
 import './streaming-channel-list.scss';
