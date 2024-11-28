@@ -24,12 +24,11 @@ jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
 
 const initialState = {
   sdk: undefined,
-  createChannel: undefined,
   userListQuery: undefined,
   onCreateChannelClick: undefined,
   onChannelCreated: expect.any(Function),
   onBeforeCreateChannel: undefined,
-  step: 0,
+  pageStep: 0,
   type: CHANNEL_TYPE.GROUP,
   onCreateChannel: undefined,
   overrideInviteUser: undefined,

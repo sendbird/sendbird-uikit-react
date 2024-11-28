@@ -69,7 +69,7 @@ describe('CreateChannelProvider', () => {
 
     const { result } = renderHook(() => useCreateChannel(), { wrapper });
     await act(async () => {
-      result.current.actions.setStep(1);
+      result.current.actions.setPageStep(1);
       await waitFor(() => {
         const updatedState = result.current.state;
         expect(updatedState.pageStep).toEqual(1);

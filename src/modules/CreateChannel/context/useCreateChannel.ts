@@ -12,9 +12,9 @@ const useCreateChannel = () => {
 
   const state: CreateChannelState = useSyncExternalStore(store.subscribe, store.getState);
   const actions = useMemo(() => ({
-    setStep: (step: number) => store.setState(state => ({
+    setPageStep: (pageStep: number) => store.setState(state => ({
       ...state,
-      step,
+      pageStep,
     })),
 
     setType: (type: CHANNEL_TYPE) => store.setState(state => ({

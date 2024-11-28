@@ -28,7 +28,7 @@ const SelectChannelType: React.FC<SelectChannelTypeProps> = (props: SelectChanne
 
   const {
     actions: {
-      setStep,
+      setPageStep,
       setType,
     },
   } = useCreateChannel();
@@ -50,13 +50,13 @@ const SelectChannelType: React.FC<SelectChannelTypeProps> = (props: SelectChanne
           className="sendbird-add-channel__rectangle"
           onClick={() => {
             setType(CHANNEL_TYPE.GROUP);
-            setStep(1);
+            setPageStep(1);
           }}
           role="button"
           tabIndex={0}
           onKeyDown={() => {
             setType(CHANNEL_TYPE.GROUP);
-            setStep(1);
+            setPageStep(1);
           }}
         >
           <Icon
@@ -76,13 +76,13 @@ const SelectChannelType: React.FC<SelectChannelTypeProps> = (props: SelectChanne
               className="sendbird-add-channel__rectangle"
               onClick={() => {
                 setType(CHANNEL_TYPE.SUPERGROUP);
-                setStep(1);
+                setPageStep(1);
               }}
               role="button"
               tabIndex={0}
               onKeyDown={() => {
                 setType(CHANNEL_TYPE.SUPERGROUP);
-                setStep(1);
+                setPageStep(1);
               }}
             >
               <Icon
@@ -104,13 +104,13 @@ const SelectChannelType: React.FC<SelectChannelTypeProps> = (props: SelectChanne
               className="sendbird-add-channel__rectangle"
               onClick={() => {
                 setType(CHANNEL_TYPE.BROADCAST);
-                setStep(1);
+                setPageStep(1);
               }}
               role="button"
               tabIndex={0}
               onKeyDown={() => {
                 setType(CHANNEL_TYPE.BROADCAST);
-                setStep(1);
+                setPageStep(1);
               }}
             >
               <Icon

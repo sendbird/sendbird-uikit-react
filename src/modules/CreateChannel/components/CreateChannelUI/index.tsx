@@ -21,7 +21,7 @@ const CreateChannel: React.FC<CreateChannelUIProps> = (props: CreateChannelUIPro
       userListQuery,
     },
     actions: {
-      setStep,
+      setPageStep,
     },
   } = useCreateChannel();
 
@@ -41,7 +41,7 @@ const CreateChannel: React.FC<CreateChannelUIProps> = (props: CreateChannelUIPro
           <InviteUsers
             userListQuery={userListQuery}
             onCancel={() => {
-              setStep(0);
+              setPageStep(0);
               onCancel?.();
             }}
           />
