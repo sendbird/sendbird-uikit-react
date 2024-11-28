@@ -12,8 +12,8 @@ import IconButton from '../IconButton';
 import Button, { ButtonTypes } from '../Button';
 import Icon, { IconTypes, IconColors } from '../Icon';
 import Label, { LabelTypography, LabelColors } from '../Label';
-import { useSendbirdStateContext } from '../../lib/Sendbird';
 import uuidv4 from '../../utils/uuid';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ModalHeaderProps {
   titleText: string;
@@ -113,7 +113,7 @@ export function Modal(props: ModalProps): ReactElement {
     customFooter,
   } = props;
   const handleClose = onClose ?? onCancel ?? noop;
-  const { eventHandlers } = useSendbirdStateContext();
+  const { state: { eventHandlers } } = useSendbird();
 
   const [id] = useState(() => `sbu-modal-${uuidv4()}`);
 

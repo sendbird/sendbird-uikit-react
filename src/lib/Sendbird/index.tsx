@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './index.scss';
 import './__experimental__typography.scss';
 
-import type { SendbirdProviderProps, UIKitOptions } from './types';
 import { UIKitConfigProvider } from '@sendbird/uikit-tools';
+
+import type { SendbirdProviderProps, SendbirdState, UIKitOptions } from './types';
 import { uikitConfigMapper } from '../utils/uikitConfigMapper';
 import { uikitConfigStorage } from '../utils/uikitConfigStorage';
 import { SendbirdContextProvider } from './context/SendbirdProvider';
+import useSendbird from './context/hooks/useSendbird';
 
 // For Exportation
 export const SendbirdProvider = (props: SendbirdProviderProps) => {
@@ -44,11 +46,9 @@ export const SendbirdProvider = (props: SendbirdProviderProps) => {
   );
 };
 
-// const NO_CONTEXT_ERROR = 'No sendbird state value available. Make sure you are rendering `<SendbirdProvider>` at the top of your app.';
-// export function useSendbirdStateContext(): SendbirdState {
-//   const context = useContext(SendbirdContext);
-//   if (!context) throw new Error(NO_CONTEXT_ERROR);
-//   return context;
-// }
+export function useSendbirdStateContext(): SendbirdState {
+  const { state, actions } = useSendbird();
+  return { ...state, ...actions };
+}
 
 export default SendbirdProvider;

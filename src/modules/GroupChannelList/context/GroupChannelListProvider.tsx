@@ -6,7 +6,6 @@ import { GroupChannelCollectionParams, GroupChannelFilter } from '@sendbird/chat
 import { useGroupChannelList, useGroupChannelHandler } from '@sendbird/uikit-tools';
 
 import type { CHANNEL_TYPE } from '../../CreateChannel/types';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import type { UserProfileProviderProps } from '../../../lib/UserProfileContext';
 import { useMarkAsDeliveredScheduler } from '../../../lib/hooks/useMarkAsDeliveredScheduler';
@@ -16,6 +15,7 @@ import { PartialRequired } from '../../../utils/typeHelpers/partialRequired';
 import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
 import { noop } from '../../../utils/utils';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 type OnCreateChannelClickParams = { users: Array<string>; onClose: () => void; channelType: CHANNEL_TYPE };
 type ChannelListDataSource = ReturnType<typeof useGroupChannelList>;
@@ -104,8 +104,9 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
   onBeforeCreateChannel,
   onUserProfileUpdated,
 }: GroupChannelListProviderProps) => {
-
-  const { config, stores } = useSendbirdStateContext();
+  const { state: sendbirdState } = useSendbird();
+  console.log('sendbirdState', sendbirdState);
+  const { config, stores } = sendbirdState;
   const { state, updateState } = useGroupChannelListStore();
   const { sdkStore } = stores;
 

@@ -8,7 +8,6 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import RemoveMessage from '../RemoveMessageModal';
 import FileViewer from '../../../../ui/FileViewer';
 import { useThreadContext } from '../../context/ThreadProvider';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 import MessageInput from '../../../../ui/MessageInput';
 import { ThreadListStateTypes } from '../../types';
@@ -22,6 +21,7 @@ import { User } from '@sendbird/chat';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
 import { classnames } from '../../../../utils/utils';
 import { MessageComponentRenderers } from '../../../../ui/MessageContent';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadListItemProps extends MessageComponentRenderers {
   className?: string;
@@ -43,7 +43,7 @@ export default function ThreadListItem(props: ThreadListItemProps): React.ReactE
     renderCustomSeparator,
     handleScroll,
   } = props;
-  const { stores, config } = useSendbirdStateContext();
+  const { state: { stores, config } } = useSendbird();
   const { isOnline, userMention, logger, groupChannel } = config;
   const userId = stores?.userStore?.user?.userId;
   const { dateLocale, stringSet } = useLocalization();

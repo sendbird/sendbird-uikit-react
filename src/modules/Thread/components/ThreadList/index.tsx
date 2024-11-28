@@ -7,10 +7,10 @@ import type { SendableMessageType } from '../../../../utils';
 import ThreadListItem, { ThreadListItemProps } from './ThreadListItem';
 import { useThreadContext } from '../../context/ThreadProvider';
 import { compareMessagesForGrouping } from '../../../../utils/messages';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { isSameDay } from 'date-fns';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadListProps {
   className?: string;
@@ -27,7 +27,7 @@ export default function ThreadList({
   scrollRef,
   scrollBottom,
 }: ThreadListProps): React.ReactElement {
-  const { config } = useSendbirdStateContext();
+  const { state: { config } } = useSendbird();
   const { userId } = config;
   const {
     currentChannel,

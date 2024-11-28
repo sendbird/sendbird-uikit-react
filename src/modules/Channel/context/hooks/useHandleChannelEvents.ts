@@ -6,11 +6,11 @@ import { scrollIntoLast } from '../utils';
 import uuidv4 from '../../../../utils/uuid';
 import compareIds from '../../../../utils/compareIds';
 import * as messageActions from '../dux/actionTypes';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { SendableMessageType } from '../../../../utils';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import { LoggerInterface } from '../../../../lib/Logger';
 import { SdkStore } from '../../../../lib/types';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 /**
  * Handles ChannelEvents and send values to dispatcher using messagesDispatcher
@@ -47,7 +47,8 @@ function useHandleChannelEvents({
   setQuoteMessage,
   messagesDispatcher,
 }: StaticParams): void {
-  const store = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const store = state;
   const {
     markAsReadScheduler,
     markAsDeliveredScheduler,

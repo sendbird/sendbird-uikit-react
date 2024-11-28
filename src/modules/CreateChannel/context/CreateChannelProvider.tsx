@@ -6,9 +6,9 @@ import type {
 } from '@sendbird/chat/groupChannel';
 
 import { getCreateGroupChannel } from '../../../lib/selectors';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CHANNEL_TYPE } from '../types';
 import { SendbirdChatType } from '../../../lib/types';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 const CreateChannelContext = React.createContext<CreateChannelContextInterface | null>(null);
 
@@ -102,16 +102,16 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
     overrideInviteUser,
   } = props;
 
-  const store = useSendbirdStateContext();
-  const _userListQuery = userListQuery ?? store?.config?.userListQuery;
+  const { state } = useSendbird();;
+  const _userListQuery = userListQuery ?? state?.config?.userListQuery;
 
   const [step, setStep] = useState(0);
   const [type, setType] = useState(CHANNEL_TYPE.GROUP);
 
   return (
     <CreateChannelContext.Provider value={{
-      sdk: store.stores.sdkStore.sdk,
-      createChannel: getCreateGroupChannel(store),
+      sdk: state.stores.sdkStore.sdk,
+      createChannel: getCreateGroupChannel(state),
       onCreateChannelClick,
       onBeforeCreateChannel,
       onChannelCreated,

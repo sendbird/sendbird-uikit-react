@@ -24,9 +24,9 @@ import {
   DeleteMenuItem,
   DownloadMenuItem,
 } from '../MessageMenu/menuItems/MobileMenuItems';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { MenuItems } from '../ContextMenu';
 import { noop } from '../../utils/utils';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMenuProps): React.ReactElement => {
   const {
@@ -48,8 +48,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
     hideMenu: hideMobileMenu,
   } = props;
   const isByMe = message?.sender?.userId === userId;
-  const { config } = useSendbirdStateContext();
-  const { isOnline } = config;
+  const { state: { config: { isOnline } } } = useSendbird();
 
   // Menu Items condition
   const showMenuItemCopy = isUserMessage(message as UserMessage);

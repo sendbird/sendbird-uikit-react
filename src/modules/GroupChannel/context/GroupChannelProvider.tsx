@@ -15,7 +15,6 @@ import { useAsyncEffect, useAsyncLayoutEffect, useGroupChannelMessages, useIIFE,
 
 import type { SendableMessageType } from '../../../utils';
 import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { ThreadReplySelectType } from './const';
 import { ReplyType } from '../../../types';
 import useToggleReactionCallback from './hooks/useToggleReactionCallback';
@@ -26,6 +25,7 @@ import PUBSUB_TOPICS, { PubSubSendMessagePayload } from '../../../lib/pubSub/top
 import { PubSubTypes } from '../../../lib/pubSub';
 import { useMessageActions } from './hooks/useMessageActions';
 import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export { ThreadReplySelectType } from './const'; // export for external usage
 
@@ -142,7 +142,8 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   } = props;
 
   // Global context
-  const { config, stores } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { config, stores } = state;
 
   const { sdkStore } = stores;
   const { markAsReadScheduler, logger } = config;

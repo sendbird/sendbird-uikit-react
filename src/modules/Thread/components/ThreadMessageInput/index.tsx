@@ -3,7 +3,6 @@ import { MutedState } from '@sendbird/chat/groupChannel';
 
 import './index.scss';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { useThreadContext } from '../../context/ThreadProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
@@ -19,6 +18,7 @@ import { useHandleUploadFiles } from '../../../Channel/context/hooks/useHandleUp
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channel/context/utils';
 import { User } from '@sendbird/chat';
 import { classnames } from '../../../../utils/utils';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadMessageInputProps {
   className?: string;
@@ -41,7 +41,7 @@ const ThreadMessageInput = (
     acceptableMimeTypes,
   } = props;
 
-  const { config } = useSendbirdStateContext();
+  const { state: { config } } = useSendbird();
   const { isMobile } = useMediaQueryContext();
   const { stringSet } = useLocalization();
   const { isOnline, userMention, logger, groupChannel } = config;

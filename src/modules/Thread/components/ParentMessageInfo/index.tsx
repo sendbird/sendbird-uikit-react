@@ -9,7 +9,6 @@ import ParentMessageInfoItem from './ParentMessageInfoItem';
 import { getSenderName, SendableMessageType } from '../../../../utils';
 import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useThreadContext } from '../../context/ThreadProvider';
 import { useUserProfileContext } from '../../../../lib/UserProfileContext';
 import SuggestedMentionList from '../SuggestedMentionList';
@@ -32,6 +31,7 @@ import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyTyp
 import { classnames } from '../../../../utils/utils';
 import { MessageMenu, MessageMenuProps } from '../../../../ui/MessageMenu';
 import useElementObserver from '../../../../hooks/useElementObserver';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ParentMessageInfoProps {
   className?: string;
@@ -44,7 +44,7 @@ export default function ParentMessageInfo({
   renderEmojiMenu = (props) => <MessageEmojiMenu {...props} />,
   renderMessageMenu = (props) => <MessageMenu {...props} />,
 }: ParentMessageInfoProps): React.ReactElement {
-  const { stores, config } = useSendbirdStateContext();
+  const { state: { stores, config } } = useSendbird();
   const { isOnline, userMention, logger, groupChannel } = config;
   const userId = stores.userStore.user?.userId ?? '';
   const { dateLocale, stringSet } = useLocalization();

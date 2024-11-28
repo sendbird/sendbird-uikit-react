@@ -25,13 +25,13 @@ import * as channelListActions from '../dux/actionTypes';
 import { ChannelListActionTypes } from '../dux/actionTypes';
 
 import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import channelListReducers from '../dux/reducers';
 import channelListInitialState from '../dux/initialState';
 import { CHANNEL_TYPE } from '../../CreateChannel/types';
 import useActiveChannelUrl from './hooks/useActiveChannelUrl';
 import { useFetchChannelList } from './hooks/useFetchChannelList';
 import useHandleReconnectForChannelList from '../../Channel/context/hooks/useHandleReconnectForChannelList';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ApplicationUserListQueryInternal {
   limit?: number;
@@ -136,8 +136,8 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const disableAutoSelect = props?.disableAutoSelect || !!activeChannelUrl;
   const onChannelSelect = props?.onChannelSelect || noop;
   // fetch store from <SendbirdProvider />
-  const globalStore = useSendbirdStateContext();
-  const { config, stores } = globalStore;
+  const { state  } = useSendbird();
+  const { config, stores } = state;
   const { sdkStore } = stores;
   const { pubSub, logger } = config;
   const {

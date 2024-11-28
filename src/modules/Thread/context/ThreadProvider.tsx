@@ -11,7 +11,6 @@ import type {
 import { getNicknamesMapFromMembers, getParentMessageFrom } from './utils';
 import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
 import { CustomUseReducerDispatcher } from '../../../lib/SendbirdState';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 
 import threadReducer from './dux/reducer';
 import { ThreadContextActionTypes } from './dux/actionTypes';
@@ -33,6 +32,7 @@ import useSendVoiceMessageCallback from './hooks/useSendVoiceMessageCallback';
 import { PublishingModuleType, useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage';
 import { SendableMessageType } from '../../../utils';
 import { useThreadFetchers } from './hooks/useThreadFetchers';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadProviderProps extends
   Pick<UserProfileProviderProps, 'disableUserProfile' | 'renderUserProfile'> {
@@ -82,8 +82,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
   const propsMessage = props?.message;
   const propsParentMessage = getParentMessageFrom(propsMessage);
   // Context from SendbirdProvider
-  const globalStore = useSendbirdStateContext();
-  const { stores, config } = globalStore;
+  const { state: { stores, config } } = useSendbird();
   // // stores
   const { sdkStore, userStore } = stores;
   const { sdk } = sdkStore;

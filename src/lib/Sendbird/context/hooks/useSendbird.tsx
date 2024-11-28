@@ -1,15 +1,16 @@
 import { useContext, useMemo, useSyncExternalStore } from "react";
-import { SendbirdError } from "@sendbird/chat";
+import { SendbirdError, User } from "@sendbird/chat";
 
-import { SendbirdContext } from "../SendbirdProvider";
+import { SendbirdContext } from "../SendbirdContext";
 import { LoggerInterface } from "../../../Logger";
 import { MessageTemplatesInfo } from "../../../dux/appInfo/initialState";
 import { SendbirdState, WaitingTemplateKeyData } from "../../types";
 import { initSDK, setupSDK, updateAppInfoStore, updateSdkStore, updateUserStore } from "../../utils";
 
+const NO_CONTEXT_ERROR = 'No sendbird state value available. Make sure you are rendering `<SendbirdProvider>` at the top of your app.';
 export const useSendbird = () => {
   const store = useContext(SendbirdContext);
-  if (!store) throw new Error('useSendbird must be used within a SendbirdProvider');
+  if (!store) throw new Error(NO_CONTEXT_ERROR);
   
   const state = useSyncExternalStore(store.subscribe, store.getState);
   const actions = useMemo(() => ({
@@ -19,14 +20,14 @@ export const useSendbird = () => {
     // })),
     
     /* AppInfo */
-    initMessageTemplateInfo: ({ payload }: { payload: MessageTemplatesInfo }) => (
+    initMessageTemplateInfo: ({ payload }: { payload: MessageTemplatesInfo }) => {
       store.setState((state): SendbirdState => (
         updateAppInfoStore(state, {
           messageTemplatesInfo: payload,
           waitingTemplateKeysMap: {},
         })
-      ))
-    ),
+      ));
+    },
     upsertMessageTemplates: ({ payload }) => {
       const appInfoStore = state.stores.appInfoStore;
       const templatesInfo = appInfoStore.messageTemplatesInfo;
@@ -38,7 +39,7 @@ export const useSendbird = () => {
           templatesInfo.templatesMap[key] = template;
           delete waitingTemplateKeysMap[key];
         });
-      return store.setState((state): SendbirdState => (
+      store.setState((state): SendbirdState => (
         updateAppInfoStore(state, {
           waitingTemplateKeysMap,
           messageTemplatesInfo: templatesInfo,
@@ -55,7 +56,7 @@ export const useSendbird = () => {
           requestedAt,
         };
       });
-      return store.setState((state): SendbirdState => (
+      store.setState((state): SendbirdState => (
         updateAppInfoStore(state, {
           waitingTemplateKeysMap,
         })
@@ -71,7 +72,7 @@ export const useSendbird = () => {
           waitingTemplateKeyData.erroredMessageIds.push(messageId);
         }
       });
-      return store.setState((state): SendbirdState => (
+      store.setState((state): SendbirdState => (
         updateAppInfoStore(state, {
           waitingTemplateKeysMap,
         })
@@ -79,24 +80,24 @@ export const useSendbird = () => {
     },
 
     /* SDK */
-    setSdkLoading: (payload) => (
+    setSdkLoading: (payload) => {
       store.setState((state): SendbirdState => (
         updateSdkStore(state, {
           initialized: false,
           loading: payload,
         })
       ))
-    ),
-    sdkError: () => (
+    },
+    sdkError: () => {
       store.setState((state): SendbirdState => (
         updateSdkStore(state, {
           initialized: false,
           loading: false,
           error: true,
         })
-      ))
-    ),
-    initSdk: (payload) => (
+      ));
+    },
+    initSdk: (payload) => {
       store.setState((state): SendbirdState => (
         updateSdkStore(state, {
           sdk: payload,
@@ -104,9 +105,9 @@ export const useSendbird = () => {
           loading: false,
           error: false,
         })
-      ))
-    ),
-    resetSdk: () => (
+      ));
+    },
+    resetSdk: () => {
       store.setState((state): SendbirdState => (
         updateSdkStore(state, {
           sdk: null,
@@ -115,10 +116,10 @@ export const useSendbird = () => {
           error: false,
         })
       ))
-    ),
+    },
 
     /* User */
-    initUser: (payload) => (
+    initUser: (payload) => {
       store.setState((state): SendbirdState => (
         updateUserStore(state, {
           initialized: true,
@@ -126,8 +127,8 @@ export const useSendbird = () => {
           user: payload,
         })
       ))
-    ),
-    resetUser: () => (
+    },
+    resetUser: () => {
       store.setState((state): SendbirdState => (
         updateUserStore(state, {
           initialized: false,
@@ -135,14 +136,14 @@ export const useSendbird = () => {
           user: null,
         })
       ))
-    ),
-    updateUserInfo: (payload) => (
+    },
+    updateUserInfo: (payload: User) => {
       store.setState((state): SendbirdState => (
         updateUserStore(state, {
           user: payload,
         })
       ))
-    ),
+    },
 
     /* Connection */
     connect: async (params) => {
@@ -197,18 +198,7 @@ export const useSendbird = () => {
         await initializeMessageTemplatesInfo?.(sdk);
         await initDashboardConfigs?.(sdk);
 
-        store.setState((state) => ({
-          ...state,
-          stores: {
-            ...state.stores,
-            sdkStore: {
-              ...state.stores.sdkStore,
-              sdk,
-              initialized: true,
-              loading: false,
-            },
-          },
-        }));
+        actions.initSdk(sdk);
 
         eventHandlers?.connection?.onConnected?.(user);
       } catch (error) {

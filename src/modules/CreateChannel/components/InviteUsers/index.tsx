@@ -5,7 +5,6 @@ import type { GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
 import './invite-users.scss';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useCreateChannelContext } from '../../context/CreateChannelProvider';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import Modal from '../../../../ui/Modal';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
@@ -15,6 +14,7 @@ import UserListItem from '../../../../ui/UserListItem';
 import { createDefaultUserListQuery, filterUser, setChannelType } from './utils';
 import { noop } from '../../../../utils/utils';
 import { UserListQuery } from '../../../../types';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface InviteUsersProps {
   onCancel?: () => void;
@@ -36,10 +36,9 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
     overrideInviteUser,
     type,
   } = useCreateChannelContext();
-
-  const globalStore = useSendbirdStateContext();
-  const userId = globalStore?.config?.userId;
-  const sdk = globalStore?.stores?.sdkStore?.sdk;
+  const { state } = useSendbird();
+  const userId = state?.config?.userId;
+  const sdk = state?.stores?.sdkStore?.sdk;
   const idsToFilter = [userId];
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<Record<string, boolean>>({});

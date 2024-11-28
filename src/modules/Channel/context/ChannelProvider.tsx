@@ -21,7 +21,6 @@ import type { EmojiContainer, SendbirdError, User } from '@sendbird/chat';
 
 import { ReplyType, Nullable } from '../../../types';
 import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CoreMessageType, SendableMessageType } from '../../../utils';
 import { ThreadReplySelectType } from './const';
 
@@ -51,6 +50,7 @@ import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage
 import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEvents';
 import { PublishingModuleType } from '../../internalInterfaces';
 import { ChannelActionTypes } from './dux/actionTypes';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export { ThreadReplySelectType } from './const'; // export for external usage
 
@@ -199,8 +199,8 @@ const ChannelProvider = (props: ChannelContextProps) => {
     scrollBehavior = 'auto',
     reconnectOnIdle = true,
   } = props;
-
-  const globalStore = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const globalStore = state;
   const { config } = globalStore;
   const replyType = props.replyType ?? getCaseResolvedReplyType(config.groupChannel.replyType).upperCase;
   const {

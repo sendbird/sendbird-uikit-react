@@ -1,15 +1,16 @@
 import React from 'react';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
 import { getSuggestedReplies } from '../../../../utils';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 import MessageView, { MessageProps } from '../../../GroupChannel/components/Message/MessageView';
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 const Message = (props: MessageProps) => {
-  const { config } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { config } = state;
   const {
     initialized,
     currentGroupChannel,

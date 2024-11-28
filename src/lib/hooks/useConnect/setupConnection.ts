@@ -171,7 +171,6 @@ export function initSDK({
   customApiHost?: string;
   customWebSocketHost?: string;
   sdkInitParams?: SendbirdChatInitParams;
-  customExtensionParams?: CustomExtensionParams;
 }) {
   const params = Object.assign(sdkInitParams, {
     appId,

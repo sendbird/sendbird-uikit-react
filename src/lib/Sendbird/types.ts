@@ -94,6 +94,7 @@ export interface UserListQuery {
 /*                                 Stores                                     */
 /* -------------------------------------------------------------------------- */
 
+// AppInfo
 export interface MessageTemplatesInfo {
   token: string; // This server-side token gets updated on every CRUD operation on message template table.
   templatesMap: Record<string, ProcessedMessageTemplate>;

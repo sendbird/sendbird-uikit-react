@@ -26,7 +26,6 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import ImageRenderer from '../../../../ui/ImageRenderer';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import TextButton from '../../../../ui/TextButton';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EmojiReactions from '../../../../ui/EmojiReactions';
 import { useThreadContext } from '../../context/ThreadProvider';
 import VoiceMessageItemBody from '../../../../ui/VoiceMessageItemBody';
@@ -39,6 +38,7 @@ import { useFileInfoListWithUploaded } from '../../../Channel/context/hooks/useF
 import { Colors } from '../../../../utils/color';
 import type { OnBeforeDownloadFileMessageType } from '../../../GroupChannel/context/GroupChannelProvider';
 import { openURL } from '../../../../utils/utils';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ParentMessageInfoItemProps {
   className?: string;
@@ -53,7 +53,7 @@ export default function ParentMessageInfoItem({
   showFileViewer,
   onBeforeDownloadFileMessage = null,
 }: ParentMessageInfoItemProps): ReactElement {
-  const { stores, config, eventHandlers } = useSendbirdStateContext();
+  const { state: { stores, config, eventHandlers } } = useSendbird();
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const currentUserId = stores?.userStore?.user?.userId;

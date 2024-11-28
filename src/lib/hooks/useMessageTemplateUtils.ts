@@ -5,6 +5,7 @@ import SendbirdChat from '@sendbird/chat';
 import { CACHED_MESSAGE_TEMPLATES_KEY, CACHED_MESSAGE_TEMPLATES_TOKEN_KEY } from '../../utils/consts';
 import { LoggerInterface } from '../Logger';
 import useSendbird from '../Sendbird/context/hooks/useSendbird';
+import { useCallback } from 'react';
 
 const MESSAGE_TEMPLATES_FETCH_LIMIT = 20;
 
@@ -29,7 +30,7 @@ export default function useMessageTemplateUtils({
 }: UseMessageTemplateUtilsProps): UseMessageTemplateUtilsWrapper {
   const messageTemplatesInfo: MessageTemplatesInfo | undefined = appInfoStore?.messageTemplatesInfo;
 
-  const getCachedTemplate = (key: string): ProcessedMessageTemplate | null => {
+  const getCachedTemplate = useCallback((key: string): ProcessedMessageTemplate | null => {
     if (!messageTemplatesInfo) return null;
 
     let cachedTemplate: ProcessedMessageTemplate | null = null;
@@ -38,7 +39,7 @@ export default function useMessageTemplateUtils({
       cachedTemplate = cachedMessageTemplates[key] ?? null;
     }
     return cachedTemplate;
-  };
+  }, [appInfoStore?.messageTemplatesInfo]);
 
   /**
    * Fetches a single message template by given key and then

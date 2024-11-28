@@ -3,17 +3,17 @@ import type { OpenChannel } from '@sendbird/chat/openChannel';
 import type { FileMessageCreateParams } from '@sendbird/chat/message';
 
 import type { Logger } from '../../../../lib/SendbirdState';
-import type { ImageCompressionOptions } from '../../../../lib/Sendbird';
+import type { ImageCompressionOptions } from '../../../../lib/Sendbird/types';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
 import { SdkStore } from '../../../../lib/types';
 import { compressImages } from '../../../../utils/compressImages';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useGlobalModalContext } from '../../../../hooks/useModal';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { ONE_MiB } from '../../../../utils/consts';
 import { ModalFooter } from '../../../../ui/Modal';
 import { ButtonTypes } from '../../../../ui/Button';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface DynamicParams {
   currentOpenChannel: OpenChannel | null;
@@ -39,8 +39,7 @@ function useFileUploadCallback({
 ): CallbackReturn {
   const { stringSet } = useLocalization();
   const { openModal } = useGlobalModalContext();
-  const { config } = useSendbirdStateContext();
-  const { uikitUploadSizeLimit } = config;
+  const { state: { config: { uikitUploadSizeLimit } } } = useSendbird();
 
   return useCallback(async (files) => {
     if (sdk) {

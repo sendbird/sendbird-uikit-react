@@ -5,8 +5,8 @@ import { SendableMessageType } from '../../../../utils';
 import { CustomUseReducerDispatcher } from '../../../../lib/SendbirdState';
 import { LoggerInterface } from '../../../../lib/Logger';
 import { useCallback } from 'react';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { ThreadListStateTypes } from '../../types';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 type Params = {
   anchorMessage?: SendableMessageType;
@@ -38,7 +38,7 @@ export const useThreadFetchers = ({
   latestMessageTimeStamp,
   threadListState,
 }: Params) => {
-  const { stores } = useSendbirdStateContext();
+  const { state: { stores } } = useSendbird();
   const timestamp = anchorMessage?.createdAt || 0;
 
   const initialize = useCallback(

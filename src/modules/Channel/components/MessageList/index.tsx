@@ -13,7 +13,6 @@ import { isAboutSame } from '../../context/utils';
 import UnreadCount from '../UnreadCount';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { useSetScrollToBottom } from './hooks/useSetScrollToBottom';
@@ -26,6 +25,7 @@ import { GroupChannelMessageListProps } from '../../../GroupChannel/components/M
 import { GroupChannelUIBasicProps } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
 import { deleteNullish } from '../../../../utils/utils';
 import { getHTMLTextDirection } from '../../../../utils';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
@@ -72,7 +72,8 @@ export const MessageList = (props: MessageListProps) => {
     typingMembers,
   } = useChannelContext();
 
-  const store = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const store = state;
   const allMessagesFiltered = typeof filterMessageList === 'function' ? allMessages.filter(filterMessageList) : allMessages;
   const markAsReadScheduler = store.config.markAsReadScheduler;
 

@@ -4,8 +4,8 @@ import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 
 import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { uuidv4 } from '../../../utils/uuid';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface TypingIndicatorTextProps {
   members: Member[];
@@ -37,9 +37,9 @@ export interface TypingIndicatorProps {
 }
 
 export const TypingIndicator = ({ channelUrl }: TypingIndicatorProps) => {
-  const globalStore = useSendbirdStateContext();
-  const sb = globalStore?.stores?.sdkStore?.sdk;
-  const logger = globalStore?.config?.logger;
+  const { state } = useSendbird();
+  const sb = state?.stores?.sdkStore?.sdk;
+  const logger = state?.config?.logger;
   const [handlerId, setHandlerId] = useState(uuidv4());
   const [typingMembers, setTypingMembers] = useState<Member[]>([]);
 

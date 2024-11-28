@@ -1,8 +1,9 @@
-import type { SendbirdState, SendbirdStateConfig, ReplyType, SendbirdStateStore } from '../types';
+import type { SendbirdState, SendbirdStateConfig, ReplyType, SendbirdStateStore, SdkStore } from '../types';
 import {
   DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,
   DEFAULT_UPLOAD_SIZE_LIMIT,
 } from '../../../utils/consts';
+import { User } from '@sendbird/chat';
 
 /**
  * Config
@@ -88,13 +89,13 @@ const config: SendbirdStateConfig = {
  */
 const stores: SendbirdStateStore = {
   sdkStore: {
-    sdk: undefined,
+    sdk: {} as SdkStore['sdk'],
     initialized: false,
     loading: false,
     error: undefined,
   },
   userStore: {
-    user: undefined,
+    user: {} as User,
     initialized: false,
     loading: false,
   },

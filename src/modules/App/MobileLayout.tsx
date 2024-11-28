@@ -13,11 +13,11 @@ import ChannelList from '../ChannelList';
 import ChannelSettings from '../ChannelSettings';
 import MessageSearch from '../MessageSearch';
 import Thread from '../Thread';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import uuidv4 from '../../utils/uuid';
 import { ALL, useVoicePlayerContext } from '../../hooks/VoicePlayer';
 import { SendableMessageType } from '../../utils';
 import { APP_LAYOUT_ROOT } from './const';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 enum PANELS {
   CHANNEL_LIST = 'CHANNEL_LIST',
@@ -48,7 +48,8 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
   } = props;
   const [panel, setPanel] = useState(PANELS.CHANNEL_LIST);
 
-  const store = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const store = state;
   const sdk = store?.stores?.sdkStore?.sdk;
   const userId = store?.config?.userId;
 
