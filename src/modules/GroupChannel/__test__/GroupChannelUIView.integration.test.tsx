@@ -2,11 +2,11 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { GroupChannelUIView } from '../components/GroupChannelUI/GroupChannelUIView';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
+import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 jest.mock('../../../hooks/useSendbirdStateContext');
 
-const mockUseSendbirdStateContext = useSendbirdStateContext as jest.Mock;
+const mockUseSendbird = useSendbird as jest.Mock;
 
 describe('GroupChannelUIView Integration Tests', () => {
   const defaultProps = {
@@ -18,7 +18,7 @@ describe('GroupChannelUIView Integration Tests', () => {
   };
 
   beforeEach(() => {
-    mockUseSendbirdStateContext.mockImplementation(() => ({
+    mockUseSendbird.mockImplementation(() => ({
       stores: {
         sdkStore: { error: null },
       },
@@ -58,7 +58,7 @@ describe('GroupChannelUIView Integration Tests', () => {
   });
 
   it('renders SDK error placeholder when SDK has error', () => {
-    mockUseSendbirdStateContext.mockImplementation(() => ({
+    mockUseSendbird.mockImplementation(() => ({
       stores: {
         sdkStore: { error: new Error('SDK Error') },
       },

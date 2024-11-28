@@ -14,7 +14,7 @@ import {
 } from '@sendbird/chat/message';
 import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from '../consts';
 import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
+import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useSendUserMessageCallback from './hooks/useSendUserMessageCallback';
 import { PublishingModuleType } from '../../../lib/pubSub/topics';
 
@@ -37,7 +37,7 @@ const useThread = () => {
   if (!store) throw new Error('useCreateChannel must be used within a CreateChannelProvider');
 
   // SendbirdStateContext config
-  const { stores, config } = useSendbirdStateContext();
+  const { state: { stores, config } } = useSendbird();
   const { logger, pubSub } = config;
   const isMentionEnabled = config.groupChannel.enableMention;
   const isReactionEnabled = config.groupChannel.enableReactions;
