@@ -37,7 +37,7 @@ const useThread = () => {
   if (!store) throw new Error('useCreateChannel must be used within a CreateChannelProvider');
 
   // SendbirdStateContext config
-  const { config } = useSendbirdStateContext();
+  const { stores, config } = useSendbirdStateContext();
   const { logger, pubSub } = config;
   const isMentionEnabled = config.groupChannel.enableMention;
   const isReactionEnabled = config.groupChannel.enableReactions;
@@ -533,7 +533,12 @@ const useThread = () => {
     initializeThreadFetcher,
     fetchPrevThreads,
     fetchNextThreads,
-  }), [store, currentChannel]);
+  }), [
+    store,
+    currentChannel,
+    stores.sdkStore.initialized,
+    parentMessage,
+  ]);
 
   return { state, actions };
 };

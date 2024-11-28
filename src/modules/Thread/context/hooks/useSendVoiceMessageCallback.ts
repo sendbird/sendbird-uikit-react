@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, FileMessageCreateParams, MessageMetaArray } from '@sendbird/chat/message';
+import { FileMessage, FileMessageCreateParams, MessageMetaArray, SendingStatus } from '@sendbird/chat/message';
 import { Logger } from '../../../../lib/SendbirdState';
 import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
@@ -78,6 +78,7 @@ export const useSendVoiceMessageCallback = ({
           // pending thumbnail message seems to be failed
           // @ts-ignore
           requestState: 'pending',
+          sendingStatus: SendingStatus.PENDING,
           isUserMessage: pendingMessage.isUserMessage,
           isFileMessage: pendingMessage.isFileMessage,
           isAdminMessage: pendingMessage.isAdminMessage,

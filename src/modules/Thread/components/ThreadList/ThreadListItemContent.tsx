@@ -128,7 +128,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
   );
   const supposedHoverClassName = isMenuMounted ? 'sendbird-mouse-hover' : '';
   const isReactionEnabledInChannel = isReactionEnabled && !channel?.isEphemeral;
-  const isOgMessageEnabledInGroupChannel = channel.isGroupChannel() && config.groupChannel.enableOgtag;
+  const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
 
   // Mobile
   const mobileMenuRef = useRef(null);
