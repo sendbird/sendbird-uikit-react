@@ -2,7 +2,6 @@ import './channel-profile.scss';
 import React, { useState, useContext, useMemo } from 'react';
 
 import useChannelSettings from '../../context/useChannelSettings';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 
 import ChannelAvatar from '../../../../ui/ChannelAvatar';
@@ -12,9 +11,10 @@ import Label, {
   LabelColors,
 } from '../../../../ui/Label';
 import EditDetailsModal from '../EditDetailsModal';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 const ChannelProfile: React.FC = () => {
-  const state = useSendbirdStateContext();
+  const { state } = useSendbird();
   const { state: { channel } } = useChannelSettings();
   const { stringSet } = useContext(LocalizationContext);
   const [showModal, setShowModal] = useState(false);

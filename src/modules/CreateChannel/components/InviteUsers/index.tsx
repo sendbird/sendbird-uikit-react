@@ -4,7 +4,7 @@ import type { GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
 
 import './invite-users.scss';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import Modal from '../../../../ui/Modal';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
@@ -41,9 +41,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
     },
   } = useCreateChannel();
 
-  const globalStore = useSendbirdStateContext();
-  const userId = globalStore?.config?.userId;
-  const sdk = globalStore?.stores?.sdkStore?.sdk;
+  const { state: { config: { userId }, stores: { sdkStore: { sdk } } } } = useSendbird();
   const idsToFilter = [userId];
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<Record<string, boolean>>({});

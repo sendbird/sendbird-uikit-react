@@ -3,8 +3,7 @@ import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 
 import uuidv4 from '../../../../utils/uuid';
 import compareIds from '../../../../utils/compareIds';
-import type { SdkStore } from '../../../../lib/types';
-import type { Logger } from '../../../../lib/SendbirdState';
+import type { SdkStore, Logger } from '../../../../lib/Sendbird/types';
 
 interface UseChannelHandlerProps {
   sdk: SdkStore['sdk'];

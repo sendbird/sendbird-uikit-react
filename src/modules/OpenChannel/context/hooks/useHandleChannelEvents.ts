@@ -4,8 +4,7 @@ import { OpenChannel, OpenChannelHandler } from '@sendbird/chat/openChannel';
 import * as messageActionTypes from '../dux/actionTypes';
 import uuidv4 from '../../../../utils/uuid';
 import { scrollIntoLast } from '../utils';
-import { Logger } from '../../../../lib/SendbirdState';
-import { SdkStore } from '../../../../lib/types';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 
 type MessagesDispatcherType = {
   type: string, payload: any,

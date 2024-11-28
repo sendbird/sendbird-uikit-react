@@ -3,7 +3,7 @@ import type { FileMessage } from '@sendbird/chat/message';
 
 import { useGroupChannel } from '../../context/hooks/useGroupChannel';
 import { FileViewerView } from './FileViewerView';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface FileViewerProps {
   onCancel: () => void;
@@ -15,8 +15,7 @@ export const FileViewer = (props: FileViewerProps) => {
     state: { onBeforeDownloadFileMessage },
     actions: { deleteMessage },
   } = useGroupChannel();
-  const { config } = useSendbirdStateContext();
-  const { logger } = config;
+  const { state: { config: { logger } } } = useSendbird();
   return (
     <FileViewerView
       {...props}

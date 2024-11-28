@@ -12,8 +12,7 @@
  */
 import type { Emoji, EmojiCategory, EmojiContainer } from '@sendbird/chat';
 
-import type { SendbirdChatType } from './types';
-import { Logger } from './SendbirdState';
+import type { SendbirdChatType, Logger } from './Sendbird/types';
 import { match } from 'ts-pattern';
 import { Reaction } from '@sendbird/chat/message';
 

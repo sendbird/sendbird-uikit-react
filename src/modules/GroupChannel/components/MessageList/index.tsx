@@ -12,7 +12,6 @@ import Message from '../Message';
 import UnreadCount from '../UnreadCount';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
 import { GroupChannelUIBasicProps } from '../GroupChannelUI/GroupChannelUIView';
 import { deleteNullish } from '../../../../utils/utils';
@@ -21,6 +20,7 @@ import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { getComponentKeyFromMessage } from '../../context/utils';
 import { InfiniteList } from './InfiniteList';
 import { useGroupChannel } from '../../context/hooks/useGroupChannel';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface GroupChannelMessageListProps {
   className?: string;
@@ -91,7 +91,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     },
   } = useGroupChannel();
 
-  const store = useSendbirdStateContext();
+  const { state } = useSendbird();
 
   const [unreadSinceDate, setUnreadSinceDate] = useState<Date>();
 
@@ -167,8 +167,8 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       <div
         className={`sendbird-conversation__messages ${className}`}
         dir={getHTMLTextDirection(
-          store?.config?.htmlTextDirection,
-          store?.config?.forceLeftToRightMessageLayout,
+          state.config.htmlTextDirection,
+          state.config.forceLeftToRightMessageLayout,
         )}
       >
         <InfiniteList
@@ -195,7 +195,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
               currentMessage: message as CoreMessageType,
               currentChannel: currentChannel!,
             });
-            const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === store.config.userId;
+            const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === state.config.userId;
             return (
               <MessageProvider message={message} key={getComponentKeyFromMessage(message)} isByMe={isOutgoingMessage}>
                 {renderMessage({
@@ -213,8 +213,8 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
           }}
           typingIndicator={
             !hasNext()
-            && store?.config?.groupChannel?.enableTypingIndicator
-            && store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble) && (
+            && state?.config?.groupChannel?.enableTypingIndicator
+            && state?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble) && (
               <TypingIndicatorBubbleWrapper channelUrl={channelUrl} handleScroll={onMessageContentSizeChanged} />
             )
           }
@@ -228,7 +228,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
 };
 
 const TypingIndicatorBubbleWrapper = (props: { handleScroll: () => void; channelUrl: string }) => {
-  const { stores } = useSendbirdStateContext();
+  const { state: { stores } } = useSendbird();
   const [typingMembers, setTypingMembers] = useState<Member[]>([]);
 
   useGroupChannelHandler(stores.sdkStore.sdk, {

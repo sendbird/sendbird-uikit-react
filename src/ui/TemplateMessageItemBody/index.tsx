@@ -12,13 +12,13 @@ import {
 } from './types';
 import selectColorVariablesByTheme from './utils/selectColorVariablesByTheme';
 import { SendbirdTheme } from '../../types';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
-import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/dux/appInfo/initialState';
+import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/Sendbird/types';
 import FallbackTemplateMessageItemBody from './FallbackTemplateMessageItemBody';
 import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
 import MessageTemplateErrorBoundary from '../MessageTemplate/messageTemplateErrorBoundary';
 import { MESSAGE_TEMPLATE_KEY } from '../../utils/consts';
 import flattenObject from './utils/flattenObject';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
 
@@ -88,17 +88,17 @@ export function TemplateMessageItemBody({
   }
   const templateKey = templateData.key;
 
-  const globalState = useSendbirdStateContext();
-  if (!globalState) {
+  const { state } = useSendbird();
+  if (!state) {
     return getFailedBody();
   }
-  const logger = globalState.config.logger;
+  const logger = state.config.logger;
   const {
     getCachedTemplate,
     updateMessageTemplatesInfo,
-  } = globalState.utils;
+  } = state.utils;
 
-  const waitingTemplateKeysMap = globalState.stores.appInfoStore.waitingTemplateKeysMap;
+  const waitingTemplateKeysMap = state.stores.appInfoStore.waitingTemplateKeysMap;
 
   const waitingTemplateKeysMapString = Object.entries(waitingTemplateKeysMap)
     .map(([key, value]) => {

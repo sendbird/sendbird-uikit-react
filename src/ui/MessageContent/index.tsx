@@ -25,7 +25,6 @@ import {
   SendableMessageType,
 } from '../../utils';
 import { useLocalization } from '../../lib/LocalizationContext';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { type EmojiCategory, EmojiContainer } from '@sendbird/chat';
 import { Feedback, FeedbackRating } from '@sendbird/chat/message';
@@ -50,6 +49,7 @@ import useElementObserver from '../../hooks/useElementObserver';
 import { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '../ContextMenu';
 import { MessageContentForTemplateMessage } from './MessageContentForTemplateMessage';
 import { MESSAGE_TEMPLATE_KEY } from '../../utils/consts';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export { MessageBody } from './MessageBody';
 export { MessageHeader } from './MessageHeader';
@@ -139,7 +139,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   } = deleteNullish(props);
 
   const { dateLocale, stringSet } = useLocalization();
-  const { config, eventHandlers } = useSendbirdStateContext();
+  const { state: { config, eventHandlers } } = useSendbird();
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const contentRef = useRef<HTMLDivElement>();

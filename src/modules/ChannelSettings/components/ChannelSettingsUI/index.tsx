@@ -2,7 +2,6 @@ import './channel-settings-ui.scss';
 
 import React, { ReactNode, useState } from 'react';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import useChannelSettings from '../../context/useChannelSettings';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import useMenuItems from './hooks/useMenuItems';
@@ -19,6 +18,7 @@ import ChannelProfile from '../ChannelProfile';
 import LeaveChannelModal from '../LeaveChannel';
 import MenuItem from './MenuItem';
 import MenuListByRole from './MenuListByRole';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface ModerationPanelProps {
   menuItems: ReturnType<typeof useMenuItems>;
@@ -46,9 +46,8 @@ const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
     renderPlaceholderError,
     renderPlaceholderLoading,
   } = deleteNullish(props);
-  const {
-    config: { isOnline },
-  } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { isOnline } = state.config;
   const {
     state: {
       channel,

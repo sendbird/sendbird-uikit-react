@@ -1,4 +1,4 @@
-import { UIKitOptions, CommonUIKitConfigProps } from '../types';
+import type { UIKitOptions, CommonUIKitConfigProps } from '../Sendbird/types';
 import { getCaseResolvedReplyType } from './resolvedReplyType';
 
 export function uikitConfigMapper({

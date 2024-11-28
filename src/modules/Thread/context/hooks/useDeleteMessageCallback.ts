@@ -1,6 +1,7 @@
-import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { useCallback } from 'react';
-import { Logger } from '../../../../lib/SendbirdState';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
+
+import type { Logger } from '../../../../lib/Sendbird/types';
 import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {

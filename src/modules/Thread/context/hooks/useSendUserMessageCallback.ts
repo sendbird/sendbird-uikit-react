@@ -3,7 +3,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { UserMessage, UserMessageCreateParams } from '@sendbird/chat/message';
 import { User } from '@sendbird/chat';
 
-import { Logger } from '../../../../lib/SendbirdState';
+import type { Logger } from '../../../../lib/Sendbird/types';
 import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';

@@ -6,7 +6,7 @@ import { OperatorToggleMenuItem, MuteToggleMenuItem, BanToggleMenuItem } from '.
 import { classnames } from '../../utils/utils';
 import { MenuItems } from '../ContextMenu';
 import { DefaultMenuItems, TriggerIcon } from './DefaultElements';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export type RenderUserListItemMenuItemsParams = {
   items: {
@@ -32,7 +32,7 @@ export const UserListItemMenu = (props: UserListItemMenuProps) => {
   const containerRef = useRef(null);
   const triggerRef = useRef(null);
 
-  const { config } = useSendbirdStateContext();
+  const { state: { config } } = useSendbird();
   const { userId: currentUserId } = config;
 
   const toggleMenu = () => {

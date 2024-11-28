@@ -6,17 +6,20 @@ import type {
   User,
   SendbirdChatParams,
   SendbirdError,
+  SessionHandler,
 } from '@sendbird/chat';
 import type {
   GroupChannel,
   GroupChannelCreateParams,
   GroupChannelModule,
   Member,
+  SendbirdGroupChat,
 } from '@sendbird/chat/groupChannel';
 import type {
   OpenChannel,
   OpenChannelCreateParams,
   OpenChannelModule,
+  SendbirdOpenChat,
 } from '@sendbird/chat/openChannel';
 import type {
   FileMessageCreateParams,
@@ -24,7 +27,7 @@ import type {
   UserMessageCreateParams,
   UserMessageUpdateParams,
 } from '@sendbird/chat/message';
-import { MessageTemplateInfo, Module, ModuleNamespaces } from '@sendbird/chat/lib/__definition';
+import { Module, ModuleNamespaces } from '@sendbird/chat/lib/__definition';
 import { SBUConfig } from '@sendbird/uikit-tools';
 
 import { PartialDeep } from '../../utils/typeHelpers/partialDeep';
@@ -33,16 +36,20 @@ import { LoggerInterface } from '../Logger';
 import { MarkAsReadSchedulerType } from '../hooks/useMarkAsReadScheduler';
 import { MarkAsDeliveredSchedulerType } from '../hooks/useMarkAsDeliveredScheduler';
 import { SBUGlobalPubSub } from '../pubSub/topics';
-import { ConfigureSessionTypes } from '../hooks/useConnect/types';
 import { EmojiManager } from '../emojiManager';
 import { StringSet } from '../../ui/Label/stringSet';
-import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../dux/appInfo/initialState';
 
 /* -------------------------------------------------------------------------- */
 /*                               Legacy                                       */
 /* -------------------------------------------------------------------------- */
 
 export type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
+export type ConfigureSessionTypes = (sdk: SendbirdChat | SendbirdGroupChat | SendbirdOpenChat) => SessionHandler;
+// Sendbird state dispatcher
+export type CustomUseReducerDispatcher = React.Dispatch<{
+  type: string;
+  payload: any;
+}>;
 
 /* -------------------------------------------------------------------------- */
 /*                            Common Types                                    */
@@ -60,12 +67,6 @@ export interface ImageCompressionOptions {
 
 // Logger type
 export type Logger = LoggerInterface;
-
-// Sendbird state dispatcher
-export type CustomUseReducerDispatcher = React.Dispatch<{
-  type: string;
-  payload: any;
-}>;
 
 // Roles for a user in a channel
 export const Role = {
@@ -88,6 +89,36 @@ export interface UserListQuery {
   hasNext?: boolean;
   next(): Promise<Array<User>>;
   get isLoading(): boolean;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 Stores                                     */
+/* -------------------------------------------------------------------------- */
+
+// AppInfo
+export interface MessageTemplatesInfo {
+  token: string; // This server-side token gets updated on every CRUD operation on message template table.
+  templatesMap: Record<string, ProcessedMessageTemplate>;
+}
+
+export interface WaitingTemplateKeyData {
+  requestedAt: number;
+  erroredMessageIds: number[];
+}
+
+export type ProcessedMessageTemplate = {
+  version: number;
+  uiTemplate: string; // This is stringified ui_template.body.items
+  colorVariables?: Record<string, string>;
+};
+
+export interface AppInfoStateType {
+  messageTemplatesInfo?: MessageTemplatesInfo;
+  /**
+   * This represents template keys that are currently waiting for its fetch response.
+   * Whenever initialized, request succeeds or fails, it needs to be updated.
+   */
+  waitingTemplateKeysMap: Record<string, WaitingTemplateKeyData>;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -309,7 +340,11 @@ export interface UserStore {
 }
 
 export interface AppInfoStore {
-  messageTemplatesInfo?: MessageTemplateInfo;
+  messageTemplatesInfo?: MessageTemplatesInfo;
+  /**
+   * This represents template keys that are currently waiting for its fetch response.
+   * Whenever initialized, request succeeds or fails, it needs to be updated.
+   */
   waitingTemplateKeysMap: Record<string, WaitingTemplateKeyData>;
 }
 

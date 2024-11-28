@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import { Logger } from '../../../../lib/SendbirdState';
-import { SdkStore } from '../../../../lib/types';
 import useThread from '../useThread';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 
 interface DanamicPrpos {
   sdk: SdkStore['sdk'];

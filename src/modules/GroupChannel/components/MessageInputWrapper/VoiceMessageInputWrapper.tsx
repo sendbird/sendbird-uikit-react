@@ -11,9 +11,9 @@ import { VoiceMessageInput } from '../../../../ui/VoiceMessageInput';
 import { VoiceMessageInputStatus } from '../../../../ui/VoiceMessageInput/types';
 import Modal from '../../../../ui/Modal';
 import Button, { ButtonSizes, ButtonTypes } from '../../../../ui/Button';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { VOICE_PLAYER_STATUS } from '../../../../hooks/VoicePlayer/dux/initialState';
 import uuidv4 from '../../../../utils/uuid';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export type VoiceMessageInputWrapperProps = {
   channel?: GroupChannel;
@@ -33,7 +33,8 @@ export const VoiceMessageInputWrapper = ({
   const [isDisabled, setDisabled] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { stringSet } = useLocalization();
-  const { config } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { config } = state;
   const {
     start,
     stop,

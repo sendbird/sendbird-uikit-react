@@ -4,12 +4,12 @@ import React from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { GroupChannelListUIView } from './GroupChannelListUIView';
 import GroupChannelPreviewAction from '../GroupChannelPreviewAction';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { GroupChannelListItem } from '../GroupChannelListItem';
 import AddGroupChannel from '../AddGroupChannel';
 import { GroupChannelListItemBasicProps } from '../GroupChannelListItem/GroupChannelListItemView';
 import { noop } from '../../../../utils/utils';
 import { useGroupChannelList } from '../../context/useGroupChannelList';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface GroupChannelItemProps extends GroupChannelListItemBasicProps {}
 
@@ -38,8 +38,7 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
     },
   } = useGroupChannelList();
 
-  const { stores, config } = useSendbirdStateContext();
-  const { logger, isOnline } = config;
+  const { state: { stores, config: { logger, isOnline } } } = useSendbird();
   const sdk = stores.sdkStore.sdk;
 
   const renderListItem = (renderProps: { item: GroupChannel; index: number }) => {

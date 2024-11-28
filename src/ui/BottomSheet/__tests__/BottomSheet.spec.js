@@ -2,14 +2,14 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import BottomSheet from "../index";
-import { SendbirdSdkContext } from '../../../lib/SendbirdSdkContext';
+import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
 
 describe('ui/BottomSheet', () => {
   it('should do a snapshot test of the default Button DOM', function () {
     render(
-      <SendbirdSdkContext.Provider value={{}}>
+      <SendbirdContext.Provider value={{}}>
         <BottomSheet className='test_classname' />
-      </SendbirdSdkContext.Provider>
+      </SendbirdContext.Provider>
     );
     expect(document.body.lastChild).toMatchSnapshot();
   });

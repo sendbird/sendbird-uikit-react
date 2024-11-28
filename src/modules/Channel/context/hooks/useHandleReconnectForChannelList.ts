@@ -4,9 +4,8 @@ import {
   GroupChannel,
   GroupChannelListQuery,
 } from '@sendbird/chat/groupChannel';
-import { Logger } from '../../../../lib/SendbirdState';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import useReconnectOnIdle from './useReconnectOnIdle';
-import { SdkStore } from '../../../../lib/types';
 import { ChannelListActionTypes } from '../../../ChannelList/dux/actionTypes';
 import { GroupChannelListQueryParamsInternal } from '../../../ChannelList/context/ChannelListProvider';
 import { MarkAsDeliveredSchedulerType } from '../../../../lib/hooks/useMarkAsDeliveredScheduler';
