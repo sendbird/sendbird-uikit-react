@@ -10,7 +10,7 @@ import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import type { UserProfileProviderProps } from '../../../lib/UserProfileContext';
 import { useMarkAsDeliveredScheduler } from '../../../lib/hooks/useMarkAsDeliveredScheduler';
 import useOnlineStatus from '../../../lib/hooks/useOnlineStatus';
-import type { SdkStore } from '../../../lib/types';
+import type { SdkStore } from '../../../lib/Sendbird/types';
 import { PartialRequired } from '../../../utils/typeHelpers/partialRequired';
 import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';

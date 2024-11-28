@@ -12,7 +12,7 @@ import {
 } from './types';
 import selectColorVariablesByTheme from './utils/selectColorVariablesByTheme';
 import { SendbirdTheme } from '../../types';
-import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/dux/appInfo/initialState';
+import { ProcessedMessageTemplate, WaitingTemplateKeyData } from '../../lib/Sendbird/types';
 import FallbackTemplateMessageItemBody from './FallbackTemplateMessageItemBody';
 import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
 import MessageTemplateErrorBoundary from '../MessageTemplate/messageTemplateErrorBoundary';

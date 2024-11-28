@@ -12,9 +12,9 @@ import { FileMessage, FileMessageCreateParams, SendableMessage, UserMessageUpdat
 import {
   SdkStore,
   // SendBirdState,
-  SendBirdStateConfig,
-  SendBirdStateStore,
-} from './types';
+  SendbirdStateConfig,
+  SendbirdStateStore,
+} from './Sendbird/types';
 import { noop } from '../utils/utils';
 import { SendableMessageType } from '../utils';
 import { PublishingModuleType } from '../modules/internalInterfaces';
@@ -63,7 +63,7 @@ type SendBirdState = SendbirdState;
  */
 export const getSdk = (state: SendBirdState) => {
   const { stores = {} } = state;
-  const { sdkStore = {} } = stores as SendBirdStateStore;
+  const { sdkStore = {} } = stores as SendbirdStateStore;
   const { sdk } = sdkStore as SdkStore;
   return sdk;
 };
@@ -73,7 +73,7 @@ export const getSdk = (state: SendBirdState) => {
  */
 export const getPubSub = (state: SendBirdState) => {
   const { config = {} } = state;
-  const { pubSub } = config as SendBirdStateConfig;
+  const { pubSub } = config as SendbirdStateConfig;
   return pubSub;
 };
 

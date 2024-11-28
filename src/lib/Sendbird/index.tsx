@@ -46,9 +46,34 @@ export const SendbirdProvider = (props: SendbirdProviderProps) => {
   );
 };
 
-export function useSendbirdStateContext(): SendbirdState {
-  const { state, actions } = useSendbird();
-  return { ...state, ...actions };
-}
+type ContextAwareComponentType = {
+  (props: any): JSX.Element;
+  displayName: string;
+};
+const withSendbirdContext = (OriginalComponent: any, mapStoreToProps: Record<string, any>): ContextAwareComponentType => {
+  const ContextAwareComponent = (props) => {
+    const { state, actions } = useSendbird();
+    const context = { ...state, ...actions };
+    if (mapStoreToProps && typeof mapStoreToProps !== 'function') {
+      // eslint-disable-next-line no-console
+      console.warn('Second parameter to withSendbirdContext must be a pure function');
+    }
+    const mergedProps = (mapStoreToProps && typeof mapStoreToProps === 'function')
+          ? { ...mapStoreToProps(context), ...props }
+          : { ...context, ...props };
+    return <>
+      <OriginalComponent {...mergedProps} />
+    </>
+  }
+
+  const componentName = OriginalComponent.displayName || OriginalComponent.name || 'Component';
+  ContextAwareComponent.displayName = `SendbirdAware${componentName}`;
+
+  return ContextAwareComponent;
+};
+/**
+ * @deprecated This function is deprecated. Use `useSendbirdStateContext` instead.
+ * */
+export const withSendBird = withSendbirdContext;
 
 export default SendbirdProvider;

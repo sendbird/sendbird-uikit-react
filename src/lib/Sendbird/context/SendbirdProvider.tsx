@@ -1,5 +1,5 @@
 /* External libraries */
-import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { useUIKitConfig } from '@sendbird/uikit-tools';
 
 /* Types */
@@ -69,7 +69,7 @@ const SendbirdContextManager = ({
   eventHandlers,
   htmlTextDirection = 'ltr',
   forceLeftToRightMessageLayout = false,
-}: SendbirdProviderProps): ReactNode => {
+}: SendbirdProviderProps): ReactElement => {
   const onStartDirectMessage = _onStartDirectMessage ?? _onUserProfileMessage;
   const { logLevel = '', userMention = {}, isREMUnitEnabled = false, pubSub: customPubSub } = config;
   const { isMobile } = useMediaQueryContext();

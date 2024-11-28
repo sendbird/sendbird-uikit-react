@@ -6,17 +6,20 @@ import type {
   User,
   SendbirdChatParams,
   SendbirdError,
+  SessionHandler,
 } from '@sendbird/chat';
 import type {
   GroupChannel,
   GroupChannelCreateParams,
   GroupChannelModule,
   Member,
+  SendbirdGroupChat,
 } from '@sendbird/chat/groupChannel';
 import type {
   OpenChannel,
   OpenChannelCreateParams,
   OpenChannelModule,
+  SendbirdOpenChat,
 } from '@sendbird/chat/openChannel';
 import type {
   FileMessageCreateParams,
@@ -33,16 +36,20 @@ import { LoggerInterface } from '../Logger';
 import { MarkAsReadSchedulerType } from '../hooks/useMarkAsReadScheduler';
 import { MarkAsDeliveredSchedulerType } from '../hooks/useMarkAsDeliveredScheduler';
 import { SBUGlobalPubSub } from '../pubSub/topics';
-import { ConfigureSessionTypes } from '../hooks/useConnect/types';
 import { EmojiManager } from '../emojiManager';
 import { StringSet } from '../../ui/Label/stringSet';
-import { ProcessedMessageTemplate } from '../dux/appInfo/initialState';
 
 /* -------------------------------------------------------------------------- */
 /*                               Legacy                                       */
 /* -------------------------------------------------------------------------- */
 
 export type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
+export type ProcessedMessageTemplate = {
+  version: number;
+  uiTemplate: string; // This is stringified ui_template.body.items
+  colorVariables?: Record<string, string>;
+};
+export type ConfigureSessionTypes = (sdk: SendbirdChat | SendbirdGroupChat | SendbirdOpenChat) => SessionHandler;
 
 /* -------------------------------------------------------------------------- */
 /*                            Common Types                                    */

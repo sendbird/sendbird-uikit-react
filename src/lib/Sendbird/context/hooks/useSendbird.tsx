@@ -3,7 +3,7 @@ import { SendbirdError, User } from "@sendbird/chat";
 
 import { SendbirdContext } from "../SendbirdContext";
 import { LoggerInterface } from "../../../Logger";
-import { MessageTemplatesInfo } from "../../../dux/appInfo/initialState";
+import { MessageTemplatesInfo } from "../../types";
 import { SendbirdState, WaitingTemplateKeyData } from "../../types";
 import { initSDK, setupSDK, updateAppInfoStore, updateSdkStore, updateUserStore } from "../../utils";
 
