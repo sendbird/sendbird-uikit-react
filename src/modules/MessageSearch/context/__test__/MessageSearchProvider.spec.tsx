@@ -3,7 +3,7 @@ import { waitFor, act } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
 import { MessageSearchQuery } from '@sendbird/chat/message';
 
-import { MessageSearchProvider, useMessageSearchContext } from '../MessageSearchProvider';
+import { MessageSearchProvider } from '../MessageSearchProvider';
 import useMessageSearch from '../hooks/useMessageSearch';
 
 jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
@@ -71,28 +71,38 @@ describe('MessageSearchProvider', () => {
       </MessageSearchProvider>
     );
 
-    const { result } = renderHook(() => useMessageSearchContext(), { wrapper });
+    const { result } = renderHook(() => useMessageSearch(), { wrapper });
 
-    expect(result.current.getState()).toEqual(expect.objectContaining(initialState));
+    expect(result.current.state).toEqual(expect.objectContaining(initialState));
   });
 
   it('updates state correctly when props change', async () => {
-    const wrapper = ({ children }) => (
-      <MessageSearchProvider channelUrl="test-channel">
+    const initialUrl = 'test-channel';
+    const newUrl = 'new-channel';
+
+    const wrapper = ({ children, channelUrl }) => (
+      <MessageSearchProvider channelUrl={channelUrl}>
         {children}
       </MessageSearchProvider>
     );
 
-    const { result } = renderHook(() => useMessageSearchContext(), { wrapper });
+    const { result, rerender } = renderHook(
+      () => useMessageSearch(),
+      {
+        wrapper,
+        initialProps: { channelUrl: initialUrl, children: null },
+      },
+    );
 
-    expect(result.current.getState().channelUrl).toBe('test-channel');
+    expect(result.current.state.channelUrl).toBe(initialUrl);
 
     await act(async () => {
-      result.current.setState({ channelUrl: 'new-channel' });
+      rerender({ channelUrl: newUrl, children: null });
+
       await waitFor(() => {
-        const newState = result.current.getState();
-        expect(newState.channelUrl).toBe('new-channel');
         // Verify other states remain unchanged
+        const newState = result.current.state;
+        expect(newState.channelUrl).toBe(newUrl);
         expect(newState.allMessages).toEqual(initialState.allMessages);
         expect(newState.loading).toBe(initialState.loading);
         expect(newState.isQueryInvalid).toBe(initialState.isQueryInvalid);

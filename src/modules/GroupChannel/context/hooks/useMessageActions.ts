@@ -19,9 +19,7 @@ import {
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
-import type { SendableMessageType } from '../../../../utils';
-import type { ReplyType } from '../../../../types';
-import type { GroupChannelProviderProps } from '../GroupChannelProvider';
+import type { GroupChannelState } from '../types';
 
 type MessageListDataSource = ReturnType<typeof useGroupChannelMessages>;
 type MessageActions = {
@@ -30,12 +28,10 @@ type MessageActions = {
   sendVoiceMessage: (params: FileMessageCreateParams, duration: number) => Promise<FileMessage>;
   sendMultipleFilesMessage: (params: MultipleFilesMessageCreateParams) => Promise<MultipleFilesMessage>;
   updateUserMessage: (messageId: number, params: UserMessageUpdateParams) => Promise<UserMessage>;
-};
+} & Partial<MessageListDataSource>;
 
-interface Params extends GroupChannelProviderProps, MessageListDataSource {
+interface Params extends GroupChannelState {
   scrollToBottom(animated?: boolean): Promise<void>;
-  quoteMessage?: SendableMessageType | null;
-  replyType: ReplyType;
 }
 
 const pass = <T>(value: T) => value;
@@ -55,6 +51,10 @@ export function useMessageActions(params: Params): MessageActions {
     sendMultipleFilesMessage,
     sendUserMessage,
     updateUserMessage,
+    updateFileMessage,
+    resendMessage,
+    deleteMessage,
+    resetNewMessages,
 
     scrollToBottom,
     quoteMessage,
@@ -144,5 +144,9 @@ export function useMessageActions(params: Params): MessageActions {
       },
       [buildInternalMessageParams, updateUserMessage],
     ),
+    updateFileMessage,
+    resendMessage,
+    deleteMessage,
+    resetNewMessages,
   };
 }
