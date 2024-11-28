@@ -30,7 +30,7 @@ export function useMarkAsDeliveredScheduler({
       try {
         await channel.markAsDelivered();
       } catch (error) {
-        logger.warning('Channel: Mark as delivered failed', { channel, error });
+        logger?.warning('Channel: Mark as delivered failed', { channel, error });
       }
     },
   }), []);

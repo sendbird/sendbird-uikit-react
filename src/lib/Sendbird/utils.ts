@@ -37,8 +37,8 @@ export const updateUserStore: UpdateUserStoreType = (state, payload) => {
     ...state,
     stores: {
       ...state.stores,
-      sdkStore: {
-        ...state.stores.sdkStore,
+      userStore: {
+        ...state.stores.userStore,
         ...payload,
       },
     },
