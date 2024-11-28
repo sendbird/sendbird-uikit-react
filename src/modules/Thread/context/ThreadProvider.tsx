@@ -72,15 +72,15 @@ export interface ThreadState {
 const initialState = {
   channelUrl: '',
   message: null,
-  onHeaderActionClick: null,
-  onMoveToParentMessage: null,
-  onBeforeSendUserMessage: null,
-  onBeforeSendFileMessage: null,
-  onBeforeSendVoiceMessage: null,
-  onBeforeSendMultipleFilesMessage: null,
-  onBeforeDownloadFileMessage: null,
-  isMultipleFilesMessageEnabled: null,
-  filterEmojiCategoryIds: null,
+  onHeaderActionClick: undefined,
+  onMoveToParentMessage: undefined,
+  onBeforeSendUserMessage: undefined,
+  onBeforeSendFileMessage: undefined,
+  onBeforeSendVoiceMessage: undefined,
+  onBeforeSendMultipleFilesMessage: undefined,
+  onBeforeDownloadFileMessage: undefined,
+  isMultipleFilesMessageEnabled: undefined,
+  filterEmojiCategoryIds: undefined,
   currentChannel: null,
   allThreadMessages: [],
   localThreadMessages: [],
@@ -136,8 +136,7 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
   } = useThread();
   const { updateState } = useThreadStore();
 
-  const propsMessage = props?.message;
-  const propsParentMessage = getParentMessageFrom(propsMessage);
+  const propsParentMessage = getParentMessageFrom(message);
   // Context from SendbirdProvider
   const globalStore = useSendbirdStateContext();
   const { stores, config } = globalStore;
@@ -154,7 +153,7 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
   useGetChannel({
     channelUrl,
     sdkInit,
-    message: propsMessage,
+    message,
   }, { sdk, logger });
   useGetParentMessage({
     channelUrl,
