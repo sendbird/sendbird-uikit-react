@@ -52,12 +52,11 @@ export default function useSendFileMessageCallback({
 
       currentChannel?.sendFileMessage(params)
         .onPending((pendingMessage) => {
+          // @ts-ignore
           sendMessageStart({
             ...pendingMessage,
             url: URL.createObjectURL(file),
             // pending thumbnail message seems to be failed
-            // @ts-ignore
-            requestState: 'pending',
             sendingStatus: SendingStatus.PENDING,
             isUserMessage: pendingMessage.isUserMessage,
             isFileMessage: pendingMessage.isFileMessage,

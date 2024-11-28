@@ -69,6 +69,7 @@ export const useSendVoiceMessageCallback = ({
     logger.info('Thread | useSendVoiceMessageCallback:  Start sending voice message', messageParams);
     currentChannel?.sendFileMessage(messageParams)
       .onPending((pendingMessage) => {
+        // @ts-ignore
         sendMessageStart({
           /* pubSub is used instead of messagesDispatcher
             to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
@@ -76,8 +77,6 @@ export const useSendVoiceMessageCallback = ({
           ...pendingMessage,
           url: URL.createObjectURL(file),
           // pending thumbnail message seems to be failed
-          // @ts-ignore
-          requestState: 'pending',
           sendingStatus: SendingStatus.PENDING,
           isUserMessage: pendingMessage.isUserMessage,
           isFileMessage: pendingMessage.isFileMessage,

@@ -145,4 +145,71 @@ describe('ThreadProvider', () => {
       });
     });
   });
+
+  // it('calls sendMessage correctly', async () => {
+  //   const wrapper = ({ children }) => (
+  //     <ThreadProvider channelUrl="test-channel" message={{ messageId: 1 }}>
+  //       {children}
+  //     </ThreadProvider>
+  //   );
+  //
+  //   const { result } = renderHook(() => useThreadContext(), { wrapper });
+  //   const sendMessageMock = jest.fn();
+  //
+  //   result.current.sendMessage({ message: 'Test Message' });
+  //
+  //   expect(sendMessageMock).toHaveBeenCalledWith({ message: 'Test Message' });
+  // });
+  //
+  // it('handles channel events correctly', () => {
+  //   const wrapper = ({ children }) => (
+  //     <ThreadProvider channelUrl="test-channel" message={{ messageId: 1 }}>
+  //       {children}
+  //     </ThreadProvider>
+  //   );
+  //
+  //   render(<ThreadProvider channelUrl="test-channel" message={{ messageId: 1 }} />);
+  //   // Add assertions for handling channel events
+  // });
+  //
+  // it('updates state when nicknamesMap is updated', async () => {
+  //   const wrapper = ({ children }) => (
+  //     <ThreadProvider channelUrl="test-channel" message={{ messageId: 1 }}>
+  //       {children}
+  //     </ThreadProvider>
+  //   );
+  //
+  //   const { result } = renderHook(() => useThreadContext(), { wrapper });
+  //
+  //   await act(async () => {
+  //     result.current.updateState({
+  //       nicknamesMap: new Map([['user1', 'User One'], ['user2', 'User Two']]),
+  //     });
+  //     await waitFor(() => {
+  //       expect(result.current.nicknamesMap.get('user1')).toBe('User One');
+  //     });
+  //   });
+  // });
+  //
+  // it('calls onMoveToParentMessage when provided', async () => {
+  //   const onMoveToParentMessageMock = jest.fn();
+  //   const wrapper = ({ children }) => (
+  //     <ThreadProvider
+  //       channelUrl="test-channel"
+  //       message={{ messageId: 1 }}
+  //       onMoveToParentMessage={onMoveToParentMessageMock}
+  //     >
+  //       {children}
+  //     </ThreadProvider>
+  //   );
+  //
+  //   const { result } = renderHook(() => useThreadContext(), { wrapper });
+  //
+  //   await act(async () => {
+  //     result.current.onMoveToParentMessage({ message: { messageId: 1 }, channel: {} });
+  //     await waitFor(() => {
+  //       expect(onMoveToParentMessageMock).toHaveBeenCalled();
+  //     });
+  //   });
+  // });
 });

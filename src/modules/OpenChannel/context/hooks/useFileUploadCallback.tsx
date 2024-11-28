@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
-import { FileMessageCreateParams, SendingStatus } from '@sendbird/chat/message';
+import type { FileMessageCreateParams } from '@sendbird/chat/message';
 
 import type { Logger } from '../../../../lib/SendbirdState';
 import type { ImageCompressionOptions } from '../../../../lib/Sendbird';
@@ -107,7 +107,6 @@ function useFileUploadCallback({
                 url: URL.createObjectURL(file),
                 // pending thumbnail message seems to be failed
                 requestState: 'pending',
-                sendingStatus: SendingStatus.PENDING,
                 isUserMessage: pendingMessage.isUserMessage,
                 isFileMessage: pendingMessage.isFileMessage,
                 isAdminMessage: pendingMessage.isAdminMessage,

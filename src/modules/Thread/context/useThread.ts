@@ -145,7 +145,7 @@ const useThread = () => {
     }, {
       logger,
       pubSub,
-    }),
+    })[0],
 
     resendMessage: useResendMessageCallback({
       resendMessageStart: sendMessageStatusActions.resendMessageStart,
