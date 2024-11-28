@@ -12,10 +12,12 @@ import { Logger } from '../../../../lib/SendbirdState';
 import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';
-import useThread from '../useThread';
 
 interface DynamicProps {
   currentChannel: GroupChannel | null;
+  resendMessageStart: (message: SendableMessageType) => void;
+  sendMessageSuccess: (message: SendableMessageType) => void;
+  sendMessageFailure: (message: SendableMessageType) => void;
 }
 interface StaticProps {
   logger: Logger;
@@ -24,17 +26,13 @@ interface StaticProps {
 
 export default function useResendMessageCallback({
   currentChannel,
+  resendMessageStart,
+  sendMessageSuccess,
+  sendMessageFailure,
 }: DynamicProps, {
   logger,
   pubSub,
 }: StaticProps): (failedMessage: SendableMessageType) => void {
-  const {
-    actions: {
-      resendMessageStart,
-      sendMessageSuccess,
-      sendMessageFailure,
-    },
-  } = useThread();
   return useCallback((failedMessage: SendableMessageType) => {
     if ((failedMessage as SendableMessageType)?.isResendable) {
       logger.info('Thread | useResendMessageCallback: Resending failedMessage start.', failedMessage);

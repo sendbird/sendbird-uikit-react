@@ -5,7 +5,6 @@ import { LoggerInterface } from '../../../../lib/Logger';
 import { useCallback } from 'react';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { ThreadListStateTypes } from '../../types';
-import useThread from '../useThread';
 
 type Params = {
   anchorMessage?: SendableMessageType;
@@ -15,6 +14,15 @@ type Params = {
   threadListState: ThreadListStateTypes;
   oldestMessageTimeStamp: number;
   latestMessageTimeStamp: number;
+  initializeThreadListStart: () => void,
+  initializeThreadListSuccess: (parentMessage: BaseMessage, anchorMessage: SendableMessageType, threadedMessages: BaseMessage[]) => void,
+  initializeThreadListFailure: () => void,
+  getPrevMessagesStart: () => void,
+  getPrevMessagesSuccess: (threadedMessages: CoreMessageType[]) => void,
+  getPrevMessagesFailure: () => void,
+  getNextMessagesStart: () => void,
+  getNextMessagesSuccess: (threadedMessages: CoreMessageType[]) => void,
+  getNextMessagesFailure: () => void,
 };
 
 function getThreadMessageListParams(params?: Partial<ThreadedMessageListParams>): ThreadedMessageListParams {
@@ -34,20 +42,16 @@ export const useThreadFetchers = ({
   oldestMessageTimeStamp,
   latestMessageTimeStamp,
   threadListState,
+  initializeThreadListStart,
+  initializeThreadListSuccess,
+  initializeThreadListFailure,
+  getPrevMessagesStart,
+  getPrevMessagesSuccess,
+  getPrevMessagesFailure,
+  getNextMessagesStart,
+  getNextMessagesSuccess,
+  getNextMessagesFailure,
 }: Params) => {
-  const {
-    actions: {
-      initializeThreadListStart,
-      initializeThreadListSuccess,
-      initializeThreadListFailure,
-      getPrevMessagesStart,
-      getPrevMessagesSuccess,
-      getPrevMessagesFailure,
-      getNextMessagesStart,
-      getNextMessagesSuccess,
-      getNextMessagesFailure,
-    },
-  } = useThread();
   const { stores } = useSendbirdStateContext();
   const timestamp = anchorMessage?.createdAt || 0;
 

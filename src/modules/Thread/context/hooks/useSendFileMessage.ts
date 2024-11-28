@@ -8,11 +8,12 @@ import { scrollIntoLast } from '../utils';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from './useSendMultipleFilesMessage';
 import { SCROLL_BOTTOM_DELAY_FOR_SEND } from '../../../../utils/consts';
-import useThread from '../useThread';
 
 interface DynamicProps {
   currentChannel: GroupChannel | null;
   onBeforeSendFileMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
+  sendMessageStart: (message: SendableMessageType) => void;
+  sendMessageFailure: (message: SendableMessageType) => void;
 }
 interface StaticProps {
   logger: Logger;
@@ -29,17 +30,12 @@ export type SendFileMessageFunctionType = (file: File, quoteMessage?: SendableMe
 export default function useSendFileMessageCallback({
   currentChannel,
   onBeforeSendFileMessage,
+  sendMessageStart,
+  sendMessageFailure,
 }: DynamicProps, {
   logger,
   pubSub,
 }: StaticProps): SendFileMessageFunctionType {
-  const {
-    actions: {
-      sendMessageStart,
-      sendMessageFailure,
-    },
-  } = useThread();
-
   return useCallback((file, quoteMessage): Promise<FileMessage> => {
     return new Promise((resolve, reject) => {
       const createParamsDefault = () => {

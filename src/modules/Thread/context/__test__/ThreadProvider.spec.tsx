@@ -1,8 +1,7 @@
 import React from 'react';
 import { act, waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
-import { ThreadProvider, ThreadState } from '../ThreadProvider';
-import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
+import { ThreadProvider } from '../ThreadProvider';
 import useThread from '../useThread';
 import { SendableMessageType } from '../../../../utils';
 
@@ -47,26 +46,6 @@ jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
 }));
 
 describe('ThreadProvider', () => {
-  const initialState: ThreadState = {
-    channelUrl: '',
-    message: null,
-    currentChannel: null,
-    allThreadMessages: [],
-    localThreadMessages: [],
-    parentMessage: null,
-    channelState: ChannelStateTypes.NIL,
-    parentMessageState: ParentMessageStateTypes.NIL,
-    threadListState: ThreadListStateTypes.NIL,
-    hasMorePrev: false,
-    hasMoreNext: false,
-    emojiContainer: {} as any,
-    isMuted: false,
-    isChannelFrozen: false,
-    currentUserId: '',
-    typingMembers: [],
-    nicknamesMap: new Map(),
-  };
-
   const initialMockMessage = {
     messageId: 1,
   } as SendableMessageType;

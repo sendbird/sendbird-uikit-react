@@ -14,11 +14,12 @@ import {
 } from '../../../../utils/consts';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';
-import useThread from '../useThread';
 
 interface DynamicParams {
   currentChannel: GroupChannel | null;
   onBeforeSendVoiceMessage?: (file: File, quoteMessage?: SendableMessageType) => FileMessageCreateParams;
+  sendMessageStart: (message: SendableMessageType) => void;
+  sendMessageFailure: (message: SendableMessageType) => void;
 }
 interface StaticParams {
   logger: Logger;
@@ -33,18 +34,13 @@ interface LocalFileMessage extends FileMessage {
 export const useSendVoiceMessageCallback = ({
   currentChannel,
   onBeforeSendVoiceMessage,
+  sendMessageStart,
+  sendMessageFailure,
 }: DynamicParams,
 {
   logger,
   pubSub,
 }: StaticParams): FuncType => {
-  const {
-    actions: {
-      sendMessageStart,
-      sendMessageFailure,
-    },
-  } = useThread();
-
   const sendMessage = useCallback((file: File, duration: number, quoteMessage: SendableMessageType) => {
     const messageParams: FileMessageCreateParams = (
       onBeforeSendVoiceMessage

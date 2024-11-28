@@ -2,10 +2,11 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { useCallback } from 'react';
 import { Logger } from '../../../../lib/SendbirdState';
 import { SendableMessageType } from '../../../../utils';
-import useThread from '../useThread';
 
 interface DynamicProps {
   currentChannel: GroupChannel | null;
+  onMessageDeletedByReqId: (reqId: string | number) => void,
+  onMessageDeleted: (channel: GroupChannel, messageId: number) => void,
 }
 interface StaticProps {
   logger: Logger;
@@ -13,15 +14,11 @@ interface StaticProps {
 
 export default function useDeleteMessageCallback({
   currentChannel,
+  onMessageDeletedByReqId,
+  onMessageDeleted,
 }: DynamicProps, {
   logger,
 }: StaticProps): (message: SendableMessageType) => Promise<void> {
-  const {
-    actions: {
-      onMessageDeletedByReqId,
-      onMessageDeleted,
-    },
-  } = useThread();
   return useCallback((message: SendableMessageType): Promise<void> => {
     logger.info('Thread | useDeleteMessageCallback: Deleting message.', message);
     const { sendingStatus } = message;

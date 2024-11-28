@@ -7,11 +7,12 @@ import { Logger } from '../../../../lib/SendbirdState';
 
 import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { PublishingModuleType } from '../../../internalInterfaces';
-import useThread from '../useThread';
+import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
   currentChannel: GroupChannel | null;
   isMentionEnabled?: boolean;
+  onMessageUpdated: (currentChannel: GroupChannel, message: SendableMessageType) => void;
 }
 interface StaticProps {
   logger: Logger;
@@ -28,6 +29,7 @@ type CallbackParams = {
 export default function useUpdateMessageCallback({
   currentChannel,
   isMentionEnabled,
+  onMessageUpdated,
 }: DynamicProps, {
   logger,
   pubSub,
@@ -40,12 +42,6 @@ export default function useUpdateMessageCallback({
       mentionedUsers,
       mentionTemplate,
     } = props;
-
-    const {
-      actions: {
-        onMessageUpdated,
-      },
-    } = useThread();
 
     const createParamsDefault = () => {
       const params = {} as UserMessageUpdateParams;

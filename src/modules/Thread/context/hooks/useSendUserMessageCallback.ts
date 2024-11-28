@@ -7,13 +7,14 @@ import { Logger } from '../../../../lib/SendbirdState';
 import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';
-import useThread from '../useThread';
 
 export type OnBeforeSendUserMessageType = (message: string, quoteMessage?: SendableMessageType) => UserMessageCreateParams;
 interface DynamicProps {
   isMentionEnabled: boolean;
   currentChannel: GroupChannel | null;
   onBeforeSendUserMessage?: OnBeforeSendUserMessageType;
+  sendMessageStart: (message: SendableMessageType) => void;
+  sendMessageFailure: (message: SendableMessageType) => void;
 }
 interface StaticProps {
   logger: Logger;
@@ -31,6 +32,8 @@ export default function useSendUserMessageCallback({
   isMentionEnabled,
   currentChannel,
   onBeforeSendUserMessage,
+  sendMessageStart,
+  sendMessageFailure,
 }: DynamicProps, {
   logger,
   pubSub,
@@ -42,13 +45,6 @@ export default function useSendUserMessageCallback({
       mentionTemplate,
       mentionedUsers,
     } = props;
-
-    const {
-      actions: {
-        sendMessageStart,
-        sendMessageFailure,
-      },
-    } = useThread();
 
     const createDefaultParams = () => {
       const params = {} as UserMessageCreateParams;
