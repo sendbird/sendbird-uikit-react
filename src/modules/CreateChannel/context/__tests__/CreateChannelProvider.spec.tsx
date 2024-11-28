@@ -56,11 +56,11 @@ describe('CreateChannelProvider', () => {
 
     const { result } = renderHook(() => useCreateChannel(), { wrapper });
 
-    expect(result.current.actions).toHaveProperty('setStep');
+    expect(result.current.actions).toHaveProperty('setPageStep');
     expect(result.current.actions).toHaveProperty('setType');
   });
 
-  it('update state correctly when setStep is called', async () => {
+  it('update state correctly when setPageStep is called', async () => {
     const wrapper = ({ children }) => (
       <CreateChannelProvider onChannelCreated={jest.fn()}>
         {children}
