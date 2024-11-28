@@ -32,10 +32,12 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
       onCreateChannelClick,
       onBeforeCreateChannel,
       onChannelCreated,
-      createChannel,
       onCreateChannel,
       overrideInviteUser,
       type,
+    },
+    actions: {
+      createChannel,
     },
   } = useCreateChannel();
 

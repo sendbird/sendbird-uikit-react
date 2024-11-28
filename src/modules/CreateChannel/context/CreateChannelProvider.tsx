@@ -16,12 +16,11 @@ const CreateChannelContext = React.createContext<ReturnType<typeof createStore<C
 
 const initialState = {
   sdk: undefined,
-  createChannel: undefined,
   userListQuery: undefined,
   onCreateChannelClick: undefined,
   onChannelCreated: undefined,
   onBeforeCreateChannel: undefined,
-  step: 0,
+  pageStep: 0,
   type: CHANNEL_TYPE.GROUP,
   onCreateChannel: undefined,
   overrideInviteUser: undefined,
@@ -69,11 +68,8 @@ export interface CreateChannelProviderProps {
   overrideInviteUser?(params: OverrideInviteUserType): void;
 }
 
-type CreateChannel = (channelParams: GroupChannelCreateParams) => Promise<GroupChannel>;
-
 export interface CreateChannelState {
   sdk: SendbirdChatType;
-  createChannel: CreateChannel;
   userListQuery?(): UserListQuery;
 
   /**
@@ -90,7 +86,7 @@ export interface CreateChannelState {
    * */
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
 
-  step: number,
+  pageStep: number,
   type: CHANNEL_TYPE,
   /**
    * @deprecated
