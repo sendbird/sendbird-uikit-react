@@ -20,7 +20,7 @@ import MessageContent, { MessageContentProps } from '../../../../ui/MessageConte
 
 import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
-import type { OnBeforeDownloadFileMessageType } from '../../context/GroupChannelProvider';
+import type { OnBeforeDownloadFileMessageType } from '../../context/types';
 import { classnames, deleteNullish } from '../../../../utils/utils';
 
 export interface MessageProps {

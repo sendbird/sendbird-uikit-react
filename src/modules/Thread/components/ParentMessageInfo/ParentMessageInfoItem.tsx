@@ -36,7 +36,7 @@ import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/useThreadMessageKindKeySelector';
 import { useFileInfoListWithUploaded } from '../../../Channel/context/hooks/useFileInfoListWithUploaded';
 import { Colors } from '../../../../utils/color';
-import type { OnBeforeDownloadFileMessageType } from '../../../GroupChannel/context/GroupChannelProvider';
+import type { OnBeforeDownloadFileMessageType } from '../../../GroupChannel/context/types';
 import { openURL } from '../../../../utils/utils';
 import useThread from '../../context/useThread';
 
