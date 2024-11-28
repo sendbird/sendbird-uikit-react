@@ -2,7 +2,7 @@ import SendbirdChat, { DeviceOsPlatform, SendbirdChatWith, SendbirdPlatform, Sen
 import { GroupChannelModule } from '@sendbird/chat/groupChannel';
 import { OpenChannelModule } from '@sendbird/chat/openChannel';
 
-import type { AppInfoStore, CustomExtensionParams, SdkStore, SendbirdState, UserStore } from "./types";
+import type { AppInfoStore, CustomExtensionParams, SdkStore, SendbirdState, UserStore } from './types';
 import { LoggerInterface } from '../Logger';
 
 type UpdateAppInfoStoreType = (state: SendbirdState, payload: AppInfoStore) => SendbirdState;

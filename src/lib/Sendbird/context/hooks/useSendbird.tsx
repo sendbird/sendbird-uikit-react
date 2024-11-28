@@ -1,17 +1,16 @@
-import { useContext, useMemo, useSyncExternalStore } from "react";
-import { SendbirdError, User } from "@sendbird/chat";
+import { useContext, useMemo, useSyncExternalStore } from 'react';
+import { SendbirdError, User } from '@sendbird/chat';
 
-import { SendbirdContext } from "../SendbirdContext";
-import { LoggerInterface } from "../../../Logger";
-import { MessageTemplatesInfo } from "../../types";
-import { SendbirdState, WaitingTemplateKeyData } from "../../types";
-import { initSDK, setupSDK, updateAppInfoStore, updateSdkStore, updateUserStore } from "../../utils";
+import { SendbirdContext } from '../SendbirdContext';
+import { LoggerInterface } from '../../../Logger';
+import { MessageTemplatesInfo, SendbirdState, WaitingTemplateKeyData } from '../../types';
+import { initSDK, setupSDK, updateAppInfoStore, updateSdkStore, updateUserStore } from '../../utils';
 
 const NO_CONTEXT_ERROR = 'No sendbird state value available. Make sure you are rendering `<SendbirdProvider>` at the top of your app.';
 export const useSendbird = () => {
   const store = useContext(SendbirdContext);
   if (!store) throw new Error(NO_CONTEXT_ERROR);
-  
+
   const state = useSyncExternalStore(store.subscribe, store.getState);
   const actions = useMemo(() => ({
     /* Example: How to set the state basically */
@@ -21,7 +20,7 @@ export const useSendbird = () => {
     //     example: true,
     //   })),
     // },
-    
+
     /* AppInfo */
     initMessageTemplateInfo: ({ payload }: { payload: MessageTemplatesInfo }) => {
       store.setState((state): SendbirdState => (
@@ -34,14 +33,14 @@ export const useSendbird = () => {
     upsertMessageTemplates: ({ payload }) => {
       const appInfoStore = state.stores.appInfoStore;
       const templatesInfo = appInfoStore.messageTemplatesInfo;
-        if (!templatesInfo) return state; // Not initialized. Ignore.
+      if (!templatesInfo) return state; // Not initialized. Ignore.
 
-        const waitingTemplateKeysMap = { ...appInfoStore.waitingTemplateKeysMap };
-        payload.forEach((templatesMapData) => {
-          const { key, template } = templatesMapData;
-          templatesInfo.templatesMap[key] = template;
-          delete waitingTemplateKeysMap[key];
-        });
+      const waitingTemplateKeysMap = { ...appInfoStore.waitingTemplateKeysMap };
+      payload.forEach((templatesMapData) => {
+        const { key, template } = templatesMapData;
+        templatesInfo.templatesMap[key] = template;
+        delete waitingTemplateKeysMap[key];
+      });
       store.setState((state): SendbirdState => (
         updateAppInfoStore(state, {
           waitingTemplateKeysMap,
@@ -89,7 +88,7 @@ export const useSendbird = () => {
           initialized: false,
           loading: payload,
         })
-      ))
+      ));
     },
     sdkError: () => {
       store.setState((state): SendbirdState => (
@@ -118,7 +117,7 @@ export const useSendbird = () => {
           loading: false,
           error: false,
         })
-      ))
+      ));
     },
 
     /* User */
@@ -129,7 +128,7 @@ export const useSendbird = () => {
           loading: false,
           user: payload,
         })
-      ))
+      ));
     },
     resetUser: () => {
       store.setState((state): SendbirdState => (
@@ -138,14 +137,14 @@ export const useSendbird = () => {
           loading: false,
           user: null,
         })
-      ))
+      ));
     },
     updateUserInfo: (payload: User) => {
       store.setState((state): SendbirdState => (
         updateUserStore(state, {
           user: payload,
         })
-      ))
+      ));
     },
 
     /* Connection */
@@ -220,7 +219,7 @@ export const useSendbird = () => {
       if (sdk?.disconnectWebSocket) {
         await sdk.disconnectWebSocket();
       }
-        
+
       actions.resetSdk();
       actions.resetUser();
       logger.info?.('SendbirdProvider | useSendbird/disconnect completed');

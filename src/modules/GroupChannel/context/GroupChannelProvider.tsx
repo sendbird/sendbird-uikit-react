@@ -26,7 +26,6 @@ import { PubSubTypes } from '../../../lib/pubSub';
 import { useMessageActions } from './hooks/useMessageActions';
 import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
-import { sub } from 'date-fns';
 
 export { ThreadReplySelectType } from './const'; // export for external usage
 
@@ -148,7 +147,6 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
 
   const { sdkStore } = stores;
   const { markAsReadScheduler, logger, pubSub } = config;
-  console.log('펍섯ㅂ', pubSub)
 
   // State
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType | null>(null);

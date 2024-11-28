@@ -39,7 +39,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
   const userMessage = message as UserMessage;
   const status = message?.sendingStatus;
   const { stringSet } = useLocalization();
-  const { state: { config: { userId } } } = useSendbird()
+  const { state: { config: { userId } } } = useSendbird();
   const fileMessage = message as FileMessage;
   return (
     <ContextMenu

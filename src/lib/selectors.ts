@@ -14,11 +14,10 @@ import {
   // SendBirdState,
   SendbirdStateConfig,
   SendbirdStateStore,
-} from './Sendbird/types';
+  SendbirdState } from './Sendbird/types';
 import { noop } from '../utils/utils';
 import { SendableMessageType } from '../utils';
 import { PublishingModuleType } from '../modules/internalInterfaces';
-import { SendbirdState } from './Sendbird/types';
 
 type SendBirdState = SendbirdState;
 

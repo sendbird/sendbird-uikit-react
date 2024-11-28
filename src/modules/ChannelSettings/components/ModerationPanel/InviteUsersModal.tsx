@@ -26,7 +26,7 @@ export function InviteUsersModal({
   const [userListQuery, setUserListQuery] = useState<UserListQuery | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<Record<UserId, User>>({});
 
-  const { state } = useSendbird();;
+  const { state } = useSendbird();
   const sdk = state?.stores?.sdkStore?.sdk;
   const globalUserListQuery = state?.config?.userListQuery;
 

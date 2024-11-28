@@ -339,7 +339,7 @@ const SendbirdContextManager = ({
     utils: {
       updateMessageTemplatesInfo,
       getCachedTemplate,
-    }
+    },
   }), [
     updateMessageTemplatesInfo,
     getCachedTemplate,
@@ -352,7 +352,7 @@ const SendbirdContextManager = ({
       ...configState,
       eventHandlers,
       emojiManager,
-    })
+    });
   }, [
     storeState,
     configState,

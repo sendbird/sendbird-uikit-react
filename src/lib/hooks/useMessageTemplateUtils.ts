@@ -4,7 +4,7 @@ import { SendbirdMessageTemplate } from '../../ui/TemplateMessageItemBody/types'
 import { CACHED_MESSAGE_TEMPLATES_KEY, CACHED_MESSAGE_TEMPLATES_TOKEN_KEY } from '../../utils/consts';
 import { LoggerInterface } from '../Logger';
 import useSendbird from '../Sendbird/context/hooks/useSendbird';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 const MESSAGE_TEMPLATES_FETCH_LIMIT = 20;
 
@@ -186,7 +186,7 @@ export default function useMessageTemplateUtils({
             key: newParsedTemplate.key,
             template: getProcessedTemplate(newParsedTemplate),
           };
-        })
+        }),
       } as any);
     } else {
       actions.markErrorWaitingTemplateKeys({

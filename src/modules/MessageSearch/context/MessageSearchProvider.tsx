@@ -66,7 +66,7 @@ const MessageSearchManager: React.FC<MessageSearchProviderProps> = ({
   onResultClick,
 }) => {
   const { state, updateState } = useMessageSearchStore();
-  const { state: { config, stores } } = useSendbird();;
+  const { state: { config, stores } } = useSendbird();
   const sdk = stores?.sdkStore?.sdk;
   const sdkInit = stores?.sdkStore?.initialized;
   const { logger } = config;

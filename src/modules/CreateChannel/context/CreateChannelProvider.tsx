@@ -102,7 +102,7 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
     overrideInviteUser,
   } = props;
 
-  const { state } = useSendbird();;
+  const { state } = useSendbird();
   const _userListQuery = userListQuery ?? state?.config?.userListQuery;
 
   const [step, setStep] = useState(0);

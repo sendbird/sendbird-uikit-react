@@ -15,7 +15,7 @@ export const LeaveGroupChannel = ({
   onSubmit,
   onCancel,
 }: LeaveGroupChannelProps) => {
-  const { state: { config: { logger, isOnline } } } = useSendbird();;
+  const { state: { config: { logger, isOnline } } } = useSendbird();
   const { stringSet } = useLocalization();
   if (channel) {
     return (

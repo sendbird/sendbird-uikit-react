@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './index.scss';
 import './__experimental__typography.scss';
 
 import { UIKitConfigProvider } from '@sendbird/uikit-tools';
 
-import type { SendbirdProviderProps, SendbirdState, UIKitOptions } from './types';
+import type { SendbirdProviderProps, UIKitOptions } from './types';
 import { uikitConfigMapper } from '../utils/uikitConfigMapper';
 import { uikitConfigStorage } from '../utils/uikitConfigStorage';
 import { SendbirdContextProvider } from './context/SendbirdProvider';
@@ -61,12 +61,12 @@ const withSendbirdContext = (OriginalComponent: any, mapStoreToProps: Record<str
       console.warn('Second parameter to withSendbirdContext must be a pure function');
     }
     const mergedProps = (mapStoreToProps && typeof mapStoreToProps === 'function')
-          ? { ...mapStoreToProps(context), ...props }
-          : { ...context, ...props };
+      ? { ...mapStoreToProps(context), ...props }
+      : { ...context, ...props };
     return <>
       <OriginalComponent {...mergedProps} />
-    </>
-  }
+    </>;
+  };
 
   const componentName = OriginalComponent.displayName || OriginalComponent.name || 'Component';
   ContextAwareComponent.displayName = `SendbirdAware${componentName}`;

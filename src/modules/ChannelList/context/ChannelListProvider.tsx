@@ -136,7 +136,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
   const disableAutoSelect = props?.disableAutoSelect || !!activeChannelUrl;
   const onChannelSelect = props?.onChannelSelect || noop;
   // fetch store from <SendbirdProvider />
-  const { state  } = useSendbird();
+  const { state } = useSendbird();
   const { config, stores } = state;
   const { sdkStore } = stores;
   const { pubSub, logger } = config;

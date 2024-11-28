@@ -10,7 +10,6 @@ import './edit-user-profile.scss';
 
 import { useEditUserProfileContext } from '../../context/EditUserProfileProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { USER_ACTIONS } from '../../../../lib/dux/user/actionTypes';
 
 import Modal from '../../../../ui/Modal';
 import { ButtonTypes } from '../../../../ui/Button';
