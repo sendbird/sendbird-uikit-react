@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, FileMessageCreateParams } from '@sendbird/chat/message';
+import { FileMessage, FileMessageCreateParams, SendingStatus } from '@sendbird/chat/message';
 
 import { Logger } from '../../../../lib/SendbirdState';
 import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
@@ -58,6 +58,7 @@ export default function useSendFileMessageCallback({
             // pending thumbnail message seems to be failed
             // @ts-ignore
             requestState: 'pending',
+            sendingStatus: SendingStatus.PENDING,
             isUserMessage: pendingMessage.isUserMessage,
             isFileMessage: pendingMessage.isFileMessage,
             isAdminMessage: pendingMessage.isAdminMessage,
