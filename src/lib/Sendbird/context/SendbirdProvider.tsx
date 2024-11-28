@@ -72,7 +72,7 @@ const SendbirdContextManager = ({
   const { logLevel = '', userMention = {}, isREMUnitEnabled = false, pubSub: customPubSub } = config;
   const { isMobile } = useMediaQueryContext();
   const [logger, setLogger] = useState(LoggerFactory(logLevel as LogLevel));
-  const [pubSub] = useState(() => customPubSub ?? pubSubFactory<PUBSUB_TOPICS, SBUGlobalPubSubTopicPayloadUnion>());
+  const [pubSub] = useState(customPubSub ?? pubSubFactory<PUBSUB_TOPICS, SBUGlobalPubSubTopicPayloadUnion>());
 
   const { state, updateState } = useSendbirdStore();
   const { actions } = useSendbird();
@@ -184,7 +184,7 @@ const SendbirdContextManager = ({
     });
   }, [sdkStore.initialized]);
 
-  const uikitCofigs = useMemo(() => ({
+  const uikitConfigs = useMemo(() => ({
     common: {
       enableUsingDefaultUserProfile: configs.common.enableUsingDefaultUserProfile,
     },
@@ -225,7 +225,7 @@ const SendbirdContextManager = ({
     configs.groupChannel.setting,
     configs.openChannel.channel,
   ]);
-  const stateStores = useMemo(() => ({
+  const storeState = useMemo(() => ({
     stores: {
       sdkStore: state.stores.sdkStore,
       userStore: state.stores.userStore,
@@ -277,8 +277,8 @@ const SendbirdContextManager = ({
     configs.groupChannel.channelList.enableMessageReceiptStatus,
     configs.groupChannel.setting.enableMessageSearch,
   ]);
-  const stateConfig = useMemo<SendbirdStateConfig>(() => ({
-    // config: {
+  const configState = useMemo<Record<string, SendbirdStateConfig>>(() => ({
+    config: {
       disableMarkAsDelivered,
       renderUserProfile,
       onStartDirectMessage,
@@ -305,9 +305,9 @@ const SendbirdContextManager = ({
       voiceRecord: configVoiceRecord,
       userMention: configUserMention,
       // Remote configs set from dashboard by UIKit feature configuration
-      ...uikitCofigs,
+      ...uikitConfigs,
       ...deprecatedConfigs,
-    // },
+    },
   }), [
     disableMarkAsDelivered,
     renderUserProfile,
@@ -332,10 +332,10 @@ const SendbirdContextManager = ({
     configImageCompression,
     configVoiceRecord,
     configUserMention,
-    uikitCofigs,
+    uikitConfigs,
     deprecatedConfigs,
   ]);
-  const stateUtils = useMemo(() => ({
+  const utilsState = useMemo(() => ({
     utils: {
       updateMessageTemplatesInfo,
       getCachedTemplate,
@@ -347,18 +347,18 @@ const SendbirdContextManager = ({
 
   useEffect(() => {
     updateState({
-      ...stateStores,
-      config: stateConfig,
+      ...storeState,
+      ...utilsState,
+      ...configState,
       eventHandlers,
       emojiManager,
-      ...stateUtils,
     })
   }, [
-    stateStores,
-    stateConfig,
+    storeState,
+    configState,
     eventHandlers,
     emojiManager,
-    stateUtils,
+    utilsState,
   ]);
 
   return null;
@@ -366,7 +366,7 @@ const SendbirdContextManager = ({
 
 const InternalSendbirdProvider = ({ children, stringSet, breakpoint, dateLocale }) => {
   const storeRef = useRef(createStore(initialState));
-  const localeStringSet = React.useMemo(() => {
+  const localeStringSet = useMemo(() => {
     return { ...getStringSet('en'), ...stringSet };
   }, [stringSet]);
 

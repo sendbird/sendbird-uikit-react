@@ -9,8 +9,7 @@ import RemoveMessageModal from '../RemoveMessageModal';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 const Message = (props: MessageProps) => {
-  const { state } = useSendbird();
-  const { config } = state;
+  const { state: { config } } = useSendbird();
   const {
     initialized,
     currentGroupChannel,

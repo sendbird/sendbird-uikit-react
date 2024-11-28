@@ -48,8 +48,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
   } = props;
   const [panel, setPanel] = useState(PANELS.CHANNEL_LIST);
 
-  const { state } = useSendbird();
-  const store = state;
+  const { state: store } = useSendbird();
   const sdk = store?.stores?.sdkStore?.sdk;
   const userId = store?.config?.userId;
 

@@ -141,7 +141,7 @@ export default function useMessageTemplateUtils({
    * If given message is a template message with template key and if the key does not exist in the cache,
    * update the cache by fetching the template.
    */
-  const updateMessageTemplatesInfo = useMemo(() => async (
+  const updateMessageTemplatesInfo = useCallback(async (
     templateKeys: string[],
     messageId: number,
     requestedAt: number,

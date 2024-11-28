@@ -105,7 +105,6 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
   onUserProfileUpdated,
 }: GroupChannelListProviderProps) => {
   const { state: sendbirdState } = useSendbird();
-  console.log('sendbirdState', sendbirdState);
   const { config, stores } = sendbirdState;
   const { state, updateState } = useGroupChannelListStore();
   const { sdkStore } = stores;

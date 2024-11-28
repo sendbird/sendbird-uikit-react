@@ -26,6 +26,7 @@ import { PubSubTypes } from '../../../lib/pubSub';
 import { useMessageActions } from './hooks/useMessageActions';
 import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import { sub } from 'date-fns';
 
 export { ThreadReplySelectType } from './const'; // export for external usage
 
@@ -146,7 +147,8 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
   const { config, stores } = state;
 
   const { sdkStore } = stores;
-  const { markAsReadScheduler, logger } = config;
+  const { markAsReadScheduler, logger, pubSub } = config;
+  console.log('펍섯ㅂ', pubSub)
 
   // State
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType | null>(null);
@@ -239,14 +241,16 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     const onSentMessageFromOtherModule = (data: PubSubSendMessagePayload) => {
       if (data.channel.url === currentChannel?.url) scrollPubSub.publish('scrollToBottom', {});
     };
+
+    if (pubSub?.subscribe === undefined) return;
     const subscribes = [
-      config.pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, onSentMessageFromOtherModule),
-      config.pubSub.subscribe(PUBSUB_TOPICS.SEND_FILE_MESSAGE, onSentMessageFromOtherModule),
+      pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, onSentMessageFromOtherModule),
+      pubSub.subscribe(PUBSUB_TOPICS.SEND_FILE_MESSAGE, onSentMessageFromOtherModule),
     ];
     return () => {
       subscribes.forEach((subscribe) => subscribe.remove());
     };
-  }, [messageDataSource.initialized, currentChannel?.url]);
+  }, [messageDataSource.initialized, currentChannel?.url, pubSub?.subscribe]);
 
   // SideEffect: Reset MessageCollection with startingPoint prop.
   useEffect(() => {

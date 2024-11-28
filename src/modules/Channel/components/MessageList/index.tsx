@@ -72,8 +72,7 @@ export const MessageList = (props: MessageListProps) => {
     typingMembers,
   } = useChannelContext();
 
-  const { state } = useSendbird();
-  const store = state;
+  const { state: store } = useSendbird();
   const allMessagesFiltered = typeof filterMessageList === 'function' ? allMessages.filter(filterMessageList) : allMessages;
   const markAsReadScheduler = store.config.markAsReadScheduler;
 

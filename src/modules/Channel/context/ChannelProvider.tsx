@@ -199,8 +199,7 @@ const ChannelProvider = (props: ChannelContextProps) => {
     scrollBehavior = 'auto',
     reconnectOnIdle = true,
   } = props;
-  const { state } = useSendbird();
-  const globalStore = state;
+  const { state: globalStore } = useSendbird();
   const { config } = globalStore;
   const replyType = props.replyType ?? getCaseResolvedReplyType(config.groupChannel.replyType).upperCase;
   const {

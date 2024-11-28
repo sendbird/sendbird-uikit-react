@@ -47,8 +47,7 @@ function useHandleChannelEvents({
   setQuoteMessage,
   messagesDispatcher,
 }: StaticParams): void {
-  const { state } = useSendbird();
-  const store = state;
+  const { state: store } = useSendbird();
   const {
     markAsReadScheduler,
     markAsDeliveredScheduler,

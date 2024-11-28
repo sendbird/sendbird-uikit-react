@@ -36,8 +36,7 @@ export const useHandleUploadFiles = ({
   logger,
 }: useHandleUploadFilesStaticProps) => {
   const { stringSet } = useLocalization();
-  const { state } = useSendbird();
-  const { config } = state;
+  const { state: { config } } = useSendbird();
   const { imageCompression } = config;
   const uikitUploadSizeLimit = config?.uikitUploadSizeLimit;
   const uikitMultipleFilesMessageLimit = config?.uikitMultipleFilesMessageLimit;

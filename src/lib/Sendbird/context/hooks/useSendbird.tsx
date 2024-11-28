@@ -168,7 +168,7 @@ export const useSendbird = () => {
         initDashboardConfigs,
       } = params;
 
-      /* Clean up previous ws connection */
+      // clean up previous ws connection
       await actions.disconnect({ logger });
 
       const sdk = initSDK({
