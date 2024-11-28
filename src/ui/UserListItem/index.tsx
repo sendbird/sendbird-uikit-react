@@ -3,7 +3,7 @@ import type { User } from '@sendbird/chat';
 import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import './index.scss';
 
-import { useSendbirdStateContext } from '../../lib/Sendbird';
+import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { useUserProfileContext } from '../../lib/UserProfileContext';
 import { useLocalization } from '../../lib/LocalizationContext';
 
