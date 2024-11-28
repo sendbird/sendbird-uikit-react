@@ -13,7 +13,7 @@ import MessageInput from '../../../../ui/MessageInput';
 import { ThreadListStateTypes } from '../../types';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import ThreadListItemContent from './ThreadListItemContent';
-import { Role } from '../../../../lib/types';
+import { Role } from '../../../../lib/Sendbird/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 import { SendableMessageType } from '../../../../utils';

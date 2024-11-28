@@ -11,7 +11,7 @@ import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { SuggestedMentionList } from '../SuggestedMentionList';
 import { VoiceMessageInputWrapper } from '../../../GroupChannel/components/MessageInputWrapper';
-import { Role } from '../../../../lib/types';
+import { Role } from '../../../../lib/Sendbird/types';
 
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { useHandleUploadFiles } from '../../../Channel/context/hooks/useHandleUploadFiles';

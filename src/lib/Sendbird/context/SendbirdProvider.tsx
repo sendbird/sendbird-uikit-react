@@ -3,7 +3,7 @@ import React, { ReactElement, useEffect, useMemo, useRef, useState } from 'react
 import { useUIKitConfig } from '@sendbird/uikit-tools';
 
 /* Types */
-import type { ImageCompressionOptions, SendbirdProviderProps, SendbirdProviderUtils, SendbirdStateConfig } from '../types';
+import type { ImageCompressionOptions, SendbirdProviderProps, SendbirdStateConfig } from '../types';
 
 /* Providers */
 import VoiceMessageProvider from '../../VoiceMessageProvider';
@@ -33,9 +33,7 @@ import { DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, DEFAULT_UPLOAD_SIZE_LIMIT, VOICE_
 import { EmojiReactionListRoot, MenuRoot } from '../../../ui/ContextMenu';
 
 import useSendbird from './hooks/useSendbird';
-import { createSendbirdContextStore, SendbirdContext, useSendbirdStore } from './SendbirdContext';
-import { initSDK, setupSDK } from '../utils';
-import { SendbirdError } from '@sendbird/chat';
+import { SendbirdContext, useSendbirdStore } from './SendbirdContext';
 import { createStore } from '../../../utils/storeManager';
 import { initialState } from './initialState';
 
@@ -88,12 +86,12 @@ const SendbirdContextManager = ({
 
   useTheme(colorSet);
 
-  // const { getCachedTemplate, updateMessageTemplatesInfo, initializeMessageTemplatesInfo } = useMessageTemplateUtils({
-  //   sdk,
-  //   logger,
-  //   appInfoStore,
-  //   actions,
-  // });
+  const { getCachedTemplate, updateMessageTemplatesInfo, initializeMessageTemplatesInfo } = useMessageTemplateUtils({
+    sdk,
+    logger,
+    appInfoStore,
+    actions,
+  });
 
   // Reconnect when necessary
   useEffect(() => {
@@ -113,7 +111,7 @@ const SendbirdContextManager = ({
       customExtensionParams,
       initDashboardConfigs,
       eventHandlers,
-      // initializeMessageTemplatesInfo,
+      initializeMessageTemplatesInfo,
     });
   }, [appId, userId]);
 
@@ -337,15 +335,15 @@ const SendbirdContextManager = ({
     uikitCofigs,
     deprecatedConfigs,
   ]);
-  // const stateUtils = useMemo(() => ({
-  //   utils: {
-  //     updateMessageTemplatesInfo,
-  //     getCachedTemplate,  
-  //   }
-  // }), [
-  //   updateMessageTemplatesInfo,
-  //   getCachedTemplate,
-  // ]);
+  const stateUtils = useMemo(() => ({
+    utils: {
+      updateMessageTemplatesInfo,
+      getCachedTemplate,
+    }
+  }), [
+    updateMessageTemplatesInfo,
+    getCachedTemplate,
+  ]);
 
   useEffect(() => {
     updateState({
@@ -353,14 +351,14 @@ const SendbirdContextManager = ({
       config: stateConfig,
       eventHandlers,
       emojiManager,
-      // ...stateUtils,
+      ...stateUtils,
     })
   }, [
     stateStores,
     stateConfig,
     eventHandlers,
     emojiManager,
-    // stateUtils,
+    stateUtils,
   ]);
 
   return null;
@@ -371,8 +369,6 @@ const InternalSendbirdProvider = ({ children, stringSet, breakpoint, dateLocale 
   const localeStringSet = React.useMemo(() => {
     return { ...getStringSet('en'), ...stringSet };
   }, [stringSet]);
-
-  console.log('인터널 SendbirdProvider ', storeRef.current.getState());
 
   return (
     <SendbirdContext.Provider value={storeRef.current}>

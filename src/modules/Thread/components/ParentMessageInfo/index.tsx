@@ -21,7 +21,7 @@ import ContextMenu, { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_N
 import ConnectedUserProfile from '../../../../ui/UserProfile';
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
-import { Role } from '../../../../lib/types';
+import { Role } from '../../../../lib/Sendbird/types';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 import MobileMenu from '../../../../ui/MobileMenu';

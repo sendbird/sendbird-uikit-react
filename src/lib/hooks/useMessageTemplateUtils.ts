@@ -1,13 +1,33 @@
-import { AppInfoStateType, MessageTemplatesInfo, ProcessedMessageTemplate } from '../dux/appInfo/initialState';
-import { SendbirdMessageTemplate } from '../../ui/TemplateMessageItemBody/types';
-import { getProcessedTemplate, getProcessedTemplatesMap } from '../dux/appInfo/utils';
 import SendbirdChat from '@sendbird/chat';
+import { AppInfoStateType, MessageTemplatesInfo, ProcessedMessageTemplate } from '../Sendbird/types';
+import { SendbirdMessageTemplate } from '../../ui/TemplateMessageItemBody/types';
 import { CACHED_MESSAGE_TEMPLATES_KEY, CACHED_MESSAGE_TEMPLATES_TOKEN_KEY } from '../../utils/consts';
 import { LoggerInterface } from '../Logger';
 import useSendbird from '../Sendbird/context/hooks/useSendbird';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 const MESSAGE_TEMPLATES_FETCH_LIMIT = 20;
+
+/**
+ * Takes JSON parsed template and then returns processed message template for storing it in global state.
+ */
+export const getProcessedTemplate = (parsedTemplate: SendbirdMessageTemplate): ProcessedMessageTemplate => {
+  return {
+    version: Number(parsedTemplate.ui_template.version),
+    uiTemplate: JSON.stringify(parsedTemplate.ui_template.body.items),
+    colorVariables: parsedTemplate.color_variables,
+  };
+};
+
+export const getProcessedTemplatesMap = (
+  parsedTemplates: SendbirdMessageTemplate[],
+): Record<string, ProcessedMessageTemplate> => {
+  const processedTemplates = {};
+  parsedTemplates.forEach((template) => {
+    processedTemplates[template.key] = getProcessedTemplate(template);
+  });
+  return processedTemplates;
+};
 
 interface UseMessageTemplateUtilsProps {
   sdk: SendbirdChat,
@@ -121,7 +141,7 @@ export default function useMessageTemplateUtils({
    * If given message is a template message with template key and if the key does not exist in the cache,
    * update the cache by fetching the template.
    */
-  const updateMessageTemplatesInfo = async (
+  const updateMessageTemplatesInfo = useMemo(() => async (
     templateKeys: string[],
     messageId: number,
     requestedAt: number,
@@ -174,7 +194,11 @@ export default function useMessageTemplateUtils({
         messageId,
       } as any);
     }
-  };
+  }, [
+    actions.upsertMessageTemplates,
+    actions.upsertWaitingTemplateKeys,
+    sdk.message?.getMessageTemplatesByToken,
+  ]);
   return {
     getCachedTemplate,
     updateMessageTemplatesInfo,

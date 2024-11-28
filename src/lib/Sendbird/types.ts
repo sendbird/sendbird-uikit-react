@@ -44,11 +44,6 @@ import { StringSet } from '../../ui/Label/stringSet';
 /* -------------------------------------------------------------------------- */
 
 export type ReplyType = 'NONE' | 'QUOTE_REPLY' | 'THREAD';
-export type ProcessedMessageTemplate = {
-  version: number;
-  uiTemplate: string; // This is stringified ui_template.body.items
-  colorVariables?: Record<string, string>;
-};
 export type ConfigureSessionTypes = (sdk: SendbirdChat | SendbirdGroupChat | SendbirdOpenChat) => SessionHandler;
 
 /* -------------------------------------------------------------------------- */
@@ -110,6 +105,31 @@ export interface MessageTemplatesInfo {
 export interface WaitingTemplateKeyData {
   requestedAt: number;
   erroredMessageIds: number[];
+}
+
+export type ProcessedMessageTemplate = {
+  version: number;
+  uiTemplate: string; // This is stringified ui_template.body.items
+  colorVariables?: Record<string, string>;
+};
+
+export interface MessageTemplatesInfo {
+  token: string; // This server-side token gets updated on every CRUD operation on message template table.
+  templatesMap: Record<string, ProcessedMessageTemplate>;
+}
+
+export interface WaitingTemplateKeyData {
+  requestedAt: number;
+  erroredMessageIds: number[];
+}
+
+export interface AppInfoStateType {
+  messageTemplatesInfo?: MessageTemplatesInfo;
+  /**
+   * This represents template keys that are currently waiting for its fetch response.
+   * Whenever initialized, request succeeds or fails, it needs to be updated.
+   */
+  waitingTemplateKeysMap: Record<string, WaitingTemplateKeyData>;
 }
 
 /* -------------------------------------------------------------------------- */
