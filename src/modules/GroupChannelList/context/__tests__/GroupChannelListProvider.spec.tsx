@@ -1,8 +1,6 @@
 import React from 'react';
-import {
-  GroupChannelListProvider,
-  useGroupChannelListContext,
-} from '../GroupChannelListProvider';
+import { GroupChannelListProvider, useGroupChannelListStore } from '../GroupChannelListProvider';
+import { useGroupChannelList } from '../useGroupChannelList';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 const mockState = {
@@ -16,7 +14,11 @@ const mockState = {
       initialized: true,
     },
   },
-  config: { logger: console },
+  config: {
+    logger: console,
+    groupChannelList: {
+    },
+  },
 };
 jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
@@ -64,9 +66,9 @@ describe('GroupChannelListProvider', () => {
       </GroupChannelListProvider>
     );
 
-    const { result } = renderHook(() => useGroupChannelListContext(), { wrapper });
+    const { result } = renderHook(() => useGroupChannelList(), { wrapper });
 
-    expect(result.current.getState()).toMatchObject(initialState);
+    expect(result.current.state).toMatchObject(initialState);
   });
 
   it('update state correctly', async () => {
@@ -79,14 +81,14 @@ describe('GroupChannelListProvider', () => {
 
     channelListQueryParams.prev = 42;
 
-    const { result } = renderHook(() => useGroupChannelListContext(), { wrapper });
-    expect(result.current.getState().className).toEqual('old-classname');
+    const { result } = renderHook(() => useGroupChannelListStore(), { wrapper });
+    expect(result.current.state.className).toEqual('old-classname');
 
     await act(async () => {
-      result.current.setState({ className: 'new-classname' });
-      result.current.setState({ disableAutoSelect: true });
+      result.current.updateState({ className: 'new-classname' });
+      result.current.updateState({ disableAutoSelect: true });
       await waitFor(() => {
-        const newState = result.current.getState();
+        const newState = result.current.state;
         expect(newState.className).toEqual('new-classname');
         expect(newState.disableAutoSelect).toEqual(true);
       });

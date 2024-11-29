@@ -108,7 +108,8 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
 }: GroupChannelListProviderProps) => {
   const { state: sendbirdState } = useSendbird();
   const { config, stores } = sendbirdState;
-  const { state, updateState } = useGroupChannelListStore();
+  const { state } = useGroupChannelList();
+  const { updateState } = useGroupChannelListStore();
   const { sdkStore } = stores;
 
   const sdk = sdkStore.sdk;
