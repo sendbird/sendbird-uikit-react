@@ -2,9 +2,8 @@ import { useEffect, useCallback } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
 import type { SendbirdError } from '@sendbird/chat';
-import type { Logger } from '../../../../lib/SendbirdState';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import { CoreMessageType } from '../../../../utils';
-import { SdkStore } from '../../../../lib/types';
 import useMessageSearch from '../hooks/useMessageSearch';
 import { ClientSentMessages } from '../../../../types';
 

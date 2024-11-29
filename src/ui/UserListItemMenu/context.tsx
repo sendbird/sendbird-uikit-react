@@ -4,7 +4,7 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { OpenChannel } from '@sendbird/chat/openChannel';
 
 import { useToggleBan, useToggleMute, useToggleOperator } from './hooks';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 interface UserListItemMenuContextInterface extends
   UserListItemMenuContextValues,
@@ -38,7 +38,7 @@ export interface UserListItemMenuProviderProps extends UserListItemMenuContextVa
   isBanned?: boolean;
 }
 export const UserListItemMenuProvider = ({ children, ...values }: UserListItemMenuProviderProps) => {
-  const { config } = useSendbirdStateContext();
+  const { state: { config } } = useSendbird();
   const { userId: currentUserId } = config;
   const { channel, user } = values;
   const isCurrentUser = user.userId === currentUserId;

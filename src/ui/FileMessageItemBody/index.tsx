@@ -8,10 +8,10 @@ import TextButton from '../TextButton';
 import { getClassName, getUIKitFileType, truncateString } from '../../utils';
 import { Colors } from '../../utils/color';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/types';
 import { LoggerInterface } from '../../lib/Logger';
 import { openURL } from '../../utils/utils';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 interface Props {
   className?: string | Array<string>;
@@ -34,7 +34,8 @@ export default function FileMessageItemBody({
 }: Props): ReactElement {
   let logger: LoggerInterface | null = null;
   try {
-    logger = useSendbirdStateContext()?.config?.logger;
+    const { state: { config: { logger: globalLogger } } } = useSendbird();
+    logger = globalLogger;
   } catch (err) {
     // TODO: Handle error
   }

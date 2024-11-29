@@ -16,11 +16,11 @@ import { getEmojiTooltipString, isReactedBy, SendableMessageType } from '../../u
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import useLongPress from '../../hooks/useLongPress';
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { useMessageContext } from '../../modules/Message/context/MessageProvider';
 import { ModalFooter } from '../Modal';
 import { ButtonTypes } from '../Button';
 import { useGlobalModalContext } from '../../hooks/useModal';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 type Props = {
   reaction: Reaction;
@@ -44,12 +44,11 @@ export default function ReactionItem({
   isFiltered,
 }: Props) {
   const { openModal } = useGlobalModalContext();
-  const store = useSendbirdStateContext();
+  const { state: { config: { userId } } } = useSendbird();
   const { isMobile } = useMediaQueryContext();
   const messageStore = useMessageContext();
   const { stringSet } = useContext(LocalizationContext);
 
-  const userId = store.config.userId;
   const reactedByMe = isReactedBy(userId, reaction);
   const showHoverTooltip = (reaction.userIds.length > 0)
     && (channel?.isGroupChannel() && !channel.isSuper);

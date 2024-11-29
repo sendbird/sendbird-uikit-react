@@ -9,7 +9,6 @@ import ParentMessageInfoItem from './ParentMessageInfoItem';
 import { getSenderName, SendableMessageType } from '../../../../utils';
 import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useUserProfileContext } from '../../../../lib/UserProfileContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 
@@ -21,7 +20,7 @@ import ContextMenu, { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_N
 import ConnectedUserProfile from '../../../../ui/UserProfile';
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
-import { Role } from '../../../../lib/types';
+import { Role } from '../../../../lib/Sendbird/types';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 import MobileMenu from '../../../../ui/MobileMenu';
@@ -32,6 +31,7 @@ import { classnames } from '../../../../utils/utils';
 import { MessageMenu, MessageMenuProps } from '../../../../ui/MessageMenu';
 import useElementObserver from '../../../../hooks/useElementObserver';
 import useThread from '../../context/useThread';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ParentMessageInfoProps {
   className?: string;
@@ -44,7 +44,7 @@ export default function ParentMessageInfo({
   renderEmojiMenu = (props) => <MessageEmojiMenu {...props} />,
   renderMessageMenu = (props) => <MessageMenu {...props} />,
 }: ParentMessageInfoProps): React.ReactElement {
-  const { stores, config } = useSendbirdStateContext();
+  const { state: { stores, config } } = useSendbird();
   const { isOnline, userMention, logger, groupChannel } = config;
   const userId = stores.userStore.user?.userId ?? '';
   const { dateLocale, stringSet } = useLocalization();

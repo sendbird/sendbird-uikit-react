@@ -15,11 +15,11 @@ export { default as MessageSearch } from './modules/MessageSearch';
 
 // HOC for using ui-kit state
 // withBird(MyCustomComponent) will give the sendbird state as props to MyCustomComponent
-export { default as withSendBird } from './lib/SendbirdSdkContext';
+export { withSendBird } from './lib/Sendbird/index';
+export { useSendbirdStateContext } from './lib/Sendbird/context/hooks/useSendbirdStateContext';
 export { default as sendbirdSelectors } from './lib/selectors';
 // for legacy parity, slowly remove
 export { default as sendBirdSelectors } from './lib/selectors';
-export { default as useSendbirdStateContext } from './hooks/useSendbirdStateContext';
 
 // Public enum included in AppProps
 export { TypingIndicatorType } from './types';

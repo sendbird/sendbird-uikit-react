@@ -16,7 +16,7 @@ import Label, { LabelColors, LabelTypography } from '../../../ui/Label';
 import TextButton from '../../../ui/TextButton';
 import OpenChannelAvatar from '../../../ui/ChannelAvatar/OpenChannelAvatar';
 import { useOpenChannelSettingsContext } from '../context/OpenChannelSettingsProvider';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface Props {
   onCancel(): void;
@@ -26,8 +26,8 @@ const EditDetails = (props: Props): ReactElement => {
   const {
     onCancel,
   } = props;
-  const globalState = useSendbirdStateContext();
-  const { logger, theme, pubSub } = globalState.config;
+  const { state } = useSendbird();
+  const { logger, theme, pubSub } = state.config;
   const {
     channel,
     onBeforeUpdateChannel,

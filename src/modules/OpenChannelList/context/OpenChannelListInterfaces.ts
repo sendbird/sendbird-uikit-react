@@ -1,6 +1,6 @@
 import { OpenChannel } from '@sendbird/chat/openChannel';
 import { Dispatch } from 'react';
-import { Logger } from '../../../lib/SendbirdState';
+import { Logger } from '../../../lib/Sendbird/types';
 import OpenChannelListActionTypes from './dux/actionTypes';
 import { FetchNextCallbackType } from './hooks/useFetchNextCallback';
 

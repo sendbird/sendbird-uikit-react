@@ -3,8 +3,8 @@ import { BaseMessage, ThreadedMessageListParams } from '@sendbird/chat/message';
 import { CoreMessageType, SendableMessageType } from '../../../../utils';
 import { LoggerInterface } from '../../../../lib/Logger';
 import { useCallback } from 'react';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { ThreadListStateTypes } from '../../types';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 type Params = {
   anchorMessage?: SendableMessageType;
@@ -52,7 +52,7 @@ export const useThreadFetchers = ({
   getNextMessagesSuccess,
   getNextMessagesFailure,
 }: Params) => {
-  const { stores } = useSendbirdStateContext();
+  const { state: { stores } } = useSendbird();
   const timestamp = anchorMessage?.createdAt || 0;
 
   const initialize = useCallback(

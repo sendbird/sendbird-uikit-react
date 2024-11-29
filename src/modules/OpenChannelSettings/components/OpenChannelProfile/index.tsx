@@ -11,13 +11,13 @@ import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import TextButton from '../../../../ui/TextButton';
 import OpenChannelAvatar from '../../../../ui/ChannelAvatar/OpenChannelAvatar';
 import EditDetailsModal from '../EditDetailsModal';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export default function ChannelProfile(): ReactElement {
-  const globalState = useSendbirdStateContext();
-  const disabled = !(globalState?.config?.isOnline);
-  const theme = globalState?.config?.theme;
+  const { state } = useSendbird();
+  const disabled = !(state?.config?.isOnline);
+  const theme = state?.config?.theme;
   const {
     channel,
   } = useOpenChannelSettingsContext();

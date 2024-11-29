@@ -5,33 +5,35 @@ import React from 'react';
 import { useGroupChannelList as useGroupChannelListModule } from '../../../context/useGroupChannelList';
 import { LocalizationContext } from '../../../../../lib/LocalizationContext';
 
-jest.mock('../../../../../hooks/useSendbirdStateContext', () => ({
+const mockState = {
+  stores: {
+    userStore: {
+      user: {
+        userId: ' test-user-id',
+      },
+    },
+    sdkStore: {
+      sdk: {
+        currentUser: {
+          userId: 'test-user-id',
+        },
+      },
+      initialized: true,
+    },
+  },
+  config: {
+    logger: console,
+    userId: 'test-user-id',
+    groupChannel: {
+      enableMention: true,
+    },
+    isOnline: true,
+  },
+};
+jest.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
-    stores: {
-      userStore: {
-        user: {
-          userId: ' test-user-id',
-        },
-      },
-      sdkStore: {
-        sdk: {
-          currentUser: {
-            userId: 'test-user-id',
-          },
-        },
-        initialized: true,
-      },
-    },
-    config: {
-      logger: console,
-      userId: 'test-user-id',
-      groupChannel: {
-        enableMention: true,
-      },
-      isOnline: true,
-    },
-  })),
+  default: jest.fn(() => ({ state: mockState })),
+  useSendbird: jest.fn(() => ({ state: mockState })),
 }));
 jest.mock('../../../context/useGroupChannelList');
 

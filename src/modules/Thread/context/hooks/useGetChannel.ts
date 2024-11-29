@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 
-import { Logger } from '../../../../lib/SendbirdState';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import { SendableMessageType } from '../../../../utils';
-import { SdkStore } from '../../../../lib/types';
 import useThread from '../useThread';
 
 interface DynamicProps {

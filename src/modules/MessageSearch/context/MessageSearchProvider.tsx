@@ -5,8 +5,6 @@ import { ClientSentMessages } from '../../../types';
 import { SendbirdError } from '@sendbird/chat';
 import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
 
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-
 import useSetChannel from './hooks/useSetChannel';
 import useGetSearchMessages from './hooks/useGetSearchedMessages';
 import useScrollCallback from './hooks/useScrollCallback';
@@ -15,6 +13,7 @@ import { CoreMessageType } from '../../../utils';
 import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
 import useMessageSearch from './hooks/useMessageSearch';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface MessageSearchProviderProps {
   channelUrl: string;
@@ -68,7 +67,7 @@ const MessageSearchManager: React.FC<MessageSearchProviderProps> = ({
   onResultClick,
 }) => {
   const { state, updateState } = useMessageSearchStore();
-  const { config, stores } = useSendbirdStateContext();
+  const { state: { config, stores } } = useSendbird();
   const sdk = stores?.sdkStore?.sdk;
   const sdkInit = stores?.sdkStore?.initialized;
   const { logger } = config;

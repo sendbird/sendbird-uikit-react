@@ -1,4 +1,4 @@
-import { UIKitOptions } from '../../../../src/lib/types.ts';
+import { UIKitOptions } from '../../../../src/lib/Sendbird/types';
 import { useSearchParams } from 'react-router-dom';
 
 export interface InitialParams {

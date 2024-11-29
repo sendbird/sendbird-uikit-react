@@ -6,10 +6,10 @@ import { IconColors, IconTypes } from '../../../../ui/Icon';
 import ChannelAvatar from '../../../../ui/ChannelAvatar';
 import { getChannelTitle } from './utils';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import Header, { type HeaderCustomProps } from '../../../../ui/Header';
 import { classnames } from '../../../../utils/utils';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface GroupChannelHeaderViewProps extends HeaderCustomProps {
   className?: string;
@@ -32,7 +32,8 @@ export const GroupChannelHeaderView = ({
   renderMiddle,
   renderRight,
 }: GroupChannelHeaderViewProps) => {
-  const { config } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { config } = state;
   const { userId, theme } = config;
   const { isMobile } = useMediaQueryContext();
 

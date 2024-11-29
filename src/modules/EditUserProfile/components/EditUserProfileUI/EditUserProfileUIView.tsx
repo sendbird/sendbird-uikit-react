@@ -6,7 +6,7 @@ import Avatar from '../../../../ui/Avatar';
 import TextButton from '../../../../ui/TextButton';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import Icon, { IconTypes } from '../../../../ui/Icon';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface EditUserProfileUIViewProps {
   formRef: MutableRefObject<any>;
@@ -20,7 +20,8 @@ export const EditUserProfileUIView = ({
   onThemeChange,
   setProfileImage,
 }: EditUserProfileUIViewProps) => {
-  const { stores, config } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { stores, config } = state;
   const { theme, setCurrentTheme } = config;
   const user = stores.userStore?.user;
   const { stringSet } = useLocalization();

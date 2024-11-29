@@ -1,8 +1,8 @@
 import React from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import Modal from '../../../../ui/Modal';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export type LeaveGroupChannelProps = {
   channel?: GroupChannel;
@@ -15,8 +15,7 @@ export const LeaveGroupChannel = ({
   onSubmit,
   onCancel,
 }: LeaveGroupChannelProps) => {
-  const { config } = useSendbirdStateContext();
-  const { logger, isOnline } = config;
+  const { state: { config: { logger, isOnline } } } = useSendbird();
   const { stringSet } = useLocalization();
   if (channel) {
     return (

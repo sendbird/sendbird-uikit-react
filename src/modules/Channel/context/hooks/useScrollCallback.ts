@@ -9,7 +9,7 @@ import { MessageListParams as MessageListParamsInternal } from '../ChannelProvid
 import { LoggerInterface } from '../../../../lib/Logger';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import { CoreMessageType } from '../../../../utils';
-import { SdkStore } from '../../../../lib/types';
+import type { SdkStore } from '../../../../lib/Sendbird/types';
 
 type UseScrollCallbackOptions = {
   currentGroupChannel: GroupChannel | null;

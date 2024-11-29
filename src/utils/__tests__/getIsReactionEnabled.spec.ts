@@ -1,6 +1,6 @@
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
-import type { SendBirdStateConfig } from '../../lib/types';
+import type { SendbirdStateConfig } from '../../lib/Sendbird/types';
 import { getIsReactionEnabled } from '../getIsReactionEnabled';
 
 const normalGroupChannel = (props?: any) => ({
@@ -16,7 +16,7 @@ const normalConfigs = (props?: any, groupChannelProps?: any) => ({
     ...groupChannelProps,
   },
   ...props,
-} as SendBirdStateConfig);
+} as SendbirdStateConfig);
 
 describe('Global-utils/getIsReactionEnabled', () => {
   it('should prioritize the moduleLevel than global config', () => {

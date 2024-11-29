@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { VoiceRecorderEventHandler, useVoiceRecorderContext } from '.';
-import useSendbirdStateContext from '../useSendbirdStateContext';
 import { noop } from '../../utils/utils';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 // export interface UseVoiceRecorderProps extends VoiceRecorderEventHandler {
 //   /**
@@ -31,7 +31,8 @@ export const useVoiceRecorder = ({
   onRecordingStarted = noop,
   onRecordingEnded = noop,
 }: VoiceRecorderEventHandler): UseVoiceRecorderContext => {
-  const { config } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { config } = state;
   const { voiceRecord } = config;
   const maxRecordingTime = voiceRecord.maxRecordingTime;
   const voiceRecorder = useVoiceRecorderContext();

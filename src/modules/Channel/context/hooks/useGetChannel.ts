@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import * as messageActionTypes from '../dux/actionTypes';
 import { ChannelActionTypes } from '../dux/actionTypes';
-import { SdkStore } from '../../../../lib/types';
+import type { SdkStore } from '../../../../lib/Sendbird/types';
 import { LoggerInterface } from '../../../../lib/Logger';
 import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadScheduler';
 

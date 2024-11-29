@@ -5,20 +5,22 @@ import { CreateChannelProvider } from '../CreateChannelProvider';
 import { renderHook } from '@testing-library/react';
 import useCreateChannel from '../useCreateChannel';
 
-jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
+jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
   default: jest.fn(() => ({
-    stores: {
-      sdkStore: {
-        sdk: {
-          currentUser: {
-            userId: 'test-user-id',
+    state: {
+      stores: {
+        sdkStore: {
+          sdk: {
+            currentUser: {
+              userId: 'test-user-id',
+            },
           },
+          initialized: true,
         },
-        initialized: true,
       },
+      config: { logger: console },
     },
-    config: { logger: console },
   })),
 }));
 

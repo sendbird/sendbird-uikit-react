@@ -1,10 +1,10 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { ChannelSettingsProvider, useChannelSettingsContext } from '../context/ChannelSettingsProvider';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { SendbirdSdkContext } from '../../../lib/SendbirdSdkContext';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
 
-jest.mock('../../../hooks/useSendbirdStateContext');
+jest.mock('../../../lib/Sendbird/context/hooks/useSendbird');
 jest.mock('../context/hooks/useSetChannel');
 
 const mockLogger = {
@@ -33,17 +33,19 @@ describe('ChannelSettingsProvider', () => {
   let wrapper;
 
   beforeEach(() => {
-    useSendbirdStateContext.mockReturnValue({
-      stores: { sdkStore: { sdk: {}, initialized: true } },
-      config: { logger: mockLogger },
+    useSendbird.mockReturnValue({
+      state: {
+        stores: { sdkStore: { sdk: {}, initialized: true } },
+        config: { logger: mockLogger },
+      },
     });
 
     wrapper = ({ children }) => (
-      <SendbirdSdkContext.Provider value={{ config: { logger: mockLogger } } as any}>
+      <SendbirdContext.Provider value={{ config: { logger: mockLogger } } as any}>
         <ChannelSettingsProvider channelUrl="test-channel">
           {children}
         </ChannelSettingsProvider>
-      </SendbirdSdkContext.Provider>
+      </SendbirdContext.Provider>
     );
 
     jest.clearAllMocks();
@@ -56,9 +58,11 @@ describe('ChannelSettingsProvider', () => {
   });
 
   it('logs a warning if SDK is not initialized', () => {
-    useSendbirdStateContext.mockReturnValue({
-      stores: { sdkStore: { sdk: null, initialized: false } },
-      config: { logger: mockLogger },
+    useSendbird.mockReturnValue({
+      state: {
+        stores: { sdkStore: { sdk: null, initialized: false } },
+        config: { logger: mockLogger },
+      },
     });
 
     renderHook(() => useChannelSettingsContext(), { wrapper });

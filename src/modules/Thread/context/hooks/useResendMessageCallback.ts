@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import {
   FileMessage,
@@ -7,8 +8,8 @@ import {
   UploadableFileInfo,
   UserMessage,
 } from '@sendbird/chat/message';
-import { useCallback } from 'react';
-import { Logger } from '../../../../lib/SendbirdState';
+
+import type { Logger } from '../../../../lib/Sendbird/types';
 import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
 import { PublishingModuleType } from '../../../internalInterfaces';
