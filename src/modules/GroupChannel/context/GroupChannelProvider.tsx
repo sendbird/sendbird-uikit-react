@@ -326,9 +326,8 @@ const GroupChannelProvider: React.FC<React.PropsWithChildren<GroupChannelProvide
 const useGroupChannelStore = () => {
   return useStore(GroupChannelContext, state => state, initialState);
 };
-/**
- * Keep this function for backward compatibility.
- */
+
+// Keep this function for backward compatibility.
 const useGroupChannelContext = () => {
   const { state, actions } = useGroupChannel();
   return { ...state, ...actions };

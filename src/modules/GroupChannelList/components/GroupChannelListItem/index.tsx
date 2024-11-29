@@ -23,8 +23,8 @@ export const GroupChannelListItem = ({
   const { stringSet } = useLocalization();
   const {
     state: {
-      isTypingIndicatorEnabled = false,
-      isMessageReceiptStatusEnabled = false,
+      isTypingIndicatorEnabled,
+      isMessageReceiptStatusEnabled,
     },
   } = useGroupChannelList();
 
