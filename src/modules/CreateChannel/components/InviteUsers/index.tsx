@@ -4,7 +4,7 @@ import type { GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
 
 import './invite-users.scss';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import Modal from '../../../../ui/Modal';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';

@@ -14,7 +14,7 @@ import {
 } from '@sendbird/chat/message';
 import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from '../consts';
 import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useSendUserMessageCallback from './hooks/useSendUserMessageCallback';
 import { PublishingModuleType } from '../../../lib/pubSub/topics';
 

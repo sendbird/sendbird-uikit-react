@@ -1,10 +1,17 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, renderHook } from '@testing-library/react';
 
 import { FileViewerComponent as FileViewer } from "../index";
 import { msg0, msg1 } from '../data.mock';
-import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
 import { MODAL_ROOT } from '../../../hooks/useModal';
+import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+
+jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+  __esModule: true,
+  default: jest.fn(),
+  useSendbird: jest.fn(),
+}));
 
 describe('ui/FileViewer', () => {
   let modalRoot;
@@ -19,6 +26,18 @@ describe('ui/FileViewer', () => {
   afterAll(() => {
     // Remove the modal root element after tests
     document.body.removeChild(modalRoot);
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    const stateContextValue = {
+      state: {
+        config: {},
+        stores: {},
+      },
+    };
+    useSendbird.mockReturnValue(stateContextValue);
+    renderHook(() => useSendbird());
   });
 
   it('should display image', function () {
