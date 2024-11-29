@@ -10,7 +10,7 @@ import uuidv4 from '../../../utils/uuid';
 import { classnames } from '../../../utils/utils';
 import { createStore } from '../../../utils/storeManager';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export const ChannelSettingsContext = createContext<ReturnType<typeof createStore<ChannelSettingsState>> | null>(null);
 

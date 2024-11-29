@@ -1,4 +1,4 @@
-import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export function filterNumber(input: string | number): Array<number> {
   if (typeof input !== 'string' && typeof input !== 'number') {

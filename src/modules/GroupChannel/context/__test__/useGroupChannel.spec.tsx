@@ -22,7 +22,7 @@ const mockMessageCollection = {
 };
 jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  useSendbird: jest.fn(() => ({
+  default: jest.fn(() => ({
     state: {
       stores: {
         sdkStore: {

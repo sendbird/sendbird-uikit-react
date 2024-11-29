@@ -8,7 +8,7 @@ import type { SendbirdProviderProps, UIKitOptions } from './types';
 import { uikitConfigMapper } from '../utils/uikitConfigMapper';
 import { uikitConfigStorage } from '../utils/uikitConfigStorage';
 import { SendbirdContextProvider } from './context/SendbirdProvider';
-import { useSendbird } from './context/hooks/useSendbird';
+import useSendbird from './context/hooks/useSendbird';
 
 export type { SendbirdProviderProps } from './types';
 

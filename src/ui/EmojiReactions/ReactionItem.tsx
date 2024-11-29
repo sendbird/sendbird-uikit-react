@@ -20,7 +20,7 @@ import { useMessageContext } from '../../modules/Message/context/MessageProvider
 import { ModalFooter } from '../Modal';
 import { ButtonTypes } from '../Button';
 import { useGlobalModalContext } from '../../hooks/useModal';
-import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 type Props = {
   reaction: Reaction;

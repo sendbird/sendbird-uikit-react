@@ -10,7 +10,7 @@ import { SendbirdChatType } from '../../../lib/Sendbird/types';
 import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
 import useCreateChannel from './useCreateChannel';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 const CreateChannelContext = React.createContext<ReturnType<typeof createStore<CreateChannelState>> | null>(null);
 

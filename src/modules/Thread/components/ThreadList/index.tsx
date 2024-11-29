@@ -10,7 +10,7 @@ import { isSameDay } from 'date-fns';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
 import useThread from '../../context/useThread';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadListProps {
   className?: string;

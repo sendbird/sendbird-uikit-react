@@ -11,7 +11,7 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/types';
 import { LoggerInterface } from '../../lib/Logger';
 import { openURL } from '../../utils/utils';
-import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 interface Props {
   className?: string | Array<string>;

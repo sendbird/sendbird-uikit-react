@@ -6,7 +6,7 @@ import Avatar from '../../../../ui/Avatar';
 import TextButton from '../../../../ui/TextButton';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import Icon, { IconTypes } from '../../../../ui/Icon';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface EditUserProfileUIViewProps {
   formRef: MutableRefObject<any>;

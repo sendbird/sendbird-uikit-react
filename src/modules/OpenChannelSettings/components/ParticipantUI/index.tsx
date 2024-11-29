@@ -18,7 +18,7 @@ import { UserListItem } from './ParticipantItem';
 import ParticipantsModal from './ParticipantsModal';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface ParticipantListProps {
   isOperatorView?: boolean;

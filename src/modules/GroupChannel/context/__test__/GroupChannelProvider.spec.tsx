@@ -20,7 +20,7 @@ const mockMessageCollection = {
 };
 jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  useSendbird: jest.fn(() => ({
+  default: jest.fn(() => ({
     state: {
       stores: {
         sdkStore: {
@@ -93,7 +93,7 @@ describe('GroupChannelProvider', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
     jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
-      useSendbird: () => ({
+      default: () => ({
         state: {
           stores: {
             sdkStore: {

@@ -14,7 +14,7 @@ import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Modal from '../../../../ui/Modal';
 import { ButtonTypes } from '../../../../ui/Button';
 import { EditUserProfileUIView } from './EditUserProfileUIView';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import { SendbirdState } from '../../../../lib/Sendbird/types';
 
 interface HandleUpdateUserInfoParams {

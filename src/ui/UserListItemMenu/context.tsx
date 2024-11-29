@@ -4,7 +4,7 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { OpenChannel } from '@sendbird/chat/openChannel';
 
 import { useToggleBan, useToggleMute, useToggleOperator } from './hooks';
-import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 interface UserListItemMenuContextInterface extends
   UserListItemMenuContextValues,

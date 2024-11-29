@@ -16,7 +16,7 @@ import Label, { LabelColors, LabelTypography } from '../../../ui/Label';
 import TextButton from '../../../ui/TextButton';
 import OpenChannelAvatar from '../../../ui/ChannelAvatar/OpenChannelAvatar';
 import { useOpenChannelSettingsContext } from '../context/OpenChannelSettingsProvider';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface Props {
   onCancel(): void;

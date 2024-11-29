@@ -25,7 +25,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { User } from '@sendbird/chat';
 import { OpenChannel } from '@sendbird/chat/openChannel';
 import { UserMessage } from '@sendbird/chat/message';
-import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const noop = () => {

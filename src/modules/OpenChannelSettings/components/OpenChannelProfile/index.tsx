@@ -12,7 +12,7 @@ import TextButton from '../../../../ui/TextButton';
 import OpenChannelAvatar from '../../../../ui/ChannelAvatar/OpenChannelAvatar';
 import EditDetailsModal from '../EditDetailsModal';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export default function ChannelProfile(): ReactElement {
   const { state } = useSendbird();

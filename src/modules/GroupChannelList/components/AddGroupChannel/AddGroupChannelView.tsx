@@ -5,7 +5,7 @@ import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 
 import CreateChannel from '../../../CreateChannel';
 import { CreateChannelProviderProps } from '../../../CreateChannel/context/CreateChannelProvider';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 type Props = {
   createChannelVisible: boolean;

@@ -31,7 +31,7 @@ import { CHANNEL_TYPE } from '../../CreateChannel/types';
 import useActiveChannelUrl from './hooks/useActiveChannelUrl';
 import { useFetchChannelList } from './hooks/useFetchChannelList';
 import useHandleReconnectForChannelList from '../../Channel/context/hooks/useHandleReconnectForChannelList';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ApplicationUserListQueryInternal {
   limit?: number;

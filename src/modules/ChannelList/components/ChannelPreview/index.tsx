@@ -5,7 +5,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useChannelListContext } from '../../context/ChannelListProvider';
 import { getChannelTitle } from './utils';
 import { GroupChannelListItemBasicProps, GroupChannelListItemView } from '../../../GroupChannelList/components/GroupChannelListItem/GroupChannelListItemView';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface ChannelPreviewInterface extends GroupChannelListItemBasicProps {
   /** @deprecated Please use `isSelected` instead */

@@ -4,15 +4,15 @@ import { render, renderHook } from '@testing-library/react';
 import MessageContent from "../index";
 import { useMessageContext } from '../../../modules/Message/context/MessageProvider';
 import { useLocalization } from '../../../lib/LocalizationContext';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 jest.mock('date-fns/format', () => () => ('mock-date'));
 
 // to mock useSendbird
 jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  useSendbird: jest.fn(),
   default: jest.fn(),
+  useSendbird: jest.fn(),
 }));
 jest.mock('../../../lib/LocalizationContext', () => {
   const React = require('react');
@@ -92,15 +92,10 @@ describe('ui/MessageContent', () => {
     };
 
     // Mocking the hooks
-    const useSendbirdDefaultMock = require('../../../lib/Sendbird/context/hooks/useSendbird').default;
-    const useSendbirdMock = require('../../../lib/Sendbird/context/hooks/useSendbird').useSendbird;
-    const useLocalizationMock = require('../../../lib/LocalizationContext').useLocalization;
-    const useMessageContextMock = require('../../../modules/Message/context/MessageProvider').useMessageContext;
 
-    useSendbirdDefaultMock.mockReturnValue(stateContextValue);
-    useSendbirdMock.mockReturnValue(stateContextValue);
-    useLocalizationMock.mockReturnValue(localeContextValue);
-    useMessageContextMock.mockReturnValue(messageContextValue);
+    useSendbird.mockReturnValue(stateContextValue);
+    useLocalization.mockReturnValue(localeContextValue);
+    useMessageContext.mockReturnValue(messageContextValue);
 
     renderHook(() => useSendbird());
     renderHook(() => useLocalization());

@@ -4,15 +4,15 @@ import userEvent from '@testing-library/user-event';
 
 import MessageInput from "../index";
 import { useLocalization } from '../../../lib/LocalizationContext';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 const noop = () => {};
 
 // to mock useSendbirdStateContext
 jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  useSendbird: jest.fn(),
   default: jest.fn(),
+  useSendbird: jest.fn(),
 }));
 jest.mock('../../../lib/LocalizationContext', () => ({
   ...jest.requireActual('../../../lib/LocalizationContext'),
@@ -35,13 +35,8 @@ describe('ui/MessageInput', () => {
       stringSet: {},
     };
 
-    const useSendbirdDefaultMock = require('../../../lib/Sendbird/context/hooks/useSendbird').default;
-    const useSendbirdMock = require('../../../lib/Sendbird/context/hooks/useSendbird').useSendbird;
-    const useLocalizationMock = require('../../../lib/LocalizationContext').useLocalization;
-
-    useSendbirdDefaultMock.mockReturnValue(stateContextValue);
-    useSendbirdMock.mockReturnValue(stateContextValue);
-    useLocalizationMock.mockReturnValue(localeContextValue);
+    useSendbird.mockReturnValue(stateContextValue);
+    useLocalization.mockReturnValue(localeContextValue);
 
     renderHook(() => useSendbird());
     renderHook(() => useLocalization());

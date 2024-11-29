@@ -11,7 +11,7 @@ import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettings
 import OperatorListModal from './OperatorsModal';
 import AddOperatorsModal from './AddOperatorsModal';
 import { Participant } from '@sendbird/chat';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 const OperatorList = (): ReactElement => {
   const [showAdd, setShowAdd] = useState<boolean>(false);

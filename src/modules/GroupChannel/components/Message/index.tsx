@@ -8,7 +8,7 @@ import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
 import { ThreadReplySelectType } from '../../context/const';
 import { useGroupChannel } from '../../context/hooks/useGroupChannel';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export const Message = (props: MessageProps): React.ReactElement => {
   const { state } = useSendbird();

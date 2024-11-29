@@ -30,7 +30,7 @@ import {
   DeleteMenuItem,
   DownloadMenuItem,
 } from '../MessageMenu/menuItems/BottomSheetMenuItems';
-import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 const EMOJI_SIZE = 38;
 

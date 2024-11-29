@@ -3,7 +3,7 @@ import type { FileMessage } from '@sendbird/chat/message';
 
 import { useGroupChannel } from '../../context/hooks/useGroupChannel';
 import { FileViewerView } from './FileViewerView';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface FileViewerProps {
   onCancel: () => void;

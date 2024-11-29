@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { GroupChannelUIView } from '../components/GroupChannelUI/GroupChannelUIView';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 jest.mock('../../../lib/Sendbird/context/hooks/useSendbird');
 

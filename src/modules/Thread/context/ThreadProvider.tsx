@@ -22,7 +22,7 @@ import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from
 import { useStore } from '../../../hooks/useStore';
 import useSetCurrentUserId from './hooks/useSetCurrentUserId';
 import useThread from './useThread';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadProviderProps extends
   Pick<UserProfileProviderProps, 'disableUserProfile' | 'renderUserProfile'> {

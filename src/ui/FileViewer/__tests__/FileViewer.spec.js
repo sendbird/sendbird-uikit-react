@@ -5,10 +5,11 @@ import { FileViewerComponent as FileViewer } from "../index";
 import { msg0, msg1 } from '../data.mock';
 import { MODAL_ROOT } from '../../../hooks/useModal';
 import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
+  default: jest.fn(),
   useSendbird: jest.fn(),
 }));
 

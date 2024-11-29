@@ -10,7 +10,7 @@ import ParticipantUI from '../ParticipantUI';
 
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconTypes } from '../../../../ui/Icon';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface OpenChannelUIProps {
   renderOperatorUI?: () => React.ReactElement;

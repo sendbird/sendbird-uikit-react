@@ -6,13 +6,13 @@ import ChannelSettingsUI from '../components/ChannelSettingsUI';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import * as useChannelSettingsModule from '../context/useChannelSettings';
 import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 jest.mock('../context/useChannelSettings');
 
 jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  useSendbird: jest.fn(),
+  default: jest.fn(),
 }));
 
 const mockStringSet = {

@@ -4,7 +4,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import { ThreadProvider } from '../ThreadProvider';
 import useThread from '../useThread';
 import { SendableMessageType } from '../../../../utils';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 const mockChannel = {
   url: 'test-channel',
@@ -44,7 +44,7 @@ const mockState = {
 };
 jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  useSendbird: jest.fn(() => ({ state: mockState })),
+  default: jest.fn(() => ({ state: mockState })),
 }));
 
 describe('ThreadProvider', () => {

@@ -8,7 +8,7 @@ import { MobileLayout } from './MobileLayout';
 
 import { SendableMessageType } from '../../utils';
 import { getCaseResolvedReplyType } from '../../lib/utils/resolvedReplyType';
-import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export const AppLayout = (props: AppLayoutProps) => {
   const {

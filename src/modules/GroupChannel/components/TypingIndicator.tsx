@@ -5,7 +5,7 @@ import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import { uuidv4 } from '../../../utils/uuid';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface TypingIndicatorTextProps {
   members: Member[];

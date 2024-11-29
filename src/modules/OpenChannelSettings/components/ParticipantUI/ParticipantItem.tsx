@@ -19,7 +19,7 @@ import UserProfile from '../../../../ui/UserProfile';
 import ContextMenu, { MenuItems } from '../../../../ui/ContextMenu';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import MutedAvatarOverlay from '../../../../ui/Avatar/MutedAvatarOverlay';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 const SHOWN_MEMBER_MAX = 10;
 

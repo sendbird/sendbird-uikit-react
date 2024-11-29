@@ -14,7 +14,7 @@ import Label, {
   LabelColors,
 } from '../../../../ui/Label';
 import useChannelSettings from '../../context/useChannelSettings';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export type LeaveChannelProps = {
   onSubmit: () => void;

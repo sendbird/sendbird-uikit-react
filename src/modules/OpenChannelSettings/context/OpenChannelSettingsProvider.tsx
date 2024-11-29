@@ -7,7 +7,7 @@ import { OpenChannel, OpenChannelHandler, OpenChannelUpdateParams } from '@sendb
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import { RenderUserProfileProps } from '../../../types';
 import uuidv4 from '../../../utils/uuid';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface OpenChannelSettingsContextProps {
   channelUrl: string;

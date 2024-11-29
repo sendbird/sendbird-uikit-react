@@ -8,7 +8,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { UserListQuery } from '../../../../types';
 import useChannelSettings from '../../context/useChannelSettings';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 type UserId = string;
 export interface InviteUsersModalProps {

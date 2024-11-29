@@ -30,7 +30,7 @@ import {
 } from '../../utils/menuConditions';
 
 import { MessageMenuProvider } from './MessageMenuProvider';
-import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export type RenderMenuItemsParams = {
   items: {

@@ -18,7 +18,7 @@ import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channe
 import { User } from '@sendbird/chat';
 import { classnames } from '../../../../utils/utils';
 import useThread from '../../context/useThread';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadMessageInputProps {
   className?: string;

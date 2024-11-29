@@ -26,7 +26,7 @@ import {
 } from '../MessageMenu/menuItems/MobileMenuItems';
 import { MenuItems } from '../ContextMenu';
 import { noop } from '../../utils/utils';
-import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMenuProps): React.ReactElement => {
   const {

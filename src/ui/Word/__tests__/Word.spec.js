@@ -2,11 +2,12 @@ import React from "react";
 import { render, renderHook } from "@testing-library/react";
 
 import Word from "../index";
-import { useSendbird } from "../../../lib/Sendbird/context/hooks/useSendbird";
+import useSendbird from "../../../lib/Sendbird/context/hooks/useSendbird";
 import { SendbirdContext } from "../../../lib/Sendbird/context/SendbirdContext";
 
 jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
+  default: jest.fn(),
   useSendbird: jest.fn(),
 }));
 

@@ -13,7 +13,7 @@ import useFetchNextCallback from './hooks/useFetchNextCallback';
 import useSetupOpenChannelList from './hooks/useSetupOpenChannelList';
 import useRefreshOpenChannelList from './hooks/useRefreshOpenChannelList';
 import OpenChannelListActionTypes from './dux/actionTypes';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 const OpenChannelListContext = React.createContext<OpenChannelListProviderInterface | null>(null);
 

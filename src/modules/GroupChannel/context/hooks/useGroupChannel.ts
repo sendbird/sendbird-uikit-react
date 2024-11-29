@@ -15,7 +15,7 @@ import type {
 
 import { SendableMessageType } from '../../../../utils';
 import { getMessageTopOffset } from '../utils';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import { GroupChannelContext } from '../GroupChannelProvider';
 import type { GroupChannelState, MessageActions } from '../types';
 import { useMessageActions } from './useMessageActions';

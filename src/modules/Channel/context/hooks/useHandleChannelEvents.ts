@@ -10,7 +10,7 @@ import { SendableMessageType } from '../../../../utils';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import { LoggerInterface } from '../../../../lib/Logger';
 import type { SdkStore } from '../../../../lib/Sendbird/types';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 /**
  * Handles ChannelEvents and send values to dispatcher using messagesDispatcher

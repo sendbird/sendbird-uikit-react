@@ -15,7 +15,7 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { noop } from '../../../../utils/utils';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
-import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface Props {
   onCancel(): void;

@@ -13,7 +13,7 @@ import { CoreMessageType } from '../../../utils';
 import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
 import useMessageSearch from './hooks/useMessageSearch';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface MessageSearchProviderProps {
   channelUrl: string;

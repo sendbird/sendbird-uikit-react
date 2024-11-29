@@ -3,10 +3,11 @@ import { render, renderHook } from '@testing-library/react';
 
 import BottomSheet from "../index";
 import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
-import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
+  default: jest.fn(),
   useSendbird: jest.fn(),
 }));
 
