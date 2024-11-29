@@ -1,7 +1,6 @@
 import React from 'react';
 import { useIIFE } from '@sendbird/uikit-tools';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { getSuggestedReplies, isSendableMessage } from '../../../../utils';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 import MessageView, { MessageProps } from './MessageView';
@@ -9,9 +8,11 @@ import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
 import { ThreadReplySelectType } from '../../context/const';
 import { useGroupChannel } from '../../context/hooks/useGroupChannel';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export const Message = (props: MessageProps): React.ReactElement => {
-  const { config, emojiManager } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { config, emojiManager } = state;
   const {
     state: {
       loading,

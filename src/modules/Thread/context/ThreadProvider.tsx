@@ -9,7 +9,6 @@ import type {
 
 import { getNicknamesMapFromMembers, getParentMessageFrom } from './utils';
 import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 
 import type { OnBeforeDownloadFileMessageType } from '../../GroupChannel/context/types';
 import useGetChannel from './hooks/useGetChannel';
@@ -23,6 +22,7 @@ import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from
 import { useStore } from '../../../hooks/useStore';
 import useSetCurrentUserId from './hooks/useSetCurrentUserId';
 import useThread from './useThread';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadProviderProps extends
   Pick<UserProfileProviderProps, 'disableUserProfile' | 'renderUserProfile'> {
@@ -138,8 +138,7 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
 
   const propsParentMessage = getParentMessageFrom(message);
   // Context from SendbirdProvider
-  const globalStore = useSendbirdStateContext();
-  const { stores, config } = globalStore;
+  const { state: { stores, config } } = useSendbird();
   // // stores
   const { sdkStore, userStore } = stores;
   const { sdk } = sdkStore;

@@ -2,7 +2,6 @@ import React, { ReactElement, useState } from 'react';
 import { MultipleFilesMessage, SendingStatus } from '@sendbird/chat/message';
 
 import type { OnBeforeDownloadFileMessageType } from '../../modules/GroupChannel/context/types';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import ImageRenderer, { getBorderRadiusForMultipleImageRenderer } from '../ImageRenderer';
 import ImageGrid from '../ImageGrid';
@@ -11,6 +10,7 @@ import './index.scss';
 import { MULTIPLE_FILES_IMAGE_BORDER_RADIUS, MULTIPLE_FILES_IMAGE_SIDE_LENGTH, MULTIPLE_FILES_IMAGE_THUMBNAIL_SIDE_LENGTH } from './const';
 import { isGif } from '../../utils';
 import { UploadedFileInfoWithUpload } from '../../types';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export const ThreadMessageKind = {
   PARENT: 'parent',
@@ -39,7 +39,7 @@ export default function MultipleFilesMessageItemBody({
   statefulFileInfoList = [],
   onBeforeDownloadFileMessage = null,
 }: Props): ReactElement {
-  const logger = useSendbirdStateContext?.()?.config?.logger;
+  const { state: { config: { logger } } } = useSendbird();
   const [currentFileViewerIndex, setCurrentFileViewerIndex] = useState(-1);
 
   function onClose() {

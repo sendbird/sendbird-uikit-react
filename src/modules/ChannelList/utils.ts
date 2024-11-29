@@ -7,7 +7,7 @@ import {
 } from '@sendbird/chat/groupChannel';
 import * as channelActions from './dux/actionTypes';
 import topics, { SBUGlobalPubSub } from '../../lib/pubSub/topics';
-import { SdkStore } from '../../lib/types';
+import { SdkStore } from '../../lib/Sendbird/types';
 import React from 'react';
 import { ChannelListInitialStateType } from './dux/initialState';
 import { ChannelListActionTypes } from './dux/actionTypes';

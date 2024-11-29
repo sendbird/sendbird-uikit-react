@@ -5,21 +5,23 @@ import useMessageSearch from '../../context/hooks/useMessageSearch';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { MessageSearchQuery } from '@sendbird/chat/message';
 
-jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
-  __esModule: true,
-  default: jest.fn(() => ({
-    stores: {
-      sdkStore: {
-        sdk: {
-          createMessageSearchQuery: jest.fn(() => ({
-            next: jest.fn().mockResolvedValue([{ messageId: 1 }]),
-          })),
-        },
-        initialized: true,
+const mockState = {
+  stores: {
+    sdkStore: {
+      sdk: {
+        createMessageSearchQuery: jest.fn(() => ({
+          next: jest.fn().mockResolvedValue([{ messageId: 1 }]),
+        })),
       },
+      initialized: true,
     },
-    config: { logger: console },
-  })),
+  },
+  config: { logger: console },
+};
+jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+  __esModule: true,
+  default: jest.fn(() => ({ state: mockState })),
+  useSendbird: jest.fn(() => ({ state: mockState })),
 }));
 
 describe('useMessageSearch', () => {

@@ -6,9 +6,9 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import { DesktopLayout } from './DesktopLayout';
 import { MobileLayout } from './MobileLayout';
 
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { SendableMessageType } from '../../utils';
 import { getCaseResolvedReplyType } from '../../lib/utils/resolvedReplyType';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export const AppLayout = (props: AppLayoutProps) => {
   const {
@@ -21,8 +21,8 @@ export const AppLayout = (props: AppLayoutProps) => {
     enableLegacyChannelModules,
   } = props;
 
-  const globalStore = useSendbirdStateContext();
-  const globalConfigs = globalStore.config;
+  const { state } = useSendbird();
+  const globalConfigs = state.config;
 
   const [showThread, setShowThread] = useState(false);
   const [threadTargetMessage, setThreadTargetMessage] = useState<SendableMessageType | null>(null);

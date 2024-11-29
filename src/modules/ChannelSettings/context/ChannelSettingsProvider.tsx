@@ -3,7 +3,6 @@ import React, { createContext, useCallback, useEffect, useRef, useState } from '
 import type { ChannelSettingsContextProps, ChannelSettingsState } from './types';
 
 import useSetChannel from './hooks/useSetChannel';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { useStore } from '../../../hooks/useStore';
 import { useChannelHandler } from './hooks/useChannelHandler';
 
@@ -11,6 +10,7 @@ import uuidv4 from '../../../utils/uuid';
 import { classnames } from '../../../utils/utils';
 import { createStore } from '../../../utils/storeManager';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export const ChannelSettingsContext = createContext<ReturnType<typeof createStore<ChannelSettingsState>> | null>(null);
 
@@ -49,7 +49,8 @@ const ChannelSettingsManager = ({
   queries,
   renderUserListItem,
 }: ChannelSettingsContextProps) => {
-  const { config, stores } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { config, stores } = state;
   const { updateState } = useChannelSettingsStore();
   const { logger } = config;
   const { sdk, initialized } = stores?.sdkStore ?? {};

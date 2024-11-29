@@ -1,7 +1,6 @@
 import React, { useContext, useReducer, useEffect } from 'react';
 
 import pubSubTopics from '../../../lib/pubSub/topics';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 
 import openChannelListReducer from './dux/reducer';
 import openChannelListInitialState, { OpenChannelListInitialInterface } from './dux/initialState';
@@ -14,6 +13,7 @@ import useFetchNextCallback from './hooks/useFetchNextCallback';
 import useSetupOpenChannelList from './hooks/useSetupOpenChannelList';
 import useRefreshOpenChannelList from './hooks/useRefreshOpenChannelList';
 import OpenChannelListActionTypes from './dux/actionTypes';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 const OpenChannelListContext = React.createContext<OpenChannelListProviderInterface | null>(null);
 
@@ -30,7 +30,7 @@ export const OpenChannelListProvider: React.FC<OpenChannelListProviderProps> = (
   onChannelSelected,
 }: OpenChannelListProviderProps): React.ReactElement => {
   // props
-  const { stores, config } = useSendbirdStateContext();
+  const { state: { stores, config } } = useSendbird();
   const { logger, pubSub } = config;
   const sdk = stores?.sdkStore?.sdk || null;
   const sdkInitialized = stores?.sdkStore?.initialized || false;

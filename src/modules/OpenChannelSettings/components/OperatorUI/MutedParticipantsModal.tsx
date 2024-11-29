@@ -12,9 +12,9 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import { noop } from '../../../../utils/utils';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { MutedUserListQuery, User } from '@sendbird/chat';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface Props {
   onCancel(): void;
@@ -27,7 +27,7 @@ export default function MutedParticipantsModal({
   const [userListQuery, setUserListQuery] = useState<MutedUserListQuery | null>(null);
 
   const { channel } = useOpenChannelSettingsContext();
-  const state = useSendbirdStateContext();
+  const { state } = useSendbird();
   const currentUserId = state?.config?.userId;
   const { stringSet } = useContext(LocalizationContext);
 

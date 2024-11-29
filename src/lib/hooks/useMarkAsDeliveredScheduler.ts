@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import { schedulerFactory } from './schedulerFactory';
-import { Logger } from '../SendbirdState';
+import { Logger } from '../Sendbird/types';
 import { useUnmount } from '../../hooks/useUnmount';
 
 export type MarkAsDeliveredSchedulerType = {
@@ -30,7 +30,7 @@ export function useMarkAsDeliveredScheduler({
       try {
         await channel.markAsDelivered();
       } catch (error) {
-        logger.warning('Channel: Mark as delivered failed', { channel, error });
+        logger?.warning('Channel: Mark as delivered failed', { channel, error });
       }
     },
   }), []);

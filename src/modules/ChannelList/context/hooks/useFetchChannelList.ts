@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import { GroupChannel, GroupChannelListQuery } from '@sendbird/chat/groupChannel';
 
+import type { Logger } from '../../../../lib/Sendbird/types';
 import { Nullable } from '../../../../types';
-import { Logger } from '../../../../lib/SendbirdState';
 import { MarkAsDeliveredSchedulerType } from '../../../../lib/hooks/useMarkAsDeliveredScheduler';
 import * as channelListActions from '../../dux/actionTypes';
 import { ChannelListActionTypes } from '../../dux/actionTypes';

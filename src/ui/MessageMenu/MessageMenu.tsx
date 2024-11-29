@@ -4,7 +4,6 @@ import { OpenChannel } from '@sendbird/chat/openChannel';
 
 import { SendableMessageType } from '../../utils';
 import { classnames, noop } from '../../utils/utils';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { MenuItems, getObservingId } from '../ContextMenu';
 import {
   type PrebuildMenuItemPropsType,
@@ -31,6 +30,7 @@ import {
 } from '../../utils/menuConditions';
 
 import { MessageMenuProvider } from './MessageMenuProvider';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export type RenderMenuItemsParams = {
   items: {
@@ -79,8 +79,7 @@ export const MessageMenu = ({
   onReplyInThread,
   onMoveToParentMessage,
 }: MessageMenuProps) => {
-  const { config } = useSendbirdStateContext();
-  const { isOnline } = config;
+  const { state: { config: { isOnline } } } = useSendbird();
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
 

@@ -1,8 +1,6 @@
 import './index.scss';
 import React from 'react';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-
 import TypingIndicator from '../TypingIndicator';
 import { TypingIndicatorType } from '../../../../types';
 import ConnectionStatus from '../../../../ui/ConnectionStatus';
@@ -14,6 +12,7 @@ import type { GroupChannelMessageListProps } from '../MessageList';
 import type { MessageContentProps } from '../../../../ui/MessageContent';
 import { SuggestedRepliesProps } from '../SuggestedReplies';
 import { deleteNullish } from '../../../../utils/utils';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface GroupChannelUIBasicProps {
   // Components
@@ -103,8 +102,8 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
     renderPlaceholderLoader,
     renderPlaceholderInvalid,
   } = deleteNullish(props);
-
-  const { stores, config } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { stores, config } = state;
   const sdkError = stores?.sdkStore?.error;
   const { logger, isOnline } = config;
 

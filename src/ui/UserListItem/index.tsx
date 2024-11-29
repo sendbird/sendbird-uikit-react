@@ -3,7 +3,6 @@ import type { User } from '@sendbird/chat';
 import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import './index.scss';
 
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { useUserProfileContext } from '../../lib/UserProfileContext';
 import { useLocalization } from '../../lib/LocalizationContext';
 
@@ -16,6 +15,7 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { UserListItemMenuProps } from '../UserListItemMenu/UserListItemMenu';
 import { classnames } from '../../utils/utils';
 import pxToNumber from '../../utils/pxToNumber';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface UserListItemProps {
   user: User | Member;
@@ -63,7 +63,7 @@ export function UserListItem({
   const avatarRef = useRef(null);
   const { disableUserProfile, renderUserProfile } = useUserProfileContext();
   const { stringSet } = useLocalization();
-  const { config } = useSendbirdStateContext();
+  const { state: { config } } = useSendbird();
   const currentUser = config.userId;
 
   const itemClassName = size === 'small' ? 'sendbird-user-list-item--small' : 'sendbird-user-list-item';

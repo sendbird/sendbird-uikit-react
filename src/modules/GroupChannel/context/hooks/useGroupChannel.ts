@@ -15,7 +15,7 @@ import type {
 
 import { SendableMessageType } from '../../../../utils';
 import { getMessageTopOffset } from '../utils';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import { GroupChannelContext } from '../GroupChannelProvider';
 import type { GroupChannelState, MessageActions } from '../types';
 import { useMessageActions } from './useMessageActions';
@@ -53,7 +53,7 @@ export const useGroupChannel = () => {
   const store = useContext(GroupChannelContext);
   if (!store) throw new Error('useGroupChannel must be used within a GroupChannelProvider');
 
-  const { config } = useSendbirdStateContext();
+  const { state: { config } } = useSendbird();
   const { markAsReadScheduler } = config;
   const state: GroupChannelState = useSyncExternalStore(store.subscribe, store.getState);
 

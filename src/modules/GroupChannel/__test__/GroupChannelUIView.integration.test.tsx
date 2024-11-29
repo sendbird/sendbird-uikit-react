@@ -2,11 +2,11 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { GroupChannelUIView } from '../components/GroupChannelUI/GroupChannelUIView';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
-jest.mock('../../../hooks/useSendbirdStateContext');
+jest.mock('../../../lib/Sendbird/context/hooks/useSendbird');
 
-const mockUseSendbirdStateContext = useSendbirdStateContext as jest.Mock;
+const mockUseSendbird = useSendbird as jest.Mock;
 
 describe('GroupChannelUIView Integration Tests', () => {
   const defaultProps = {
@@ -18,16 +18,18 @@ describe('GroupChannelUIView Integration Tests', () => {
   };
 
   beforeEach(() => {
-    mockUseSendbirdStateContext.mockImplementation(() => ({
-      stores: {
-        sdkStore: { error: null },
-      },
-      config: {
-        logger: { info: jest.fn() },
-        isOnline: true,
-        groupChannel: {
-          enableTypingIndicator: true,
-          typingIndicatorTypes: new Set(['text']),
+    mockUseSendbird.mockImplementation(() => ({
+      state: {
+        stores: {
+          sdkStore: { error: null },
+        },
+        config: {
+          logger: { info: jest.fn() },
+          isOnline: true,
+          groupChannel: {
+            enableTypingIndicator: true,
+            typingIndicatorTypes: new Set(['text']),
+          },
         },
       },
     }));
@@ -58,13 +60,15 @@ describe('GroupChannelUIView Integration Tests', () => {
   });
 
   it('renders SDK error placeholder when SDK has error', () => {
-    mockUseSendbirdStateContext.mockImplementation(() => ({
-      stores: {
-        sdkStore: { error: new Error('SDK Error') },
-      },
-      config: {
-        logger: { info: jest.fn() },
-        isOnline: true,
+    mockUseSendbird.mockImplementation(() => ({
+      state: {
+        stores: {
+          sdkStore: { error: new Error('SDK Error') },
+        },
+        config: {
+          logger: { info: jest.fn() },
+          isOnline: true,
+        },
       },
     }));
 

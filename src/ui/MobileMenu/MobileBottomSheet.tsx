@@ -19,7 +19,6 @@ import BottomSheet from '../BottomSheet';
 import ImageRenderer from '../ImageRenderer';
 import ReactionButton from '../ReactionButton';
 import Icon, { IconTypes, IconColors } from '../Icon';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { classnames } from '../../utils/utils';
 import { MessageMenuProvider, MobileMessageMenuContextProps } from '../MessageMenu/MessageMenuProvider';
 import {
@@ -31,6 +30,7 @@ import {
   DeleteMenuItem,
   DownloadMenuItem,
 } from '../MessageMenu/menuItems/BottomSheetMenuItems';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 const EMOJI_SIZE = 38;
 
@@ -56,8 +56,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     renderMenuItems,
   } = props;
   const isByMe = message?.sender?.userId === userId;
-  const { config } = useSendbirdStateContext();
-  const { isOnline } = config;
+  const { state: { config: { isOnline } } } = useSendbird();
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
   const showMenuItemResend: boolean = (isOnline && isFailedMessage(message) && message?.isResendable && isByMe);

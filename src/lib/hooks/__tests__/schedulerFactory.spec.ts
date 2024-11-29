@@ -2,7 +2,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import { schedulerFactory } from '../schedulerFactory';
 import { LoggerFactory } from '../../Logger';
-import { Logger } from '../../SendbirdState';
+import type { Logger } from '../../Sendbird/types';
 
 jest.useFakeTimers();
 jest.spyOn(global, 'setInterval');

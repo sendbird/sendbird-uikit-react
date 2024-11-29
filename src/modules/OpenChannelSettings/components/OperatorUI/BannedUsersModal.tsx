@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { BannedUserListQuery, RestrictedUser } from '@sendbird/chat';
 
 import Modal from '../../../../ui/Modal';
 import UserListItem from '../../../../ui/UserListItem';
@@ -14,8 +15,7 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import { noop } from '../../../../utils/utils';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { BannedUserListQuery, RestrictedUser } from '@sendbird/chat';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface Props {
   onCancel(): void;
@@ -27,7 +27,7 @@ export default function BannedUsersModal({
   const [bannedUsers, setBannedUsers] = useState<RestrictedUser[]>([]);
   const [userListQuery, setUserListQuery] = useState<BannedUserListQuery | null>(null);
   const { channel } = useOpenChannelSettingsContext();
-  const state = useSendbirdStateContext();
+  const { state } = useSendbird();
   const { stringSet } = useContext(LocalizationContext);
   const currentUserId = state?.config?.userId;
 

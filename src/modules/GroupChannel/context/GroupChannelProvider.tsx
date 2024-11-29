@@ -12,7 +12,6 @@ import {
 } from '@sendbird/uikit-tools';
 
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { useMessageListScroll } from './hooks/useMessageListScroll';
 import { getIsReactionEnabled } from '../../../utils/getIsReactionEnabled';
 import {
@@ -30,6 +29,7 @@ import type {
   MessageListQueryParamsType,
   GroupChannelState,
 } from './types';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 const initialState = {
   currentChannel: null,
@@ -101,9 +101,9 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
   const { state, actions } = useGroupChannel();
   const { updateState } = useGroupChannelStore();
-  const { config, stores } = useSendbirdStateContext();
+  const { state: { config, stores } } = useSendbird();
   const { sdkStore } = stores;
-  const { markAsReadScheduler, logger } = config;
+  const { markAsReadScheduler, logger, pubSub } = config;
 
   // ScrollHandler initialization
   const {
@@ -185,6 +185,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       }
     };
 
+    if (pubSub?.subscribe === undefined) return;
     const subscriptions = [
       config.pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, handleExternalMessage),
       config.pubSub.subscribe(PUBSUB_TOPICS.SEND_FILE_MESSAGE, handleExternalMessage),
@@ -193,7 +194,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     return () => {
       subscriptions.forEach(subscription => subscription.remove());
     };
-  }, [messageDataSource.initialized, state.currentChannel?.url]);
+  }, [messageDataSource.initialized, state.currentChannel?.url, pubSub?.subscribe]);
 
   // Starting point handling
   useEffect(() => {
