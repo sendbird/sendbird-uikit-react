@@ -77,6 +77,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     replyType: moduleReplyType,
     threadReplySelectType: moduleThreadReplySelectType,
     isMessageGroupingEnabled = true,
+    isMultipleFilesMessageEnabled,
     showSearchIcon,
     disableMarkAsRead = false,
     scrollBehavior = 'auto',
@@ -247,6 +248,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   const configurations = useMemo(() => ({
     isReactionEnabled: resolvedIsReactionEnabled,
     isMessageGroupingEnabled,
+    isMultipleFilesMessageEnabled,
     replyType: resolvedReplyType,
     threadReplySelectType: resolvedThreadReplySelectType,
     showSearchIcon: showSearchIcon ?? config.groupChannelSettings.enableMessageSearch,
@@ -255,6 +257,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   }), [
     resolvedIsReactionEnabled,
     isMessageGroupingEnabled,
+    isMultipleFilesMessageEnabled,
     resolvedReplyType,
     resolvedThreadReplySelectType,
     showSearchIcon,
