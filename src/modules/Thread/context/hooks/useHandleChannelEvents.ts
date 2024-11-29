@@ -1,8 +1,7 @@
 import { GroupChannel, GroupChannelHandler } from '@sendbird/chat/groupChannel';
 import { useEffect } from 'react';
-import { Logger } from '../../../../lib/SendbirdState';
 import uuidv4 from '../../../../utils/uuid';
-import { SdkStore } from '../../../../lib/types';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import compareIds from '../../../../utils/compareIds';
 import useThread from '../useThread';
 import { SendableMessageType } from '../../../../utils';

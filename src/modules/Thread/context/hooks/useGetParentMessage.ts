@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
 
-import { Logger } from '../../../../lib/SendbirdState';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import { BaseMessage, MessageRetrievalParams } from '@sendbird/chat/message';
 import { ChannelType } from '@sendbird/chat';
-import { SdkStore } from '../../../../lib/types';
 import useThread from '../useThread';
 
 interface DynamicProps {

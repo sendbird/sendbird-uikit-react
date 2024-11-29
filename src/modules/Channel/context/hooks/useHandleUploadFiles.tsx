@@ -1,8 +1,7 @@
 import React, { useCallback } from 'react';
 
-import { Logger } from '../../../../lib/SendbirdState';
+import { Logger } from '../../../../lib/Sendbird/types';
 import { SendMFMFunctionType } from './useSendMultipleFilesMessage';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { SendableMessageType, isImage } from '../../../../utils';
 // TODO: get SendFileMessageFunctionType from Channel
 import { SendFileMessageFunctionType } from '../../../Thread/context/hooks/useSendFileMessage';
@@ -13,6 +12,7 @@ import { ModalFooter } from '../../../../ui/Modal';
 import { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
 import { compressImages } from '../../../../utils/compressImages';
 import { ONE_MiB } from '../../../../utils/consts';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 /**
  * The handleUploadFiles is a function sending a FileMessage and MultipleFilesMessage
@@ -36,7 +36,7 @@ export const useHandleUploadFiles = ({
   logger,
 }: useHandleUploadFilesStaticProps) => {
   const { stringSet } = useLocalization();
-  const { config } = useSendbirdStateContext();
+  const { state: { config } } = useSendbird();
   const { imageCompression } = config;
   const uikitUploadSizeLimit = config?.uikitUploadSizeLimit;
   const uikitMultipleFilesMessageLimit = config?.uikitMultipleFilesMessageLimit;

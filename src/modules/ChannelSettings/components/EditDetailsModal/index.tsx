@@ -1,7 +1,6 @@
 import React, { useState, useRef, useContext } from 'react';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import useChannelSettings from '../../context/useChannelSettings';
 
 import Modal from '../../../../ui/Modal';
@@ -13,6 +12,7 @@ import TextButton from '../../../../ui/TextButton';
 import ChannelAvatar from '../../../../ui/ChannelAvatar/index';
 import uuidv4 from '../../../../utils/uuid';
 import { FileCompat } from '@sendbird/chat';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export type EditDetailsProps = {
   onSubmit: () => void;
@@ -35,7 +35,7 @@ const EditDetails: React.FC<EditDetailsProps> = (props: EditDetailsProps) => {
   } = useChannelSettings();
   const title = channel?.name;
 
-  const state = useSendbirdStateContext();
+  const { state } = useSendbird();
   const userId = state?.config?.userId;
   const theme = state?.config?.theme;
   const logger = state?.config?.logger;

@@ -3,21 +3,23 @@ import { renderHook } from '@testing-library/react';
 import React from 'react';
 import { useGroupChannelList } from '../useGroupChannelList';
 
-jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
-  __esModule: true,
-  default: jest.fn(() => ({
-    stores: {
-      sdkStore: {
-        sdk: {
-          currentUser: {
-            userId: 'test-user-id',
-          },
+const mockState = {
+  stores: {
+    sdkStore: {
+      sdk: {
+        currentUser: {
+          userId: 'test-user-id',
         },
-        initialized: true,
       },
+      initialized: true,
     },
-    config: { logger: console },
-  })),
+  },
+  config: { logger: console },
+};
+jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+  __esModule: true,
+  default: jest.fn(() => ({ state: mockState })),
+  useSendbird: jest.fn(() => ({ state: mockState })),
 }));
 
 jest.mock('@sendbird/uikit-tools', () => ({

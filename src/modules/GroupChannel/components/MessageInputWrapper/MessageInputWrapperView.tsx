@@ -18,7 +18,6 @@ import {
   isDisabledBecauseSuggestedReplies,
   isDisabledBecauseMessageForm,
 } from '../../context/utils';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
@@ -29,6 +28,7 @@ import MessageInput from '../../../../ui/MessageInput';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { useHandleUploadFiles } from './useHandleUploadFiles';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface MessageInputWrapperViewProps {
   // Basic
@@ -80,7 +80,8 @@ export const MessageInputWrapperView = React.forwardRef((
   } = props;
   const { stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();
-  const { stores, config } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { stores, config } = state;
   const { isOnline, userMention, logger, groupChannel } = config;
   const sdk = stores.sdkStore.sdk;
   const { maxMentionCount, maxSuggestionCount } = userMention;

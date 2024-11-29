@@ -8,7 +8,7 @@ import React, {
 import type { User } from '@sendbird/chat';
 
 import Modal from '../Modal';
-import withSendbirdContext from '../../lib/SendbirdSdkContext';
+import { withSendBird } from '../../lib/Sendbird/index';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 
 import Input, { InputLabel } from '../Input';
@@ -179,6 +179,6 @@ interface ConnectedEditUserProfileProps {
 
 const ConnectedEditUserProfile: (
   props: ConnectedEditUserProfileProps
-) => React.ReactElement = withSendbirdContext(EditUserProfile, mapStoreToProps);
+) => React.ReactElement = withSendBird(EditUserProfile, mapStoreToProps);
 
 export default ConnectedEditUserProfile;

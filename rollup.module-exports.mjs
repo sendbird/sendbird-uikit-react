@@ -10,10 +10,11 @@ export default {
   App: 'src/modules/App/index.tsx',
 
   // SendbirdProvider
-  SendbirdProvider: 'src/lib/Sendbird.tsx',
+  SendbirdProvider: 'src/lib/Sendbird/index.tsx',
   sendbirdSelectors: 'src/lib/selectors.ts',
-  useSendbirdStateContext: 'src/hooks/useSendbirdStateContext.tsx',
-  withSendbird: 'src/lib/SendbirdSdkContext.tsx',
+  // TODO: Support below legacy exports
+  // useSendbirdStateContext: 'src/hooks/useSendbirdStateContext.tsx',
+  // withSendbird: 'src/lib/SendbirdSdkContext.tsx',
 
   // Voice message
   'VoiceRecorder/context': 'src/hooks/VoiceRecorder/index.tsx',

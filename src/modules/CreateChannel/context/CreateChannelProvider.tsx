@@ -5,12 +5,12 @@ import type {
   GroupChannelCreateParams,
 } from '@sendbird/chat/groupChannel';
 
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CHANNEL_TYPE } from '../types';
-import { SendbirdChatType } from '../../../lib/types';
+import { SendbirdChatType } from '../../../lib/Sendbird/types';
 import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
 import useCreateChannel from './useCreateChannel';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 const CreateChannelContext = React.createContext<ReturnType<typeof createStore<CreateChannelState>> | null>(null);
 
@@ -111,8 +111,8 @@ const CreateChannelManager: React.FC<CreateChannelProviderProps> = (props: Creat
   } = props;
 
   const { updateState } = useCreateChannelStore();
-  const store = useSendbirdStateContext();
-  const _userListQuery = userListQuery ?? store?.config?.userListQuery;
+  const { state: { config } } = useSendbird();
+  const _userListQuery = userListQuery ?? config?.userListQuery;
 
   useEffect(() => {
     updateState({

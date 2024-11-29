@@ -23,7 +23,6 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 import MobileMenu from '../../../../ui/MobileMenu';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { ThreadMessageKind } from '../../../../ui/MultipleFilesMessageItemBody';
 import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/useThreadMessageKindKeySelector';
 import { useFileInfoListWithUploaded } from '../../../Channel/context/hooks/useFileInfoListWithUploaded';
@@ -36,6 +35,7 @@ import MessageBody, { CustomSubcomponentsProps, MessageBodyProps } from '../../.
 import { MessageHeaderProps, MessageHeader } from '../../../../ui/MessageContent/MessageHeader';
 import { MobileBottomSheetProps } from '../../../../ui/MobileMenu/types';
 import useThread from '../../context/useThread';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadListItemContentProps extends MessageComponentRenderers {
   className?: string;
@@ -99,7 +99,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
 
   const { isMobile } = useMediaQueryContext();
   const { dateLocale, stringSet } = useLocalization();
-  const { config, eventHandlers } = useSendbirdStateContext?.() || {};
+  const { state: { config, eventHandlers } } = useSendbird();
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const isMenuMounted = useElementObserver(
