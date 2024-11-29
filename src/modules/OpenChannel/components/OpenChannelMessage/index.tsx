@@ -21,7 +21,7 @@ import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 import type { RenderMessageProps } from '../../../../types';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { CoreMessageType, SendableMessageType } from '../../../../utils';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export type OpenChannelMessageProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;

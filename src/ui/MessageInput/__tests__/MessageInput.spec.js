@@ -1,17 +1,18 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { render, renderHook, screen,fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { useLocalization } from '../../../lib/LocalizationContext';
 import MessageInput from "../index";
+import { useLocalization } from '../../../lib/LocalizationContext';
+import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 const noop = () => {};
 
 // to mock useSendbirdStateContext
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  useContext: jest.fn(),
+jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+  __esModule: true,
+  useSendbird: jest.fn(),
+  default: jest.fn(),
 }));
 jest.mock('../../../lib/LocalizationContext', () => ({
   ...jest.requireActual('../../../lib/LocalizationContext'),
@@ -22,9 +23,11 @@ describe('ui/MessageInput', () => {
   /** Mocking necessary hooks */
   beforeEach(() => {
     const stateContextValue = {
-      config: {
-        groupChannel: {
-          enableDocument: true,
+      state: {
+        config: {
+          groupChannel: {
+            enableDocument: true,
+          }
         }
       }
     };
@@ -32,25 +35,32 @@ describe('ui/MessageInput', () => {
       stringSet: {},
     };
 
-    useContext.mockReturnValue(stateContextValue);
-    useLocalization.mockReturnValue(localeContextValue);
+    const useSendbirdDefaultMock = require('../../../lib/Sendbird/context/hooks/useSendbird').default;
+    const useSendbirdMock = require('../../../lib/Sendbird/context/hooks/useSendbird').useSendbird;
+    const useLocalizationMock = require('../../../lib/LocalizationContext').useLocalization;
 
-    renderHook(() => useSendbirdStateContext());
+    useSendbirdDefaultMock.mockReturnValue(stateContextValue);
+    useSendbirdMock.mockReturnValue(stateContextValue);
+    useLocalizationMock.mockReturnValue(localeContextValue);
+
+    renderHook(() => useSendbird());
     renderHook(() => useLocalization());
   })
 
   describe('Dashboard enableDocument config', () => {
     it('should not render file upload icon if groupChannel.enableDocument: false', () => {
       const stateContextValue = {
-        config: {
-          groupChannel: {
-            enableDocument: false,
+        state: {
+          config: {
+            groupChannel: {
+              enableDocument: false,
+            }
           }
         }
       };
 
-      useContext.mockReturnValue(stateContextValue);
-      renderHook(() => useSendbirdStateContext());
+      useSendbird.mockReturnValue(stateContextValue);
+      renderHook(() => useSendbird());
 
       const { container } = render(<MessageInput onSendMessage={noop} value=""  channel={{channelType: 'group'}} />);
       expect(
@@ -60,15 +70,17 @@ describe('ui/MessageInput', () => {
 
     it('should not render file upload icon if openChannel.enableDocument: false', () => {
       const stateContextValue = {
-        config: {
-          openChannel: {
-            enableDocument: false,
+        state: {
+          config: {
+            openChannel: {
+              enableDocument: false,
+            }
           }
         }
       };
 
-      useContext.mockReturnValue(stateContextValue);
-      renderHook(() => useSendbirdStateContext());
+      useSendbird.mockReturnValue(stateContextValue);
+      renderHook(() => useSendbird());
 
       const { container } = render(<MessageInput onSendMessage={noop} value="" channel={{channelType: 'open'}} />);
       expect(
@@ -78,15 +90,17 @@ describe('ui/MessageInput', () => {
 
     it('should not render file upload icon if openChannel.enableDocument: true', () => {
       const stateContextValue = {
-        config: {
-          openChannel: {
-            enableDocument: true,
+        state: {
+          config: {
+            openChannel: {
+              enableDocument: true,
+            }
           }
         }
       };
 
-      useContext.mockReturnValue(stateContextValue);
-      renderHook(() => useSendbirdStateContext());
+      useSendbird.mockReturnValue(stateContextValue);
+      renderHook(() => useSendbird());
 
       const { container } = render(<MessageInput onSendMessage={noop} value="" channel={{channelType: 'open'}} />);
       expect(
@@ -242,27 +256,29 @@ describe('ui/MessageInput', () => {
 describe('MessageInput error handling', () => {
   beforeEach(() => {
     const stateContextValue = {
-      config: {
-        groupChannel: {
-          enableDocument: true,
+      state: {
+        config: {
+          groupChannel: {
+            enableDocument: true,
+          },
         },
-      },
-      eventHandlers: {
-        message: {
-          onSendMessageFailed: jest.fn(),
-          onUpdateMessageFailed: jest.fn(),
-          onFileUploadFailed: jest.fn(),
+        eventHandlers: {
+          message: {
+            onSendMessageFailed: jest.fn(),
+            onUpdateMessageFailed: jest.fn(),
+            onFileUploadFailed: jest.fn(),
+          },
         },
-      },
+      }
     };
     const localeContextValue = {
       stringSet: {},
     };
 
-    useContext.mockReturnValue(stateContextValue);
+    useSendbird.mockReturnValue(stateContextValue);
     useLocalization.mockReturnValue(localeContextValue);
 
-    renderHook(() => useSendbirdStateContext());
+    renderHook(() => useSendbird());
     renderHook(() => useLocalization());
   });
 
@@ -271,7 +287,7 @@ describe('MessageInput error handling', () => {
     const onSendMessage = jest.fn(() => {
       throw new Error(mockErrorMessage);
     });
-    const { eventHandlers } = useSendbirdStateContext();
+    const { state: { eventHandlers } } = useSendbird();
     const textRef = { current: { innerText: null } };
     const mockText = 'Test Value';
 
@@ -291,7 +307,7 @@ describe('MessageInput error handling', () => {
     const onSendMessage = jest.fn(() => {
       throw new Error(mockErrorMessage);
     });
-    const { eventHandlers } = useSendbirdStateContext();
+    const { state: { eventHandlers } } = useSendbird();
     const textRef = { current: { innerText: null } };
     const mockText = 'Test Value';
 
@@ -312,7 +328,7 @@ describe('MessageInput error handling', () => {
     const onUpdateMessage = jest.fn(() => {
       throw new Error(mockErrorMessage);
     });
-    const { eventHandlers } = useSendbirdStateContext();
+    const { state: { eventHandlers } } = useSendbird();
     const messageId = 123;
     const textRef = { current: { innerText: null } };
     const mockText = 'Updated Text';
@@ -342,7 +358,7 @@ describe('MessageInput error handling', () => {
     const onFileUpload = jest.fn(() => {
       throw new Error(mockErrorMessage);
     });
-    const { eventHandlers } = useSendbirdStateContext();
+    const { state: { eventHandlers } } = useSendbird();
     const file = new File(['dummy content'], 'example.txt', { type: 'text/plain' });
 
     render(<MessageInput onFileUpload={onFileUpload} />);

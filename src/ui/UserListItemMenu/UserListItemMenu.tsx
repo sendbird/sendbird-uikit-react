@@ -6,7 +6,7 @@ import { OperatorToggleMenuItem, MuteToggleMenuItem, BanToggleMenuItem } from '.
 import { classnames } from '../../utils/utils';
 import { MenuItems } from '../ContextMenu';
 import { DefaultMenuItems, TriggerIcon } from './DefaultElements';
-import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export type RenderUserListItemMenuItemsParams = {
   items: {

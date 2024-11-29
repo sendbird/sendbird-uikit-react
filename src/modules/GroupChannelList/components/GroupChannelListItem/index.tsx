@@ -6,7 +6,7 @@ import * as utils from './utils';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { GroupChannelListItemBasicProps, GroupChannelListItemView } from './GroupChannelListItemView';
 import { useGroupChannelList } from '../../context/useGroupChannelList';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface GroupChannelListItemProps extends GroupChannelListItemBasicProps {}
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import Modal from '../../../../ui/Modal';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export type LeaveGroupChannelProps = {
   channel?: GroupChannel;

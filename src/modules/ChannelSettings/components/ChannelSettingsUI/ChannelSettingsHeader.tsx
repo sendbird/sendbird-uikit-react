@@ -4,7 +4,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 
 import { IconTypes } from '../../../../ui/Icon';
 import Header, { type HeaderCustomProps } from '../../../../ui/Header';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ChannelSettingsHeaderProps extends HeaderCustomProps {
   onCloseClick?: (e: MouseEvent) => void;

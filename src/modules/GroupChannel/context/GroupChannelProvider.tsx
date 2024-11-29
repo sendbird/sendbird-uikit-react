@@ -29,7 +29,7 @@ import type {
   MessageListQueryParamsType,
   GroupChannelState,
 } from './types';
-import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 const initialState = {
   currentChannel: null,

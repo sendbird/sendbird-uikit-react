@@ -12,7 +12,7 @@ import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import uuidv4 from '../../../../utils/uuid';
 import { fetchMembersFromChannel, fetchMembersFromQuery } from './utils';
 import { classnames } from '../../../../utils/utils';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface SuggestedMentionListViewProps {
   className?: string;

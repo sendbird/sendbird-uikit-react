@@ -1,5 +1,5 @@
 import { SendbirdState } from '../../types';
-import useSendbird from './useSendbird';
+import { useSendbird } from './useSendbird';
 
 // NOTE: Do not use this hook internally.
 // This hook is exported to support backward compatibility.

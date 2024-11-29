@@ -28,7 +28,7 @@ import MessageInput from '../../../../ui/MessageInput';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { useHandleUploadFiles } from './useHandleUploadFiles';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface MessageInputWrapperViewProps {
   // Basic

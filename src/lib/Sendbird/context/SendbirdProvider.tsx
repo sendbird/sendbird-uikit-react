@@ -32,7 +32,7 @@ import { getCaseResolvedReplyType } from '../../utils/resolvedReplyType';
 import { DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, DEFAULT_UPLOAD_SIZE_LIMIT, VOICE_RECORDER_DEFAULT_MAX, VOICE_RECORDER_DEFAULT_MIN } from '../../../utils/consts';
 import { EmojiReactionListRoot, MenuRoot } from '../../../ui/ContextMenu';
 
-import useSendbird from './hooks/useSendbird';
+import { useSendbird } from './hooks/useSendbird';
 import { SendbirdContext, useSendbirdStore } from './SendbirdContext';
 import { createStore } from '../../../utils/storeManager';
 import { initialState } from './initialState';

@@ -12,7 +12,7 @@ import { ModalFooter } from '../../../../ui/Modal';
 import { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
 import { compressImages } from '../../../../utils/compressImages';
 import { ONE_MiB } from '../../../../utils/consts';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 /**
  * The handleUploadFiles is a function sending a FileMessage and MultipleFilesMessage

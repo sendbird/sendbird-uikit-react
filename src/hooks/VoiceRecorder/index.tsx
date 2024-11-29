@@ -10,7 +10,7 @@ import {
 } from '../../utils/consts';
 import { type WebAudioUtils } from './WebAudioUtils';
 import { noop } from '../../utils/utils';
-import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
 
 // Input props of VoiceRecorder
 export interface VoiceRecorderProps {

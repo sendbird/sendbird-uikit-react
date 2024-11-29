@@ -20,37 +20,39 @@ const mockMessageCollection = {
   loadPrevious: jest.fn(),
   loadNext: jest.fn(),
 };
-jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
+jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
-    stores: {
-      sdkStore: {
-        sdk: {
-          groupChannel: {
-            getChannel: mockGetChannel,
-            addGroupChannelHandler: jest.fn(),
-            removeGroupChannelHandler: jest.fn(),
+  useSendbird: jest.fn(() => ({
+    state: {
+      stores: {
+        sdkStore: {
+          sdk: {
+            groupChannel: {
+              getChannel: mockGetChannel,
+              addGroupChannelHandler: jest.fn(),
+              removeGroupChannelHandler: jest.fn(),
+            },
+            createMessageCollection: jest.fn().mockReturnValue(mockMessageCollection),
           },
-          createMessageCollection: jest.fn().mockReturnValue(mockMessageCollection),
+          initialized: true,
         },
-        initialized: true,
       },
-    },
-    config: {
-      logger: mockLogger,
-      markAsReadScheduler: {
-        push: jest.fn(),
-      },
-      groupChannel: {
-        replyType: 'NONE',
-        threadReplySelectType: 'PARENT',
-      },
-      groupChannelSettings: {
-        enableMessageSearch: true,
-      },
-      isOnline: true,
-      pubSub: {
-        subscribe: () => ({ remove: jest.fn() }),
+      config: {
+        logger: mockLogger,
+        markAsReadScheduler: {
+          push: jest.fn(),
+        },
+        groupChannel: {
+          replyType: 'NONE',
+          threadReplySelectType: 'PARENT',
+        },
+        groupChannelSettings: {
+          enableMessageSearch: true,
+        },
+        isOnline: true,
+        pubSub: {
+          subscribe: () => ({ remove: jest.fn() }),
+        },
       },
     },
   })),

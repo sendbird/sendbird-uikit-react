@@ -3,7 +3,7 @@ import { AppInfoStateType, MessageTemplatesInfo, ProcessedMessageTemplate } from
 import { SendbirdMessageTemplate } from '../../ui/TemplateMessageItemBody/types';
 import { CACHED_MESSAGE_TEMPLATES_KEY, CACHED_MESSAGE_TEMPLATES_TOKEN_KEY } from '../../utils/consts';
 import { LoggerInterface } from '../Logger';
-import useSendbird from '../Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../Sendbird/context/hooks/useSendbird';
 import { useCallback } from 'react';
 
 const MESSAGE_TEMPLATES_FETCH_LIMIT = 20;

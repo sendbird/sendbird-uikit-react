@@ -11,7 +11,7 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { ONE_MiB } from '../../../../utils/consts';
 import { ModalFooter } from '../../../../ui/Modal';
 import { ButtonTypes } from '../../../../ui/Button';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface DynamicParams {
   currentOpenChannel: OpenChannel | null;

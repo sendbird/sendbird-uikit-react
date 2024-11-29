@@ -38,7 +38,7 @@ import { Colors } from '../../../../utils/color';
 import type { OnBeforeDownloadFileMessageType } from '../../../GroupChannel/context/types';
 import { openURL } from '../../../../utils/utils';
 import useThread from '../../context/useThread';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ParentMessageInfoItemProps {
   className?: string;

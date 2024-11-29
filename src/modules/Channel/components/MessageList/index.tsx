@@ -25,7 +25,7 @@ import { GroupChannelMessageListProps } from '../../../GroupChannel/components/M
 import { GroupChannelUIBasicProps } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
 import { deleteNullish } from '../../../../utils/utils';
 import { getHTMLTextDirection } from '../../../../utils';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 const SCROLL_BOTTOM_PADDING = 50;
 

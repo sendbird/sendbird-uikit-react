@@ -1,13 +1,19 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen } from '@testing-library/react';
+import { render, renderHook, screen } from '@testing-library/react';
 
 import ChannelSettingsUI from '../components/ChannelSettingsUI';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import * as useChannelSettingsModule from '../context/useChannelSettings';
 import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
+import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 jest.mock('../context/useChannelSettings');
+
+jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+  __esModule: true,
+  useSendbird: jest.fn(),
+}));
 
 const mockStringSet = {
   CHANNEL_SETTING__HEADER__TITLE: 'Channel information',
@@ -56,6 +62,14 @@ describe('ChannelSettings Integration Tests', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    const stateContextValue = {
+      state: {
+        config: {},
+        stores: {},
+      },
+    };
+    useSendbird.mockReturnValue(stateContextValue);
+    renderHook(() => useSendbird());
   });
 
   it('renders all necessary texts correctly', () => {

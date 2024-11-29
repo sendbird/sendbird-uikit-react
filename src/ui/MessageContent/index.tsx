@@ -49,7 +49,7 @@ import useElementObserver from '../../hooks/useElementObserver';
 import { EMOJI_MENU_ROOT_ID, getObservingId, MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '../ContextMenu';
 import { MessageContentForTemplateMessage } from './MessageContentForTemplateMessage';
 import { MESSAGE_TEMPLATE_KEY } from '../../utils/consts';
-import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export { MessageBody } from './MessageBody';
 export { MessageHeader } from './MessageHeader';

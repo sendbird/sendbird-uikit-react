@@ -23,7 +23,7 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import { AddReactionBadgeItem } from './AddReactionBadgeItem';
 import { MobileEmojisBottomSheet } from '../MobileMenu/MobileEmojisBottomSheet';
 import { getIsReactionEnabled } from '../../utils/getIsReactionEnabled';
-import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface EmojiReactionsProps {
   className?: string | Array<string>;

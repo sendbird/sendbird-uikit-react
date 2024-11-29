@@ -20,7 +20,7 @@ import {
   VOICE_PLAYER_ROOT_ID,
 } from '../../utils/consts';
 import { getParsedVoiceAudioFileInfo } from './utils';
-import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
 
 // VoicePlayerProvider interface
 export interface VoicePlayerProps {

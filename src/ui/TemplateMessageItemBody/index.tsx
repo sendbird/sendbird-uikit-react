@@ -18,7 +18,7 @@ import LoadingTemplateMessageItemBody from './LoadingTemplateMessageItemBody';
 import MessageTemplateErrorBoundary from '../MessageTemplate/messageTemplateErrorBoundary';
 import { MESSAGE_TEMPLATE_KEY } from '../../utils/consts';
 import flattenObject from './utils/flattenObject';
-import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
 
 const TEMPLATE_FETCH_RETRY_BUFFER_TIME_IN_MILLIES = 500; // It takes about 450ms for isError update
 

@@ -16,7 +16,7 @@ import { UserListItem } from '../ParticipantUI/ParticipantItem';
 import MutedParticipantsModal from './MutedParticipantsModal';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export const MutedParticipantList = (): ReactElement => {
   const [mutedUsers, setMutedUsers] = useState<RestrictedUser[]>([]);

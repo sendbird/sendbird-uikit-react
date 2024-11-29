@@ -15,7 +15,7 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import { UserListItemMenuProps } from '../UserListItemMenu/UserListItemMenu';
 import { classnames } from '../../utils/utils';
 import pxToNumber from '../../utils/pxToNumber';
-import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface UserListItemProps {
   user: User | Member;

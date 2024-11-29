@@ -24,7 +24,7 @@ import MessageStatus from '../../../../ui/MessageStatus';
 import Modal from '../../../../ui/Modal';
 import TextButton from '../../../../ui/TextButton';
 import { getChannelPreviewMessage } from '../../../Message/utils/tokens/tokenize';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface GroupChannelListItemBasicProps {
   tabIndex: number;

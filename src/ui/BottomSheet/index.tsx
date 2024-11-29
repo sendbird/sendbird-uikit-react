@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 import { MODAL_ROOT } from '../../hooks/useModal';
-import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
 
 interface BottomSheetProps {
   className?: string;

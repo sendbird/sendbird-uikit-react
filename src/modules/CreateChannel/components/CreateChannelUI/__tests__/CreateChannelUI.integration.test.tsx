@@ -6,35 +6,37 @@ import '@testing-library/jest-dom/extend-expect';
 import { LocalizationContext } from '../../../../../lib/LocalizationContext';
 import CreateChannelUI from '../index';
 
-jest.mock('../../../../../hooks/useSendbirdStateContext', () => ({
+jest.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
-    stores: {
-      userStore: {
-        user: {
-          userId: ' test-user-id',
-        },
-      },
-      sdkStore: {
-        sdk: {
-          currentUser: {
-            userId: 'test-user-id',
+  useSendbird: jest.fn(() => ({
+    state: {
+      stores: {
+        userStore: {
+          user: {
+            userId: ' test-user-id',
           },
-          createApplicationUserListQuery: () => ({
-            next: () => Promise.resolve([{ userId: 'test-user-id' }]),
-            isLoading: false,
-          }),
         },
-        initialized: true,
+        sdkStore: {
+          sdk: {
+            currentUser: {
+              userId: 'test-user-id',
+            },
+            createApplicationUserListQuery: () => ({
+              next: () => Promise.resolve([{ userId: 'test-user-id' }]),
+              isLoading: false,
+            }),
+          },
+          initialized: true,
+        },
       },
-    },
-    config: {
-      logger: console,
-      userId: 'test-user-id',
-      groupChannel: {
-        enableMention: true,
+      config: {
+        logger: console,
+        userId: 'test-user-id',
+        groupChannel: {
+          enableMention: true,
+        },
+        isOnline: true,
       },
-      isOnline: true,
     },
   })),
 }));

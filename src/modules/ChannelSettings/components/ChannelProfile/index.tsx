@@ -11,7 +11,7 @@ import Label, {
   LabelColors,
 } from '../../../../ui/Label';
 import EditDetailsModal from '../EditDetailsModal';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 const ChannelProfile: React.FC = () => {
   const { state } = useSendbird();

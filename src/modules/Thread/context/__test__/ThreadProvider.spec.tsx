@@ -4,6 +4,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import { ThreadProvider } from '../ThreadProvider';
 import useThread from '../useThread';
 import { SendableMessageType } from '../../../../utils';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 const mockChannel = {
   url: 'test-channel',
@@ -18,37 +19,44 @@ const mockNewMessage = {
 
 const mockGetChannel = jest.fn().mockResolvedValue(mockChannel);
 
-jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
-  __esModule: true,
-  default: jest.fn(() => ({
-    stores: {
-      sdkStore: {
-        sdk: {
-          groupChannel: {
-            getChannel: mockGetChannel,
-          },
+const mockState = {
+  stores: {
+    sdkStore: {
+      sdk: {
+        groupChannel: {
+          getChannel: mockGetChannel,
         },
-        initialized: true,
       },
-      userStore: { user: { userId: 'test-user-id' } },
+      initialized: true,
     },
-    config: {
-      logger: console,
-      pubSub: {
-        publish: jest.fn(),
-      },
-      groupChannel: {
-        enableMention: true,
-        enableReactions: true,
-      },
+    userStore: { user: { userId: 'test-user-id' } },
+  },
+  config: {
+    logger: console,
+    pubSub: {
+      publish: jest.fn(),
     },
-  })),
+    groupChannel: {
+      enableMention: true,
+      enableReactions: true,
+    },
+  },
+};
+jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+  __esModule: true,
+  useSendbird: jest.fn(() => ({ state: mockState })),
 }));
 
 describe('ThreadProvider', () => {
   const initialMockMessage = {
     messageId: 1,
   } as SendableMessageType;
+
+  beforeEach(() => {
+    const stateContextValue = { state: mockState };
+    useSendbird.mockReturnValue(stateContextValue);
+    renderHook(() => useSendbird());
+  });
 
   it('provides the correct initial state', async () => {
     const wrapper = ({ children }) => (

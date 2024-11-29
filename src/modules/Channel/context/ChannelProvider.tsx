@@ -50,7 +50,7 @@ import { useSendMultipleFilesMessage } from './hooks/useSendMultipleFilesMessage
 import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEvents';
 import { PublishingModuleType } from '../../internalInterfaces';
 import { ChannelActionTypes } from './dux/actionTypes';
-import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export { ThreadReplySelectType } from './const'; // export for external usage
 

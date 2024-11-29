@@ -12,7 +12,7 @@ import ContextMenu, { MenuItems } from '../ContextMenu';
 import Label, { LabelTypography, LabelColors } from '../Label';
 import UserProfile from '../UserProfile';
 import { classnames } from '../../utils/utils';
-import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
 
 interface MentionLabelProps {
   mentionTemplate: string;

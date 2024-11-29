@@ -18,37 +18,39 @@ const mockMessageCollection = {
   loadPrevious: jest.fn(),
   loadNext: jest.fn(),
 };
-jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
+jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
-    stores: {
-      sdkStore: {
-        sdk: {
-          groupChannel: {
-            getChannel: mockGetChannel,
-            addGroupChannelHandler: jest.fn(),
-            removeGroupChannelHandler: jest.fn(),
+  useSendbird: jest.fn(() => ({
+    state: {
+      stores: {
+        sdkStore: {
+          sdk: {
+            groupChannel: {
+              getChannel: mockGetChannel,
+              addGroupChannelHandler: jest.fn(),
+              removeGroupChannelHandler: jest.fn(),
+            },
+            createMessageCollection: jest.fn().mockReturnValue(mockMessageCollection),
           },
-          createMessageCollection: jest.fn().mockReturnValue(mockMessageCollection),
+          initialized: true,
         },
-        initialized: true,
       },
-    },
-    config: {
-      logger: mockLogger,
-      markAsReadScheduler: {
-        push: jest.fn(),
-      },
-      groupChannel: {
-        replyType: 'NONE',
-        threadReplySelectType: 'PARENT',
-      },
-      groupChannelSettings: {
-        enableMessageSearch: true,
-      },
-      isOnline: true,
-      pubSub: {
-        subscribe: () => ({ remove: jest.fn() }),
+      config: {
+        logger: mockLogger,
+        markAsReadScheduler: {
+          push: jest.fn(),
+        },
+        groupChannel: {
+          replyType: 'NONE',
+          threadReplySelectType: 'PARENT',
+        },
+        groupChannelSettings: {
+          enableMessageSearch: true,
+        },
+        isOnline: true,
+        pubSub: {
+          subscribe: () => ({ remove: jest.fn() }),
+        },
       },
     },
   })),
@@ -90,19 +92,21 @@ describe('GroupChannelProvider', () => {
     const mockError = new Error('Channel fetch failed');
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
-      default: () => ({
-        stores: {
-          sdkStore: {
-            sdk: {
-              groupChannel: {
-                getChannel: jest.fn().mockRejectedValue(mockError),
+    jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+      useSendbird: () => ({
+        state: {
+          stores: {
+            sdkStore: {
+              sdk: {
+                groupChannel: {
+                  getChannel: jest.fn().mockRejectedValue(mockError),
+                },
               },
+              initialized: true,
             },
-            initialized: true,
           },
+          config: { logger: console },
         },
-        config: { logger: console },
       }),
     }));
 

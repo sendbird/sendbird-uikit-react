@@ -9,7 +9,7 @@ import { getCreateGroupChannel } from '../../lib/selectors';
 import Avatar from '../Avatar/index';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import Button, { ButtonTypes } from '../Button';
-import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
 
 interface Logger {
   info?(message: string, channel: GroupChannel): void;

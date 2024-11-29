@@ -6,20 +6,22 @@ import { MessageSearchQuery } from '@sendbird/chat/message';
 import { MessageSearchProvider } from '../MessageSearchProvider';
 import useMessageSearch from '../hooks/useMessageSearch';
 
-jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
+jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
-    stores: {
-      sdkStore: {
-        sdk: {
-          createMessageSearchQuery: jest.fn(() => ({
-            next: jest.fn().mockResolvedValue([{ messageId: 1 }]),
-          })),
+  useSendbird: jest.fn(() => ({
+    state: {
+      stores: {
+        sdkStore: {
+          sdk: {
+            createMessageSearchQuery: jest.fn(() => ({
+              next: jest.fn().mockResolvedValue([{ messageId: 1 }]),
+            })),
+          },
+          initialized: true,
         },
-        initialized: true,
       },
+      config: { logger: console },
     },
-    config: { logger: console },
   })),
 }));
 

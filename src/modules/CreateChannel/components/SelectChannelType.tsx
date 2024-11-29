@@ -14,7 +14,7 @@ import {
 } from '../utils';
 import { CHANNEL_TYPE } from '../types';
 import useCreateChannel from '../context/useCreateChannel';
-import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface SelectChannelTypeProps {
   onCancel?(): void;

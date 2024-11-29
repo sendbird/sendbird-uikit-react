@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { GroupChannelUIView } from '../components/GroupChannelUI/GroupChannelUIView';
 import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
 
-jest.mock('../../../hooks/useSendbirdStateContext');
+jest.mock('../../../lib/Sendbird/context/hooks/useSendbird');
 
 const mockUseSendbird = useSendbird as jest.Mock;
 
@@ -19,15 +19,17 @@ describe('GroupChannelUIView Integration Tests', () => {
 
   beforeEach(() => {
     mockUseSendbird.mockImplementation(() => ({
-      stores: {
-        sdkStore: { error: null },
-      },
-      config: {
-        logger: { info: jest.fn() },
-        isOnline: true,
-        groupChannel: {
-          enableTypingIndicator: true,
-          typingIndicatorTypes: new Set(['text']),
+      state: {
+        stores: {
+          sdkStore: { error: null },
+        },
+        config: {
+          logger: { info: jest.fn() },
+          isOnline: true,
+          groupChannel: {
+            enableTypingIndicator: true,
+            typingIndicatorTypes: new Set(['text']),
+          },
         },
       },
     }));
@@ -59,12 +61,14 @@ describe('GroupChannelUIView Integration Tests', () => {
 
   it('renders SDK error placeholder when SDK has error', () => {
     mockUseSendbird.mockImplementation(() => ({
-      stores: {
-        sdkStore: { error: new Error('SDK Error') },
-      },
-      config: {
-        logger: { info: jest.fn() },
-        isOnline: true,
+      state: {
+        stores: {
+          sdkStore: { error: new Error('SDK Error') },
+        },
+        config: {
+          logger: { info: jest.fn() },
+          isOnline: true,
+        },
       },
     }));
 

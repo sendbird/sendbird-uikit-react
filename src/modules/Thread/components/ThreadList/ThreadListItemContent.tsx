@@ -35,7 +35,7 @@ import MessageBody, { CustomSubcomponentsProps, MessageBodyProps } from '../../.
 import { MessageHeaderProps, MessageHeader } from '../../../../ui/MessageContent/MessageHeader';
 import { MobileBottomSheetProps } from '../../../../ui/MobileMenu/types';
 import useThread from '../../context/useThread';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadListItemContentProps extends MessageComponentRenderers {
   className?: string;

@@ -18,7 +18,7 @@ import ChannelProfile from '../ChannelProfile';
 import LeaveChannelModal from '../LeaveChannel';
 import MenuItem from './MenuItem';
 import MenuListByRole from './MenuListByRole';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface ModerationPanelProps {
   menuItems: ReturnType<typeof useMenuItems>;

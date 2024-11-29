@@ -9,7 +9,7 @@ import AddGroupChannel from '../AddGroupChannel';
 import { GroupChannelListItemBasicProps } from '../GroupChannelListItem/GroupChannelListItemView';
 import { noop } from '../../../../utils/utils';
 import { useGroupChannelList } from '../../context/useGroupChannelList';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface GroupChannelItemProps extends GroupChannelListItemBasicProps {}
 

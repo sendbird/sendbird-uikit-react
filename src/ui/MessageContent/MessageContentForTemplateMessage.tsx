@@ -7,7 +7,7 @@ import { MessageComponentRenderers, MessageContentProps } from './index';
 import { uiContainerType } from '../../utils';
 import { useLocalization } from '../../lib/LocalizationContext';
 import { MESSAGE_TEMPLATE_KEY } from '../../utils/consts';
-import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
 
 type MessageContentForTemplateMessageProps = MessageContentProps & MessageComponentRenderers & {
   isByMe: boolean;

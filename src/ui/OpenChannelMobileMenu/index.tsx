@@ -12,7 +12,7 @@ import {
 } from '../../utils/openChannelUtils';
 import { useLocalization } from '../../lib/LocalizationContext';
 import { SendableMessageType } from '../../utils';
-import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../lib/Sendbird/context/hooks/useSendbird';
 
 type Props = {
   message: SendableMessageType;

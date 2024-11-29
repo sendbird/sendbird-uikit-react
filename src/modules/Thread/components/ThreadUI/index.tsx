@@ -18,7 +18,7 @@ import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { SendableMessageType, getHTMLTextDirection } from '../../../../utils';
 import { classnames } from '../../../../utils/utils';
 import useThread from '../../context/useThread';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadUIProps {
   renderHeader?: () => React.ReactElement;

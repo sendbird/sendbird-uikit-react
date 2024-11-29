@@ -11,7 +11,7 @@ import Label, { LabelColors, LabelTypography, LabelStringSet } from '../../../..
 import { isImage, isSupportedFileView, isVideo } from '../../../../utils';
 import { MODAL_ROOT } from '../../../../hooks/useModal';
 import Modal from '../../../../ui/Modal';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 type DeleteMessageTypeLegacy = (message: CoreMessageType) => Promise<void>;
 export interface FileViewerViewProps extends FileViewerProps {

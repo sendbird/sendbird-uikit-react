@@ -15,7 +15,7 @@ import { PartialRequired } from '../../../utils/typeHelpers/partialRequired';
 import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
 import { noop } from '../../../utils/utils';
-import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 type OnCreateChannelClickParams = { users: Array<string>; onClose: () => void; channelType: CHANNEL_TYPE };
 type ChannelListDataSource = ReturnType<typeof useGroupChannelList>;

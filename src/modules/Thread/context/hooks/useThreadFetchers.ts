@@ -4,7 +4,7 @@ import { CoreMessageType, SendableMessageType } from '../../../../utils';
 import { LoggerInterface } from '../../../../lib/Logger';
 import { useCallback } from 'react';
 import { ThreadListStateTypes } from '../../types';
-import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useSendbird } from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 type Params = {
   anchorMessage?: SendableMessageType;
