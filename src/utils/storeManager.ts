@@ -11,11 +11,26 @@ export type Store<T> = {
 export function createStore<T extends object>(initialState: T): Store<T> {
   let state = { ...initialState };
   const listeners = new Set<() => void>();
+  let isUpdating = false;
 
   const setState = (partial: Partial<T> | ((state: T) => Partial<T>)) => {
-    const nextState = typeof partial === 'function' ? partial(state) : partial;
-    state = { ...state, ...nextState };
-    listeners.forEach((listener) => listener());
+    // Prevent nested updates
+    if (isUpdating) return;
+
+    try {
+      isUpdating = true;
+      const nextState = typeof partial === 'function' ? partial(state) : partial;
+      const hasChanged = Object.entries(nextState).some(
+        ([key, value]) => state[key] !== value,
+      );
+
+      if (hasChanged) {
+        state = { ...state, ...nextState };
+        listeners.forEach((listener) => listener());
+      }
+    } finally {
+      isUpdating = false;
+    }
   };
 
   return {

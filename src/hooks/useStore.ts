@@ -1,8 +1,14 @@
-import { useContext, useRef, useCallback } from 'react';
+import { useContext, useRef, useCallback, useMemo } from 'react';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { type Store } from '../utils/storeManager';
 
 type StoreSelector<T, U> = (state: T) => U;
+
+function hasStateChanged<T>(prevState: T, updates: Partial<T>): boolean {
+  return Object.entries(updates).some(([key, value]) => {
+    return prevState[key as keyof T] !== value;
+  });
+}
 
 /**
  * A generic hook for accessing and updating store state
@@ -19,6 +25,7 @@ export function useStore<T, U>(
   if (!store) {
     throw new Error('useStore must be used within a StoreProvider');
   }
+
   // Ensure the stability of the selector function using useRef
   const selectorRef = useRef(selector);
   selectorRef.current = selector;
@@ -36,14 +43,18 @@ export function useStore<T, U>(
   );
 
   const updateState = useCallback((updates: Partial<T>) => {
-    store.setState((prevState) => ({
-      ...prevState,
-      ...updates,
-    }));
+    const currentState = store.getState();
+
+    if (hasStateChanged(currentState, updates)) {
+      store.setState((prevState) => ({
+        ...prevState,
+        ...updates,
+      }));
+    }
   }, [store]);
 
-  return {
+  return useMemo(() => ({
     state,
     updateState,
-  };
+  }), [state, updateState]);
 }
