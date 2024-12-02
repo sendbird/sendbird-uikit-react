@@ -1,4 +1,4 @@
-import { GroupChannelListProvider, useGroupChannelListContext } from '../GroupChannelListProvider';
+import { GroupChannelListProvider } from '../GroupChannelListProvider';
 import { renderHook } from '@testing-library/react';
 import React from 'react';
 import { useGroupChannelList } from '../useGroupChannelList';
@@ -14,7 +14,12 @@ const mockState = {
       initialized: true,
     },
   },
-  config: { logger: console },
+  config: {
+    logger: console,
+    groupChannelList: {
+      enableTypingIndicator: true,
+    },
+  },
 };
 jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
@@ -33,17 +38,12 @@ jest.mock('@sendbird/uikit-tools', () => ({
   useGroupChannelHandler: jest.fn(() => {}),
 }));
 
-jest.mock('../GroupChannelListProvider', () => ({
-  ...jest.requireActual('../GroupChannelListProvider'),
-  useGroupChannelListContext: jest.fn(),
-}));
-
 const initialState = {
   className: '',
   selectedChannelUrl: '',
   disableAutoSelect: false,
-  allowProfileEdit: false,
-  isTypingIndicatorEnabled: false,
+  allowProfileEdit: true,
+  isTypingIndicatorEnabled: true,
   isMessageReceiptStatusEnabled: false,
   onChannelSelect: undefined,
   onChannelCreated: undefined,
@@ -66,7 +66,7 @@ const mockStore = {
 };
 
 const wrapper = ({ children }) => (
-  <GroupChannelListProvider onChannelSelect={jest.fn()} onChannelCreated={jest.fn()}>
+  <GroupChannelListProvider>
     {children}
   </GroupChannelListProvider>
 );
@@ -78,15 +78,12 @@ describe('GroupChannelListProvider', () => {
   });
 
   it('throws an error if used outside of GroupChannelListProvider', () => {
-    (useGroupChannelListContext as jest.Mock).mockReturnValue(null);
-
     expect(() => {
-      renderHook(() => useGroupChannelList(), { wrapper });
+      renderHook(() => useGroupChannelList());
     }).toThrow(new Error('useGroupChannelList must be used within a GroupChannelListProvider'));
   });
 
   it('provide the correct initial state', () => {
-    (useGroupChannelListContext as jest.Mock).mockReturnValue(mockStore);
     const { result } = renderHook(() => useGroupChannelList(), { wrapper });
 
     expect(result.current.state).toEqual(expect.objectContaining(initialState));
