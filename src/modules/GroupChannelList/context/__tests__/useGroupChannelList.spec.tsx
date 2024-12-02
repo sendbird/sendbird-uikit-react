@@ -59,12 +59,6 @@ const initialState = {
   loadMore: null,
 };
 
-const mockStore = {
-  getState: jest.fn(() => initialState),
-  setState: jest.fn(),
-  subscribe: jest.fn(() => jest.fn()),
-};
-
 const wrapper = ({ children }) => (
   <GroupChannelListProvider>
     {children}
