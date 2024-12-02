@@ -36,6 +36,7 @@ import useSendbird from './hooks/useSendbird';
 import { SendbirdContext, useSendbirdStore } from './SendbirdContext';
 import { createStore } from '../../../utils/storeManager';
 import { initialState } from './initialState';
+import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
 
 /**
  * SendbirdContext - Manager
@@ -345,7 +346,7 @@ const SendbirdContextManager = ({
     getCachedTemplate,
   ]);
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     updateState({
       ...storeState,
       ...utilsState,
