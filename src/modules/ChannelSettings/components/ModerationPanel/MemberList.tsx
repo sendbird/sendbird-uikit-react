@@ -38,7 +38,7 @@ export const MemberList = ({
   } = useChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
 
-  const isOperator = useMemo(() => (channel.myRole === Role.OPERATOR), [channel?.myRole]);
+  const isOperator = channel.myRole === Role.OPERATOR;
   const refreshList = useCallback(() => {
     if (!channel) {
       setMembers([]);
