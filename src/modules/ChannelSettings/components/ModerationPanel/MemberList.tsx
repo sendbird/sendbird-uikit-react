@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useContext,
   ReactNode,
+  useMemo,
 } from 'react';
 import type { Member, MemberListQueryParams } from '@sendbird/chat/groupChannel';
 import { Role } from '@sendbird/chat';
@@ -34,6 +35,7 @@ export const MemberList = ({
   const { state: { channel, forceUpdateUI } } = useChannelSettings();
   const { stringSet } = useContext(LocalizationContext);
 
+  const isOperator = useMemo(() => (channel.myRole === Role.OPERATOR), [channel?.myRole]);
   const refreshList = useCallback(() => {
     if (!channel) {
       setMembers([]);
@@ -60,35 +62,37 @@ export const MemberList = ({
                 channel,
                 size: 'small',
                 avatarSize: '24px',
-                renderListItemMenu: (props) => (
-                  <UserListItemMenu {...props}
-                    onToggleOperatorState={({ newStatus: isOperator }) => {
-                      const newMembers = [...members];
-                      for (const newMember of newMembers) {
-                        if (newMember.userId === member.userId) {
-                          newMember.role = isOperator ? Role.OPERATOR : Role.NONE;
-                          break;
+                renderListItemMenu: isOperator
+                  ? (props) => (
+                    <UserListItemMenu {...props}
+                      onToggleOperatorState={({ newStatus: isOperator }) => {
+                        const newMembers = [...members];
+                        for (const newMember of newMembers) {
+                          if (newMember.userId === member.userId) {
+                            newMember.role = isOperator ? Role.OPERATOR : Role.NONE;
+                            break;
+                          }
                         }
-                      }
-                      setMembers(newMembers);
-                    }}
-                    onToggleMuteState={({ newStatus: isMuted }) => {
-                      const newMembers = [...members];
-                      for (const newMember of newMembers) {
-                        if (newMember.userId === member.userId) {
-                          newMember.isMuted = isMuted;
-                          break;
+                        setMembers(newMembers);
+                      }}
+                      onToggleMuteState={({ newStatus: isMuted }) => {
+                        const newMembers = [...members];
+                        for (const newMember of newMembers) {
+                          if (newMember.userId === member.userId) {
+                            newMember.isMuted = isMuted;
+                            break;
+                          }
                         }
-                      }
-                      setMembers(newMembers);
-                    }}
-                    onToggleBanState={() => {
-                      setMembers(members.filter(({ userId }) => {
-                        return userId !== member.userId;
-                      }));
-                    }}
-                  />
-                ),
+                        setMembers(newMembers);
+                      }}
+                      onToggleBanState={() => {
+                        setMembers(members.filter(({ userId }) => {
+                          return userId !== member.userId;
+                        }));
+                      }}
+                    />
+                  )
+                  : () => <></>,
               })
             }
           </React.Fragment>
