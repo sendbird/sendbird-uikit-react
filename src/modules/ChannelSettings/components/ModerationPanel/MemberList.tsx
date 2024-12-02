@@ -5,7 +5,6 @@ import React, {
   useCallback,
   useContext,
   ReactNode,
-  useMemo,
 } from 'react';
 import type { Member, MemberListQueryParams } from '@sendbird/chat/groupChannel';
 import { Role } from '@sendbird/chat';
