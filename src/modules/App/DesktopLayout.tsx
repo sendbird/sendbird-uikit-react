@@ -167,9 +167,11 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
             if (channel?.url !== currentChannel?.url) {
               setCurrentChannel(channel);
             }
-            if (message?.messageId !== highlightedMessage) {
-              setStartingPoint?.(message?.createdAt);
-            }
+            setTimeout(() => {
+              if (message?.messageId !== highlightedMessage) {
+                setStartingPoint?.(message?.createdAt);
+              }
+            }, 200);
             setTimeout(() => {
               setStartingPoint?.(null);
               setHighlightedMessage?.(message?.messageId);

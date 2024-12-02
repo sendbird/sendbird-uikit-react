@@ -23,6 +23,7 @@ import { useStore } from '../../../hooks/useStore';
 import useSetCurrentUserId from './hooks/useSetCurrentUserId';
 import useThread from './useThread';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
 
 export interface ThreadProviderProps extends
   Pick<UserProfileProviderProps, 'disableUserProfile' | 'renderUserProfile'> {
@@ -184,7 +185,7 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
       : new Map()
   ), [currentChannel?.members]);
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     updateState({
       channelUrl,
       message,
