@@ -57,9 +57,6 @@
     padding: 12px 22px 10px 56px;
     @include themed() {
       border-top: 1px solid t(on-bg-4);
-      &:last-child {
-        border-bottom: 1px solid t(on-bg-4);
-      }
     }
     &:focus {
       outline: none;
@@ -71,7 +68,8 @@
 
   .sendbird-channel-settings__panel-item__leave-channel {
     @include themed() {
-      border-top: 0;
+      border-top: 1px solid t(on-bg-4);
+      border-bottom: 1px solid t(on-bg-4);
     }
   }
 
