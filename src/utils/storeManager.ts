@@ -5,6 +5,12 @@ export type Store<T> = {
   subscribe: (listener: () => void) => () => void;
 };
 
+export function hasStateChanged<T>(prevState: T, updates: Partial<T>): boolean {
+  return Object.entries(updates).some(([key, value]) => {
+    return prevState[key as keyof T] !== value;
+  });
+}
+
 /**
  * A custom store creation utility
  */
@@ -20,9 +26,7 @@ export function createStore<T extends object>(initialState: T): Store<T> {
     try {
       isUpdating = true;
       const nextState = typeof partial === 'function' ? partial(state) : partial;
-      const hasChanged = Object.entries(nextState).some(
-        ([key, value]) => state[key] !== value,
-      );
+      const hasChanged = hasStateChanged(state, nextState);
 
       if (hasChanged) {
         state = { ...state, ...nextState };
