@@ -42,9 +42,9 @@ describe('GroupChannelListProvider', () => {
     className: '',
     selectedChannelUrl: '',
     disableAutoSelect: false,
-    allowProfileEdit: undefined,
-    isTypingIndicatorEnabled: undefined,
-    isMessageReceiptStatusEnabled: undefined,
+    allowProfileEdit: true,
+    isTypingIndicatorEnabled: false,
+    isMessageReceiptStatusEnabled: false,
     onChannelSelect: expect.any(Function),
     onChannelCreated: expect.any(Function),
     onThemeChange: undefined,
@@ -87,11 +87,12 @@ describe('GroupChannelListProvider', () => {
     await act(async () => {
       result.current.updateState({ className: 'new-classname' });
       result.current.updateState({ disableAutoSelect: true });
-      await waitFor(() => {
-        const newState = result.current.state;
-        expect(newState.className).toEqual('new-classname');
-        expect(newState.disableAutoSelect).toEqual(true);
-      });
+    });
+
+    await waitFor(() => {
+      const newState = result.current.state;
+      expect(newState.className).toEqual('new-classname');
+      expect(newState.disableAutoSelect).toEqual(true);
     });
   });
 

@@ -30,6 +30,7 @@ import type {
   GroupChannelState,
 } from './types';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
 
 const initialState = {
   currentChannel: null,
@@ -280,7 +281,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     isScrollBottomReached,
   ]);
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     updateState({
       // Channel state
       channelUrl,
