@@ -21,7 +21,7 @@ import {
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
 import type { CoreMessageType } from '../../../../utils';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import type { GroupChannelState, OnBeforeHandler } from '../types';
 
 type MessageListDataSource = ReturnType<typeof useGroupChannelMessages>;
@@ -70,7 +70,7 @@ export function useMessageActions(params: Params): MessageActions {
     quoteMessage,
     replyType,
   } = params;
-  const { eventHandlers } = useSendbirdStateContext();
+  const { state: { eventHandlers } } = useSendbird();
   const buildInternalMessageParams = useCallback(
     <T extends BaseMessageCreateParams>(basicParams: T): T => {
       const messageParams = { ...basicParams } as T;
