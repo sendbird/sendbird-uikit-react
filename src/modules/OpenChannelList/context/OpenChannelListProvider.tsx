@@ -61,19 +61,21 @@ export const OpenChannelListProvider: React.FC<OpenChannelListProviderProps> = (
   // Events & PubSub
   useEffect(() => {
     const subscriber = new Map<string, { remove:() => void }>();
-    subscriber.set(
-      pubSubTopics.UPDATE_OPEN_CHANNEL,
-      pubSub.subscribe(pubSubTopics.UPDATE_OPEN_CHANNEL, (channel) => {
-        openChannelListDispatcher({
-          type: OpenChannelListActionTypes.UPDATE_OPEN_CHANNEL,
-          payload: channel,
-        });
-      }),
-    );
+    if (pubSub?.subscribe) {
+      subscriber.set(
+        pubSubTopics.UPDATE_OPEN_CHANNEL,
+        pubSub.subscribe(pubSubTopics.UPDATE_OPEN_CHANNEL, (channel) => {
+          openChannelListDispatcher({
+            type: OpenChannelListActionTypes.UPDATE_OPEN_CHANNEL,
+            payload: channel,
+          });
+        }),
+      );
+    }
     return () => {
-      subscriber.forEach((it) => it.remove());
+      subscriber.forEach((it) => it?.remove());
     };
-  }, [sdkInitialized, pubSub]);
+  }, [sdkInitialized, pubSub?.subscribe]);
 
   // Fetch next channels by scroll event
   const fetchNextChannels = useFetchNextCallback({

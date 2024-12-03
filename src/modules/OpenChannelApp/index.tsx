@@ -31,7 +31,7 @@ export default function OpenChannelApp({
   const [showSettings, setShowSettings] = useState(false);
 
   return (
-    <Sendbird appId={appId} userId={userId} nickname={nickname} theme={theme} imageCompression={imageCompression}>
+    <Sendbird appId={appId} userId={userId} nickname={nickname} theme={theme} imageCompression={imageCompression} config={{ logLevel: 'all' }}>
       <div className="sendbird-openchannel-app">
         <div className={'sendbird-openchannel-app__channellist'}>
           <OpenChannelList onChannelSelected={(channel) => setChannelUrl(channel.url)} />
