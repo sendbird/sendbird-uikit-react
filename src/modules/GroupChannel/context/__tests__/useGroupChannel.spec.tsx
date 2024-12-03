@@ -2,7 +2,7 @@ import React from 'react';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { GroupChannelProvider } from '../GroupChannelProvider';
+import { GroupChannelProvider, GroupChannelContext } from '../GroupChannelProvider';
 import { useGroupChannel } from '../hooks/useGroupChannel';
 import { SendableMessageType } from '../../../../utils';
 
@@ -20,6 +20,7 @@ const mockMessageCollection = {
   loadPrevious: jest.fn(),
   loadNext: jest.fn(),
 };
+const mockMarkAsReadScheduler = { push: jest.fn() };
 jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
   default: jest.fn(() => ({
@@ -39,9 +40,7 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
       },
       config: {
         logger: mockLogger,
-        markAsReadScheduler: {
-          push: jest.fn(),
-        },
+        markAsReadScheduler: mockMarkAsReadScheduler,
         groupChannel: {
           replyType: 'NONE',
           threadReplySelectType: 'PARENT',
@@ -57,6 +56,50 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
     },
   })),
 }));
+jest.mock('../utils', () => ({
+  getMessageTopOffset: jest.fn().mockReturnValue(100),
+}));
+
+const createMockStore = (initialState = {}) => {
+  let state = {
+    currentChannel: null,
+    fetchChannelError: null,
+    quoteMessage: null,
+    animatedMessageId: null,
+    isScrollBottomReached: true,
+    messages: [],
+    scrollRef: { current: null },
+    hasNext: () => false,
+    resetWithStartingPoint: jest.fn(),
+    scrollPubSub: {
+      publish: jest.fn(),
+    },
+    resetNewMessages: jest.fn(),
+    ...initialState,
+  };
+
+  const subscribers = new Set<() => void>();
+
+  return {
+    getState: () => state,
+    setState: (updater: (prev: typeof state) => typeof state) => {
+      state = updater(state);
+      subscribers.forEach(subscriber => subscriber());
+    },
+    subscribe: (callback: () => void) => {
+      subscribers.add(callback);
+      return () => subscribers.delete(callback);
+    },
+  };
+};
+
+const createWrapper = (mockStore) => {
+  return ({ children }) => (
+    <GroupChannelContext.Provider value={mockStore}>
+      {children}
+    </GroupChannelContext.Provider>
+  );
+};
 
 describe('useGroupChannel', () => {
   const wrapper = ({ children }) => (
@@ -64,7 +107,6 @@ describe('useGroupChannel', () => {
       {children}
     </GroupChannelProvider>
   );
-
   describe('State management', () => {
     it('provides initial state', () => {
       const { result } = renderHook(() => useGroupChannel(), { wrapper });
@@ -98,7 +140,7 @@ describe('useGroupChannel', () => {
       const error = new Error('Failed to fetch channel');
 
       act(() => {
-        result.current.actions.handleChannelError(error);
+        result.current.actions.handleChannelError(error as any);
       });
 
       expect(result.current.state.currentChannel).toBeNull();
@@ -160,6 +202,132 @@ describe('useGroupChannel', () => {
   });
 
   describe('Channel actions', () => {
+    describe('scrollToBottom', () => {
+      it('should not scroll if scrollRef is not set', async () => {
+        const mockStore = createMockStore({
+          scrollRef: { current: null },
+          scrollPubSub: { publish: jest.fn() },
+        });
+        const { result } = renderHook(() => useGroupChannel(), {
+          wrapper: createWrapper(mockStore),
+        });
+        await act(async () => {
+          await result.current.actions.scrollToBottom(true);
+          await waitFor(() => {
+            expect(result.current.state.scrollPubSub.publish).not.toHaveBeenCalled();
+          });
+        });
+      });
+      it('should reset new messages and mark as read if no next messages', async () => {
+        const mockStore = createMockStore({
+          scrollRef: { current: {} },
+          hasNext: () => false,
+          currentChannel: mockChannel,
+          resetNewMessages: jest.fn(),
+          scrollPubSub: { publish: jest.fn() },
+        });
+        const { result } = renderHook(() => useGroupChannel(), {
+          wrapper: createWrapper(mockStore),
+        });
+        await act(async () => {
+          await result.current.actions.scrollToBottom(true);
+          await waitFor(() => {
+            expect(result.current.state.resetNewMessages).toHaveBeenCalled();
+            expect(mockMarkAsReadScheduler.push).toHaveBeenCalledWith(mockChannel);
+          });
+        });
+      });
+      it('should scroll to bottom when online and has next message', async () => {
+        const mockScrollRef = { current: {} };
+        const mockScrollPubSub = { publish: jest.fn() };
+        const mockStore = createMockStore({
+          scrollRef: mockScrollRef,
+          hasNext: () => true,
+          resetWithStartingPoint: jest.fn().mockResolvedValue(undefined),
+          scrollPubSub: mockScrollPubSub,
+        });
+        const { result } = renderHook(() => useGroupChannel(), {
+          wrapper: createWrapper(mockStore),
+        });
+        await act(async () => {
+          await result.current.actions.scrollToBottom(true);
+          await waitFor(() => {
+            expect(result.current.state.resetWithStartingPoint).toHaveBeenCalledWith(Number.MAX_SAFE_INTEGER);
+            expect(result.current.state.scrollPubSub.publish).toHaveBeenCalledWith('scrollToBottom', { animated: true });
+          });
+        });
+      });
+    });
+    describe('scrollToMessage', () => {
+      it('should not scroll if element is not found', async () => {
+        const mockStore = createMockStore({
+          messages: [],
+          scrollRef: { current: document.createElement('div') },
+          scrollPubSub: { publish: jest.fn() },
+        });
+        const { result } = renderHook(() => useGroupChannel(), {
+          wrapper: createWrapper(mockStore),
+        });
+        await act(async () => {
+          await result.current.actions.scrollToMessage(9999, 9999, true, true);
+          await waitFor(() => {
+            expect(result.current.state.scrollPubSub.publish).not.toHaveBeenCalled();
+          });
+        });
+      });
+      it('scroll to message when message exists', async () => {
+        const mockMessage = { messageId: 123, createdAt: 1000 };
+        const mockStore = createMockStore({
+          messages: [mockMessage],
+          scrollRef: { current: document.createElement('div') },
+          scrollPubSub: { publish: jest.fn() },
+        });
+        const { result } = renderHook(() => useGroupChannel(), {
+          wrapper: createWrapper(mockStore),
+        });
+        await act(async () => {
+          await result.current.actions.scrollToMessage(mockMessage.createdAt, mockMessage.messageId, true, true);
+          await waitFor(() => {
+            expect(mockStore.getState().scrollPubSub.publish)
+              .toHaveBeenCalledWith('scroll', {
+                top: 100,
+                animated: true,
+              });
+            expect(result.current.state.animatedMessageId).toBe(mockMessage.messageId);
+          });
+        });
+      });
+      it('loads message and scrolls when message does not exist', async () => {
+        const mockScrollPubSub = { publish: jest.fn() };
+        const mockResetWithStartingPoint = jest.fn().mockResolvedValue(undefined);
+        const mockStore = createMockStore({
+          messages: [],
+          scrollRef: {
+            current: document.createElement('div'),
+          },
+          scrollPubSub: mockScrollPubSub,
+          resetWithStartingPoint: mockResetWithStartingPoint,
+        });
+        const { result } = renderHook(() => useGroupChannel(), {
+          wrapper: createWrapper(mockStore),
+        });
+        await act(async () => {
+          await result.current.actions.scrollToMessage(1000, 123, true, true);
+          await waitFor(() => {
+            expect(mockResetWithStartingPoint).toHaveBeenCalledWith(1000);
+            // mocking setTimeout
+            jest.runAllTimers();
+            expect(mockStore.getState().scrollPubSub.publish)
+              .toHaveBeenCalledWith('scroll', {
+                top: 100,
+                lazy: false,
+                animated: true,
+              });
+            expect(mockStore.getState().animatedMessageId).toBe(123);
+          });
+        });
+      });
+    });
     it('processes reaction toggle', async () => {
       const mockChannelWithReactions = {
         ...mockChannel,
@@ -229,40 +397,68 @@ describe('useGroupChannel', () => {
 
     });
 
-    it('processes successful reaction toggles without logging errors', async () => {
-      const mockChannelWithReactions = {
-        ...mockChannel,
-        addReaction: jest.fn().mockResolvedValue({}),
-        deleteReaction: jest.fn().mockResolvedValue({}),
-      };
+    describe('toggleReaction', () => {
+      it('should be able to add and delete reactions', async () => {
+        const mockChannel = {
+          addReaction: jest.fn().mockResolvedValue(undefined),
+          deleteReaction: jest.fn().mockResolvedValue(undefined),
+        };
+        const mockStore = createMockStore({
+          currentChannel: mockChannel,
+        });
+        const { result } = renderHook(() => useGroupChannel(), {
+          wrapper: createWrapper(mockStore),
+        });
+        const mockMessage = { messageId: 123 } as SendableMessageType;
 
-      const { result } = renderHook(() => useGroupChannel(), { wrapper });
-
-      act(async () => {
-        result.current.actions.setCurrentChannel(mockChannelWithReactions as any);
-      });
-
-      act(async () => {
-        result.current.actions.toggleReaction(
-          { messageId: 1 } as SendableMessageType,
-          'thumbs_up',
-          false,
-        );
-        await waitFor(() => {
-          expect(mockChannelWithReactions.addReaction).toHaveBeenCalled();
-          expect(mockLogger.warning).not.toHaveBeenCalled();
+        await act(async () => {
+          result.current.actions.toggleReaction(mockMessage, '👍', false);
+          await waitFor(() => {
+            expect(mockChannel.addReaction).toHaveBeenCalledWith(mockMessage, '👍');
+          });
+        });
+        await act(async () => {
+          result.current.actions.toggleReaction(mockMessage, '👍', true);
+          await waitFor(() => {
+            expect(mockChannel.deleteReaction).toHaveBeenCalledWith(mockMessage, '👍');
+          });
         });
       });
+      it('processes successful reaction toggles without logging errors', async () => {
+        const mockChannelWithReactions = {
+          ...mockChannel,
+          addReaction: jest.fn().mockResolvedValue({}),
+          deleteReaction: jest.fn().mockResolvedValue({}),
+        };
 
-      act(async () => {
-        result.current.actions.toggleReaction(
-          { messageId: 1 } as SendableMessageType,
-          'thumbs_up',
-          true,
-        );
-        await waitFor(() => {
-          expect(mockChannelWithReactions.deleteReaction).toHaveBeenCalled();
-          expect(mockLogger.warning).not.toHaveBeenCalled();
+        const { result } = renderHook(() => useGroupChannel(), { wrapper });
+
+        act(async () => {
+          result.current.actions.setCurrentChannel(mockChannelWithReactions as any);
+        });
+
+        act(async () => {
+          result.current.actions.toggleReaction(
+            { messageId: 1 } as SendableMessageType,
+            'thumbs_up',
+            false,
+          );
+          await waitFor(() => {
+            expect(mockChannelWithReactions.addReaction).toHaveBeenCalled();
+            expect(mockLogger.warning).not.toHaveBeenCalled();
+          });
+        });
+
+        act(async () => {
+          result.current.actions.toggleReaction(
+            { messageId: 1 } as SendableMessageType,
+            'thumbs_up',
+            true,
+          );
+          await waitFor(() => {
+            expect(mockChannelWithReactions.deleteReaction).toHaveBeenCalled();
+            expect(mockLogger.warning).not.toHaveBeenCalled();
+          });
         });
       });
     });
