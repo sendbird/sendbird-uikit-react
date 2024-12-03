@@ -12,7 +12,7 @@ interface DynamicParams {
   userFilledMessageListParams?: Record<string, any>;
 }
 interface StaticParams {
-  logger: Logger;
+  logger?: Logger;
   messagesDispatcher: CustomUseReducerDispatcher;
   scrollRef: React.RefObject<HTMLElement>;
 }
@@ -22,7 +22,7 @@ function useInitialMessagesFetch(
   { logger, messagesDispatcher, scrollRef }: StaticParams,
 ): void {
   useEffect(() => {
-    logger.info('OpenChannel | useInitialMessagesFetch: Setup started', currentOpenChannel);
+    logger?.info('OpenChannel | useInitialMessagesFetch: Setup started', currentOpenChannel);
     messagesDispatcher({
       type: messageActionTypes.RESET_MESSAGES,
       payload: null,
@@ -40,16 +40,16 @@ function useInitialMessagesFetch(
           // @ts-ignore
           messageListParams[key] = userFilledMessageListParams[key];
         });
-        logger.info('OpenChannel | useInitialMessagesFetch: Used customizedMessageListParams');
+        logger?.info('OpenChannel | useInitialMessagesFetch: Used customizedMessageListParams');
       }
 
-      logger.info('OpenChannel | useInitialMessagesFetch: Fetching messages', { currentOpenChannel, messageListParams });
+      logger?.info('OpenChannel | useInitialMessagesFetch: Fetching messages', { currentOpenChannel, messageListParams });
       messagesDispatcher({
         type: messageActionTypes.GET_PREV_MESSAGES_START,
         payload: null,
       });
       currentOpenChannel.getMessagesByTimestamp(new Date().getTime(), messageListParams).then((messages) => {
-        logger.info('OpenChannel | useInitialMessagesFetch: Fetching messages succeeded', messages);
+        logger?.info('OpenChannel | useInitialMessagesFetch: Fetching messages succeeded', messages);
         const hasMore = (messages && messages.length > 0);
         const lastMessageTimestamp = hasMore ? messages[0].createdAt : null;
         messagesDispatcher({
@@ -63,7 +63,7 @@ function useInitialMessagesFetch(
         });
         setTimeout(() => { scrollIntoLast(0, scrollRef); });
       }).catch((error) => {
-        logger.error('OpenChannel | useInitialMessagesFetch: Fetching messages failed', error);
+        logger?.error('OpenChannel | useInitialMessagesFetch: Fetching messages failed', error);
         messagesDispatcher({
           type: messageActionTypes.GET_PREV_MESSAGES_FAIL,
           payload: {
