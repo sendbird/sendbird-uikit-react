@@ -73,7 +73,7 @@ function useSetupOpenChannelList(
         payload: null,
       });
     }
-  }, [sdkInitialized, openChannelListQuery, logger]);
+  }, [sdkInitialized, openChannelListQuery]);
 }
 
 export default useSetupOpenChannelList;
