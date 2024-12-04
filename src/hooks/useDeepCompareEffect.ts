@@ -13,12 +13,24 @@ function useDeepCompareMemoize<T>(value: T): T {
 
 /**
  * Custom hook that works like useEffect but performs a deep comparison of dependencies
- * instead of reference equality. This is useful when dealing with complex objects or arrays
- * in dependencies that could trigger unnecessary re-renders.
+ * instead of reference equality.
  *
- * Inspired by https://github.com/kentcdodds/use-deep-compare-effect
+ * Best used when:
+ * - Working with complex objects without guaranteed immutability
+ * - Handling data from external sources where reference equality isn't maintained
+ * - Dealing with deeply nested objects where individual memoization is impractical
  *
- * @param callback Effect callback that can either return nothing (void) or return a cleanup function (() => void).
+ * Avoid using when:
+ * - Detecting changes within array items is crucial
+ * - Performance is critical (deep comparison is expensive)
+ * - Working primarily with primitive values or simple objects
+ *
+ * @example
+ * useDeepCompareEffect(() => {
+ *   // Effect logic
+ * }, [complexObject, anotherObject]);
+ *
+ * @param callback Effect callback that can return a cleanup function
  * @param dependencies Array of dependencies to be deeply compared
  */
 function useDeepCompareEffect(

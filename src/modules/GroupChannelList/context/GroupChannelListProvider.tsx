@@ -17,7 +17,6 @@ import { useStore } from '../../../hooks/useStore';
 import { noop } from '../../../utils/utils';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useGroupChannelList from './useGroupChannelList';
-import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
 
 type OnCreateChannelClickParams = { users: Array<string>; onClose: () => void; channelType: CHANNEL_TYPE };
 type ChannelListDataSource = ReturnType<typeof useGroupChannelListDataSource>;
@@ -203,17 +202,16 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
     refresh,
     loadMore,
   ]);
-  const memoizedGroupChannel = useMemo(() => groupChannels, [groupChannels]);
-  useDeepCompareEffect(() => {
+  useEffect(() => {
     updateState({
-      groupChannels: memoizedGroupChannel,
       ...eventHandlers,
       ...configurations,
+      groupChannels,
     });
   }, [
     configurations,
     eventHandlers,
-    memoizedGroupChannel,
+    groupChannels,
   ]);
 
   return null;
