@@ -247,7 +247,6 @@ describe('ThreadProvider', () => {
 
     await waitFor(() => {
       expect(result.current.state.localThreadMessages.at(-1)).toHaveProperty('messageId', 42);
-      expect(result.current.state.localThreadMessages.at(-1)).toHaveProperty('messageId', 42);
     });
   });
 
