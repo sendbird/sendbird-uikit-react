@@ -1,12 +1,11 @@
 import './leave-channel.scss';
 
 import React from 'react';
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { noop } from '../../../../utils/utils';
-
+import { getChannelTitle } from '../../../GroupChannelList/components/GroupChannelListItem/utils';
 import Modal from '../../../../ui/Modal';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
@@ -32,22 +31,14 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
   const state = useSendbirdStateContext();
   const logger = state?.config?.logger;
   const isOnline = state?.config?.isOnline;
+  const userId = state?.config?.userId;
   const { isMobile } = useMediaQueryContext();
-  const getChannelName = (channel: GroupChannel | null) => {
-    if (channel?.name && channel?.name !== 'Group Channel') {
-      return channel.name;
-    }
-    if (channel?.name === 'Group Channel' || !channel?.name) {
-      return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
-    }
 
-    return stringSet.NO_TITLE;
-  };
   if (isMobile) {
     return (
       <Modal
         className="sendbird-channel-settings__leave--mobile"
-        titleText={getChannelName(channel)}
+        titleText={getChannelTitle(channel, userId, stringSet)}
         hideFooter
         isCloseOnClickOutside
         onCancel={onCancel}
