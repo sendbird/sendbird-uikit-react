@@ -1,10 +1,10 @@
 import './channel-profile.scss';
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useContext } from 'react';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
-
+import { getChannelTitle } from '../../../GroupChannelList/components/GroupChannelListItem/utils';
 import ChannelAvatar from '../../../../ui/ChannelAvatar';
 import TextButton from '../../../../ui/TextButton';
 import Label, {
@@ -27,17 +27,6 @@ const ChannelProfile: React.FC = () => {
 
   const channel = channelSettingStore?.channel;
 
-  const channelName = useMemo(() => {
-    if (channel?.name && channel.name !== 'Group Channel') {
-      return channel.name;
-    }
-    if (channel?.name === 'Group Channel' || !channel?.name) {
-      return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
-    }
-
-    return stringSet.NO_TITLE;
-  }, [channel?.name, channel?.joinedMemberCount]);
-
   return (
     <div className="sendbird-channel-profile">
       <div className="sendbird-channel-profile--inner">
@@ -55,7 +44,7 @@ const ChannelProfile: React.FC = () => {
           type={LabelTypography.SUBTITLE_2}
           color={LabelColors.ONBACKGROUND_1}
         >
-          {channelName}
+          {getChannelTitle(channel, userId, stringSet)}
         </Label>
         <TextButton
           disabled={disabled}

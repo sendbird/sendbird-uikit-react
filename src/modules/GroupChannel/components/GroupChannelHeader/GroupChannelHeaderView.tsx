@@ -4,7 +4,7 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import { IconColors, IconTypes } from '../../../../ui/Icon';
 import ChannelAvatar from '../../../../ui/ChannelAvatar';
-import { getChannelTitle } from './utils';
+import { getChannelTitle } from '../../../GroupChannelList/components/GroupChannelListItem/utils';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';

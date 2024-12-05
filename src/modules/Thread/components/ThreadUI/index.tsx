@@ -4,7 +4,7 @@ import './index.scss';
 
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import { getChannelTitle } from '../../../GroupChannel/components/GroupChannelHeader/utils';
+import { getChannelTitle } from '../../../GroupChannelList/components/GroupChannelListItem/utils';
 import { useThreadContext } from '../../context/ThreadProvider';
 import { ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
 import ParentMessageInfo from '../ParentMessageInfo';

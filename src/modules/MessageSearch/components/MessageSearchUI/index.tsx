@@ -4,7 +4,7 @@ import './index.scss';
 
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useMessageSearchContext } from '../../context/MessageSearchProvider';
-
+import { getChannelTitle } from '../../../GroupChannelList/components/GroupChannelListItem/utils';
 import MessageSearchItem from '../../../../ui/MessageSearchItem';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import MessageSearchFileItem from '../../../../ui/MessageSearchFileItem';
@@ -74,16 +74,6 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
     }
   };
 
-  const getChannelName = () => {
-    if (currentChannel && currentChannel?.name && currentChannel?.name !== 'Group Channel') {
-      return currentChannel?.name;
-    }
-    if (currentChannel && (currentChannel?.name === 'Group Channel' || !currentChannel?.name)) {
-      return currentChannel.members.map((member) => member.nickname || stringSet.NO_NAME).join(', ');
-    }
-    return stringSet.NO_TITLE;
-  };
-
   if (isInvalid && searchString && requestString) {
     return renderPlaceHolderError?.() || (
       <div className="sendbird-message-search">
@@ -108,7 +98,7 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
       <div className="sendbird-message-search">
         <PlaceHolder
           type={PlaceHolderTypes.SEARCH_IN}
-          searchInString={getChannelName()}
+          searchInString={getChannelTitle(currentChannel, '', stringSet)}
         />
       </div>
     );
