@@ -46,6 +46,61 @@ describe('useMessageListScroll', () => {
       });
     });
 
+    it('should update scroll position refs when scrolling to bottom', async () => {
+      const { result } = renderHook(() => useMessageListScroll('auto'));
+      const mockScrollRef = {
+        current: {
+          scrollHeight: 1000,
+          clientHeight: 500,
+          scrollTop: 0,
+          scroll: jest.fn(),
+        },
+      };
+      // @ts-ignore
+      result.current.scrollRef = mockScrollRef;
+
+      await act(async () => {
+        result.current.scrollPubSub.publish('scrollToBottom', {});
+        await waitFor(() => {
+          expect(result.current.scrollDistanceFromBottomRef.current).toBe(0);
+          expect(result.current.isScrollBottomReached).toBe(true);
+        });
+      });
+    });
+
+    it('should update scroll position refs when scrolling to specific position', async () => {
+      const mockElement = document.createElement('div');
+      Object.defineProperties(mockElement, {
+        scrollHeight: { value: 1000, configurable: true },
+        clientHeight: { value: 500, configurable: true },
+        scrollTop: {
+          value: 300,
+          writable: true,
+          configurable: true,
+        },
+        scroll: {
+          value: jest.fn(),
+          configurable: true,
+        },
+      });
+
+      const { result } = renderHook(() => useMessageListScroll('auto'));
+
+      await act(async () => {
+        // @ts-ignore
+        result.current.scrollRef.current = mockElement;
+        result.current.scrollPubSub.publish('scroll', {
+          top: 300,
+          lazy: false,
+        });
+
+        await waitFor(() => {
+          expect(result.current.scrollDistanceFromBottomRef.current).toBe(200);
+          expect(mockSetIsScrollBottomReached).toHaveBeenCalledWith(true);
+        });
+      });
+    });
+
     it('should use scrollTop if scroll method is not defined', async () => {
       const { result } = renderHook(() => useMessageListScroll('auto'));
 
