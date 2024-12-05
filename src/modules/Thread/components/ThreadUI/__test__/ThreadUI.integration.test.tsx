@@ -1,4 +1,3 @@
-import { SendableMessageType } from '../../../../../utils';
 import * as useThreadModule from '../../../context/useThread';
 import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../../../types';
 import { EmojiContainer } from '@sendbird/chat';
@@ -7,48 +6,6 @@ import { LocalizationContext } from '../../../../../lib/LocalizationContext';
 import ThreadUI from '../index';
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-
-class MockMessageMethod {
-  _onPending: (message: SendableMessageType) => void;
-
-  _onFailed: (message: SendableMessageType) => void;
-
-  _onSucceeded: (message: SendableMessageType) => void;
-
-  constructor(message, willSucceed = true) {
-    this._onPending = undefined;
-    this._onFailed = undefined;
-    this._onSucceeded = undefined;
-
-    this.init(message, willSucceed);
-  }
-
-  init(message, willSucceed) {
-    setTimeout(() => this._onPending?.(message), 0);
-    setTimeout(() => {
-      if (willSucceed) {
-        this._onSucceeded?.(message);
-      } else {
-        this._onFailed?.(message);
-      }
-    }, 300);
-  }
-
-  onPending(func) {
-    this._onPending = func;
-    return this;
-  }
-
-  onFailed(func) {
-    this._onFailed = func;
-    return this;
-  }
-
-  onSucceeded(func) {
-    this._onSucceeded = func;
-    return this;
-  }
-}
 
 const mockSendUserMessage = jest.fn();
 
