@@ -57,7 +57,7 @@ const withSendbirdContext = (OriginalComponent: any, mapStoreToProps: (props: an
   const ContextAwareComponent = (props) => {
     const { state, actions } = useSendbird();
     const context = { ...state, ...actions };
-    if (mapStoreToProps && typeof mapStoreToProps !== 'function') {
+    if (!mapStoreToProps || typeof mapStoreToProps !== 'function') {
       // eslint-disable-next-line no-console
       console.warn('Second parameter to withSendbirdContext must be a pure function');
     }
