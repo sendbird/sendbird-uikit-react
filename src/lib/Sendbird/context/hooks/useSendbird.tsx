@@ -224,7 +224,7 @@ export const useSendbird = () => {
       actions.resetUser();
       logger.info?.('SendbirdProvider | useSendbird/disconnect completed');
     },
-  }), [store]);
+  }), [store, state.stores.appInfoStore]);
 
   return { state, actions };
 };
