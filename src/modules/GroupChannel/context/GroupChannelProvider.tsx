@@ -298,14 +298,14 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     });
   }, [
     channelUrl,
-    state.currentChannel,
-    messageDataSource.initialized,
-    messageDataSource.loading,
-    messageDataSource.messages,
+    state.currentChannel?.serialize(),
     configurations,
     scrollState,
     eventHandlers,
     renderProps,
+    messageDataSource.initialized,
+    messageDataSource.loading,
+    messageDataSource.messages.map(it => it.serialize()),
   ]);
 
   return children;
