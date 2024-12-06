@@ -8,6 +8,7 @@ const mockLogger = { warning: jest.fn() };
 const mockChannel = {
   url: 'test-channel',
   members: [{ userId: '1', nickname: 'user1' }],
+  serialize: () => JSON.stringify(this),
 };
 
 const mockGetChannel = jest.fn().mockResolvedValue(mockChannel);
@@ -17,6 +18,7 @@ const mockMessageCollection = {
   initialize: jest.fn().mockResolvedValue(null),
   loadPrevious: jest.fn(),
   loadNext: jest.fn(),
+  messages: [],
 };
 jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
