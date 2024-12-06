@@ -10,6 +10,7 @@ const mockLogger = { warning: jest.fn() };
 const mockChannel = {
   url: 'test-channel',
   members: [{ userId: '1', nickname: 'user1' }],
+  serialize: () => JSON.stringify(this),
 };
 
 const mockGetChannel = jest.fn().mockResolvedValue(mockChannel);
@@ -19,6 +20,7 @@ const mockMessageCollection = {
   initialize: jest.fn().mockResolvedValue(null),
   loadPrevious: jest.fn(),
   loadNext: jest.fn(),
+  messages: [],
 };
 const mockMarkAsReadScheduler = { push: jest.fn() };
 jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
@@ -276,7 +278,7 @@ describe('useGroupChannel', () => {
         });
       });
       it('scroll to message when message exists', async () => {
-        const mockMessage = { messageId: 123, createdAt: 1000 };
+        const mockMessage = { messageId: 123, createdAt: 1000, serialize: () => JSON.stringify(this) };
         const mockStore = createMockStore({
           messages: [mockMessage],
           scrollRef: { current: document.createElement('div') },
