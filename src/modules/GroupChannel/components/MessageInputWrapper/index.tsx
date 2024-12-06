@@ -1,7 +1,7 @@
 import React from 'react';
 import MessageInputWrapperView from './MessageInputWrapperView';
-import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { GroupChannelUIBasicProps } from '../GroupChannelUI/GroupChannelUIView';
+import { useGroupChannel } from '../../context/hooks/useGroupChannel';
 
 export interface MessageInputWrapperProps {
   value?: string;
@@ -13,8 +13,8 @@ export interface MessageInputWrapperProps {
 }
 
 export const MessageInputWrapper = (props: MessageInputWrapperProps) => {
-  const context = useGroupChannelContext();
-  return <MessageInputWrapperView {...props} {...context} />;
+  const { state, actions } = useGroupChannel();
+  return <MessageInputWrapperView {...props} {...state} { ...actions} />;
 };
 
 export { VoiceMessageInputWrapper, type VoiceMessageInputWrapperProps } from './VoiceMessageInputWrapper';

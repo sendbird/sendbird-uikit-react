@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { FileMessage } from '@sendbird/chat/message';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import useLongPress from '../../../../hooks/useLongPress';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
@@ -25,6 +24,7 @@ import MessageStatus from '../../../../ui/MessageStatus';
 import Modal from '../../../../ui/Modal';
 import TextButton from '../../../../ui/TextButton';
 import { getChannelPreviewMessage } from '../../../Message/utils/tokens/tokenize';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface GroupChannelListItemBasicProps {
   tabIndex: number;
@@ -52,7 +52,7 @@ export const GroupChannelListItemView = ({
   onLeaveChannel = () => Promise.resolve(),
   renderChannelAction,
 }: GroupChannelListItemViewProps) => {
-  const { config } = useSendbirdStateContext();
+  const { state: { config } } = useSendbird();
   const { theme, userId } = config;
   const { dateLocale, stringSet } = useLocalization();
   const { isMobile } = useMediaQueryContext();

@@ -18,8 +18,8 @@ import ParticipantsModal from './ParticipantsModal';
 import UserProfile from '../../../../ui/UserProfile';
 import ContextMenu, { MenuItems } from '../../../../ui/ContextMenu';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import MutedAvatarOverlay from '../../../../ui/Avatar/MutedAvatarOverlay';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 const SHOWN_MEMBER_MAX = 10;
 
@@ -153,8 +153,8 @@ export interface ParticipantsAccordionProps {
 export default function ParticipantsAccordion(props: ParticipantsAccordionProps): ReactElement {
   const maxMembers = props?.maxMembers || SHOWN_MEMBER_MAX;
   const { channel } = useOpenChannelSettingsContext();
-  const globalState = useSendbirdStateContext();
-  const currentUserId = globalState?.config?.userId;
+  const { state } = useSendbird();
+  const currentUserId = state?.config?.userId;
   const [participants, setParticipants] = useState<User[]>([]);
   const [showMoreModal, setShowMoreModal] = useState(false);
   const { stringSet } = useContext(LocalizationContext);

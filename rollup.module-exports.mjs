@@ -10,10 +10,11 @@ export default {
   App: 'src/modules/App/index.tsx',
 
   // SendbirdProvider
-  SendbirdProvider: 'src/lib/Sendbird.tsx',
+  SendbirdProvider: 'src/lib/Sendbird/index.tsx',
   sendbirdSelectors: 'src/lib/selectors.ts',
-  useSendbirdStateContext: 'src/hooks/useSendbirdStateContext.tsx',
-  withSendbird: 'src/lib/SendbirdSdkContext.tsx',
+  // TODO: Support below legacy exports
+  // useSendbirdStateContext: 'src/hooks/useSendbirdStateContext.tsx',
+  // withSendbird: 'src/lib/SendbirdSdkContext.tsx',
 
   // Voice message
   'VoiceRecorder/context': 'src/hooks/VoiceRecorder/index.tsx',
@@ -57,7 +58,7 @@ export default {
 
   // ChannelSettings
   ChannelSettings: 'src/modules/ChannelSettings/index.tsx',
-  'ChannelSettings/context': 'src/modules/ChannelSettings/context/ChannelSettingsProvider.tsx',
+  'ChannelSettings/context': 'src/modules/ChannelSettings/context/index.tsx',
   'ChannelSettings/hooks/useMenuList': 'src/modules/ChannelSettings/components/ChannelSettingsUI/hooks/useMenuItems.tsx',
   'ChannelSettings/components/ChannelProfile': 'src/modules/ChannelSettings/components/ChannelProfile/index.tsx',
   'ChannelSettings/components/ChannelSettingsUI': 'src/modules/ChannelSettings/components/ChannelSettingsUI/index.tsx',

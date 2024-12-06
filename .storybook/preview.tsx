@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Preview } from '@storybook/react';
-import { SendbirdSdkContext } from '../src/lib/SendbirdSdkContext';
+import { SendbirdContext } from '../src/lib/Sendbird/context/SendbirdContext';
 
 import '../src/lib/index.scss';
 import './index.css';
@@ -28,9 +28,9 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <div className="sendbird-theme--light">
-        <SendbirdSdkContext.Provider value={{} as any}>
+        <SendbirdContext.Provider value={{} as any}>
           {Story()}
-        </SendbirdSdkContext.Provider>
+        </SendbirdContext.Provider>
       </div>
     ),
   ],

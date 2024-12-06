@@ -3,9 +3,9 @@ import React, { useContext } from 'react';
 import Modal from '../../../ui/Modal';
 import { ButtonTypes } from '../../../ui/Button';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
-import { useThreadContext } from '../context/ThreadProvider';
 import { SendableMessageType } from '../../../utils';
 import { getModalDeleteMessageTitle } from '../../../ui/Label/stringFormatterUtils';
+import useThread from '../context/useThread';
 
 export interface RemoveMessageProps {
   onCancel: () => void; // rename to onClose
@@ -21,8 +21,10 @@ const RemoveMessage: React.FC<RemoveMessageProps> = (props: RemoveMessageProps) 
   } = props;
   const { stringSet } = useContext(LocalizationContext);
   const {
-    deleteMessage,
-  } = useThreadContext();
+    actions: {
+      deleteMessage,
+    },
+  } = useThread();
   return (
     <Modal
       type={ButtonTypes.DANGER}

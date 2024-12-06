@@ -3,7 +3,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import { useMarkAsDeliveredScheduler } from '../useMarkAsDeliveredScheduler';
 import { LoggerFactory } from '../../Logger';
-import { Logger } from '../../SendbirdState';
+import type { Logger } from '../../Sendbird/types';
 
 jest.useFakeTimers();
 

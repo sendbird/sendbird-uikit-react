@@ -4,10 +4,10 @@ import { classnames } from '../../utils/utils';
 import format from 'date-fns/format';
 import { MessageTemplateData, TemplateType } from '../TemplateMessageItemBody/types';
 import { MessageComponentRenderers, MessageContentProps } from './index';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { uiContainerType } from '../../utils';
 import { useLocalization } from '../../lib/LocalizationContext';
 import { MESSAGE_TEMPLATE_KEY } from '../../utils/consts';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 type MessageContentForTemplateMessageProps = MessageContentProps & MessageComponentRenderers & {
   isByMe: boolean;
@@ -42,7 +42,7 @@ export function MessageContentForTemplateMessage(props: MessageContentForTemplat
     useReplying,
   } = props;
 
-  const { config } = useSendbirdStateContext();
+  const { state: { config } } = useSendbird();
   const { dateLocale } = useLocalization();
 
   const uiContainerTypeClassName = uiContainerType[templateType] ?? '';

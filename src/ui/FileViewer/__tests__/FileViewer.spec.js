@@ -1,10 +1,17 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, renderHook } from '@testing-library/react';
 
 import { FileViewerComponent as FileViewer } from "../index";
 import { msg0, msg1 } from '../data.mock';
-import { SendbirdSdkContext } from '../../../lib/SendbirdSdkContext';
 import { MODAL_ROOT } from '../../../hooks/useModal';
+import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+
+jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+  __esModule: true,
+  default: jest.fn(),
+  useSendbird: jest.fn(),
+}));
 
 describe('ui/FileViewer', () => {
   let modalRoot;
@@ -21,6 +28,18 @@ describe('ui/FileViewer', () => {
     document.body.removeChild(modalRoot);
   });
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+    const stateContextValue = {
+      state: {
+        config: {},
+        stores: {},
+      },
+    };
+    useSendbird.mockReturnValue(stateContextValue);
+    renderHook(() => useSendbird());
+  });
+
   it('should display image', function () {
     const {
       sender,
@@ -30,7 +49,7 @@ describe('ui/FileViewer', () => {
     } = msg0;
     const { profileUrl, nickname = '' } = sender;
     render(
-      <SendbirdSdkContext.Provider value={{}}>
+      <SendbirdContext.Provider value={{}}>
         <FileViewer
           profileUrl={profileUrl}
           nickname={nickname}
@@ -40,7 +59,7 @@ describe('ui/FileViewer', () => {
           onClose={() => { }}
           onDelete={() => { }}
         />
-      </SendbirdSdkContext.Provider>
+      </SendbirdContext.Provider>
     );
     expect(
       screen.getByAltText(msg0.name).className
@@ -62,7 +81,7 @@ describe('ui/FileViewer', () => {
     } = msg1;
     const { profileUrl, nickname = '' } = sender;
     const { container } = render(
-      <SendbirdSdkContext.Provider value={{}}>
+      <SendbirdContext.Provider value={{}}>
         <FileViewer
           profileUrl={profileUrl}
           nickname={nickname}
@@ -72,7 +91,7 @@ describe('ui/FileViewer', () => {
           onClose={() => { }}
           onDelete={() => { }}
         />
-      </SendbirdSdkContext.Provider>
+      </SendbirdContext.Provider>
     );
 
     // Use document to search for the element inside the modal root
@@ -98,7 +117,7 @@ describe('ui/FileViewer', () => {
       name = '',
     } = unsupportedMsg;
     const { container } = render(
-      <SendbirdSdkContext.Provider value={{}}>
+      <SendbirdContext.Provider value={{}}>
         <FileViewer
           profileUrl={profileUrl}
           nickname={nickname}
@@ -108,7 +127,7 @@ describe('ui/FileViewer', () => {
           onClose={() => { }}
           onDelete={() => { }}
         />
-      </SendbirdSdkContext.Provider>
+      </SendbirdContext.Provider>
     );
 
     // Use document to search for the element inside the modal root
@@ -137,7 +156,7 @@ describe('ui/FileViewer', () => {
     } = msg0;
     const { profileUrl, nickname = '' } = sender;
     const { asFragment } = render(
-      <SendbirdSdkContext.Provider value={{}}>
+      <SendbirdContext.Provider value={{}}>
         <FileViewer
           profileUrl={profileUrl}
           nickname={nickname}
@@ -148,7 +167,7 @@ describe('ui/FileViewer', () => {
           onDelete={() => { }}
           message={msg0}
         />
-      </SendbirdSdkContext.Provider>
+      </SendbirdContext.Provider>
     );
     expect(asFragment()).toMatchSnapshot();
   });

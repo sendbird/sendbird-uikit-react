@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import type { Member, MemberListQueryParams } from '@sendbird/chat/groupChannel';
 
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
@@ -15,6 +14,7 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { UserListItemMenu } from '../../../../ui/UserListItemMenu';
 import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
 import MutedMembersModal from './MutedMembersModal';
+import useChannelSettings from '../../context/useChannelSettings';
 
 interface MutedMemberListProps {
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
@@ -29,7 +29,7 @@ export const MutedMemberList = ({
   const [showModal, setShowModal] = useState(false);
   const { stringSet } = useLocalization();
 
-  const { channel } = useChannelSettingsContext();
+  const { state: { channel } } = useChannelSettings();
 
   const refreshList = useCallback(() => {
     if (!channel) {

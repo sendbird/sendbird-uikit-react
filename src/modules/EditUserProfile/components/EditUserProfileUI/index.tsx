@@ -8,22 +8,22 @@ import React, {
 import { User } from '@sendbird/chat';
 import './edit-user-profile.scss';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useEditUserProfileContext } from '../../context/EditUserProfileProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { SendBirdState } from '../../../../lib/types';
-import { USER_ACTIONS } from '../../../../lib/dux/user/actionTypes';
 
 import Modal from '../../../../ui/Modal';
 import { ButtonTypes } from '../../../../ui/Button';
 import { EditUserProfileUIView } from './EditUserProfileUIView';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { SendbirdState } from '../../../../lib/Sendbird/types';
 
 interface HandleUpdateUserInfoParams {
-  globalContext: SendBirdState;
+  globalContext: SendbirdState;
   formRef: MutableRefObject<any>;
   inputRef: MutableRefObject<any>;
   profileImage: File | null;
   onEditProfile?: (user: User) => void;
+  updateUserInfo: (user: User) => void;
 }
 const handleUpdateUserInfo = ({
   globalContext,
@@ -31,11 +31,11 @@ const handleUpdateUserInfo = ({
   inputRef,
   profileImage,
   onEditProfile,
+  updateUserInfo,
 }: HandleUpdateUserInfoParams) => {
-  const { stores, dispatchers } = globalContext;
+  const { stores } = globalContext;
   const sdk = stores.sdkStore.sdk;
   const user = stores.userStore.user;
-  const { userDispatcher } = dispatchers;
 
   if (user?.nickname !== '' && !inputRef.current.value) {
     formRef.current.reportValidity?.(); // might not work in explorer
@@ -45,7 +45,7 @@ const handleUpdateUserInfo = ({
     nickname: inputRef?.current?.value,
     profileImage: profileImage ?? undefined,
   }).then((updatedUser) => {
-    userDispatcher({ type: USER_ACTIONS.UPDATE_USER_INFO, payload: updatedUser });
+    updateUserInfo(updatedUser);
     onEditProfile?.(updatedUser);
   });
 };
@@ -56,17 +56,18 @@ export interface UseEditUserProfileUIStateParams {
 export const useEditUserProfileUISates = ({
   onEditProfile,
 }: UseEditUserProfileUIStateParams) => {
-  const globalContext = useSendbirdStateContext();
+  const { state, actions } = useSendbird();
   const inputRef = useRef(null);
   const formRef = useRef(null);
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const updateUserInfo = () => {
     handleUpdateUserInfo({
-      globalContext,
+      globalContext: state,
       formRef,
       inputRef,
       profileImage,
       onEditProfile,
+      updateUserInfo: actions.updateUserInfo,
     });
   };
 

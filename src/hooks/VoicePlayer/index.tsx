@@ -19,8 +19,8 @@ import {
   VOICE_PLAYER_AUDIO_ID,
   VOICE_PLAYER_ROOT_ID,
 } from '../../utils/consts';
-import useSendbirdStateContext from '../useSendbirdStateContext';
 import { getParsedVoiceAudioFileInfo } from './utils';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 // VoicePlayerProvider interface
 export interface VoicePlayerProps {
@@ -64,7 +64,8 @@ export const VoicePlayerProvider = ({
     currentPlayer,
     audioStorage,
   } = voicePlayerStore;
-  const { config } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { config } = state;
   const { logger } = config;
 
   const stop = (text = '') => {
