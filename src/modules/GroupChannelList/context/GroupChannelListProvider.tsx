@@ -203,17 +203,16 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
     refresh,
     loadMore,
   ]);
-  const memoizedGroupChannel = useMemo(() => groupChannels, [groupChannels]);
   useDeepCompareEffect(() => {
     updateState({
-      groupChannels: memoizedGroupChannel,
       ...eventHandlers,
       ...configurations,
+      groupChannels,
     });
   }, [
     configurations,
     eventHandlers,
-    memoizedGroupChannel,
+    groupChannels.map(groupChannel => groupChannel.serialize()),
   ]);
 
   return null;
