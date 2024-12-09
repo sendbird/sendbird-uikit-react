@@ -5,11 +5,11 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import GroupChannelListHeader from '../GroupChannelListHeader';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import EditUserProfile from '../../../EditUserProfile';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { User } from '@sendbird/chat';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface Props {
   renderHeader?: (props: void) => React.ReactElement;
@@ -47,7 +47,7 @@ export const GroupChannelListUIView = ({
   renderAddChannel,
 }: Props) => {
   const [showProfileEdit, setShowProfileEdit] = useState(false);
-  const { stores } = useSendbirdStateContext();
+  const { state: { stores } } = useSendbird();
 
   const renderer = {
     addChannel: renderAddChannel,

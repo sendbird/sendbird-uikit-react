@@ -1,4 +1,6 @@
 // Initializing status
+import { UploadableFileInfo } from '@sendbird/chat/message';
+
 export enum ChannelStateTypes {
   NIL = 'NIL',
   LOADING = 'LOADING',
@@ -16,4 +18,12 @@ export enum ThreadListStateTypes {
   LOADING = 'LOADING',
   INVALID = 'INVALID',
   INITIALIZED = 'INITIALIZED',
+}
+
+export interface FileUploadInfoParams {
+  channelUrl: string,
+  requestId: string,
+  index: number,
+  uploadableFileInfo: UploadableFileInfo,
+  error: Error,
 }

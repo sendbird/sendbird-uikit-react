@@ -7,12 +7,13 @@ import GroupChannelHeader, { GroupChannelHeaderProps } from '../GroupChannelHead
 import MessageList, { GroupChannelMessageListProps } from '../MessageList';
 import MessageInputWrapper from '../MessageInputWrapper';
 import { deleteNullish } from '../../../../utils/utils';
+import { useGroupChannel } from '../../context/hooks/useGroupChannel';
 
 export interface GroupChannelUIProps extends GroupChannelUIBasicProps {}
 
 export const GroupChannelUI = (props: GroupChannelUIProps) => {
   const context = useGroupChannelContext();
-  const { channelUrl, fetchChannelError } = context;
+  const { state: { channelUrl, fetchChannelError } } = useGroupChannel();
 
   // Inject components to presentation layer
   const {

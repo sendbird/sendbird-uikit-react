@@ -8,9 +8,9 @@ import {
   VOICE_MESSAGE_MIME_TYPE,
   VOICE_RECORDER_AUDIO_BIT_RATE,
 } from '../../utils/consts';
-import useSendbirdStateContext from '../useSendbirdStateContext';
 import { type WebAudioUtils } from './WebAudioUtils';
 import { noop } from '../../utils/utils';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 // Input props of VoiceRecorder
 export interface VoiceRecorderProps {
@@ -37,7 +37,8 @@ const Context = createContext<VoiceRecorderContext>({
 
 export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactElement => {
   const { children } = props;
-  const { config } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { config } = state;
   const { logger, groupChannel } = config;
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [isRecordable, setIsRecordable] = useState<boolean>(false);

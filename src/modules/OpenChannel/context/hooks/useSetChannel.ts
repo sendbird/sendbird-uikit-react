@@ -1,9 +1,8 @@
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 import { useEffect } from 'react';
-import type { Logger } from '../../../../lib/SendbirdState';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
-import { SdkStore } from '../../../../lib/types';
 
 interface DynamicParams {
   channelUrl: string;

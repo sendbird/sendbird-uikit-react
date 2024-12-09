@@ -7,7 +7,7 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 import { match } from 'ts-pattern';
 
-import type { SendBirdStateConfig } from '../../lib/types';
+import type { SendbirdStateConfig } from '../../lib/Sendbird/types';
 
 /**
  * FIXME:
@@ -26,12 +26,12 @@ enum ChannelType {
  * If customer is using MessageInput outside our modules(ie: custom UI),
  * we expect Channel to be undefined and customer gets control to show/hide file-upload.
  * @param {*} channel GroupChannel | OpenChannel
- * @param {*} config SendBirdStateConfig
+ * @param {*} config SendbirdStateConfig
  * @returns boolean
  */
 export const checkIfFileUploadEnabled = ({ channel, config }: {
   channel?: GroupChannel | OpenChannel,
-  config?: SendBirdStateConfig,
+  config?: SendbirdStateConfig,
 }) => {
   const isEnabled = match(channel?.channelType)
     .with(ChannelType.GROUP, () => config?.groupChannel?.enableDocument)

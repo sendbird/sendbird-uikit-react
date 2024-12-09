@@ -3,18 +3,17 @@ import React, {
   useEffect,
   useState,
   useCallback,
-  useContext,
   ReactNode,
 } from 'react';
 import type { OperatorListQueryParams, User } from '@sendbird/chat';
 
-import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
+import useChannelSettings from '../../context/useChannelSettings';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
-import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import UserListItemMenu from '../../../../ui/UserListItemMenu/UserListItemMenu';
-
+import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
+
 import OperatorsModal from './OperatorsModal';
 import AddOperatorsModal from './AddOperatorsModal';
 
@@ -30,8 +29,8 @@ export const OperatorList = ({
   const [showMore, setShowMore] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [hasNext, setHasNext] = useState(false);
-  const { stringSet } = useContext(LocalizationContext);
-  const { channel } = useChannelSettingsContext();
+  const { stringSet } = useLocalization();
+  const { state: { channel } } = useChannelSettings();
 
   const refreshList = useCallback(() => {
     if (!channel) {

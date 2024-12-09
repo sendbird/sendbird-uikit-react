@@ -1,12 +1,12 @@
 import React from 'react';
 
 import './index.scss';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import Avatar from '../../../../ui/Avatar';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import Header, { HeaderCustomProps } from '../../../../ui/Header';
 import { classnames } from '../../../../utils/utils';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface GroupChannelListHeaderProps extends HeaderCustomProps {
   /** @deprecated Use the props `renderMiddle` instead */
@@ -26,8 +26,7 @@ export const GroupChannelListHeader = ({
   renderMiddle,
   renderRight,
 }: GroupChannelListHeaderProps) => {
-  const { stores } = useSendbirdStateContext();
-  const { user } = stores.userStore;
+  const { state: { stores: { userStore: { user } } } } = useSendbird();
 
   const { stringSet } = useLocalization();
   const renderProfile = renderMiddle ?? renderTitle;

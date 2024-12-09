@@ -1,16 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { User } from '@sendbird/chat';
 import type {
   GroupChannel,
   GroupChannelCreateParams,
 } from '@sendbird/chat/groupChannel';
 
-import { getCreateGroupChannel } from '../../../lib/selectors';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { CHANNEL_TYPE } from '../types';
-import { SendbirdChatType } from '../../../lib/types';
+import { SendbirdChatType } from '../../../lib/Sendbird/types';
+import { createStore } from '../../../utils/storeManager';
+import { useStore } from '../../../hooks/useStore';
+import useCreateChannel from './useCreateChannel';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
-const CreateChannelContext = React.createContext<CreateChannelContextInterface | null>(null);
+const CreateChannelContext = React.createContext<ReturnType<typeof createStore<CreateChannelState>> | null>(null);
+
+const initialState = {
+  sdk: undefined,
+  userListQuery: undefined,
+  onCreateChannelClick: undefined,
+  onChannelCreated: undefined,
+  onBeforeCreateChannel: undefined,
+  pageStep: 0,
+  type: CHANNEL_TYPE.GROUP,
+  onCreateChannel: undefined,
+  overrideInviteUser: undefined,
+};
 
 export interface UserListQuery {
   hasNext?: boolean;
@@ -54,11 +68,8 @@ export interface CreateChannelProviderProps {
   overrideInviteUser?(params: OverrideInviteUserType): void;
 }
 
-type CreateChannel = (channelParams: GroupChannelCreateParams) => Promise<GroupChannel>;
-
-export interface CreateChannelContextInterface {
+export interface CreateChannelState {
   sdk: SendbirdChatType;
-  createChannel: CreateChannel;
   userListQuery?(): UserListQuery;
 
   /**
@@ -75,10 +86,8 @@ export interface CreateChannelContextInterface {
    * */
   onBeforeCreateChannel?(users: Array<string>): GroupChannelCreateParams;
 
-  step: number,
-  setStep: React.Dispatch<React.SetStateAction<number>>,
+  pageStep: number,
   type: CHANNEL_TYPE,
-  setType: React.Dispatch<React.SetStateAction<CHANNEL_TYPE>>,
   /**
    * @deprecated
    * Use the onChannelCreated instead
@@ -91,9 +100,8 @@ export interface CreateChannelContextInterface {
   overrideInviteUser?(params: OverrideInviteUserType): void;
 }
 
-const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: CreateChannelProviderProps) => {
+const CreateChannelManager: React.FC<CreateChannelProviderProps> = (props: CreateChannelProviderProps) => {
   const {
-    children,
     onCreateChannelClick,
     onBeforeCreateChannel,
     onChannelCreated,
@@ -102,39 +110,64 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
     overrideInviteUser,
   } = props;
 
-  const store = useSendbirdStateContext();
-  const _userListQuery = userListQuery ?? store?.config?.userListQuery;
+  const { updateState } = useCreateChannelStore();
+  const { state: { config } } = useSendbird();
+  const _userListQuery = userListQuery ?? config?.userListQuery;
 
-  const [step, setStep] = useState(0);
-  const [type, setType] = useState(CHANNEL_TYPE.GROUP);
-
-  return (
-    <CreateChannelContext.Provider value={{
-      sdk: store.stores.sdkStore.sdk,
-      createChannel: getCreateGroupChannel(store),
+  useEffect(() => {
+    updateState({
       onCreateChannelClick,
       onBeforeCreateChannel,
       onChannelCreated,
       userListQuery: _userListQuery,
-      step,
-      setStep,
-      type,
-      setType,
       onCreateChannel,
       overrideInviteUser,
-    }}>
+    });
+  }, [
+    onCreateChannelClick,
+    onBeforeCreateChannel,
+    onChannelCreated,
+    userListQuery,
+    onCreateChannel,
+    overrideInviteUser,
+    _userListQuery,
+  ]);
+
+  return null;
+};
+const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: CreateChannelProviderProps) => {
+  const { children } = props;
+
+  return (
+    <InternalCreateChannelProvider>
+      <CreateChannelManager {...props} />
+      {children}
+    </InternalCreateChannelProvider>
+  );
+};
+
+const createCreateChannelStore = () => createStore(initialState);
+const InternalCreateChannelProvider: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
+  const storeRef = useRef(createCreateChannelStore());
+
+  return (
+    <CreateChannelContext.Provider value={storeRef.current}>
       {children}
     </CreateChannelContext.Provider>
   );
 };
 
+const useCreateChannelStore = () => {
+  return useStore(CreateChannelContext, state => state, initialState);
+};
+
 const useCreateChannelContext = () => {
-  const context = React.useContext(CreateChannelContext);
-  if (!context) throw new Error('CreateChannelContext not found. Use within the CreateChannel module.');
-  return context;
+  const { state, actions } = useCreateChannel();
+  return { ...state, ...actions };
 };
 
 export {
   CreateChannelProvider,
+  CreateChannelContext,
   useCreateChannelContext,
 };

@@ -9,7 +9,7 @@ import { getCreateGroupChannel } from '../../lib/selectors';
 import Avatar from '../Avatar/index';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import Button, { ButtonTypes } from '../Button';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 interface Logger {
   info?(message: string, channel: GroupChannel): void;
@@ -30,11 +30,11 @@ function UserProfile({
   disableMessaging = false,
   onSuccess,
 }: Props): ReactElement {
-  const store = useSendbirdStateContext();
-  const createChannel = getCreateGroupChannel(store);
-  const logger = store?.config?.logger;
+  const { state } = useSendbird();
+  const createChannel = getCreateGroupChannel(state);
+  const logger = state?.config?.logger;
   const { stringSet } = useContext(LocalizationContext);
-  const currentUserId_ = currentUserId || store?.config?.userId;
+  const currentUserId_ = currentUserId || state?.config?.userId;
   const { onStartDirectMessage } = useUserProfileContext();
   return (
     <div className="sendbird__user-profile">

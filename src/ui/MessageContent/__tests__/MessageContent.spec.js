@@ -1,24 +1,33 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { render, renderHook } from '@testing-library/react';
 
 import MessageContent from "../index";
 import { useMessageContext } from '../../../modules/Message/context/MessageProvider';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../lib/LocalizationContext';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 jest.mock('date-fns/format', () => () => ('mock-date'));
 
-// to mock useSendbirdStateContext
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  useContext: jest.fn(),
+// to mock useSendbird
+jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+  __esModule: true,
+  default: jest.fn(),
+  useSendbird: jest.fn(),
 }));
-jest.mock('../../../lib/LocalizationContext', () => ({
-  ...jest.requireActual('../../../lib/LocalizationContext'),
-  useLocalization: jest.fn(),
-}));
+jest.mock('../../../lib/LocalizationContext', () => {
+  const React = require('react');
+  return {
+    __esModule: true,
+    LocalizationContext: React.createContext({
+      stringSet: {
+        DATE_FORMAT__MESSAGE_CREATED_AT: 'p',
+      },
+    }),
+    useLocalization: jest.fn(),
+  };
+});
 jest.mock('../../../modules/Message/context/MessageProvider', () => ({
-  ...jest.requireActual('../../../modules/Message/context/MessageProvider'),
+  __esModule: true,
   useMessageContext: jest.fn(),
 }));
 
@@ -63,10 +72,13 @@ describe('ui/MessageContent', () => {
   /** Mocking necessary hooks */
   beforeEach(() => {
     const stateContextValue = {
-      config: {
-        groupChannel: {
-          enableOgtag: true,
-        }
+      state: {
+        config: {
+          groupChannel: {
+            enableOgtag: true,
+          }
+        },
+        eventHandlers: {},
       }
     };
     const localeContextValue = {
@@ -77,13 +89,15 @@ describe('ui/MessageContent', () => {
     };
     const messageContextValue = {
       message: {},
-    }
+    };
 
-    useContext.mockReturnValue(stateContextValue);
+    // Mocking the hooks
+
+    useSendbird.mockReturnValue(stateContextValue);
     useLocalization.mockReturnValue(localeContextValue);
-    useMessageContext.mockReturnValue(messageContextValue)
+    useMessageContext.mockReturnValue(messageContextValue);
 
-    renderHook(() => useSendbirdStateContext());
+    renderHook(() => useSendbird());
     renderHook(() => useLocalization());
     renderHook(() => useMessageContext());
   })
@@ -290,11 +304,13 @@ describe('ui/MessageContent', () => {
   it('should render OGMessageItemBody if config.groupChannel.enableOgtag == true', function () {
     const message = createMockMessage();
     const contextValue = {
-      config: {
-        groupChannel: { enableOgtag: true },
+      state: {
+        config: {
+          groupChannel: { enableOgtag: true },
+        }
       }
     };
-    useContext.mockReturnValue(contextValue);
+    useSendbird.mockReturnValue(contextValue);
     const { container } = render(
       <MessageContent
         className="classname-for-snapshot"
@@ -314,11 +330,13 @@ describe('ui/MessageContent', () => {
   it('should not render OGMessageItemBody if config.groupChannel.enableOgtag == false', function () {
     const message = createMockMessage();
     const contextValue = {
-      config: {
-        groupChannel: { enableOgtag: false },
+      state: {
+        config: {
+          groupChannel: { enableOgtag: false },
+        }
       }
     };
-    useContext.mockReturnValue(contextValue);
+    useSendbird.mockReturnValue(contextValue);
     const { container } = render(
       <MessageContent
         className="classname-for-snapshot"

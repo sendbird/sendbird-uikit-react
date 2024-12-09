@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 
-import { Logger } from '../../../lib/SendbirdState';
+import { Logger } from '../../../lib/Sendbird/types';
 import { getMentionNodes } from '../utils/getMentionNodes';
 
 interface DynamicParams {

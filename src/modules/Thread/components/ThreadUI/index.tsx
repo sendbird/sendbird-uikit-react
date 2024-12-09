@@ -2,10 +2,8 @@ import React, { ReactNode, useRef, useState } from 'react';
 
 import './index.scss';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { getChannelTitle } from '../../../GroupChannel/components/GroupChannelHeader/utils';
-import { useThreadContext } from '../../context/ThreadProvider';
 import { ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
 import ParentMessageInfo from '../ParentMessageInfo';
 import ThreadHeader from '../ThreadHeader';
@@ -19,6 +17,8 @@ import { isAboutSame } from '../../context/utils';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { SendableMessageType, getHTMLTextDirection } from '../../../../utils';
 import { classnames } from '../../../../utils/utils';
+import useThread from '../../context/useThread';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadUIProps {
   renderHeader?: () => React.ReactElement;
@@ -50,27 +50,28 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
   renderVoiceMessageIcon,
   renderSendMessageIcon,
 }: ThreadUIProps): React.ReactElement => {
-  const {
-    stores,
-    config,
-  } = useSendbirdStateContext();
+  const { state: { stores, config } } = useSendbird();
   const currentUserId = stores?.sdkStore?.sdk?.currentUser?.userId;
   const {
     stringSet,
   } = useLocalization();
   const {
-    currentChannel,
-    allThreadMessages,
-    parentMessage,
-    parentMessageState,
-    threadListState,
-    hasMorePrev,
-    hasMoreNext,
-    fetchPrevThreads,
-    fetchNextThreads,
-    onHeaderActionClick,
-    onMoveToParentMessage,
-  } = useThreadContext();
+    state: {
+      currentChannel,
+      allThreadMessages,
+      parentMessage,
+      parentMessageState,
+      threadListState,
+      hasMorePrev,
+      hasMoreNext,
+      onHeaderActionClick,
+      onMoveToParentMessage,
+    },
+    actions: {
+      fetchPrevThreads,
+      fetchNextThreads,
+    },
+  } = useThread();
   const replyCount = allThreadMessages.length;
   const isByMe = currentUserId === parentMessage?.sender?.userId;
 
