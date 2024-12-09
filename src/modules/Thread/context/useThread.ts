@@ -34,8 +34,7 @@ function hasReqId<T extends object>(
 
 const useThread = () => {
   const store = useContext(ThreadContext);
-  if (!store) throw new Error('useCreateChannel must be used within a CreateChannelProvider');
-
+  if (!store) throw new Error('useThread must be used within a ThreadProvider');
   // SendbirdStateContext config
   const { state: { stores, config } } = useSendbird();
   const { logger, pubSub } = config;

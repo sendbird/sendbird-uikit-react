@@ -60,7 +60,12 @@ export default function useUpdateMessageCallback({
     const params = createParamsDefault();
     logger.info('Thread | useUpdateMessageCallback: Message update start.', params);
 
-    currentChannel?.updateUserMessage?.(messageId, params)
+    if (currentChannel == null) {
+      logger.warning('Thread | useUpdateMessageCallback: currentChannel is null.');
+      return;
+    }
+
+    currentChannel.updateUserMessage?.(messageId, params)
       .then((message: UserMessage) => {
         logger.info('Thread | useUpdateMessageCallback: Message update succeeded.', message);
         onMessageUpdated(currentChannel, message);
