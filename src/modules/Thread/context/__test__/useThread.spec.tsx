@@ -692,4 +692,29 @@ describe('useThread', () => {
     });
   });
 
+  it('handles onTypingStatusUpdated action correctly', async () => {
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
+    );
+
+    let result;
+    await act(async () => {
+      result = renderHook(() => useThread(), { wrapper }).result;
+
+      await waitFor(() => {
+        expect(result.current.state.currentChannel).not.toBe(undefined);
+      });
+    });
+    const { onTypingStatusUpdated } = result.current.actions;
+    const mockMember = { userId: '1', nickname: 'user1' };
+
+    await act(() => {
+      onTypingStatusUpdated(mockChannel, [mockMember]);
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.typingMembers).toContain(mockMember);
+    });
+  });
+
 });
