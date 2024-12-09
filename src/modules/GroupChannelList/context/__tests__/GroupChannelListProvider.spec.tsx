@@ -31,7 +31,7 @@ jest.mock('@sendbird/uikit-tools', () => ({
   useGroupChannelList: jest.fn(() => ({
     refreshing: false,
     initialized: true,
-    groupChannels: [{ url: 'test-groupchannel-url-1' }],
+    groupChannels: [{ url: 'test-groupchannel-url-1', serialize: () => JSON.stringify(this) }],
     refresh: null,
     loadMore: null,
   })),
