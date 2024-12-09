@@ -70,7 +70,7 @@ export interface ThreadState {
   nicknamesMap: Map<string, string>;
 }
 
-const initialState = {
+const initialState: ThreadState = {
   channelUrl: '',
   message: null,
   onHeaderActionClick: undefined,

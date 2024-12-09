@@ -1,21 +1,68 @@
 import React from 'react';
 import { act, waitFor } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
-import { ThreadProvider } from '../ThreadProvider';
+import { ThreadProvider, ThreadState } from '../ThreadProvider';
 import useThread from '../useThread';
 import { SendableMessageType } from '../../../../utils';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
+import { EmojiContainer } from '@sendbird/chat';
+
+class MockMessageMethod {
+  _onPending: (message: SendableMessageType) => void;
+
+  _onFailed: (message: SendableMessageType) => void;
+
+  _onSucceeded: (message: SendableMessageType) => void;
+
+  constructor(message, willSucceed = true) {
+    this._onPending = undefined;
+    this._onFailed = undefined;
+    this._onSucceeded = undefined;
+
+    this.init(message, willSucceed);
+  }
+
+  init(message, willSucceed) {
+    setTimeout(() => this._onPending?.(message), 0);
+    setTimeout(() => {
+      if (willSucceed) {
+        this._onSucceeded?.(message);
+      } else {
+        this._onFailed?.(message);
+      }
+    }, 300);
+  }
+
+  onPending(func) {
+    this._onPending = func;
+    return this;
+  }
+
+  onFailed(func) {
+    this._onFailed = func;
+    return this;
+  }
+
+  onSucceeded(func) {
+    this._onSucceeded = func;
+    return this;
+  }
+}
+
+const mockSendUserMessage = jest.fn();
 
 const mockChannel = {
   url: 'test-channel',
   members: [{ userId: '1', nickname: 'user1' }],
-  updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+  updateUserMessage: jest.fn().mockImplementation(async (message) => mockNewMessage(message)),
+  sendUserMessage: mockSendUserMessage,
 };
 
-const mockNewMessage = {
+const mockNewMessage = (message) => ({
   messageId: 42,
-  message: 'new message',
-};
+  message: message ?? 'new message',
+});
 
 const mockGetChannel = jest.fn().mockResolvedValue(mockChannel);
 
@@ -48,26 +95,54 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
 }));
 
 describe('ThreadProvider', () => {
+  const initialState: ThreadState = {
+    channelUrl: '',
+    message: null,
+    onHeaderActionClick: undefined,
+    onMoveToParentMessage: undefined,
+    onBeforeSendUserMessage: undefined,
+    onBeforeSendFileMessage: undefined,
+    onBeforeSendVoiceMessage: undefined,
+    onBeforeSendMultipleFilesMessage: undefined,
+    onBeforeDownloadFileMessage: undefined,
+    isMultipleFilesMessageEnabled: undefined,
+    filterEmojiCategoryIds: undefined,
+    currentChannel: null,
+    allThreadMessages: [],
+    localThreadMessages: [],
+    parentMessage: null,
+    channelState: ChannelStateTypes.NIL,
+    parentMessageState: ParentMessageStateTypes.NIL,
+    threadListState: ThreadListStateTypes.NIL,
+    hasMorePrev: false,
+    hasMoreNext: false,
+    emojiContainer: {} as EmojiContainer,
+    isMuted: false,
+    isChannelFrozen: false,
+    currentUserId: '',
+    typingMembers: [],
+    nicknamesMap: null,
+  };
+
   const initialMockMessage = {
     messageId: 1,
   } as SendableMessageType;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     const stateContextValue = { state: mockState };
-    useSendbird.mockReturnValue(stateContextValue);
+    (useSendbird as jest.Mock).mockReturnValue(stateContextValue);
     renderHook(() => useSendbird());
   });
 
   it('provides the correct initial state', async () => {
     const wrapper = ({ children }) => (
-      <ThreadProvider message={initialMockMessage} channelUrl="test-channel">{children}</ThreadProvider>
+      <ThreadProvider channelUrl="test-channel-url">{children}</ThreadProvider>
     );
 
     await act(async () => {
       const { result } = renderHook(() => useThread(), { wrapper });
-      await waitFor(() => {
-        expect(result.current.state.message).toBe(initialMockMessage);
-      });
+      expect(result.current.state).toEqual(initialState);
     });
 
   });
@@ -154,70 +229,25 @@ describe('ThreadProvider', () => {
     });
   });
 
-  // it('calls sendMessage correctly', async () => {
-  //   const wrapper = ({ children }) => (
-  //     <ThreadProvider channelUrl="test-channel" message={{ messageId: 1 }}>
-  //       {children}
-  //     </ThreadProvider>
-  //   );
-  //
-  //   const { result } = renderHook(() => useThreadContext(), { wrapper });
-  //   const sendMessageMock = jest.fn();
-  //
-  //   result.current.sendMessage({ message: 'Test Message' });
-  //
-  //   expect(sendMessageMock).toHaveBeenCalledWith({ message: 'Test Message' });
-  // });
-  //
-  // it('handles channel events correctly', () => {
-  //   const wrapper = ({ children }) => (
-  //     <ThreadProvider channelUrl="test-channel" message={{ messageId: 1 }}>
-  //       {children}
-  //     </ThreadProvider>
-  //   );
-  //
-  //   render(<ThreadProvider channelUrl="test-channel" message={{ messageId: 1 }} />);
-  //   // Add assertions for handling channel events
-  // });
-  //
-  // it('updates state when nicknamesMap is updated', async () => {
-  //   const wrapper = ({ children }) => (
-  //     <ThreadProvider channelUrl="test-channel" message={{ messageId: 1 }}>
-  //       {children}
-  //     </ThreadProvider>
-  //   );
-  //
-  //   const { result } = renderHook(() => useThreadContext(), { wrapper });
-  //
-  //   await act(async () => {
-  //     result.current.updateState({
-  //       nicknamesMap: new Map([['user1', 'User One'], ['user2', 'User Two']]),
-  //     });
-  //     await waitFor(() => {
-  //       expect(result.current.nicknamesMap.get('user1')).toBe('User One');
-  //     });
-  //   });
-  // });
-  //
-  // it('calls onMoveToParentMessage when provided', async () => {
-  //   const onMoveToParentMessageMock = jest.fn();
-  //   const wrapper = ({ children }) => (
-  //     <ThreadProvider
-  //       channelUrl="test-channel"
-  //       message={{ messageId: 1 }}
-  //       onMoveToParentMessage={onMoveToParentMessageMock}
-  //     >
-  //       {children}
-  //     </ThreadProvider>
-  //   );
-  //
-  //   const { result } = renderHook(() => useThreadContext(), { wrapper });
-  //
-  //   await act(async () => {
-  //     result.current.onMoveToParentMessage({ message: { messageId: 1 }, channel: {} });
-  //     await waitFor(() => {
-  //       expect(onMoveToParentMessageMock).toHaveBeenCalled();
-  //     });
-  //   });
-  // });
+  it('update state correctly when sendMessage is called', async () => {
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>
+        {children}
+      </ThreadProvider>
+    );
+
+    const { result } = renderHook(() => useThread(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+
+    mockSendUserMessage.mockImplementation((propsMessage) => new MockMessageMethod(mockNewMessage(propsMessage), true));
+    result.current.actions.sendMessage({ message: 'Test Message' });
+
+    await waitFor(() => {
+      expect(result.current.state.localThreadMessages.at(-1)).toHaveProperty('messageId', 42);
+    });
+  });
+
 });
