@@ -717,4 +717,45 @@ describe('useThread', () => {
     });
   });
 
+  it('handles onFileInfoUpdated action correctly', async () => {
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
+    );
+
+    let result;
+    await act(async () => {
+      result = renderHook(() => useThread(), { wrapper }).result;
+
+      await waitFor(() => {
+        expect(result.current.state.currentChannel).not.toBe(undefined);
+      });
+    });
+    const { sendMessageStart, onFileInfoUpdated } = result.current.actions;
+    const mockMessage = {
+      messageId: 2,
+      message: 'Test message',
+      reqId: 2,
+      parentMessage: mockParentMessage,
+      messageParams: {
+        fileInfoList: [],
+      },
+    };
+    const newFileInfo = { name: 'new-file-info' };
+
+    await act(() => {
+      sendMessageStart(mockMessage);
+      onFileInfoUpdated({
+        channelUrl: 'test-channel',
+        requestId: mockMessage.reqId,
+        index: 0,
+        uploadableFileInfo: newFileInfo,
+      });
+    });
+
+    await waitFor(() => {
+      console.log(result.current.state.localThreadMessages[0]);
+      expect(result.current.state.localThreadMessages[0].messageParams.fileInfoList).toContain(newFileInfo);
+    });
+  });
+
 });
