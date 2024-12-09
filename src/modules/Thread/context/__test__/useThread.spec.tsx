@@ -63,19 +63,6 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
 }));
 
 describe('useThread', () => {
-  const mockThreadState = {
-    message: null,
-    parentMessage: null,
-    currentChannel: { url: 'mock-channel-url', isFrozen: false },
-    threadListState: 'LOADING',
-    allThreadMessages: [{ messageId: 1, message: 'existing message', reqId: 1 }],
-    localThreadMessages: [],
-    onBeforeSendUserMessage: jest.fn(),
-    onBeforeSendFileMessage: jest.fn(),
-    onBeforeSendVoiceMessage: jest.fn(),
-    onBeforeSendMultipleFilesMessage: jest.fn(),
-  };
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -264,11 +251,6 @@ describe('useThread', () => {
     });
     const { sendMessageStart, onMessageDeletedByReqId } = result.current.actions;
 
-    const channel = {
-      url: 'test-channel',
-      members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
-    };
     const mockMessage = { messageId: 1, message: 'Test message', reqId: 2 };
 
     await act(() => {
