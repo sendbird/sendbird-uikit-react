@@ -31,9 +31,12 @@ export default function useDeleteMessageCallback({
         onMessageDeletedByReqId(message.reqId);
         resolve();
       }
-
+      if (currentChannel == null) {
+        logger.info('Thread | useDeleteMessageCallback: No current channel');
+        resolve();
+      }
       logger.info('Thread | useDeleteMessageCallback: Deleting message from remote:', sendingStatus);
-      currentChannel?.deleteMessage?.(message)
+      currentChannel.deleteMessage?.(message)
         .then(() => {
           logger.info('Thread | useDeleteMessageCallback: Deleting message success!', message);
           onMessageDeleted(currentChannel, message.messageId);

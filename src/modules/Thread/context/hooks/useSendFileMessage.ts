@@ -50,37 +50,42 @@ export default function useSendFileMessageCallback({
       const params = onBeforeSendFileMessage?.(file, quoteMessage) ?? createParamsDefault();
       logger.info('Thread | useSendFileMessageCallback: Sending file message start.', params);
 
-      currentChannel?.sendFileMessage(params)
-        .onPending((pendingMessage) => {
+      if (currentChannel == null) {
+        logger.warning('Thread | useSendFileMessageCallback: currentChannel is null. Skipping file message send.');
+        resolve(null);
+      } else {
+        currentChannel.sendFileMessage(params)
+          .onPending((pendingMessage) => {
           // @ts-ignore
-          sendMessageStart({
-            ...pendingMessage,
-            url: URL.createObjectURL(file),
-            // pending thumbnail message seems to be failed
-            sendingStatus: SendingStatus.PENDING,
-            isUserMessage: pendingMessage.isUserMessage,
-            isFileMessage: pendingMessage.isFileMessage,
-            isAdminMessage: pendingMessage.isAdminMessage,
-            isMultipleFilesMessage: pendingMessage.isMultipleFilesMessage,
+            sendMessageStart({
+              ...pendingMessage,
+              url: URL.createObjectURL(file),
+              // pending thumbnail message seems to be failed
+              sendingStatus: SendingStatus.PENDING,
+              isUserMessage: pendingMessage.isUserMessage,
+              isFileMessage: pendingMessage.isFileMessage,
+              isAdminMessage: pendingMessage.isAdminMessage,
+              isMultipleFilesMessage: pendingMessage.isMultipleFilesMessage,
+            });
+            setTimeout(() => scrollIntoLast(), SCROLL_BOTTOM_DELAY_FOR_SEND);
+          })
+          .onFailed((error, message) => {
+            (message as LocalFileMessage).localUrl = URL.createObjectURL(file);
+            (message as LocalFileMessage).file = file;
+            logger.info('Thread | useSendFileMessageCallback: Sending file message failed.', { message, error });
+            sendMessageFailure(message as SendableMessageType);
+            reject(error);
+          })
+          .onSucceeded((message) => {
+            logger.info('Thread | useSendFileMessageCallback: Sending file message succeeded.', message);
+            pubSub.publish(topics.SEND_FILE_MESSAGE, {
+              channel: currentChannel,
+              message: message as FileMessage,
+              publishingModules: [PublishingModuleType.THREAD],
+            });
+            resolve(message as FileMessage);
           });
-          setTimeout(() => scrollIntoLast(), SCROLL_BOTTOM_DELAY_FOR_SEND);
-        })
-        .onFailed((error, message) => {
-          (message as LocalFileMessage).localUrl = URL.createObjectURL(file);
-          (message as LocalFileMessage).file = file;
-          logger.info('Thread | useSendFileMessageCallback: Sending file message failed.', { message, error });
-          sendMessageFailure(message as SendableMessageType);
-          reject(error);
-        })
-        .onSucceeded((message) => {
-          logger.info('Thread | useSendFileMessageCallback: Sending file message succeeded.', message);
-          pubSub.publish(topics.SEND_FILE_MESSAGE, {
-            channel: currentChannel,
-            message: message as FileMessage,
-            publishingModules: [PublishingModuleType.THREAD],
-          });
-          resolve(message as FileMessage);
-        });
+      }
     });
   },
   [currentChannel],
