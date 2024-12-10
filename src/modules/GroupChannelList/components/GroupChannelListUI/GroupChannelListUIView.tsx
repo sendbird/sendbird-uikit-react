@@ -28,7 +28,7 @@ export interface Props {
 
   renderAddChannel(): React.ReactElement;
 
-  // NOTE: We only support scrollRef in GroupChannelList
+  // NOTE: scrollRef is used only for external access (export) and not for internal logic.
   scrollRef?: React.RefObject<HTMLDivElement>;
 }
 
