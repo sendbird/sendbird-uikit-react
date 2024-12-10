@@ -15,7 +15,7 @@ describe('useAppendDomNode', () => {
   });
 
   it('renders correctly', () => {
-    const { result } = renderHook(() => useAppendDomNode(ids, rootSelector));
+    renderHook(() => useAppendDomNode(ids, rootSelector));
 
     expect(document.getElementById(rootId).children.length).toBe(ids.length);
     ids.forEach((_, i) => {
