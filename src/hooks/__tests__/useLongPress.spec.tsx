@@ -24,7 +24,9 @@ describe('useLongPress', () => {
 
     const element = screen.getByText('touch this');
     fireEvent.touchStart(element);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => {
+      setTimeout(resolve, 1000);
+    });
     fireEvent.touchEnd(element);
 
     await waitFor(() => {
@@ -47,7 +49,9 @@ describe('useLongPress', () => {
 
     const element = screen.getByText('touch this');
     fireEvent.touchStart(element);
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise(resolve => {
+      setTimeout(resolve, 100);
+    });
     fireEvent.touchEnd(element);
 
     await waitFor(() => {
