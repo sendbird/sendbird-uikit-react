@@ -753,7 +753,6 @@ describe('useThread', () => {
     });
 
     await waitFor(() => {
-      console.log(result.current.state.localThreadMessages[0]);
       expect(result.current.state.localThreadMessages[0].messageParams.fileInfoList).toContain(newFileInfo);
     });
   });
