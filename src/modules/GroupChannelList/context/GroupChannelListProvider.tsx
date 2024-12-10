@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import type { User } from '@sendbird/chat';
 import type { GroupChannel, GroupChannelCreateParams, GroupChannelFilterParams } from '@sendbird/chat/groupChannel';
@@ -45,6 +45,7 @@ interface ContextBaseType {
 
 export interface GroupChannelListContextType extends ContextBaseType, ChannelListDataSource {
   typingChannelUrls: string[];
+  scrollRef: React.RefObject<HTMLDivElement>;
 }
 export interface GroupChannelListProviderProps extends
   PartialRequired<ContextBaseType, 'onChannelSelect' | 'onChannelCreated'>,
@@ -79,6 +80,8 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
   const sdk = sdkStore.sdk;
   const isConnected = useOnlineStatus(sdk, config.logger);
   const scheduler = useMarkAsDeliveredScheduler({ isConnected }, config);
+
+  const scrollRef = useRef(null);
 
   const channelListDataSource = useGroupChannelList(sdk, {
     collectionCreator: getCollectionCreator(sdk, channelListQueryParams),
@@ -141,6 +144,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
         groupChannels,
         refresh,
         loadMore,
+        scrollRef,
       }}
     >
       <UserProfileProvider {...props}>
