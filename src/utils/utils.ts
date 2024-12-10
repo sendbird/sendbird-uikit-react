@@ -1,5 +1,6 @@
 import { SendableMessageType } from './index';
 
+export const delay = (ms?: number) => new Promise(resolve => { setTimeout(resolve, ms); });
 export const noop = () => {
   /** noop * */
 };
