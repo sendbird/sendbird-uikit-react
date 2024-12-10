@@ -25,4 +25,43 @@ global.requestAnimationFrame = function (callback) {
 global.cancelAnimationFrame = function (id) {
   clearTimeout(id);
 };
+class MockMediaRecorder {
+  static isTypeSupported(type) {
+    const supportedMimeTypes = ['audio/webm', 'audio/wav'];
+    return supportedMimeTypes.includes(type);
+  }
+
+  constructor() {
+    this.state = 'inactive';
+    this.ondataavailable = null;
+    this.onerror = null;
+    this.onpause = null;
+    this.onresume = null;
+    this.onstart = null;
+    this.onstop = null;
+  }
+
+  start() {
+    this.state = 'recording';
+    if (this.onstart) this.onstart(new Event('start'));
+  }
+
+  stop() {
+    this.state = 'inactive';
+    if (this.onstop) this.onstop(new Event('stop'));
+  }
+
+  pause() {
+    this.state = 'paused';
+    if (this.onpause) this.onpause(new Event('pause'));
+  }
+
+  resume() {
+    this.state = 'recording';
+    if (this.onresume) this.onresume(new Event('resume'));
+  }
+}
+
+global.MediaRecorder = MockMediaRecorder;
+
 copyProps(window, global);

@@ -37,34 +37,95 @@ const mockProps: SendbirdProviderProps = {
   eventHandlers: {},
   children: <div>Test Child</div>,
 };
-class MockMediaRecorder {
-  static isTypeSupported(type: string): boolean {
-    const supportedTypes = ['audio/webm', 'audio/webm;codecs=opus'];
-    return supportedTypes.includes(type);
-  }
-}
-Object.defineProperty(global, 'MediaRecorder', {
-  value: MockMediaRecorder,
-  writable: true,
-});
 
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
+const mockDisconnect = jest.fn();
+const mockConnect = jest.fn();
+const mockUpdateCurrentUserInfo = jest.fn();
+
+jest.mock('@sendbird/chat', () => {
+  return {
+    __esModule: true,
+    default: jest.fn().mockImplementation(() => {
+      return {
+        connect: mockConnect.mockResolvedValue({
+          userId: 'test-user-id',
+          nickname: 'test-nickname',
+          profileUrl: 'test-profile-url',
+        }),
+        disconnect: mockDisconnect.mockResolvedValue(null),
+        updateCurrentUserInfo: mockUpdateCurrentUserInfo.mockResolvedValue(null),
+        GroupChannel: { createMyGroupChannelListQuery: jest.fn() },
+        appInfo: {
+          uploadSizeLimit: 1024 * 1024 * 5, // 5MB
+          multipleFilesMessageFileCountLimit: 10,
+        },
+      };
+    }),
+  };
 });
 
 describe('SendbirdProvider Props & Context Interface Validation', () => {
-  it('should accept all props without errors', () => {
-    render(<SendbirdProvider {...mockProps} />);
+  const originalConsoleError = console.error;
+  let originalFetch;
+
+  beforeAll(() => {
+    originalFetch = global.fetch;
+    global.fetch = jest.fn(() => Promise.resolve({ ok: true }));
+
+    console.error = jest.fn((...args) => {
+      if (typeof args[0] === 'string'
+          && (args[0].includes('Warning: An update to %s inside a test was not wrapped in act')
+           || args[0].includes('WebSocket connection'))) {
+        return;
+      }
+      originalConsoleError(...args);
+    });
+  });
+
+  afterAll(() => {
+    console.error = originalConsoleError;
+    global.fetch = originalFetch;
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockConnect.mockClear();
+    mockDisconnect.mockClear();
+    mockUpdateCurrentUserInfo.mockClear();
+
+    global.MediaRecorder = {
+      isTypeSupported: jest.fn((type) => {
+        const supportedMimeTypes = ['audio/webm', 'audio/wav'];
+        return supportedMimeTypes.includes(type);
+      }),
+    } as any;
+
+    // Window matchMedia 모킹
+    window.matchMedia = jest.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+  });
+
+  it('should accept all legacy props without type errors', async () => {
+    const { rerender } = render(
+      <SendbirdProvider {...mockProps}>
+        {mockProps.children}
+      </SendbirdProvider>,
+    );
+
+    // Props change scenario test
+    rerender(
+      <SendbirdProvider {...mockProps}>
+        {mockProps.children}
+      </SendbirdProvider>,
+    );
   });
 
   it('should provide all expected keys in context', () => {
