@@ -1,4 +1,5 @@
 import './__mocks__/intersectionObserverMock';
+import '@testing-library/jest-dom';
 
 const { JSDOM } = require('jsdom');
 
