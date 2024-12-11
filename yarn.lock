@@ -2774,6 +2774,7 @@ __metadata:
     "@sendbird/react-uikit-message-template-view": 0.0.2
     "@sendbird/uikit-tools": 0.0.2
     "@storybook/addon-essentials": ^8.0.9
+    "@storybook/manager-api": ^8.4.7
     "@storybook/react-vite": ^8.0.9
     "@svgr/rollup": ^8.1.0
     "@testing-library/jest-dom": ^5.16.5
@@ -3161,6 +3162,15 @@ __metadata:
   peerDependencies:
     storybook: ^8.3.5
   checksum: e2043aa681a9186d128ed820cafbd18e55e0c625c17dd9018e35a82ca2376d4095d3ff04a9afaa4855bf36b15ec64122c0a455a61d5113900cff3dbc91c42454
+  languageName: node
+  linkType: hard
+
+"@storybook/manager-api@npm:^8.4.7":
+  version: 8.4.7
+  resolution: "@storybook/manager-api@npm:8.4.7"
+  peerDependencies:
+    storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
+  checksum: 2b826ec55de7ea0b5b5151dfa896f3e7eddfd36ede61f8a7ad14a37733d5d5645565f863dbde7e2272f1e9b5717f26de7802ae60e297a2647ee2c4c072ed3069
   languageName: node
   linkType: hard
 
