@@ -4,13 +4,13 @@ import { MessageSearchQuery } from '@sendbird/chat/message';
 
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { ClientSentMessages } from '../../../../types';
-import { MessageSearchContext } from '../MessageSearchProvider';
+import { MessageSearchContext, type MessageSearchState } from '../MessageSearchProvider';
 
 const useMessageSearch = () => {
   const store = useContext(MessageSearchContext);
   if (!store) throw new Error('useMessageSearch must be used within a MessageSearchProvider');
 
-  const state = useSyncExternalStore(store.subscribe, store.getState);
+  const state: MessageSearchState = useSyncExternalStore(store.subscribe, store.getState);
   const actions = useMemo(() => ({
     setCurrentChannel: (channel: GroupChannel) => store.setState(state => ({
       ...state,

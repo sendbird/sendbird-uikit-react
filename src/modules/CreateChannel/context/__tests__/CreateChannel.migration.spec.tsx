@@ -34,7 +34,7 @@ const mockState = {
     },
     isOnline: true,
   },
-};const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
+}; const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
 
 jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
