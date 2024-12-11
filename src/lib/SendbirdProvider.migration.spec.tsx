@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react';
 import { render, renderHook, screen } from '@testing-library/react';
 import SendbirdProvider, { SendbirdProviderProps } from './Sendbird';
@@ -42,6 +43,11 @@ const mockDisconnect = jest.fn();
 const mockConnect = jest.fn();
 const mockUpdateCurrentUserInfo = jest.fn();
 
+/**
+ * Mocking Sendbird SDK
+ * sdk.connect causes DOMException issue in jest.
+ * Because it retries many times to connect indexDB.
+ */
 jest.mock('@sendbird/chat', () => {
   return {
     __esModule: true,
@@ -100,7 +106,6 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
       }),
     } as any;
 
-    // Window matchMedia 모킹
     window.matchMedia = jest.fn().mockImplementation((query) => ({
       matches: false,
       media: query,
@@ -120,7 +125,6 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
       </SendbirdProvider>,
     );
 
-    // Props change scenario test
     rerender(
       <SendbirdProvider {...mockProps}>
         {mockProps.children}

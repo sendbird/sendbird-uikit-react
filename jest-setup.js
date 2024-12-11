@@ -25,6 +25,8 @@ global.requestAnimationFrame = function (callback) {
 global.cancelAnimationFrame = function (id) {
   clearTimeout(id);
 };
+
+// MediaRecorder and MediaRecorder.isTypeSupported are used within SendbirdProvider's internal logic.
 class MockMediaRecorder {
   static isTypeSupported(type) {
     const supportedMimeTypes = ['audio/webm', 'audio/wav'];
@@ -61,7 +63,6 @@ class MockMediaRecorder {
     if (this.onresume) this.onresume(new Event('resume'));
   }
 }
-
 global.MediaRecorder = MockMediaRecorder;
 
 copyProps(window, global);
