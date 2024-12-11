@@ -29,9 +29,9 @@ interface CommonChannelSettingsProps {
   channelUrl: string;
   onCloseClick?(): void;
   onLeaveChannel?(): void;
-  overrideInviteUser?(params: OverrideInviteUserType): void;
   onChannelModified?(channel: GroupChannel): void;
   onBeforeUpdateChannel?(currentTitle: string, currentImg: File | null, data: string | undefined): GroupChannelUpdateParams;
+  overrideInviteUser?(params: OverrideInviteUserType): void;
   queries?: ChannelSettingsQueries;
   renderUserListItem?: (props: UserListItemProps) => ReactNode;
 }
