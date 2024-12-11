@@ -3,9 +3,16 @@ import { render, screen } from '@testing-library/react';
 import { MessageSearchProvider, useMessageSearchContext } from '../MessageSearchProvider';
 import { match } from 'ts-pattern';
 
-jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
+const mockState = {
+  stores: { sdkStore: {} },
+  config: { logger: console, groupChannel: {} },
+};
+const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
+
+jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: () => ({}),
+  default: jest.fn(() => ({ state: mockState, actions: mockActions })),
+  useSendbird: jest.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
 const mockProps = {
