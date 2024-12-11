@@ -34,6 +34,7 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
     selectedChannelUrl,
     loadMore,
     onUserProfileUpdated,
+    scrollRef,
   } = useGroupChannelListContext();
 
   const { stores, config } = useSendbirdStateContext();
@@ -89,6 +90,7 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
       onLoadMore={loadMore}
       initialized={initialized}
       renderAddChannel={() => <AddGroupChannel />}
+      scrollRef={scrollRef}
     />
   );
 };
