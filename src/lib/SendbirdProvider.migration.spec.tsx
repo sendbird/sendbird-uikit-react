@@ -2,7 +2,7 @@
 import React from 'react';
 import { render, renderHook, screen } from '@testing-library/react';
 import SendbirdProvider, { SendbirdProviderProps } from './Sendbird';
-import useSendbirdStateContext from '../hooks/useSendbirdStateContext';
+import useSendbirdStateContext from './Sendbird/context/hooks/useSendbirdStateContext';
 import { match } from 'ts-pattern';
 import { DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, DEFAULT_UPLOAD_SIZE_LIMIT } from '../utils/consts';
 

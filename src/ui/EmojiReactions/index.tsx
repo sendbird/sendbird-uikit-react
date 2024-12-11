@@ -22,8 +22,8 @@ import ReactionItem from './ReactionItem';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import { AddReactionBadgeItem } from './AddReactionBadgeItem';
 import { MobileEmojisBottomSheet } from '../MobileMenu/MobileEmojisBottomSheet';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { getIsReactionEnabled } from '../../utils/getIsReactionEnabled';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface EmojiReactionsProps {
   className?: string | Array<string>;
@@ -54,7 +54,7 @@ const EmojiReactions = ({
 }: EmojiReactionsProps): ReactElement => {
   let showTheReactedMembers = false;
   try {
-    const { config } = useSendbirdStateContext();
+    const { state: { config } } = useSendbird();
     showTheReactedMembers = channel ? getIsReactionEnabled({
       channel,
       config,

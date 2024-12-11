@@ -29,7 +29,7 @@ import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
 import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
 import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useTrimMessageList from './hooks/useTrimMessageList';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 type OpenChannelQueries = {
   // https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html
@@ -101,12 +101,12 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
 
   // We didn't decide to support fetching participant list
   const fetchingParticipants = false;
-  const globalStore = useSendbirdStateContext();
+  const { state } = useSendbird();
 
-  const sdk = globalStore?.stores?.sdkStore?.sdk;
-  const sdkInit = globalStore?.stores?.sdkStore?.initialized;
-  const user = globalStore?.stores?.userStore?.user;
-  const config = globalStore?.config;
+  const sdk = state.stores.sdkStore.sdk;
+  const sdkInit = state.stores.sdkStore.initialized;
+  const user = state.stores.userStore.user;
+  const config = state.config;
 
   const {
     userId,

@@ -10,9 +10,9 @@ import {
   isFineEdit,
   isFineDownload,
 } from '../../utils/openChannelUtils';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../lib/LocalizationContext';
 import { SendableMessageType } from '../../utils';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 type Props = {
   message: SendableMessageType;
@@ -39,7 +39,7 @@ const OpenChannelMobileMenu: React.FC<Props> = (props: Props) => {
   const userMessage = message as UserMessage;
   const status = message?.sendingStatus;
   const { stringSet } = useLocalization();
-  const userId = useSendbirdStateContext()?.config?.userId;
+  const { state: { config: { userId } } } = useSendbird();
   const fileMessage = message as FileMessage;
   return (
     <ContextMenu

@@ -3,7 +3,7 @@ import type { FileMessage, FileMessageCreateParams } from '@sendbird/chat/messag
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { MessageMetaArray } from '@sendbird/chat/message';
 
-import type { Logger } from '../../../../lib/SendbirdState';
+import type { Logger } from '../../../../lib/Sendbird/types';
 import * as messageActionTypes from '../dux/actionTypes';
 import * as utils from '../utils';
 import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';

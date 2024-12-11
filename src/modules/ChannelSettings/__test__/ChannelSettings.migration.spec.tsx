@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, renderHook, screen } from '@testing-library/react';
 
-import { ChannelSettingsContextProps, ChannelSettingsProvider, useChannelSettingsContext } from '../context/ChannelSettingsProvider';
+import type { ChannelSettingsContextProps } from '../context/types';
+import { ChannelSettingsProvider, useChannelSettingsContext } from '../context/ChannelSettingsProvider';
 import { match } from 'ts-pattern';
 
 const mockState = {
@@ -18,14 +19,11 @@ const mockState = {
     },
   },
 };
-
-jest.mock('../../../hooks/useSendbirdStateContext', () => ({
+const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
+jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => mockState),
-}));
-jest.mock('../../../lib/Sendbird', () => ({
-  __esModule: true,
-  useSendbirdStateContext: jest.fn(() => mockState),
+  default: jest.fn(() => ({ state: mockState, actions: mockActions })),
+  useSendbird: jest.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
 const mockProps: ChannelSettingsContextProps = {

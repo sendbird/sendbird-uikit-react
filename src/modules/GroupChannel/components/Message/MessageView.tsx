@@ -6,7 +6,6 @@ import type { FileMessage, UserMessage, UserMessageCreateParams, UserMessageUpda
 import format from 'date-fns/format';
 
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, ThreadReplySelectType } from '../../context/const';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
@@ -20,8 +19,9 @@ import MessageContent, { MessageContentProps } from '../../../../ui/MessageConte
 
 import SuggestedReplies, { SuggestedRepliesProps } from '../SuggestedReplies';
 import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionListView';
-import type { OnBeforeDownloadFileMessageType } from '../../context/GroupChannelProvider';
+import type { OnBeforeDownloadFileMessageType } from '../../context/types';
 import { classnames, deleteNullish } from '../../../../utils/utils';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface MessageProps {
   message: EveryMessage;
@@ -152,7 +152,7 @@ const MessageView = (props: MessageViewProps) => {
   } = deleteNullish(props);
 
   const { dateLocale, stringSet } = useLocalization();
-  const globalStore = useSendbirdStateContext();
+  const { state } = useSendbird();
 
   const {
     userId,
@@ -160,7 +160,7 @@ const MessageView = (props: MessageViewProps) => {
     userMention,
     logger,
     groupChannel,
-  } = globalStore.config;
+  } = state.config;
   const maxUserMentionCount = userMention?.maxMentionCount || MAX_USER_MENTION_COUNT;
   const maxUserSuggestionCount = userMention?.maxSuggestionCount || MAX_USER_SUGGESTION_COUNT;
 

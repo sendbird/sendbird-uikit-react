@@ -4,8 +4,8 @@ import IconButton from '../../../../ui/IconButton';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 
 import CreateChannel from '../../../CreateChannel';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { CreateChannelProviderProps } from '../../../CreateChannel/context/CreateChannelProvider';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 type Props = {
   createChannelVisible: boolean;
@@ -22,7 +22,7 @@ export const AddGroupChannelView = ({
   onCreateChannelClick,
   onChannelCreated,
 }: Props) => {
-  const { config } = useSendbirdStateContext();
+  const { state: { config } } = useSendbird();
 
   return (
     <>

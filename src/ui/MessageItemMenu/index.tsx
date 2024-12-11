@@ -17,7 +17,7 @@ import {
   SendableMessageType,
 } from '../../utils/index';
 import { LocalizationContext } from '../../lib/LocalizationContext';
-import { Role } from '../../lib/types';
+import { Role } from '../../lib/Sendbird/types';
 import { ReplyType } from '../../types';
 import { deleteNullish } from '../../utils/utils';
 

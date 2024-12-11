@@ -3,7 +3,7 @@ import type { User } from '@sendbird/chat';
 import type { OpenChannel, ParticipantListQuery } from '@sendbird/chat/openChannel';
 import format from 'date-fns/format';
 
-import { Logger } from '../../../lib/SendbirdState';
+import { Logger } from '../../../lib/Sendbird/types';
 import { SendableMessageType } from '../../../utils';
 import { useLocalization } from '../../../lib/LocalizationContext';
 

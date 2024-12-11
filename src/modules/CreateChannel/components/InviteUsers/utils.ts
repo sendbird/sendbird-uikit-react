@@ -1,7 +1,7 @@
 import type { ApplicationUserListQuery } from '@sendbird/chat';
 import type { GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
 import { CHANNEL_TYPE } from '../../types';
-import { SdkStore } from '../../../../lib/types';
+import type { SdkStore } from '../../../../lib/Sendbird/types';
 
 export const filterUser = (idsToFilter: string[]) => (currentId: string): boolean => idsToFilter?.includes(currentId);
 

@@ -7,7 +7,7 @@ import {
   useCreateChannelContext,
 } from '../CreateChannelProvider';
 
-const mockSendbirdStateContext = {
+const mockState = {
   stores: {
     userStore: {
       user: {
@@ -34,16 +34,12 @@ const mockSendbirdStateContext = {
     },
     isOnline: true,
   },
-};
+};const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
 
-jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
+jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: () => mockSendbirdStateContext,
-}));
-
-jest.mock('../../../../lib/Sendbird', () => ({
-  __esModule: true,
-  useSendbirdStateContext: () => mockSendbirdStateContext,
+  default: jest.fn(() => ({ state: mockState, actions: mockActions })),
+  useSendbird: jest.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
 const mockProps: CreateChannelProviderProps = {

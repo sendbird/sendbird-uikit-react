@@ -8,7 +8,7 @@ import {
   UseSendMFMStaticParams,
   useSendMultipleFilesMessage,
 } from '../useSendMultipleFilesMessage';
-import { Logger } from '../../../../../lib/SendbirdState';
+import type { Logger } from '../../../../../lib/Sendbird/types';
 import {
   MockMessageRequestHandlerType,
   getMockMessageRequestHandler,

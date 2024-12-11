@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { FileMessage, FileMessageCreateParams } from '@sendbird/chat/message';
 
+import type { SendbirdState } from '../../../../lib/Sendbird/types';
 import * as messageActionTypes from '../dux/actionTypes';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import * as utils from '../utils';
@@ -9,13 +10,12 @@ import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { PublishingModuleType } from '../../../internalInterfaces';
 import { LoggerInterface } from '../../../../lib/Logger';
 import { SendableMessageType } from '../../../../utils';
-import { SendBirdState } from '../../../../lib/types';
 import { SCROLL_BOTTOM_DELAY_FOR_SEND } from '../../../../utils/consts';
 
 type UseSendFileMessageCallbackOptions = {
   currentGroupChannel: null | GroupChannel;
   onBeforeSendFileMessage?: (file: File, quoteMessage?: SendableMessageType) => FileMessageCreateParams;
-  imageCompression?: SendBirdState['config']['imageCompression'];
+  imageCompression?: SendbirdState['config']['imageCompression'];
 };
 type UseSendFileMessageCallbackParams = {
   logger: LoggerInterface;

@@ -1,4 +1,4 @@
-import { SdkStore } from '../../lib/types';
+import type { SdkStore } from '../../lib/Sendbird/types';
 
 export const isBroadcastChannelEnabled = (sdk: SdkStore['sdk']): boolean => {
   const ALLOW_BROADCAST_CHANNEL = 'allow_broadcast_channel';
