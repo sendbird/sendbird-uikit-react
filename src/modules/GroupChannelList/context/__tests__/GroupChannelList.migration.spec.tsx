@@ -44,13 +44,13 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
 
 jest.mock('@sendbird/uikit-tools', () => ({
   ...jest.requireActual('@sendbird/uikit-tools'),
-  useGroupChannelList: () => ({
+  useGroupChannelList: jest.fn(() => ({
     refreshing: false,
     initialized: true,
-    groupChannels: [],
+    groupChannels: [{ url: 'test-groupchannel-url-1', serialize: () => JSON.stringify(this) }],
     refresh: jest.fn(),
     loadMore: jest.fn(),
-  }),
+  })),
 }));
 
 const mockProps: GroupChannelListProviderProps = {
