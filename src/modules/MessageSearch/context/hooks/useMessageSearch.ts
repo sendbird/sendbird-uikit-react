@@ -31,7 +31,7 @@ const useMessageSearch = () => {
           return {
             ...state,
             loading: false,
-            isQueryInvalid: false,
+            isInvalid: false,
             allMessages: messages,
             hasMoreResult: state.currentMessageSearchQuery.hasNext,
           };
@@ -40,11 +40,11 @@ const useMessageSearch = () => {
       });
     },
 
-    setQueryInvalid: () => store.setState(state => ({ ...state, isQueryInvalid: true })),
+    setQueryInvalid: () => store.setState(state => ({ ...state, isInvalid: true })),
 
     startMessageSearch: () => store.setState(state => ({
       ...state,
-      isQueryInvalid: false,
+      isInvalid: false,
       loading: false,
     })),
 
@@ -68,6 +68,12 @@ const useMessageSearch = () => {
     })),
 
     handleRetryToConnect: () => store.setState(state => ({
+      ...state,
+      retryCount: state.retryCount + 1,
+    })),
+
+    // Looks exactly same as handleRetryToConnect but keep just for backward compatibility
+    setRetryCount: () => store.setState(state => ({
       ...state,
       retryCount: state.retryCount + 1,
     })),
