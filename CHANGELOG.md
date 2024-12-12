@@ -1,5 +1,18 @@
 # Changelog - v3
 
+## [v3.15.10] (Dec 12 2024)
+
+### Features:
+- Added `scrollRef` in GroupChannelList context
+
+### Fixes:
+- Fixed broken UI
+  * MessageInput height becomes short when it's disabled.
+  * Empty UserListItem menu appears on the ChannelSettings member list of normal channel member who is not an operator of the channel.
+- Fixed an issue where editing a text parent message in a channel did not update the corresponding parent message in the Thread area in real-time.
+- Fixed a GroupChannel UI error when the `Open in Channel` action is triggered in a different channel.
+  * The `Open in Channel` implementation invokes both `setCurrentChannel` and `setStartingPoint`. The `setCurrentChannel` function triggers asynchronous side effects that update `channel`, `messagesDataSource`, and `startingPoint`. If `setStartingPoint` is invoked before these updates are completed, it can result in the channel not being updated correctly or the starting point being improperly set.
+
 ## [v3.15.9] (Nov 21 2024)
 
 ### Fixes:
