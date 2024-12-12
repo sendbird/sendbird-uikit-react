@@ -12,7 +12,7 @@ export const useSendbird = () => {
   const store = useContext(SendbirdContext);
   if (!store) throw new Error(NO_CONTEXT_ERROR);
 
-  const state = useSyncExternalStore(store.subscribe, store.getState);
+  const state: SendbirdState = useSyncExternalStore(store.subscribe, store.getState);
   const actions = useMemo(() => ({
     /* Example: How to set the state basically */
     // exampleAction: () => {
