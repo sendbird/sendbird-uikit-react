@@ -1,7 +1,6 @@
 import { match } from 'ts-pattern';
 import { useCallback } from 'react';
 import { useGroupChannelMessages } from '@sendbird/uikit-tools';
-import { MessageMetaArray } from '@sendbird/chat/message';
 import type {
   BaseMessageCreateParams,
   FileMessage,
@@ -12,6 +11,7 @@ import type {
   UserMessageCreateParams,
   UserMessageUpdateParams,
 } from '@sendbird/chat/message';
+import { MessageMetaArray } from '@sendbird/chat/message';
 
 import {
   META_ARRAY_MESSAGE_TYPE_KEY,
@@ -20,10 +20,12 @@ import {
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
-import type { SendableMessageType, CoreMessageType } from '../../../../utils';
+import type { CoreMessageType, SendableMessageType } from '../../../../utils';
 import type { ReplyType } from '../../../../types';
 import type { GroupChannelProviderProps, OnBeforeHandler } from '../GroupChannelProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import { PublishingModuleType, PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 type MessageListDataSource = ReturnType<typeof useGroupChannelMessages>;
 type MessageActions = {
@@ -38,6 +40,8 @@ interface Params extends GroupChannelProviderProps, MessageListDataSource {
   scrollToBottom(animated?: boolean): Promise<void>;
   quoteMessage?: SendableMessageType | null;
   replyType: ReplyType;
+  pubSub: SBUGlobalPubSub;
+  channel: GroupChannel;
 }
 
 const pass = <T>(value: T) => value;
@@ -68,6 +72,8 @@ export function useMessageActions(params: Params): MessageActions {
     scrollToBottom,
     quoteMessage,
     replyType,
+    channel,
+    pubSub,
   } = params;
   const { eventHandlers } = useSendbirdStateContext();
   const buildInternalMessageParams = useCallback(
@@ -185,9 +191,18 @@ export function useMessageActions(params: Params): MessageActions {
       async (messageId: number, params: UserMessageUpdateParams) => {
         const internalParams = buildInternalMessageParams<UserMessageUpdateParams>(params);
         const processedParams = await processParams(onBeforeUpdateUserMessage, internalParams, 'update');
-        return updateUserMessage(messageId, processedParams);
+        return updateUserMessage(messageId, processedParams)
+          .then((message) => {
+            pubSub.publish(PUBSUB_TOPICS.UPDATE_USER_MESSAGE, {
+              channel,
+              message,
+              publishingModules: [PublishingModuleType.CHANNEL],
+            });
+
+            return message;
+          });
       },
-      [buildInternalMessageParams, updateUserMessage, processParams],
+      [buildInternalMessageParams, updateUserMessage, processParams, channel?.url],
     ),
   };
 }

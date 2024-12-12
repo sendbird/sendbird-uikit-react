@@ -9,6 +9,7 @@ import MessageSearchItem from '../../../../ui/MessageSearchItem';
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import MessageSearchFileItem from '../../../../ui/MessageSearchFileItem';
 import { ClientSentMessages } from '../../../../types';
+import { isDefaultChannelName } from '../../../../utils';
 
 export interface MessageSearchUIProps {
   renderPlaceHolderError?: (props: void) => React.ReactElement;
@@ -75,13 +76,13 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
   };
 
   const getChannelName = () => {
-    if (currentChannel && currentChannel?.name && currentChannel?.name !== 'Group Channel') {
-      return currentChannel?.name;
+    if (!currentChannel?.name && !currentChannel?.members) {
+      return stringSet.NO_TITLE;
     }
-    if (currentChannel && (currentChannel?.name === 'Group Channel' || !currentChannel?.name)) {
-      return currentChannel.members.map((member) => member.nickname || stringSet.NO_NAME).join(', ');
-    }
-    return stringSet.NO_TITLE;
+
+    if (isDefaultChannelName(currentChannel)) return currentChannel.members.map((member) => member.nickname || stringSet.NO_NAME).join(', ');
+
+    return currentChannel?.name;
   };
 
   if (isInvalid && searchString && requestString) {
