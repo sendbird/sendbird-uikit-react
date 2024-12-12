@@ -13,6 +13,7 @@ import Label, {
 } from '../../../../ui/Label';
 
 import EditDetailsModal from '../EditDetailsModal';
+import { isDefaultChannelName } from '../../../../utils';
 
 const ChannelProfile: React.FC = () => {
   const state = useSendbirdStateContext();
@@ -28,10 +29,10 @@ const ChannelProfile: React.FC = () => {
   const channel = channelSettingStore?.channel;
 
   const channelName = useMemo(() => {
-    if (channel?.name && channel.name !== 'Group Channel' && channel.name !== 'AI Chatbot Widget Channel') {
+    if (!isDefaultChannelName(channel)) {
       return channel.name;
     }
-    if (channel?.name === 'Group Channel' || channel?.name === 'AI Chatbot Widget Channel' || !channel?.name) {
+    if (isDefaultChannelName(channel)) {
       return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
     }
 

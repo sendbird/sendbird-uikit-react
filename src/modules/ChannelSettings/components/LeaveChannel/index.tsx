@@ -15,6 +15,7 @@ import Label, {
   LabelTypography,
   LabelColors,
 } from '../../../../ui/Label';
+import { isDefaultChannelName } from '../../../../utils';
 
 export type LeaveChannelProps = {
   onSubmit: () => void;
@@ -34,10 +35,10 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
   const isOnline = state?.config?.isOnline;
   const { isMobile } = useMediaQueryContext();
   const getChannelName = (channel: GroupChannel | null) => {
-    if (channel?.name && channel?.name !== 'Group Channel' && channel.name !== 'AI Chatbot Widget Channel') {
+    if (!isDefaultChannelName(channel)) {
       return channel.name;
     }
-    if (channel?.name === 'Group Channel' || channel?.name === 'AI Chatbot Widget Channel' || !channel?.name) {
+    if (isDefaultChannelName(channel)) {
       return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
     }
 

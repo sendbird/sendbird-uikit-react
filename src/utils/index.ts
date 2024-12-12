@@ -994,3 +994,11 @@ export const isChannelJustCreated = (channel: GroupChannel): boolean => {
 export const getHTMLTextDirection = (direction: HTMLTextDirection, forceLeftToRightMessageLayout: boolean): string => {
   return forceLeftToRightMessageLayout ? 'ltr' : direction;
 };
+
+export const isDefaultChannelName = (channel: GroupChannel) => {
+  return (
+    !channel?.name
+    || channel.name === 'Group Channel'
+    || channel.name === 'AI Chatbot Widget Channel'
+  );
+};
