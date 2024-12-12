@@ -320,7 +320,15 @@ export const GroupChannelProvider = (props: GroupChannelProviderProps) => {
     },
   );
 
-  const messageActions = useMessageActions({ ...props, ...messageDataSource, scrollToBottom, quoteMessage, replyType });
+  const messageActions = useMessageActions({
+    ...props,
+    ...messageDataSource,
+    scrollToBottom,
+    quoteMessage,
+    replyType,
+    pubSub: config.pubSub,
+    channel: currentChannel,
+  });
 
   return (
     <GroupChannelContext.Provider
