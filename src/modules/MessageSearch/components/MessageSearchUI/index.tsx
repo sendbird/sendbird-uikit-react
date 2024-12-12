@@ -76,7 +76,9 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
   };
 
   const getChannelName = () => {
-    if (!currentChannel) return stringSet.NO_TITLE;
+    if (!currentChannel?.name && !currentChannel?.members) {
+      return stringSet.NO_TITLE;
+    }
 
     if (isDefaultChannelName(currentChannel)) return currentChannel.members.map((member) => member.nickname || stringSet.NO_NAME).join(', ');
 

@@ -29,6 +29,8 @@ const ChannelProfile: React.FC = () => {
   const channel = channelSettingStore?.channel;
 
   const channelName = useMemo(() => {
+    if (!channel?.name && !channel?.members) return stringSet.NO_TITLE;
+
     if (isDefaultChannelName(channel)) return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
 
     return channel.name;
