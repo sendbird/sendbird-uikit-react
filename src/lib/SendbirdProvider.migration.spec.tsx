@@ -1,10 +1,59 @@
 /* eslint-disable no-console */
-import React from 'react';
+import React, { act } from 'react';
 import { render, renderHook, screen } from '@testing-library/react';
 import SendbirdProvider, { SendbirdProviderProps } from './Sendbird';
 import useSendbirdStateContext from './Sendbird/context/hooks/useSendbirdStateContext';
 import { match } from 'ts-pattern';
 import { DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, DEFAULT_UPLOAD_SIZE_LIMIT } from '../utils/consts';
+
+jest.mock('@sendbird/chat', () => {
+  const mockConnect = jest.fn().mockResolvedValue({
+    userId: 'test-user-id',
+    nickname: 'test-nickname',
+    profileUrl: 'test-profile-url',
+  });
+  const mockDisconnect = jest.fn().mockResolvedValue(null);
+  const mockUpdateCurrentUserInfo = jest.fn().mockResolvedValue(null);
+  const mockAddExtension = jest.fn().mockReturnThis();
+  const mockAddSendbirdExtensions = jest.fn().mockReturnThis();
+  const mockGetMessageTemplatesByToken = jest.fn().mockResolvedValue({
+    hasMore: false,
+    token: null,
+    templates: [],
+  });
+
+  const mockSdk = {
+    init: jest.fn().mockImplementation(() => mockSdk),
+    connect: mockConnect,
+    disconnect: mockDisconnect,
+    updateCurrentUserInfo: mockUpdateCurrentUserInfo,
+    addExtension: mockAddExtension,
+    addSendbirdExtensions: mockAddSendbirdExtensions,
+    GroupChannel: { createMyGroupChannelListQuery: jest.fn() },
+    message: {
+      getMessageTemplatesByToken: mockGetMessageTemplatesByToken,
+    },
+    appInfo: {
+      uploadSizeLimit: 1024 * 1024 * 5,
+      multipleFilesMessageFileCountLimit: 10,
+    },
+  };
+
+  return {
+    __esModule: true,
+    default: mockSdk,
+    SendbirdProduct: {
+      UIKIT_CHAT: 'UIKIT_CHAT',
+    },
+    SendbirdPlatform: {
+      JS: 'JS',
+    },
+    DeviceOsPlatform: {
+      WEB: 'WEB',
+      MOBILE_WEB: 'MOBILE_WEB',
+    },
+  };
+});
 
 const mockProps: SendbirdProviderProps = {
   appId: 'test-app-id',
@@ -39,37 +88,6 @@ const mockProps: SendbirdProviderProps = {
   children: <div>Test Child</div>,
 };
 
-const mockDisconnect = jest.fn();
-const mockConnect = jest.fn();
-const mockUpdateCurrentUserInfo = jest.fn();
-
-/**
- * Mocking Sendbird SDK
- * sdk.connect causes DOMException issue in jest.
- * Because it retries many times to connect indexDB.
- */
-jest.mock('@sendbird/chat', () => {
-  return {
-    __esModule: true,
-    default: jest.fn().mockImplementation(() => {
-      return {
-        connect: mockConnect.mockResolvedValue({
-          userId: 'test-user-id',
-          nickname: 'test-nickname',
-          profileUrl: 'test-profile-url',
-        }),
-        disconnect: mockDisconnect.mockResolvedValue(null),
-        updateCurrentUserInfo: mockUpdateCurrentUserInfo.mockResolvedValue(null),
-        GroupChannel: { createMyGroupChannelListQuery: jest.fn() },
-        appInfo: {
-          uploadSizeLimit: 1024 * 1024 * 5, // 5MB
-          multipleFilesMessageFileCountLimit: 10,
-        },
-      };
-    }),
-  };
-});
-
 describe('SendbirdProvider Props & Context Interface Validation', () => {
   const originalConsoleError = console.error;
   let originalFetch;
@@ -95,9 +113,6 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockConnect.mockClear();
-    mockDisconnect.mockClear();
-    mockUpdateCurrentUserInfo.mockClear();
 
     global.MediaRecorder = {
       isTypeSupported: jest.fn((type) => {
@@ -119,24 +134,27 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
   });
 
   it('should accept all legacy props without type errors', async () => {
-    const { rerender } = render(
-      <SendbirdProvider {...mockProps}>
-        {mockProps.children}
-      </SendbirdProvider>,
-    );
+    const { rerender } = await act(async () => (
+      render(
+        <SendbirdProvider {...mockProps}>
+          {mockProps.children}
+        </SendbirdProvider>,
+      )
+    ));
 
-    rerender(
-      <SendbirdProvider {...mockProps}>
-        {mockProps.children}
-      </SendbirdProvider>,
-    );
+    await act(async () => (
+      rerender(
+        <SendbirdProvider {...mockProps}>
+          {mockProps.children}
+        </SendbirdProvider>,
+      )
+    ));
   });
 
-  it('should provide all expected keys in context', () => {
+  it('should provide all expected keys in context', async () => {
     const expectedKeys = [
       'config',
       'stores',
-      'dispatchers',
       'eventHandlers',
       'emojiManager',
       'utils',
@@ -159,11 +177,13 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
       );
     };
 
-    render(
-      <SendbirdProvider appId="test-app-id" userId="test-user-id">
-        <TestComponent />
-      </SendbirdProvider>,
-    );
+    await act(() => (
+      render(
+        <SendbirdProvider appId="test-app-id" userId="test-user-id">
+          <TestComponent />
+        </SendbirdProvider>,
+      )
+    ));
 
     expectedKeys.forEach((key) => {
       const element = screen.getByTestId(`context-${key}`);
@@ -171,7 +191,7 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
     });
   });
 
-  it('should pass all expected values to the config object', () => {
+  it('should pass all expected values to the config object', async () => {
     const mockProps: SendbirdProviderProps = {
       appId: 'test-app-id',
       userId: 'test-user-id',
@@ -192,7 +212,10 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
       <SendbirdProvider {...mockProps}>{children}</SendbirdProvider>
     );
 
-    const { result } = renderHook(() => useSendbirdStateContext(), { wrapper });
+    let result;
+    await act(async () => {
+      result = renderHook(() => useSendbirdStateContext(), { wrapper }).result;
+    });
 
     const config = result.current.config;
 
@@ -220,14 +243,17 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
     expect(config.markAsDeliveredScheduler).toBeDefined();
   });
 
-  it('should handle optional and default values correctly', () => {
+  it('should handle optional and default values correctly', async () => {
     const wrapper = ({ children }) => (
       <SendbirdProvider {...mockProps} appId="test-app-id" userId="test-user-id">
         {children}
       </SendbirdProvider>
     );
 
-    const { result } = renderHook(() => useSendbirdStateContext(), { wrapper });
+    let result;
+    await act(async () => {
+      result = renderHook(() => useSendbirdStateContext(), { wrapper }).result;
+    });
 
     expect(result.current.config.pubSub).toBeDefined();
     expect(result.current.config.logger).toBeDefined();

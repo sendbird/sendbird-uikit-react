@@ -16,6 +16,7 @@ import { ReplyType } from '../../../types';
 import { useMessageActions } from './hooks/useMessageActions';
 import { useGroupChannelMessages } from '@sendbird/uikit-tools';
 import { ThreadReplySelectType } from './const';
+import { PropsWithChildren } from 'react';
 
 // Message data source types
 type MessageDataSource = ReturnType<typeof useGroupChannelMessages>;
@@ -66,8 +67,13 @@ interface InternalGroupChannelState extends MessageDataSource {
   scrollPubSub: PubSubTypes<ScrollTopics, ScrollTopicUnion>;
 }
 
-export interface GroupChannelProviderProps extends
-  Pick<UserProfileProviderProps, 'renderUserProfile' | 'disableUserProfile'> {
+export interface GroupChannelProviderProps extends PropsWithChildren<
+  Pick<UserProfileProviderProps,
+    'renderUserProfile' |
+    'disableUserProfile' |
+    'onUserProfileMessage'|
+    'onStartDirectMessage'
+  >> {
   // Required
   channelUrl: string;
 

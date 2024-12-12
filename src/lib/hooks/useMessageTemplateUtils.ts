@@ -197,7 +197,7 @@ export default function useMessageTemplateUtils({
   }, [
     actions.upsertMessageTemplates,
     actions.upsertWaitingTemplateKeys,
-    sdk.message?.getMessageTemplatesByToken,
+    sdk?.message?.getMessageTemplatesByToken,
   ]);
   return {
     getCachedTemplate,

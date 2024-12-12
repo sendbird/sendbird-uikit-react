@@ -1,32 +1,32 @@
+import React from 'react';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { useChannelSettings } from '../context/useChannelSettings';
-import { useChannelSettingsContext } from '../context/ChannelSettingsProvider';
+import { ChannelSettingsContext } from '../context/ChannelSettingsProvider';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
-jest.mock('../context/ChannelSettingsProvider', () => ({
-  useChannelSettingsContext: jest.fn(),
-}));
-
-const mockStore = {
-  getState: jest.fn(),
-  setState: jest.fn(),
-  subscribe: jest.fn(() => jest.fn()),
-};
-
-const mockChannel: GroupChannel = {
-  url: 'test-channel',
-  name: 'Test Channel',
-} as GroupChannel;
-
-beforeEach(() => {
-  jest.clearAllMocks();
-  (useChannelSettingsContext as jest.Mock).mockReturnValue(mockStore);
-});
-
 describe('useChannelSettings', () => {
-  it('throws an error if used outside of ChannelSettingsProvider', () => {
-    (useChannelSettingsContext as jest.Mock).mockReturnValueOnce(null);
+  const mockStore = {
+    getState: jest.fn(),
+    setState: jest.fn(),
+    subscribe: jest.fn(() => jest.fn()),
+  };
 
+  const mockChannel: GroupChannel = {
+    url: 'test-channel',
+    name: 'Test Channel',
+  } as GroupChannel;
+
+  const wrapper = ({ children }) => (
+    <ChannelSettingsContext.Provider value={mockStore}>
+      {children}
+    </ChannelSettingsContext.Provider>
+  );
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('throws an error if used outside of ChannelSettingsProvider', () => {
     const { result } = renderHook(() => useChannelSettings());
 
     expect(result.error).toEqual(
@@ -43,13 +43,13 @@ describe('useChannelSettings', () => {
 
     mockStore.getState.mockReturnValue(initialState);
 
-    const { result } = renderHook(() => useChannelSettings());
+    const { result } = renderHook(() => useChannelSettings(), { wrapper });
 
     expect(result.current.state).toEqual(initialState);
   });
 
   it('calls setChannel with the correct channel object', () => {
-    const { result } = renderHook(() => useChannelSettings());
+    const { result } = renderHook(() => useChannelSettings(), { wrapper });
 
     act(() => {
       result.current.actions.setChannel(mockChannel);
@@ -61,7 +61,7 @@ describe('useChannelSettings', () => {
   });
 
   it('calls setLoading with the correct value', () => {
-    const { result } = renderHook(() => useChannelSettings());
+    const { result } = renderHook(() => useChannelSettings(), { wrapper });
 
     act(() => {
       result.current.actions.setLoading(true);
@@ -73,7 +73,7 @@ describe('useChannelSettings', () => {
   });
 
   it('calls setInvalid with the correct value', () => {
-    const { result } = renderHook(() => useChannelSettings());
+    const { result } = renderHook(() => useChannelSettings(), { wrapper });
 
     act(() => {
       result.current.actions.setInvalid(true);
