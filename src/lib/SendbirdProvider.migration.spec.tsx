@@ -23,7 +23,7 @@ jest.mock('@sendbird/chat', () => {
   });
 
   const mockSdk = {
-    init: jest.fn().mockImplementation((params) => mockSdk),
+    init: jest.fn().mockImplementation(() => mockSdk),
     connect: mockConnect,
     disconnect: mockDisconnect,
     updateCurrentUserInfo: mockUpdateCurrentUserInfo,
