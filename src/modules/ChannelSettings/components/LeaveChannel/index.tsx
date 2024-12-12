@@ -35,14 +35,9 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
   const isOnline = state?.config?.isOnline;
   const { isMobile } = useMediaQueryContext();
   const getChannelName = (channel: GroupChannel | null) => {
-    if (!isDefaultChannelName(channel)) {
-      return channel.name;
-    }
-    if (isDefaultChannelName(channel)) {
-      return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
-    }
+    if (isDefaultChannelName(channel)) return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
 
-    return stringSet.NO_TITLE;
+    return channel.name;
   };
   if (isMobile) {
     return (

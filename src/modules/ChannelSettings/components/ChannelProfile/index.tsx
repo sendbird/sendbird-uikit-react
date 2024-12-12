@@ -29,14 +29,9 @@ const ChannelProfile: React.FC = () => {
   const channel = channelSettingStore?.channel;
 
   const channelName = useMemo(() => {
-    if (!isDefaultChannelName(channel)) {
-      return channel.name;
-    }
-    if (isDefaultChannelName(channel)) {
-      return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
-    }
+    if (isDefaultChannelName(channel)) return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
 
-    return stringSet.NO_TITLE;
+    return channel.name;
   }, [channel?.name, channel?.joinedMemberCount]);
 
   return (
