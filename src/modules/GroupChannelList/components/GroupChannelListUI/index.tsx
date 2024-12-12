@@ -35,6 +35,7 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
       selectedChannelUrl,
       loadMore,
       onUserProfileUpdated,
+      scrollRef,
     },
   } = useGroupChannelList();
 
@@ -90,6 +91,7 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
       onLoadMore={loadMore}
       initialized={initialized}
       renderAddChannel={() => <AddGroupChannel />}
+      scrollRef={scrollRef}
     />
   );
 };

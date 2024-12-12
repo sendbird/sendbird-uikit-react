@@ -49,6 +49,7 @@ interface ContextBaseType {
 
 export interface GroupChannelListContextType extends ContextBaseType, ChannelListDataSource {
   typingChannelUrls: string[];
+  scrollRef: React.RefObject<HTMLDivElement>;
 }
 export interface GroupChannelListProviderProps extends
   PartialRequired<ContextBaseType, 'onChannelSelect' | 'onChannelCreated'>,
@@ -80,6 +81,7 @@ const initialState: GroupChannelListState = {
   groupChannels: [],
   refresh: null,
   loadMore: null,
+  scrollRef: { current: null },
 };
 
 /**
@@ -114,6 +116,7 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
   const isConnected = useOnlineStatus(sdk, config.logger);
   const scheduler = useMarkAsDeliveredScheduler({ isConnected }, config);
 
+  const scrollRef = useRef(null);
   const channelListDataSource = useGroupChannelListDataSource(sdk, {
     collectionCreator: getCollectionCreator(sdk, channelListQueryParams),
     markAsDelivered: (channels) => channels.forEach(scheduler.push),
@@ -202,6 +205,7 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
     initialized,
     refresh,
     loadMore,
+    scrollRef,
   ]);
   useDeepCompareEffect(() => {
     updateState({
