@@ -28,7 +28,7 @@ export interface MessageSearchState extends MessageSearchProviderProps {
   channelUrl: string;
   allMessages: ClientSentMessages[];
   loading: boolean;
-  isQueryInvalid: boolean;
+  isInvalid: boolean;
   initialized: boolean;
   currentChannel: GroupChannel | null;
   currentMessageSearchQuery: MessageSearchQuery | null;
@@ -45,7 +45,7 @@ const initialState: MessageSearchState = {
   channelUrl: '',
   allMessages: [],
   loading: false,
-  isQueryInvalid: false,
+  isInvalid: false,
   initialized: false,
   currentChannel: null,
   currentMessageSearchQuery: null,
@@ -55,6 +55,11 @@ const initialState: MessageSearchState = {
   selectedMessageId: null,
   searchString: '',
   requestString: '',
+  /**
+   * messageSearchDispatcher is no longer used.
+   * Please use useMessageSearch() to get the store and update the state.
+   */
+  // messageSearchDispatcher: null,
 };
 
 export const MessageSearchContext = createContext<ReturnType<typeof createStore<MessageSearchState>> | null>(null);
@@ -162,9 +167,7 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = ({
   );
 };
 
-/**
- * Keep this function for backward compatibility.
- */
+// Keep this function for backward compatibility.
 const useMessageSearchContext = () => {
   const { state, actions } = useMessageSearch();
   return { ...state, ...actions };

@@ -204,8 +204,6 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
     typingChannelUrls,
     refreshing,
     initialized,
-    refresh,
-    loadMore,
     scrollRef,
   ]);
   useDeepCompareEffect(() => {

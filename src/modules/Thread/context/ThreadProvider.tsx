@@ -41,18 +41,7 @@ export interface ThreadProviderProps extends
   filterEmojiCategoryIds?: (message: SendableMessageType) => EmojiCategory['id'][];
 }
 
-export interface ThreadState {
-  channelUrl: string;
-  message: SendableMessageType | null;
-  onHeaderActionClick?: () => void;
-  onMoveToParentMessage?: (props: { message: SendableMessageType, channel: GroupChannel }) => void;
-  onBeforeSendUserMessage?: (message: string, quotedMessage?: SendableMessageType) => UserMessageCreateParams;
-  onBeforeSendFileMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
-  onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
-  onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
-  onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;
-  isMultipleFilesMessageEnabled?: boolean;
-  filterEmojiCategoryIds?: (message: SendableMessageType) => EmojiCategory['id'][];
+export interface ThreadState extends ThreadProviderProps {
   currentChannel: GroupChannel;
   allThreadMessages: Array<CoreMessageType>;
   localThreadMessages: Array<CoreMessageType>;

@@ -62,7 +62,6 @@ describe('MessageSearch Migration Compatibility Tests', () => {
       'setRetryCount',
       'selectedMessageId',
       'setSelectedMessageId',
-      'messageSearchDispatcher',
       'scrollRef',
       'allMessages',
       'loading',

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { act } from 'react';
 import { render, screen } from '@testing-library/react';
-import type { GroupChannelProviderProps } from '../types'
+import type { GroupChannelProviderProps } from '../types';
 import { GroupChannelProvider, useGroupChannelContext } from '../GroupChannelProvider';
 import { ThreadReplySelectType } from '../const';
 import { match } from 'ts-pattern';
@@ -57,8 +57,7 @@ const mockProps: GroupChannelProviderProps = {
   scrollBehavior: 'smooth',
   forceLeftToRightMessageLayout: false,
 
-  startingPoint: 0,
-
+  startingPoint: undefined,
   // Message Focusing
   animatedMessageId: null,
   onMessageAnimated: jest.fn(),
@@ -93,15 +92,15 @@ const mockProps: GroupChannelProviderProps = {
 describe('GroupChannel Migration Compatibility Tests', () => {
   // 1. Provider Props Interface test
   describe('GroupChannelProvider Props Compatibility', () => {
-    it('should accept all legacy props without type errors', () => {
-      const { rerender } = render(
+    it('should accept all legacy props without type errors', async () => {
+      const { rerender } = await act(async () => render(
         <GroupChannelProvider {...mockProps}>
           {mockProps.children}
         </GroupChannelProvider>,
-      );
+      ));
 
       // Props change scenario test
-      rerender(
+      await act(async () => rerender(
         <GroupChannelProvider
           {...mockProps}
           isReactionEnabled={false}
@@ -109,7 +108,7 @@ describe('GroupChannel Migration Compatibility Tests', () => {
         >
           {mockProps.children}
         </GroupChannelProvider>,
-      );
+      ));
     });
   });
 

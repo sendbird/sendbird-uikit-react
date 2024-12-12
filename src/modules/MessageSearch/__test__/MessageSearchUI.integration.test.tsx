@@ -21,7 +21,7 @@ const mockLocalizationContext = {
 };
 
 const defaultMockState = {
-  isQueryInvalid: false,
+  isInvalid: false,
   searchString: '',
   requestString: '',
   currentChannel: null,
@@ -89,7 +89,7 @@ describe('MessageSearchUI Integration Tests', () => {
   it('handles error state and retry', async () => {
     const handleRetryToConnect = jest.fn();
     renderComponent(
-      { isQueryInvalid: true, searchString: 'error query', requestString: 'error query' },
+      { isInvalid: true, searchString: 'error query', requestString: 'error query' },
       { handleRetryToConnect },
     );
     expect(screen.getByText(mockStringSet.PLACE_HOLDER__RETRY_TO_CONNECT)).toBeInTheDocument();

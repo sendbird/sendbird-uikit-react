@@ -40,9 +40,9 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
 
 jest.mock('../hooks/useThreadFetchers', () => ({
   useThreadFetchers: jest.fn().mockReturnValue({
-    initialize: jest.fn(),
-    loadPrevious: jest.fn(),
-    loadNext: jest.fn(),
+    initializeThreadFetcher: jest.fn(),
+    fetchPrevThreads: jest.fn(),
+    fetchNextThreads: jest.fn(),
   }),
 }));
 

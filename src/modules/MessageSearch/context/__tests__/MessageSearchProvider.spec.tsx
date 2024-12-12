@@ -55,7 +55,7 @@ describe('MessageSearchProvider', () => {
   const initialState = {
     allMessages: [],
     loading: false,
-    isQueryInvalid: false,
+    isInvalid: false,
     initialized: false,
     currentChannel: null,
     currentMessageSearchQuery: null,
@@ -113,7 +113,7 @@ describe('MessageSearchProvider', () => {
         expect(newState.channelUrl).toBe(newUrl);
         expect(newState.allMessages).toEqual(initialState.allMessages);
         expect(newState.loading).toBe(initialState.loading);
-        expect(newState.isQueryInvalid).toBe(initialState.isQueryInvalid);
+        expect(newState.isInvalid).toBe(initialState.isInvalid);
       });
     });
   });
@@ -154,7 +154,7 @@ describe('MessageSearchProvider', () => {
         expect(updatedState.initialized).toBe(true);
         // Verify other states remain unchanged
         expect(updatedState.loading).toBe(initialState.loading);
-        expect(updatedState.isQueryInvalid).toBe(initialState.isQueryInvalid);
+        expect(updatedState.isInvalid).toBe(initialState.isInvalid);
         expect(updatedState.allMessages).toEqual(initialState.allMessages);
         expect(updatedState.hasMoreResult).toBe(initialState.hasMoreResult);
       });
@@ -175,7 +175,7 @@ describe('MessageSearchProvider', () => {
       await waitFor(() => {
         const updatedState = result.current.state;
         expect(updatedState.loading).toBe(false);
-        expect(updatedState.isQueryInvalid).toBe(false);
+        expect(updatedState.isInvalid).toBe(false);
         // Verify other states remain unchanged
         expect(updatedState.allMessages).toEqual(initialState.allMessages);
         expect(updatedState.currentChannel).toBe(initialState.currentChannel);
@@ -205,7 +205,7 @@ describe('MessageSearchProvider', () => {
         expect(updatedState.hasMoreResult).toBe(true);
         expect(updatedState.currentMessageSearchQuery).toEqual(mockQuery);
         // Verify other states remain unchanged
-        expect(updatedState.isQueryInvalid).toBe(initialState.isQueryInvalid);
+        expect(updatedState.isInvalid).toBe(initialState.isInvalid);
         expect(updatedState.initialized).toBe(initialState.initialized);
       });
     });
@@ -264,7 +264,7 @@ describe('MessageSearchProvider', () => {
       result.current.actions.setQueryInvalid();
       await waitFor(() => {
         const updatedState = result.current.state;
-        expect(updatedState.isQueryInvalid).toBe(true);
+        expect(updatedState.isInvalid).toBe(true);
         // Verify other states remain unchanged
         expect(updatedState.allMessages).toEqual(initialState.allMessages);
         expect(updatedState.loading).toBe(initialState.loading);
@@ -291,7 +291,7 @@ describe('MessageSearchProvider', () => {
         const updatedState = result.current.state;
         expect(updatedState.allMessages).toEqual([]);
         // Verify other states remain unchanged
-        expect(updatedState.isQueryInvalid).toBe(initialState.isQueryInvalid);
+        expect(updatedState.isInvalid).toBe(initialState.isInvalid);
         expect(updatedState.currentChannel).toBe(initialState.currentChannel);
       });
     });
