@@ -995,10 +995,14 @@ export const getHTMLTextDirection = (direction: HTMLTextDirection, forceLeftToRi
   return forceLeftToRightMessageLayout ? 'ltr' : direction;
 };
 
+export const DEFAULT_GROUP_CHANNEL_NAME = 'Group Channel';
+
+export const DEFAULT_AI_CHATBOT_CHANNEL_NAME = 'AI Chatbot Widget Channel';
+
 export const isDefaultChannelName = (channel: GroupChannel) => {
   return (
     !channel?.name
-    || channel.name === 'Group Channel'
-    || channel.name === 'AI Chatbot Widget Channel'
+    || channel.name === DEFAULT_GROUP_CHANNEL_NAME
+    || channel.name === DEFAULT_AI_CHATBOT_CHANNEL_NAME
   );
 };
