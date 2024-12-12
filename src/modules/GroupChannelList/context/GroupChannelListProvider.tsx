@@ -117,7 +117,6 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
   const scheduler = useMarkAsDeliveredScheduler({ isConnected }, config);
 
   const scrollRef = useRef(null);
-
   const channelListDataSource = useGroupChannelListDataSource(sdk, {
     collectionCreator: getCollectionCreator(sdk, channelListQueryParams),
     markAsDelivered: (channels) => channels.forEach(scheduler.push),
