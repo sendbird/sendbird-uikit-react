@@ -28,10 +28,10 @@ const ChannelProfile: React.FC = () => {
   const channel = channelSettingStore?.channel;
 
   const channelName = useMemo(() => {
-    if (channel?.name && channel.name !== 'Group Channel') {
+    if (channel?.name && channel.name !== 'Group Channel' && channel.name !== 'AI Chatbot Widget Channel') {
       return channel.name;
     }
-    if (channel?.name === 'Group Channel' || !channel?.name) {
+    if (channel?.name === 'Group Channel' || channel?.name === 'AI Chatbot Widget Channel' || !channel?.name) {
       return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
     }
 

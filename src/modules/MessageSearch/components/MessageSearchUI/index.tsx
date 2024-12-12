@@ -75,10 +75,10 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
   };
 
   const getChannelName = () => {
-    if (currentChannel && currentChannel?.name && currentChannel?.name !== 'Group Channel') {
+    if (currentChannel && currentChannel?.name && currentChannel?.name !== 'Group Channel' && currentChannel?.name !== 'AI Chatbot Widget Channel') {
       return currentChannel?.name;
     }
-    if (currentChannel && (currentChannel?.name === 'Group Channel' || !currentChannel?.name)) {
+    if (currentChannel && (currentChannel?.name === 'Group Channel' || currentChannel?.name === 'AI Chatbot Widget Channel' || !currentChannel?.name)) {
       return currentChannel.members.map((member) => member.nickname || stringSet.NO_NAME).join(', ');
     }
     return stringSet.NO_TITLE;
