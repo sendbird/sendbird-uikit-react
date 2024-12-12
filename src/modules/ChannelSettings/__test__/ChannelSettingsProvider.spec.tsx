@@ -13,26 +13,24 @@ const mockLogger = {
   error: jest.fn(),
 };
 
+const mockStore = {
+  getState: jest.fn(),
+  setState: jest.fn(),
+  subscribe: jest.fn(() => jest.fn()),
+};
+
 const initialState = {
   channelUrl: 'test-channel',
-  onCloseClick: undefined,
-  onLeaveChannel: undefined,
-  onChannelModified: undefined,
-  onBeforeUpdateChannel: undefined,
-  renderUserListItem: undefined,
-  queries: undefined,
-  overrideInviteUser: undefined,
   channel: null,
   loading: false,
   invalidChannel: false,
-  forceUpdateUI: expect.any(Function),
-  setChannelUpdateId: expect.any(Function),
 };
 
 describe('ChannelSettingsProvider', () => {
   let wrapper;
 
   beforeEach(() => {
+    mockStore.getState.mockReturnValue(initialState);
     useSendbird.mockReturnValue({
       state: {
         stores: { sdkStore: { sdk: {}, initialized: true } },
@@ -51,10 +49,13 @@ describe('ChannelSettingsProvider', () => {
     jest.clearAllMocks();
   });
 
-  it('provides the correct initial state', () => {
+  it('provides the correct initial state and actions', () => {
     const { result } = renderHook(() => useChannelSettingsContext(), { wrapper });
 
-    expect(result.current.getState()).toEqual(expect.objectContaining(initialState));
+    expect(result.current.channelUrl).toBe(initialState.channelUrl);
+    expect(result.current.channel).toBe(initialState.channel);
+    expect(result.current.loading).toBe(initialState.loading);
+    expect(result.current.invalidChannel).toBe(initialState.invalidChannel);
   });
 
   it('logs a warning if SDK is not initialized', () => {
@@ -66,32 +67,29 @@ describe('ChannelSettingsProvider', () => {
     });
 
     renderHook(() => useChannelSettingsContext(), { wrapper });
-
     expect(mockLogger.warning).toHaveBeenCalledWith('ChannelSettings: SDK or GroupChannelModule is not available');
   });
 
-  it('updates state correctly when setChannelUpdateId is called', async () => {
+  it('updates channel state correctly', async () => {
+    const { result } = renderHook(() => useChannelSettingsContext(), { wrapper });
+    const newChannel = { url: 'new-channel' } as any;
+
+    await act(async () => {
+      result.current.setChannel(newChannel);
+    });
+
+    expect(result.current.channel).toEqual(newChannel);
+  });
+
+  it('maintains loading and invalid states', async () => {
     const { result } = renderHook(() => useChannelSettingsContext(), { wrapper });
 
     await act(async () => {
-      result.current.setState({ channelUrl: 'new-channel' });
-      await waitForStateUpdate();
-      expect(result.current.getState().channelUrl).toBe('new-channel');
+      result.current.setLoading(true);
+      result.current.setInvalid(true);
     });
+
+    expect(result.current.loading).toBe(true);
+    expect(result.current.invalidChannel).toBe(true);
   });
-
-  it('maintains other state values when channel changes', async () => {
-    const { result } = renderHook(() => useChannelSettingsContext(), { wrapper });
-
-    await act(async () => {
-      result.current.setState({ channel: { name: 'Updated Channel' } });
-      await waitForStateUpdate();
-      const updatedState = result.current.getState();
-      expect(updatedState.channel).toEqual({ name: 'Updated Channel' });
-      expect(updatedState.loading).toBe(false);
-      expect(updatedState.invalidChannel).toBe(false);
-    });
-  });
-
-  const waitForStateUpdate = () => new Promise(resolve => { setTimeout(resolve, 0); });
 });

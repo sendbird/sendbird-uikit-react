@@ -10,7 +10,7 @@ interface ApplicationUserListQuery {
   metaDataValuesFilter?: Array<string>;
 }
 
-interface ChannelSettingsQueries {
+export interface ChannelSettingsQueries {
   applicationUserListQuery?: ApplicationUserListQuery;
 }
 
@@ -20,7 +20,7 @@ type OverrideInviteUserType = {
   channel: GroupChannel;
 };
 
-interface CommonChannelSettingsProps {
+export interface CommonChannelSettingsProps {
   channelUrl: string;
   onCloseClick?(): void;
   onLeaveChannel?(): void;

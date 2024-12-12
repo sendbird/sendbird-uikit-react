@@ -311,7 +311,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   return children;
 };
 
-const GroupChannelProvider: React.FC<React.PropsWithChildren<GroupChannelProviderProps>> = (props) => {
+const GroupChannelProvider: React.FC<GroupChannelProviderProps> = (props) => {
   return (
     <InternalGroupChannelProvider>
       <GroupChannelManager {...props}>

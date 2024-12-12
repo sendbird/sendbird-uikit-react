@@ -11,6 +11,7 @@ import { classnames } from '../../../utils/utils';
 import { createStore } from '../../../utils/storeManager';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useChannelSettings from './useChannelSettings';
 
 export const ChannelSettingsContext = createContext<ReturnType<typeof createStore<ChannelSettingsState>> | null>(null);
 
@@ -127,9 +128,8 @@ const ChannelSettingsProvider = (props: ChannelSettingsContextProps) => {
 };
 
 const useChannelSettingsContext = () => {
-  const context = React.useContext(ChannelSettingsContext);
-  if (!context) throw new Error('ChannelSettingsContext not found. Use within the ChannelSettings module');
-  return context;
+  const { state, actions } = useChannelSettings();
+  return { ...state, ...actions };
 };
 
 export { ChannelSettingsProvider, useChannelSettingsContext };
