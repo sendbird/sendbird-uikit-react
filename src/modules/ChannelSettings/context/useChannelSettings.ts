@@ -1,12 +1,12 @@
-import { useMemo } from 'react';
+import { useMemo, useContext } from 'react';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
-import { useChannelSettingsContext } from './ChannelSettingsProvider';
+import { ChannelSettingsContext } from './ChannelSettingsProvider';
 import { ChannelSettingsState } from './types';
 
 export const useChannelSettings = () => {
-  const store = useChannelSettingsContext();
+  const store = useContext(ChannelSettingsContext);
   if (!store) throw new Error('useChannelSettings must be used within a ChannelSettingsProvider');
 
   const state: ChannelSettingsState = useSyncExternalStore(store.subscribe, store.getState);
