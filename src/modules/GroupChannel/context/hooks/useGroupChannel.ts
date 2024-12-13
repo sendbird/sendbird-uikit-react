@@ -55,7 +55,7 @@ export const useGroupChannel = () => {
   if (!store) throw new Error('useGroupChannel must be used within a GroupChannelProvider');
 
   const { state: { config } } = useSendbird();
-  const { markAsReadScheduler } = config;
+  const { markAsReadScheduler, pubSub } = config;
   const state: GroupChannelState = useSyncExternalStore(store.subscribe, store.getState);
 
   const flagActions = {

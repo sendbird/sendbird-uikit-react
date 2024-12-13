@@ -23,7 +23,7 @@ import {
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import type { GroupChannelState, OnBeforeHandler } from '../types';
 import type { CoreMessageType } from '../../../../utils';
-import { PublishingModuleType, PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
+import { PublishingModuleType, PUBSUB_TOPICS } from '../../../../lib/pubSub/topics';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 type MessageListDataSource = ReturnType<typeof useGroupChannelMessages>;
@@ -37,8 +37,7 @@ type MessageActions = {
 
 interface Params extends GroupChannelState {
   scrollToBottom(animated?: boolean): Promise<void>;
-  pubSub: SBUGlobalPubSub;
-  channel: GroupChannel;
+  currentChannel: GroupChannel;
 }
 
 const pass = <T>(value: T) => value;
@@ -73,10 +72,16 @@ export function useMessageActions(params: Params): MessageActions {
     scrollToBottom,
     quoteMessage,
     replyType,
-    channel,
-    pubSub,
+    currentChannel,
   } = params;
-  const { state: { eventHandlers } } = useSendbird();
+  const {
+    state: {
+      eventHandlers,
+      config: {
+        pubSub,
+      },
+    },
+  } = useSendbird();
   const buildInternalMessageParams = useCallback(
     <T extends BaseMessageCreateParams>(basicParams: T): T => {
       const messageParams = { ...basicParams } as T;
@@ -195,7 +200,7 @@ export function useMessageActions(params: Params): MessageActions {
         return updateUserMessage(messageId, processedParams)
           .then((message) => {
             pubSub.publish(PUBSUB_TOPICS.UPDATE_USER_MESSAGE, {
-              channel,
+              channel: currentChannel,
               message,
               publishingModules: [PublishingModuleType.CHANNEL],
             });
@@ -203,7 +208,7 @@ export function useMessageActions(params: Params): MessageActions {
             return message;
           });
       },
-      [buildInternalMessageParams, updateUserMessage, processParams, channel?.url],
+      [buildInternalMessageParams, updateUserMessage, processParams, currentChannel?.url],
     ),
     updateFileMessage,
     resendMessage,

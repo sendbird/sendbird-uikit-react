@@ -54,6 +54,7 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
         isOnline: true,
         pubSub: {
           subscribe: () => ({ remove: jest.fn() }),
+          publish: jest.fn(),
         },
       },
     },
