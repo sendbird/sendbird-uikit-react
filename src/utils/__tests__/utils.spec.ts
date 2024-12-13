@@ -3,11 +3,12 @@ import {
   isFileMessage,
   isUrl,
   isUserMessage,
-  isMultipleFilesMessage,
+  isMultipleFilesMessage, isDefaultChannelName, DEFAULT_GROUP_CHANNEL_NAME, DEFAULT_AI_CHATBOT_CHANNEL_NAME,
 } from '../index';
 import { AdminMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 import { delay, deleteNullish } from '../utils';
 import { isMobileIOS } from '../browser';
+import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 describe('Global-utils: verify message type util functions', () => {
   it('should return true for each message', () => {
@@ -269,5 +270,53 @@ describe('delay', () => {
     const elapsed = end - start;
 
     expect(elapsed).toBeLessThan(10);
+  });
+});
+
+describe('isDefaultChannelName', () => {
+  it('return true if channel is undefined', () => {
+    const result = isDefaultChannelName(undefined);
+
+    expect(result).toBe(true);
+  });
+
+  it('return true if channel name is undefined', () => {
+    const channel = {
+      name: undefined,
+    } as GroupChannel;
+
+    const result = isDefaultChannelName(channel);
+
+    expect(result).toBe(true);
+  });
+
+  it('return true if channel name is the default group channel name', () => {
+    const channel = {
+      name: DEFAULT_GROUP_CHANNEL_NAME,
+    } as GroupChannel;
+
+    const result = isDefaultChannelName(channel);
+
+    expect(result).toBe(true);
+  });
+
+  it('return true if channel name is the default AI chatbot channel name', () => {
+    const channel = {
+      name: DEFAULT_AI_CHATBOT_CHANNEL_NAME,
+    } as GroupChannel;
+
+    const result = isDefaultChannelName(channel);
+
+    expect(result).toBe(true);
+  });
+
+  it('return false if channel name is not default', () => {
+    const channel = {
+      name: 'test-channel-name',
+    } as GroupChannel;
+
+    const result = isDefaultChannelName(channel);
+
+    expect(result).toBe(false);
   });
 });

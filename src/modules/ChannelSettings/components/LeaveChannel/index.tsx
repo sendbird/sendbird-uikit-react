@@ -13,6 +13,7 @@ import Label, {
   LabelTypography,
   LabelColors,
 } from '../../../../ui/Label';
+import { isDefaultChannelName } from '../../../../utils';
 import useChannelSettings from '../../context/useChannelSettings';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
@@ -34,14 +35,11 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
   const isOnline = state?.config?.isOnline;
   const { isMobile } = useMediaQueryContext();
   const getChannelName = (channel: GroupChannel | null) => {
-    if (channel?.name && channel?.name !== 'Group Channel') {
-      return channel.name;
-    }
-    if (channel?.name === 'Group Channel' || !channel?.name) {
-      return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
-    }
+    if (!channel?.name && !channel?.members) return stringSet.NO_TITLE;
 
-    return stringSet.NO_TITLE;
+    if (isDefaultChannelName(channel)) return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
+
+    return channel.name;
   };
   if (isMobile) {
     return (

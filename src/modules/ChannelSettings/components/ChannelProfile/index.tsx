@@ -12,6 +12,7 @@ import Label, {
 } from '../../../../ui/Label';
 import EditDetailsModal from '../EditDetailsModal';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { isDefaultChannelName } from '../../../../utils';
 
 const ChannelProfile: React.FC = () => {
   const { state } = useSendbird();
@@ -25,14 +26,11 @@ const ChannelProfile: React.FC = () => {
   const disabled = !isOnline;
 
   const channelName = useMemo(() => {
-    if (channel?.name && channel.name !== 'Group Channel') {
-      return channel.name;
-    }
-    if (channel?.name === 'Group Channel' || !channel?.name) {
-      return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
-    }
+    if (!channel?.name && !channel?.members) return stringSet.NO_TITLE;
 
-    return stringSet.NO_TITLE;
+    if (isDefaultChannelName(channel)) return (channel?.members || []).map((member) => member.nickname || stringSet.NO_NAME).join(', ');
+
+    return channel.name;
   }, [channel?.name, channel?.joinedMemberCount]);
 
   return (

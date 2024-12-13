@@ -65,7 +65,7 @@ describe('useMessageActions', () => {
   const mockSendUserMessage = jest.fn();
   const mockSendFileMessage = jest.fn();
   const mockSendMultipleFilesMessage = jest.fn();
-  const mockUpdateUserMessage = jest.fn();
+  const mockUpdateUserMessage = jest.fn(async () => {});
   const mockScrollToBottom = jest.fn();
 
   // Default params for the hook
@@ -77,6 +77,10 @@ describe('useMessageActions', () => {
     scrollToBottom: mockScrollToBottom,
     quoteMessage: null,
     replyType: 'NONE',
+    pubSub: {
+      publish: jest.fn(),
+    },
+    channel: {},
   };
 
   beforeEach(() => {
