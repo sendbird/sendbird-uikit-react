@@ -112,9 +112,10 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     scrollRef,
     scrollPubSub,
     scrollDistanceFromBottomRef,
-    isScrollBottomReached,
     scrollPositionRef,
   } = useMessageListScroll(scrollBehavior, [state.currentChannel?.url]);
+
+  const { isScrollBottomReached } = state;
 
   // Configuration resolution
   const resolvedReplyType = getCaseResolvedReplyType(moduleReplyType ?? config.groupChannel.replyType).upperCase;
@@ -143,8 +144,8 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
         channels.forEach((it) => markAsReadScheduler.push(it));
       }
     },
-    onMessagesReceived: () => {
-      if (isScrollBottomReached && isContextMenuClosed()) {
+    onMessagesReceived: (messages) => {
+      if (isScrollBottomReached && isContextMenuClosed() && messages.length !== state.messages.length) {
         setTimeout(() => actions.scrollToBottom(true), 10);
       }
     },
@@ -157,7 +158,9 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       onBackClick?.();
     },
     onChannelUpdated: (channel) => {
-      actions.setCurrentChannel(channel);
+      if (!state.currentChannel?.isEqual(channel)) {
+        actions.setCurrentChannel(channel);
+      }
     },
     logger: logger as any,
   });
@@ -196,7 +199,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     return () => {
       subscriptions.forEach(subscription => subscription.remove());
     };
-  }, [messageDataSource.initialized, state.currentChannel?.url, pubSub?.subscribe]);
+  }, [messageDataSource.initialized, state.currentChannel?.url]);
 
   // Starting point handling
   useEffect(() => {

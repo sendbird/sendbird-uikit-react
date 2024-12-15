@@ -1,4 +1,4 @@
-import React, { DependencyList, forwardRef, UIEventHandler, useLayoutEffect, useRef } from 'react';
+import React, { DependencyList, forwardRef, UIEventHandler, useCallback, useLayoutEffect, useRef } from 'react';
 import type { BaseMessage } from '@sendbird/chat/message';
 import { isAboutSame } from '../../../Channel/context/utils';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
@@ -61,7 +61,7 @@ export const InfiniteList = forwardRef((props: Props, listRef: React.RefObject<H
     }
   }, [listRef.current, messages.length]);
 
-  const handleScroll: UIEventHandler<HTMLDivElement> = async () => {
+  const handleScroll: UIEventHandler<HTMLDivElement> = useCallback(async () => {
     if (!listRef.current) return;
     const list = listRef.current;
 
@@ -87,7 +87,7 @@ export const InfiniteList = forwardRef((props: Props, listRef: React.RefObject<H
     } else {
       direction.current = undefined;
     }
-  };
+  }, [listRef.current, messages.length]);
 
   return (
     <div className="sendbird-conversation__scroll-container">

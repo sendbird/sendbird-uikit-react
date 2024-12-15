@@ -25,7 +25,6 @@ describe('useMessageListScroll', () => {
       const { result } = renderHook(() => useMessageListScroll('auto'));
 
       expect(result.current.scrollRef.current).toBe(null);
-      expect(result.current.isScrollBottomReached).toBe(true);
       expect(result.current.scrollDistanceFromBottomRef.current).toBe(0);
       expect(result.current.scrollPositionRef.current).toBe(0);
       expect(typeof result.current.scrollPubSub.publish).toBe('function');
@@ -63,7 +62,7 @@ describe('useMessageListScroll', () => {
         result.current.scrollPubSub.publish('scrollToBottom', {});
         await waitFor(() => {
           expect(result.current.scrollDistanceFromBottomRef.current).toBe(0);
-          expect(result.current.isScrollBottomReached).toBe(true);
+          expect(mockSetIsScrollBottomReached).toHaveBeenCalledWith(true);
         });
       });
     });

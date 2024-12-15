@@ -1,3 +1,5 @@
+import isEqual from 'lodash/isEqual';
+
 // Referrence: https://github.com/pmndrs/zustand
 export type Store<T> = {
   getState: () => T;
@@ -7,7 +9,16 @@ export type Store<T> = {
 
 export function hasStateChanged<T>(prevState: T, updates: Partial<T>): boolean {
   return Object.entries(updates).some(([key, value]) => {
-    return prevState[key as keyof T] !== value;
+    if (typeof prevState[key as keyof T] === 'function' && typeof value === 'function') {
+      /**
+       * Function is not considered as state change. Why?
+       * Because function is not a value, it's a reference.
+       * If we consider non-memoized function as state change,
+       * it will always be true and cause unnecessary re-renders.
+       */
+      return false;
+    }
+    return !isEqual(prevState[key as keyof T], value);
   });
 }
 
