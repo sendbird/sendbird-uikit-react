@@ -112,9 +112,10 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     scrollRef,
     scrollPubSub,
     scrollDistanceFromBottomRef,
-    isScrollBottomReached,
     scrollPositionRef,
   } = useMessageListScroll(scrollBehavior, [state.currentChannel?.url]);
+
+  const { isScrollBottomReached } = state;
 
   // Configuration resolution
   const resolvedReplyType = getCaseResolvedReplyType(moduleReplyType ?? config.groupChannel.replyType).upperCase;
@@ -143,8 +144,13 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
         channels.forEach((it) => markAsReadScheduler.push(it));
       }
     },
-    onMessagesReceived: () => {
-      if (isScrollBottomReached && isContextMenuClosed()) {
+    onMessagesReceived: (messages) => {
+      if (isScrollBottomReached
+        && isContextMenuClosed()
+        // Note: this shouldn't happen ideally, but it happens on re-rendering GroupChannelManager
+        // even though the next messages and the current messages length are the same.
+        // So added this condition to check if they are the same to prevent unnecessary calling scrollToBottom action
+        && messages.length !== state.messages.length) {
         setTimeout(() => actions.scrollToBottom(true), 10);
       }
     },
@@ -157,7 +163,12 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       onBackClick?.();
     },
     onChannelUpdated: (channel) => {
-      actions.setCurrentChannel(channel);
+      // Note: this shouldn't happen ideally, but it happens on re-rendering GroupChannelManager
+      // even though the next channel and the current channel are the same.
+      // So added this condition to check if they are the same to prevent unnecessary calling setCurrentChannel action
+      if (!state.currentChannel?.isEqual(channel)) {
+        actions.setCurrentChannel(channel);
+      }
     },
     logger: logger as any,
   });
@@ -196,7 +207,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     return () => {
       subscriptions.forEach(subscription => subscription.remove());
     };
-  }, [messageDataSource.initialized, state.currentChannel?.url, pubSub?.subscribe]);
+  }, [messageDataSource.initialized, state.currentChannel?.url]);
 
   // Starting point handling
   useEffect(() => {

@@ -32,7 +32,6 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto', deps: Dependen
 
   const [scrollPubSub] = useState(() => pubSubFactory<ScrollTopics, ScrollTopicUnion>({ publishSynchronous: true }));
   const {
-    state: { isScrollBottomReached },
     actions: { setIsScrollBottomReached },
   } = useGroupChannel();
 
@@ -99,8 +98,6 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto', deps: Dependen
   return {
     scrollRef,
     scrollPubSub,
-    isScrollBottomReached,
-    setIsScrollBottomReached,
     scrollDistanceFromBottomRef,
     scrollPositionRef,
   };
