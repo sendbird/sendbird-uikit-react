@@ -11,7 +11,7 @@ exports[`ui/Word should do a snapshot test of the Word DOM 1`] = `
       class="sendbird-context-menu"
     >
       <a
-        class="sendbird-word__mention"
+        class="sendbird-word__mention sendbird-word__mention--me"
         data-nickname="Hoon Baek"
         data-sb-mention="true"
         data-userid="hoon"

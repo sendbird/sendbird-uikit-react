@@ -3,7 +3,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import { useMarkAsReadScheduler } from '../useMarkAsReadScheduler';
 import { LoggerFactory } from '../../Logger';
-import { Logger } from '../../SendbirdState';
+import type { Logger } from '../../Sendbird/types';
 
 const logger = LoggerFactory('all') as Logger;
 describe('useMarkAsReadScheduler', () => {

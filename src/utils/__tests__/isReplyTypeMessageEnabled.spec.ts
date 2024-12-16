@@ -1,4 +1,4 @@
-import { Role } from '../../lib/types';
+import { Role } from '../../lib/Sendbird/types';
 import { isFailedMessage, isPendingMessage } from '..';
 import { isReplyTypeMessageEnabled } from '../menuConditions';
 

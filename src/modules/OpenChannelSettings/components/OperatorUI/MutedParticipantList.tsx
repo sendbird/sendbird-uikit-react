@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
+import { RestrictedUser } from '@sendbird/chat';
 
 import Button, { ButtonTypes, ButtonSizes } from '../../../../ui/Button';
 import IconButton from '../../../../ui/IconButton';
@@ -13,10 +14,9 @@ import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import { UserListItem } from '../ParticipantUI/ParticipantItem';
 import MutedParticipantsModal from './MutedParticipantsModal';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
-import { RestrictedUser } from '@sendbird/chat';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export const MutedParticipantList = (): ReactElement => {
   const [mutedUsers, setMutedUsers] = useState<RestrictedUser[]>([]);
@@ -24,7 +24,7 @@ export const MutedParticipantList = (): ReactElement => {
   const [showModal, setShowModal] = useState(false);
 
   const { channel } = useOpenChannelSettingsContext();
-  const state = useSendbirdStateContext();
+  const { state } = useSendbird();
   const currentUserId = state?.config?.userId;
   const { stringSet } = useContext(LocalizationContext);
 

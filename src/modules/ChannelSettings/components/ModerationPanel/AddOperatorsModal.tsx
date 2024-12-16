@@ -14,9 +14,9 @@ import Label, {
 } from '../../../../ui/Label';
 import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem, { UserListItemProps } from '../../../../ui/UserListItem';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { Member, MemberListQuery, OperatorFilter } from '@sendbird/chat/groupChannel';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
+import useChannelSettings from '../../context/useChannelSettings';
 
 export interface AddOperatorsModalProps {
   onCancel(): void;
@@ -34,7 +34,7 @@ export default function AddOperatorsModal({
   const [memberQuery, setMemberQuery] = useState<MemberListQuery | null>(null);
   const { stringSet } = useContext(LocalizationContext);
 
-  const { channel } = useChannelSettingsContext();
+  const { state: { channel } } = useChannelSettings();
 
   useEffect(() => {
     const memberListQuery = channel?.createMemberListQuery({

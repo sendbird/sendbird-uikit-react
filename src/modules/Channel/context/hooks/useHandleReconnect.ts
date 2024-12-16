@@ -5,12 +5,11 @@ import { MessageListParams, ReplyType } from '@sendbird/chat/message';
 import * as utils from '../utils';
 import { PREV_RESULT_SIZE, NEXT_RESULT_SIZE } from '../const';
 import * as messageActionTypes from '../dux/actionTypes';
-import { Logger } from '../../../../lib/SendbirdState';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import { MarkAsReadSchedulerType } from '../../../../lib/hooks/useMarkAsReadScheduler';
 import useReconnectOnIdle from './useReconnectOnIdle';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import { CoreMessageType } from '../../../../utils';
-import { SdkStore } from '../../../../lib/types';
 import { SCROLL_BOTTOM_DELAY_FOR_FETCH } from '../../../../utils/consts';
 
 interface DynamicParams {

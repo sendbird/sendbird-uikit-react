@@ -8,7 +8,7 @@ import {
   SendBirdProviderConfig,
   HTMLTextDirection,
 } from '../../types';
-import { CustomExtensionParams, SBUEventHandlers, SendbirdChatInitParams } from '../../lib/types';
+import { CustomExtensionParams, SBUEventHandlers, SendbirdChatInitParams } from '../../lib/Sendbird/types';
 import { SendableMessageType } from '../../utils';
 
 export interface AppLayoutProps {

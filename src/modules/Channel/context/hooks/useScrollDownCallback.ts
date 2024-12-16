@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 
+import type { SdkStore } from '../../../../lib/Sendbird/types';
 import * as messageActionTypes from '../dux/actionTypes';
 import { ChannelActionTypes } from '../dux/actionTypes';
 import { NEXT_RESULT_SIZE } from '../const';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { LoggerInterface } from '../../../../lib/Logger';
-import { SdkStore } from '../../../../lib/types';
 import { ReplyType as ReplyTypeInternal } from '../../../../types';
 import { MessageListParams as MessageListParamsInternal } from '../ChannelProvider';
 import { BaseMessage, MessageListParams, ReplyType } from '@sendbird/chat/message';

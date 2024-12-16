@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { SendbirdError } from '@sendbird/chat';
 import { OpenChannel, OpenChannelListQuery } from '@sendbird/chat/openChannel';
 
-import { Logger } from '../../../../lib/SendbirdState';
+import type { Logger } from '../../../../lib/Sendbird/types';
 import OpenChannelListActionTypes from '../dux/actionTypes';
 import { OpenChannelListDispatcherType } from '../OpenChannelListInterfaces';
 

@@ -3,10 +3,7 @@ import ChannelSettingsUI, {
   ChannelSettingsUIProps,
 } from './components/ChannelSettingsUI';
 
-import {
-  ChannelSettingsProvider,
-  ChannelSettingsContextProps,
-} from './context/ChannelSettingsProvider';
+import { ChannelSettingsProvider, ChannelSettingsContextProps } from './context/index';
 
 interface ChannelSettingsProps extends ChannelSettingsContextProps, Omit<ChannelSettingsUIProps, 'renderUserListItem'> { }
 

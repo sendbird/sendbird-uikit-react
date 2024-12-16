@@ -20,11 +20,10 @@ import {
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
-import type { CoreMessageType, SendableMessageType } from '../../../../utils';
-import type { ReplyType } from '../../../../types';
-import type { GroupChannelProviderProps, OnBeforeHandler } from '../GroupChannelProvider';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { PublishingModuleType, PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import type { GroupChannelState, OnBeforeHandler } from '../types';
+import type { CoreMessageType } from '../../../../utils';
+import { PublishingModuleType, PUBSUB_TOPICS } from '../../../../lib/pubSub/topics';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
 type MessageListDataSource = ReturnType<typeof useGroupChannelMessages>;
@@ -34,14 +33,11 @@ type MessageActions = {
   sendVoiceMessage: (params: FileMessageCreateParams, duration: number) => Promise<FileMessage>;
   sendMultipleFilesMessage: (params: MultipleFilesMessageCreateParams) => Promise<MultipleFilesMessage>;
   updateUserMessage: (messageId: number, params: UserMessageUpdateParams) => Promise<UserMessage>;
-};
+} & Partial<MessageListDataSource>;
 
-interface Params extends GroupChannelProviderProps, MessageListDataSource {
+interface Params extends GroupChannelState {
   scrollToBottom(animated?: boolean): Promise<void>;
-  quoteMessage?: SendableMessageType | null;
-  replyType: ReplyType;
-  pubSub: SBUGlobalPubSub;
-  channel: GroupChannel;
+  currentChannel: GroupChannel;
 }
 
 const pass = <T>(value: T) => value;
@@ -68,14 +64,24 @@ export function useMessageActions(params: Params): MessageActions {
     sendMultipleFilesMessage,
     sendUserMessage,
     updateUserMessage,
+    updateFileMessage,
+    resendMessage,
+    deleteMessage,
+    resetNewMessages,
 
     scrollToBottom,
     quoteMessage,
     replyType,
-    channel,
-    pubSub,
+    currentChannel,
   } = params;
-  const { eventHandlers } = useSendbirdStateContext();
+  const {
+    state: {
+      eventHandlers,
+      config: {
+        pubSub,
+      },
+    },
+  } = useSendbird();
   const buildInternalMessageParams = useCallback(
     <T extends BaseMessageCreateParams>(basicParams: T): T => {
       const messageParams = { ...basicParams } as T;
@@ -194,7 +200,7 @@ export function useMessageActions(params: Params): MessageActions {
         return updateUserMessage(messageId, processedParams)
           .then((message) => {
             pubSub.publish(PUBSUB_TOPICS.UPDATE_USER_MESSAGE, {
-              channel,
+              channel: currentChannel,
               message,
               publishingModules: [PublishingModuleType.CHANNEL],
             });
@@ -202,7 +208,11 @@ export function useMessageActions(params: Params): MessageActions {
             return message;
           });
       },
-      [buildInternalMessageParams, updateUserMessage, processParams, channel?.url],
+      [buildInternalMessageParams, updateUserMessage, processParams, currentChannel?.url],
     ),
+    updateFileMessage,
+    resendMessage,
+    deleteMessage,
+    resetNewMessages,
   };
 }

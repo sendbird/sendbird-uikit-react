@@ -6,7 +6,7 @@ import {
   isMultipleFilesMessage, isDefaultChannelName, DEFAULT_GROUP_CHANNEL_NAME, DEFAULT_AI_CHATBOT_CHANNEL_NAME,
 } from '../index';
 import { AdminMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
-import { deleteNullish } from '../utils';
+import { delay, deleteNullish } from '../utils';
 import { isMobileIOS } from '../browser';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
@@ -233,6 +233,43 @@ describe('deleteNullish', () => {
     expect(component({ a: null, b: undefined })).toEqual({ a: 1, b: '2', c: 3 });
     expect(component({ a: null, c: 4 })).toEqual({ a: 1, b: '2', c: 4 });
     expect(component({ a: null, b: '3', c: 4 })).toEqual({ a: 1, b: '3', c: 4 });
+  });
+});
+
+describe('delay', () => {
+  it('should resolve after the specified time', async () => {
+    const start = Date.now();
+    const delayTime = 100;
+
+    await delay(delayTime);
+
+    const end = Date.now();
+    const elapsed = end - start;
+
+    // Check if the elapsed time is at least the delay time
+    expect(elapsed).toBeGreaterThanOrEqual(delayTime);
+  });
+
+  it('should resolve immediately for 0 milliseconds', async () => {
+    const start = Date.now();
+
+    await delay(0);
+
+    const end = Date.now();
+    const elapsed = end - start;
+
+    // Check if the elapsed time is very small
+    expect(elapsed).toBeLessThan(10);
+  });
+  it('should resolve immediately when no parameter is provided', async () => {
+    const start = Date.now();
+
+    await delay();
+
+    const end = Date.now();
+    const elapsed = end - start;
+
+    expect(elapsed).toBeLessThan(10);
   });
 });
 

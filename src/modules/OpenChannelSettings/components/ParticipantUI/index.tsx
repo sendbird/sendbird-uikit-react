@@ -18,7 +18,7 @@ import { UserListItem } from './ParticipantItem';
 import ParticipantsModal from './ParticipantsModal';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface ParticipantListProps {
   isOperatorView?: boolean;
@@ -27,8 +27,8 @@ interface ParticipantListProps {
 export default function ParticipantList({
   isOperatorView = false,
 }: ParticipantListProps): ReactElement {
-  const globalState = useSendbirdStateContext();
-  const currentUserId = globalState?.config?.userId;
+  const { state } = useSendbird();
+  const currentUserId = state?.config?.userId;
   const { channel } = useOpenChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
   const [participants, setParticipants] = useState<Array<User> | null>(null);

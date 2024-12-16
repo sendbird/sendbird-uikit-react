@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import type { Logger } from './SendbirdState';
+import type { Logger } from './Sendbird/types';
 
 const DEFAULT_MOBILE = false;
 // const DEFAULT_MOBILE = '768px';

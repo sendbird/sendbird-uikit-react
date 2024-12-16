@@ -6,13 +6,13 @@ import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import Label, { LabelColors, LabelTypography } from '../../../../ui/Label';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import SuggestedUserMentionItem from './SuggestedUserMentionItem';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { MAX_USER_MENTION_COUNT, MAX_USER_SUGGESTION_COUNT, USER_MENTION_TEMP_CHAR } from '../../context/const';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import uuidv4 from '../../../../utils/uuid';
 import { fetchMembersFromChannel, fetchMembersFromQuery } from './utils';
 import { classnames } from '../../../../utils/utils';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface SuggestedMentionListViewProps {
   className?: string;
@@ -46,7 +46,8 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
     maxMentionCount = MAX_USER_MENTION_COUNT,
     maxSuggestionCount = MAX_USER_SUGGESTION_COUNT,
   } = props;
-  const { config, stores } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { config, stores } = state;
   const { logger } = config;
   const currentUserId = stores?.sdkStore?.sdk?.currentUser?.userId || '';
   const scrollRef = useRef(null);

@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 import { MODAL_ROOT } from '../../hooks/useModal';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 interface BottomSheetProps {
   className?: string;
@@ -17,7 +17,7 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
     children,
     onBackdropClick,
   } = props;
-  const logger = useSendbirdStateContext()?.config?.logger;
+  const { state: { config: { logger } } } = useSendbird();
 
   // https://github.com/testing-library/react-testing-library/issues/62#issuecomment-438653348
   const portalRoot = useRef<HTMLElement| null>();
