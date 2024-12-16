@@ -87,7 +87,7 @@ export const InfiniteList = forwardRef((props: Props, listRef: React.RefObject<H
     } else {
       direction.current = undefined;
     }
-  }, [listRef.current, messages.length]);
+  }, [messages.length]);
 
   return (
     <div className="sendbird-conversation__scroll-container">

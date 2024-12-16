@@ -145,7 +145,12 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       }
     },
     onMessagesReceived: (messages) => {
-      if (isScrollBottomReached && isContextMenuClosed() && messages.length !== state.messages.length) {
+      if (isScrollBottomReached
+        && isContextMenuClosed()
+        // Note: this shouldn't happen ideally, but it happens on re-rendering GroupChannelManager
+        // even though the next messages and the current messages length are the same.
+        // So added this condition to check if they are the same to prevent unnecessary calling scrollToBottom action
+        && messages.length !== state.messages.length) {
         setTimeout(() => actions.scrollToBottom(true), 10);
       }
     },
@@ -158,6 +163,9 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       onBackClick?.();
     },
     onChannelUpdated: (channel) => {
+      // Note: this shouldn't happen ideally, but it happens on re-rendering GroupChannelManager
+      // even though the next channel and the current channel are the same.
+      // So added this condition to check if they are the same to prevent unnecessary calling setCurrentChannel action
       if (!state.currentChannel?.isEqual(channel)) {
         actions.setCurrentChannel(channel);
       }
