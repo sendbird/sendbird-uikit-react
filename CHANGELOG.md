@@ -1,5 +1,9 @@
 # Changelog - v3
 
+## [v3.15.11] (Dec 19 2024)
+
+- Fixed an issue where the bubble type typing indicator appeared but was not visible because the scroll did not move to the bottom.
+
 ## [v3.15.10] (Dec 12 2024)
 
 ### Features:
