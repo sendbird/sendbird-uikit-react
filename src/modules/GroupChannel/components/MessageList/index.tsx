@@ -19,7 +19,7 @@ import { GroupChannelUIBasicProps } from '../GroupChannelUI/GroupChannelUIView';
 import { deleteNullish } from '../../../../utils/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
-import { getComponentKeyFromMessage } from '../../context/utils';
+import { getComponentKeyFromMessage, isContextMenuClosed } from '../../context/utils';
 import { InfiniteList } from './InfiniteList';
 
 export interface GroupChannelMessageListProps {
@@ -225,12 +225,19 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
 
 const TypingIndicatorBubbleWrapper = (props: { handleScroll: () => void; channelUrl: string }) => {
   const { stores } = useSendbirdStateContext();
+  const { isScrollBottomReached, scrollPubSub } = useGroupChannelContext();
   const [typingMembers, setTypingMembers] = useState<Member[]>([]);
 
   useGroupChannelHandler(stores.sdkStore.sdk, {
     onTypingStatusUpdated(channel) {
       if (channel.url === props.channelUrl) {
         setTypingMembers(channel.getTypingUsers());
+      }
+
+      if (isScrollBottomReached && isContextMenuClosed()) {
+        setTimeout(() => {
+          scrollPubSub.publish('scrollToBottom', {});
+        }, 10);
       }
     },
   });
