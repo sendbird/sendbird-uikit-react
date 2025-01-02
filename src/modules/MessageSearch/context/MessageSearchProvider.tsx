@@ -104,7 +104,7 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: Mess
     { sdk, logger, messageSearchDispatcher },
   );
 
-  const requestString = useSearchStringEffect({ searchString: searchString ?? '' }, { messageSearchDispatcher });
+  const requestString = useSearchStringEffect({ searchString: searchString ?? messageSearchQuery.keyword }, { messageSearchDispatcher });
 
   useGetSearchMessages(
     { currentChannel, channelUrl, requestString, messageSearchQuery, onResultLoaded, retryCount },
