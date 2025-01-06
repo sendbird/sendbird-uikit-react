@@ -1,9 +1,8 @@
-
 import { useState } from 'react';
 import { ConnectionState } from '@sendbird/chat';
 
 import ConnectionHandler from '../lib/handlers/ConnectionHandler';
-import useSendbirdStateContext from './useSendbirdStateContext'
+import useSendbirdStateContext from './useSendbirdStateContext';
 import uuidv4 from '../utils/uuid';
 
 export const useConnectionState = (): ConnectionState => {
