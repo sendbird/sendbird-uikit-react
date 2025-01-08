@@ -58,6 +58,15 @@ export const useGroupChannel = () => {
   const { markAsReadScheduler } = config;
   const state: GroupChannelState = useSyncExternalStore(store.subscribe, store.getState);
 
+  const flagActions = {
+    setAnimatedMessageId: (messageId: number | null) => {
+      store.setState(state => ({ ...state, animatedMessageId: messageId }));
+    },
+    setIsScrollBottomReached: (isReached: boolean) => {
+      store.setState(state => ({ ...state, isScrollBottomReached: isReached }));
+    },
+  };
+
   const setAnimatedMessageId = useCallback((messageId: number | null) => {
     store.setState(state => ({ ...state, animatedMessageId: messageId }));
   }, []);
@@ -66,13 +75,17 @@ export const useGroupChannel = () => {
     store.setState(state => ({ ...state, isScrollBottomReached: isReached }));
   }, []);
 
-  const scrollToBottom = useCallback(async (animated?: boolean) => {
+  const scrollToBottom = async (animated?: boolean) => {
     if (!state.scrollRef.current) return;
     setAnimatedMessageId(null);
     setIsScrollBottomReached(true);
 
     // wait a bit for scroll ref to be updated
     await delay();
+
+    flagActions.setAnimatedMessageId(null);
+    flagActions.setIsScrollBottomReached(true);
+
     if (config.isOnline && state.hasNext()) {
       await state.resetWithStartingPoint(Number.MAX_SAFE_INTEGER);
     }
@@ -84,127 +97,110 @@ export const useGroupChannel = () => {
         markAsReadScheduler.push(state.currentChannel);
       }
     }
-  }, [state.scrollRef.current, config.isOnline, markAsReadScheduler]);
-
-  const scrollToMessage = useCallback(async (
-    createdAt: number,
-    messageId: number,
-    messageFocusAnimated?: boolean,
-    scrollAnimated?: boolean,
-  ) => {
-    const element = state.scrollRef.current;
-    const parentNode = element?.parentNode as HTMLDivElement;
-    const clickHandler = {
-      activate() {
-        if (!element || !parentNode) return;
-        element.style.pointerEvents = 'auto';
-        parentNode.style.cursor = 'auto';
-      },
-      deactivate() {
-        if (!element || !parentNode) return;
-        element.style.pointerEvents = 'none';
-        parentNode.style.cursor = 'wait';
-      },
-    };
-
-    clickHandler.deactivate();
-
-    setAnimatedMessageId(null);
-    const message = state.messages.find(
-      (it) => it.messageId === messageId || it.createdAt === createdAt,
-    );
-
-    if (message) {
-      const topOffset = getMessageTopOffset(message.createdAt);
-      if (topOffset) state.scrollPubSub.publish('scroll', { top: topOffset, animated: scrollAnimated });
-      if (messageFocusAnimated ?? true) setAnimatedMessageId(messageId);
-    } else {
-      await state.resetWithStartingPoint(createdAt);
-      setTimeout(() => {
-        const topOffset = getMessageTopOffset(createdAt);
-        if (topOffset) {
-          state.scrollPubSub.publish('scroll', {
-            top: topOffset,
-            lazy: false,
-            animated: scrollAnimated,
-          });
-        }
-        if (messageFocusAnimated ?? true) setAnimatedMessageId(messageId);
-      });
-    }
-    clickHandler.activate();
-  }, [setAnimatedMessageId, state.scrollRef.current, state.messages?.map(it => it?.messageId)]);
-
-  const toggleReaction = useCallback((message: SendableMessageType, emojiKey: string, isReacted: boolean) => {
-    if (!state.currentChannel) return;
-    if (isReacted) {
-      state.currentChannel.deleteReaction(message, emojiKey)
-        .catch(error => {
-          config.logger?.warning('Failed to delete reaction:', error);
-        });
-    } else {
-      state.currentChannel.addReaction(message, emojiKey)
-        .catch(error => {
-          config.logger?.warning('Failed to add reaction:', error);
-        });
-    }
-  }, [state.currentChannel?.deleteReaction, state.currentChannel?.addReaction]);
+  };
 
   const messageActions = useMessageActions({
     ...state,
     scrollToBottom,
   });
 
-  const setCurrentChannel = useCallback((channel: GroupChannel) => {
-    store.setState(state => ({
-      ...state,
-      currentChannel: channel,
-      fetchChannelError: null,
-      quoteMessage: null,
-      animatedMessageId: null,
-      nicknamesMap: new Map(
-        channel.members.map(({ userId, nickname }) => [userId, nickname]),
-      ),
-    }));
-  }, []);
+  const actions: GroupChannelActions = useMemo(() => ({
+    setCurrentChannel: (channel: GroupChannel) => {
+      store.setState(state => ({
+        ...state,
+        currentChannel: channel,
+        fetchChannelError: null,
+        quoteMessage: null,
+        animatedMessageId: null,
+        nicknamesMap: new Map(
+          channel.members.map(({ userId, nickname }) => [userId, nickname]),
+        ),
+      }));
+    },
 
-  const handleChannelError = useCallback((error: SendbirdError) => {
-    store.setState(state => ({
-      ...state,
-      currentChannel: null,
-      fetchChannelError: error,
-      quoteMessage: null,
-      animatedMessageId: null,
-    }));
-  }, []);
+    handleChannelError: (error: SendbirdError) => {
+      store.setState(state => ({
+        ...state,
+        currentChannel: null,
+        fetchChannelError: error,
+        quoteMessage: null,
+        animatedMessageId: null,
+      }));
+    },
 
-  const setQuoteMessage = useCallback((message: SendableMessageType | null) => {
-    store.setState(state => ({ ...state, quoteMessage: message }));
-  }, []);
+    setQuoteMessage: (message: SendableMessageType | null) => {
+      store.setState(state => ({ ...state, quoteMessage: message }));
+    },
 
-  const actions: GroupChannelActions = useMemo(() => {
-    return {
-      setCurrentChannel,
-      handleChannelError,
-      setQuoteMessage,
-      scrollToBottom,
-      scrollToMessage,
-      toggleReaction,
-      setAnimatedMessageId,
-      setIsScrollBottomReached,
-      ...messageActions,
-    };
-  }, [
-    setCurrentChannel,
-    handleChannelError,
-    setQuoteMessage,
     scrollToBottom,
-    scrollToMessage,
-    toggleReaction,
-    setAnimatedMessageId,
-    setIsScrollBottomReached,
-    messageActions,
-  ]);
+    scrollToMessage: async (
+      createdAt: number,
+      messageId: number,
+      messageFocusAnimated?: boolean,
+      scrollAnimated?: boolean,
+    ) => {
+      const element = state.scrollRef.current;
+      const parentNode = element?.parentNode as HTMLDivElement;
+      const clickHandler = {
+        activate() {
+          if (!element || !parentNode) return;
+          element.style.pointerEvents = 'auto';
+          parentNode.style.cursor = 'auto';
+        },
+        deactivate() {
+          if (!element || !parentNode) return;
+          element.style.pointerEvents = 'none';
+          parentNode.style.cursor = 'wait';
+        },
+      };
+
+      clickHandler.deactivate();
+
+      flagActions.setAnimatedMessageId(null);
+      const message = state.messages.find(
+        (it) => it.messageId === messageId || it.createdAt === createdAt,
+      );
+
+      if (message) {
+        const topOffset = getMessageTopOffset(message.createdAt);
+        if (topOffset) state.scrollPubSub.publish('scroll', { top: topOffset, animated: scrollAnimated });
+        if (messageFocusAnimated ?? true) flagActions.setAnimatedMessageId(messageId);
+      } else {
+        await state.resetWithStartingPoint(createdAt);
+        setTimeout(() => {
+          const topOffset = getMessageTopOffset(createdAt);
+          if (topOffset) {
+            state.scrollPubSub.publish('scroll', {
+              top: topOffset,
+              lazy: false,
+              animated: scrollAnimated,
+            });
+          }
+          if (messageFocusAnimated ?? true) flagActions.setAnimatedMessageId(messageId);
+        });
+      }
+
+      clickHandler.activate();
+    },
+
+    toggleReaction: (message: SendableMessageType, emojiKey: string, isReacted: boolean) => {
+      if (!state.currentChannel) return;
+
+      if (isReacted) {
+        state.currentChannel.deleteReaction(message, emojiKey)
+          .catch(error => {
+            config.logger?.warning('Failed to delete reaction:', error);
+          });
+      } else {
+        state.currentChannel.addReaction(message, emojiKey)
+          .catch(error => {
+            config.logger?.warning('Failed to add reaction:', error);
+          });
+      }
+    },
+    ...flagActions,
+    ...messageActions,
+  }), [store, state, config.isOnline, markAsReadScheduler]);
 
   return { state, actions };
 };
