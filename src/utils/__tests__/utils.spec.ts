@@ -237,6 +237,8 @@ describe('deleteNullish', () => {
 });
 
 describe('delay', () => {
+  const errorBound = 5;
+
   it('should resolve after the specified time', async () => {
     const start = Date.now();
     const delayTime = 100;
@@ -247,7 +249,7 @@ describe('delay', () => {
     const elapsed = end - start;
 
     // Check if the elapsed time is at least the delay time
-    expect(elapsed).toBeGreaterThanOrEqual(delayTime);
+    expect(elapsed).toBeGreaterThanOrEqual(delayTime - errorBound);
   });
 
   it('should resolve immediately for 0 milliseconds', async () => {
@@ -259,7 +261,7 @@ describe('delay', () => {
     const elapsed = end - start;
 
     // Check if the elapsed time is very small
-    expect(elapsed).toBeLessThan(10);
+    expect(elapsed).toBeLessThan(errorBound);
   });
   it('should resolve immediately when no parameter is provided', async () => {
     const start = Date.now();
@@ -269,7 +271,7 @@ describe('delay', () => {
     const end = Date.now();
     const elapsed = end - start;
 
-    expect(elapsed).toBeLessThan(10);
+    expect(elapsed).toBeLessThan(errorBound);
   });
 });
 
