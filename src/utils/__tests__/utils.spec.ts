@@ -3,7 +3,7 @@ import {
   isFileMessage,
   isUrl,
   isUserMessage,
-  isMultipleFilesMessage, isDefaultChannelName, DEFAULT_GROUP_CHANNEL_NAME, DEFAULT_AI_CHATBOT_CHANNEL_NAME,
+  isMultipleFilesMessage, isDefaultChannelName, DEFAULT_GROUP_CHANNEL_NAME, DEFAULT_AI_CHATBOT_CHANNEL_NAME, arrayEqual,
 } from '../index';
 import { AdminMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
 import { delay, deleteNullish } from '../utils';
@@ -318,5 +318,35 @@ describe('isDefaultChannelName', () => {
     const result = isDefaultChannelName(channel);
 
     expect(result).toBe(false);
+  });
+});
+
+describe('arrayEqual', () => {
+  it('return true if two arrays are equal', () => {
+    const arr1 = ['elem', 2, true];
+    const arr2 = ['elem', 2, true];
+
+    expect(arrayEqual(arr1, arr2)).toBe(true);
+  });
+
+  it('return false if two arrays are not equal', () => {
+    const arr1 = ['elem', 2, true];
+    const arr2 = ['elem', 42, false];
+
+    expect(arrayEqual(arr1, arr2)).toBe(false);
+  });
+
+  it('return false if two array doesn\'t have same length', () => {
+    const arr1 = ['elem', 2, true];
+    const arr2 = ['elem', 42];
+
+    expect(arrayEqual(arr1, arr2)).toBe(false);
+  });
+
+  it('return false if the one of parameter is not array', () => {
+    const arr1 = ['elem', 2, true];
+    const arr2 = {};
+
+    expect(arrayEqual(arr1, arr2)).toBe(false);
   });
 });
