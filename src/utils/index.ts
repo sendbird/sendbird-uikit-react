@@ -1,5 +1,5 @@
-import SendbirdChat, { Emoji, EmojiCategory, EmojiContainer, User } from '@sendbird/chat';
-import { GroupChannel, Member, SendbirdGroupChat, GroupChannelListQuery, GroupChannelListOrder } from '@sendbird/chat/groupChannel';
+import { Emoji, EmojiCategory, EmojiContainer, User } from '@sendbird/chat';
+import { GroupChannel, Member, GroupChannelListQuery, GroupChannelListOrder } from '@sendbird/chat/groupChannel';
 import {
   AdminMessage,
   BaseMessage,
@@ -10,7 +10,6 @@ import {
   UploadedFileInfo,
   UserMessage,
 } from '@sendbird/chat/message';
-import { SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import { SendableMessage } from '@sendbird/chat/lib/__definition';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
@@ -463,23 +462,6 @@ export const getEmojiTooltipString = (reaction: Reaction, userId: string, member
     .map((reactorUserId: string) => (memberNicknamesMap.get(reactorUserId) || stringSet.TOOLTIP__UNKNOWN_USER))
     .join(', ')}${you}`);
 };
-
-// TODO: Use the interface after language tranlsatation of Sendbird.js
-interface UIKitStore {
-  stores: {
-    sdkStore: {
-      sdk: SendbirdChat | SendbirdOpenChat | SendbirdGroupChat,
-    },
-    userStore: {
-      user: User,
-    },
-  },
-  config: {
-    isReactionEnabled: boolean,
-    htmlTextDirection: HTMLTextDirection,
-    forceLeftToRightMessageLayout: boolean,
-  }
-}
 
 export function getSuggestedReplies(message?: BaseMessage): string[] {
   if (message?.extendedMessagePayload && Array.isArray(message?.extendedMessagePayload?.suggested_replies)) {
