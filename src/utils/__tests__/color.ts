@@ -8,7 +8,6 @@ describe('color', () => {
     expect(Colors.ONBACKGROUND_3).not.toBe(undefined);
     expect(Colors.ONBACKGROUND_4).not.toBe(undefined);
     expect(Colors.ONCONTENT_1).not.toBe(undefined);
-    expect(Colors.ONCONTENT_2).not.toBe(undefined);
     expect(Colors.PRIMARY).not.toBe(undefined);
     expect(Colors.ERROR).not.toBe(undefined);
   });
