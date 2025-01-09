@@ -108,7 +108,7 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
 }: GroupChannelListProviderProps) => {
   const { state: sendbirdState } = useSendbird();
   const { config, stores } = sendbirdState;
-  const { state } = useGroupChannelList();
+  const { state, actions } = useGroupChannelList();
   const { updateState } = useGroupChannelListStore();
   const { sdkStore } = stores;
 
@@ -125,6 +125,9 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
       channelUrls.forEach((url) => {
         if (url === selectedChannelUrl) onChannelSelect(null);
       });
+    },
+    onChannelsUpdated: () => {
+      actions.setGroupChannels(groupChannels);
     },
   });
 

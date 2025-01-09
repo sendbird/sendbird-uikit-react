@@ -165,7 +165,7 @@ export const useGroupChannel = () => {
       nicknamesMap: new Map(
         channel.members.map(({ userId, nickname }) => [userId, nickname]),
       ),
-    }));
+    }), true);
   }, []);
 
   const handleChannelError = useCallback((error: SendbirdError) => {
