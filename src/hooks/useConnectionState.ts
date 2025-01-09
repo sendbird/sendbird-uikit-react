@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ConnectionState } from '@sendbird/chat';
 
 import ConnectionHandler from '../lib/handlers/ConnectionHandler';
@@ -11,12 +11,22 @@ export const useConnectionState = (): ConnectionState => {
   const { sdk } = sdkStore;
 
   const [connectionState, setConnectionState] = useState(sdk.connectionState);
-  sdk.addConnectionHandler(uuidv4(), new ConnectionHandler({
-    onConnected: () => setConnectionState(ConnectionState.OPEN),
-    onDisconnected: () => setConnectionState(ConnectionState.CLOSED),
-    onReconnectStarted: () => setConnectionState(ConnectionState.CONNECTING),
-    onReconnectSucceeded: () => setConnectionState(ConnectionState.OPEN),
-    onReconnectFailed: () => setConnectionState(ConnectionState.CLOSED),
-  }));
+
+  useEffect(() => {
+    const handlerId = uuidv4();
+
+    sdk?.addConnectionHandler(handlerId, new ConnectionHandler({
+      onConnected: () => setConnectionState(ConnectionState.OPEN),
+      onDisconnected: () => setConnectionState(ConnectionState.CLOSED),
+      onReconnectStarted: () => setConnectionState(ConnectionState.CONNECTING),
+      onReconnectSucceeded: () => setConnectionState(ConnectionState.OPEN),
+      onReconnectFailed: () => setConnectionState(ConnectionState.CLOSED),
+    }));
+
+    return () => {
+      sdk?.removeConnectionHandler(handlerId);
+    };
+  }, [sdk]);
+
   return connectionState;
 };
