@@ -13,7 +13,7 @@ import {visualizer} from "rollup-plugin-visualizer";
 import ts2 from "rollup-plugin-typescript2"
 
 // config from package.json
-import pkg from "./package.json" assert {type: "json"};
+import pkg from "./package.json" with {type: "json"};
 import inputs from "./rollup.module-exports.mjs";
 import { readFileSync, writeFileSync } from 'fs';
 import postcssRTLOptions from "./postcssRtlOptions.mjs";
