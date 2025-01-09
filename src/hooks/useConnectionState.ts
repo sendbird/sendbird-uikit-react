@@ -15,7 +15,7 @@ export const useConnectionState = (): ConnectionState => {
   useEffect(() => {
     const handlerId = uuidv4();
 
-    sdk?.addConnectionHandler(handlerId, new ConnectionHandler({
+    sdk?.addConnectionHandler?.(handlerId, new ConnectionHandler({
       onConnected: () => setConnectionState(ConnectionState.OPEN),
       onDisconnected: () => setConnectionState(ConnectionState.CLOSED),
       onReconnectStarted: () => setConnectionState(ConnectionState.CONNECTING),
@@ -24,7 +24,7 @@ export const useConnectionState = (): ConnectionState => {
     }));
 
     return () => {
-      sdk?.removeConnectionHandler(handlerId);
+      sdk?.removeConnectionHandler?.(handlerId);
     };
   }, [sdk]);
 
