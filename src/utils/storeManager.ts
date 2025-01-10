@@ -3,7 +3,7 @@ import isEqual from 'lodash/isEqual';
 // Referrence: https://github.com/pmndrs/zustand
 export type Store<T> = {
   getState: () => T;
-  setState: (partial: Partial<T> | ((state: T) => Partial<T>)) => void;
+  setState: (partial: Partial<T> | ((state: T) => Partial<T>), force?: boolean) => void;
   subscribe: (listener: () => void) => () => void;
 };
 
@@ -30,7 +30,7 @@ export function createStore<T extends object>(initialState: T): Store<T> {
   const listeners = new Set<() => void>();
   let isUpdating = false;
 
-  const setState = (partial: Partial<T> | ((state: T) => Partial<T>)) => {
+  const setState = (partial: Partial<T> | ((state: T) => Partial<T>), force?: boolean) => {
     // Prevent nested updates
     if (isUpdating) return;
 
@@ -39,7 +39,7 @@ export function createStore<T extends object>(initialState: T): Store<T> {
       const nextState = typeof partial === 'function' ? partial(state) : partial;
       const hasChanged = hasStateChanged(state, nextState);
 
-      if (hasChanged) {
+      if (force || hasChanged) {
         state = { ...state, ...nextState };
         listeners.forEach((listener) => listener());
       }
