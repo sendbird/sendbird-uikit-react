@@ -1,5 +1,5 @@
-import SendbirdChat, { Emoji, EmojiCategory, EmojiContainer, User } from '@sendbird/chat';
-import { GroupChannel, Member, SendbirdGroupChat, GroupChannelListQuery, GroupChannelListOrder } from '@sendbird/chat/groupChannel';
+import { Emoji, EmojiCategory, EmojiContainer, User } from '@sendbird/chat';
+import { GroupChannel, Member, GroupChannelListQuery, GroupChannelListOrder } from '@sendbird/chat/groupChannel';
 import {
   AdminMessage,
   BaseMessage,
@@ -10,7 +10,6 @@ import {
   UploadedFileInfo,
   UserMessage,
 } from '@sendbird/chat/message';
-import { OpenChannel, SendbirdOpenChat } from '@sendbird/chat/openChannel';
 import { SendableMessage } from '@sendbird/chat/lib/__definition';
 
 import { getOutgoingMessageState, OutgoingMessageStates } from './exports/getOutgoingMessageState';
@@ -216,13 +215,6 @@ const SendingMessageStatus: SendingMessageStatus = {
 
 export type CoreMessageType = AdminMessage | UserMessage | FileMessage | MultipleFilesMessage;
 export type SendableMessageType = UserMessage | FileMessage | MultipleFilesMessage;
-
-export const isTextuallyNull = (text: string): boolean => {
-  if (text === '' || text === null) {
-    return true;
-  }
-  return false;
-};
 
 export const isMOVType = (type: string): boolean => type === 'video/quicktime';
 /**
@@ -452,15 +444,6 @@ export const getClassName = (classNames: string | Array<string | Array<string>>)
     : classNames
 );
 
-export const startsWithAtAndEndsWithBraces = (str: string) => {
-  const regex = /^\{@.*\}$/;
-  return regex.test(str);
-};
-
-export const removeAtAndBraces = (str: string) => {
-  return str.replace(/^\{@|}$/g, '');
-};
-
 export const isReactedBy = (userId: string, reaction: Reaction): boolean => (
   reaction.userIds.some((reactorUserId: string): boolean => reactorUserId === userId)
 );
@@ -480,33 +463,6 @@ export const getEmojiTooltipString = (reaction: Reaction, userId: string, member
     .join(', ')}${you}`);
 };
 
-// TODO: Use the interface after language tranlsatation of Sendbird.js
-interface UIKitStore {
-  stores: {
-    sdkStore: {
-      sdk: SendbirdChat | SendbirdOpenChat | SendbirdGroupChat,
-    },
-    userStore: {
-      user: User,
-    },
-  },
-  config: {
-    isReactionEnabled: boolean,
-    htmlTextDirection: HTMLTextDirection,
-    forceLeftToRightMessageLayout: boolean,
-  }
-}
-export const getCurrentUserId = (store: UIKitStore): string => (store?.stores?.userStore?.user?.userId);
-export const getUseReaction = (store: UIKitStore, channel: GroupChannel | OpenChannel): boolean => {
-  if (!store?.config?.isReactionEnabled)
-    return false;
-  if (!store?.stores?.sdkStore?.sdk?.appInfo?.useReaction)
-    return false;
-  if (channel?.isGroupChannel())
-    return !((channel as GroupChannel).isBroadcast || (channel as GroupChannel).isSuper);
-  return store?.config?.isReactionEnabled;
-};
-
 export function getSuggestedReplies(message?: BaseMessage): string[] {
   if (message?.extendedMessagePayload && Array.isArray(message?.extendedMessagePayload?.suggested_replies)) {
     return message.extendedMessagePayload.suggested_replies;
@@ -515,21 +471,11 @@ export function getSuggestedReplies(message?: BaseMessage): string[] {
   }
 }
 
-export const isMessageSentByMe = (
-  userId: string,
-  message: SendableMessageType,
-): boolean => (
-  !!(userId && message?.sender?.userId && userId === message.sender.userId)
-);
-
 const URL_REG = /^((http|https):\/\/)?([a-z\d-]+\.)+[a-z]{2,}(\:[0-9]{1,5})?(\/[-a-zA-Z\d%_.~+&=]*)*(\?[;&a-zA-Z\d%_.~+=-]*)?(#\S*)?$/;
 /** @deprecated
  * URL detection in a message text will be handled in utils/tokens/tokenize.ts
  */
 export const isUrl = (text: string): boolean => URL_REG.test(text);
-
-const MENTION_TAG_REG = /\@\{.*?\}/i;
-export const isMentionedText = (text: string): boolean => MENTION_TAG_REG.test(text);
 
 export const truncateString = (fullStr: string, strLen?: number): string => {
   if (!strLen) strLen = 40;
@@ -895,18 +841,6 @@ export const getChannelsWithUpsertedChannel = (
     channels.push(channel);
   }
   return sortChannelList(channels, order ?? GroupChannelListOrder.LATEST_LAST_MESSAGE);
-};
-
-export const getMatchedUserIds = (word: string, users: Array<User>, _template?: string): boolean => {
-  const template = _template || '@'; // Use global variable
-  // const matchedUserIds = [];
-  // users.map((user) => user?.userId).forEach((userId) => {
-  //   if (word.indexOf(`${template}{${userId}}`) > -1) {
-  //     matchedUserIds.push(userId);
-  //   }
-  // });
-  // return matchedUserIds;
-  return users.map((user) => user?.userId).some((userId) => word.indexOf(`${template}{${userId}}`) > -1);
 };
 
 export enum StringObjType {
