@@ -103,7 +103,7 @@
       position: relative;
       display: inline-block;
       box-sizing: border-box;
-      width: calc(100% - 64px);
+      min-width: 360px;
       max-width: 360px;
       left: 64px;
       padding: 12px 12px 4px 12px;
