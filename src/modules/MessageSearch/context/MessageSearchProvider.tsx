@@ -2,6 +2,7 @@ import React, {
   useRef,
   useState,
   useReducer,
+  useMemo,
 } from 'react';
 import { SendbirdError } from '@sendbird/chat';
 import type { MessageSearchQuery } from '@sendbird/chat/message';
@@ -104,7 +105,10 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: Mess
     { sdk, logger, messageSearchDispatcher },
   );
 
-  const requestString = useSearchStringEffect({ searchString: searchString ?? '' }, { messageSearchDispatcher });
+  const _searchString = useMemo(() => {
+    return searchString ?? messageSearchQuery?.keyword ?? '';
+  }, [searchString, messageSearchQuery?.keyword]);
+  const requestString = useSearchStringEffect({ searchString: _searchString }, { messageSearchDispatcher });
 
   useGetSearchMessages(
     { currentChannel, channelUrl, requestString, messageSearchQuery, onResultLoaded, retryCount },
@@ -122,7 +126,7 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: Mess
   return (
     <MessageSearchContext.Provider value={{
       channelUrl,
-      searchString,
+      searchString: _searchString,
       requestString,
       messageSearchQuery,
       onResultLoaded,
