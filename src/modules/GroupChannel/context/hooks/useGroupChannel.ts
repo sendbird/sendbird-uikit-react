@@ -1,4 +1,4 @@
-import { useContext, useMemo, useCallback } from 'react';
+import { useContext, useCallback, useMemo } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { SendbirdError } from '@sendbird/chat';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
@@ -165,7 +165,7 @@ export const useGroupChannel = () => {
       nicknamesMap: new Map(
         channel.members.map(({ userId, nickname }) => [userId, nickname]),
       ),
-    }));
+    }), true);
   }, []);
 
   const handleChannelError = useCallback((error: SendbirdError) => {
