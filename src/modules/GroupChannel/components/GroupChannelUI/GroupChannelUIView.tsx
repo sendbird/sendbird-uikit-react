@@ -1,5 +1,5 @@
 import './index.scss';
-import React from 'react';
+import React, { useRef } from 'react';
 
 import TypingIndicator from '../TypingIndicator';
 import { TypingIndicatorType } from '../../../../types';
@@ -13,6 +13,9 @@ import type { MessageContentProps } from '../../../../ui/MessageContent';
 import { SuggestedRepliesProps } from '../SuggestedReplies';
 import { deleteNullish } from '../../../../utils/utils';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useGroupChannel } from '../../context/hooks/useGroupChannel';
+import { useHandleUploadFiles } from '../MessageInputWrapper/useHandleUploadFiles';
+import { DragCover } from '../DragCover';
 
 export interface GroupChannelUIBasicProps {
   // Components
@@ -106,6 +109,24 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
   const { stores, config } = state;
   const sdkError = stores?.sdkStore?.error;
   const { logger, isOnline } = config;
+  const conversationRef = useRef(null);
+
+  const {
+    state: {
+      quoteMessage,
+    },
+    actions: {
+      sendFileMessage,
+      sendMultipleFilesMessage,
+      scrollToBottom,
+    },
+  } = useGroupChannel();
+
+  const handleUploadFiles = useHandleUploadFiles({
+    sendFileMessage,
+    sendMultipleFilesMessage,
+    quoteMessage,
+  }, { logger });
 
   // Note: This is not a loading status of the message list.
   //  It is just for custom props from the Channel module and is not used in the GroupChannel module. (We should remove this in v4)
@@ -140,7 +161,7 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
   }
 
   return (
-    <div className="sendbird-conversation">
+    <div className="sendbird-conversation" ref={conversationRef}>
       {renderChannelHeader?.({ className: 'sendbird-conversation__channel-header' })}
       {renderMessageList?.(props)}
       <div className="sendbird-conversation__footer">
@@ -153,6 +174,7 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
           {!isOnline && <ConnectionStatus />}
         </div>
       </div>
+      <DragCover targetRef={conversationRef} onDrop={(e) => { handleUploadFiles(e).then(() => scrollToBottom()); }} />
     </div>
   );
 };
