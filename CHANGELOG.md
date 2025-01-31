@@ -1,5 +1,16 @@
 # Changelog - v3
 
+## [v3.15.13] (Jan 31 2025)
+
+### Features:
+- Added React 19 compatibility
+- Added `messageSearchQuery.keyword` when searching in MessageSearch module
+  - `searchString` now takes higher priority, while `messageSearchQuery.keyword` is assigned secondary priority.
+
+### Fixes:
+- Fixed the width of the messages in open channel
+
+
 ## [v3.15.12] (Jan 9 2025)
 
 ### Features:
