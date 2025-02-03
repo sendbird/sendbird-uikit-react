@@ -1,5 +1,4 @@
-import { useSyncExternalStore } from 'use-sync-external-store/shim';
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useSyncExternalStore } from 'react';
 import { CreateChannelContext, CreateChannelState } from './CreateChannelProvider';
 import { CHANNEL_TYPE } from '../types';
 import { getCreateGroupChannel } from '../../../lib/selectors';

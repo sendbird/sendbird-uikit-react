@@ -1,7 +1,6 @@
-import { useContext, useCallback, useMemo } from 'react';
+import { useContext, useCallback, useMemo, useSyncExternalStore } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { SendbirdError } from '@sendbird/chat';
-import { useSyncExternalStore } from 'use-sync-external-store/shim';
 
 import type {
   FileMessage,
