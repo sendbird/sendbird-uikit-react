@@ -4,7 +4,7 @@ import DOMPurify from 'dompurify';
 import { insertTemplateToDOM } from './insertTemplate';
 import { sanitizeString } from '../../utils';
 import { DynamicProps } from './types';
-import { domToMessageTemplate, extractTextFromNodes, getLeafNodes, getUsersFromWords, hasMention } from './utils';
+import { domToMessageTemplate, getLeafNodes, getUsersFromWords, hasMention } from './utils';
 
 function pasteContentAtCaret(content: string) {
   const selection = window.getSelection(); // Get the current selection
