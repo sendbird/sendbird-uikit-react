@@ -60,8 +60,7 @@ export function usePaste({
 
     if (!hasMention(pasteNode)) {
       // No mention, paste as plain text
-      const extractedText = extractTextFromNodes(Array.from(pasteNode.children) as HTMLSpanElement[]);
-      pasteContentAtCaret(sanitizeString(extractedText));
+      pasteContentAtCaret(sanitizeString(text));
       pasteNode.remove();
       setIsInput(true);
       return;
