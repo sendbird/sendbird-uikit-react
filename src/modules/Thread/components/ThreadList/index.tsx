@@ -11,6 +11,7 @@ import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { isSameDay } from 'date-fns';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 export interface ThreadListProps {
   className?: string;
@@ -28,6 +29,7 @@ export default function ThreadList({
   scrollBottom,
 }: ThreadListProps): React.ReactElement {
   const { config } = useSendbirdStateContext();
+  const { stringSet } = useLocalization();
   const { userId } = config;
   const {
     currentChannel,
@@ -47,6 +49,7 @@ export default function ThreadList({
             prevMessage as SendableMessageType,
             message as SendableMessageType,
             nextMessage as SendableMessageType,
+            stringSet,
             currentChannel,
             getCaseResolvedReplyType(config.groupChannel.replyType).upperCase,
           )
