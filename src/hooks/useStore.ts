@@ -1,4 +1,5 @@
-import { useContext, useRef, useCallback, useMemo, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'use-sync-external-store/shim';
+import { useContext, useRef, useCallback, useMemo } from 'react';
 import { type Store, hasStateChanged } from '../utils/storeManager';
 
 type StoreSelector<T, U> = (state: T) => U;

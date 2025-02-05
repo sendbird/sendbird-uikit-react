@@ -106,6 +106,7 @@
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/node": "^22.7.2",
+    "@types/use-sync-external-store": "^0.0.6",
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",
     "autoprefixer": "^9.7.4",

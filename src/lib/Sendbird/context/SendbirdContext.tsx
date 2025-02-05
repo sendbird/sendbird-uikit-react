@@ -19,5 +19,5 @@ export const createSendbirdContextStore = () => createStore(initialState);
  * @returns {ReturnType<typeof createStore<SendbirdState>>}
  */
 export const useSendbirdStore = () => {
-  return useStore<SendbirdState, void>(SendbirdContext, state => state, initialState);
+  return useStore(SendbirdContext, state => state, initialState);
 };
