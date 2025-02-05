@@ -8,6 +8,12 @@ export interface FileViewerProps {
   message: FileMessage;
 }
 
+/**
+ * @deprecated This component is deprecated and will be removed in the next major update.
+ * Please use the `GroupChannel` component from '@sendbird/uikit-react/GroupChannel' instead.
+ * For more information, please refer to the migration guide:
+ * https://docs.sendbird.com/docs/chat/uikit/v3/react/introduction/group-channel-migration-guide
+ */
 export const FileViewer = (props: FileViewerProps) => {
   const { deleteMessage } = useChannelContext();
   return <FileViewerView {...props} deleteMessage={deleteMessage} />;

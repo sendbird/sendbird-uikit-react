@@ -183,6 +183,7 @@ export default function OpenChannelFileMessage({
               onClick={openFileUrl}
             >
               <Label
+                className="sendbird-openchannel-file-message__right__body__file-name__label"
                 type={LabelTypography.BODY_1}
                 color={LabelColors.ONBACKGROUND_1}
               >

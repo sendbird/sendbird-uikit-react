@@ -1,5 +1,29 @@
 # Changelog - v3
 
+## [v3.15.13] (Jan 31 2025)
+
+### Features:
+- Added React 19 compatibility
+- Added `messageSearchQuery.keyword` when searching in MessageSearch module
+  - `searchString` now takes higher priority, while `messageSearchQuery.keyword` is assigned secondary priority.
+
+### Fixes:
+- Fixed the width of the messages in open channel
+
+
+## [v3.15.12] (Jan 9 2025)
+
+### Features:
+- Provided `useConnectionState` that you can get the connection state of SDK.
+
+### Fixes:
+- Improved the stability with the latest Chat SDK version.
+
+## [v3.15.11] (Dec 19 2024)
+
+### Fixes:
+- Fixed an issue where the bubble type typing indicator appeared but was not visible because the scroll did not move to the bottom.
+
 ## [v3.15.10] (Dec 12 2024)
 
 ### Features:

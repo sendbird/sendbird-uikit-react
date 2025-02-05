@@ -4,7 +4,7 @@ import DOMPurify from 'dompurify';
 import { insertTemplateToDOM } from './insertTemplate';
 import { sanitizeString } from '../../utils';
 import { DynamicProps } from './types';
-import { domToMessageTemplate, extractTextFromNodes, getLeafNodes, getUsersFromWords, hasMention } from './utils';
+import { domToMessageTemplate, getLeafNodes, getUsersFromWords, hasMention } from './utils';
 
 function pasteContentAtCaret(content: string) {
   const selection = window.getSelection(); // Get the current selection
@@ -60,8 +60,7 @@ export function usePaste({
 
     if (!hasMention(pasteNode)) {
       // No mention, paste as plain text
-      const extractedText = extractTextFromNodes(Array.from(pasteNode.children) as HTMLSpanElement[]);
-      pasteContentAtCaret(sanitizeString(extractedText));
+      pasteContentAtCaret(sanitizeString(text));
       pasteNode.remove();
       setIsInput(true);
       return;

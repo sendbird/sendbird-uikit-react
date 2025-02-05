@@ -1,3 +1,6 @@
+
+const reactCompilerConfig = {};
+
 module.exports = {
   presets: [
     '@babel/preset-env',
@@ -5,6 +8,7 @@ module.exports = {
     '@babel/preset-typescript',
   ],
   plugins: [
+    ['babel-plugin-react-compiler', reactCompilerConfig],
     '@babel/plugin-proposal-class-properties',
     '@babel/plugin-syntax-export-default-from',
     '@babel/plugin-proposal-private-property-in-object',

@@ -1,3 +1,4 @@
+import './open-channel-message.scss';
 import React, { useState, useRef, ReactElement } from 'react';
 import { AdminMessage, FileMessage, UserMessage } from '@sendbird/chat/message';
 import { User } from '@sendbird/chat';
@@ -8,7 +9,6 @@ import OpenChannelAdminMessage from '../../../../ui/OpenChannelAdminMessage';
 import OpenChannelOGMessage from '../../../../ui/OpenchannelOGMessage';
 import OpenChannelThumbnailMessage from '../../../../ui/OpenchannelThumbnailMessage';
 import OpenChannelFileMessage from '../../../../ui/OpenchannelFileMessage';
-// import UnknownMessage from '../../../../ui/UnknownMessage';
 
 import DateSeparator from '../../../../ui/DateSeparator';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
@@ -73,7 +73,7 @@ export default function OpenChannelMessage(
 
   if (renderMessage) {
     return (
-      <div className="sendbird-msg-hoc sendbird-msg--scroll-ref" data-testid="sendbird-message-hoc">
+      <div className="sendbird-open-channel-msg-hoc sendbird-msg--scroll-ref" data-testid="sendbird-message-hoc">
         {renderMessage({ message, chainTop, chainBottom })}
       </div>
     );
@@ -99,7 +99,7 @@ export default function OpenChannelMessage(
   }
 
   return (
-    <div className="sendbird-msg-hoc sendbird-msg--scroll-ref" data-testid="sendbird-message-hoc">
+    <div className="sendbird-open-channel-msg-hoc sendbird-msg--scroll-ref" data-testid="sendbird-message-hoc">
       <>
         {/* date-separator */}
         {hasSeparator && message?.createdAt && (

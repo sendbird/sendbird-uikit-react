@@ -1,4 +1,4 @@
-import React, { createContext, useRef, useCallback, useEffect } from 'react';
+import React, { createContext, useRef, useCallback, useEffect, useMemo } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { MessageSearchQuery } from '@sendbird/chat/message';
 import { ClientSentMessages } from '../../../types';
@@ -83,9 +83,10 @@ const MessageSearchManager: React.FC<MessageSearchProviderProps> = ({
     { sdk, logger },
   );
 
-  const requestString = useSearchStringEffect(
-    { searchString: searchString ?? '' },
-  );
+  const _searchString = useMemo(() => {
+    return searchString ?? messageSearchQuery?.keyword ?? '';
+  }, [searchString, messageSearchQuery?.keyword]);
+  const requestString = useSearchStringEffect({ searchString: _searchString });
 
   useGetSearchMessages(
     {
@@ -120,7 +121,7 @@ const MessageSearchManager: React.FC<MessageSearchProviderProps> = ({
   useEffect(() => {
     updateState({
       channelUrl,
-      searchString,
+      searchString: _searchString,
       messageSearchQuery,
       onResultClick,
       onScroll,

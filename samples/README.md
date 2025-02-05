@@ -6,6 +6,26 @@
 
 Sendbird UIKit for React is a development kit with an user interface that enables an easy and fast integration of standard chat features into new or existing client apps.
 
+# Table of Contents
+1. [Sendbird UIKit for React Samples](#sendbird-uikit-for-react-samples)
+   1. [More about Sendbird UIKit for React](#more-about-sendbird-uikit-for-react)
+2. [UIKit Components and Ways to Customize](#uikit-components-and-ways-to-customize)
+3. [Before Getting Started](#before-getting-started)
+   1. [Requirements](#requirements)
+   2. [Implement Chat with App Component](#implement-chat-with-app-component)
+   3. [Import Components to Customize UIKit](#import-components-to-customize-uikit)
+   4. [Referring to StackBlitz](#referring-to-stackblitz)
+4. [Getting Started](#getting-started)
+   1. [Message Item](#message-item)
+   2. [Message list params](#message-list-params)
+   3. [Message params](#message-params)
+   4. [Chat header](#chat-header)
+   5. [Message input](#message-input)
+   6. [Channel preview item](#channel-preview-item)
+   7. [Channel list query](#channel-list-query)
+   8. [Channel params](#channel-params)
+5. [UIKit Configuration Samples](#uikit-configuration-samples)
+
 ### More about Sendbird UIKit for React
 
 Find out more about Sendbird UIKit for React at [UIKit for React doc](https://sendbird.com/docs/uikit/v3/react/overview). If you need any help in resolving any issues or have questions, visit [our community](https://community.sendbird.com).

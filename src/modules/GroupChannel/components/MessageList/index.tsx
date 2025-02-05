@@ -17,7 +17,7 @@ import { GroupChannelUIBasicProps } from '../GroupChannelUI/GroupChannelUIView';
 import { deleteNullish } from '../../../../utils/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
-import { getComponentKeyFromMessage } from '../../context/utils';
+import { getComponentKeyFromMessage, isContextMenuClosed } from '../../context/utils';
 import { InfiniteList } from './InfiniteList';
 import { useGroupChannel } from '../../context/hooks/useGroupChannel';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
@@ -229,12 +229,24 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
 
 const TypingIndicatorBubbleWrapper = (props: { handleScroll: () => void; channelUrl: string }) => {
   const { state: { stores } } = useSendbird();
+  const {
+    state: {
+      isScrollBottomReached,
+      scrollPubSub,
+    },
+  } = useGroupChannel();
   const [typingMembers, setTypingMembers] = useState<Member[]>([]);
 
   useGroupChannelHandler(stores.sdkStore.sdk, {
     onTypingStatusUpdated(channel) {
       if (channel.url === props.channelUrl) {
         setTypingMembers(channel.getTypingUsers());
+      }
+
+      if (isScrollBottomReached && isContextMenuClosed()) {
+        setTimeout(() => {
+          scrollPubSub.publish('scrollToBottom', {});
+        }, 10);
       }
     },
   });
