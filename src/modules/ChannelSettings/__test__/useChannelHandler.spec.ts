@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 import { useChannelHandler } from '../context/hooks/useChannelHandler';
 

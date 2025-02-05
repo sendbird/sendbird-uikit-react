@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import useGetSearchedMessages from '../hooks/useGetSearchedMessages';
 import useMessageSearch from '../hooks/useMessageSearch';

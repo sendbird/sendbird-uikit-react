@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import { ChannelSettingsProvider, useChannelSettingsContext } from '../context/ChannelSettingsProvider';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';

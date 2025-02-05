@@ -1,6 +1,5 @@
 import React from 'react';
-import { renderHook, act } from '@testing-library/react-hooks';
-import { waitFor } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { GroupChannelProvider, GroupChannelContext } from '../GroupChannelProvider';
 import { useGroupChannel } from '../hooks/useGroupChannel';

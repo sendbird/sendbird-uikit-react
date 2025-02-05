@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import { useChannelSettings } from '../context/useChannelSettings';
 import { ChannelSettingsContext } from '../context/ChannelSettingsProvider';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';

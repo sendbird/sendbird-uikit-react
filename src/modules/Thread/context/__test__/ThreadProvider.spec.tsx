@@ -1,6 +1,5 @@
 import React from 'react';
-import { act, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, waitFor, renderHook } from '@testing-library/react';
 import { ThreadProvider, ThreadState } from '../ThreadProvider';
 import useThread from '../useThread';
 import { SendableMessageType } from '../../../../utils';

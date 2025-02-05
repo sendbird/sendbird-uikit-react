@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import useSendbird from '../context/hooks/useSendbird';
 import { SendbirdContext, createSendbirdContextStore } from '../context/SendbirdContext';
 

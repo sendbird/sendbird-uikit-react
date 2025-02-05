@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { FileMessage, UserMessage, MessageType, SendingStatus, MultipleFilesMessage } from '@sendbird/chat/message';
 import useResendMessageCallback from '../hooks/useResendMessageCallback';
