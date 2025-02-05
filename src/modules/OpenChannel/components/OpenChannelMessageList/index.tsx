@@ -14,6 +14,7 @@ import { MessageProvider } from '../../../Message/context/MessageProvider';
 import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { compareMessagesForGrouping } from '../../../../utils/messages';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 export type OpenChannelMessageListProps = {
   renderMessage?: (props: RenderMessageProps) => React.ReactElement;
@@ -31,6 +32,7 @@ function OpenChannelMessageList(props: OpenChannelMessageListProps, ref: React.F
     onScroll,
   } = useOpenChannelContext();
   const store = useSendbirdStateContext();
+  const { stringSet } = useLocalization();
   const userId = store.config.userId;
   const localRef = useRef<HTMLDivElement>(null);
   const scrollRef = ref || localRef;
@@ -65,7 +67,7 @@ function OpenChannelMessageList(props: OpenChannelMessageListProps, ref: React.F
           ));
 
           const [chainTop, chainBottom] = isMessageGroupingEnabled
-            ? compareMessagesForGrouping(previousMessage, message, nextMessage)
+            ? compareMessagesForGrouping(previousMessage, message, nextMessage, stringSet)
             : [false, false];
           const isByMe = (message as UserMessage)?.sender?.userId === userId;
           const key = message?.messageId || (message as UserMessage)?.reqId;

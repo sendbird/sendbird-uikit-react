@@ -5,7 +5,7 @@ import format from 'date-fns/format';
 import { ReplyType } from '../types';
 import type { CoreMessageType } from '.';
 import { isReadMessage } from '.';
-import { useLocalization } from '../lib/LocalizationContext';
+import { StringSet } from '../ui/Label/stringSet';
 
 /**
  * exported, should be backward compatible
@@ -15,13 +15,14 @@ export const compareMessagesForGrouping = (
   prevMessage: CoreMessageType,
   currMessage: CoreMessageType,
   nextMessage: CoreMessageType,
+  stringSet: StringSet,
   currentChannel?: GroupChannel | null,
   replyType?: ReplyType,
 ) => {
   if (!currentChannel || (currentChannel as GroupChannel).channelType !== 'group') {
     return [
-      isSameGroup(prevMessage, currMessage),
-      isSameGroup(currMessage, nextMessage),
+      isSameGroup(prevMessage, currMessage, stringSet),
+      isSameGroup(currMessage, nextMessage, stringSet),
     ];
   }
 
@@ -31,19 +32,19 @@ export const compareMessagesForGrouping = (
   const sendingStatus = (currMessage as UserMessage)?.sendingStatus || '';
   const isAcceptable = sendingStatus !== 'pending' && sendingStatus !== 'failed';
   return [
-    isSameGroup(prevMessage, currMessage, currentChannel) && isAcceptable,
-    isSameGroup(currMessage, nextMessage, currentChannel) && isAcceptable,
+    isSameGroup(prevMessage, currMessage, stringSet, currentChannel) && isAcceptable,
+    isSameGroup(currMessage, nextMessage, stringSet, currentChannel) && isAcceptable,
   ];
 };
 
-export const getMessageCreatedAt = (message: BaseMessage) => {
-  const { stringSet } = useLocalization();
+export const getMessageCreatedAt = (message: BaseMessage, stringSet: StringSet) => {
   return format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT);
 };
 
 export const isSameGroup = (
   message: CoreMessageType,
   comparingMessage: CoreMessageType,
+  stringSet: StringSet,
   currentChannel?: GroupChannel,
 ) => {
   if (
@@ -67,7 +68,7 @@ export const isSameGroup = (
   return (
     message?.sendingStatus === comparingMessage?.sendingStatus
     && message?.sender?.userId === comparingMessage?.sender?.userId
-    && getMessageCreatedAt(message) === getMessageCreatedAt(comparingMessage)
+    && getMessageCreatedAt(message, stringSet) === getMessageCreatedAt(comparingMessage, stringSet)
   ) && (
     currentChannel ? isReadMessage(currentChannel, message) === isReadMessage(currentChannel, comparingMessage) : true
   );

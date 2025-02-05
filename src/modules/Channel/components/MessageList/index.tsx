@@ -26,6 +26,7 @@ import { GroupChannelMessageListProps } from '../../../GroupChannel/components/M
 import { GroupChannelUIBasicProps } from '../../../GroupChannel/components/GroupChannelUI/GroupChannelUIView';
 import { deleteNullish } from '../../../../utils/utils';
 import { getHTMLTextDirection } from '../../../../utils';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
@@ -80,6 +81,7 @@ export const MessageList = (props: MessageListProps) => {
   } = useChannelContext();
 
   const store = useSendbirdStateContext();
+  const { stringSet } = useLocalization();
   const allMessagesFiltered = typeof filterMessageList === 'function' ? allMessages.filter(filterMessageList) : allMessages;
   const markAsReadScheduler = store.config.markAsReadScheduler;
 
@@ -205,6 +207,7 @@ export const MessageList = (props: MessageListProps) => {
             {allMessagesFiltered.map((m, idx) => {
               const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
                 allMessages: allMessagesFiltered,
+                stringSet,
                 replyType,
                 isMessageGroupingEnabled,
                 currentIndex: idx,
@@ -232,6 +235,7 @@ export const MessageList = (props: MessageListProps) => {
             {localMessages.map((m, idx) => {
               const { chainTop, chainBottom } = getMessagePartsInfo({
                 allMessages: allMessagesFiltered,
+                stringSet,
                 replyType,
                 isMessageGroupingEnabled,
                 currentIndex: idx,
