@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import { UserMessageCreateParams, FileMessageCreateParams } from '@sendbird/chat/message';
 
 import { useMessageActions } from '../hooks/useMessageActions';

@@ -1,5 +1,6 @@
 import React from 'react';
-import { waitFor, act, renderHook } from '@testing-library/react';
+import { waitFor, act } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import { MessageSearchQuery } from '@sendbird/chat/message';
 
 import { MessageSearchProvider } from '../MessageSearchProvider';

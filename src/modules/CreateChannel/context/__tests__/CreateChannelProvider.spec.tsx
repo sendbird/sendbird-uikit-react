@@ -1,8 +1,9 @@
 import React from 'react';
-import { act, waitFor, renderHook } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { CreateChannelProvider } from '../CreateChannelProvider';
 import { CHANNEL_TYPE } from '../../types';
 import useCreateChannel from '../useCreateChannel';
+import { renderHook } from '@testing-library/react-hooks';
 
 jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,

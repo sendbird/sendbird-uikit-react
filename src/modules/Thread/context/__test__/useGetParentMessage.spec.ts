@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import { BaseMessage } from '@sendbird/chat/message';
 import { ChannelType } from '@sendbird/chat';
 import useGetParentMessage from '../hooks/useGetParentMessage';

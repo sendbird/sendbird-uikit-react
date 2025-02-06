@@ -1,6 +1,7 @@
 import React from 'react';
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import useThread from '../useThread';
+import { act, waitFor } from '@testing-library/react';
 import { ThreadProvider } from '../ThreadProvider';
 import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
 import { PREV_THREADS_FETCH_SIZE } from '../../consts';

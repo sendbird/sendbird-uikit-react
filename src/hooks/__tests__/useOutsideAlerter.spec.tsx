@@ -1,5 +1,6 @@
 import React from 'react';
-import { renderHook, screen, fireEvent, render, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
+import { screen, fireEvent, render, waitFor } from '@testing-library/react';
 import useOutsideAlerter from '../useOutsideAlerter';
 
 describe('useOutsideAlerter', () => {

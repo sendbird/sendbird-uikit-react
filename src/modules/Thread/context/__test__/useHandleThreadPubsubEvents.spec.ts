@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import useHandleThreadPubsubEvents from '../hooks/useHandleThreadPubsubEvents';
 import { PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { GroupChannel } from '@sendbird/chat/groupChannel';

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { BaseMessage } from '@sendbird/chat/message';
 import useToggleReactionCallback from '../hooks/useToggleReactionsCallback';

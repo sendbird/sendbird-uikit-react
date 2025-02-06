@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react-hooks';
 import { MessageSearchProvider } from '../../context/MessageSearchProvider';
 import useMessageSearch from '../../context/hooks/useMessageSearch';
 import { GroupChannel } from '@sendbird/chat/groupChannel';

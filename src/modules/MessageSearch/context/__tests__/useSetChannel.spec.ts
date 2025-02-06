@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import useSetChannel from '../hooks/useSetChannel';
 import useMessageSearch from '../hooks/useMessageSearch';
 
