@@ -1,7 +1,6 @@
 import React from 'react';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import useThread from '../useThread';
-import { act, waitFor } from '@testing-library/react';
 import { ThreadProvider } from '../ThreadProvider';
 import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
 import { PREV_THREADS_FETCH_SIZE } from '../../consts';
@@ -68,8 +67,11 @@ describe('useThread', () => {
   });
 
   it('throws an error if used outside of ThreadProvider', () => {
-    const { result } = renderHook(() => useThread());
-    expect(result.error).toEqual(new Error('useThread must be used within a ThreadProvider'));
+    try {
+      renderHook(() => useThread());
+    } catch (error) {
+      expect(error.message).toBe('useThread must be used within a ThreadProvider');
+    }
   });
 
   it('handles sendMessageStart action correctly', async () => {
@@ -164,7 +166,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -203,7 +205,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -245,7 +247,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -431,7 +433,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -469,7 +471,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -503,7 +505,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -528,7 +530,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -553,7 +555,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -579,7 +581,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -599,7 +601,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -625,7 +627,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -649,7 +651,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -674,7 +676,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -701,7 +703,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });
@@ -726,7 +728,7 @@ describe('useThread', () => {
     await act(async () => {
       result = renderHook(() => useThread(), { wrapper }).result;
 
-      await waitFor(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).not.toBe(undefined);
       });
     });

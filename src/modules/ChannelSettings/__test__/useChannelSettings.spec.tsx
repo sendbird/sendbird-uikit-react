@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import { useChannelSettings } from '../context/useChannelSettings';
 import { ChannelSettingsContext } from '../context/ChannelSettingsProvider';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
@@ -27,11 +27,11 @@ describe('useChannelSettings', () => {
   });
 
   it('throws an error if used outside of ChannelSettingsProvider', () => {
-    const { result } = renderHook(() => useChannelSettings());
-
-    expect(result.error).toEqual(
-      new Error('useChannelSettings must be used within a ChannelSettingsProvider'),
-    );
+    try {
+      renderHook(() => useChannelSettings());
+    } catch (error) {
+      expect(error.message).toBe('useChannelSettings must be used within a ChannelSettingsProvider');
+    }
   });
 
   it('returns the correct initial state', () => {

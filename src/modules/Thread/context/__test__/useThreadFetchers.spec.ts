@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { BaseMessage } from '@sendbird/chat/message';
 import { useThreadFetchers } from '../hooks/useThreadFetchers';
 import { ThreadListStateTypes } from '../../types';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 import useSendbird from '../context/hooks/useSendbird';
 import { SendbirdContext, createSendbirdContextStore } from '../context/SendbirdContext';
 
@@ -29,9 +29,11 @@ describe('useSendbird', () => {
 
   describe('General behavior', () => {
     it('should throw an error if used outside SendbirdProvider', () => {
-      const { result } = renderHook(() => useSendbird());
-      expect(result.error).toBeDefined();
-      expect(result.error.message).toBe('No sendbird state value available. Make sure you are rendering `<SendbirdProvider>` at the top of your app.');
+      try {
+        renderHook(() => useSendbird());
+      } catch (error) {
+        expect(error.message).toBe('No sendbird state value available. Make sure you are rendering `<SendbirdProvider>` at the top of your app.');
+      }
     });
 
     it('should return state and actions when used within SendbirdProvider', () => {

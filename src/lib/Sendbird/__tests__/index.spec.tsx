@@ -84,7 +84,7 @@ describe('withSendbirdContext', () => {
         mappedProp: 'testState',
         testProp: 'additionalValue',
       }),
-      {},
+      undefined,
     );
   });
 });

@@ -1,9 +1,8 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { GroupChannel, GroupChannelHandler } from '@sendbird/chat/groupChannel';
 import { UserMessage } from '@sendbird/chat/message';
 import { User } from '@sendbird/chat';
 import useHandleChannelEvents from '../hooks/useHandleChannelEvents';
-import { waitFor } from '@testing-library/react';
 
 const mockThreadActions = {
   onMessageReceived: jest.fn(),

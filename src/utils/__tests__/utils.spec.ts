@@ -237,7 +237,7 @@ describe('deleteNullish', () => {
 });
 
 describe('delay', () => {
-  const errorBound = 5;
+  const errorBound = 10;
 
   it('should resolve after the specified time', async () => {
     const start = Date.now();

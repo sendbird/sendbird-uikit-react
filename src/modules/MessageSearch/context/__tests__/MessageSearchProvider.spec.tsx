@@ -1,6 +1,5 @@
-import React from 'react';
-import { waitFor, act } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import React, { useEffect, useState } from 'react';
+import { waitFor, act, renderHook } from '@testing-library/react';
 import { MessageSearchQuery } from '@sendbird/chat/message';
 
 import { MessageSearchProvider } from '../MessageSearchProvider';
@@ -61,7 +60,7 @@ describe('MessageSearchProvider', () => {
     currentMessageSearchQuery: null,
     hasMoreResult: false,
     channelUrl: 'test-channel',
-    searchString: undefined,
+    searchString: '',
     retryCount: 0,
     selectedMessageId: null,
     handleOnScroll: expect.any(Function),
@@ -81,40 +80,45 @@ describe('MessageSearchProvider', () => {
 
     const { result } = renderHook(() => useMessageSearch(), { wrapper });
 
-    expect(result.current.state).toEqual(expect.objectContaining(initialState));
+    expect(result.current.state).toMatchObject(initialState);
   });
 
   it('updates state correctly when props change', async () => {
     const initialUrl = 'test-channel';
     const newUrl = 'new-channel';
+    let setter;
 
-    const wrapper = ({ children, channelUrl }) => (
-      <MessageSearchProvider channelUrl={channelUrl}>
-        {children}
-      </MessageSearchProvider>
-    );
+    const wrapper = ({ children }) => {
+      const [channelUrl, setChannelUrl] = useState(initialUrl);
 
-    const { result, rerender } = renderHook(
-      () => useMessageSearch(),
-      {
-        wrapper,
-        initialProps: { channelUrl: initialUrl, children: null },
-      },
-    );
+      useEffect(() => {
+        setter = setChannelUrl;
+
+        // return () => { setter = undefined; };
+      }, []);
+
+      return (
+        <MessageSearchProvider channelUrl={channelUrl}>
+          {children}
+        </MessageSearchProvider>
+      );
+    };
+
+    const { result } = renderHook(() => useMessageSearch(), { wrapper });
 
     expect(result.current.state.channelUrl).toBe(initialUrl);
 
-    await act(async () => {
-      rerender({ channelUrl: newUrl, children: null });
+    act(() => {
+      setter(newUrl);
+    });
 
-      await waitFor(() => {
-        // Verify other states remain unchanged
-        const newState = result.current.state;
-        expect(newState.channelUrl).toBe(newUrl);
-        expect(newState.allMessages).toEqual(initialState.allMessages);
-        expect(newState.loading).toBe(initialState.loading);
-        expect(newState.isInvalid).toBe(initialState.isInvalid);
-      });
+    await waitFor(() => {
+      // Verify other states remain unchanged
+      const newState = result.current.state;
+      expect(newState.channelUrl).toBe(newUrl);
+      expect(newState.allMessages).toEqual(initialState.allMessages);
+      expect(newState.loading).toBe(initialState.loading);
+      expect(newState.isInvalid).toBe(initialState.isInvalid);
     });
   });
 

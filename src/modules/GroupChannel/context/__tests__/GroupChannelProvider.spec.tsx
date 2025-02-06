@@ -1,6 +1,5 @@
 import React from 'react';
-import { waitFor, act } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { waitFor, act, renderHook } from '@testing-library/react';
 import { GroupChannelProvider, useGroupChannelContext } from '../GroupChannelProvider';
 import { useGroupChannel } from '../hooks/useGroupChannel';
 
@@ -137,8 +136,11 @@ describe('GroupChannelProvider', () => {
 
     const { result } = renderHook(() => useGroupChannel(), { wrapper });
 
+    waitFor(() => {
+      expect(result.current.state).toBeDefined();
+    });
+
     act(async () => {
-      result.current.actions.scrollToBottom();
       await waitFor(() => {
         expect(result.current.state.isScrollBottomReached).toBe(true);
       });

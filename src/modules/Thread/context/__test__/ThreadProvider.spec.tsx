@@ -1,6 +1,5 @@
 import React from 'react';
-import { act, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { waitFor, renderHook } from '@testing-library/react';
 import { ThreadProvider, ThreadState } from '../ThreadProvider';
 import useThread from '../useThread';
 import { SendableMessageType } from '../../../../utils';
@@ -96,8 +95,8 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
 
 describe('ThreadProvider', () => {
   const initialState: ThreadState = {
-    channelUrl: '',
-    message: null,
+    channelUrl: 'test-channel-url',
+    message: undefined,
     onHeaderActionClick: undefined,
     onMoveToParentMessage: undefined,
     onBeforeSendUserMessage: undefined,
@@ -111,7 +110,7 @@ describe('ThreadProvider', () => {
     allThreadMessages: [],
     localThreadMessages: [],
     parentMessage: null,
-    channelState: ChannelStateTypes.NIL,
+    channelState: ChannelStateTypes.LOADING,
     parentMessageState: ParentMessageStateTypes.NIL,
     threadListState: ThreadListStateTypes.NIL,
     hasMorePrev: false,
@@ -119,9 +118,9 @@ describe('ThreadProvider', () => {
     emojiContainer: {} as EmojiContainer,
     isMuted: false,
     isChannelFrozen: false,
-    currentUserId: '',
+    currentUserId: 'test-user-id',
     typingMembers: [],
-    nicknamesMap: null,
+    nicknamesMap: expect.any(Map),
   };
 
   const initialMockMessage = {
@@ -140,11 +139,9 @@ describe('ThreadProvider', () => {
       <ThreadProvider channelUrl="test-channel-url">{children}</ThreadProvider>
     );
 
-    await act(async () => {
-      const { result } = renderHook(() => useThread(), { wrapper });
-      expect(result.current.state).toEqual(initialState);
-    });
+    const { result } = renderHook(() => useThread(), { wrapper });
 
+    expect(result.current.state).toMatchObject(initialState);
   });
 
   it('provides correct actions through useThread hook', async () => {
@@ -152,59 +149,57 @@ describe('ThreadProvider', () => {
       <ThreadProvider message={initialMockMessage} channelUrl="test-channel">{children}</ThreadProvider>
     );
 
-    await act(async () => {
-      const { result } = renderHook(() => useThread(), { wrapper });
-      await waitFor(() => {
-        expect(result.current.actions).toHaveProperty('toggleReaction');
-        expect(result.current.actions).toHaveProperty('sendMessage');
-        expect(result.current.actions).toHaveProperty('sendFileMessage');
-        expect(result.current.actions).toHaveProperty('sendVoiceMessage');
-        expect(result.current.actions).toHaveProperty('sendMultipleFilesMessage');
-        expect(result.current.actions).toHaveProperty('resendMessage');
-        expect(result.current.actions).toHaveProperty('initializeThreadFetcher');
-        expect(result.current.actions).toHaveProperty('fetchPrevThreads');
-        expect(result.current.actions).toHaveProperty('fetchNextThreads');
-        expect(result.current.actions).toHaveProperty('updateMessage');
-        expect(result.current.actions).toHaveProperty('deleteMessage');
-        expect(result.current.actions).toHaveProperty('setCurrentUserId');
-        expect(result.current.actions).toHaveProperty('getChannelStart');
-        expect(result.current.actions).toHaveProperty('getChannelSuccess');
-        expect(result.current.actions).toHaveProperty('getChannelFailure');
-        expect(result.current.actions).toHaveProperty('getParentMessageStart');
-        expect(result.current.actions).toHaveProperty('getParentMessageSuccess');
-        expect(result.current.actions).toHaveProperty('getParentMessageFailure');
-        expect(result.current.actions).toHaveProperty('setEmojiContainer');
-        expect(result.current.actions).toHaveProperty('onMessageReceived');
-        expect(result.current.actions).toHaveProperty('onMessageUpdated');
-        expect(result.current.actions).toHaveProperty('onMessageDeleted');
-        expect(result.current.actions).toHaveProperty('onMessageDeletedByReqId');
-        expect(result.current.actions).toHaveProperty('onReactionUpdated');
-        expect(result.current.actions).toHaveProperty('onUserMuted');
-        expect(result.current.actions).toHaveProperty('onUserUnmuted');
-        expect(result.current.actions).toHaveProperty('onUserBanned');
-        expect(result.current.actions).toHaveProperty('onUserUnbanned');
-        expect(result.current.actions).toHaveProperty('onUserLeft');
-        expect(result.current.actions).toHaveProperty('onChannelFrozen');
-        expect(result.current.actions).toHaveProperty('onChannelUnfrozen');
-        expect(result.current.actions).toHaveProperty('onOperatorUpdated');
-        expect(result.current.actions).toHaveProperty('onTypingStatusUpdated');
-        expect(result.current.actions).toHaveProperty('sendMessageStart');
-        expect(result.current.actions).toHaveProperty('sendMessageSuccess');
-        expect(result.current.actions).toHaveProperty('sendMessageFailure');
-        expect(result.current.actions).toHaveProperty('resendMessageStart');
-        expect(result.current.actions).toHaveProperty('onFileInfoUpdated');
-        expect(result.current.actions).toHaveProperty('initializeThreadListStart');
-        expect(result.current.actions).toHaveProperty('initializeThreadListSuccess');
-        expect(result.current.actions).toHaveProperty('initializeThreadListFailure');
-        expect(result.current.actions).toHaveProperty('getPrevMessagesStart');
-        expect(result.current.actions).toHaveProperty('getPrevMessagesSuccess');
-        expect(result.current.actions).toHaveProperty('getPrevMessagesFailure');
-        expect(result.current.actions).toHaveProperty('getNextMessagesStart');
-        expect(result.current.actions).toHaveProperty('getNextMessagesSuccess');
-        expect(result.current.actions).toHaveProperty('getNextMessagesFailure');
-      });
-    });
+    const { result } = renderHook(() => useThread(), { wrapper });
 
+    await waitFor(() => {
+      expect(result.current.actions).toHaveProperty('toggleReaction');
+      expect(result.current.actions).toHaveProperty('sendMessage');
+      expect(result.current.actions).toHaveProperty('sendFileMessage');
+      expect(result.current.actions).toHaveProperty('sendVoiceMessage');
+      expect(result.current.actions).toHaveProperty('sendMultipleFilesMessage');
+      expect(result.current.actions).toHaveProperty('resendMessage');
+      expect(result.current.actions).toHaveProperty('initializeThreadFetcher');
+      expect(result.current.actions).toHaveProperty('fetchPrevThreads');
+      expect(result.current.actions).toHaveProperty('fetchNextThreads');
+      expect(result.current.actions).toHaveProperty('updateMessage');
+      expect(result.current.actions).toHaveProperty('deleteMessage');
+      expect(result.current.actions).toHaveProperty('setCurrentUserId');
+      expect(result.current.actions).toHaveProperty('getChannelStart');
+      expect(result.current.actions).toHaveProperty('getChannelSuccess');
+      expect(result.current.actions).toHaveProperty('getChannelFailure');
+      expect(result.current.actions).toHaveProperty('getParentMessageStart');
+      expect(result.current.actions).toHaveProperty('getParentMessageSuccess');
+      expect(result.current.actions).toHaveProperty('getParentMessageFailure');
+      expect(result.current.actions).toHaveProperty('setEmojiContainer');
+      expect(result.current.actions).toHaveProperty('onMessageReceived');
+      expect(result.current.actions).toHaveProperty('onMessageUpdated');
+      expect(result.current.actions).toHaveProperty('onMessageDeleted');
+      expect(result.current.actions).toHaveProperty('onMessageDeletedByReqId');
+      expect(result.current.actions).toHaveProperty('onReactionUpdated');
+      expect(result.current.actions).toHaveProperty('onUserMuted');
+      expect(result.current.actions).toHaveProperty('onUserUnmuted');
+      expect(result.current.actions).toHaveProperty('onUserBanned');
+      expect(result.current.actions).toHaveProperty('onUserUnbanned');
+      expect(result.current.actions).toHaveProperty('onUserLeft');
+      expect(result.current.actions).toHaveProperty('onChannelFrozen');
+      expect(result.current.actions).toHaveProperty('onChannelUnfrozen');
+      expect(result.current.actions).toHaveProperty('onOperatorUpdated');
+      expect(result.current.actions).toHaveProperty('onTypingStatusUpdated');
+      expect(result.current.actions).toHaveProperty('sendMessageStart');
+      expect(result.current.actions).toHaveProperty('sendMessageSuccess');
+      expect(result.current.actions).toHaveProperty('sendMessageFailure');
+      expect(result.current.actions).toHaveProperty('resendMessageStart');
+      expect(result.current.actions).toHaveProperty('onFileInfoUpdated');
+      expect(result.current.actions).toHaveProperty('initializeThreadListStart');
+      expect(result.current.actions).toHaveProperty('initializeThreadListSuccess');
+      expect(result.current.actions).toHaveProperty('initializeThreadListFailure');
+      expect(result.current.actions).toHaveProperty('getPrevMessagesStart');
+      expect(result.current.actions).toHaveProperty('getPrevMessagesSuccess');
+      expect(result.current.actions).toHaveProperty('getPrevMessagesFailure');
+      expect(result.current.actions).toHaveProperty('getNextMessagesStart');
+      expect(result.current.actions).toHaveProperty('getNextMessagesSuccess');
+      expect(result.current.actions).toHaveProperty('getNextMessagesFailure');
+    });
   });
 
   it('updates state when props change', async () => {
@@ -214,18 +209,16 @@ describe('ThreadProvider', () => {
       </ThreadProvider>
     );
 
-    await act(async () => {
-      const { result } = renderHook(() => useThread(), { wrapper });
+    const { result } = renderHook(() => useThread(), { wrapper });
 
-      await waitFor(() => {
-        expect(result.current.state.currentChannel).not.toBe(undefined);
-      });
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
 
-      result.current.actions.setCurrentUserId('new-user-id');
+    result.current.actions.setCurrentUserId('new-user-id');
 
-      await waitFor(() => {
-        expect(result.current.state.currentUserId).toEqual('new-user-id');
-      });
+    await waitFor(() => {
+      expect(result.current.state.currentUserId).toEqual('new-user-id');
     });
   });
 

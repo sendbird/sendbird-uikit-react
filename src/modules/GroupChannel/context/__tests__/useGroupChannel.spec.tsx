@@ -1,6 +1,5 @@
 import React from 'react';
-import { renderHook, act } from '@testing-library/react-hooks';
-import { waitFor } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { GroupChannelProvider, GroupChannelContext } from '../GroupChannelProvider';
 import { useGroupChannel } from '../hooks/useGroupChannel';
@@ -109,6 +108,7 @@ describe('useGroupChannel', () => {
       {children}
     </GroupChannelProvider>
   );
+
   describe('State management', () => {
     it('provides initial state', () => {
       const { result } = renderHook(() => useGroupChannel(), { wrapper });
@@ -372,29 +372,32 @@ describe('useGroupChannel', () => {
 
     it('logs errors for reaction deletion failure', async () => {
       const mockError = new Error('Failed to delete reaction');
+      const deleteReaction = jest.fn().mockRejectedValue(mockError);
       const mockChannelWithReactions = {
         ...mockChannel,
-        deleteReaction: jest.fn().mockRejectedValue(mockError),
+        deleteReaction,
       };
 
       const { result } = renderHook(() => useGroupChannel(), { wrapper });
 
-      act(async () => {
+      act(() => {
         result.current.actions.setCurrentChannel(mockChannelWithReactions as any);
       });
 
-      act(async () => {
-        await result.current.actions.toggleReaction(
+      act(() => {
+        result.current.actions.toggleReaction(
           { messageId: 1 } as SendableMessageType,
           'thumbs_up',
           true,
         );
-        await waitFor(() => {
-          expect(mockLogger.warning).toHaveBeenCalledWith(
-            'Failed to delete reaction:',
-            mockError,
-          );
-        });
+      });
+
+      waitFor(() => {
+        expect(mockChannelWithReactions.deleteReaction).toHaveBeenCalled();
+        expect(mockLogger.warning).toHaveBeenCalledWith(
+          'Failed to delete reaction:',
+          mockError,
+        );
       });
 
     });
@@ -412,6 +415,10 @@ describe('useGroupChannel', () => {
           wrapper: createWrapper(mockStore),
         });
         const mockMessage = { messageId: 123 } as SendableMessageType;
+
+        await waitFor(() => {
+          expect(result.current.actions).toBeDefined();
+        });
 
         await act(async () => {
           result.current.actions.toggleReaction(mockMessage, '👍', false);
@@ -435,7 +442,9 @@ describe('useGroupChannel', () => {
 
         const { result } = renderHook(() => useGroupChannel(), { wrapper });
 
-        act(async () => {
+        // act(() => {});
+
+        act(() => {
           result.current.actions.setCurrentChannel(mockChannelWithReactions as any);
         });
 

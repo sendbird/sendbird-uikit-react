@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import { useAsyncRequest } from '../useAsyncRequest';
 
 describe('useAsyncRequest', () => {
@@ -12,7 +12,9 @@ describe('useAsyncRequest', () => {
 
     const { result } = renderHook(() => useAsyncRequest(mockRequest));
 
-    await mockPromise;
+    await act(async () => {
+      await mockPromise;
+    });
 
     expect(result.current.loading).toBe(false);
   });
@@ -24,7 +26,9 @@ describe('useAsyncRequest', () => {
 
     const { result } = renderHook(() => useAsyncRequest(mockRequest));
 
-    await mockPromise;
+    await act(async () => {
+      await mockPromise;
+    });
 
     expect(result.current.response).toBe(mockResponse);
     expect(result.current.loading).toBe(false);
