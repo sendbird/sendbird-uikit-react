@@ -442,8 +442,6 @@ describe('useGroupChannel', () => {
 
         const { result } = renderHook(() => useGroupChannel(), { wrapper });
 
-        // act(() => {});
-
         act(() => {
           result.current.actions.setCurrentChannel(mockChannelWithReactions as any);
         });
