@@ -142,7 +142,6 @@ describe('GroupChannelProvider', () => {
 
     const { result } = renderHook(() => useGroupChannel(), { wrapper });
 
-    //
     act(() => {
       waitFor(() => {
         expect(result.current.state).toBeDefined();
