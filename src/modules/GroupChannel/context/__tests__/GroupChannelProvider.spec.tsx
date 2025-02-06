@@ -81,8 +81,8 @@ describe('GroupChannelProvider', () => {
 
     const { result } = renderHook(() => useGroupChannel(), { wrapper });
 
-    act(async () => {
-      await waitFor(() => {
+    act(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).toBeTruthy();
         expect(result.current.state.currentChannel?.url).toBe('test-channel');
       });
@@ -121,13 +121,13 @@ describe('GroupChannelProvider', () => {
 
     act(() => {
       waitFor(() => {
-        expect(result.current.state).toBeDefined();
+        expect(result.current.state.currentChannel).toBeTruthy();
+        expect(result.current.state.fetchChannelError).toBeNull();
       });
     });
 
-    act(async () => {
-      await waitFor(() => {
-        expect(result.current.state.fetchChannelError).toBeNull();
+    act(() => {
+      waitFor(() => {
         expect(result.current.state.currentChannel).toBeNull();
       });
     });
@@ -143,13 +143,8 @@ describe('GroupChannelProvider', () => {
     const { result } = renderHook(() => useGroupChannel(), { wrapper });
 
     act(() => {
+      result.current.actions.scrollToBottom();
       waitFor(() => {
-        expect(result.current.state).toBeDefined();
-      });
-    });
-
-    act(async () => {
-      await waitFor(() => {
         expect(result.current.state.isScrollBottomReached).toBe(true);
       });
     });
