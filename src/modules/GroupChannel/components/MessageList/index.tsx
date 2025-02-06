@@ -21,6 +21,7 @@ import { getComponentKeyFromMessage, isContextMenuClosed } from '../../context/u
 import { InfiniteList } from './InfiniteList';
 import { useGroupChannel } from '../../context/hooks/useGroupChannel';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { useLocalization } from '../../../../lib/LocalizationContext';
 
 export interface GroupChannelMessageListProps {
   className?: string;
@@ -92,6 +93,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   } = useGroupChannel();
 
   const { state } = useSendbird();
+  const { stringSet } = useLocalization();
 
   const [unreadSinceDate, setUnreadSinceDate] = useState<Date>();
 
@@ -189,6 +191,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
           renderMessage={({ message, index }) => {
             const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
               allMessages: messages as CoreMessageType[],
+              stringSet,
               replyType: replyType ?? 'NONE',
               isMessageGroupingEnabled: isMessageGroupingEnabled ?? false,
               currentIndex: index,

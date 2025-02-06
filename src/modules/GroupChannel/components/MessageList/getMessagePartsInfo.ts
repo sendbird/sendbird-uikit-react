@@ -4,9 +4,11 @@ import isSameDay from 'date-fns/isSameDay';
 import { compareMessagesForGrouping } from '../../../../utils/messages';
 import { ReplyType } from '../../../../types';
 import { CoreMessageType } from '../../../../utils';
+import { StringSet } from '../../../../ui/Label/stringSet';
 
 export interface GetMessagePartsInfoProps {
   allMessages: Array<CoreMessageType>;
+  stringSet: StringSet
   isMessageGroupingEnabled?: boolean;
   currentIndex: number;
   currentMessage: CoreMessageType;
@@ -24,7 +26,8 @@ interface OutPuts {
  * exported, should be backward compatible
  */
 export const getMessagePartsInfo = ({
-  allMessages = [],
+  allMessages,
+  stringSet,
   isMessageGroupingEnabled = true,
   currentIndex = 0,
   currentMessage,
@@ -34,7 +37,7 @@ export const getMessagePartsInfo = ({
   const previousMessage = allMessages[currentIndex - 1];
   const nextMessage = allMessages[currentIndex + 1];
   const [chainTop, chainBottom] = isMessageGroupingEnabled
-    ? compareMessagesForGrouping(previousMessage, currentMessage, nextMessage, currentChannel, (replyType as ReplyType))
+    ? compareMessagesForGrouping(previousMessage, currentMessage, nextMessage, stringSet, currentChannel, (replyType as ReplyType))
     : [false, false];
   const previousMessageCreatedAt = previousMessage?.createdAt;
   const currentCreatedAt = currentMessage.createdAt;
