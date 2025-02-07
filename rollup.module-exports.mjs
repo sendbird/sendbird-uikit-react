@@ -50,7 +50,7 @@ export default {
 
   // GroupChannelList
   GroupChannelList: 'src/modules/GroupChannelList/index.tsx',
-  'GroupChannelList/context': 'src/modules/GroupChannelList/context/GroupChannelListProvider.tsx',
+  'GroupChannelList/context': 'src/modules/GroupChannelList/context/index.tsx',
   'GroupChannelList/components/AddGroupChannel': 'src/modules/GroupChannelList/components/AddGroupChannel/index.tsx',
   'GroupChannelList/components/GroupChannelListUI': 'src/modules/GroupChannelList/components/GroupChannelListUI/index.tsx',
   'GroupChannelList/components/GroupChannelListHeader': 'src/modules/GroupChannelList/components/GroupChannelListHeader/index.tsx',
@@ -94,7 +94,7 @@ export default {
   'Channel/components/SuggestedMentionList': 'src/modules/Channel/components/SuggestedMentionList/index.tsx',
 
   GroupChannel: 'src/modules/GroupChannel/index.tsx',
-  'GroupChannel/context': 'src/modules/GroupChannel/context/GroupChannelProvider.tsx',
+  'GroupChannel/context': 'src/modules/GroupChannel/context/index.tsx',
   'GroupChannel/components/GroupChannelHeader': 'src/modules/GroupChannel/components/GroupChannelHeader/index.tsx',
   'GroupChannel/components/GroupChannelUI': 'src/modules/GroupChannel/components/GroupChannelUI/index.tsx',
   'GroupChannel/components/FileViewer': 'src/modules/GroupChannel/components/FileViewer/index.tsx',
@@ -140,7 +140,7 @@ export default {
 
   // MessageSearch
   MessageSearch: 'src/modules/MessageSearch/index.tsx',
-  'MessageSearch/context': 'src/modules/MessageSearch/context/MessageSearchProvider.tsx',
+  'MessageSearch/context': 'src/modules/MessageSearch/context/index.tsx',
   'MessageSearch/components/MessageSearchUI': 'src/modules/MessageSearch/components/MessageSearchUI/index.tsx',
 
   // Message
@@ -149,7 +149,7 @@ export default {
 
   // Thread
   Thread: 'src/modules/Thread/index.tsx',
-  'Thread/context': 'src/modules/Thread/context/ThreadProvider.tsx',
+  'Thread/context': 'src/modules/Thread/context/index.tsx',
   'Thread/context/types': 'src/modules/Thread/types.tsx',
   'Thread/components/ThreadUI': 'src/modules/Thread/components/ThreadUI/index.tsx',
   'Thread/components/ThreadHeader': 'src/modules/Thread/components/ThreadHeader/index.tsx',
@@ -161,7 +161,7 @@ export default {
 
   // CreateChannel
   CreateChannel: 'src/modules/CreateChannel/index.tsx',
-  'CreateChannel/context': 'src/modules/CreateChannel/context/CreateChannelProvider.tsx',
+  'CreateChannel/context': 'src/modules/CreateChannel/context/index.tsx',
   'CreateChannel/components/CreateChannelUI': 'src/modules/CreateChannel/components/CreateChannelUI/index.tsx',
   'CreateChannel/components/InviteUsers': 'src/modules/CreateChannel/components/InviteUsers/index.tsx',
   'CreateChannel/components/SelectChannelType': 'src/modules/CreateChannel/components/SelectChannelType.tsx',
