@@ -1,4 +1,5 @@
-import { useMemo, useContext, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'use-sync-external-store/shim';
+import { useMemo, useContext } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 import { ChannelSettingsContext } from './ChannelSettingsProvider';

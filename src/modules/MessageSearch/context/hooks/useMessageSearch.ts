@@ -1,4 +1,5 @@
-import { useContext, useMemo, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'use-sync-external-store/shim';
+import { useContext, useMemo } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { MessageSearchQuery } from '@sendbird/chat/message';
 

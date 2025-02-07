@@ -1,4 +1,5 @@
-import { useContext, useMemo, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'use-sync-external-store/shim';
+import { useContext, useMemo } from 'react';
 import { ThreadContext, ThreadState } from './ThreadProvider';
 import { ChannelStateTypes, FileUploadInfoParams, ParentMessageStateTypes, ThreadListStateTypes } from '../types';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';

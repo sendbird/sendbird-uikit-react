@@ -1,4 +1,5 @@
-import { useMemo, useContext, useCallback, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'use-sync-external-store/shim';
+import { useMemo, useContext, useCallback } from 'react';
 import { GroupChannelListState, GroupChannelListContext } from './GroupChannelListProvider';
 
 export const useGroupChannelList = () => {

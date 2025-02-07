@@ -1,4 +1,5 @@
-import { useContext, useMemo, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'use-sync-external-store/shim';
+import { useContext, useMemo } from 'react';
 import { SendbirdError, User } from '@sendbird/chat';
 
 import { SendbirdContext } from '../SendbirdContext';
