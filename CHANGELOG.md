@@ -1,5 +1,43 @@
 # Changelog - v3
 
+## [v3.15.14] (Feb 7 2025)
+
+### Features:
+- Added custom hooks for each module replacing the previous context hook. The custom hook allows access to the provider's data, which are divided into `state` and `actions` properties.
+  * Added `useGroupChannelList`, replacing `useGroupChannelListContext`
+  * Added `useCreateChannel`, replacing `useCreateChannelContext`
+  * Added `useChannelSettings`, replacing `useChannelSettingsContext`
+  * Added `useGroupChannel`, replacing `useGroupChannelContext`
+  * Added `useMessageSearch`, replacing `useMessageSearchContext`
+  * Added `useThread`, replacing `useThreadContext`
+    - How to Use?
+    ```tsx
+    import { useGroupChannel } from '@sendbird/uikit-react/GroupChannel/context';
+
+    // Implement your code inside the react function component.
+    const Component = () => {
+    // const { currentChannel, scrollToBottom } = useGroupChannelContext();
+    const {
+      state : {
+        currentChannel,
+      },
+      actions : {
+        scrollToBottom
+      },
+    } = useGroupChannel();
+
+    const onScrollDownButtonClick = () => {
+      scrollToBottom();
+    };
+
+    // ...
+    }
+    ```
+    
+### Fixes:
+- Fixed an issue where the pasting the formatted text to `MessageInput` did not shows properly. 
+- Fixed a bug with forwardRef Rules of Hooks violation.
+
 ## [v3.15.13] (Jan 31 2025)
 
 ### Features:
