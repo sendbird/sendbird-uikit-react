@@ -11,9 +11,9 @@ import { useOpenChannelContext } from '../../context/OpenChannelProvider';
 import OpenChannelMessage from '../OpenChannelMessage';
 import { RenderMessageProps } from '../../../../types';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useHandleOnScrollCallback } from '../../../../hooks/useHandleOnScrollCallback';
 import { compareMessagesForGrouping } from '../../../../utils/messages';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 
 export type OpenChannelMessageListProps = {
@@ -31,9 +31,9 @@ function OpenChannelMessageList(props: OpenChannelMessageListProps, ref: React.F
     hasMore,
     onScroll,
   } = useOpenChannelContext();
-  const store = useSendbirdStateContext();
+  const { state } = useSendbird();
   const { stringSet } = useLocalization();
-  const userId = store.config.userId;
+  const userId = state.config.userId;
   const localRef = useRef<HTMLDivElement>(null);
   const scrollRef = ref || localRef;
   const [showScrollDownButton, setShowScrollDownButton] = useState(false);

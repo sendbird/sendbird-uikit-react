@@ -7,14 +7,12 @@ import DateSeparator from '../../../../ui/DateSeparator';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import RemoveMessage from '../RemoveMessageModal';
 import FileViewer from '../../../../ui/FileViewer';
-import { useThreadContext } from '../../context/ThreadProvider';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import SuggestedMentionList from '../SuggestedMentionList';
 import MessageInput from '../../../../ui/MessageInput';
 import { ThreadListStateTypes } from '../../types';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import ThreadListItemContent from './ThreadListItemContent';
-import { Role } from '../../../../lib/types';
+import { Role } from '../../../../lib/Sendbird/types';
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { getIsReactionEnabled } from '../../../../utils/getIsReactionEnabled';
 import { SendableMessageType } from '../../../../utils';
@@ -22,6 +20,8 @@ import { User } from '@sendbird/chat';
 import { getCaseResolvedReplyType } from '../../../../lib/utils/resolvedReplyType';
 import { classnames } from '../../../../utils/utils';
 import { MessageComponentRenderers } from '../../../../ui/MessageContent';
+import useThread from '../../context/useThread';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadListItemProps extends MessageComponentRenderers {
   className?: string;
@@ -43,25 +43,28 @@ export default function ThreadListItem(props: ThreadListItemProps): React.ReactE
     renderCustomSeparator,
     handleScroll,
   } = props;
-  const { stores, config } = useSendbirdStateContext();
+  const { state: { stores, config } } = useSendbird();
   const { isOnline, userMention, logger, groupChannel } = config;
   const userId = stores?.userStore?.user?.userId;
   const { dateLocale, stringSet } = useLocalization();
-  const threadContext = useThreadContext?.();
   const {
-    currentChannel,
-    nicknamesMap,
-    emojiContainer,
-    toggleReaction,
-    threadListState,
-    updateMessage,
-    resendMessage,
-    deleteMessage,
-    isMuted,
-    isChannelFrozen,
-    onBeforeDownloadFileMessage,
-  } = threadContext;
-  const openingMessage = threadContext?.message;
+    state: {
+      message: openingMessage,
+      currentChannel,
+      nicknamesMap,
+      emojiContainer,
+      threadListState,
+      isMuted,
+      isChannelFrozen,
+      onBeforeDownloadFileMessage,
+    },
+    actions: {
+      toggleReaction,
+      updateMessage,
+      resendMessage,
+      deleteMessage,
+    },
+  } = useThread();
 
   const [showEdit, setShowEdit] = useState(false);
   const [showRemove, setShowRemove] = useState(false);

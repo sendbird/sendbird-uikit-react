@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { FileMessage, FileMessageCreateParams, MessageMetaArray } from '@sendbird/chat/message';
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
-import { ThreadContextActionTypes } from '../dux/actionTypes';
+import { FileMessage, FileMessageCreateParams, MessageMetaArray, SendingStatus } from '@sendbird/chat/message';
+
+import type { Logger } from '../../../../lib/Sendbird/types';
 import topics, { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
 import {
@@ -19,11 +19,12 @@ import { PublishingModuleType } from '../../../internalInterfaces';
 interface DynamicParams {
   currentChannel: GroupChannel | null;
   onBeforeSendVoiceMessage?: (file: File, quoteMessage?: SendableMessageType) => FileMessageCreateParams;
+  sendMessageStart: (message: SendableMessageType) => void;
+  sendMessageFailure: (message: SendableMessageType) => void;
 }
 interface StaticParams {
   logger: Logger;
   pubSub: SBUGlobalPubSub;
-  threadDispatcher: CustomUseReducerDispatcher;
 }
 type FuncType = (file: File, duration: number, quoteMessage: SendableMessageType) => void;
 interface LocalFileMessage extends FileMessage {
@@ -34,11 +35,12 @@ interface LocalFileMessage extends FileMessage {
 export const useSendVoiceMessageCallback = ({
   currentChannel,
   onBeforeSendVoiceMessage,
+  sendMessageStart,
+  sendMessageFailure,
 }: DynamicParams,
 {
   logger,
   pubSub,
-  threadDispatcher,
 }: StaticParams): FuncType => {
   const sendMessage = useCallback((file: File, duration: number, quoteMessage: SendableMessageType) => {
     const messageParams: FileMessageCreateParams = (
@@ -68,23 +70,19 @@ export const useSendVoiceMessageCallback = ({
     logger.info('Thread | useSendVoiceMessageCallback:  Start sending voice message', messageParams);
     currentChannel?.sendFileMessage(messageParams)
       .onPending((pendingMessage) => {
-        threadDispatcher({
-          type: ThreadContextActionTypes.SEND_MESSAGE_START,
-          payload: {
-            /* pubSub is used instead of messagesDispatcher
+        // @ts-ignore
+        sendMessageStart({
+          /* pubSub is used instead of messagesDispatcher
             to avoid redundantly calling `messageActionTypes.SEND_MESSAGE_START` */
-            // TODO: remove data pollution
-            message: {
-              ...pendingMessage,
-              url: URL.createObjectURL(file),
-              // pending thumbnail message seems to be failed
-              requestState: 'pending',
-              isUserMessage: pendingMessage.isUserMessage,
-              isFileMessage: pendingMessage.isFileMessage,
-              isAdminMessage: pendingMessage.isAdminMessage,
-              isMultipleFilesMessage: pendingMessage.isMultipleFilesMessage,
-            },
-          },
+          // TODO: remove data pollution
+          ...pendingMessage,
+          url: URL.createObjectURL(file),
+          // pending thumbnail message seems to be failed
+          sendingStatus: SendingStatus.PENDING,
+          isUserMessage: pendingMessage.isUserMessage,
+          isFileMessage: pendingMessage.isFileMessage,
+          isAdminMessage: pendingMessage.isAdminMessage,
+          isMultipleFilesMessage: pendingMessage.isMultipleFilesMessage,
         });
         setTimeout(() => scrollIntoLast(), SCROLL_BOTTOM_DELAY_FOR_SEND);
       })
@@ -92,10 +90,7 @@ export const useSendVoiceMessageCallback = ({
         (message as LocalFileMessage).localUrl = URL.createObjectURL(file);
         (message as LocalFileMessage).file = file;
         logger.info('Thread | useSendVoiceMessageCallback: Sending voice message failed.', { message, error });
-        threadDispatcher({
-          type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
-          payload: { message, error },
-        });
+        sendMessageFailure(message as SendableMessageType);
       })
       .onSucceeded((message) => {
         logger.info('Thread | useSendVoiceMessageCallback: Sending voice message succeeded.', message);

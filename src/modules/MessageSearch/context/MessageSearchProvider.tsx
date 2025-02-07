@@ -1,27 +1,19 @@
-import React, {
-  useRef,
-  useState,
-  useReducer,
-  useMemo,
-} from 'react';
-import { SendbirdError } from '@sendbird/chat';
-import type { MessageSearchQuery } from '@sendbird/chat/message';
+import React, { createContext, useRef, useCallback, useEffect, useMemo } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
-import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
-
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
+import { MessageSearchQuery } from '@sendbird/chat/message';
 import { ClientSentMessages } from '../../../types';
-
-import messageSearchReducer from './dux/reducers';
-import messageSearchInitialState, { State as MessageSearchReducerState } from './dux/initialState';
+import { SendbirdError } from '@sendbird/chat';
+import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
 
 import useSetChannel from './hooks/useSetChannel';
 import useGetSearchMessages from './hooks/useGetSearchedMessages';
-import useScrollCallback, {
-  CallbackReturn as UseScrollCallbackType,
-} from './hooks/useScrollCallback';
+import useScrollCallback from './hooks/useScrollCallback';
 import useSearchStringEffect from './hooks/useSearchStringEffect';
 import { CoreMessageType } from '../../../utils';
+import { createStore } from '../../../utils/storeManager';
+import { useStore } from '../../../hooks/useStore';
+import useMessageSearch from './hooks/useMessageSearch';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface MessageSearchProviderProps {
   channelUrl: string;
@@ -32,65 +24,91 @@ export interface MessageSearchProviderProps {
   onResultClick?(message: ClientSentMessages): void;
 }
 
-interface MessageSearchProviderInterface extends MessageSearchProviderProps {
-  requestString?: string;
-  retryCount: number;
-  setRetryCount: React.Dispatch<React.SetStateAction<number>>;
-  selectedMessageId: number;
-  setSelectedMessageId: React.Dispatch<React.SetStateAction<number>>;
-  messageSearchDispatcher: (props: { type: string, payload: any }) => void;
-  scrollRef: React.RefObject<HTMLDivElement>;
-  allMessages: MessageSearchReducerState['allMessages'];
+export interface MessageSearchState extends MessageSearchProviderProps {
+  channelUrl: string;
+  allMessages: ClientSentMessages[];
   loading: boolean;
   isInvalid: boolean;
-  currentChannel: GroupChannel;
-  currentMessageSearchQuery: MessageSearchQuery;
+  initialized: boolean;
+  currentChannel: GroupChannel | null;
+  currentMessageSearchQuery: MessageSearchQuery | null;
   hasMoreResult: boolean;
-  onScroll: UseScrollCallbackType;
-  handleRetryToConnect: () => void;
-  handleOnScroll: (e: React.BaseSyntheticEvent) => void;
+  retryCount: number;
+  selectedMessageId: number | null;
+  requestString: string;
+  onScroll?: ReturnType<typeof useScrollCallback>;
+  handleOnScroll?: (e: React.BaseSyntheticEvent) => void;
+  scrollRef?: React.RefObject<HTMLDivElement>;
 }
 
-const MessageSearchContext = React.createContext<MessageSearchProviderInterface | null>(null);
+const initialState: MessageSearchState = {
+  channelUrl: '',
+  allMessages: [],
+  loading: false,
+  isInvalid: false,
+  initialized: false,
+  currentChannel: null,
+  currentMessageSearchQuery: null,
+  messageSearchQuery: null,
+  hasMoreResult: false,
+  retryCount: 0,
+  selectedMessageId: null,
+  searchString: '',
+  requestString: '',
+  /**
+   * messageSearchDispatcher is no longer used.
+   * Please use useMessageSearch() to get the store and update the state.
+   */
+  // messageSearchDispatcher: null,
+};
 
-const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: MessageSearchProviderProps) => {
-  const {
-    // message search props
-    channelUrl,
-    searchString,
-    messageSearchQuery,
-    onResultLoaded,
-    onResultClick,
-  } = props;
+export const MessageSearchContext = createContext<ReturnType<typeof createStore<MessageSearchState>> | null>(null);
 
-  const globalState = useSendbirdStateContext();
-
-  // hook variables
-  const [retryCount, setRetryCount] = useState(0); // this is a trigger flag for activating useGetSearchMessages
-  const [selectedMessageId, setSelectedMessageId] = useState(0);
-  const [messageSearchStore, messageSearchDispatcher] = useReducer(messageSearchReducer, messageSearchInitialState);
-  const {
-    allMessages,
-    loading,
-    isInvalid,
-    currentChannel,
-    currentMessageSearchQuery,
-    hasMoreResult,
-  } = messageSearchStore;
-
-  const logger = globalState?.config?.logger;
-  const sdk = globalState?.stores?.sdkStore?.sdk;
-  const sdkInit = globalState?.stores?.sdkStore?.initialized;
+const MessageSearchManager: React.FC<MessageSearchProviderProps> = ({
+  channelUrl,
+  searchString,
+  messageSearchQuery,
+  onResultLoaded,
+  onResultClick,
+}) => {
+  const { state, updateState } = useMessageSearchStore();
+  const { state: { config, stores } } = useSendbird();
+  const sdk = stores?.sdkStore?.sdk;
+  const sdkInit = stores?.sdkStore?.initialized;
+  const { logger } = config;
   const scrollRef = useRef<HTMLDivElement>(null);
-  const handleOnScroll = (e: React.BaseSyntheticEvent) => {
-    const scrollElement = e.target as HTMLDivElement;
-    const {
-      scrollTop,
-      scrollHeight,
-      clientHeight,
-    } = scrollElement;
 
-    if (!hasMoreResult) {
+  useSetChannel(
+    { channelUrl, sdkInit },
+    { sdk, logger },
+  );
+
+  const _searchString = useMemo(() => {
+    return searchString ?? messageSearchQuery?.keyword ?? '';
+  }, [searchString, messageSearchQuery?.keyword]);
+  const requestString = useSearchStringEffect({ searchString: _searchString });
+
+  useGetSearchMessages(
+    {
+      currentChannel: state.currentChannel,
+      channelUrl,
+      requestString,
+      messageSearchQuery,
+      onResultLoaded,
+    },
+    { sdk, logger },
+  );
+
+  const onScroll = useScrollCallback(
+    { onResultLoaded },
+    { logger },
+  );
+
+  const handleOnScroll = useCallback((e: React.BaseSyntheticEvent) => {
+    const scrollElement = e.target as HTMLDivElement;
+    const { scrollTop, scrollHeight, clientHeight } = scrollElement;
+
+    if (!state.hasMoreResult) {
       return;
     }
     if (scrollTop + clientHeight >= scrollHeight) {
@@ -98,67 +116,74 @@ const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: Mess
         // after load more searched messages
       });
     }
-  };
+  }, [state.hasMoreResult, onScroll]);
 
-  useSetChannel(
-    { channelUrl, sdkInit },
-    { sdk, logger, messageSearchDispatcher },
-  );
-
-  const _searchString = useMemo(() => {
-    return searchString ?? messageSearchQuery?.keyword ?? '';
-  }, [searchString, messageSearchQuery?.keyword]);
-  const requestString = useSearchStringEffect({ searchString: _searchString }, { messageSearchDispatcher });
-
-  useGetSearchMessages(
-    { currentChannel, channelUrl, requestString, messageSearchQuery, onResultLoaded, retryCount },
-    { sdk, logger, messageSearchDispatcher },
-  );
-
-  const onScroll = useScrollCallback(
-    { currentMessageSearchQuery, hasMoreResult, onResultLoaded },
-    { logger, messageSearchDispatcher },
-  );
-
-  const handleRetryToConnect = () => {
-    setRetryCount(retryCount + 1);
-  };
-  return (
-    <MessageSearchContext.Provider value={{
+  useEffect(() => {
+    updateState({
       channelUrl,
       searchString: _searchString,
-      requestString,
       messageSearchQuery,
-      onResultLoaded,
       onResultClick,
-      retryCount,
-      setRetryCount,
-      selectedMessageId,
-      setSelectedMessageId,
-      messageSearchDispatcher,
-      allMessages,
-      loading,
-      isInvalid,
-      currentChannel,
-      currentMessageSearchQuery,
-      hasMoreResult,
       onScroll,
-      scrollRef,
-      handleRetryToConnect,
       handleOnScroll,
-    }}>
-      {props?.children}
+      scrollRef,
+      requestString,
+    });
+  }, [channelUrl, searchString, messageSearchQuery, onResultClick, updateState, requestString]);
+
+  return null;
+};
+
+const createMessageSearchStore = () => createStore(initialState);
+const InternalMessageSearchProvider: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
+  const storeRef = useRef(createMessageSearchStore());
+
+  return (
+    <MessageSearchContext.Provider value={storeRef.current}>
+      {children}
     </MessageSearchContext.Provider>
   );
 };
 
+const MessageSearchProvider: React.FC<MessageSearchProviderProps> = ({
+  children,
+  channelUrl,
+  searchString,
+  messageSearchQuery,
+  onResultLoaded,
+  onResultClick,
+}) => {
+
+  return (
+    <InternalMessageSearchProvider>
+      <MessageSearchManager
+        channelUrl={channelUrl}
+        searchString={searchString}
+        messageSearchQuery={messageSearchQuery}
+        onResultLoaded={onResultLoaded}
+        onResultClick={onResultClick}
+      />
+      {children}
+    </InternalMessageSearchProvider>
+  );
+};
+
+// Keep this function for backward compatibility.
 const useMessageSearchContext = () => {
-  const context = React.useContext(MessageSearchContext);
-  if (!context) throw new Error('MessageSearchContext not found. Use within the MessageSearch module.');
-  return context;
+  const { state, actions } = useMessageSearch();
+  return { ...state, ...actions };
 };
 
 export {
   MessageSearchProvider,
   useMessageSearchContext,
+  MessageSearchManager,
+};
+
+/**
+ * A specialized hook for MessageSearch state management
+ * @returns {ReturnType<typeof createStore<MessageSearchState>>}
+ */
+const useMessageSearchStore = () => {
+  return useStore(MessageSearchContext, state => state, initialState);
 };

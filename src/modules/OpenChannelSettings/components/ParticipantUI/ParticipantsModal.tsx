@@ -15,7 +15,7 @@ import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { noop } from '../../../../utils/utils';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface Props {
   onCancel(): void;
@@ -24,7 +24,7 @@ interface Props {
 export default function ParticipantsModal({
   onCancel,
 }: Props): ReactElement {
-  const state = useSendbirdStateContext();
+  const { state } = useSendbird();
   const { channel } = useOpenChannelSettingsContext();
   const { stringSet } = useContext(LocalizationContext);
   const [participants, setParticipants] = useState<Array<User> | null>([]);

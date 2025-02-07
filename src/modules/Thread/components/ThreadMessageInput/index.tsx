@@ -3,22 +3,22 @@ import { MutedState } from '@sendbird/chat/groupChannel';
 
 import './index.scss';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
-import { useThreadContext } from '../../context/ThreadProvider';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 
 import MessageInput from '../../../../ui/MessageInput';
 import { MessageInputKeys } from '../../../../ui/MessageInput/const';
 import { SuggestedMentionList } from '../SuggestedMentionList';
 import { VoiceMessageInputWrapper } from '../../../GroupChannel/components/MessageInputWrapper';
-import { Role } from '../../../../lib/types';
+import { Role } from '../../../../lib/Sendbird/types';
 
 import { useDirtyGetMentions } from '../../../Message/hooks/useDirtyGetMentions';
 import { useHandleUploadFiles } from '../../../Channel/context/hooks/useHandleUploadFiles';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../../Channel/context/utils';
 import { User } from '@sendbird/chat';
 import { classnames } from '../../../../utils/utils';
+import useThread from '../../context/useThread';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadMessageInputProps {
   className?: string;
@@ -41,27 +41,31 @@ const ThreadMessageInput = (
     acceptableMimeTypes,
   } = props;
 
-  const { config } = useSendbirdStateContext();
+  const { state: { config } } = useSendbird();
   const { isMobile } = useMediaQueryContext();
   const { stringSet } = useLocalization();
   const { isOnline, userMention, logger, groupChannel } = config;
-  const threadContext = useThreadContext();
+  const threadContext = useThread();
   const {
-    currentChannel,
-    parentMessage,
-    sendMessage,
-    sendFileMessage,
-    sendVoiceMessage,
-    sendMultipleFilesMessage,
-    isMuted,
-    isChannelFrozen,
-    allThreadMessages,
+    state: {
+      currentChannel,
+      parentMessage,
+      isMuted,
+      isChannelFrozen,
+      allThreadMessages,
+    },
+    actions: {
+      sendMessage,
+      sendFileMessage,
+      sendVoiceMessage,
+      sendMultipleFilesMessage,
+    },
   } = threadContext;
   const messageInputRef = useRef();
 
   const isMentionEnabled = groupChannel.enableMention;
   const isVoiceMessageEnabled = groupChannel.enableVoiceMessage;
-  const isMultipleFilesMessageEnabled = threadContext.isMultipleFilesMessageEnabled ?? config.isMultipleFilesMessageEnabled;
+  const isMultipleFilesMessageEnabled = threadContext.state.isMultipleFilesMessageEnabled ?? config.isMultipleFilesMessageEnabled;
 
   const threadInputDisabled = props.disabled
     || !isOnline

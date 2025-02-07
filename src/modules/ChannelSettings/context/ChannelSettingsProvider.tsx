@@ -1,178 +1,135 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import { GroupChannel, GroupChannelHandler, GroupChannelUpdateParams } from '@sendbird/chat/groupChannel';
+import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
 
-import type { UserListItemProps } from '../../../ui/UserListItem';
-import useSendbirdStateContext from '../../../hooks/useSendbirdStateContext';
-import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
+import type { ChannelSettingsContextProps, ChannelSettingsState } from './types';
+
+import useSetChannel from './hooks/useSetChannel';
+import { useStore } from '../../../hooks/useStore';
+import { useChannelHandler } from './hooks/useChannelHandler';
+
 import uuidv4 from '../../../utils/uuid';
-import { useAsyncRequest } from '../../../hooks/useAsyncRequest';
-import compareIds from '../../../utils/compareIds';
+import { classnames } from '../../../utils/utils';
+import { createStore } from '../../../utils/storeManager';
+import { UserProfileProvider } from '../../../lib/UserProfileContext';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import useChannelSettings from './useChannelSettings';
 
-interface ApplicationUserListQuery {
-  limit?: number;
-  userIdsFilter?: Array<string>;
-  metaDataKeyFilter?: string;
-  metaDataValuesFilter?: Array<string>;
-}
+export const ChannelSettingsContext = createContext<ReturnType<typeof createStore<ChannelSettingsState>> | null>(null);
 
-interface ChannelSettingsQueries {
-  applicationUserListQuery?: ApplicationUserListQuery;
-}
-
-type OverrideInviteUserType = {
-  users: Array<string>;
-  onClose: () => void;
-  channel: GroupChannel;
+const initialState: ChannelSettingsState = {
+  // Props
+  channelUrl: '',
+  onCloseClick: undefined,
+  onLeaveChannel: undefined,
+  onChannelModified: undefined,
+  onBeforeUpdateChannel: undefined,
+  renderUserListItem: undefined,
+  queries: {},
+  overrideInviteUser: undefined,
+  // Managed states
+  channel: null,
+  loading: false,
+  invalidChannel: false,
+  forceUpdateUI: () => { },
+  setChannelUpdateId: () => { },
 };
 
-interface CommonChannelSettingsProps {
-  channelUrl: string;
-  onCloseClick?(): void;
-  onLeaveChannel?(): void;
-  onChannelModified?(channel: GroupChannel): void;
-  onBeforeUpdateChannel?(currentTitle: string, currentImg: File | null, data: string | undefined): GroupChannelUpdateParams;
-  overrideInviteUser?(params: OverrideInviteUserType): void;
-  queries?: ChannelSettingsQueries;
-  renderUserListItem?: (props: UserListItemProps) => ReactNode;
-}
-export interface ChannelSettingsContextProps extends
-  CommonChannelSettingsProps,
-  Pick<UserProfileProviderProps, 'renderUserProfile' | 'disableUserProfile'> {
-  children?: React.ReactElement;
-  className?: string;
-}
+/**
+ * @returns {ReturnType<typeof createStore<ChannelSettingsState>>}
+ */
+const useChannelSettingsStore = () => {
+  return useStore(ChannelSettingsContext, state => state, initialState);
+};
 
-interface ChannelSettingsProviderInterface extends CommonChannelSettingsProps {
-  setChannelUpdateId(uniqId: string): void;
-  forceUpdateUI(): void;
-  channel: GroupChannel | null;
-  loading: boolean;
-  invalidChannel: boolean;
-}
+const ChannelSettingsManager = ({
+  channelUrl,
+  onCloseClick,
+  onLeaveChannel,
+  onChannelModified,
+  overrideInviteUser,
+  onBeforeUpdateChannel,
+  queries,
+  renderUserListItem,
+}: ChannelSettingsContextProps) => {
+  const { state } = useSendbird();
+  const { config, stores } = state;
+  const { updateState } = useChannelSettingsStore();
+  const { logger } = config;
+  const { sdk, initialized } = stores?.sdkStore ?? {};
 
-const ChannelSettingsContext = React.createContext<ChannelSettingsProviderInterface | null>(null);
+  const [channelUpdateId, setChannelUpdateId] = useState(() => uuidv4());
+  const forceUpdateUI = useCallback(() => setChannelUpdateId(uuidv4()), []);
 
-const ChannelSettingsProvider = (props: ChannelSettingsContextProps) => {
-  const {
-    children,
-    className,
+  const dependencies = [channelUpdateId];
+  useSetChannel({
+    channelUrl,
+    sdk,
+    logger,
+    initialized,
+    dependencies,
+  });
+  useChannelHandler({
+    sdk,
+    channelUrl,
+    logger,
+    forceUpdateUI,
+    dependencies,
+  });
+
+  useEffect(() => {
+    updateState({
+      channelUrl,
+      onCloseClick,
+      onLeaveChannel,
+      onChannelModified,
+      onBeforeUpdateChannel,
+      renderUserListItem,
+      queries,
+      overrideInviteUser,
+      forceUpdateUI,
+      setChannelUpdateId,
+    });
+  }, [
     channelUrl,
     onCloseClick,
     onLeaveChannel,
     onChannelModified,
-    overrideInviteUser,
     onBeforeUpdateChannel,
-    queries,
     renderUserListItem,
-  } = props;
-  const { config, stores } = useSendbirdStateContext();
-  const { sdkStore } = stores;
-  const { logger } = config;
-  const [channelHandlerId, setChannelHandlerId] = useState<string>();
+    queries,
+    overrideInviteUser,
+    forceUpdateUI,
+  ]);
 
-  // hack to keep track of channel updates by triggering useEffect
-  const [channelUpdateId, setChannelUpdateId] = useState(() => uuidv4());
-  const forceUpdateUI = () => setChannelUpdateId(uuidv4());
+  return null;
+};
 
-  const {
-    response: channel = null,
-    loading,
-    error,
-    refresh,
-  } = useAsyncRequest(
-    async () => {
-      logger.info('ChannelSettings: fetching channel');
-
-      if (!channelUrl) {
-        logger.warning('ChannelSettings: channel url is required');
-        return;
-      } else if (!sdkStore.initialized || !sdkStore.sdk) {
-        logger.warning('ChannelSettings: SDK is not initialized');
-        return;
-      } else if (!sdkStore.sdk.groupChannel) {
-        logger.warning('ChannelSettings: GroupChannelModule is not specified in the SDK');
-        return;
-      }
-
-      try {
-        if (channelHandlerId) {
-          if (sdkStore.sdk?.groupChannel?.removeGroupChannelHandler) {
-            logger.info('ChannelSettings: Removing message reciver handler', channelHandlerId);
-            sdkStore.sdk.groupChannel.removeGroupChannelHandler(channelHandlerId);
-          } else if (sdkStore.sdk?.groupChannel) {
-            logger.error('ChannelSettings: Not found the removeGroupChannelHandler');
-          }
-
-          setChannelHandlerId(undefined);
-        }
-
-        // FIXME :: refactor below code by new state management protocol
-        const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
-        const channelHandler: GroupChannelHandler = {
-          onUserLeft: (channel, user) => {
-            if (compareIds(channel?.url, channelUrl)) {
-              logger.info('ChannelSettings: onUserLeft', { channel, user });
-              refresh();
-            }
-          },
-          onUserBanned: (channel, user) => {
-            if (compareIds(channel?.url, channelUrl) && channel.isGroupChannel()) {
-              logger.info('ChannelSettings: onUserBanned', { channel, user });
-              refresh();
-            }
-          },
-        };
-
-        const newChannelHandlerId = uuidv4();
-        sdkStore.sdk.groupChannel?.addGroupChannelHandler(newChannelHandlerId, new GroupChannelHandler(channelHandler));
-        setChannelHandlerId(newChannelHandlerId);
-
-        return channel;
-      } catch (error) {
-        logger.error('ChannelSettings: fetching channel error:', error);
-        throw error;
-      }
-    },
-    {
-      resetResponseOnRefresh: true,
-      persistLoadingIfNoResponse: true,
-      deps: [sdkStore.initialized, sdkStore.sdk.groupChannel],
-    },
-  );
-
-  useEffect(() => {
-    refresh();
-  }, [channelUrl, channelUpdateId]);
-
+const createChannelSettingsStore = () => createStore(initialState);
+const InternalChannelSettingsProvider = ({ children }) => {
+  const storeRef = useRef(createChannelSettingsStore());
   return (
-    <ChannelSettingsContext.Provider
-      value={{
-        channelUrl,
-        onCloseClick,
-        onLeaveChannel,
-        onChannelModified,
-        onBeforeUpdateChannel,
-        queries,
-        overrideInviteUser,
-        setChannelUpdateId,
-        forceUpdateUI,
-        channel,
-        loading,
-        invalidChannel: Boolean(error),
-        renderUserListItem,
-      }}
-    >
-      <UserProfileProvider {...props}>
-        <div className={`sendbird-channel-settings ${className}`}>{children}</div>
-      </UserProfileProvider>
+    <ChannelSettingsContext.Provider value={storeRef.current}>
+      {children}
     </ChannelSettingsContext.Provider>
   );
 };
 
-const useChannelSettingsContext = () => {
-  const context = React.useContext(ChannelSettingsContext);
-  if (!context) throw new Error('ChannelSettingsContext not found. Use within the ChannelSettings module');
-
-  return context;
+const ChannelSettingsProvider = (props: ChannelSettingsContextProps) => {
+  const { children, className } = props;
+  return (
+    <InternalChannelSettingsProvider>
+      <ChannelSettingsManager {...props} />
+      <UserProfileProvider {...props}>
+        <div className={classnames('sendbird-channel-settings', className)}>
+          {children}
+        </div>
+      </UserProfileProvider>
+    </InternalChannelSettingsProvider>
+  );
 };
+
+const useChannelSettingsContext = () => {
+  const { state, actions } = useChannelSettings();
+  return { ...state, ...actions };
+};
+
 export { ChannelSettingsProvider, useChannelSettingsContext };

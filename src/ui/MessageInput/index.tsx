@@ -10,7 +10,6 @@ import renderMentionLabelToString from '../MentionUserLabel/renderToString';
 import Icon, { IconColors, IconTypes } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
-import useSendbirdStateContext from '../../hooks/useSendbirdStateContext';
 
 import { extractTextAndMentions, isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
 import { arrayEqual, getMimeTypesUIKitAccepts } from '../../utils';
@@ -26,6 +25,7 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { User } from '@sendbird/chat';
 import { OpenChannel } from '@sendbird/chat/openChannel';
 import { UserMessage } from '@sendbird/chat/message';
+import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
 const TEXT_FIELD_ID = 'sendbird-message-input-text-field';
 const noop = () => {
@@ -126,7 +126,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
 
   const textFieldId = messageFieldId || TEXT_FIELD_ID;
   const { stringSet } = useLocalization();
-  const { config, eventHandlers } = useSendbirdStateContext();
+  const { state: { config, eventHandlers } } = useSendbird();
 
   const isFileUploadEnabled = checkIfFileUploadEnabled({
     channel,

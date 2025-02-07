@@ -10,8 +10,8 @@ import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import Label, { LabelColors, LabelTypography, LabelStringSet } from '../../../../ui/Label';
 import { isImage, isSupportedFileView, isVideo } from '../../../../utils';
 import { MODAL_ROOT } from '../../../../hooks/useModal';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import Modal from '../../../../ui/Modal';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 type DeleteMessageTypeLegacy = (message: CoreMessageType) => Promise<void>;
 export interface FileViewerViewProps extends FileViewerProps {
@@ -28,7 +28,8 @@ export const FileViewerView = ({
   const { sender, type, url, name = '', threadInfo } = message;
   const { profileUrl, nickname, userId } = sender;
 
-  const { config } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { config } = state;
 
   return createPortal(
     <FileViewerComponent

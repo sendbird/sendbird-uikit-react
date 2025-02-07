@@ -23,11 +23,9 @@ import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useMediaQueryContext } from '../../../../lib/MediaQueryContext';
 import useLongPress from '../../../../hooks/useLongPress';
 import MobileMenu from '../../../../ui/MobileMenu';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { ThreadMessageKind } from '../../../../ui/MultipleFilesMessageItemBody';
 import { useThreadMessageKindKeySelector } from '../../../Channel/context/hooks/useThreadMessageKindKeySelector';
 import { useFileInfoListWithUploaded } from '../../../Channel/context/hooks/useFileInfoListWithUploaded';
-import { useThreadContext } from '../../context/ThreadProvider';
 import { classnames, deleteNullish } from '../../../../utils/utils';
 import { MessageMenu, MessageMenuProps } from '../../../../ui/MessageMenu';
 import useElementObserver from '../../../../hooks/useElementObserver';
@@ -36,6 +34,8 @@ import MessageProfile, { MessageProfileProps } from '../../../../ui/MessageConte
 import MessageBody, { CustomSubcomponentsProps, MessageBodyProps } from '../../../../ui/MessageContent/MessageBody';
 import { MessageHeaderProps, MessageHeader } from '../../../../ui/MessageContent/MessageHeader';
 import { MobileBottomSheetProps } from '../../../../ui/MobileMenu/types';
+import useThread from '../../context/useThread';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface ThreadListItemContentProps extends MessageComponentRenderers {
   className?: string;
@@ -99,7 +99,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
 
   const { isMobile } = useMediaQueryContext();
   const { dateLocale, stringSet } = useLocalization();
-  const { config, eventHandlers } = useSendbirdStateContext?.() || {};
+  const { state: { config, eventHandlers } } = useSendbird();
   const { logger } = config;
   const onPressUserProfileHandler = eventHandlers?.reaction?.onPressUserProfile;
   const isMenuMounted = useElementObserver(
@@ -109,7 +109,15 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
       document.getElementById(EMOJI_MENU_ROOT_ID),
     ],
   );
-  const { deleteMessage, onBeforeDownloadFileMessage, filterEmojiCategoryIds } = useThreadContext();
+  const {
+    state: {
+      onBeforeDownloadFileMessage,
+      filterEmojiCategoryIds,
+    },
+    actions: {
+      deleteMessage,
+    },
+  } = useThread();
 
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
@@ -120,7 +128,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
   );
   const supposedHoverClassName = isMenuMounted ? 'sendbird-mouse-hover' : '';
   const isReactionEnabledInChannel = isReactionEnabled && !channel?.isEphemeral;
-  const isOgMessageEnabledInGroupChannel = channel.isGroupChannel() && config.groupChannel.enableOgtag;
+  const isOgMessageEnabledInGroupChannel = channel?.isGroupChannel() && config.groupChannel.enableOgtag;
 
   // Mobile
   const mobileMenuRef = useRef(null);

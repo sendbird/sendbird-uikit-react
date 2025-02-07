@@ -3,10 +3,10 @@ import {
   isFileMessage,
   isUrl,
   isUserMessage,
-  isMultipleFilesMessage, isDefaultChannelName, DEFAULT_GROUP_CHANNEL_NAME, DEFAULT_AI_CHATBOT_CHANNEL_NAME,
+  isMultipleFilesMessage, isDefaultChannelName, DEFAULT_GROUP_CHANNEL_NAME, DEFAULT_AI_CHATBOT_CHANNEL_NAME, arrayEqual,
 } from '../index';
 import { AdminMessage, FileMessage, MultipleFilesMessage, UserMessage } from '@sendbird/chat/message';
-import { deleteNullish } from '../utils';
+import { delay, deleteNullish } from '../utils';
 import { isMobileIOS } from '../browser';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 
@@ -236,6 +236,45 @@ describe('deleteNullish', () => {
   });
 });
 
+describe('delay', () => {
+  const errorBound = 10;
+
+  it('should resolve after the specified time', async () => {
+    const start = Date.now();
+    const delayTime = 100;
+
+    await delay(delayTime);
+
+    const end = Date.now();
+    const elapsed = end - start;
+
+    // Check if the elapsed time is at least the delay time
+    expect(elapsed).toBeGreaterThanOrEqual(delayTime - errorBound);
+  });
+
+  it('should resolve immediately for 0 milliseconds', async () => {
+    const start = Date.now();
+
+    await delay(0);
+
+    const end = Date.now();
+    const elapsed = end - start;
+
+    // Check if the elapsed time is very small
+    expect(elapsed).toBeLessThan(errorBound);
+  });
+  it('should resolve immediately when no parameter is provided', async () => {
+    const start = Date.now();
+
+    await delay();
+
+    const end = Date.now();
+    const elapsed = end - start;
+
+    expect(elapsed).toBeLessThan(errorBound);
+  });
+});
+
 describe('isDefaultChannelName', () => {
   it('return true if channel is undefined', () => {
     const result = isDefaultChannelName(undefined);
@@ -281,5 +320,35 @@ describe('isDefaultChannelName', () => {
     const result = isDefaultChannelName(channel);
 
     expect(result).toBe(false);
+  });
+});
+
+describe('arrayEqual', () => {
+  it('return true if two arrays are equal', () => {
+    const arr1 = ['elem', 2, true];
+    const arr2 = ['elem', 2, true];
+
+    expect(arrayEqual(arr1, arr2)).toBe(true);
+  });
+
+  it('return false if two arrays are not equal', () => {
+    const arr1 = ['elem', 2, true];
+    const arr2 = ['elem', 42, false];
+
+    expect(arrayEqual(arr1, arr2)).toBe(false);
+  });
+
+  it('return false if two array doesn\'t have same length', () => {
+    const arr1 = ['elem', 2, true];
+    const arr2 = ['elem', 42];
+
+    expect(arrayEqual(arr1, arr2)).toBe(false);
+  });
+
+  it('return false if the one of parameter is not array', () => {
+    const arr1 = ['elem', 2, true];
+    const arr2 = {};
+
+    expect(arrayEqual(arr1, arr2)).toBe(false);
   });
 });

@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { ConnectionState } from '@sendbird/chat';
 
 import ConnectionHandler from '../lib/handlers/ConnectionHandler';
-import useSendbirdStateContext from './useSendbirdStateContext';
 import uuidv4 from '../utils/uuid';
+import useSendbird from '../lib/Sendbird/context/hooks/useSendbird';
 
 export const useConnectionState = (): ConnectionState => {
-  const { stores } = useSendbirdStateContext();
+  const { state: { stores } } = useSendbird();
   const { sdkStore } = stores;
   const { sdk } = sdkStore;
 

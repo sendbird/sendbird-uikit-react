@@ -2815,6 +2815,7 @@ __metadata:
     "@testing-library/react": ^16.2.0
     "@testing-library/user-event": ^14.4.3
     "@types/node": ^22.7.2
+    "@types/use-sync-external-store": ^0.0.6
     "@typescript-eslint/eslint-plugin": ^6.17.0
     "@typescript-eslint/parser": ^6.17.0
     autoprefixer: ^9.7.4
@@ -2860,6 +2861,7 @@ __metadata:
     ts-pattern: ^4.2.2
     typedoc: ^0.25.13
     typescript: ^5.4.5
+    use-sync-external-store: ^1.2.2
     vite: ^5.1.5
     vite-plugin-svgr: ^4.2.0
   peerDependencies:
@@ -3830,6 +3832,13 @@ __metadata:
   version: 2.0.11
   resolution: "@types/unist@npm:2.0.11"
   checksum: 6d436e832bc35c6dde9f056ac515ebf2b3384a1d7f63679d12358766f9b313368077402e9c1126a14d827f10370a5485e628bf61aa91117cf4fc882423191a4e
+  languageName: node
+  linkType: hard
+
+"@types/use-sync-external-store@npm:^0.0.6":
+  version: 0.0.6
+  resolution: "@types/use-sync-external-store@npm:0.0.6"
+  checksum: a95ce330668501ad9b1c5b7f2b14872ad201e552a0e567787b8f1588b22c7040c7c3d80f142cbb9f92d13c4ea41c46af57a20f2af4edf27f224d352abcfe4049
   languageName: node
   linkType: hard
 
@@ -14275,6 +14284,15 @@ __metadata:
     querystringify: ^2.1.1
     requires-port: ^1.0.0
   checksum: fbdba6b1d83336aca2216bbdc38ba658d9cfb8fc7f665eb8b17852de638ff7d1a162c198a8e4ed66001ddbf6c9888d41e4798912c62b4fd777a31657989f7bdf
+  languageName: node
+  linkType: hard
+
+"use-sync-external-store@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "use-sync-external-store@npm:1.2.2"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: fe07c071c4da3645f112c38c0e57beb479a8838616ff4e92598256ecce527f2888c08febc7f9b2f0ce2f0e18540ba3cde41eb2035e4fafcb4f52955037098a81
   languageName: node
   linkType: hard
 

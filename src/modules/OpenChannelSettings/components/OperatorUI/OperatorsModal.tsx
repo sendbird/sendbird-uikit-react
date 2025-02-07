@@ -11,10 +11,10 @@ import IconButton from '../../../../ui/IconButton';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import ContextMenu, { MenuItem, MenuItems } from '../../../../ui/ContextMenu';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import { OperatorListQuery, User } from '@sendbird/chat';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface Props { onCancel?(): void }
 
@@ -23,7 +23,7 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
   const [operatorQuery, setOperatorQuery] = useState<OperatorListQuery | null>(null);
 
   const { channel } = useOpenChannelSettingsContext();
-  const state = useSendbirdStateContext();
+  const { state } = useSendbird();
   const currentUserId = state?.config?.userId;
   const { stringSet } = useContext(LocalizationContext);
 

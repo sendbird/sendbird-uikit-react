@@ -1,23 +1,24 @@
 import './channel-settings-ui.scss';
 
-import React, { ReactNode, useContext, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
+import useChannelSettings from '../../context/useChannelSettings';
+import { useLocalization } from '../../../../lib/LocalizationContext';
+import useMenuItems from './hooks/useMenuItems';
 
+import { deleteNullish, classnames } from '../../../../utils/utils';
 import { ChannelSettingsHeader, ChannelSettingsHeaderProps } from './ChannelSettingsHeader';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
-import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
+import { UserListItemProps } from '../../../../ui/UserListItem';
+
 import ChannelProfile from '../ChannelProfile';
 import LeaveChannelModal from '../LeaveChannel';
-import { deleteNullish, classnames } from '../../../../utils/utils';
 import MenuItem from './MenuItem';
 import MenuListByRole from './MenuListByRole';
-import useMenuItems from './hooks/useMenuItems';
-import { UserListItemProps } from '../../../../ui/UserListItem';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface ModerationPanelProps {
   menuItems: ReturnType<typeof useMenuItems>;
@@ -37,7 +38,6 @@ export interface ChannelSettingsUIProps {
 }
 
 const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
-  const { channel, invalidChannel, onCloseClick, loading } = useChannelSettingsContext();
   const {
     renderHeader = (props: ChannelSettingsHeaderProps) => <ChannelSettingsHeader {...props} />,
     renderLeaveChannel,
@@ -46,13 +46,20 @@ const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
     renderPlaceholderError,
     renderPlaceholderLoading,
   } = deleteNullish(props);
+  const { state } = useSendbird();
+  const { isOnline } = state.config;
+  const {
+    state: {
+      channel,
+      invalidChannel,
+      onCloseClick,
+      loading,
+    },
+  } = useChannelSettings();
+  const { stringSet } = useLocalization();
   const menuItems = useMenuItems();
 
-  const state = useSendbirdStateContext();
   const [showLeaveChannelModal, setShowLeaveChannelModal] = useState(false);
-
-  const isOnline = state?.config?.isOnline;
-  const { stringSet } = useContext(LocalizationContext);
 
   if (loading) {
     if (renderPlaceholderLoading) return renderPlaceholderLoading();
@@ -120,6 +127,7 @@ const ChannelSettingsUI = (props: ChannelSettingsUIProps) => {
 };
 
 export default ChannelSettingsUI;
+/** NOTE: For exportation */
 export { OperatorList } from '../ModerationPanel/OperatorList';
 export { MemberList } from '../ModerationPanel/MemberList';
 export { MutedMemberList } from '../ModerationPanel/MutedMemberList';

@@ -12,15 +12,15 @@ import Message from '../Message';
 import UnreadCount from '../UnreadCount';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
-import { useGroupChannelContext } from '../../context/GroupChannelProvider';
 import { GroupChannelUIBasicProps } from '../GroupChannelUI/GroupChannelUIView';
 import { deleteNullish } from '../../../../utils/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { getComponentKeyFromMessage, isContextMenuClosed } from '../../context/utils';
 import { InfiniteList } from './InfiniteList';
+import { useGroupChannel } from '../../context/hooks/useGroupChannel';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 
 export interface GroupChannelMessageListProps {
@@ -68,27 +68,31 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   } = deleteNullish(props);
 
   const {
-    channelUrl,
-    hasNext,
-    loading,
-    messages,
-    newMessages,
-    scrollToBottom,
-    isScrollBottomReached,
-    isMessageGroupingEnabled,
-    scrollRef,
-    scrollDistanceFromBottomRef,
-    scrollPositionRef,
-    currentChannel,
-    replyType,
-    scrollPubSub,
-    loadNext,
-    loadPrevious,
-    setIsScrollBottomReached,
-    resetNewMessages,
-  } = useGroupChannelContext();
+    state: {
+      channelUrl,
+      hasNext,
+      loading,
+      messages,
+      newMessages,
+      isScrollBottomReached,
+      isMessageGroupingEnabled,
+      currentChannel,
+      replyType,
+      scrollPubSub,
+      loadNext,
+      loadPrevious,
+      resetNewMessages,
+      scrollRef,
+      scrollPositionRef,
+      scrollDistanceFromBottomRef,
+    },
+    actions: {
+      scrollToBottom,
+      setIsScrollBottomReached,
+    },
+  } = useGroupChannel();
 
-  const store = useSendbirdStateContext();
+  const { state } = useSendbird();
   const { stringSet } = useLocalization();
 
   const [unreadSinceDate, setUnreadSinceDate] = useState<Date>();
@@ -165,8 +169,8 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       <div
         className={`sendbird-conversation__messages ${className}`}
         dir={getHTMLTextDirection(
-          store?.config?.htmlTextDirection,
-          store?.config?.forceLeftToRightMessageLayout,
+          state.config.htmlTextDirection,
+          state.config.forceLeftToRightMessageLayout,
         )}
       >
         <InfiniteList
@@ -194,7 +198,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
               currentMessage: message as CoreMessageType,
               currentChannel: currentChannel!,
             });
-            const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === store.config.userId;
+            const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === state.config.userId;
             return (
               <MessageProvider message={message} key={getComponentKeyFromMessage(message)} isByMe={isOutgoingMessage}>
                 {renderMessage({
@@ -212,8 +216,8 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
           }}
           typingIndicator={
             !hasNext()
-            && store?.config?.groupChannel?.enableTypingIndicator
-            && store?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble) && (
+            && state?.config?.groupChannel?.enableTypingIndicator
+            && state?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble) && (
               <TypingIndicatorBubbleWrapper channelUrl={channelUrl} handleScroll={onMessageContentSizeChanged} />
             )
           }
@@ -227,8 +231,13 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
 };
 
 const TypingIndicatorBubbleWrapper = (props: { handleScroll: () => void; channelUrl: string }) => {
-  const { stores } = useSendbirdStateContext();
-  const { isScrollBottomReached, scrollPubSub } = useGroupChannelContext();
+  const { state: { stores } } = useSendbird();
+  const {
+    state: {
+      isScrollBottomReached,
+      scrollPubSub,
+    },
+  } = useGroupChannel();
   const [typingMembers, setTypingMembers] = useState<Member[]>([]);
 
   useGroupChannelHandler(stores.sdkStore.sdk, {

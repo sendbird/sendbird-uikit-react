@@ -5,7 +5,7 @@ import React from 'react';
 import { ThreadProvider, ThreadProviderProps, useThreadContext } from '../ThreadProvider';
 import { SendableMessageType } from '../../../../utils';
 
-const mockSendbirdStateContext = {
+const mockState = {
   stores: {
     userStore: {
     },
@@ -30,22 +30,19 @@ const mockSendbirdStateContext = {
     isOnline: true,
   },
 };
+const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
 
-jest.mock('../../../../hooks/useSendbirdStateContext', () => ({
+jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: () => mockSendbirdStateContext,
-}));
-
-jest.mock('../../../../lib/Sendbird', () => ({
-  __esModule: true,
-  useSendbirdStateContext: () => mockSendbirdStateContext,
+  default: jest.fn(() => ({ state: mockState, actions: mockActions })),
+  useSendbird: jest.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
 jest.mock('../hooks/useThreadFetchers', () => ({
   useThreadFetchers: jest.fn().mockReturnValue({
-    initialize: jest.fn(),
-    loadPrevious: jest.fn(),
-    loadNext: jest.fn(),
+    initializeThreadFetcher: jest.fn(),
+    fetchPrevThreads: jest.fn(),
+    fetchNextThreads: jest.fn(),
   }),
 }));
 

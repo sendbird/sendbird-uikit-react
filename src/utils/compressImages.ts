@@ -1,6 +1,5 @@
-import type { ImageCompressionOptions, ImageCompressionOutputFormatType } from '../lib/Sendbird';
+import type { ImageCompressionOptions, ImageCompressionOutputFormatType, Logger } from '../lib/Sendbird/types';
 import pxToNumber from './pxToNumber';
-import { Logger } from '../lib/SendbirdState';
 
 interface CompressImageParams {
   imageFile: File;

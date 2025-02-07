@@ -4,11 +4,11 @@ import { User } from '@sendbird/chat';
 import Modal from '../../../../ui/Modal';
 import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem, { type UserListItemProps } from '../../../../ui/UserListItem';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 import { useOnScrollPositionChangeDetector } from '../../../../hooks/useOnScrollReachedEndDetector';
 import { UserListQuery } from '../../../../types';
+import useChannelSettings from '../../context/useChannelSettings';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 type UserId = string;
 export interface InviteUsersModalProps {
@@ -26,11 +26,11 @@ export function InviteUsersModal({
   const [userListQuery, setUserListQuery] = useState<UserListQuery | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<Record<UserId, User>>({});
 
-  const state = useSendbirdStateContext();
+  const { state } = useSendbird();
   const sdk = state?.stores?.sdkStore?.sdk;
   const globalUserListQuery = state?.config?.userListQuery;
 
-  const { channel, overrideInviteUser, queries } = useChannelSettingsContext();
+  const { state: { channel, overrideInviteUser, queries } } = useChannelSettings();
   const { stringSet } = useLocalization();
 
   const onScroll = useOnScrollPositionChangeDetector({

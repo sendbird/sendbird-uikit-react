@@ -1,8 +1,8 @@
 import type { OpenChannel } from '@sendbird/chat/openChannel';
+import type { Logger } from '../../../../lib/Sendbird/types';
 import { useCallback } from 'react';
 import * as messageActionTypes from '../dux/actionTypes';
 import { SendableMessageType } from '../../../../utils';
-import { Logger } from '../../../../lib/SendbirdState';
 
 interface DynamicParams {
   currentOpenChannel: OpenChannel | null;

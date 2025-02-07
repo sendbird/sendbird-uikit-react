@@ -1,5 +1,6 @@
 import { DependencyList, useLayoutEffect, useRef, useState } from 'react';
 import pubSubFactory from '../../../../lib/pubSub';
+import { useGroupChannel } from './useGroupChannel';
 
 /**
  * You can pass the resolve function to scrollPubSub, if you want to catch when the scroll is finished.
@@ -30,7 +31,9 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto', deps: Dependen
   const scrollDistanceFromBottomRef = useRef(0);
 
   const [scrollPubSub] = useState(() => pubSubFactory<ScrollTopics, ScrollTopicUnion>({ publishSynchronous: true }));
-  const [isScrollBottomReached, setIsScrollBottomReached] = useState(true);
+  const {
+    actions: { setIsScrollBottomReached },
+  } = useGroupChannel();
 
   // SideEffect: Reset scroll state
   useLayoutEffect(() => {
@@ -95,8 +98,6 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto', deps: Dependen
   return {
     scrollRef,
     scrollPubSub,
-    isScrollBottomReached,
-    setIsScrollBottomReached,
     scrollDistanceFromBottomRef,
     scrollPositionRef,
   };

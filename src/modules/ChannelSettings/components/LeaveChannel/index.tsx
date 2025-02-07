@@ -3,8 +3,6 @@ import './leave-channel.scss';
 import React from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
-import { useChannelSettingsContext } from '../../context/ChannelSettingsProvider';
 import { noop } from '../../../../utils/utils';
 
 import Modal from '../../../../ui/Modal';
@@ -16,6 +14,8 @@ import Label, {
   LabelColors,
 } from '../../../../ui/Label';
 import { isDefaultChannelName } from '../../../../utils';
+import useChannelSettings from '../../context/useChannelSettings';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export type LeaveChannelProps = {
   onSubmit: () => void;
@@ -28,9 +28,9 @@ const LeaveChannel: React.FC<LeaveChannelProps> = (props: LeaveChannelProps) => 
     onCancel = noop,
   } = props;
 
-  const { channel, onLeaveChannel } = useChannelSettingsContext();
+  const { state: { channel, onLeaveChannel } } = useChannelSettings();
   const { stringSet } = useLocalization();
-  const state = useSendbirdStateContext();
+  const { state } = useSendbird();
   const logger = state?.config?.logger;
   const isOnline = state?.config?.isOnline;
   const { isMobile } = useMediaQueryContext();

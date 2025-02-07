@@ -2,7 +2,7 @@ import { MessageListParams } from '@sendbird/chat/message';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 import React, { useEffect } from 'react';
 
-import type { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+import type { CustomUseReducerDispatcher, Logger } from '../../../../lib/Sendbird/types';
 import * as messageActionTypes from '../dux/actionTypes';
 import { scrollIntoLast } from '../utils';
 

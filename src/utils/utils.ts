@@ -1,5 +1,10 @@
 import { SendableMessageType } from './index';
 
+/**
+ * @param ms - milliseconds to delay
+ * @returns Promise that resolves after the specified time
+ */
+export const delay = (ms?: number) => new Promise((resolve) => { setTimeout(resolve, ms); });
 export const noop = () => {
   /** noop * */
 };

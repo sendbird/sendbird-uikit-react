@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
+
+import type { Logger } from '../../../../lib/Sendbird/types';
 import topics, { PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { scrollIntoLast } from '../utils';
-import { ThreadContextActionTypes } from '../dux/actionTypes';
 import { SendableMessageType } from '../../../../utils';
-import * as channelActions from '../../../Channel/context/dux/actionTypes';
 import { shouldPubSubPublishToThread } from '../../../internalInterfaces';
+import useThread from '../useThread';
 
 interface DynamicProps {
   sdkInit: boolean;
@@ -16,7 +16,6 @@ interface DynamicProps {
 interface StaticProps {
   logger: Logger;
   pubSub: SBUGlobalPubSub;
-  threadDispatcher: CustomUseReducerDispatcher;
 }
 
 export default function useHandleThreadPubsubEvents({
@@ -25,8 +24,18 @@ export default function useHandleThreadPubsubEvents({
   parentMessage,
 }: DynamicProps, {
   pubSub,
-  threadDispatcher,
 }: StaticProps): void {
+  const {
+    actions: {
+      sendMessageStart,
+      sendMessageSuccess,
+      sendMessageFailure,
+      onFileInfoUpdated,
+      onMessageUpdated,
+      onMessageDeleted,
+    },
+  } = useThread();
+
   useEffect(() => {
     const subscriber = new Map();
     if (pubSub?.subscribe) {
@@ -42,22 +51,14 @@ export default function useHandleThreadPubsubEvents({
               url: URL.createObjectURL(fileInfo.file as File),
             })) ?? [];
           }
-          threadDispatcher({
-            type: ThreadContextActionTypes.SEND_MESSAGE_START,
-            payload: {
-              message: pendingMessage,
-            },
-          });
+          sendMessageStart(message);
         }
         scrollIntoLast?.();
       }));
       subscriber.set(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, pubSub.subscribe(PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED, (props) => {
         const { response, publishingModules } = props;
         if (currentChannel?.url === response.channelUrl && shouldPubSubPublishToThread(publishingModules)) {
-          threadDispatcher({
-            type: channelActions.ON_FILE_INFO_UPLOADED,
-            payload: response,
-          });
+          onFileInfoUpdated(response);
         }
       }));
       subscriber.set(topics.SEND_USER_MESSAGE, pubSub.subscribe(topics.SEND_USER_MESSAGE, (props) => {
@@ -68,29 +69,20 @@ export default function useHandleThreadPubsubEvents({
         if (currentChannel?.url === channel?.url
           && message?.parentMessageId === parentMessage?.messageId
         ) {
-          threadDispatcher({
-            type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,
-            payload: { message },
-          });
+          sendMessageSuccess(message);
         }
         scrollIntoLast?.();
       }));
       subscriber.set(topics.SEND_MESSAGE_FAILED, pubSub.subscribe(topics.SEND_MESSAGE_FAILED, (props) => {
         const { channel, message, publishingModules } = props;
         if (currentChannel?.url === channel?.url && message?.parentMessageId === parentMessage?.messageId && shouldPubSubPublishToThread(publishingModules)) {
-          threadDispatcher({
-            type: ThreadContextActionTypes.SEND_MESSAGE_FAILURE,
-            payload: { message },
-          });
+          sendMessageFailure(message);
         }
       }));
       subscriber.set(topics.SEND_FILE_MESSAGE, pubSub.subscribe(topics.SEND_FILE_MESSAGE, (props) => {
         const { channel, message, publishingModules } = props;
         if (currentChannel?.url === channel?.url && shouldPubSubPublishToThread(publishingModules)) {
-          threadDispatcher({
-            type: ThreadContextActionTypes.SEND_MESSAGE_SUCESS,
-            payload: { message },
-          });
+          sendMessageSuccess(message);
         }
         scrollIntoLast?.();
       }));
@@ -100,20 +92,12 @@ export default function useHandleThreadPubsubEvents({
           message,
         } = props as { channel: GroupChannel, message: SendableMessageType };
         if (currentChannel?.url === channel?.url) {
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_MESSAGE_UPDATED,
-            payload: { channel, message },
-          });
+          onMessageUpdated(channel, message);
         }
       }));
       subscriber.set(topics.DELETE_MESSAGE, pubSub.subscribe(topics.DELETE_MESSAGE, (props) => {
         const { channel, messageId } = props as { channel: GroupChannel, messageId: number };
-        if (currentChannel?.url === channel?.url) {
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_MESSAGE_DELETED,
-            payload: { messageId },
-          });
-        }
+        onMessageDeleted(channel, messageId);
       }));
     }
     return () => {

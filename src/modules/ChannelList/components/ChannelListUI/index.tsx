@@ -5,11 +5,11 @@ import ChannelPreviewAction from '../ChannelPreviewAction';
 import { useChannelListContext } from '../../context/ChannelListProvider';
 import * as channelListActions from '../../dux/actionTypes';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { GroupChannelListUIView } from '../../../GroupChannelList/components/GroupChannelListUI/GroupChannelListUIView';
 import AddChannel from '../AddChannel';
 import { GroupChannelListItemBasicProps } from '../../../GroupChannelList/components/GroupChannelListItem/GroupChannelListItemView';
 import { noop } from '../../../../utils/utils';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface ChannelPreviewProps extends Omit<GroupChannelListItemBasicProps, 'onLeaveChannel'> {
   onLeaveChannel(channel?: GroupChannel, onLeaveChannelCb?: (channel: GroupChannel, error?: unknown) => void): Promise<void>;
@@ -44,7 +44,8 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
     onProfileEditSuccess,
   } = useChannelListContext();
 
-  const { stores, config } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { stores, config } = state;
   const { logger, isOnline = false } = config;
   const sdk = stores.sdkStore.sdk;
 

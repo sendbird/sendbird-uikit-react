@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { RenderUserProfileProps } from '../types';
-import { useSendbirdStateContext } from './Sendbird';
+import useSendbird from './Sendbird/context/hooks/useSendbird';
 
 interface UserProfileContextInterface {
   isOpenChannel: boolean;
@@ -44,7 +44,8 @@ export const UserProfileProvider = ({
   onStartDirectMessage: _onStartDirectMessage,
   children,
 }: UserProfileProviderProps) => {
-  const { config } = useSendbirdStateContext();
+  const { state } = useSendbird();
+  const { config } = state;
   const onStartDirectMessage = _onStartDirectMessage ?? _onUserProfileMessage ?? config.onStartDirectMessage;
 
   return (

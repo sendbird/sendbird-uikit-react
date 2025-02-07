@@ -1,12 +1,12 @@
 import React from 'react';
 
-import useSendbirdStateContext from '../../../../hooks/useSendbirdStateContext';
 import { useChannelContext } from '../../context/ChannelProvider';
 import { getSuggestedReplies } from '../../../../utils';
 import { isDisabledBecauseFrozen, isDisabledBecauseMuted } from '../../context/utils';
 import MessageView, { MessageProps } from '../../../GroupChannel/components/Message/MessageView';
 import FileViewer from '../FileViewer';
 import RemoveMessageModal from '../RemoveMessageModal';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 /**
  * @deprecated This component is deprecated and will be removed in the next major update.
@@ -15,7 +15,7 @@ import RemoveMessageModal from '../RemoveMessageModal';
  * https://docs.sendbird.com/docs/chat/uikit/v3/react/introduction/group-channel-migration-guide
  */
 const Message = (props: MessageProps) => {
-  const { config } = useSendbirdStateContext();
+  const { state: { config } } = useSendbird();
   const {
     initialized,
     currentGroupChannel,

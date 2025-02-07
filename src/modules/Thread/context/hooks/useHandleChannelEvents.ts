@@ -1,11 +1,10 @@
 import { GroupChannel, GroupChannelHandler } from '@sendbird/chat/groupChannel';
 import { useEffect } from 'react';
-import { CustomUseReducerDispatcher, Logger } from '../../../../lib/SendbirdState';
 import uuidv4 from '../../../../utils/uuid';
-import { ThreadContextActionTypes } from '../dux/actionTypes';
-import { SdkStore } from '../../../../lib/types';
+import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import compareIds from '../../../../utils/compareIds';
-import * as messageActions from '../../../Channel/context/dux/actionTypes';
+import useThread from '../useThread';
+import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
   sdk: SdkStore['sdk'];
@@ -13,7 +12,6 @@ interface DynamicProps {
 }
 interface StaticProps {
   logger: Logger;
-  threadDispatcher: CustomUseReducerDispatcher;
 }
 
 export default function useHandleChannelEvents({
@@ -21,8 +19,25 @@ export default function useHandleChannelEvents({
   currentChannel,
 }: DynamicProps, {
   logger,
-  threadDispatcher,
 }: StaticProps): void {
+  const {
+    actions: {
+      onMessageReceived,
+      onMessageUpdated,
+      onMessageDeleted,
+      onReactionUpdated,
+      onUserMuted,
+      onUserUnmuted,
+      onUserBanned,
+      onUserUnbanned,
+      onUserLeft,
+      onChannelFrozen,
+      onChannelUnfrozen,
+      onOperatorUpdated,
+      onTypingStatusUpdated,
+    },
+  } = useThread();
+
   useEffect(() => {
     const handlerId = uuidv4();
     // validation check
@@ -33,101 +48,59 @@ export default function useHandleChannelEvents({
         // message status change
         onMessageReceived(channel, message) {
           logger.info('Thread | useHandleChannelEvents: onMessageReceived', { channel, message });
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_MESSAGE_RECEIVED,
-            payload: { channel, message },
-          });
+          onMessageReceived(channel as GroupChannel, message as SendableMessageType);
         },
         onMessageUpdated(channel, message) {
           logger.info('Thread | useHandleChannelEvents: onMessageUpdated', { channel, message });
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_MESSAGE_UPDATED,
-            payload: { channel, message },
-          });
+          onMessageUpdated(channel as GroupChannel, message as SendableMessageType);
         },
         onMessageDeleted(channel, messageId) {
           logger.info('Thread | useHandleChannelEvents: onMessageDeleted', { channel, messageId });
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_MESSAGE_DELETED,
-            payload: { channel, messageId },
-          });
+          onMessageDeleted(channel as GroupChannel, messageId);
         },
         onReactionUpdated(channel, reactionEvent) {
           logger.info('Thread | useHandleChannelEvents: onReactionUpdated', { channel, reactionEvent });
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_REACTION_UPDATED,
-            payload: { channel, reactionEvent },
-          });
+          onReactionUpdated(reactionEvent);
         },
         // user status change
         onUserMuted(channel, user) {
           logger.info('Thread | useHandleChannelEvents: onUserMuted', { channel, user });
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_USER_MUTED,
-            payload: { channel, user },
-          });
+          onUserMuted(channel as GroupChannel, user);
         },
         onUserUnmuted(channel, user) {
           logger.info('Thread | useHandleChannelEvents: onUserUnmuted', { channel, user });
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_USER_UNMUTED,
-            payload: { channel, user },
-          });
+          onUserUnmuted(channel as GroupChannel, user);
         },
         onUserBanned(channel, user) {
           logger.info('Thread | useHandleChannelEvents: onUserBanned', { channel, user });
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_USER_BANNED,
-            payload: { channel, user },
-          });
+          onUserBanned();
         },
         onUserUnbanned(channel, user) {
           logger.info('Thread | useHandleChannelEvents: onUserUnbanned', { channel, user });
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_USER_UNBANNED,
-            payload: { channel, user },
-          });
+          onUserUnbanned();
         },
         onUserLeft(channel, user) {
           logger.info('Thread | useHandleChannelEvents: onUserLeft', { channel, user });
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_USER_LEFT,
-            payload: { channel, user },
-          });
+          onUserLeft();
         },
         // channel status change
         onChannelFrozen(channel) {
           logger.info('Thread | useHandleChannelEvents: onChannelFrozen', { channel });
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_CHANNEL_FROZEN,
-            payload: { channel },
-          });
+          onChannelFrozen();
         },
         onChannelUnfrozen(channel) {
           logger.info('Thread | useHandleChannelEvents: onChannelUnfrozen', { channel });
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_CHANNEL_UNFROZEN,
-            payload: { channel },
-          });
+          onChannelUnfrozen();
         },
         onOperatorUpdated(channel, users) {
           logger.info('Thread | useHandleChannelEvents: onOperatorUpdated', { channel, users });
-          threadDispatcher({
-            type: ThreadContextActionTypes.ON_OPERATOR_UPDATED,
-            payload: { channel, users },
-          });
+          onOperatorUpdated(channel as GroupChannel);
         },
         onTypingStatusUpdated: (channel) => {
           if (compareIds(channel?.url, currentChannel.url)) {
             logger.info('Channel | onTypingStatusUpdated', { channel });
             const typingMembers = channel.getTypingUsers();
-            threadDispatcher({
-              type: messageActions.ON_TYPING_STATUS_UPDATED,
-              payload: {
-                channel,
-                typingMembers,
-              },
-            });
+            onTypingStatusUpdated(channel as GroupChannel, typingMembers);
           }
         },
       };
