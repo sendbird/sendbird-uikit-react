@@ -4,7 +4,7 @@ import { SendbirdError, User } from '@sendbird/chat';
 
 import { SendbirdContext } from '../SendbirdContext';
 import { LoggerInterface } from '../../../Logger';
-import { MessageTemplatesInfo, SendbirdState, WaitingTemplateKeyData } from '../../types';
+import { MessageTemplatesInfo, SdkStore, SendbirdState, WaitingTemplateKeyData } from '../../types';
 import { initSDK, setupSDK, updateAppInfoStore, updateSdkStore, updateUserStore } from '../../utils';
 
 const NO_CONTEXT_ERROR = 'No sendbird state value available. Make sure you are rendering `<SendbirdProvider>` at the top of your app.';
@@ -113,7 +113,7 @@ export const useSendbird = () => {
     resetSdk: () => {
       store.setState((state): SendbirdState => (
         updateSdkStore(state, {
-          sdk: null,
+          sdk: {} as SdkStore['sdk'],
           initialized: false,
           loading: false,
           error: false,
