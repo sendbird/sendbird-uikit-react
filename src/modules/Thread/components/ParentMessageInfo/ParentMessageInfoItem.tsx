@@ -81,6 +81,7 @@ export default function ParentMessageInfoItem({
   // For MultipleFilesMessage only.
   const statefulFileInfoList = useFileInfoListWithUploaded(message);
   const isMentionedMessage = isMentionEnabled
+    && message?.isUserMessage()
     && message?.mentionedMessageTemplate?.length > 0
     && message?.mentionedUsers
     && message.mentionedUsers.length > 0;

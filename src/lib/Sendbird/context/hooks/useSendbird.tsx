@@ -136,7 +136,7 @@ export const useSendbird = () => {
         updateUserStore(state, {
           initialized: false,
           loading: false,
-          user: null,
+          user: {} as User,
         })
       ));
     },
