@@ -67,7 +67,7 @@ describe('useSendbird', () => {
       });
 
       const sdkStore = mockStore.getState().stores.sdkStore;
-      expect(sdkStore.sdk).toBeNull();
+      expect(sdkStore.sdk).toStrictEqual({});
       expect(sdkStore.initialized).toBe(false);
       expect(sdkStore.loading).toBe(false);
     });
@@ -129,7 +129,7 @@ describe('useSendbird', () => {
       });
 
       const userStore = mockStore.getState().stores.userStore;
-      expect(userStore.user).toBeNull();
+      expect(userStore.user).toStrictEqual({});
       expect(userStore.initialized).toBe(false);
     });
 
@@ -318,8 +318,8 @@ describe('useSendbird', () => {
       const sdkStore = mockStore.getState().stores.sdkStore;
       const userStore = mockStore.getState().stores.userStore;
 
-      expect(sdkStore.sdk).toBeNull();
-      expect(userStore.user).toBeNull();
+      expect(sdkStore.sdk).toStrictEqual({});
+      expect(userStore.user).toStrictEqual({});
     });
 
     it('should trigger onConnected event handler after successful connection', async () => {
@@ -398,8 +398,8 @@ describe('useSendbird', () => {
       const sdkStore = mockStore.getState().stores.sdkStore;
       const userStore = mockStore.getState().stores.userStore;
 
-      expect(sdkStore.sdk).toBeNull();
-      expect(userStore.user).toBeNull();
+      expect(sdkStore.sdk).toStrictEqual({});
+      expect(userStore.user).toStrictEqual({});
 
       expect(mockLogger.error).toHaveBeenCalledWith(
         'SendbirdProvider | useSendbird/connect failed',
