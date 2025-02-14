@@ -34,7 +34,7 @@ export const useVoiceRecorder = ({
   const { state } = useSendbird();
   const { config } = state;
   const { voiceRecord } = config;
-  const maxRecordingTime = voiceRecord.maxRecordingTime;
+  const maxRecordingTime = voiceRecord?.maxRecordingTime;
   const voiceRecorder = useVoiceRecorderContext();
   const { isRecordable } = voiceRecorder;
 

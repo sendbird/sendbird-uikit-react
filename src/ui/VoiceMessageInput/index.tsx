@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import './index.scss';
 
 import PlaybackTime from '../PlaybackTime';
@@ -63,13 +63,13 @@ export const VoiceMessageInput = ({
       setLastClickTime(currentTime);
     }
   };
-  const handleOnControlClick = useCallback(() => {
+  const handleOnControlClick = () => {
     const currentTime = Date.now();
     if (currentTime - lastClickTime > VOICE_RECORDER_CLICK_BUFFER_TIME) {
       onControlClick?.(currentType);
       setLastClickTime(currentTime);
     }
-  }, [currentType]);
+  };
   const handleOnSubmitClick = () => {
     const currentTime = Date.now();
     if (currentTime - lastClickTime > VOICE_RECORDER_CLICK_BUFFER_TIME) {
