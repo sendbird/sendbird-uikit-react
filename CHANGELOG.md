@@ -1,6 +1,16 @@
 # Changelog - v3
 
 
+## [v3.15.15] (Feb 14 2025)
+### Fixes:
+- Added the missing import paths for the following deprecated interfaces.
+  - `useSendbirdStateContext`
+  - `withSendbird`
+- Fixed an issue where `VoiceMessageInput` failed to record the audio at first.
+
+### Chore
+- Updated `@sendbird/chat` version to 4.16.4
+
 ## [v3.15.14] (Feb 7 2025)
 
 ### Features:
