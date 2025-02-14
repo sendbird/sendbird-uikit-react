@@ -75,7 +75,7 @@ const withSendbirdContext = (OriginalComponent: any, mapStoreToProps: (props: an
   return ContextAwareComponent;
 };
 /**
- * @deprecated This function is deprecated. Use `useSendbirdStateContext` instead.
+ * @deprecated This function is deprecated. Use `useSendbird` instead.
  * */
 export const withSendBird = withSendbirdContext;
 
