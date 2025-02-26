@@ -15,20 +15,20 @@ export const SendbirdContext = React.createContext<ReturnType<typeof createStore
 export const createSendbirdContextStore = (props?: any) => createStore({
   config: {
     ...initialState.config,
-    ...props.config,
+    ...props?.config,
   },
   stores: {
     ...initialState.stores,
-    ...props.stores,
+    ...props?.stores,
   },
   eventHandlers: {
     ...initialState.eventHandlers,
-    ...props.eventHandlers,
+    ...props?.eventHandlers,
   },
-  emojiManager: props.emojiManager ?? initialState.emojiManager,
+  emojiManager: props?.emojiManager ?? initialState.emojiManager,
   utils: {
     ...initialState.utils,
-    ...props.utils,
+    ...props?.utils,
   },
 });
 
