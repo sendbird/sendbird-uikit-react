@@ -1,3 +1,3 @@
-export { ChannelSettingsProvider, useChannelSettingsContext } from './ChannelSettingsProvider';
+export * from './ChannelSettingsProvider';
+export * from './types';
 export { useChannelSettings } from './useChannelSettings';
-export type { ChannelSettingsContextProps } from './types';
