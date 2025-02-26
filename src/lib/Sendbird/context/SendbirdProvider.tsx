@@ -3,7 +3,13 @@ import React, { ReactElement, useEffect, useMemo, useRef, useState } from 'react
 import { useUIKitConfig } from '@sendbird/uikit-tools';
 
 /* Types */
-import type { ImageCompressionOptions, SendbirdProviderProps, SendbirdStateConfig } from '../types';
+import {
+  ImageCompressionOptions,
+  Logger,
+  SendbirdProviderProps,
+  SendbirdState,
+  SendbirdStateConfig,
+} from '../types';
 
 /* Providers */
 import VoiceMessageProvider from '../../VoiceMessageProvider';
@@ -33,10 +39,10 @@ import { DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, DEFAULT_UPLOAD_SIZE_LIMIT, VOICE_
 import { EmojiReactionListRoot, MenuRoot } from '../../../ui/ContextMenu';
 
 import useSendbird from './hooks/useSendbird';
-import { SendbirdContext, useSendbirdStore } from './SendbirdContext';
-import { createStore } from '../../../utils/storeManager';
-import { initialState } from './initialState';
+import { createSendbirdContextStore, SendbirdContext, useSendbirdStore } from './SendbirdContext';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
+import { PartialDeep } from '../../../utils/typeHelpers/partialDeep';
+import { deleteNullish } from '../../../utils/utils';
 
 /**
  * SendbirdContext - Manager
@@ -49,6 +55,7 @@ const SendbirdContextManager = ({
   customWebSocketHost,
   configureSession,
   theme = 'light',
+  logger,
   config = {},
   nickname = '',
   colorSet,
@@ -68,11 +75,10 @@ const SendbirdContextManager = ({
   eventHandlers,
   htmlTextDirection = 'ltr',
   forceLeftToRightMessageLayout = false,
-}: SendbirdProviderProps): ReactElement => {
+}: SendbirdProviderProps & { logger: Logger }): ReactElement => {
   const onStartDirectMessage = _onStartDirectMessage ?? _onUserProfileMessage;
-  const { logLevel = '', userMention = {}, isREMUnitEnabled = false, pubSub: customPubSub } = config;
+  const { userMention = {}, isREMUnitEnabled = false, pubSub: customPubSub } = config;
   const { isMobile } = useMediaQueryContext();
-  const [logger, setLogger] = useState(LoggerFactory(logLevel as LogLevel));
   const [pubSub] = useState(customPubSub ?? pubSubFactory<PUBSUB_TOPICS, SBUGlobalPubSubTopicPayloadUnion>());
 
   const { state, updateState } = useSendbirdStore();
@@ -120,11 +126,6 @@ const SendbirdContextManager = ({
   useUnmount(() => {
     actions.disconnect({ logger });
   });
-
-  // to create a pubsub to communicate between parent and child
-  useEffect(() => {
-    setLogger(LoggerFactory(logLevel as LogLevel));
-  }, [logLevel]);
 
   // should move to reducer
   const [currentTheme, setCurrentTheme] = useState(theme);
@@ -365,8 +366,49 @@ const SendbirdContextManager = ({
   return null;
 };
 
-const InternalSendbirdProvider = ({ children, stringSet, breakpoint, dateLocale }) => {
-  const storeRef = useRef(createStore(initialState));
+const InternalSendbirdProvider = (props: SendbirdProviderProps & { logger: Logger }) => {
+  const {
+    children,
+    stringSet,
+    breakpoint,
+    dateLocale,
+  } = props;
+
+  const defaultProps: PartialDeep<SendbirdState> = deleteNullish({
+    config: {
+      renderUserProfile: props?.renderUserProfile,
+      onStartDirectMessage: props?.onStartDirectMessage,
+      allowProfileEdit: props?.allowProfileEdit,
+      appId: props?.appId,
+      userId: props?.userId,
+      accessToken: props?.accessToken,
+      theme: props?.theme,
+      htmlTextDirection: props?.htmlTextDirection,
+      forceLeftToRightMessageLayout: props?.forceLeftToRightMessageLayout,
+      pubSub: props?.config?.pubSub,
+      logger: props?.logger,
+      userListQuery: props?.userListQuery,
+      voiceRecord: {
+        maxRecordingTime: props?.voiceRecord?.maxRecordingTime ?? VOICE_RECORDER_DEFAULT_MAX,
+        minRecordingTime: props?.voiceRecord?.minRecordingTime ?? VOICE_RECORDER_DEFAULT_MIN,
+      },
+      userMention: {
+        maxMentionCount: props?.config?.userMention?.maxMentionCount || 10,
+        maxSuggestionCount: props?.config?.userMention?.maxSuggestionCount || 15,
+      },
+      imageCompression: {
+        compressionRate: 0.7,
+        outputFormat: 'preserve',
+        ...props?.imageCompression,
+      },
+      disableMarkAsDelivered: props?.disableMarkAsDelivered,
+      isMultipleFilesMessageEnabled: props?.isMultipleFilesMessageEnabled,
+    },
+    eventHandlers: props?.eventHandlers,
+  });
+
+  const storeRef = useRef(createSendbirdContextStore(defaultProps));
+
   const localeStringSet = useMemo(() => {
     return { ...getStringSet('en'), ...stringSet };
   }, [stringSet]);
@@ -391,11 +433,19 @@ const InternalSendbirdProvider = ({ children, stringSet, breakpoint, dateLocale 
 };
 
 export const SendbirdContextProvider = (props: SendbirdProviderProps) => {
-  const { children } = props;
+  const { children, config } = props;
+  const logLevel = config?.logLevel;
+
+  const [logger, setLogger] = useState(LoggerFactory(logLevel as LogLevel));
+
+  // to create a pubsub to communicate between parent and child
+  useEffect(() => {
+    setLogger(LoggerFactory(logLevel as LogLevel));
+  }, [logLevel]);
 
   return (
-    <InternalSendbirdProvider stringSet={props.stringSet} breakpoint={props.breakpoint} dateLocale={props.dateLocale} >
-      <SendbirdContextManager {...props} />
+    <InternalSendbirdProvider {...props} logger={logger} >
+      <SendbirdContextManager {...props} logger={logger} />
       {children}
     </InternalSendbirdProvider>
   );

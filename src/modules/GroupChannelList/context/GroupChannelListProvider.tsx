@@ -14,10 +14,11 @@ import type { SdkStore } from '../../../lib/Sendbird/types';
 import { PartialRequired } from '../../../utils/typeHelpers/partialRequired';
 import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
-import { noop } from '../../../utils/utils';
+import { deleteNullish, noop } from '../../../utils/utils';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useGroupChannelList from './useGroupChannelList';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
+import { PartialDeep } from '../../../utils/typeHelpers/partialDeep';
 
 type OnCreateChannelClickParams = { users: Array<string>; onClose: () => void; channelType: CHANNEL_TYPE };
 type ChannelListDataSource = ReturnType<typeof useGroupChannelListDataSource>;
@@ -224,9 +225,32 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
   return null;
 };
 
-const createGroupChannelListStore = () => createStore(initialState);
-const InternalGroupChannelListProvider = ({ children }) => {
-  const storeRef = useRef(createGroupChannelListStore());
+const createGroupChannelListStore = (props?: Omit<PartialDeep<GroupChannelListState>, 'scrollRef' | 'groupChannels'>) => createStore({
+  ...initialState,
+  ...props,
+});
+
+const InternalGroupChannelListProvider = (props: GroupChannelListProviderProps) => {
+  const { children } = props;
+
+  const defaultProps: PartialDeep<GroupChannelListState> = deleteNullish({
+    onChannelSelect: props?.onChannelSelect,
+    onChannelCreated: props?.onChannelCreated,
+    className: props?.className,
+    selectedChannelUrl: props?.selectedChannelUrl,
+    allowProfileEdit: props?.allowProfileEdit,
+    disableAutoSelect: props?.disableAutoSelect,
+    isTypingIndicatorEnabled: props?.isTypingIndicatorEnabled,
+    isMessageReceiptStatusEnabled: props?.isMessageReceiptStatusEnabled,
+    channelListQueryParams: props?.channelListQueryParams,
+    onThemeChange: props?.onThemeChange,
+    onCreateChannelClick: props?.onCreateChannelClick,
+    onBeforeCreateChannel: props?.onBeforeCreateChannel,
+    onUserProfileUpdated: props?.onUserProfileUpdated,
+  });
+
+  const storeRef = useRef(createGroupChannelListStore(defaultProps));
+
   return (
     <GroupChannelListContext.Provider value={storeRef.current}>
       {children}
@@ -238,7 +262,7 @@ export const GroupChannelListProvider = (props: GroupChannelListProviderProps) =
   const { children, className } = props;
 
   return (
-    <InternalGroupChannelListProvider>
+    <InternalGroupChannelListProvider {...props} >
       <GroupChannelListManager {...props} />
       <UserProfileProvider {...props}>
         <div className={`sendbird-channel-list ${className}`}>{children}</div>

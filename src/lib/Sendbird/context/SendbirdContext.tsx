@@ -12,7 +12,25 @@ export const SendbirdContext = React.createContext<ReturnType<typeof createStore
 /**
  * Create store for Sendbird context
  */
-export const createSendbirdContextStore = () => createStore(initialState);
+export const createSendbirdContextStore = (props?: any) => createStore({
+  config: {
+    ...initialState.config,
+    ...props.config,
+  },
+  stores: {
+    ...initialState.stores,
+    ...props.stores,
+  },
+  eventHandlers: {
+    ...initialState.eventHandlers,
+    ...props.eventHandlers,
+  },
+  emojiManager: props.emojiManager ?? initialState.emojiManager,
+  utils: {
+    ...initialState.utils,
+    ...props.utils,
+  },
+});
 
 /**
  * A specialized hook for Ssendbird state management

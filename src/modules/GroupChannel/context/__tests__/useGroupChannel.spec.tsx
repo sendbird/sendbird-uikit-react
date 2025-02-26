@@ -113,14 +113,14 @@ describe('useGroupChannel', () => {
     it('provides initial state', () => {
       const { result } = renderHook(() => useGroupChannel(), { wrapper });
 
-      expect(result.current.state).toEqual(expect.objectContaining({
+      expect(result.current.state).toMatchObject({
         currentChannel: null,
         channelUrl: mockChannel.url,
         fetchChannelError: null,
         quoteMessage: null,
         animatedMessageId: null,
         isScrollBottomReached: true,
-      }));
+      });
     });
 
     it('updates channel state', () => {

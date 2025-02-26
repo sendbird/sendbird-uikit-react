@@ -31,6 +31,8 @@ import type {
 } from './types';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
+import { PartialDeep } from '../../../utils/typeHelpers/partialDeep';
+import { deleteNullish } from '../../../utils/utils';
 
 const initialState = {
   currentChannel: null,
@@ -60,8 +62,48 @@ const initialState = {
 
 export const GroupChannelContext = createContext<ReturnType<typeof createStore<GroupChannelState>> | null>(null);
 
-export const InternalGroupChannelProvider: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const storeRef = useRef(createStore(initialState));
+const createGroupChannelListStore = (props?: any) => createStore({
+  ...initialState,
+  ...props,
+});
+
+export const InternalGroupChannelProvider = (props: GroupChannelProviderProps) => {
+  const { children } = props;
+
+  const defaultProps: PartialDeep<GroupChannelState> = deleteNullish({
+    channelUrl: props?.channelUrl,
+    renderUserProfile: props?.renderUserProfile,
+    disableUserProfile: props?.disableUserProfile,
+    onUserProfileMessage: props?.onUserProfileMessage,
+    onStartDirectMessage: props?.onStartDirectMessage,
+    isReactionEnabled: props?.isReactionEnabled,
+    isMessageGroupingEnabled: props?.isMessageGroupingEnabled,
+    isMultipleFilesMessageEnabled: props?.isMultipleFilesMessageEnabled,
+    showSearchIcon: props?.showSearchIcon,
+    threadReplySelectType: props?.threadReplySelectType,
+    disableMarkAsRead: props?.disableMarkAsRead,
+    scrollBehavior: props?.scrollBehavior,
+    forceLeftToRightMessageLayout: props?.forceLeftToRightMessageLayout,
+    startingPoint: props?.startingPoint,
+    animatedMessageId: props?.animatedMessageId,
+    onMessageAnimated: props?.onMessageAnimated,
+    messageListQueryParams: props?.messageListQueryParams,
+    filterEmojiCategoryIds: props?.filterEmojiCategoryIds,
+    onBeforeSendUserMessage: props?.onBeforeSendUserMessage,
+    onBeforeSendFileMessage: props?.onBeforeSendFileMessage,
+    onBeforeSendVoiceMessage: props?.onBeforeSendVoiceMessage,
+    onBeforeSendMultipleFilesMessage: props?.onBeforeSendMultipleFilesMessage,
+    onBeforeUpdateUserMessage: props?.onBeforeUpdateUserMessage,
+    onBeforeDownloadFileMessage: props?.onBeforeDownloadFileMessage,
+    onBackClick: props?.onBackClick,
+    onChatHeaderActionClick: props?.onChatHeaderActionClick,
+    onReplyInThreadClick: props?.onReplyInThreadClick,
+    onSearchClick: props?.onSearchClick,
+    onQuoteMessageClick: props?.onQuoteMessageClick,
+    renderUserMentionItem: props?.renderUserMentionItem,
+  });
+
+  const storeRef = useRef(createGroupChannelListStore(defaultProps));
 
   return (
     <GroupChannelContext.Provider value={storeRef.current}>
@@ -319,7 +361,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
 const GroupChannelProvider: React.FC<GroupChannelProviderProps> = (props) => {
   return (
-    <InternalGroupChannelProvider>
+    <InternalGroupChannelProvider {...props}>
       <GroupChannelManager {...props}>
         <UserProfileProvider {...props}>
           {props.children}

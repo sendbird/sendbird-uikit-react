@@ -7,11 +7,12 @@ import { useStore } from '../../../hooks/useStore';
 import { useChannelHandler } from './hooks/useChannelHandler';
 
 import uuidv4 from '../../../utils/uuid';
-import { classnames } from '../../../utils/utils';
+import { classnames, deleteNullish } from '../../../utils/utils';
 import { createStore } from '../../../utils/storeManager';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useChannelSettings from './useChannelSettings';
+import { PartialDeep } from '../../../utils/typeHelpers/partialDeep';
 
 export const ChannelSettingsContext = createContext<ReturnType<typeof createStore<ChannelSettingsState>> | null>(null);
 
@@ -103,9 +104,27 @@ const ChannelSettingsManager = ({
   return null;
 };
 
-const createChannelSettingsStore = () => createStore(initialState);
-const InternalChannelSettingsProvider = ({ children }) => {
-  const storeRef = useRef(createChannelSettingsStore());
+const createChannelSettingsStore = (props?: Omit<PartialDeep<ChannelSettingsState>, 'channel'>) => createStore({
+  ...initialState,
+  ...props,
+});
+
+const InternalChannelSettingsProvider = (props: ChannelSettingsContextProps) => {
+  const { children } = props;
+
+  const defaultProps: PartialDeep<ChannelSettingsState> = deleteNullish({
+    channelUrl: props?.channelUrl,
+    onCloseClick: props?.onCloseClick,
+    onLeaveChannel: props?.onLeaveChannel,
+    onChannelModified: props?.onChannelModified,
+    onBeforeUpdateChannel: props?.onBeforeUpdateChannel,
+    renderUserListItem: props?.renderUserListItem,
+    queries: props?.queries,
+    overrideInviteUser: props?.overrideInviteUser,
+  });
+
+  const storeRef = useRef(createChannelSettingsStore(defaultProps));
+
   return (
     <ChannelSettingsContext.Provider value={storeRef.current}>
       {children}
@@ -116,7 +135,7 @@ const InternalChannelSettingsProvider = ({ children }) => {
 const ChannelSettingsProvider = (props: ChannelSettingsContextProps) => {
   const { children, className } = props;
   return (
-    <InternalChannelSettingsProvider>
+    <InternalChannelSettingsProvider {...props}>
       <ChannelSettingsManager {...props} />
       <UserProfileProvider {...props}>
         <div className={classnames('sendbird-channel-settings', className)}>
