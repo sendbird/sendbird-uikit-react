@@ -18,3 +18,13 @@ export type PartialDeep<T> = T extends object
         [P in keyof T]?: PartialDeep<T[P]>;
       }
   : T;
+
+export type TwoDepthPartial<T> = T extends object
+  ? T extends Set<unknown> // Set, Map, Function, etc. are also treated as an object so we need this to skip recursion for them.
+    ? T
+    : T extends (...args: any[]) => any
+      ? T
+      : {
+        [P in keyof T]?: Partial<T[P]>;
+      }
+  : T;

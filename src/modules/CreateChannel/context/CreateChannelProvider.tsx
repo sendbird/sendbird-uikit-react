@@ -11,6 +11,7 @@ import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
 import useCreateChannel from './useCreateChannel';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import { deleteNullish } from '../../../utils/utils';
 
 const CreateChannelContext = React.createContext<ReturnType<typeof createStore<CreateChannelState>> | null>(null);
 
@@ -139,16 +140,31 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
   const { children } = props;
 
   return (
-    <InternalCreateChannelProvider>
+    <InternalCreateChannelProvider {...props}>
       <CreateChannelManager {...props} />
       {children}
     </InternalCreateChannelProvider>
   );
 };
 
-const createCreateChannelStore = () => createStore(initialState);
-const InternalCreateChannelProvider: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const storeRef = useRef(createCreateChannelStore());
+const createCreateChannelStore = (props?: Partial<CreateChannelState>) => createStore({
+  ...initialState,
+  ...props,
+});
+
+const InternalCreateChannelProvider: React.FC<React.PropsWithChildren<unknown>> = (props: CreateChannelProviderProps) => {
+  const { children } = props;
+
+  const defaultProps: Partial<CreateChannelState> = deleteNullish({
+    userListQuery: props?.userListQuery,
+    onCreateChannelClick: props?.onCreateChannelClick,
+    onChannelCreated: props?.onChannelCreated,
+    onBeforeCreateChannel: props?.onBeforeCreateChannel,
+    onCreateChannel: props?.onCreateChannel,
+    overrideInviteUser: props?.overrideInviteUser,
+  });
+
+  const storeRef = useRef(createCreateChannelStore(defaultProps));
 
   return (
     <CreateChannelContext.Provider value={storeRef.current}>

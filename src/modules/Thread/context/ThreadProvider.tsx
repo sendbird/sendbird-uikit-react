@@ -90,8 +90,29 @@ const initialState: ThreadState = {
 
 export const ThreadContext = React.createContext<ReturnType<typeof createStore<ThreadState>> | null>(null);
 
-export const InternalThreadProvider: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const storeRef = useRef(createStore(initialState));
+const createThreadStore = (props?: Partial<ThreadState>) => createStore({
+  ...initialState,
+  ...props,
+});
+
+export const InternalThreadProvider: React.FC<React.PropsWithChildren<unknown>> = (props: ThreadProviderProps) => {
+  const { children } = props;
+
+  const defaultProps: Partial<ThreadState> = {
+    channelUrl: props?.channelUrl,
+    message: props?.message,
+    onHeaderActionClick: props?.onHeaderActionClick,
+    onMoveToParentMessage: props?.onMoveToParentMessage,
+    onBeforeSendUserMessage: props?.onBeforeSendUserMessage,
+    onBeforeSendFileMessage: props?.onBeforeSendFileMessage,
+    onBeforeSendVoiceMessage: props?.onBeforeSendVoiceMessage,
+    onBeforeSendMultipleFilesMessage: props?.onBeforeSendMultipleFilesMessage,
+    onBeforeDownloadFileMessage: props?.onBeforeDownloadFileMessage,
+    isMultipleFilesMessageEnabled: props?.isMultipleFilesMessageEnabled,
+    filterEmojiCategoryIds: props?.filterEmojiCategoryIds,
+  };
+
+  const storeRef = useRef(createThreadStore(defaultProps));
 
   return (
     <ThreadContext.Provider value={storeRef.current}>
@@ -211,7 +232,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
   const { children } = props;
 
   return (
-    <InternalThreadProvider>
+    <InternalThreadProvider {...props}>
       <ThreadManager {...props} />
         {/* UserProfileProvider */}
         <UserProfileProvider {...props}>

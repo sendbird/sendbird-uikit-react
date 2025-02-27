@@ -14,6 +14,7 @@ import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
 import useMessageSearch from './hooks/useMessageSearch';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import { deleteNullish } from '../../../utils/utils';
 
 export interface MessageSearchProviderProps {
   channelUrl: string;
@@ -134,9 +135,23 @@ const MessageSearchManager: React.FC<MessageSearchProviderProps> = ({
   return null;
 };
 
-const createMessageSearchStore = () => createStore(initialState);
-const InternalMessageSearchProvider: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const storeRef = useRef(createMessageSearchStore());
+const createMessageSearchStore = (props?: Partial<MessageSearchState>) => createStore({
+  ...initialState,
+  ...props,
+});
+
+const InternalMessageSearchProvider: React.FC<React.PropsWithChildren<unknown>> = (props: MessageSearchProviderProps) => {
+  const { children } = props;
+
+  const defaultProps: Partial<MessageSearchState> = deleteNullish({
+    channelUrl: props?.channelUrl,
+    messageSearchQuery: props?.messageSearchQuery,
+    searchString: props?.searchString,
+    onResultLoaded: props?.onResultLoaded,
+    onResultClick: props?.onResultClick,
+  });
+
+  const storeRef = useRef(createMessageSearchStore(defaultProps));
 
   return (
     <MessageSearchContext.Provider value={storeRef.current}>
@@ -145,17 +160,18 @@ const InternalMessageSearchProvider: React.FC<React.PropsWithChildren<unknown>> 
   );
 };
 
-const MessageSearchProvider: React.FC<MessageSearchProviderProps> = ({
-  children,
-  channelUrl,
-  searchString,
-  messageSearchQuery,
-  onResultLoaded,
-  onResultClick,
-}) => {
+const MessageSearchProvider: React.FC<MessageSearchProviderProps> = (props: MessageSearchProviderProps) => {
+  const {
+    children,
+    channelUrl,
+    searchString,
+    messageSearchQuery,
+    onResultLoaded,
+    onResultClick,
+  } = props;
 
   return (
-    <InternalMessageSearchProvider>
+    <InternalMessageSearchProvider {...props}>
       <MessageSearchManager
         channelUrl={channelUrl}
         searchString={searchString}

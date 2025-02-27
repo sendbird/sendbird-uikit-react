@@ -42,6 +42,6 @@ export interface ChannelSettingsState extends CommonChannelSettingsProps {
 export interface ChannelSettingsContextProps extends
   CommonChannelSettingsProps,
   Pick<UserProfileProviderProps, 'renderUserProfile' | 'disableUserProfile'> {
-  children?: React.ReactElement;
+  children?: ReactNode;
   className?: string;
 }
