@@ -18,7 +18,6 @@ import { deleteNullish, noop } from '../../../utils/utils';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useGroupChannelList from './useGroupChannelList';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
-import { PartialDeep } from '../../../utils/typeHelpers/partialDeep';
 
 type OnCreateChannelClickParams = { users: Array<string>; onClose: () => void; channelType: CHANNEL_TYPE };
 type ChannelListDataSource = ReturnType<typeof useGroupChannelListDataSource>;
@@ -225,7 +224,7 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
   return null;
 };
 
-const createGroupChannelListStore = (props?: Omit<PartialDeep<GroupChannelListState>, 'scrollRef' | 'groupChannels'>) => createStore({
+const createGroupChannelListStore = (props?: Partial<GroupChannelListState>) => createStore({
   ...initialState,
   ...props,
 });
@@ -233,7 +232,7 @@ const createGroupChannelListStore = (props?: Omit<PartialDeep<GroupChannelListSt
 const InternalGroupChannelListProvider = (props: GroupChannelListProviderProps) => {
   const { children } = props;
 
-  const defaultProps: PartialDeep<GroupChannelListState> = deleteNullish({
+  const defaultProps: Partial<GroupChannelListState> = deleteNullish({
     onChannelSelect: props?.onChannelSelect,
     onChannelCreated: props?.onChannelCreated,
     className: props?.className,

@@ -11,7 +11,6 @@ import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
 import useCreateChannel from './useCreateChannel';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
-import { PartialDeep } from '../../../utils/typeHelpers/partialDeep';
 import { deleteNullish } from '../../../utils/utils';
 
 const CreateChannelContext = React.createContext<ReturnType<typeof createStore<CreateChannelState>> | null>(null);
@@ -148,7 +147,7 @@ const CreateChannelProvider: React.FC<CreateChannelProviderProps> = (props: Crea
   );
 };
 
-const createCreateChannelStore = (props?: PartialDeep<CreateChannelState>) => createStore({
+const createCreateChannelStore = (props?: Partial<CreateChannelState>) => createStore({
   ...initialState,
   ...props,
 });
@@ -156,7 +155,7 @@ const createCreateChannelStore = (props?: PartialDeep<CreateChannelState>) => cr
 const InternalCreateChannelProvider: React.FC<React.PropsWithChildren<unknown>> = (props: CreateChannelProviderProps) => {
   const { children } = props;
 
-  const defaultProps: PartialDeep<CreateChannelState> = deleteNullish({
+  const defaultProps: Partial<CreateChannelState> = deleteNullish({
     userListQuery: props?.userListQuery,
     onCreateChannelClick: props?.onCreateChannelClick,
     onChannelCreated: props?.onChannelCreated,

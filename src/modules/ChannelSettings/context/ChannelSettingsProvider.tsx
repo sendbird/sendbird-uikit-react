@@ -12,7 +12,6 @@ import { createStore } from '../../../utils/storeManager';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useChannelSettings from './useChannelSettings';
-import { PartialDeep } from '../../../utils/typeHelpers/partialDeep';
 
 export const ChannelSettingsContext = createContext<ReturnType<typeof createStore<ChannelSettingsState>> | null>(null);
 
@@ -104,7 +103,7 @@ const ChannelSettingsManager = ({
   return null;
 };
 
-const createChannelSettingsStore = (props?: Omit<PartialDeep<ChannelSettingsState>, 'channel'>) => createStore({
+const createChannelSettingsStore = (props?: Partial<ChannelSettingsState>) => createStore({
   ...initialState,
   ...props,
 });
@@ -112,7 +111,7 @@ const createChannelSettingsStore = (props?: Omit<PartialDeep<ChannelSettingsStat
 const InternalChannelSettingsProvider = (props: ChannelSettingsContextProps) => {
   const { children } = props;
 
-  const defaultProps: PartialDeep<ChannelSettingsState> = deleteNullish({
+  const defaultProps: Partial<ChannelSettingsState> = deleteNullish({
     channelUrl: props?.channelUrl,
     onCloseClick: props?.onCloseClick,
     onLeaveChannel: props?.onLeaveChannel,

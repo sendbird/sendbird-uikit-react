@@ -24,7 +24,6 @@ import useSetCurrentUserId from './hooks/useSetCurrentUserId';
 import useThread from './useThread';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
-import { PartialDeep } from '../../../utils/typeHelpers/partialDeep';
 
 export interface ThreadProviderProps extends
   Pick<UserProfileProviderProps, 'disableUserProfile' | 'renderUserProfile'> {
@@ -91,7 +90,7 @@ const initialState: ThreadState = {
 
 export const ThreadContext = React.createContext<ReturnType<typeof createStore<ThreadState>> | null>(null);
 
-const createThreadStore = (props?: any) => createStore({
+const createThreadStore = (props?: Partial<ThreadState>) => createStore({
   ...initialState,
   ...props,
 });
@@ -99,7 +98,7 @@ const createThreadStore = (props?: any) => createStore({
 export const InternalThreadProvider: React.FC<React.PropsWithChildren<unknown>> = (props: ThreadProviderProps) => {
   const { children } = props;
 
-  const defaultProps: PartialDeep<ThreadState> = {
+  const defaultProps: Partial<ThreadState> = {
     channelUrl: props?.channelUrl,
     message: props?.message,
     onHeaderActionClick: props?.onHeaderActionClick,

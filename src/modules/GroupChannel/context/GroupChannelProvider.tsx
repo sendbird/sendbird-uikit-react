@@ -31,7 +31,6 @@ import type {
 } from './types';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
-import { PartialDeep } from '../../../utils/typeHelpers/partialDeep';
 import { deleteNullish } from '../../../utils/utils';
 
 const initialState = {
@@ -62,7 +61,7 @@ const initialState = {
 
 export const GroupChannelContext = createContext<ReturnType<typeof createStore<GroupChannelState>> | null>(null);
 
-const createGroupChannelListStore = (props?: any) => createStore({
+const createGroupChannelStore = (props?: Partial<GroupChannelState>) => createStore({
   ...initialState,
   ...props,
 });
@@ -70,7 +69,7 @@ const createGroupChannelListStore = (props?: any) => createStore({
 export const InternalGroupChannelProvider = (props: GroupChannelProviderProps) => {
   const { children } = props;
 
-  const defaultProps: PartialDeep<GroupChannelState> = deleteNullish({
+  const defaultProps: Partial<GroupChannelState> = deleteNullish({
     channelUrl: props?.channelUrl,
     renderUserProfile: props?.renderUserProfile,
     disableUserProfile: props?.disableUserProfile,
@@ -103,7 +102,7 @@ export const InternalGroupChannelProvider = (props: GroupChannelProviderProps) =
     renderUserMentionItem: props?.renderUserMentionItem,
   });
 
-  const storeRef = useRef(createGroupChannelListStore(defaultProps));
+  const storeRef = useRef(createGroupChannelStore(defaultProps));
 
   return (
     <GroupChannelContext.Provider value={storeRef.current}>

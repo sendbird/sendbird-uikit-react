@@ -41,8 +41,8 @@ import { EmojiReactionListRoot, MenuRoot } from '../../../ui/ContextMenu';
 import useSendbird from './hooks/useSendbird';
 import { createSendbirdContextStore, SendbirdContext, useSendbirdStore } from './SendbirdContext';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
-import { PartialDeep } from '../../../utils/typeHelpers/partialDeep';
 import { deleteNullish } from '../../../utils/utils';
+import { TwoDepthPartial } from '../../../utils/typeHelpers/partialDeep';
 
 /**
  * SendbirdContext - Manager
@@ -374,7 +374,7 @@ const InternalSendbirdProvider = (props: SendbirdProviderProps & { logger: Logge
     dateLocale,
   } = props;
 
-  const defaultProps: PartialDeep<SendbirdState> = deleteNullish({
+  const defaultProps: TwoDepthPartial<SendbirdState> = deleteNullish({
     config: {
       renderUserProfile: props?.renderUserProfile,
       onStartDirectMessage: props?.onStartDirectMessage,

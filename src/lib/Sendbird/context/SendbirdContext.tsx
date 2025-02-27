@@ -3,6 +3,7 @@ import { createStore } from '../../../utils/storeManager';
 import { initialState } from './initialState';
 import { SendbirdState } from '../types';
 import { useStore } from '../../../hooks/useStore';
+import { TwoDepthPartial } from '../../../utils/typeHelpers/partialDeep';
 
 /**
  * SendbirdContext
@@ -12,7 +13,7 @@ export const SendbirdContext = React.createContext<ReturnType<typeof createStore
 /**
  * Create store for Sendbird context
  */
-export const createSendbirdContextStore = (props?: any) => createStore({
+export const createSendbirdContextStore = (props?: TwoDepthPartial<SendbirdState>) => createStore({
   config: {
     ...initialState.config,
     ...props?.config,
@@ -25,7 +26,7 @@ export const createSendbirdContextStore = (props?: any) => createStore({
     ...initialState.eventHandlers,
     ...props?.eventHandlers,
   },
-  emojiManager: props?.emojiManager ?? initialState.emojiManager,
+  emojiManager: initialState.emojiManager,
   utils: {
     ...initialState.utils,
     ...props?.utils,

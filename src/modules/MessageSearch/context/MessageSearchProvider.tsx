@@ -14,7 +14,6 @@ import { createStore } from '../../../utils/storeManager';
 import { useStore } from '../../../hooks/useStore';
 import useMessageSearch from './hooks/useMessageSearch';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
-import { PartialDeep } from '../../../utils/typeHelpers/partialDeep';
 import { deleteNullish } from '../../../utils/utils';
 
 export interface MessageSearchProviderProps {
@@ -136,7 +135,7 @@ const MessageSearchManager: React.FC<MessageSearchProviderProps> = ({
   return null;
 };
 
-const createMessageSearchStore = (props?: any) => createStore({
+const createMessageSearchStore = (props?: Partial<MessageSearchState>) => createStore({
   ...initialState,
   ...props,
 });
@@ -144,7 +143,7 @@ const createMessageSearchStore = (props?: any) => createStore({
 const InternalMessageSearchProvider: React.FC<React.PropsWithChildren<unknown>> = (props: MessageSearchProviderProps) => {
   const { children } = props;
 
-  const defaultProps: PartialDeep<MessageSearchState> = deleteNullish({
+  const defaultProps: Partial<MessageSearchState> = deleteNullish({
     channelUrl: props?.channelUrl,
     messageSearchQuery: props?.messageSearchQuery,
     searchString: props?.searchString,
