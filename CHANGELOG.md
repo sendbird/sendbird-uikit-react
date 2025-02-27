@@ -1,15 +1,26 @@
 # Changelog - v3
 
+## [v3.16.0] (Feb 28 2025)
+### Fixes:
+- Added the missing import paths for the following interfaces
+  - `GroupChannelState`
+  - `GroupChannelProviderProps`
+  - `ChannelSettingsState`
+  - `ChannelSettingsContextProps`
+- Fixed an issue where some of the context properties are not defined in a certain case 
+
+### Chore
+- Updated `dompurify` dependency version to `v3.2.4`
 
 ## [v3.15.15] (Feb 14 2025)
 ### Fixes:
-- Added the missing import paths for the following deprecated interfaces.
+- Added the missing import paths for the following deprecated interfaces
   - `useSendbirdStateContext`
   - `withSendbird`
-- Fixed an issue where `VoiceMessageInput` failed to record the audio at first.
+- Fixed an issue where `VoiceMessageInput` failed to record the audio at first
 
 ### Chore
-- Updated `@sendbird/chat` version to 4.16.4
+- Updated `@sendbird/chat` version to `v4.16.4`
 
 ## [v3.15.14] (Feb 7 2025)
 
