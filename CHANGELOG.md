@@ -1,5 +1,9 @@
 # Changelog - v3
 
+### [v3.16.1] (Mar 5 2025)
+### Fixes:
+- Fixed an unexpected error in `MessageList`
+
 ## [v3.16.0] (Feb 28 2025)
 ### Fixes:
 - Added the missing import paths for the following interfaces
