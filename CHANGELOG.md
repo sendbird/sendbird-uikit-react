@@ -1,6 +1,6 @@
 # Changelog - v3
 
-### [v3.16.1] (Mar 5 2025)
+## [v3.16.1] (Mar 5 2025)
 ### Fixes:
 - Fixed an unexpected error in `MessageList`
 
