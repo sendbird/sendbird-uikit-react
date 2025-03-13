@@ -1,5 +1,4 @@
-
-const supportedProtocols = [ 'https:', 'http:', 'tel:', 'mailto:' ]
+const supportedProtocols = ['https:', 'http:', 'tel:', 'mailto:'];
 
 export function asSafeURL(url: string) {
   let safeURL = decodeURIComponent(url);
