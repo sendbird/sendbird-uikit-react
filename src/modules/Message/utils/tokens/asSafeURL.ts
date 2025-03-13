@@ -1,9 +1,11 @@
+
+const supportedProtocols = [ 'https:', 'http:', 'tel:', 'mailto:' ]
+
 export function asSafeURL(url: string) {
   let safeURL = decodeURIComponent(url);
-
   try {
     const { protocol } = new URL(safeURL);
-    if (['https:', 'http:'].some((it) => it === protocol.toLowerCase())) {
+    if (supportedProtocols.some((it) => it === protocol.toLowerCase())) {
       return safeURL;
     } else {
       return '#';
@@ -13,6 +15,5 @@ export function asSafeURL(url: string) {
       safeURL = 'https://' + safeURL;
     }
   }
-
   return safeURL;
 }
