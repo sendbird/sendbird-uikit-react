@@ -51,10 +51,10 @@ export const Message = (props: MessageProps): React.ReactElement => {
     // Use `allMessages[allMessages.length - 1]` instead of `currentGroupChannel.lastMessage`
     // because lastMessage is not updated when **Bot** sends messages
     const lastMessageInView = messages[messages.length - 1];
-    const hasUnsentMessage = isSendableMessage(lastMessageInView) && lastMessageInView.sendingStatus !== 'succeeded';
+    const hasUnsentMessage = isSendableMessage(lastMessageInView) && lastMessageInView?.sendingStatus !== 'succeeded';
     const showSuggestedReplies = showSuggestedRepliesFor === 'all_messages'
       ? true
-      : message.messageId === lastMessageInView.messageId;
+      : message.messageId === lastMessageInView?.messageId;
     return enableSuggestedReplies && getSuggestedReplies(message).length > 0 && !hasUnsentMessage && showSuggestedReplies;
   });
 
@@ -62,7 +62,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
     <MessageView
       {...props}
       channel={currentChannel!}
-      emojiContainer={emojiManager.emojiContainer}
+      emojiContainer={emojiManager?.emojiContainer}
       editInputDisabled={
         !initialized
         || isDisabledBecauseFrozen(currentChannel ?? undefined)
