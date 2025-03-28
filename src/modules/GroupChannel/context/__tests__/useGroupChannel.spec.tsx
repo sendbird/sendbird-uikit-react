@@ -127,7 +127,7 @@ describe('useGroupChannel', () => {
       const { result } = renderHook(() => useGroupChannel(), { wrapper });
 
       act(() => {
-        result.current.actions.setCurrentChannel(mockChannel as GroupChannel);
+        result.current.actions.setCurrentChannel(mockChannel as unknown as GroupChannel);
       });
 
       expect(result.current.state.currentChannel).toEqual(mockChannel);
