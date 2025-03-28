@@ -1,5 +1,9 @@
 # Changelog - v3
 
+## [v3.16.2] (Mar 28 2025)
+### Features:
+- Added `tel` and `mailto` protocol support for the markup link
+
 ## [v3.16.1] (Mar 5 2025)
 ### Fixes:
 - Fixed an unexpected error in `MessageList`
