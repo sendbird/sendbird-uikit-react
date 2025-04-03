@@ -180,10 +180,14 @@ const SendbirdContextManager = ({
 
   // Emoji Manager
   const emojiManager = useMemo(() => {
-    return new EmojiManager({
-      sdk,
-      logger,
-    });
+    if (sdkStore.initialized) {
+      return new EmojiManager({
+        sdk,
+        logger,
+      });
+    }
+
+    return undefined;
   }, [sdkStore.initialized]);
 
   const uikitConfigs = useMemo(() => ({

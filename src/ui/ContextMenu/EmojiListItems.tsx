@@ -1,10 +1,11 @@
-import React, { ReactElement, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
+import React, { Children, ReactElement, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import SortByRow from '../SortByRow';
 import { Nullable } from '../../types';
 import { EMOJI_MENU_ROOT_ID, MENU_OBSERVING_CLASS_NAME } from '.';
 import { APP_LAYOUT_ROOT } from '../../modules/App/const';
+import { Label, LabelColors, LabelTypography } from '../Label';
 
 const defaultParentRect = { x: 0, y: 0, left: 0, top: 0, height: 0 };
 type SpaceFromTrigger = { x: number, y: number };
@@ -96,7 +97,7 @@ export const EmojiListItems = ({
       }
       setReactionStyle(reactionStyle);
     }
-  }, []);
+  }, [children]);
 
   const rootElement = document.getElementById(EMOJI_MENU_ROOT_ID);
   if (rootElement) {
@@ -115,14 +116,26 @@ export const EmojiListItems = ({
               top: `${Math.round(reactionStyle.top)}px`,
             }}
           >
-            <SortByRow
-              className="sendbird-dropdown__reaction-bar__row"
-              maxItemCount={8}
-              itemWidth={44}
-              itemHeight={40}
-            >
-              {children}
-            </SortByRow>
+            {Children.count(children) <= 0
+              ? (
+                <Label
+                  className="sendbird-dropdown__reaction-bar__emptyLabel"
+                  type={LabelTypography.BODY_1}
+                  color={LabelColors.ONBACKGROUND_1}
+                >
+                  Emojis is not loaded yet.
+                </Label>
+              ) : (
+                <SortByRow
+                  className="sendbird-dropdown__reaction-bar__row"
+                  maxItemCount={8}
+                  itemWidth={44}
+                  itemHeight={40}
+                >
+                  {children}
+                </SortByRow>
+              )
+            }
           </ul>
         </div>,
         rootElement,
