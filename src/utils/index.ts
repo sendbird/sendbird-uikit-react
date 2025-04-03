@@ -529,7 +529,7 @@ export const getEmojiMapAll = (emojiContainer: EmojiContainer): Map<string, Emoj
   return emojiMap;
 };
 export const getEmojiListByCategoryIds = (emojiContainer: EmojiContainer, categoryIds: number[]): Array<Emoji> => {
-  if (!categoryIds) return getEmojiListAll(emojiContainer);
+  if (!categoryIds) return getEmojiListAll(emojiContainer) || [];
 
   return emojiContainer?.emojiCategories
     ?.filter((emojiCategory: EmojiCategory) => categoryIds.includes(emojiCategory.id))
