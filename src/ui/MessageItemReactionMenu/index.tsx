@@ -73,8 +73,6 @@ export function MessageEmojiMenu({
           </IconButton>
         )}
         menuItems={(closeDropdown: () => void): ReactElement => {
-          if (filteredEmojis.length === 0) return null;
-
           return (
             <EmojiListItems
               id={getObservingId(message.messageId)}

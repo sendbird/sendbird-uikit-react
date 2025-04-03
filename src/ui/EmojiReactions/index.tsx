@@ -121,8 +121,6 @@ const EmojiReactions = ({
             </ReactionBadge>
           )}
           menuItems={(closeDropdown: () => void): ReactElement => {
-            if (filteredEmojis.length === 0) return null;
-
             return (
               <EmojiListItems
                 parentRef={addReactionRef}
@@ -130,7 +128,7 @@ const EmojiReactions = ({
                 closeDropdown={closeDropdown}
                 spaceFromTrigger={spaceFromTrigger}
               >
-                {getEmojiListByCategoryIds(emojiContainer, filterEmojiCategoryIds?.(message)).map((emoji: Emoji): ReactElement => {
+                {filteredEmojis.map((emoji: Emoji): ReactElement => {
                   const isReacted: boolean = (message?.reactions
                     ?.find((reaction: Reaction): boolean => reaction.key === emoji.key)?.userIds
                     ?.some((reactorId: string): boolean => reactorId === userId)) || false;
