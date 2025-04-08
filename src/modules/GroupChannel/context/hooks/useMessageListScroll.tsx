@@ -72,12 +72,15 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto', deps: Dependen
     unsubscribes.push(
       scrollPubSub.subscribe('scroll', ({ top, animated, lazy, resolve }) => {
         runCallback(() => {
-          if (!scrollRef.current) return;
+          if (!scrollRef.current || typeof top !== 'number') {
+            resolve?.();
+            return;
+          }
           const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
 
           if (scrollRef.current.scroll) {
             scrollRef.current.scroll({ top, behavior: getScrollBehavior(behavior, animated) });
-          } else if (typeof top === 'number') {
+          } else {
             scrollRef.current.scrollTop = top;
           }
 
@@ -85,7 +88,7 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto', deps: Dependen
           scrollDistanceFromBottomRef.current = Math.max(0, scrollHeight - scrollTop - clientHeight);
           setIsScrollBottomReached(scrollDistanceFromBottomRef.current === 0);
 
-          if (resolve) resolve();
+          resolve?.();
         }, lazy);
       }),
     );

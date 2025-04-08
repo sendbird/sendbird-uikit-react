@@ -146,7 +146,7 @@ describe('useMessageListScroll', () => {
   });
 
   describe('scroll', () => {
-    it('should do nothing if scrollRef is null', async () => {
+    it('should call resolve() even if scrollRef is null', async () => {
       const { result } = renderHook(() => useMessageListScroll('auto'));
       const resolveMock = jest.fn();
 
@@ -154,7 +154,9 @@ describe('useMessageListScroll', () => {
         result.current.scrollPubSub.publish('scroll', { resolve: resolveMock });
       });
 
-      expect(resolveMock).not.toHaveBeenCalled();
+      await waitFor(() => {
+        expect(resolveMock).toHaveBeenCalled();
+      });
     });
 
     it('should use scrollTop if scroll method is not defined', async () => {
@@ -188,10 +190,8 @@ describe('useMessageListScroll', () => {
         clientHeight: 500,
       };
 
-      await act(async () => {
-        // @ts-ignore
-        result.current.scrollRef.current = mockScrollElement;
-      });
+      // @ts-ignore
+      result.current.scrollRef.current = mockScrollElement;
 
       await act(async () => {
         result.current.scrollPubSub.publish('scroll', {});
