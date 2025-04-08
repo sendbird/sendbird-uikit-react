@@ -188,8 +188,10 @@ describe('useMessageListScroll', () => {
         clientHeight: 500,
       };
 
-      // @ts-ignore
-      result.current.scrollRef.current = mockScrollElement;
+      await act(async () => {
+        // @ts-ignore
+        result.current.scrollRef.current = mockScrollElement;
+      });
 
       await act(async () => {
         result.current.scrollPubSub.publish('scroll', {});
