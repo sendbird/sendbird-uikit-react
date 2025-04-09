@@ -34,7 +34,7 @@ export const createSendbirdContextStore = (props?: TwoDepthPartial<SendbirdState
 });
 
 /**
- * A specialized hook for Ssendbird state management
+ * A specialized hook for Sendbird state management
  * @returns {ReturnType<typeof createStore<SendbirdState>>}
  */
 export const useSendbirdStore = () => {
