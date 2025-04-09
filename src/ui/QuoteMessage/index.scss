@@ -83,6 +83,13 @@
         max-height: 30px;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        /* Below code is for multiline ellipsis.
+        * These properties are not compatible with some browsers, and will be ignored on the unsupported browser.
+        */
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
       }
     }
 
