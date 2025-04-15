@@ -19,7 +19,6 @@ import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import { GroupChannelContext } from '../GroupChannelProvider';
 import type { GroupChannelState, MessageActions } from '../types';
 import { useMessageActions } from './useMessageActions';
-import { delay } from '../../../../utils/utils';
 
 export interface GroupChannelActions extends MessageActions {
   // Channel actions
@@ -71,8 +70,6 @@ export const useGroupChannel = () => {
     setAnimatedMessageId(null);
     setIsScrollBottomReached(true);
 
-    // wait a bit for scroll ref to be updated
-    await delay();
     if (config.isOnline && state.hasNext()) {
       await state.resetWithStartingPoint(Number.MAX_SAFE_INTEGER);
     }
