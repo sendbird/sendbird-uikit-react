@@ -102,7 +102,7 @@ export function useMessageActions(params: Params): MessageActions {
     () => {
       setTimeout(scrollToBottom, 0);
     },
-    [],
+    [scrollToBottom],
   );
 
   const processParams = useCallback(async <T extends keyof MessageParamsByType>(
