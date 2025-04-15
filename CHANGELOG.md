@@ -1,5 +1,12 @@
 # Changelog - v3
 
+## [v3.16.4] (Apr 15 2025)
+### Features:
+- Added support for multi-line ellipsis in quoted messages.
+### Fixes:
+- Fixed an issue where the previous thread message wouldn't load when scrolling to the top.
+- Fixed an issue where `scrollToBottom()` did not work when sending a message on mobile.
+
 ## [v3.16.3] (Apr 3 2025)
 ### Fixes:
 - Fixed an issue where the connection is still alive after `SendbirdProvider` have been unmounted.
