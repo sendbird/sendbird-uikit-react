@@ -537,6 +537,9 @@ const useThread = () => {
     currentChannel,
     stores.sdkStore.initialized,
     parentMessage,
+    threadListState,
+    isReactionEnabled,
+    logger,
   ]);
 
   return { state, actions };
