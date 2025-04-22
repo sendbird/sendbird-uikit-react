@@ -103,6 +103,8 @@ export const useSendVoiceMessageCallback = ({
   }, [
     currentChannel,
     onBeforeSendVoiceMessage,
+    sendMessageStart,
+    sendMessageFailure,
   ]);
   return sendMessage;
 };

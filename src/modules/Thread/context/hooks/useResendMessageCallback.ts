@@ -140,5 +140,10 @@ export default function useResendMessageCallback({
       failedMessage.sendingStatus = SendingStatus.FAILED;
       sendMessageFailure(failedMessage);
     }
-  }, [currentChannel]);
+  }, [
+    currentChannel,
+    resendMessageStart,
+    sendMessageSuccess,
+    sendMessageFailure,
+  ]);
 }

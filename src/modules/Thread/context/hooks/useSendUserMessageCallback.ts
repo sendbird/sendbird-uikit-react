@@ -85,6 +85,12 @@ export default function useSendUserMessageCallback({
           });
         });
     }
-  }, [isMentionEnabled, currentChannel]);
+  }, [
+    isMentionEnabled,
+    currentChannel,
+    onBeforeSendUserMessage,
+    sendMessageStart,
+    sendMessageFailure,
+  ]);
   return sendMessage;
 }
