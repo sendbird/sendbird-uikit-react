@@ -74,7 +74,15 @@ export const useThreadFetchers = ({
         initializeThreadListFailure();
       }
     },
-    [stores.sdkStore.initialized, staleParentMessage, anchorMessage, isReactionEnabled],
+    [
+      stores.sdkStore.initialized,
+      staleParentMessage,
+      anchorMessage,
+      isReactionEnabled,
+      initializeThreadListStart,
+      initializeThreadListSuccess,
+      initializeThreadListFailure,
+    ],
   );
 
   const loadPrevious = useCallback(
@@ -96,7 +104,15 @@ export const useThreadFetchers = ({
         getPrevMessagesFailure();
       }
     },
-    [threadListState, oldestMessageTimeStamp, isReactionEnabled, staleParentMessage],
+    [
+      threadListState,
+      oldestMessageTimeStamp,
+      isReactionEnabled,
+      staleParentMessage,
+      getPrevMessagesStart,
+      getPrevMessagesSuccess,
+      getPrevMessagesFailure,
+    ],
   );
 
   const loadNext = useCallback(
@@ -117,7 +133,15 @@ export const useThreadFetchers = ({
         getNextMessagesFailure();
       }
     },
-    [threadListState, latestMessageTimeStamp, isReactionEnabled, staleParentMessage],
+    [
+      threadListState,
+      latestMessageTimeStamp,
+      isReactionEnabled,
+      staleParentMessage,
+      getNextMessagesStart,
+      getNextMessagesSuccess,
+      getNextMessagesFailure,
+    ],
   );
 
   return {

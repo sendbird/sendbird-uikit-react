@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
-import { useContext, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { ThreadContext, ThreadState } from './ThreadProvider';
 import { ChannelStateTypes, FileUploadInfoParams, ParentMessageStateTypes, ThreadListStateTypes } from '../types';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
@@ -55,7 +55,7 @@ const useThread = () => {
   } = state;
 
   const sendMessageStatusActions = {
-    sendMessageStart: (message: SendableMessageType) => store.setState(state => {
+    sendMessageStart: useCallback((message: SendableMessageType) => store.setState(state => {
       return {
         ...state,
         localThreadMessages: [
@@ -63,9 +63,9 @@ const useThread = () => {
           message,
         ],
       };
-    }),
+    }), []),
 
-    sendMessageSuccess: (message: SendableMessageType) => store.setState(state => {
+    sendMessageSuccess: useCallback((message: SendableMessageType) => store.setState(state => {
       return {
         ...state,
         allThreadMessages: [
@@ -78,9 +78,9 @@ const useThread = () => {
           !compareIds((m as UserMessage)?.reqId, message?.reqId)
         )),
       };
-    }),
+    }), []),
 
-    sendMessageFailure: (message: SendableMessageType) => store.setState(state => {
+    sendMessageFailure: useCallback((message: SendableMessageType) => store.setState(state => {
       return {
         ...state,
         localThreadMessages: state.localThreadMessages.map((m) => (
@@ -89,9 +89,9 @@ const useThread = () => {
             : m
         )),
       };
-    }),
+    }), []),
 
-    resendMessageStart: (message: SendableMessageType) => store.setState(state => {
+    resendMessageStart: useCallback((message: SendableMessageType) => store.setState(state => {
       return {
         ...state,
         localThreadMessages: state.localThreadMessages.map((m) => (
@@ -100,7 +100,7 @@ const useThread = () => {
             : m
         )),
       };
-    }),
+    }), []),
   };
 
   const toggleReaction = useToggleReactionCallback({ currentChannel }, { logger });
@@ -155,53 +155,59 @@ const useThread = () => {
   };
 
   const messageModifiedActions = {
-    onMessageUpdated: (channel: GroupChannel, message: SendableMessageType) => store.setState(state => {
-      if (state.currentChannel?.url !== channel?.url) {
-        return state;
-      }
+    onMessageUpdated: useCallback((channel: GroupChannel, message: SendableMessageType) => {
+      store.setState(state => {
+        if (state.currentChannel?.url !== channel?.url) {
+          return state;
+        }
 
-      return {
-        ...state,
-        parentMessage: state.parentMessage?.messageId === message?.messageId
-          ? message
-          : state.parentMessage,
-        allThreadMessages: state.allThreadMessages?.map((msg) => (
-          (msg?.messageId === message?.messageId) ? message : msg
-        )),
-      };
-    }),
-
-    onMessageDeleted: (channel: GroupChannel, messageId: number) => store.setState(state => {
-      if (state.currentChannel?.url !== channel?.url) {
-        return state;
-      }
-      if (state?.parentMessage?.messageId === messageId) {
         return {
           ...state,
-          parentMessage: null,
-          parentMessageState: ParentMessageStateTypes.NIL,
-          allThreadMessages: [],
+          parentMessage: state.parentMessage?.messageId === message?.messageId
+            ? message
+            : state.parentMessage,
+          allThreadMessages: state.allThreadMessages?.map((msg) => (
+            (msg?.messageId === message?.messageId) ? message : msg
+          )),
         };
-      }
-      return {
-        ...state,
-        allThreadMessages: state.allThreadMessages?.filter((msg) => (
-          msg?.messageId !== messageId
-        )),
-        localThreadMessages: state.localThreadMessages?.filter((msg) => (
-          msg?.messageId !== messageId
-        )),
-      };
-    }),
+      });
+    }, []),
 
-    onMessageDeletedByReqId: (reqId: string | number) => store.setState(state => {
-      return {
-        ...state,
-        localThreadMessages: state.localThreadMessages.filter((m) => (
-          !compareIds((m as SendableMessageType).reqId, reqId)
-        )),
-      };
-    }),
+    onMessageDeleted: useCallback((channel: GroupChannel, messageId: number) => {
+      store.setState(state => {
+        if (state.currentChannel?.url !== channel?.url) {
+          return state;
+        }
+        if (state?.parentMessage?.messageId === messageId) {
+          return {
+            ...state,
+            parentMessage: null,
+            parentMessageState: ParentMessageStateTypes.NIL,
+            allThreadMessages: [],
+          };
+        }
+        return {
+          ...state,
+          allThreadMessages: state.allThreadMessages?.filter((msg) => (
+            msg?.messageId !== messageId
+          )),
+          localThreadMessages: state.localThreadMessages?.filter((msg) => (
+            msg?.messageId !== messageId
+          )),
+        };
+      });
+    }, []),
+
+    onMessageDeletedByReqId: useCallback((reqId: string | number) => {
+      store.setState(state => {
+        return {
+          ...state,
+          localThreadMessages: state.localThreadMessages.filter((m) => (
+            !compareIds((m as SendableMessageType).reqId, reqId)
+          )),
+        };
+      });
+    }, []),
   };
 
   const modifyMessageActions = {
@@ -219,15 +225,15 @@ const useThread = () => {
   };
 
   const threadFetcherStatusActions = {
-    initializeThreadListStart: () => store.setState(state => {
+    initializeThreadListStart: useCallback(() => store.setState(state => {
       return {
         ...state,
         threadListState: ThreadListStateTypes.LOADING,
         allThreadMessages: [],
       };
-    }),
+    }), []),
 
-    initializeThreadListSuccess: (parentMessage: BaseMessage, anchorMessage: SendableMessageType, threadedMessages: BaseMessage[]) => store.setState(state => {
+    initializeThreadListSuccess: useCallback((parentMessage: BaseMessage, anchorMessage: SendableMessageType, threadedMessages: BaseMessage[]) => store.setState(state => {
       const anchorMessageCreatedAt = (!anchorMessage?.messageId) ? parentMessage?.createdAt : anchorMessage?.createdAt;
       const anchorIndex = threadedMessages.findIndex((message) => message?.createdAt > anchorMessageCreatedAt);
       const prevThreadMessages = anchorIndex > -1 ? threadedMessages.slice(0, anchorIndex) : threadedMessages;
@@ -240,57 +246,57 @@ const useThread = () => {
         hasMoreNext: threadedMessages.length - anchorIndex === NEXT_THREADS_FETCH_SIZE,
         allThreadMessages: [prevThreadMessages, anchorThreadMessage, nextThreadMessages].flat() as CoreMessageType[],
       };
-    }),
+    }), []),
 
-    initializeThreadListFailure: () => store.setState(state => {
+    initializeThreadListFailure: useCallback(() => store.setState(state => {
       return {
         ...state,
         threadListState: ThreadListStateTypes.LOADING,
         allThreadMessages: [],
       };
-    }),
+    }), []),
 
-    getPrevMessagesStart: () => store.setState(state => {
+    getPrevMessagesStart: useCallback(() => store.setState(state => {
       return {
         ...state,
       };
-    }),
+    }), []),
 
-    getPrevMessagesSuccess: (threadedMessages: CoreMessageType[]) => store.setState(state => {
+    getPrevMessagesSuccess: useCallback((threadedMessages: CoreMessageType[]) => store.setState(state => {
       return {
         ...state,
         hasMorePrev: threadedMessages.length === PREV_THREADS_FETCH_SIZE,
         allThreadMessages: [...threadedMessages, ...state.allThreadMessages],
       };
-    }),
+    }), []),
 
-    getPrevMessagesFailure: () => store.setState(state => {
+    getPrevMessagesFailure: useCallback(() => store.setState(state => {
       return {
         ...state,
         hasMorePrev: false,
       };
-    }),
+    }), []),
 
-    getNextMessagesStart: () => store.setState(state => {
+    getNextMessagesStart: useCallback(() => store.setState(state => {
       return {
         ...state,
       };
-    }),
+    }), []),
 
-    getNextMessagesSuccess: (threadedMessages: CoreMessageType[]) => store.setState(state => {
+    getNextMessagesSuccess: useCallback((threadedMessages: CoreMessageType[]) => store.setState(state => {
       return {
         ...state,
         hasMoreNext: threadedMessages.length === NEXT_THREADS_FETCH_SIZE,
         allThreadMessages: [...state.allThreadMessages, ...threadedMessages],
       };
-    }),
+    }), []),
 
-    getNextMessagesFailure: () => store.setState(state => {
+    getNextMessagesFailure: useCallback(() => store.setState(state => {
       return {
         ...state,
         hasMoreNext: false,
       };
-    }),
+    }), []),
   };
 
   const { initializeThreadFetcher, fetchPrevThreads, fetchNextThreads } = useThreadFetchers({
@@ -313,57 +319,57 @@ const useThread = () => {
     getNextMessagesFailure: threadFetcherStatusActions.getNextMessagesFailure,
   });
 
-  const actions = useMemo(() => ({
-    setCurrentUserId: (currentUserId: string) => store.setState(state => ({
+  const simpleActions = {
+    setCurrentUserId: useCallback((currentUserId: string) => store.setState(state => ({
       ...state,
       currentUserId: currentUserId,
-    })),
+    })), []),
 
-    getChannelStart: () => store.setState(state => ({
+    getChannelStart: useCallback(() => store.setState(state => ({
       ...state,
       channelState: ChannelStateTypes.LOADING,
       currentChannel: null,
-    })),
+    })), []),
 
-    getChannelSuccess: (groupChannel: GroupChannel) => store.setState(state => ({
+    getChannelSuccess: useCallback((groupChannel: GroupChannel) => store.setState(state => ({
       ...state,
       channelState: ChannelStateTypes.INITIALIZED,
       currentChannel: groupChannel,
       // only support in normal group channel
       isMuted: groupChannel?.members?.find((member) => member?.userId === state.currentUserId)?.isMuted || false,
       isChannelFrozen: groupChannel?.isFrozen || false,
-    })),
+    })), []),
 
-    getChannelFailure: () => store.setState(state => ({
+    getChannelFailure: useCallback(() => store.setState(state => ({
       ...state,
       channelState: ChannelStateTypes.INVALID,
       currentChannel: null,
-    })),
+    })), []),
 
-    getParentMessageStart: () => store.setState(state => ({
+    getParentMessageStart: useCallback(() => store.setState(state => ({
       ...state,
       parentMessageState: ParentMessageStateTypes.LOADING,
       parentMessage: null,
-    })),
+    })), []),
 
-    getParentMessageSuccess: (parentMessage: SendableMessageType) => store.setState(state => ({
+    getParentMessageSuccess: useCallback((parentMessage: SendableMessageType) => store.setState(state => ({
       ...state,
       parentMessageState: ParentMessageStateTypes.INITIALIZED,
       parentMessage: parentMessage,
-    })),
+    })), []),
 
-    getParentMessageFailure: () => store.setState(state => ({
+    getParentMessageFailure: useCallback(() => store.setState(state => ({
       ...state,
       parentMessageState: ParentMessageStateTypes.INVALID,
       parentMessage: null,
-    })),
+    })), []),
 
-    setEmojiContainer: (emojiContainer: EmojiContainer) => store.setState(state => ({
+    setEmojiContainer: useCallback((emojiContainer: EmojiContainer) => store.setState(state => ({
       ...state,
       emojiContainer: emojiContainer,
-    })),
+    })), []),
 
-    onMessageReceived: (channel: GroupChannel, message: SendableMessageType) => store.setState(state => {
+    onMessageReceived: useCallback((channel: GroupChannel, message: SendableMessageType) => store.setState(state => {
       if (
         state.currentChannel?.url !== channel?.url
         || state.hasMoreNext
@@ -388,9 +394,9 @@ const useThread = () => {
             message,
           ],
       };
-    }),
+    }), []),
 
-    onReactionUpdated: (reactionEvent: ReactionEvent) => store.setState(state => {
+    onReactionUpdated: useCallback((reactionEvent: ReactionEvent) => store.setState(state => {
       if (state?.parentMessage?.messageId === reactionEvent?.messageId) {
         state.parentMessage?.applyReactionEvent?.(reactionEvent);
       }
@@ -404,9 +410,9 @@ const useThread = () => {
           return m;
         }),
       };
-    }),
+    }), []),
 
-    onUserMuted: (channel: GroupChannel, user: User) => store.setState(state => {
+    onUserMuted: useCallback((channel: GroupChannel, user: User) => store.setState(state => {
       if (state.currentChannel?.url !== channel?.url || state.currentUserId !== user?.userId) {
         return state;
       }
@@ -414,9 +420,9 @@ const useThread = () => {
         ...state,
         isMuted: true,
       };
-    }),
+    }), []),
 
-    onUserUnmuted: (channel: GroupChannel, user: User) => store.setState(state => {
+    onUserUnmuted: useCallback((channel: GroupChannel, user: User) => store.setState(state => {
       if (state.currentChannel?.url !== channel?.url || state.currentUserId !== user?.userId) {
         return state;
       }
@@ -424,9 +430,9 @@ const useThread = () => {
         ...state,
         isMuted: false,
       };
-    }),
+    }), []),
 
-    onUserBanned: () => store.setState(state => {
+    onUserBanned: useCallback(() => store.setState(state => {
       return {
         ...state,
         channelState: ChannelStateTypes.NIL,
@@ -438,15 +444,15 @@ const useThread = () => {
         hasMorePrev: false,
         hasMoreNext: false,
       };
-    }),
+    }), []),
 
-    onUserUnbanned: () => store.setState(state => {
+    onUserUnbanned: useCallback(() => store.setState(state => {
       return {
         ...state,
       };
-    }),
+    }), []),
 
-    onUserLeft: () => store.setState(state => {
+    onUserLeft: useCallback(() => store.setState(state => {
       return {
         ...state,
         channelState: ChannelStateTypes.NIL,
@@ -458,23 +464,23 @@ const useThread = () => {
         hasMorePrev: false,
         hasMoreNext: false,
       };
-    }),
+    }), []),
 
-    onChannelFrozen: () => store.setState(state => {
+    onChannelFrozen: useCallback(() => store.setState(state => {
       return {
         ...state,
         isChannelFrozen: true,
       };
-    }),
+    }), []),
 
-    onChannelUnfrozen: () => store.setState(state => {
+    onChannelUnfrozen: useCallback(() => store.setState(state => {
       return {
         ...state,
         isChannelFrozen: false,
       };
-    }),
+    }), []),
 
-    onOperatorUpdated: (channel: GroupChannel) => store.setState(state => {
+    onOperatorUpdated: useCallback((channel: GroupChannel) => store.setState(state => {
       if (channel?.url === state.currentChannel?.url) {
         return {
           ...state,
@@ -482,9 +488,9 @@ const useThread = () => {
         };
       }
       return state;
-    }),
+    }), []),
 
-    onTypingStatusUpdated: (channel: GroupChannel, typingMembers: Member[]) => store.setState(state => {
+    onTypingStatusUpdated: useCallback((channel: GroupChannel, typingMembers: Member[]) => store.setState(state => {
       if (!compareIds(channel.url, state.currentChannel?.url)) {
         return state;
       }
@@ -492,9 +498,9 @@ const useThread = () => {
         ...state,
         typingMembers,
       };
-    }),
+    }), []),
 
-    onFileInfoUpdated: ({
+    onFileInfoUpdated: useCallback(({
       channelUrl,
       requestId,
       index,
@@ -521,8 +527,11 @@ const useThread = () => {
         ...state,
         localThreadMessages,
       };
-    }),
+    }), []),
+  };
 
+  const actions = useMemo(() => ({
+    ...simpleActions,
     toggleReaction,
     ...sendMessageStatusActions,
     ...sendMessageActions,
