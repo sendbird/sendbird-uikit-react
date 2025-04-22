@@ -18,8 +18,10 @@ const useCreateChannel = () => {
     store.setState(state => ({ ...state, type }));
   }, []);
 
-  const createChannel = useCallback(() => {
-    return getCreateGroupChannel(sendbirdStore);
+  const createChannel = useCallback((...params: Parameters<ReturnType<typeof getCreateGroupChannel>>) => {
+    const createChannel = getCreateGroupChannel(sendbirdStore);
+
+    return createChannel(...params);
   }, [sendbirdStore]);
 
   const state: CreateChannelState = useSyncExternalStore(store.subscribe, store.getState);
