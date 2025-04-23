@@ -125,7 +125,7 @@ const SendbirdContextManager = ({
   // Disconnect on unmount
   useUnmount(() => {
     actions.disconnect({ logger });
-  }, [sdkStore]);
+  }, []);
 
   // should move to reducer
   const [currentTheme, setCurrentTheme] = useState(theme);
