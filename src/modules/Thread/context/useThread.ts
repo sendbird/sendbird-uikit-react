@@ -36,7 +36,7 @@ const useThread = () => {
   const store = useContext(ThreadContext);
   if (!store) throw new Error('useThread must be used within a ThreadProvider');
   // SendbirdStateContext config
-  const { state: { stores, config } } = useSendbird();
+  const { state: { config } } = useSendbird();
   const { logger, pubSub } = config;
   const isMentionEnabled = config.groupChannel.enableMention;
   const isReactionEnabled = config.groupChannel.enableReactions;
