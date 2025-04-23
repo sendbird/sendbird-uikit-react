@@ -14,11 +14,11 @@ const useMessageSearch = () => {
 
   const setCurrentChannel = useCallback((channel: GroupChannel) => {
     store.setState(state => ({ ...state, currentChannel: channel, initialized: true }));
-  }, []);
+  }, [store]);
 
   const setChannelInvalid = useCallback(() => {
     store.setState(state => ({ ...state, currentChannel: null, initialized: false }));
-  }, []);
+  }, [store]);
 
   const getSearchedMessages = useCallback((messages: ClientSentMessages[], createdQuery: MessageSearchQuery) => {
     store.setState(state => {
@@ -34,19 +34,19 @@ const useMessageSearch = () => {
       }
       return state;
     });
-  }, []);
+  }, [store]);
 
   const setQueryInvalid = useCallback(() => {
     store.setState(state => ({ ...state, isInvalid: true }));
-  }, []);
+  }, [store]);
 
   const startMessageSearch = useCallback(() => {
     store.setState(state => ({ ...state, isInvalid: false, loading: false }));
-  }, []);
+  }, [store]);
 
   const startGettingSearchedMessages = useCallback((query: MessageSearchQuery) => {
     store.setState(state => ({ ...state, loading: true, currentMessageSearchQuery: query }));
-  }, []);
+  }, [store]);
 
   const getNextSearchedMessages = useCallback((messages: ClientSentMessages[]) => {
     store.setState(state => ({
@@ -54,24 +54,24 @@ const useMessageSearch = () => {
       allMessages: [...state.allMessages, ...messages],
       hasMoreResult: state.currentMessageSearchQuery?.hasNext || false,
     }));
-  }, []);
+  }, [store]);
 
   const resetSearchString = useCallback(() => {
     store.setState(state => ({ ...state, allMessages: [] }));
-  }, []);
+  }, [store]);
 
   const setSelectedMessageId = (messageId: number) => useCallback(() => {
     store.setState(state => ({ ...state, selectedMessageId: messageId }));
-  }, []);
+  }, [store]);
 
   const handleRetryToConnect = useCallback(() => {
     store.setState(state => ({ ...state, retryCount: state.retryCount + 1 }));
-  }, []);
+  }, [store]);
 
   // Looks exactly same as handleRetryToConnect but keep just for backward compatibility
   const setRetryCount = useCallback(() => {
     store.setState(state => ({ ...state, retryCount: state.retryCount + 1 }));
-  }, []);
+  }, [store]);
 
   const actions = useMemo(() => ({
     setCurrentChannel,

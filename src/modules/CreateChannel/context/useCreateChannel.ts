@@ -12,11 +12,11 @@ const useCreateChannel = () => {
 
   const setPageStep = useCallback((pageStep: number) => {
     store.setState(state => ({ ...state, pageStep }));
-  }, []);
+  }, [store]);
 
   const setType = useCallback((type: CHANNEL_TYPE) => {
     store.setState(state => ({ ...state, type }));
-  }, []);
+  }, [store]);
 
   const createChannel = useCallback((...params: Parameters<ReturnType<typeof getCreateGroupChannel>>) => {
     const createChannel = getCreateGroupChannel(sendbirdStore);
