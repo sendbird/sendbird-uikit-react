@@ -88,6 +88,11 @@ export default function useSendFileMessageCallback({
       }
     });
   },
-  [currentChannel],
+  [
+    currentChannel,
+    onBeforeSendFileMessage,
+    sendMessageStart,
+    sendMessageFailure,
+  ],
   );
 }

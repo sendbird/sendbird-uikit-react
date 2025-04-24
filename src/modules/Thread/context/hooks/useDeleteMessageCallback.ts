@@ -47,5 +47,9 @@ export default function useDeleteMessageCallback({
           reject(err);
         });
     });
-  }, [currentChannel]);
+  }, [
+    currentChannel,
+    onMessageDeletedByReqId,
+    onMessageDeleted,
+  ]);
 }

@@ -1,10 +1,14 @@
-import { DependencyList, useLayoutEffect } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 // this hook accepts a callback to run component is unmounted
-export function useUnmount(callback: () => void, deps: DependencyList = []) {
+export function useUnmount(callback: () => void) {
+  const callbackRef = useRef(callback);
+
+  callbackRef.current = callback;
+
   useLayoutEffect(() => {
     return () => {
-      callback();
+      callbackRef.current();
     };
-  }, deps);
+  }, []);
 }
