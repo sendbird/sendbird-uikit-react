@@ -116,21 +116,28 @@ export const useGroupChannel = () => {
       if (topOffset) state.scrollPubSub.publish('scroll', { top: topOffset, animated: scrollAnimated });
       if (messageFocusAnimated ?? true) setAnimatedMessageId(messageId);
     } else {
-      await state.resetWithStartingPoint(createdAt);
-      setTimeout(() => {
-        const topOffset = getMessageTopOffset(createdAt);
-        if (topOffset) {
-          state.scrollPubSub.publish('scroll', {
-            top: topOffset,
-            lazy: false,
-            animated: scrollAnimated,
-          });
-        }
-        if (messageFocusAnimated ?? true) setAnimatedMessageId(messageId);
-      });
+      if (state.initialized) {
+        await state.resetWithStartingPoint(createdAt);
+        setTimeout(() => {
+          const topOffset = getMessageTopOffset(createdAt);
+          if (topOffset) {
+            state.scrollPubSub.publish('scroll', {
+              top: topOffset,
+              lazy: false,
+              animated: scrollAnimated,
+            });
+          }
+          if (messageFocusAnimated ?? true) setAnimatedMessageId(messageId);
+        });
+      }
     }
     clickHandler.activate();
-  }, [setAnimatedMessageId, state.scrollRef.current, state.messages?.map(it => it?.messageId)]);
+  }, [
+    setAnimatedMessageId,
+    state.initialized,
+    state.scrollRef.current,
+    state.messages?.map(it => it?.messageId),
+  ]);
 
   const toggleReaction = useCallback((message: SendableMessageType, emojiKey: string, isReacted: boolean) => {
     if (!state.currentChannel) return;
