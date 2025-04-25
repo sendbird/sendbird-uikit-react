@@ -115,21 +115,19 @@ export const useGroupChannel = () => {
       const topOffset = getMessageTopOffset(message.createdAt);
       if (topOffset) state.scrollPubSub.publish('scroll', { top: topOffset, animated: scrollAnimated });
       if (messageFocusAnimated ?? true) setAnimatedMessageId(messageId);
-    } else {
-      if (state.initialized) {
-        await state.resetWithStartingPoint(createdAt);
-        setTimeout(() => {
-          const topOffset = getMessageTopOffset(createdAt);
-          if (topOffset) {
-            state.scrollPubSub.publish('scroll', {
-              top: topOffset,
-              lazy: false,
-              animated: scrollAnimated,
-            });
-          }
-          if (messageFocusAnimated ?? true) setAnimatedMessageId(messageId);
-        });
-      }
+    } else if (state.initialized) {
+      await state.resetWithStartingPoint(createdAt);
+      setTimeout(() => {
+        const topOffset = getMessageTopOffset(createdAt);
+        if (topOffset) {
+          state.scrollPubSub.publish('scroll', {
+            top: topOffset,
+            lazy: false,
+            animated: scrollAnimated,
+          });
+        }
+        if (messageFocusAnimated ?? true) setAnimatedMessageId(messageId);
+      });
     }
     clickHandler.activate();
   }, [
