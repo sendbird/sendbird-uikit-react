@@ -304,6 +304,7 @@ describe('useGroupChannel', () => {
         const mockResetWithStartingPoint = jest.fn().mockResolvedValue(undefined);
         const mockStore = createMockStore({
           messages: [],
+          initialized: true,
           scrollRef: {
             current: document.createElement('div'),
           },
