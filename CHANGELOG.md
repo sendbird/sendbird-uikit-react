@@ -1,17 +1,21 @@
 # Changelog - v3
 
+## [v3.16.5] (Apr 30 2025)
+### Fixes:
+- Fixed a bug that `GroupChannelProvider` with `startingPoint` throws an error
+- Improved custom hook actions through memoization
 
 ## [v3.16.4] (Apr 15 2025)
 ### Features:
-- Added support for multi-line ellipsis in quoted messages.
+- Added support for multi-line ellipsis in quoted messages
 ### Fixes:
-- Fixed an issue where the previous thread message wouldn't load when scrolling to the top.
-- Fixed an issue where `scrollToBottom()` did not work when sending a message on mobile.
+- Fixed an issue where the previous thread message wouldn't load when scrolling to the top
+- Fixed an issue where `scrollToBottom()` did not work when sending a message on mobile
 
 ## [v3.16.3] (Apr 3 2025)
 ### Fixes:
-- Fixed an issue where the connection is still alive after `SendbirdProvider` have been unmounted.
-- Fixed an undefined error of `emojiCategory`.
+- Fixed an issue where the connection is still alive after `SendbirdProvider` have been unmounted
+- Fixed an undefined error of `emojiCategory`
 
 ## [v3.16.2] (Mar 28 2025)
 ### Features:
