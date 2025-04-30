@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useRef, useState } from 'react';
+import React, { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
 import format from 'date-fns/format';
 import './index.scss';
 
@@ -174,6 +174,12 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     && !disableQuoteMessage
   );
   const useReplyingClassName = useReplying ? 'use-quote' : '';
+
+  useEffect(() => {
+    if (useReplying) {
+      onMessageHeightChange?.();
+    }
+  }, [useReplying]);
 
   // Thread replies
   const displayThreadReplies = message?.threadInfo?.replyCount
