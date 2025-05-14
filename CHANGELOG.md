@@ -1,5 +1,9 @@
 # Changelog - v3
 
+## [v3.16.6] (May 13 2025)
+### Fixes:
+- Fixed a bug that the scroll does not remain bottom when quoted message renders
+
 ## [v3.16.5] (Apr 30 2025)
 ### Fixes:
 - Fixed a bug that `GroupChannelProvider` with `startingPoint` throws an error
