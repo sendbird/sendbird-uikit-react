@@ -39,6 +39,7 @@
     display: inline-flex;
     min-width: 40px;
     position: relative;
+    flex-shrink: 0;
 
     .sendbird-message-content__left__avatar {
       bottom: 2px;
