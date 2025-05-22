@@ -39,6 +39,8 @@ const initialState = {
   fetchChannelError: null,
   nicknamesMap: new Map(),
 
+  initialized: false,
+  loading: true,
   messages: [],
   quoteMessage: null,
   animatedMessageId: null,
