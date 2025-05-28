@@ -38,8 +38,6 @@ export default function channelReducer(
   state: ChannelInitialStateType,
   action: ChannelActionTypes,
 ): ChannelInitialStateType {
-  const { stringSet } = useLocalization();
-
   return match(action)
     .with({ type: channelActions.RESET_MESSAGES }, () => {
       return {
@@ -222,7 +220,7 @@ export default function channelReducer(
       const { channel, message } = action.payload;
       const { members } = channel;
       const { sender } = message;
-      const { currentGroupChannel } = state;
+      const { currentGroupChannel, stringSet } = state;
 
       const currentGroupChannelUrl = currentGroupChannel?.url;
 
