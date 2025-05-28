@@ -1,5 +1,9 @@
 # Changelog - v3
 
+## [v3.16.7] (May 27 2025)
+### Fixes:
+- Fixed a minor message style
+
 ## [v3.16.6] (May 13 2025)
 ### Fixes:
 - Fixed a bug that the scroll does not remain bottom when quoted message renders
