@@ -17,7 +17,6 @@ import {
   isSendableMessage,
 } from '../../../../utils';
 import { ChannelInitialStateType } from './initialState';
-import { useLocalization } from '../../../../lib/LocalizationContext';
 
 const getOldestMessageTimeStamp = (messages: CoreMessageType[] = []) => {
   const oldestMessage = messages[0];
