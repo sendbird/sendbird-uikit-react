@@ -108,7 +108,8 @@ export const generateMockChannel = () => ({
     "errorCode": 0,
     "sendingStatus": 'succeeded',
   }],
-  hasMore: true,
+  hasMorePrev: true,
+  hasMoreNext: true,
 });
 
 export const generateMockMessage = (id) => {

@@ -7,6 +7,11 @@ import { Logger } from '../../../lib/Sendbird/types';
 import { SendableMessageType } from '../../../utils';
 import { useLocalization } from '../../../lib/LocalizationContext';
 
+/**
+ * @deprecated This function is deprecated and will be removed in the next major update.
+ * Using this function may cause the violation of the rules of hooks.
+ * Please use the `getMessageCreatedAt` function from the `@sendbird/uikit-react/utils` module instead.
+ */
 export const getMessageCreatedAt = (message: SendableMessageType): string => {
   const { stringSet } = useLocalization();
   return format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT);

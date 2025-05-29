@@ -58,10 +58,16 @@ export function compareIds(a: number | string, b: number | string): boolean {
   return aString === bString;
 }
 
+/**
+ * @deprecated This function is deprecated and will be removed in the next major update.
+ * Using this function may cause the violation of the rules of hooks.
+ * Please use the `getMessageCreatedAt` function from the `@sendbird/uikit-react/utils` module instead.
+ */
 export const getMessageCreatedAt = (message: SendableMessageType): string => {
   const { stringSet } = useLocalization();
   return format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT);
 };
+
 export const isReadMessage = (channel: GroupChannel, message: SendableMessageType): boolean => (
   getOutgoingMessageState(channel, message) === OutgoingMessageStates.READ
 );

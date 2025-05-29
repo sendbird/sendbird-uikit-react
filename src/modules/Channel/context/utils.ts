@@ -116,6 +116,11 @@ export const mergeAndSortMessages = (oldMessages: BaseMessage[], newMessages: Ba
   return sortByCreatedAt(unique);
 };
 
+/**
+ * @deprecated This function is deprecated and will be removed in the next major update.
+ * Using this function may cause the violation of the rules of hooks.
+ * Please use the `getMessageCreatedAt` function from the `@sendbird/uikit-react/utils` module instead.
+ */
 export const getMessageCreatedAt = (message: BaseMessage) => {
   const { stringSet } = useLocalization();
   return format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_CREATED_AT);
