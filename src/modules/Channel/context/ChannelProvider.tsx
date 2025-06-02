@@ -51,6 +51,7 @@ import { useHandleChannelPubsubEvents } from './hooks/useHandleChannelPubsubEven
 import { PublishingModuleType } from '../../internalInterfaces';
 import { ChannelActionTypes } from './dux/actionTypes';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import { useLocalization } from '../../../lib/LocalizationContext';
 
 export { ThreadReplySelectType } from './const'; // export for external usage
 
@@ -228,7 +229,8 @@ const ChannelProvider = (props: ChannelContextProps) => {
   const [quoteMessage, setQuoteMessage] = useState<SendableMessageType | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const [messagesStore, messagesDispatcher] = useReducer(messagesReducer, messagesInitialState);
+  const { stringSet } = useLocalization();
+  const [messagesStore, messagesDispatcher] = useReducer(messagesReducer, { ...messagesInitialState, stringSet });
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const isMentionEnabled = groupChannel.enableMention;
