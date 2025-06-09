@@ -120,7 +120,11 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
 
   const channelListDataSource = useGroupChannelListDataSource(sdk, {
     collectionCreator: getCollectionCreator(sdk, channelListQueryParams),
-    markAsDelivered: (channels) => channels.forEach(scheduler.push),
+    markAsDelivered: (channels) => {
+      if (!config.disableMarkAsDelivered) {
+        channels.forEach(scheduler.push);
+      }
+    },
     onChannelsDeleted: (channelUrls) => {
       channelUrls.forEach((url) => {
         if (url === selectedChannelUrl) onChannelSelect(null);
