@@ -1,5 +1,11 @@
 # Changelog - v3
 
+## [v3.16.9] (Jun 10 2025)
+### Chore
+- Updated `@sendbird/chat` dependency version to `^4.19.1`
+- Updated `@sendbird/uikit-tools` dependency version to `^0.0.8`
+- Updated `@sendbird/react-uikit-message-template-view` dependency version to `^0.0.8`
+
 ## [v3.16.8] (Jun 9 2025)
 ### Fixes:
 - Fixed a bug that `disableMarkAsDelivered` not working properly in `GroupChannel` component
