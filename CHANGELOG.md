@@ -1,5 +1,10 @@
 # Changelog - v3
 
+## [v3.16.8] (Jun 9 2025)
+### Fixes:
+- Fixed a bug that `disableMarkAsDelivered` not working properly in `GroupChannel` component
+- Improved internal state management for stabilization
+
 ## [v3.16.7] (May 27 2025)
 ### Fixes:
 - Fixed a minor message style
