@@ -22,30 +22,34 @@ export function hasStateChanged<T>(prevState: T, updates: Partial<T>): boolean {
   });
 }
 
+interface StoreSetStateJob<T> {
+  partial: Partial<T> | ((state: T) => Partial<T>);
+  force?: boolean;
+}
+
 /**
  * A custom store creation utility
  */
 export function createStore<T extends object>(initialState: T): Store<T> {
   let state = { ...initialState };
+  const queue: StoreSetStateJob<T>[] = [];
   const listeners = new Set<() => void>();
-  let isUpdating = false;
 
-  const setState = (partial: Partial<T> | ((state: T) => Partial<T>), force?: boolean) => {
-    // Prevent nested updates
-    if (isUpdating) return;
+  const processQueue = () => {
+    const job = queue.shift();
+    if (!job) return;
 
-    try {
-      isUpdating = true;
-      const nextState = typeof partial === 'function' ? partial(state) : partial;
-      const hasChanged = hasStateChanged(state, nextState);
-
-      if (force || hasChanged) {
-        state = { ...state, ...nextState };
-        listeners.forEach((listener) => listener());
-      }
-    } finally {
-      isUpdating = false;
+    const { partial, force } = job;
+    const nextState = typeof partial === 'function' ? partial(state) : partial;
+    const hasChanged = hasStateChanged(state, nextState);
+    if (force || hasChanged) {
+      state = { ...state, ...nextState };
+      listeners.forEach((listener) => listener());
     }
+  };
+  const setState = (partial: Partial<T> | ((state: T) => Partial<T>), force?: boolean) => {
+    queue.push({ partial, force });
+    processQueue();
   };
 
   return {
