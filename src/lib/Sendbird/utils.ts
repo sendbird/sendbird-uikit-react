@@ -60,7 +60,7 @@ export function initSDK({
     appId,
     modules: [new GroupChannelModule(), new OpenChannelModule()],
     // newInstance: isNewApp,
-    localCacheEnabled: true,
+    localCacheEnabled: typeof sdkInitParams !== 'undefined' ? sdkInitParams.localCacheEnabled : true,
   });
 
   if (customApiHost) params.customApiHost = customApiHost;
