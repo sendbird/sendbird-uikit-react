@@ -1,5 +1,9 @@
 # Changelog - v3
 
+## [v3.16.9] (Jun 12 2025)
+### Chore
+- Fixed `localCacheEnabled` option applied
+
 ## [v3.16.9] (Jun 10 2025)
 ### Chore
 - Updated `@sendbird/chat` dependency version to `^4.19.1`
