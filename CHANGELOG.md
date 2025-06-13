@@ -1,6 +1,6 @@
 # Changelog - v3
 
-## [v3.16.9] (Jun 12 2025)
+## [v3.16.10] (Jun 12 2025)
 ### Chore
 - Fixed `localCacheEnabled` option applied
 
