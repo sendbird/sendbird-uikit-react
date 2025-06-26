@@ -13,14 +13,17 @@ export interface DateSeparatorProps {
   children?: string | ReactElement;
   className?: string | Array<string>;
   separatorColor?: Colors;
+  hasNewMessageSeparator?: boolean;
 }
 const DateSeparator = ({
   children = undefined,
   className = '',
-  separatorColor = Colors.ONBACKGROUND_4,
+  hasNewMessageSeparator = false,
+  separatorColor = hasNewMessageSeparator ? Colors.PRIMARY : Colors.ONBACKGROUND_4,
 }: DateSeparatorProps): ReactElement => {
   return (
     <div
+      id={hasNewMessageSeparator ? 'new-message-separator' : undefined}
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-separator',

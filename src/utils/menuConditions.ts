@@ -53,3 +53,7 @@ export const showMenuItemReply = ({ channel, message, replyType }: MenuCondition
 export const showMenuItemThread = ({ channel, message, replyType, onReplyInThread }: MenuConditionsParams) => {
   return isReplyTypeMessageEnabled({ channel, message }) && replyType === 'THREAD' && !message?.parentMessageId && typeof onReplyInThread === 'function';
 };
+
+export const showMenuItemMarkAsUnread = ({ message, channel }: MenuConditionsParams) => {
+  return !isFailedMessage(message) && !isPendingMessage(message) && channel?.isGroupChannel?.();
+};

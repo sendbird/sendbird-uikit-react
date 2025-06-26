@@ -63,6 +63,10 @@ interface InternalGroupChannelState extends MessageDataSource {
   disableMarkAsRead: boolean;
   scrollBehavior: 'smooth' | 'auto';
 
+  // Actions (React UIKit specific)
+  markAsUnread?: (message: SendableMessageType) => void;
+  markAsUnreadSourceRef: React.MutableRefObject<'menu' | 'internal' | null>;
+
   // Legacy - Will be removed after migration
   scrollPubSub: PubSubTypes<ScrollTopics, ScrollTopicUnion>;
 }

@@ -24,6 +24,8 @@ export interface GroupChannelActions extends MessageActions {
   // Channel actions
   setCurrentChannel: (channel: GroupChannel) => void;
   handleChannelError: (error: SendbirdError) => void;
+  markAsReadAll: () => void;
+  markAsUnread: (message: SendableMessageType, source?: 'menu' | 'internal') => void;
 
   // Message actions
   sendUserMessage: (params: UserMessageCreateParams) => Promise<UserMessage>;
@@ -73,15 +75,27 @@ export const useGroupChannel = () => {
     if (config.isOnline && state.hasNext()) {
       await state.resetWithStartingPoint(Number.MAX_SAFE_INTEGER);
     }
+
     state.scrollPubSub.publish('scrollToBottom', { animated });
 
     if (state.currentChannel && !state.hasNext()) {
       state.resetNewMessages();
       if (!state.disableMarkAsRead) {
-        markAsReadScheduler.push(state.currentChannel);
+        if (!config.groupChannel.enableMarkAsUnread) {
+          markAsReadScheduler.push(state.currentChannel);
+        }
       }
     }
   }, [state.scrollRef.current, config.isOnline, markAsReadScheduler]);
+
+  const markAsReadAll = useCallback(() => {
+    if (!state.markAsUnreadSourceRef?.current) {
+      state.resetNewMessages();
+    }
+    if (config.isOnline && !state.disableMarkAsRead) {
+      markAsReadScheduler.push(state.currentChannel);
+    }
+  }, [config.isOnline, state.disableMarkAsRead, state.currentChannel]);
 
   const scrollToMessage = useCallback(async (
     createdAt: number,
@@ -188,6 +202,8 @@ export const useGroupChannel = () => {
     return {
       setCurrentChannel,
       handleChannelError,
+      markAsReadAll,
+      markAsUnread: state.markAsUnread,
       setQuoteMessage,
       scrollToBottom,
       scrollToMessage,
@@ -199,6 +215,8 @@ export const useGroupChannel = () => {
   }, [
     setCurrentChannel,
     handleChannelError,
+    markAsReadAll,
+    state.markAsUnread,
     setQuoteMessage,
     scrollToBottom,
     scrollToMessage,

@@ -1,7 +1,7 @@
 /* We operate the CSS files for Channel&GroupChannel modules in the GroupChannel */
 import '../../../GroupChannel/components/MessageList/index.scss';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import type { UserMessage } from '@sendbird/chat/message';
 
 import { useChannelContext } from '../../context/ChannelProvider';
@@ -11,6 +11,7 @@ import Message from '../Message';
 import { EveryMessage, TypingIndicatorType } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
 import UnreadCount from '../UnreadCount';
+import NewMessageCount from '../NewMessageCount';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
@@ -27,6 +28,7 @@ import { deleteNullish } from '../../../../utils/utils';
 import { getHTMLTextDirection } from '../../../../utils';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import { useGroupChannel } from '../../../GroupChannel/context/hooks/useGroupChannel';
 
 const SCROLL_BOTTOM_PADDING = 50;
 
@@ -52,7 +54,7 @@ export const MessageList = (props: MessageListProps) => {
     renderCustomSeparator,
     renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
     renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
-    renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
+    renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__channel__status_notification" />,
   } = deleteNullish(props);
 
   const {
@@ -86,6 +88,8 @@ export const MessageList = (props: MessageListProps) => {
   const markAsReadScheduler = store.config.markAsReadScheduler;
 
   const [isScrollBottom, setIsScrollBottom] = useState(false);
+
+  const { state: { newMessages, markAsUnreadSourceRef } } = useGroupChannel();
 
   useScrollBehavior();
 
@@ -156,6 +160,10 @@ export const MessageList = (props: MessageListProps) => {
        * hasMoreNext is true but it needs to be called when hasNext is false when reached bottom as well.
        */
       if (!hasMoreNext && !disableMarkAsRead && !!currentGroupChannel) {
+        // markAsUnreadSourceRef의 현재 값을 확인
+        const currentSource = markAsUnreadSourceRef.current;
+        console.log('Channel MessageList: markAsUnreadSourceRef current value:', currentSource);
+        
         messagesDispatcher({
           type: messageActionTypes.MARK_AS_READ,
           payload: { channel: currentGroupChannel },
@@ -173,6 +181,31 @@ export const MessageList = (props: MessageListProps) => {
   });
 
   const { scrollToBottomHandler, scrollBottom } = useSetScrollToBottom({ loading });
+
+  const isShowUnreadCount = useMemo(() => {
+    if (store?.config?.groupChannel?.enableMarkAsUnread) {
+      // markAsUnread is enabled
+      if (currentGroupChannel?.unreadMessageCount > 0) {
+        return true;
+      }
+      return false;
+    } else {
+      // markAsUnread is disable
+      if (currentGroupChannel?.unreadMessageCount > 0 && !isScrollBottom && hasMoreNext) {
+        return true;
+      }
+      return false;
+    }
+  }, [currentGroupChannel.unreadMessageCount, isScrollBottom]);
+
+  const isShowNewMessageCount = useMemo(() => {
+    if (!store?.config?.groupChannel?.enableMarkAsUnread
+      && (!isScrollBottom || hasMoreNext)
+      && (unreadSince || unreadSinceDate)) {
+      return true;
+    }
+    return false;
+  }, [newMessages.length, isScrollBottom]);
 
   if (loading) {
     return renderPlaceholderLoader();
@@ -270,15 +303,13 @@ export const MessageList = (props: MessageListProps) => {
         </div>
         {currentGroupChannel?.isFrozen && renderFrozenNotification()}
         {
-          /**
-           * Show unread count IFF scroll is not bottom or is bottom but hasNext is true.
-           */
-          (!isScrollBottom || hasMoreNext) && (unreadSince || unreadSinceDate) && (
+          isShowUnreadCount && (
             <UnreadCount
-              className="sendbird-conversation__messages__notification"
+              className="sendbird-unread-messages-count"
               count={currentGroupChannel?.unreadMessageCount}
               time={unreadSince}
               lastReadAt={unreadSinceDate}
+              isFrozenChannel={currentGroupChannel?.isFrozen || false}
               onClick={() => {
                 if (scrollRef?.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
                 if (!disableMarkAsRead && !!currentGroupChannel) {
@@ -307,6 +338,28 @@ export const MessageList = (props: MessageListProps) => {
             >
               <Icon width="24px" height="24px" type={IconTypes.CHEVRON_DOWN} fillColor={IconColors.PRIMARY} />
             </div>
+          )
+        }
+        {
+          /* NewMessageCount - positioned at the bottom of MessageList */
+          (isShowNewMessageCount) && (
+            <NewMessageCount
+              className="sendbird-new-messages-count"
+              count={newMessages.length}
+              onClick={() => {
+                if (scrollRef?.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+                if (!disableMarkAsRead && !!currentGroupChannel) {
+                  markAsReadScheduler.push(currentGroupChannel);
+                  messagesDispatcher({
+                    type: messageActionTypes.MARK_AS_READ,
+                    payload: { channel: currentGroupChannel },
+                  });
+                }
+                setInitialTimeStamp(null);
+                setAnimatedMessageId(null);
+                setHighLightedMessageId(null);
+              }}
+            />
           )
         }
       </div>

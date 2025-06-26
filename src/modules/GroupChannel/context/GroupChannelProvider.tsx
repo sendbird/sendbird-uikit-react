@@ -32,6 +32,7 @@ import type {
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
 import { deleteNullish } from '../../../utils/utils';
+import { CollectionEventSource } from '@sendbird/chat';
 
 const initialState = {
   currentChannel: null,
@@ -177,6 +178,31 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     return ChatReplyType.ONLY_REPLY_TO_CHANNEL;
   });
 
+  const markAsUnreadSourceRef = useRef<'menu' | 'internal' | undefined>(undefined);
+
+  const markAsUnread = useMemo(() => (message: any, source?: 'menu' | 'internal') => {
+    if (!config.groupChannel.enableMarkAsUnread) return;
+    if (!state.currentChannel) {
+      logger?.error?.('GroupChannelProvider: channel is required for markAsUnread');
+      return;
+    }
+
+    try {
+      if (state.currentChannel.markAsUnread) {
+        state.currentChannel.markAsUnread(message);
+        logger?.info?.('GroupChannelProvider: markAsUnread called for message', {
+          messageId: message.messageId,
+          source: source || 'unknown',
+        });
+        markAsUnreadSourceRef.current = source || 'internal';
+      } else {
+        logger?.error?.('GroupChannelProvider: markAsUnread method not available in current SDK version');
+      }
+    } catch (error) {
+      logger?.error?.('GroupChannelProvider: markAsUnread failed', error);
+    }
+  }, [state.currentChannel, logger]);
+
   // Message Collection setup
   const messageDataSource = useGroupChannelMessages(sdkStore.sdk, state.currentChannel!, {
     startingPoint,
@@ -184,8 +210,10 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     collectionCreator: getCollectionCreator(state.currentChannel!, messageListQueryParams),
     shouldCountNewMessages: () => !isScrollBottomReached,
     markAsRead: (channels) => {
-      if (isScrollBottomReached && !disableMarkAsRead) {
-        channels.forEach((it) => markAsReadScheduler.push(it));
+      if (!config.groupChannel.enableMarkAsUnread) {
+        if (isScrollBottomReached && !disableMarkAsRead) {
+          channels.forEach((it) => markAsReadScheduler.push(it));
+        }
       }
     },
     onMessagesReceived: (messages) => {
@@ -206,7 +234,10 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       actions.setCurrentChannel(null);
       onBackClick?.();
     },
-    onChannelUpdated: (channel) => {
+    onChannelUpdated: (channel, ctx) => {
+      if (ctx.source === CollectionEventSource.EVENT_CHANNEL_UNREAD) {
+        console.log('MADOKA #1 onChannelUpdated', ctx.source, ctx.userIds);
+      }
       actions.setCurrentChannel(channel);
     },
     logger: logger as any,
@@ -345,6 +376,8 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
       // Message data source & actions
       ...messageDataSource,
+      markAsUnread,
+      markAsUnreadSourceRef,
     });
   }, [
     channelUrl,

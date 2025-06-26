@@ -14,12 +14,15 @@ export interface GetMessagePartsInfoProps {
   currentMessage: CoreMessageType;
   currentChannel?: GroupChannel | null;
   replyType?: string;
+  firstUnreadMessageId?: number | string | undefined;
 }
 
 interface OutPuts {
   chainTop: boolean,
   chainBottom: boolean,
   hasSeparator: boolean,
+  hasNewMessageSeparator: boolean,
+  newFirstUnreadMessageId?: number | string | undefined,
 }
 
 /**
@@ -33,6 +36,7 @@ export const getMessagePartsInfo = ({
   currentMessage,
   currentChannel = null,
   replyType = '',
+  firstUnreadMessageId,
 }: GetMessagePartsInfoProps): OutPuts => {
   const previousMessage = allMessages[currentIndex - 1];
   const nextMessage = allMessages[currentIndex + 1];
@@ -47,9 +51,21 @@ export const getMessagePartsInfo = ({
 
   // https://stackoverflow.com/a/41855608
   const hasSeparator = isLocalMessage ? false : !(previousMessageCreatedAt && (isSameDay(currentCreatedAt, previousMessageCreatedAt)));
+  let hasNewMessageSeparator = false;
+  let newFirstUnreadMessageId;
+  if (!firstUnreadMessageId) {
+    hasNewMessageSeparator = currentChannel.myLastRead === (currentCreatedAt - 1);
+    if (hasNewMessageSeparator) newFirstUnreadMessageId = currentMessage.messageId;
+  } else if (currentMessage.messageId === firstUnreadMessageId || currentChannel.myLastRead === (currentCreatedAt - 1)) {
+    hasNewMessageSeparator = true;
+    newFirstUnreadMessageId = currentMessage.messageId;
+  }
+
   return {
     chainTop,
     chainBottom,
     hasSeparator,
+    hasNewMessageSeparator,
+    newFirstUnreadMessageId,
   };
 };

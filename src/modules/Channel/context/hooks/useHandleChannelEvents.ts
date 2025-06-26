@@ -107,6 +107,25 @@ function useHandleChannelEvents({
             });
           }
         },
+        onUserMarkedRead: (channel, userIds) => {
+          logger.info('Channel | useHandleChannelEvents: onUserMarkedAsRead', channel, userIds);
+          if (compareIds(channel?.url, channelUrl)) {
+            messagesDispatcher({
+              type: messageActions.SET_CURRENT_CHANNEL,
+              payload: channel,
+            });
+          }
+        },
+        onUserMarkedUnread: (channel, userIds) => {
+          logger.info('Channel | useHandleChannelEvents: onUserMarkedUnread', channel, userIds);
+          // TODO:: MADOKA 이 부분에 대해서 명확하게 확인해야 함.
+          if (compareIds(channel?.url, channelUrl)) {
+            messagesDispatcher({
+              type: messageActions.SET_CURRENT_CHANNEL,
+              payload: channel,
+            });
+          }
+        },
         // before(onDeliveryReceiptUpdated)
         onUndeliveredMemberStatusUpdated: (channel) => {
           if (compareIds(channel?.url, channelUrl)) {

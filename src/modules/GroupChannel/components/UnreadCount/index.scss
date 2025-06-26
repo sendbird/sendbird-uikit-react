@@ -4,6 +4,70 @@
  */
 @import '../../../../styles/variables';
 
+// Floating UnreadCount button - completely separate from notification styles
+.sendbird-unread-floating-button {
+  position: absolute;
+  top: 8px; // Default position when no frozen notification
+  left: 50%;
+  transform: translateX(-50%);
+  width: 181px;
+  height: 40px;
+  border-radius: 20px;
+  gap: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease-in-out;
+  z-index: 5;
+  background-color: #FFFFFF;
+  
+  // When frozen notification is present, position below it
+  &.sendbird-unread-floating-button--below-frozen {
+    top: 48px;
+  }
+  
+  &:hover {
+    cursor: pointer;
+    transform: translateX(-50%) translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    background-color: #F5F5F5;
+  }
+
+  .sendbird-unread-floating-button__text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #00000080;
+    line-height: 1;
+    font-size: 14px;
+    text-align: center;
+    height: 100%;
+  }
+
+  // Icon fixed to right side
+  .sendbird-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+   
+    svg {
+      display: block;
+      vertical-align: middle;
+    }
+  }
+}
+
+.sendbird-unread-floating-button--hide {
+  display: none;
+}
+
+// FrozenNotification styles (required for Channel&GroupChannel modules)
 .sendbird-notification--hide,
 .sendbird-notification {
   position: absolute;
@@ -51,3 +115,6 @@
 .sendbird-notification--hide {
   display: none;
 }
+
+
+

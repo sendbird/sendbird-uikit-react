@@ -26,6 +26,7 @@ import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 export interface MessageProps {
   message: EveryMessage;
   hasSeparator?: boolean;
+  hasNewMessageSeparator?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
   handleScroll?: (isBottomMessageAffected?: boolean) => void;
@@ -79,6 +80,7 @@ export interface MessageViewProps extends MessageProps {
   updateUserMessage: (messageId: number, params: UserMessageUpdateParams) => void;
   resendMessage: (failedMessage: SendableMessageType) => void;
   deleteMessage: (message: CoreMessageType) => Promise<void>;
+  markAsUnread?: (message: SendableMessageType) => void;
 
   renderFileViewer: (props: { message: FileMessage; onCancel: () => void }) => React.ReactElement;
   renderRemoveMessageModal?: (props: { message: EveryMessage; onCancel: () => void }) => React.ReactElement;
@@ -107,6 +109,7 @@ const MessageView = (props: MessageViewProps) => {
     message,
     children,
     hasSeparator,
+    hasNewMessageSeparator,
     chainTop,
     chainBottom,
     handleScroll,
@@ -132,6 +135,7 @@ const MessageView = (props: MessageViewProps) => {
     updateUserMessage,
     resendMessage,
     deleteMessage,
+    markAsUnread,
 
     setAnimatedMessageId,
     animatedMessageId,
@@ -288,6 +292,7 @@ const MessageView = (props: MessageViewProps) => {
           onMessageHeightChange: handleScroll,
           onBeforeDownloadFileMessage,
           filterEmojiCategoryIds,
+          markAsUnread,
         })}
         { /* Suggested Replies */ }
         {
@@ -392,6 +397,16 @@ const MessageView = (props: MessageViewProps) => {
     );
   }
 
+  const seperatorLabelText = useMemo(() => {
+    if (!hasSeparator && hasNewMessageSeparator) {
+      return 'New Message';
+    } else {
+      return format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
+        locale: dateLocale,
+      });
+    }
+  }, [hasSeparator, hasNewMessageSeparator]);
+
   return (
     <div
       className={classnames(
@@ -405,13 +420,11 @@ const MessageView = (props: MessageViewProps) => {
       ref={messageScrollRef}
     >
       {/* date-separator */}
-      {hasSeparator
+      {(hasSeparator || hasNewMessageSeparator)
         && (renderedCustomSeparator || (
-          <DateSeparator>
+          <DateSeparator hasNewMessageSeparator={hasNewMessageSeparator}>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-              {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
-                locale: dateLocale,
-              })}
+              {seperatorLabelText}
             </Label>
           </DateSeparator>
         ))}

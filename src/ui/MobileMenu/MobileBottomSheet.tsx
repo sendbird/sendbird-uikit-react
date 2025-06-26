@@ -15,6 +15,7 @@ import {
   isVoiceMessage,
   isThreadMessage,
 } from '../../utils';
+import { showMenuItemMarkAsUnread } from '../../utils/menuConditions';
 import BottomSheet from '../BottomSheet';
 import ImageRenderer from '../ImageRenderer';
 import ReactionButton from '../ReactionButton';
@@ -29,6 +30,7 @@ import {
   ThreadMenuItem,
   DeleteMenuItem,
   DownloadMenuItem,
+  MarkAsUnreadMenuItem,
 } from '../MessageMenu/menuItems/BottomSheetMenuItems';
 import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
@@ -56,7 +58,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     renderMenuItems,
   } = props;
   const isByMe = message?.sender?.userId === userId;
-  const { state: { config: { isOnline } } } = useSendbird();
+  const { state: { config: { isOnline, groupChannel: { enableMarkAsUnread } } } } = useSendbird();
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
   const showMenuItemResend: boolean = (isOnline && isFailedMessage(message) && message?.isResendable && isByMe);
@@ -81,6 +83,13 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     && !isPendingMessage(message)
     && !isThreadMessage(message)
     && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
+  // const showMenuItemMarkAsUnreadCondition = showMenuItemMarkAsUnread({
+  //   message,
+  //   channel,
+  //   isByMe,
+  //   replyType,
+  //   onReplyInThread,
+  // });
 
   const maxEmojisPerRow = Math.floor(window.innerWidth / EMOJI_SIZE) - 1;
   const [showEmojisOnly, setShowEmojisOnly] = useState<boolean>(false);
@@ -98,6 +107,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     showRemove,
     deleteMessage,
     resendMessage,
+    markAsUnread: props.markAsUnread,
     isOnline,
     disableDeleteMessage: disableDelete,
     triggerRef: null,
@@ -192,11 +202,13 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                   ReplyMenuItem,
                   ThreadMenuItem,
                   DeleteMenuItem,
+                  MarkAsUnreadMenuItem,
                 },
               }) ?? (
                   <>
                     {showMenuItemCopy && <CopyMenuItem />}
                     {showMenuItemEdit && <EditMenuItem />}
+                    {showMenuItemMarkAsUnread && enableMarkAsUnread && <MarkAsUnreadMenuItem />}
                     {showMenuItemResend && <ResendMenuItem />}
                     {showMenuItemReply && <ReplyMenuItem />}
                     {showMenuItemThread && <ThreadMenuItem />}

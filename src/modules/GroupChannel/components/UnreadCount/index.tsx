@@ -4,7 +4,6 @@ import React, { useContext, useMemo } from 'react';
 import { LocalizationContext } from '../../../../lib/LocalizationContext';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
-import format from 'date-fns/format';
 import { classnames } from '../../../../utils/utils';
 
 export interface UnreadCountProps {
@@ -14,48 +13,48 @@ export interface UnreadCountProps {
   lastReadAt?: Date | null;
   /** @deprecated Please use `lastReadAt` instead * */
   time?: string;
+  isFrozenChannel?: boolean;
 }
 
 export const UnreadCount: React.FC<UnreadCountProps> = ({
   className = '',
   count = 0,
-  time = '',
   onClick,
-  lastReadAt,
+  isFrozenChannel = false,
 }: UnreadCountProps) => {
-  const { stringSet, dateLocale } = useContext(LocalizationContext);
+  const { stringSet } = useContext(LocalizationContext);
 
-  const unreadSince = useMemo(() => {
-    // TODO: Remove this on v4
-    if (stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__ON !== 'on') {
-      const timeArray = time?.toString?.()?.split(' ') || [];
-      timeArray?.splice(-2, 0, stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__ON);
-      return timeArray.join(' ');
-    } else if (lastReadAt) {
-      return format(lastReadAt, stringSet.DATE_FORMAT__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE, { locale: dateLocale });
+  const unreadMessageCountText = useMemo(() => {
+    if (count === 1) {
+      return stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__UNREAD_MESSAGE;
+    } else if (count > 1) {
+      return stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__UNREAD_MESSAGE_S;
     }
-  }, [time, lastReadAt]);
+  }, [count]);
 
   return (
     <div
-      className={classnames(count < 1 ? 'sendbird-notification--hide' : 'sendbird-notification', className)}
+      className={classnames(
+        count < 1 ? 'sendbird-unread-floating-button--hide' : 'sendbird-unread-floating-button',
+        isFrozenChannel && 'sendbird-unread-floating-button--below-frozen',
+        className,
+      )}
       data-testid="sendbird-notification"
       onClick={onClick}
     >
       <Label
-        className="sendbird-notification__text"
+        className="sendbird-unread-floating-button__text"
         testID="sendbird-notification__text"
         color={LabelColors.ONCONTENT_1}
         type={LabelTypography.CAPTION_2}
       >
         {`${count} `}
-        {stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE}
-        {` ${unreadSince}`}
+        {unreadMessageCountText}
       </Label>
       <Icon
         width="24px"
         height="24px"
-        type={IconTypes.CHEVRON_DOWN}
+        type={IconTypes.FLOATING_BUTTON_CLOSE}
         fillColor={IconColors.CONTENT}
       />
     </div>

@@ -12,7 +12,10 @@ const stringSet = {
   en: {
     // Group Channel - Conversation
     MESSAGE_STATUS__YESTERDAY: 'Yesterday',
-    CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE: 'new message(s) since',
+    CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE: 'new message',
+    CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE_S: 'new message',
+    CHANNEL__MESSAGE_LIST__NOTIFICATION__UNREAD_MESSAGE: 'unread message',
+    CHANNEL__MESSAGE_LIST__NOTIFICATION__UNREAD_MESSAGE_S: 'unread messages',
     /** @deprecated Please use `DATE_FORMAT__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE` instead * */
     CHANNEL__MESSAGE_LIST__NOTIFICATION__ON: 'on',
     // Channel List
@@ -168,6 +171,7 @@ const stringSet = {
     MESSAGE_MENU__RESEND: 'Resend',
     MESSAGE_MENU__DELETE: 'Delete',
     MESSAGE_MENU__SAVE: 'Save',
+    MESSAGE_MENU__MARK_AS_UNREAD: 'Mark as unread',
     //  * FIXME: get back legacy, remove after refactoring open channel messages *
     CONTEXT_MENU_DROPDOWN__COPY: 'Copy',
     CONTEXT_MENU_DROPDOWN__EDIT: 'Edit',

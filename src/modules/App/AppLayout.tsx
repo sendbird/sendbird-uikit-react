@@ -39,7 +39,7 @@ export const AppLayout = (props: AppLayoutProps) => {
   const replyType = props.replyType ?? getCaseResolvedReplyType(globalConfigs.groupChannel.replyType).upperCase;
   const isReactionEnabled = props.isReactionEnabled ?? globalConfigs.groupChannel.enableReactions;
   const showSearchIcon = props.showSearchIcon ?? globalConfigs.groupChannelSettings.enableMessageSearch;
-
+  
   return (
     <>
       {
