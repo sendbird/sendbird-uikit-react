@@ -449,7 +449,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
           )}
         </div>
         {/* thread replies */}
-        {showThreadReplies && message?.threadInfo && (
+        {showThreadReplies && message?.threadInfo && message?.threadInfo.replyCount > 0 && (
           <ThreadReplies
             className="sendbird-message-content__middle__thread-replies"
             threadInfo={message?.threadInfo}
