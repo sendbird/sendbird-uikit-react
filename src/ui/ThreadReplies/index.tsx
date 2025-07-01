@@ -65,7 +65,7 @@ export function ThreadReplies(
           <div className="sendbird-ui-thread-replies__user-profiles__avatar">
             <Avatar
               className="sendbird-ui-thread-replies__user-profiles__avatar__image"
-              src={mostRepliedUsers?.[4]?.profileUrl}
+              src={memozationThreadInfo.mostRepliedUsers?.[4]?.profileUrl}
               alt="user profile"
               width="20px"
               height="20px"
