@@ -2747,9 +2747,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendbird/chat@npm:^4.19.1":
-  version: 4.19.1
-  resolution: "@sendbird/chat@npm:4.19.1"
+"@sendbird/chat@npm:^4.19.2":
+  version: 4.19.2
+  resolution: "@sendbird/chat@npm:4.19.2"
   peerDependencies:
     "@react-native-async-storage/async-storage": ^1.17.6
     react-native-mmkv: ">=2.0.0"
@@ -2758,29 +2758,29 @@ __metadata:
       optional: true
     react-native-mmkv:
       optional: true
-  checksum: d500cbd6d994dbfdc8754814b61e8011c2aceb0c5c2a19780fdb9692cdd91a83a750c59aa4dc605c563394abed8242a0a589aa726ed097f2e49e3b7ddef59a65
+  checksum: 6cb69158f19633252f474c6edd1ae1e55d1d46dc1dcf628a0a5c5108ee1b9cafd5a2cde63aeb011237d9fdc5789c8388209ced2fc97b0d9841d5c5aa2bb6d9da
   languageName: node
   linkType: hard
 
-"@sendbird/react-uikit-message-template-view@npm:^0.0.8":
-  version: 0.0.8
-  resolution: "@sendbird/react-uikit-message-template-view@npm:0.0.8"
+"@sendbird/react-uikit-message-template-view@npm:^0.0.10":
+  version: 0.0.10
+  resolution: "@sendbird/react-uikit-message-template-view@npm:0.0.10"
   dependencies:
-    "@sendbird/uikit-message-template": ^0.0.8
+    "@sendbird/uikit-message-template": ^0.0.10
   peerDependencies:
     "@sendbird/chat": ">=4.3.0 <5"
     react: ">=16.8.6"
     react-dom: ">=16.8.6"
-  checksum: ac178463097f84e7953889b379d34af200a1dc950a3933ab02affedf6bfcf88918c745791ad99dc22720d762b64d2b63ef71fbad7e36287e3d4b1d0dd74c088a
+  checksum: aac92fb0b963c4ee3f31eea05839cd49c5ad8561c427b5778731fdf61bcbc18076b329ab2866f12b776e77e9b2a9bfbba12263bcf25d4949a34ab80120548d2f
   languageName: node
   linkType: hard
 
-"@sendbird/uikit-message-template@npm:^0.0.8":
-  version: 0.0.8
-  resolution: "@sendbird/uikit-message-template@npm:0.0.8"
+"@sendbird/uikit-message-template@npm:^0.0.10":
+  version: 0.0.10
+  resolution: "@sendbird/uikit-message-template@npm:0.0.10"
   peerDependencies:
     react: ">=16.8.6"
-  checksum: 59c7f6f78fb6513d62b6fc4bde94bb8701c03d1f8a1e74cc4e9a0aff03d03d2ba813c04ea4c7b3c12a5d19d27f1270ff8e4f3a959329248a7b7d1e0dca4925c8
+  checksum: 18dfce8f7c83d37a94bc3cbca0f561d7ed10c4367bcb2d2bf9c9192fce8fa06cfd87e8f968c6f3ae6d464a5119338ee5167b1a055b777bd906664a225c7e486f
   languageName: node
   linkType: hard
 
@@ -2803,9 +2803,9 @@ __metadata:
     "@rollup/plugin-node-resolve": ^15.2.3
     "@rollup/plugin-replace": ^5.0.4
     "@rollup/plugin-typescript": ^11.1.5
-    "@sendbird/chat": ^4.19.1
-    "@sendbird/react-uikit-message-template-view": ^0.0.8
-    "@sendbird/uikit-tools": ^0.0.8
+    "@sendbird/chat": ^4.19.2
+    "@sendbird/react-uikit-message-template-view": ^0.0.10
+    "@sendbird/uikit-tools": ^0.0.10
     "@storybook/addon-essentials": ^8.5.0
     "@storybook/manager-api": ^8.5.0
     "@storybook/react-vite": ^8.5.0
@@ -2870,13 +2870,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sendbird/uikit-tools@npm:^0.0.8":
-  version: 0.0.8
-  resolution: "@sendbird/uikit-tools@npm:0.0.8"
+"@sendbird/uikit-tools@npm:^0.0.10":
+  version: 0.0.10
+  resolution: "@sendbird/uikit-tools@npm:0.0.10"
   peerDependencies:
     "@sendbird/chat": ">=4.10.5 <5"
     react: ">=16.8.6"
-  checksum: 5c91ea3d628a317a62e28a6c8f78660844e7b07cb1a7aa7d4827798e08f8a381a19aa994645e92f37612e9deb87f7cef82dd45fc6f3ff0b143d7e0d6e162d663
+  checksum: 1b92fe4a5caced7efff4397fdf87912bc958b45f5eae1f986f78961759b18687901cc28bbc6f797a6fb0e1552e56ef5e04a16da0125883f18b00e99fbee5f44b
   languageName: node
   linkType: hard
 
