@@ -182,7 +182,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   }, [useReplying]);
 
   // Thread replies
-  const displayThreadReplies = message?.threadInfo?.replyCount
+  const displayThreadReplies = message?.threadInfo
     && message.threadInfo.replyCount > 0
     && replyType === 'THREAD';
 
@@ -449,7 +449,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
           )}
         </div>
         {/* thread replies */}
-        {showThreadReplies && message?.threadInfo && message?.threadInfo.replyCount > 0 && (
+        {showThreadReplies && message?.threadInfo && (
           <ThreadReplies
             className="sendbird-message-content__middle__thread-replies"
             threadInfo={message?.threadInfo}
