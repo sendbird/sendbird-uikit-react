@@ -81,9 +81,16 @@ export function ThreadReplies(
         color={LabelColors.PRIMARY}
       >
         {
-          replyCount === 1
-            ? `${replyCount} ${stringSet.CHANNEL__THREAD_REPLY}`
-            : `${replyCount > 99 ? stringSet.CHANNEL__THREAD_OVER_MAX : replyCount} ${stringSet.CHANNEL__THREAD_REPLIES}`
+          (() => {
+            const displayText = replyCount === 1
+              ? `${replyCount} ${stringSet.CHANNEL__THREAD_REPLY}`
+              : `${replyCount > 99 ? stringSet.CHANNEL__THREAD_OVER_MAX : replyCount} ${stringSet.CHANNEL__THREAD_REPLIES}`;
+            
+            console.log('ThreadReplies - replyCount:', replyCount);
+            console.log('ThreadReplies - displayText:', displayText);
+            
+            return displayText;
+          })()
         }
       </Label>
       )}
