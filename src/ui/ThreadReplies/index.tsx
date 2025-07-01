@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react';
+import React, { RefObject, useMemo } from 'react';
 import { ThreadInfo } from '@sendbird/chat/message';
 
 import './index.scss';
@@ -21,10 +21,18 @@ export function ThreadReplies(
   }: ThreadRepliesProps,
   ref: RefObject<HTMLDivElement>,
 ): React.ReactElement {
-  const {
-    mostRepliedUsers = [],
-    replyCount,
-  } = threadInfo;
+  // const {
+  //   mostRepliedUsers = [],
+  //   replyCount,
+  // } = threadInfo;
+
+  const memozationThreadInfo = useMemo(() => {
+    return {
+      mostRepliedUsers: threadInfo.mostRepliedUsers || [],
+      replyCount: threadInfo.replyCount,
+    };
+  }, [threadInfo, threadInfo.mostRepliedUsers, threadInfo.replyCount]);
+
   const { stringSet } = useLocalization();
   return (
     <div
@@ -41,7 +49,7 @@ export function ThreadReplies(
       ref={ref}
     >
       <div className="sendbird-ui-thread-replies__user-profiles">
-        {mostRepliedUsers.slice(0, 4).map((user) => {
+        {memozationThreadInfo.mostRepliedUsers.slice(0, 4).map((user) => {
           return (
             <Avatar
               key={user.userId}
@@ -53,7 +61,7 @@ export function ThreadReplies(
             />
           );
         })}
-        {mostRepliedUsers?.length >= 5 && (
+        {memozationThreadInfo.mostRepliedUsers?.length >= 5 && (
           <div className="sendbird-ui-thread-replies__user-profiles__avatar">
             <Avatar
               className="sendbird-ui-thread-replies__user-profiles__avatar__image"
@@ -74,23 +82,16 @@ export function ThreadReplies(
           </div>
         )}
       </div>
-      {replyCount > 0 && (
+      {memozationThreadInfo.replyCount > 0 && (
         <Label
         className="sendbird-ui-thread-replies__reply-counts"
         type={LabelTypography.CAPTION_2}
         color={LabelColors.PRIMARY}
       >
         {
-          (() => {
-            const displayText = replyCount === 1
-              ? `${replyCount} ${stringSet.CHANNEL__THREAD_REPLY}`
-              : `${replyCount > 99 ? stringSet.CHANNEL__THREAD_OVER_MAX : replyCount} ${stringSet.CHANNEL__THREAD_REPLIES}`;
-            
-            console.log('ThreadReplies - replyCount:', replyCount);
-            console.log('ThreadReplies - displayText:', displayText);
-            
-            return displayText;
-          })()
+          memozationThreadInfo.replyCount === 1
+            ? `${memozationThreadInfo.replyCount} ${stringSet.CHANNEL__THREAD_REPLY}`
+            : `${memozationThreadInfo.replyCount > 99 ? stringSet.CHANNEL__THREAD_OVER_MAX : memozationThreadInfo.replyCount} ${stringSet.CHANNEL__THREAD_REPLIES}`
         }
       </Label>
       )}
