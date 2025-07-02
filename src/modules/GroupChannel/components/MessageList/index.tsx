@@ -115,7 +115,9 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   useEffect(() => {
     firstUnreadMessageIdRef.current = undefined;
     displayedNewMessageSeparatorRef.current = false;
-    markAsUnreadSourceRef.current = undefined;
+    if (markAsUnreadSourceRef !== undefined) {
+      markAsUnreadSourceRef.current = undefined;
+    }
   }, [currentChannel]);
 
   /**
@@ -142,7 +144,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       return renderFrozenNotification();
     },
     unreadMessagesNotification() {
-      if (markAsUnreadSourceRef.current === 'menu' || displayedNewMessageSeparatorRef.current) return null;
+      if (markAsUnreadSourceRef?.current === 'menu' || displayedNewMessageSeparatorRef.current) return null;
       return (
         <UnreadCount
           className="sendbird-unread-messages-count"
