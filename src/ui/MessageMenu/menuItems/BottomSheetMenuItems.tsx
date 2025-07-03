@@ -218,7 +218,7 @@ export const MarkAsUnreadMenuItem = (props: PrebuildMenuItemPropsType) => {
       {...props}
       onClick={(e) => {
         if (markAsUnread) {
-          markAsUnread(message, 'menu');
+          markAsUnread(message, 'manual');
         }
         hideMenu();
         props.onClick?.(e);

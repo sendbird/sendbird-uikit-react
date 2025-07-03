@@ -46,6 +46,7 @@ interface InternalGroupChannelState extends MessageDataSource {
   quoteMessage: SendableMessageType | null;
   animatedMessageId: number | null;
   isScrollBottomReached: boolean;
+  readState: string | null;
 
   // References - will be managed together
   scrollRef: React.RefObject<HTMLDivElement>;
@@ -65,7 +66,7 @@ interface InternalGroupChannelState extends MessageDataSource {
 
   // Actions (React UIKit specific)
   markAsUnread?: (message: SendableMessageType) => void;
-  markAsUnreadSourceRef: React.MutableRefObject<'menu' | 'internal' | null>;
+  markAsUnreadSourceRef: React.MutableRefObject<'manual' | 'internal' | null>;
 
   // Legacy - Will be removed after migration
   scrollPubSub: PubSubTypes<ScrollTopics, ScrollTopicUnion>;

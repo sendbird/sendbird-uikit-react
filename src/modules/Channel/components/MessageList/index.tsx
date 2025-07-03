@@ -163,7 +163,7 @@ export const MessageList = (props: MessageListProps) => {
         // markAsUnreadSourceRef의 현재 값을 확인
         const currentSource = markAsUnreadSourceRef.current;
         console.log('Channel MessageList: markAsUnreadSourceRef current value:', currentSource);
-        
+
         messagesDispatcher({
           type: messageActionTypes.MARK_AS_READ,
           payload: { channel: currentGroupChannel },
