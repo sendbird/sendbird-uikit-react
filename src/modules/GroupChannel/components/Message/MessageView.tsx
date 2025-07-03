@@ -51,6 +51,10 @@ export interface MessageProps {
    * */
   renderEditInput?: () => React.ReactElement;
   /**
+   * A function that is called when the new message separator visibility changes.
+   */
+  onNewMessageSeparatorVisibilityChange?: (isVisible: boolean) => void;
+  /**
    * @deprecated Please use `children` instead
    * @description Customizes all child components of the message.
    * */
@@ -113,6 +117,7 @@ const MessageView = (props: MessageViewProps) => {
     chainTop,
     chainBottom,
     handleScroll,
+    onNewMessageSeparatorVisibilityChange,
 
     // MessageViewProps
     channel,
@@ -422,7 +427,7 @@ const MessageView = (props: MessageViewProps) => {
       {/* date-separator */}
       {(hasSeparator || hasNewMessageSeparator)
         && (renderedCustomSeparator || (
-          <DateSeparator hasNewMessageSeparator={hasNewMessageSeparator}>
+          <DateSeparator hasNewMessageSeparator={hasNewMessageSeparator} onVisibilityChange={onNewMessageSeparatorVisibilityChange}>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
               {seperatorLabelText}
             </Label>

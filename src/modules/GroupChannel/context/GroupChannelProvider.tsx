@@ -46,6 +46,7 @@ const initialState = {
   quoteMessage: null,
   animatedMessageId: null,
   isScrollBottomReached: true,
+  readState: null,
 
   scrollRef: { current: null },
   scrollDistanceFromBottomRef: { current: 0 },
@@ -150,7 +151,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   const { updateState } = useGroupChannelStore();
   const { state: { config, stores } } = useSendbird();
   const { sdkStore } = stores;
-  const { markAsReadScheduler, logger, pubSub } = config;
+  const { userId, markAsReadScheduler, logger, pubSub } = config;
 
   // ScrollHandler initialization
   const {
@@ -178,9 +179,9 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     return ChatReplyType.ONLY_REPLY_TO_CHANNEL;
   });
 
-  const markAsUnreadSourceRef = useRef<'menu' | 'internal' | undefined>(undefined);
+  const markAsUnreadSourceRef = useRef<'manual' | 'internal' | undefined>(undefined);
 
-  const markAsUnread = useMemo(() => (message: any, source?: 'menu' | 'internal') => {
+  const markAsUnread = useMemo(() => (message: any, source?: 'manual' | 'internal') => {
     if (!config.groupChannel.enableMarkAsUnread) return;
     if (!state.currentChannel) {
       logger?.error?.('GroupChannelProvider: channel is required for markAsUnread');
@@ -235,8 +236,15 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       onBackClick?.();
     },
     onChannelUpdated: (channel, ctx) => {
-      if (ctx.source === CollectionEventSource.EVENT_CHANNEL_UNREAD) {
-        console.log('MADOKA #1 onChannelUpdated', ctx.source, ctx.userIds);
+      if (ctx.source === CollectionEventSource.EVENT_CHANNEL_UNREAD
+        && ctx.userIds.includes(userId)
+      ) {
+        actions.setReadStateChanged('unread');
+      }
+      if (ctx.source === CollectionEventSource.EVENT_CHANNEL_READ
+        && ctx.userIds.includes(userId)
+      ) {
+        actions.setReadStateChanged('read');
       }
       actions.setCurrentChannel(channel);
     },

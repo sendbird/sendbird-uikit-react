@@ -24,8 +24,9 @@ export interface GroupChannelActions extends MessageActions {
   // Channel actions
   setCurrentChannel: (channel: GroupChannel) => void;
   handleChannelError: (error: SendbirdError) => void;
-  markAsReadAll: () => void;
-  markAsUnread: (message: SendableMessageType, source?: 'menu' | 'internal') => void;
+  markAsReadAll: (channel: GroupChannel) => void;
+  markAsUnread: (message: SendableMessageType, source?: 'manual' | 'internal') => void;
+  setReadStateChanged: (state: string) => void;
 
   // Message actions
   sendUserMessage: (params: UserMessageCreateParams) => Promise<UserMessage>;
@@ -88,14 +89,11 @@ export const useGroupChannel = () => {
     }
   }, [state.scrollRef.current, config.isOnline, markAsReadScheduler]);
 
-  const markAsReadAll = useCallback(() => {
-    if (!state.markAsUnreadSourceRef?.current) {
-      state.resetNewMessages();
-    }
+  const markAsReadAll = useCallback((channel: GroupChannel) => {
     if (config.isOnline && !state.disableMarkAsRead) {
-      markAsReadScheduler.push(state.currentChannel);
+      markAsReadScheduler.push(channel);
     }
-  }, [config.isOnline, state.disableMarkAsRead, state.currentChannel]);
+  }, [config.isOnline]);
 
   const scrollToMessage = useCallback(async (
     createdAt: number,
@@ -198,12 +196,17 @@ export const useGroupChannel = () => {
     store.setState(state => ({ ...state, quoteMessage: message }));
   }, []);
 
+  const setReadStateChanged = useCallback((readState: string) => {
+    store.setState(state => ({ ...state, readState }));
+  }, []);
+
   const actions: GroupChannelActions = useMemo(() => {
     return {
       setCurrentChannel,
       handleChannelError,
       markAsReadAll,
       markAsUnread: state.markAsUnread,
+      setReadStateChanged,
       setQuoteMessage,
       scrollToBottom,
       scrollToMessage,
@@ -217,6 +220,7 @@ export const useGroupChannel = () => {
     handleChannelError,
     markAsReadAll,
     state.markAsUnread,
+    setReadStateChanged,
     setQuoteMessage,
     scrollToBottom,
     scrollToMessage,
