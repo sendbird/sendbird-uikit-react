@@ -403,12 +403,14 @@ const MessageView = (props: MessageViewProps) => {
   }
 
   const seperatorLabelText = useMemo(() => {
-    if (!hasSeparator && hasNewMessageSeparator) {
-      return 'New Message';
-    } else {
-      return format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
-        locale: dateLocale,
-      });
+    if (hasSeparator) {
+      if (hasNewMessageSeparator) {
+        return 'New Message';
+      } else {
+        return format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
+          locale: dateLocale,
+        });
+      }
     }
   }, [hasSeparator, hasNewMessageSeparator]);
 

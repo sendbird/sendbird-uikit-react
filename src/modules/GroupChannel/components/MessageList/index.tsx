@@ -172,9 +172,9 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     }
   }, [currentChannel?.url]);
 
-  // check changed messages
+  // when enableMarkAsUnread is true, check changed messages
   useEffect(() => {
-    if (isChangedChannel) {
+    if (state.config.groupChannel.enableMarkAsUnread && isChangedChannel) {
       if (!hasInitializedRef.current) {
         if (currentMessagesRef.current !== messages) {
           currentMessagesRef.current = messages as CoreMessageType[];
@@ -189,7 +189,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   }, [messages]);
 
   useMemo(() => {
-    if (hasInitializedRef.current) {
+    if (state.config.groupChannel.enableMarkAsUnread && hasInitializedRef.current) {
       const firstUnreadMessageId = getFirstUnreadMessage();
 
       if (firstUnreadMessageId && firstUnreadMessageIdRef.current !== firstUnreadMessageId) {
@@ -199,7 +199,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   }, [messages.length]);
 
   useEffect(() => {
-    if (hasInitializedRef.current) {
+    if (state.config.groupChannel.enableMarkAsUnread && hasInitializedRef.current) {
       if (readState === 'unread') {
         // when readState === 'unread' find first unread message
         const firstUnreadMessageId = getFirstUnreadMessage();
