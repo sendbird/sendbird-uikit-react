@@ -13,7 +13,7 @@ const stringSet = {
     // Group Channel - Conversation
     MESSAGE_STATUS__YESTERDAY: 'Yesterday',
     CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE: 'new message',
-    CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE_S: 'new message',
+    CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE_S: 'new messages',
     CHANNEL__MESSAGE_LIST__NOTIFICATION__UNREAD_MESSAGE: 'unread message',
     CHANNEL__MESSAGE_LIST__NOTIFICATION__UNREAD_MESSAGE_S: 'unread messages',
     /** @deprecated Please use `DATE_FORMAT__MESSAGE_LIST__NOTIFICATION__UNREAD_SINCE` instead * */
@@ -94,7 +94,7 @@ const stringSet = {
     TYPING_INDICATOR__AND: 'and',
     TYPING_INDICATOR__ARE_TYPING: 'are typing...',
     TYPING_INDICATOR__MULTIPLE_TYPING: 'Several people are typing...',
-    CHANNEL_FROZEN: 'Channel frozen',
+    CHANNEL_FROZEN: 'Channel is frozen',
     PLACE_HOLDER__NO_CHANNEL: 'No channels',
     PLACE_HOLDER__WRONG: 'Something went wrong',
     PLACE_HOLDER__RETRY_TO_CONNECT: 'Retry',

@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
@@ -10,7 +10,8 @@ import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import Message from '../Message';
 import UnreadCount from '../UnreadCount';
-import NewMessageCount from '../NewMessageCount';
+import UnreadCountFloatingButton from '../UnreadCountFloatingButton';
+import NewMessageCountFloatingButton from '../NewMessageCountFloatingButton';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
 import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
@@ -89,6 +90,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       scrollDistanceFromBottomRef,
       markAsUnreadSourceRef,
       readState,
+      currentDeviceMessageIdsRef,
     },
     actions: {
       scrollToBottom,
@@ -96,6 +98,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       markAsReadAll,
       markAsUnread,
       setReadStateChanged,
+      isFromCurrentDevice,
     },
   } = useGroupChannel();
 
@@ -109,8 +112,8 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   const firstUnreadMessageIdRef = useRef<number | string>();
   const hasInitializedRef = useRef(false);
 
-  // current channel url ref
-  const currentChannelUrlRef = useRef<string>();
+  // current channel ref
+  const currentChannelRef = useRef<GroupChannel>(undefined);
   // current messages ref
   const currentMessagesRef = useRef<CoreMessageType[]>([]);
 
@@ -122,7 +125,6 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     index: number,
     allMessages: CoreMessageType[],
     currentChannel: GroupChannel,
-    hasPrevious: boolean,
   ): boolean => {
     const currentCreatedAt = message.createdAt;
 
@@ -131,8 +133,8 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       return true;
     }
 
-    // condition 2: there is no previous message that satisfies the condition, and the current message is the first message that satisfies the condition
-    if (!hasPrevious && currentCreatedAt > (currentChannel.myLastRead + 1)) {
+    // condition 2: there is no message that satisfies the condition, and the current message is the first message that satisfies the condition
+    if (currentCreatedAt > (currentChannel.myLastRead + 1)) {
       const hasPreviousMatchingMessage = allMessages
         .slice(0, index)
         .some(msg => msg.createdAt === (currentChannel.myLastRead + 1));
@@ -145,8 +147,9 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     if (state.config.groupChannel.enableMarkAsUnread) {
       for (let i = 0; i < messages.length; i++) {
         const message = messages[i] as CoreMessageType;
-        const isFind = findFirstUnreadMessage(message, i, messages as CoreMessageType[], currentChannel, hasPrevious());
-        if (isFind) {
+        const isFind = findFirstUnreadMessage(message, i, messages as CoreMessageType[], currentChannel);
+
+        if (isFind && !isFromCurrentDevice(message.messageId)) {
           return message.messageId;
         }
       }
@@ -156,8 +159,8 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
 
   // check changed channel
   useEffect(() => {
-    if (currentChannel?.url !== currentChannelUrlRef.current) {
-      currentChannelUrlRef.current = currentChannel?.url;
+    if (currentChannel?.url !== currentChannelRef.current?.url) {
+      currentChannelRef.current = currentChannel;
 
       // initialize
       firstUnreadMessageIdRef.current = undefined;
@@ -167,6 +170,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
         markAsUnreadSourceRef.current = undefined;
       }
       setIsChangedChannel(true);
+      currentDeviceMessageIdsRef.current.clear();
     } else {
       setIsChangedChannel(false);
     }
@@ -188,8 +192,10 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     }
   }, [messages]);
 
-  useMemo(() => {
+  useEffect(() => {
     if (state.config.groupChannel.enableMarkAsUnread && hasInitializedRef.current) {
+      if (firstUnreadMessageIdRef.current) return;
+
       const firstUnreadMessageId = getFirstUnreadMessage();
 
       if (firstUnreadMessageId && firstUnreadMessageIdRef.current !== firstUnreadMessageId) {
@@ -203,6 +209,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       if (readState === 'unread') {
         // when readState === 'unread' find first unread message
         const firstUnreadMessageId = getFirstUnreadMessage();
+
         if (firstUnreadMessageId !== firstUnreadMessageIdRef.current) {
           firstUnreadMessageIdRef.current = firstUnreadMessageId;
         }
@@ -217,6 +224,12 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
         setUnreadSinceDate(undefined);
       } else {
         setUnreadSinceDate(new Date());
+      }
+    } else if (isScrollBottomReached) {
+      if (!firstUnreadMessageIdRef.current && currentChannel?.unreadMessageCount === 0) {
+        markAsReadAll(currentChannel);
+      } else if (!firstUnreadMessageIdRef.current) {
+        markAsReadAll(currentChannel);
       }
     }
   }, [isScrollBottomReached]);
@@ -245,16 +258,26 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       return renderFrozenNotification();
     },
     unreadMessagesNotification() {
-      if (markAsUnreadSourceRef?.current === 'manual' || !showUnreadCount) return null;
+      if (state.config.groupChannel.enableMarkAsUnread) {
+        if (!showUnreadCount) return null;
+        return (
+          <UnreadCountFloatingButton
+            className="sendbird-unread-messages-count"
+            count={currentChannel?.unreadMessageCount ?? 0}
+            isFrozenChannel={currentChannel?.isFrozen || false}
+            onClick={() => {
+              markAsReadAll(currentChannel);
+            }}
+          />
+        );
+      }
+      if (isScrollBottomReached || !unreadSinceDate) return null;
       return (
         <UnreadCount
-          className="sendbird-unread-messages-count"
-          count={currentChannel?.unreadMessageCount ?? 0}
+          className="sendbird-conversation__messages__notification"
+          count={newMessages.length}
           lastReadAt={unreadSinceDate}
-          isFrozenChannel={currentChannel?.isFrozen || false}
-          onClick={() => {
-            markAsReadAll(currentChannel);
-          }}
+          onClick={() => scrollToBottom()}
         />
       );
     },
@@ -274,9 +297,10 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       );
     },
     newMessageCount() {
+      // 스크롤이 bottom에 있을 때는 new message count를 표시하지 않음
       if (isScrollBottomReached) return null;
       return (
-        <NewMessageCount
+        <NewMessageCountFloatingButton
           className="sendbird-new-messages-count"
           count={newMessages.length}
           onClick={() => scrollToBottom()}
@@ -291,9 +315,13 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       if (newMessages.length > 0) {
         markAsUnread(newMessages[0] as SendableMessageType, 'internal');
         firstUnreadMessageIdRef.current = newMessages[0].messageId;
-      } else if (markAsUnreadSourceRef?.current !== 'manual') {
+      } else if (currentChannel?.lastMessage.createdAt > currentChannel.myLastRead
+        && markAsUnreadSourceRef?.current !== 'manual')
+      {
         markAsReadAll(currentChannel);
       }
+    } else if (currentChannel?.unreadMessageCount > 0) {
+      setShowUnreadCount(true);
     }
   };
 
@@ -330,6 +358,8 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
           }}
           messages={messages}
           renderMessage={({ message, index }) => {
+            const isCurrentDeviceMessage = isFromCurrentDevice(message.messageId);
+
             const { chainTop, chainBottom, hasSeparator, hasNewMessageSeparator } = getMessagePartsInfo({
               allMessages: messages as CoreMessageType[],
               stringSet,
@@ -340,9 +370,11 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
               currentChannel: currentChannel!,
               hasPrevious: hasPrevious(),
               firstUnreadMessageId: firstUnreadMessageIdRef.current,
+              isCurrentDeviceMessage,
             });
 
             const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === state.config.userId;
+
             return (
               <MessageProvider message={message} key={getComponentKeyFromMessage(message)} isByMe={isOutgoingMessage}>
                 {renderMessage({

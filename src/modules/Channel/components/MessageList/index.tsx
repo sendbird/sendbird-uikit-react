@@ -11,7 +11,8 @@ import Message from '../Message';
 import { EveryMessage, TypingIndicatorType } from '../../../../types';
 import { isAboutSame } from '../../context/utils';
 import UnreadCount from '../UnreadCount';
-import NewMessageCount from '../NewMessageCount';
+import UnreadCountFloatingButton from '../UnreadCountFloatingButton';
+import NewMessageCountFloatingButton from '../NewMessageCountFloatingButton';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
 import { MessageProvider } from '../../../Message/context/MessageProvider';
@@ -184,8 +185,8 @@ export const MessageList = (props: MessageListProps) => {
 
   const isShowUnreadCount = useMemo(() => {
     if (store?.config?.groupChannel?.enableMarkAsUnread) {
-      // markAsUnread is enabled
-      if (currentGroupChannel?.unreadMessageCount > 0) {
+      // markAsUnread is enabled - 스크롤이 bottom에 있을 때는 표시하지 않음
+      if (currentGroupChannel?.unreadMessageCount > 0 && !isScrollBottom) {
         return true;
       }
       return false;
@@ -199,8 +200,12 @@ export const MessageList = (props: MessageListProps) => {
   }, [currentGroupChannel.unreadMessageCount, isScrollBottom]);
 
   const isShowNewMessageCount = useMemo(() => {
+    // 스크롤이 bottom에 있을 때는 new message count를 표시하지 않음
+    if (isScrollBottom) {
+      return false;
+    }
     if (!store?.config?.groupChannel?.enableMarkAsUnread
-      && (!isScrollBottom || hasMoreNext)
+      && hasMoreNext
       && (unreadSince || unreadSinceDate)) {
       return true;
     }
@@ -214,6 +219,54 @@ export const MessageList = (props: MessageListProps) => {
   if (allMessagesFiltered.length < 1) {
     return renderPlaceholderEmpty();
   }
+
+  const renderUnreadCount = () => {
+    if (isShowUnreadCount) {
+      if (!store?.config?.groupChannel?.enableMarkAsUnread) {
+        return (
+          <UnreadCountFloatingButton
+            className="sendbird-unread-messages-count"
+            count={currentGroupChannel?.unreadMessageCount}
+            onClick={() => {
+              if (scrollRef?.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+              if (!disableMarkAsRead && !!currentGroupChannel) {
+                markAsReadScheduler.push(currentGroupChannel);
+                messagesDispatcher({
+                  type: messageActionTypes.MARK_AS_READ,
+                  payload: { channel: currentGroupChannel },
+                });
+              }
+              setInitialTimeStamp(null);
+              setAnimatedMessageId(null);
+              setHighLightedMessageId(null);
+            }}
+          />
+        );
+      } else {
+        return (
+          <UnreadCount
+          className="sendbird-unread-messages-count"
+          count={currentGroupChannel?.unreadMessageCount}
+          time={unreadSince}
+          lastReadAt={unreadSinceDate}
+          onClick={() => {
+            if (scrollRef?.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+            if (!disableMarkAsRead && !!currentGroupChannel) {
+              markAsReadScheduler.push(currentGroupChannel);
+              messagesDispatcher({
+                type: messageActionTypes.MARK_AS_READ,
+                payload: { channel: currentGroupChannel },
+              });
+            }
+            setInitialTimeStamp(null);
+            setAnimatedMessageId(null);
+            setHighLightedMessageId(null);
+          }}
+        />
+        );
+      }
+    }
+  };
 
   return (
     <>
@@ -302,30 +355,7 @@ export const MessageList = (props: MessageListProps) => {
           </div>
         </div>
         {currentGroupChannel?.isFrozen && renderFrozenNotification()}
-        {
-          isShowUnreadCount && (
-            <UnreadCount
-              className="sendbird-unread-messages-count"
-              count={currentGroupChannel?.unreadMessageCount}
-              time={unreadSince}
-              lastReadAt={unreadSinceDate}
-              isFrozenChannel={currentGroupChannel?.isFrozen || false}
-              onClick={() => {
-                if (scrollRef?.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-                if (!disableMarkAsRead && !!currentGroupChannel) {
-                  markAsReadScheduler.push(currentGroupChannel);
-                  messagesDispatcher({
-                    type: messageActionTypes.MARK_AS_READ,
-                    payload: { channel: currentGroupChannel },
-                  });
-                }
-                setInitialTimeStamp(null);
-                setAnimatedMessageId(null);
-                setHighLightedMessageId(null);
-              }}
-            />
-          )
-        }
+        {renderUnreadCount()}
         {
           // This flag is an unmatched variable
           scrollBottom > SCROLL_BOTTOM_PADDING && (
@@ -343,7 +373,7 @@ export const MessageList = (props: MessageListProps) => {
         {
           /* NewMessageCount - positioned at the bottom of MessageList */
           (isShowNewMessageCount) && (
-            <NewMessageCount
+            <NewMessageCountFloatingButton
               className="sendbird-new-messages-count"
               count={newMessages.length}
               onClick={() => {
