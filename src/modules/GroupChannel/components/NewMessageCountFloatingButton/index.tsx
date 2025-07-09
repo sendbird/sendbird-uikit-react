@@ -20,7 +20,6 @@ export const NewMessageCount: React.FC<NewMessageCountProps> = ({
 }: NewMessageCountProps) => {
   const { stringSet } = useContext(LocalizationContext);
   const { isMobile } = useMediaQueryContext();
-  
 
   const newMessageCountText = useMemo(() => {
     if (count === 1) {
