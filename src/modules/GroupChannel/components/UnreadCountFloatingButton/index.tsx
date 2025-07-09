@@ -6,53 +6,56 @@ import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import Icon, { IconTypes, IconColors } from '../../../../ui/Icon';
 import { classnames } from '../../../../utils/utils';
 
-export interface NewMessageCountProps {
+export interface UnreadCountProps {
   className?: string;
   count: number | undefined;
   onClick(): void;
+  isFrozenChannel?: boolean;
 }
 
-export const NewMessageCount: React.FC<NewMessageCountProps> = ({
+export const UnreadCount: React.FC<UnreadCountProps> = ({
   className = '',
   count = 0,
   onClick,
-}: NewMessageCountProps) => {
+  isFrozenChannel = false,
+}: UnreadCountProps) => {
   const { stringSet } = useContext(LocalizationContext);
 
-  const newMessageCountText = useMemo(() => {
+  const unreadMessageCountText = useMemo(() => {
     if (count === 1) {
-      return stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE;
+      return stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__UNREAD_MESSAGE;
     } else if (count > 1) {
-      return stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__NEW_MESSAGE_S;
+      return stringSet.CHANNEL__MESSAGE_LIST__NOTIFICATION__UNREAD_MESSAGE_S;
     }
   }, [count]);
 
   return (
     <div
       className={classnames(
-        count < 1 ? 'sendbird-new-message-floating-button--hide' : 'sendbird-new-message-floating-button',
+        count < 1 ? 'sendbird-unread-floating-button--hide' : 'sendbird-unread-floating-button',
+        isFrozenChannel && 'sendbird-unread-floating-button--below-frozen',
         className,
       )}
-      data-testid="sendbird-new-message-notification"
+      data-testid="sendbird-notification"
       onClick={onClick}
     >
       <Label
-        className="sendbird-new-message-floating-button__text"
-        testID="sendbird-new-message-notification__text"
+        className="sendbird-unread-floating-button__text"
+        testID="sendbird-notification__text"
         color={LabelColors.ONCONTENT_1}
         type={LabelTypography.CAPTION_2}
       >
-        {`${count} `}
-        {newMessageCountText}
+        {`${count > 99 ? '99+' : count} `}
+        {unreadMessageCountText}
       </Label>
       <Icon
         width="24px"
         height="24px"
-        type={IconTypes.CHEVRON_DOWN}
-        fillColor={IconColors.PRIMARY}
+        type={IconTypes.FLOATING_BUTTON_CLOSE}
+        fillColor={IconColors.CONTENT}
       />
     </div>
   );
 };
 
-export default NewMessageCount;
+export default UnreadCount;

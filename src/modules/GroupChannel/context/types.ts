@@ -48,6 +48,9 @@ interface InternalGroupChannelState extends MessageDataSource {
   isScrollBottomReached: boolean;
   readState: string | null;
 
+  // Current device message tracking
+  currentDeviceMessageIdsRef: React.MutableRefObject<Set<string | number>>;
+
   // References - will be managed together
   scrollRef: React.RefObject<HTMLDivElement>;
   scrollDistanceFromBottomRef: React.MutableRefObject<number>;

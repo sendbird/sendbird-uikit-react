@@ -1,0 +1,120 @@
+/**
+ * We operate the CSS files for Channel&GroupChannel modules in the GroupChannel.
+ * So keep in mind that you should consider both components when you make changes in this file.
+ */
+@import '../../../../styles/variables';
+
+// Floating UnreadCount button - completely separate from notification styles
+.sendbird-unread-floating-button {
+  position: absolute;
+  top: 8px; // Default position when no frozen notification
+  left: 50%;
+  transform: translateX(-50%);
+  width: 181px;
+  height: 40px;
+  border-radius: 20px;
+  gap: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease-in-out;
+  z-index: 5;
+  background-color: #FFFFFF;
+  
+  // When frozen notification is present, position below it
+  &.sendbird-unread-floating-button--below-frozen {
+    top: 48px;
+  }
+  
+  &:hover {
+    cursor: pointer;
+    transform: translateX(-50%) translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    background-color: #F5F5F5;
+  }
+
+  .sendbird-unread-floating-button__text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #00000080;
+    line-height: 1;
+    font-size: 14px;
+    text-align: center;
+    height: 100%;
+  }
+
+  // Icon fixed to right side
+  .sendbird-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+   
+    svg {
+      display: block;
+      vertical-align: middle;
+    }
+  }
+}
+
+.sendbird-unread-floating-button--hide {
+  display: none;
+}
+
+// FrozenNotification styles (required for Channel&GroupChannel modules)
+.sendbird-notification--hide,
+.sendbird-notification {
+  position: absolute;
+}
+
+.sendbird-notification {
+  margin-top: 8px;
+  margin-left: 24px;
+  margin-right: 24px;
+  border-radius: 4px;
+  padding: 0px 2px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include themed() {
+    background-color: t(primary-3);
+  }
+  &:hover {
+    cursor: pointer;
+    @include themed() {
+      background-color: t(primary-4);
+    }
+  }
+
+  &.sendbird-notification--frozen {
+    @include themed() {
+      background-color: t(information-1);
+    }
+    .sendbird-notification__text {
+      @include themed() {
+        color: t(on-information-1);
+      }
+    }
+  }
+
+  .sendbird-notification__text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+  }
+}
+
+.sendbird-notification--hide {
+  display: none;
+}
+
+
+

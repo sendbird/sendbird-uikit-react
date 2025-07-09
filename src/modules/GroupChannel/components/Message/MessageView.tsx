@@ -22,6 +22,7 @@ import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionLi
 import type { OnBeforeDownloadFileMessageType } from '../../context/types';
 import { classnames, deleteNullish } from '../../../../utils/utils';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import NewMessageIndicator from '../../../../ui/NewMessageSeparator';
 
 export interface MessageProps {
   message: EveryMessage;
@@ -402,16 +403,6 @@ const MessageView = (props: MessageViewProps) => {
     );
   }
 
-  const seperatorLabelText = useMemo(() => {
-    if (!hasSeparator && hasNewMessageSeparator) {
-      return 'New Message';
-    } else if (hasSeparator) {
-      return format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
-        locale: dateLocale,
-      });
-    }
-  }, [hasSeparator, hasNewMessageSeparator]);
-
   return (
     <div
       className={classnames(
@@ -425,14 +416,25 @@ const MessageView = (props: MessageViewProps) => {
       ref={messageScrollRef}
     >
       {/* date-separator */}
-      {(hasSeparator || hasNewMessageSeparator)
+      {hasSeparator
         && (renderedCustomSeparator || (
-          <DateSeparator hasNewMessageSeparator={hasNewMessageSeparator} onVisibilityChange={onNewMessageSeparatorVisibilityChange}>
+          <DateSeparator>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.ONBACKGROUND_2}>
-              {seperatorLabelText}
+              {format(message.createdAt, stringSet.DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR, {
+                locale: dateLocale,
+              })}
             </Label>
           </DateSeparator>
         ))}
+      {/* new message indicator */}
+      {hasNewMessageSeparator
+        && (
+          <NewMessageIndicator onVisibilityChange={onNewMessageSeparatorVisibilityChange}>
+            <Label type={LabelTypography.CAPTION_2} color={LabelColors.PRIMARY}>
+              New Message
+            </Label>
+          </NewMessageIndicator>
+        )}
       {renderChildren()}
     </div>
   );

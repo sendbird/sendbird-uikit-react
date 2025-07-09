@@ -153,6 +153,8 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   const { sdkStore } = stores;
   const { userId, markAsReadScheduler, logger, pubSub } = config;
 
+  const currentDeviceMessageIdsRef = useRef<Set<string | number>>(new Set());
+
   // ScrollHandler initialization
   const {
     scrollRef,
@@ -224,7 +226,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
         // even though the next messages and the current messages length are the same.
         // So added this condition to check if they are the same to prevent unnecessary calling scrollToBottom action
         && messages.length !== state.messages.length) {
-        setTimeout(() => actions.scrollToBottom(true), 10);
+        setTimeout(async () => actions.scrollToBottom(true), 10);
       }
     },
     onChannelDeleted: () => {
@@ -256,6 +258,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     if (sdkStore.initialized && channelUrl) {
       try {
         const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
+        currentDeviceMessageIdsRef.current.clear();
         actions.setCurrentChannel(channel);
       } catch (error) {
         actions.handleChannelError(error);
@@ -272,6 +275,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
     const handleExternalMessage = (data) => {
       if (data.channel.url === state.currentChannel?.url) {
+        currentDeviceMessageIdsRef.current.add(data.message.messageId);
         actions.scrollToBottom(true);
       }
     };
@@ -386,6 +390,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       ...messageDataSource,
       markAsUnread,
       markAsUnreadSourceRef,
+      currentDeviceMessageIdsRef,
     });
   }, [
     channelUrl,
