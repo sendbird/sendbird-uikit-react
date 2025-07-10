@@ -25,6 +25,7 @@ export function ThreadReplies(
     mostRepliedUsers = [],
     replyCount,
   } = threadInfo;
+
   const { stringSet } = useLocalization();
   return (
     <div
@@ -74,7 +75,8 @@ export function ThreadReplies(
           </div>
         )}
       </div>
-      <Label
+      {replyCount > 0 && (
+        <Label
         className="sendbird-ui-thread-replies__reply-counts"
         type={LabelTypography.CAPTION_2}
         color={LabelColors.PRIMARY}
@@ -85,6 +87,7 @@ export function ThreadReplies(
             : `${replyCount > 99 ? stringSet.CHANNEL__THREAD_OVER_MAX : replyCount} ${stringSet.CHANNEL__THREAD_REPLIES}`
         }
       </Label>
+      )}
       <Icon
         className="sendbird-ui-thread-replies__icon"
         type={IconTypes.CHEVRON_RIGHT}
