@@ -184,7 +184,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   }, [useReplying]);
 
   // Thread replies
-  const displayThreadReplies = message?.threadInfo?.replyCount
+  const displayThreadReplies = message?.threadInfo
     && message.threadInfo.replyCount > 0
     && replyType === 'THREAD';
 
