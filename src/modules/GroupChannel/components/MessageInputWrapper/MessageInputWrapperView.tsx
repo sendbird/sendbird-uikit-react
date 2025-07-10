@@ -183,7 +183,9 @@ export const MessageInputWrapperView = React.forwardRef((
       )}
       {quoteMessage && (
         <div className="sendbird-message-input-wrapper__quote-message-input">
-          <QuoteMessageInput replyingMessage={quoteMessage} onClose={() => setQuoteMessage(null)} />
+          <QuoteMessageInput replyingMessage={quoteMessage} onClose={() => {
+            setQuoteMessage(null);
+          }} />
         </div>
       )}
       {showVoiceMessageInput ? (
@@ -244,11 +246,13 @@ export const MessageInputWrapperView = React.forwardRef((
             });
             setMentionNickname('');
             setMentionedUsers([]);
+            console.log('MADOKA setQuoteMessage null #3');
             setQuoteMessage(null);
             currentChannel?.endTyping?.();
           }}
           onFileUpload={(fileList) => {
             handleUploadFiles(fileList);
+            console.log('MADOKA setQuoteMessage null #4');
             setQuoteMessage(null);
           }}
           onUserMentioned={(user) => {

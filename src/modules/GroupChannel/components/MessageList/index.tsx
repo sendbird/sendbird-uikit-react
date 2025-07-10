@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
@@ -150,7 +150,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
         const isFind = findFirstUnreadMessage(message, i, messages as CoreMessageType[], currentChannel);
 
         if (isFind && !isFromCurrentDevice(message.messageId)) {
-          return message.messageId;
+          return firstUnreadMessageIdRef.current ? undefined : message.messageId;
         }
       }
     }
@@ -159,6 +159,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
 
   // check changed channel
   useEffect(() => {
+    if (!currentChannel?.url) return;
     if (currentChannel?.url !== currentChannelRef.current?.url) {
       currentChannelRef.current = currentChannel;
 
@@ -169,8 +170,9 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       if (markAsUnreadSourceRef?.current !== undefined) {
         markAsUnreadSourceRef.current = undefined;
       }
-      setIsChangedChannel(true);
+      currentMessagesRef.current = [];
       currentDeviceMessageIdsRef.current.clear();
+      setIsChangedChannel(true);
     } else {
       setIsChangedChannel(false);
     }
@@ -187,15 +189,14 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
             firstUnreadMessageIdRef.current = firstUnreadMessageId;
           }
           hasInitializedRef.current = true;
+          setIsChangedChannel(false);
         }
       }
     }
   }, [messages]);
 
-  useEffect(() => {
+  useMemo(() => {
     if (state.config.groupChannel.enableMarkAsUnread && hasInitializedRef.current) {
-      if (firstUnreadMessageIdRef.current) return;
-
       const firstUnreadMessageId = getFirstUnreadMessage();
 
       if (firstUnreadMessageId && firstUnreadMessageIdRef.current !== firstUnreadMessageId) {

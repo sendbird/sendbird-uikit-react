@@ -27,6 +27,7 @@ export const ON_MESSAGE_DELETED_BY_REQ_ID = 'ON_MESSAGE_DELETED_BY_REQ_ID';
 export const SET_CURRENT_CHANNEL = 'SET_CURRENT_CHANNEL';
 export const SET_CHANNEL_INVALID = 'SET_CHANNEL_INVALID';
 export const MARK_AS_READ = 'MARK_AS_READ';
+export const MARK_AS_UNREAD = 'MARK_AS_UNREAD';
 export const ON_REACTION_UPDATED = 'ON_REACTION_UPDATED';
 export const SET_EMOJI_CONTAINER = 'SET_EMOJI_CONTAINER';
 export const MESSAGE_LIST_PARAMS_CHANGED = 'MESSAGE_LIST_PARAMS_CHANGED';
@@ -77,6 +78,11 @@ type CHANNEL_PAYLOAD_TYPES = {
   [RESEND_MESSAGE_START]: SendableMessageType;
   [MARK_AS_READ]: {
     channel: null | GroupChannel;
+    userIds?: null |string[];
+  };
+  [MARK_AS_UNREAD]: {
+    channel: null | GroupChannel;
+    userIds?: null |string[];
   };
   [ON_MESSAGE_DELETED]: MessageId;
   [ON_MESSAGE_DELETED_BY_REQ_ID]: RequestId;

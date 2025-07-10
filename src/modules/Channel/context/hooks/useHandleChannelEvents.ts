@@ -111,8 +111,11 @@ function useHandleChannelEvents({
           logger.info('Channel | useHandleChannelEvents: onUserMarkedAsRead', channel, userIds);
           if (compareIds(channel?.url, channelUrl)) {
             messagesDispatcher({
-              type: messageActions.SET_CURRENT_CHANNEL,
-              payload: channel,
+              type: messageActions.MARK_AS_READ,
+              payload: {
+                channel,
+                userIds,
+              },
             });
           }
         },
@@ -121,8 +124,11 @@ function useHandleChannelEvents({
           // TODO:: MADOKA 이 부분에 대해서 명확하게 확인해야 함.
           if (compareIds(channel?.url, channelUrl)) {
             messagesDispatcher({
-              type: messageActions.SET_CURRENT_CHANNEL,
-              payload: channel,
+              type: messageActions.MARK_AS_UNREAD,
+              payload: {
+                channel,
+                userIds,
+              },
             });
           }
         },
@@ -156,6 +162,7 @@ function useHandleChannelEvents({
         },
         onMessageDeleted: (channel, messageId) => {
           logger.info('Channel | useHandleChannelEvents: onMessageDeleted', { channel, messageId });
+          console.log('MADOKA setQuoteMessage null #6');
           setQuoteMessage(null);
           messagesDispatcher({
             type: messageActions.ON_MESSAGE_DELETED,

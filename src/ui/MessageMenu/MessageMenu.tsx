@@ -152,7 +152,7 @@ export const MessageMenu = ({
                   {showMenuItemThread(params) && <ThreadMenuItem />}
                   {showMenuItemOpenInChannel(params) && <OpenInChannelMenuItem />}
                   {showMenuItemEdit(params) && <EditMenuItem />}
-                  {showMenuItemMarkAsUnread(params) && enableMarkAsUnread && <MarkAsUnreadMenuItem />}
+                  {enableMarkAsUnread && showMenuItemMarkAsUnread(params) && <MarkAsUnreadMenuItem />}
                   {showMenuItemResend(params) && <ResendMenuItem />}
                   {showMenuItemDelete(params) && <DeleteMenuItem />}
                 </>
