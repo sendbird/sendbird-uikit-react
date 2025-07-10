@@ -15,7 +15,6 @@ import {
   isVoiceMessage,
   isThreadMessage,
 } from '../../utils';
-import { showMenuItemMarkAsUnread } from '../../utils/menuConditions';
 import BottomSheet from '../BottomSheet';
 import ImageRenderer from '../ImageRenderer';
 import ReactionButton from '../ReactionButton';
@@ -83,13 +82,11 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     && !isPendingMessage(message)
     && !isThreadMessage(message)
     && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
-  // const showMenuItemMarkAsUnreadCondition = showMenuItemMarkAsUnread({
-  //   message,
-  //   channel,
-  //   isByMe,
-  //   replyType,
-  //   onReplyInThread,
-  // });
+
+  const showMenuItemMarkAsUnread: boolean = !isFailedMessage(message)
+    && !isPendingMessage(message)
+    && channel?.isGroupChannel?.()
+    && replyType !== 'THREAD';
 
   const maxEmojisPerRow = Math.floor(window.innerWidth / EMOJI_SIZE) - 1;
   const [showEmojisOnly, setShowEmojisOnly] = useState<boolean>(false);
@@ -208,14 +205,14 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                   <>
                     {showMenuItemCopy && <CopyMenuItem />}
                     {showMenuItemEdit && <EditMenuItem />}
-                    {showMenuItemMarkAsUnread && enableMarkAsUnread && <MarkAsUnreadMenuItem />}
+                    {enableMarkAsUnread && showMenuItemMarkAsUnread && <MarkAsUnreadMenuItem />}
                     {showMenuItemResend && <ResendMenuItem />}
                     {showMenuItemReply && <ReplyMenuItem />}
                     {showMenuItemThread && <ThreadMenuItem />}
                     {showMenuItemDeleteFinal && <DeleteMenuItem />}
                     {showMenuItemDownload && <DownloadMenuItem />}
                   </>
-              )}
+              )}ß
             </div>
           )}
         </div>

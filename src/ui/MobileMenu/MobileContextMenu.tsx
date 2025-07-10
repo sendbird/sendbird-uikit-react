@@ -12,7 +12,6 @@ import {
   isThreadMessage,
   isVoiceMessage,
 } from '../../utils';
-import { showMenuItemMarkAsUnread } from '../../utils/menuConditions';
 
 import { MessageMenuProvider } from '../MessageMenu';
 import type { MobileMessageMenuContextProps } from '../MessageMenu/MessageMenuProvider';
@@ -62,13 +61,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
   const showMenuItemDownload = !isPendingMessage(message) && isFileMessage(message) && !(isVoiceMessage(message) && (channel as GroupChannel)?.isSuper || (channel as GroupChannel)?.isBroadcast);
   const showMenuItemReply = replyType === 'QUOTE_REPLY' && !isFailedMessage(message) && !isPendingMessage(message) && channel?.isGroupChannel();
   const showMenuItemThread = replyType === 'THREAD' && !isOpenedFromThread && !isFailedMessage(message) && !isPendingMessage(message) && !isThreadMessage(message) && channel?.isGroupChannel();
-  const showMenuItemMarkAsUnreadCondition = showMenuItemMarkAsUnread({
-    message,
-    channel,
-    isByMe,
-    replyType,
-    onReplyInThread,
-  });
+  const showMenuItemMarkAsUnread = !isFailedMessage(message) && !isPendingMessage(message) && message.parentMessageId <= 0 && channel?.isGroupChannel?.();
   const disableDeleteMessage = (deleteMenuState !== undefined && deleteMenuState === 'DISABLE') || (message?.threadInfo?.replyCount ?? 0) > 0;
 
   const contextValue: MobileMessageMenuContextProps = {
@@ -114,7 +107,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               {showMenuItemReply && <ReplyMenuItem />}
               {showMenuItemThread && <ThreadMenuItem />}
               {showMenuItemEdit && <EditMenuItem />}
-              {showMenuItemMarkAsUnreadCondition && enableMarkAsUnread && <MarkAsUnreadMenuItem />}
+              {enableMarkAsUnread && showMenuItemMarkAsUnread && <MarkAsUnreadMenuItem />}
               {showMenuItemResend && <ResendMenuItem />}
               {showMenuItemDeleteFinal && <DeleteMenuItem />}
               {showMenuItemDownload && <DownloadMenuItem />}
