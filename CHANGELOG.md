@@ -1,5 +1,10 @@
 # Changelog - v3
 
+## [v3.16.11] (July 10 2025)
+### Fixes:
+- Fixed an issue where the layout would break when selecting a member from the invite list
+- Fixed a bug where `0` was displayed when a reply was added and then deleted
+
 ## [v3.16.10] (Jun 12 2025)
 ### Chore
 - Fixed `localCacheEnabled` option applied
