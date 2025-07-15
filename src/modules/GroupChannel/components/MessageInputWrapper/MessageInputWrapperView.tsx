@@ -246,13 +246,11 @@ export const MessageInputWrapperView = React.forwardRef((
             });
             setMentionNickname('');
             setMentionedUsers([]);
-            console.log('MADOKA setQuoteMessage null #3');
             setQuoteMessage(null);
             currentChannel?.endTyping?.();
           }}
           onFileUpload={(fileList) => {
             handleUploadFiles(fileList);
-            console.log('MADOKA setQuoteMessage null #4');
             setQuoteMessage(null);
           }}
           onUserMentioned={(user) => {

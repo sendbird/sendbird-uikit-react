@@ -162,7 +162,6 @@ function useHandleChannelEvents({
         },
         onMessageDeleted: (channel, messageId) => {
           logger.info('Channel | useHandleChannelEvents: onMessageDeleted', { channel, messageId });
-          console.log('MADOKA setQuoteMessage null #6');
           setQuoteMessage(null);
           messagesDispatcher({
             type: messageActions.ON_MESSAGE_DELETED,
