@@ -42,6 +42,7 @@ function useSetChannel({
         }
 
         setLoading(true);
+
         const groupChannel = await sdk.groupChannel.getChannel(channelUrl);
         if (!signal.aborted) {
           logger.info('ChannelSettings | useSetChannel: fetched group channel', groupChannel);
