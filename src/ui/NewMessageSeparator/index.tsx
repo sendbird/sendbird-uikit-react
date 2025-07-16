@@ -67,7 +67,7 @@ const NewMessageIndicator = ({
           children
           || (
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.PRIMARY}>
-              New Message
+              New Messages
             </Label>
           )
         }
