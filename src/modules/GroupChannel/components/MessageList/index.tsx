@@ -176,6 +176,8 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   }, [isScrollBottomReached]);
 
   const checkDisplayedNewMessageSeparator = useCallback((isNewMessageSeparatorVisible: boolean) => {
+    if (!isInitializedRef.current || !firstUnreadMessage) return;
+    
     if (isNewMessageSeparatorVisible) {
       setShowUnreadCount(false);
       if (newMessages?.length > 0) {
@@ -190,7 +192,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     } else if (currentChannel?.unreadMessageCount > 0) {
       setShowUnreadCount(true);
     }
-  }, []);
+  }, [firstUnreadMessage]);
 
   /**
    * 1. Move the message list scroll
