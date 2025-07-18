@@ -181,7 +181,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
   const markAsUnreadSourceRef = useRef<'manual' | 'internal' | undefined>(undefined);
 
-  const markAsUnread = useCallback(() => (message: any, source?: 'manual' | 'internal') => {
+  const markAsUnread = useCallback((message: any, source?: 'manual' | 'internal') => {
     if (!config.groupChannel.enableMarkAsUnread) return;
     if (!state.currentChannel) {
       logger?.error?.('GroupChannelProvider: channel is required for markAsUnread');
