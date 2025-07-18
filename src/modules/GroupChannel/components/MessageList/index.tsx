@@ -177,7 +177,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
 
   const checkDisplayedNewMessageSeparator = useCallback((isNewMessageSeparatorVisible: boolean) => {
     if (!isInitializedRef.current || !firstUnreadMessage) return;
-    
+
     if (isNewMessageSeparatorVisible) {
       setShowUnreadCount(false);
       if (newMessages?.length > 0) {
