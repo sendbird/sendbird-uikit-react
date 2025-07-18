@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useRef, createContext } from 'react';
+import React, { useMemo, useEffect, useRef, createContext, useCallback } from 'react';
 import {
   ReplyType as ChatReplyType,
 } from '@sendbird/chat/message';
@@ -153,8 +153,6 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   const { sdkStore } = stores;
   const { userId, markAsReadScheduler, logger, pubSub } = config;
 
-  const currentDeviceMessageIdsRef = useRef<Set<string | number>>(new Set());
-
   // ScrollHandler initialization
   const {
     scrollRef,
@@ -183,7 +181,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
   const markAsUnreadSourceRef = useRef<'manual' | 'internal' | undefined>(undefined);
 
-  const markAsUnread = useMemo(() => (message: any, source?: 'manual' | 'internal') => {
+  const markAsUnread = useCallback((message: any, source?: 'manual' | 'internal') => {
     if (!config.groupChannel.enableMarkAsUnread) return;
     if (!state.currentChannel) {
       logger?.error?.('GroupChannelProvider: channel is required for markAsUnread');
@@ -258,7 +256,6 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     if (sdkStore.initialized && channelUrl) {
       try {
         const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
-        currentDeviceMessageIdsRef.current.clear();
         actions.setCurrentChannel(channel);
       } catch (error) {
         actions.handleChannelError(error);
@@ -275,7 +272,6 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
     const handleExternalMessage = (data) => {
       if (data.channel.url === state.currentChannel?.url) {
-        currentDeviceMessageIdsRef.current.add(data.message.messageId);
         actions.scrollToBottom(true);
       }
     };
@@ -390,7 +386,6 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       ...messageDataSource,
       markAsUnread,
       markAsUnreadSourceRef,
-      currentDeviceMessageIdsRef,
     });
   }, [
     channelUrl,
@@ -409,7 +404,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
 const GroupChannelProvider: React.FC<GroupChannelProviderProps> = (props) => {
   return (
-    <InternalGroupChannelProvider {...props}>
+    <InternalGroupChannelProvider key={props.channelUrl} {...props}>
       <GroupChannelManager {...props}>
         <UserProfileProvider {...props}>
           {props.children}

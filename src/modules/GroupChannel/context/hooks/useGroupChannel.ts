@@ -51,9 +51,6 @@ export interface GroupChannelActions extends MessageActions {
 
   // Reaction action
   toggleReaction: (message: SendableMessageType, emojiKey: string, isReacted: boolean) => void;
-
-  // Current device message tracking
-  isFromCurrentDevice: (messageId: string | number) => boolean;
 }
 
 export const useGroupChannel = () => {
@@ -208,10 +205,6 @@ export const useGroupChannel = () => {
     store.setState(state => ({ ...state, firstUnreadMessageId: messageId }));
   }, []);
 
-  const isFromCurrentDevice = useCallback((messageId: string | number): boolean => {
-    return state.currentDeviceMessageIdsRef?.current.has(messageId) ?? false;
-  }, [state.currentDeviceMessageIdsRef]);
-
   const actions: GroupChannelActions = useMemo(() => {
     return {
       setCurrentChannel,
@@ -226,7 +219,6 @@ export const useGroupChannel = () => {
       toggleReaction,
       setAnimatedMessageId,
       setIsScrollBottomReached,
-      isFromCurrentDevice,
       ...messageActions,
     };
   }, [
@@ -242,7 +234,6 @@ export const useGroupChannel = () => {
     toggleReaction,
     setAnimatedMessageId,
     setIsScrollBottomReached,
-    isFromCurrentDevice,
     messageActions,
   ]);
 

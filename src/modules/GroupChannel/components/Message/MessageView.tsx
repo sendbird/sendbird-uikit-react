@@ -431,7 +431,7 @@ const MessageView = (props: MessageViewProps) => {
         && (
           <NewMessageIndicator onVisibilityChange={onNewMessageSeparatorVisibilityChange}>
             <Label type={LabelTypography.CAPTION_2} color={LabelColors.PRIMARY}>
-              New Message
+              New Messages
             </Label>
           </NewMessageIndicator>
         )}
