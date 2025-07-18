@@ -3,7 +3,7 @@ import isSameDay from 'date-fns/isSameDay';
 
 import { compareMessagesForGrouping } from '../../../../utils/messages';
 import { ReplyType } from '../../../../types';
-import { CoreMessageType } from '../../../../utils';
+import { CoreMessageType, isAdminMessage } from '../../../../utils';
 import { StringSet } from '../../../../ui/Label/stringSet';
 
 export interface GetMessagePartsInfoProps {
@@ -16,7 +16,6 @@ export interface GetMessagePartsInfoProps {
   replyType?: string;
   hasPrevious?: boolean;
   firstUnreadMessageId?: number | string | undefined;
-  isCurrentDeviceMessage?: boolean;
 }
 
 interface OutPuts {
@@ -38,7 +37,6 @@ export const getMessagePartsInfo = ({
   currentChannel = null,
   replyType = '',
   firstUnreadMessageId,
-  isCurrentDeviceMessage,
 }: GetMessagePartsInfoProps): OutPuts => {
   const previousMessage = allMessages[currentIndex - 1];
   const nextMessage = allMessages[currentIndex + 1];
@@ -54,7 +52,7 @@ export const getMessagePartsInfo = ({
   // https://stackoverflow.com/a/41855608
   const hasSeparator = isLocalMessage ? false : !(previousMessageCreatedAt && (isSameDay(currentCreatedAt, previousMessageCreatedAt)));
 
-  const hasNewMessageSeparator = !isCurrentDeviceMessage && firstUnreadMessageId === currentMessage.messageId;
+  const hasNewMessageSeparator = isLocalMessage ? false : (!isAdminMessage(currentMessage) && firstUnreadMessageId === currentMessage.messageId);
 
   return {
     chainTop,

@@ -37,7 +37,6 @@ export const UnreadCount: React.FC<UnreadCountProps> = ({
         className,
       )}
       data-testid="sendbird-notification"
-      onClick={onClick}
     >
       <Label
         className="sendbird-unread-floating-button__text"
@@ -53,6 +52,7 @@ export const UnreadCount: React.FC<UnreadCountProps> = ({
         height="24px"
         type={IconTypes.FLOATING_BUTTON_CLOSE}
         fillColor={IconColors.CONTENT}
+        onClick={onClick}
       />
     </div>
   );

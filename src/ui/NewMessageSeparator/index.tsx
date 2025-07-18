@@ -42,7 +42,7 @@ const NewMessageIndicator = ({
       {
         threshold: 1.0,
         rootMargin: '0px',
-        root: null, // viewport를 기준으로 관찰
+        root: null,
       },
     );
 
