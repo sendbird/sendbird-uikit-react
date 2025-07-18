@@ -88,13 +88,13 @@ export const useGroupChannel = () => {
         }
       }
     }
-  }, [state.scrollRef.current, config.isOnline, markAsReadScheduler]);
+  }, [state.scrollRef.current, config.isOnline, markAsReadScheduler, config.groupChannel.enableMarkAsUnread]);
 
   const markAsReadAll = useCallback((channel: GroupChannel) => {
     if (config.isOnline && !state.disableMarkAsRead && channel) {
       markAsReadScheduler?.push(channel);
     }
-  }, [config.isOnline]);
+  }, [config.isOnline, state.disableMarkAsRead]);
 
   const scrollToMessage = useCallback(async (
     createdAt: number,

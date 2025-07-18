@@ -202,7 +202,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     } catch (error) {
       logger?.error?.('GroupChannelProvider: markAsUnread failed', error);
     }
-  }, [state.currentChannel, logger]);
+  }, [state.currentChannel, logger, config.groupChannel.enableMarkAsUnread]);
 
   // Message Collection setup
   const messageDataSource = useGroupChannelMessages(sdkStore.sdk, state.currentChannel!, {

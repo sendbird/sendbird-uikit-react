@@ -119,30 +119,14 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     const willFindMessageCreatedAt = myLastRead + 1;
 
     // 조건 1: 정확히 myLastRead + 1인 메시지 찾기
-    const exactMatchMessage = messages.find((message) => message.createdAt === willFindMessageCreatedAt,
-    );
+    const exactMatchMessage = messages.find((message) => message.createdAt === willFindMessageCreatedAt);
 
     if (exactMatchMessage) {
       return exactMatchMessage as CoreMessageType;
     }
 
     // 조건 2: myLastRead + 1보다 큰 첫 번째 메시지 찾기
-    for (let i = 0; i < messages.length; i++) {
-      const message = messages[i] as CoreMessageType;
-
-      if (message.createdAt > willFindMessageCreatedAt) {
-        // 이전에 정확히 myLastRead + 1인 메시지가 있는지 확인
-        const hasPreviousExactMatch = messages
-          .slice(0, i)
-          .some(msg => msg.createdAt === willFindMessageCreatedAt);
-
-        if (!hasPreviousExactMatch) {
-          return message;
-        }
-      }
-    }
-
-    return undefined;
+    return messages.find((message) => message.createdAt > willFindMessageCreatedAt) as CoreMessageType | undefined;
   }, [messages, currentChannel?.myLastRead, readState]);
 
   useEffect(() => {
@@ -184,7 +168,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
         markAsUnread(newMessages[0] as SendableMessageType, 'internal');
         separatorMessageRef.current = undefined;
       } else if (firstUnreadMessage && markAsUnreadSourceRef?.current !== 'manual') {
-        if (!separatorMessageRef.current) {
+        if (!separatorMessageRef.current || separatorMessageRef.current.messageId !== firstUnreadMessage.messageId) {
           separatorMessageRef.current = firstUnreadMessage;
         }
         markAsReadAll(currentChannel);
@@ -192,7 +176,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     } else if (currentChannel?.unreadMessageCount > 0) {
       setShowUnreadCount(true);
     }
-  }, [firstUnreadMessage]);
+  }, [firstUnreadMessage, markAsUnread, markAsReadAll, currentChannel?.unreadMessageCount]);
 
   /**
    * 1. Move the message list scroll
