@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import type { Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
-import { CoreMessageType, isSendableMessage, getHTMLTextDirection, SendableMessageType } from '../../../../utils';
+import { CoreMessageType, isSendableMessage, getHTMLTextDirection, SendableMessageType, isAdminMessage } from '../../../../utils';
 import { EveryMessage, RenderMessageParamsType, TypingIndicatorType } from '../../../../types';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -125,8 +125,8 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       return exactMatchMessage as CoreMessageType;
     }
 
-    // 조건 2: myLastRead + 1보다 큰 첫 번째 메시지 찾기
-    return messages.find((message) => message.createdAt > willFindMessageCreatedAt) as CoreMessageType | undefined;
+    // 조건 2: myLastRead + 1보다 큰 첫 번째 메시지 찾기 (Admin 메시지 제외)
+    return messages.find((message) => message.createdAt > willFindMessageCreatedAt && !isAdminMessage(message as any)) as CoreMessageType | undefined;
   }, [messages, currentChannel?.myLastRead, readState]);
 
   useEffect(() => {
