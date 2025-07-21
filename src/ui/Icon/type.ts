@@ -32,6 +32,7 @@ export const Types = {
   GIF: 'GIF',
   INFO: 'INFO',
   LEAVE: 'LEAVE',
+  MARK_AS_UNREAD: 'MARK_AS_UNREAD',
   MEMBERS: 'MEMBERS',
   MESSAGE: 'MESSAGE',
   MODERATIONS: 'MODERATIONS',
@@ -60,5 +61,6 @@ export const Types = {
   USER: 'USER',
   FEEDBACK_LIKE: 'FEEDBACK_LIKE',
   FEEDBACK_DISLIKE: 'FEEDBACK_DISLIKE',
+  FLOATING_BUTTON_CLOSE: 'FLOATING_BUTTON_CLOSE',
 } as const;
 export type Types = typeof Types[keyof typeof Types];

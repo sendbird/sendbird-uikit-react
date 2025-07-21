@@ -69,6 +69,7 @@ const config: SendbirdStateConfig = {
     suggestedRepliesDirection: 'vertical',
     enableMarkdownForUserMessage: false,
     enableFormTypeMessage: false,
+    enableMarkAsUnread: false,
     enableReactionsSupergroup: undefined as never, // @deprecated
   },
   groupChannelList: {

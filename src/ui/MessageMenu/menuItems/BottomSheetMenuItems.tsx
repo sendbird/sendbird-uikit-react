@@ -208,3 +208,30 @@ export const DownloadMenuItem = (props: PrebuildMenuItemPropsType) => {
     </BottomSheetMenuItem>
   );
 };
+
+export const MarkAsUnreadMenuItem = (props: PrebuildMenuItemPropsType) => {
+  const { stringSet } = useLocalization();
+  const { message, hideMenu, markAsUnread } = useMessageMenuContext();
+
+  return (
+    <BottomSheetMenuItem
+      {...props}
+      onClick={(e) => {
+        if (markAsUnread) {
+          markAsUnread(message, 'manual');
+        }
+        hideMenu();
+        props.onClick?.(e);
+      }}
+    >
+      {props.children ?? (
+        <>
+          <Icon type={IconTypes.MARK_AS_UNREAD} fillColor={IconColors.PRIMARY} width="24px" height="24px" />
+          <Label type={LabelTypography.SUBTITLE_1} color={LabelColors.ONBACKGROUND_1}>
+            {stringSet.MESSAGE_MENU__MARK_AS_UNREAD}
+          </Label>
+        </>
+      )}
+    </BottomSheetMenuItem>
+  );
+};

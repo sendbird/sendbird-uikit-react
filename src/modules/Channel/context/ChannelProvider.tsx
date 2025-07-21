@@ -5,6 +5,7 @@ import React, {
   useRef,
   useMemo,
 } from 'react';
+import { UIKitConfigProvider, useUIKitConfig } from '@sendbird/uikit-tools';
 
 import type { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import type {
@@ -52,6 +53,7 @@ import { PublishingModuleType } from '../../internalInterfaces';
 import { ChannelActionTypes } from './dux/actionTypes';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import { useLocalization } from '../../../lib/LocalizationContext';
+import { uikitConfigStorage } from '../../../lib/utils/uikitConfigStorage';
 
 export { ThreadReplySelectType } from './const'; // export for external usage
 
@@ -215,6 +217,7 @@ const ChannelProvider = (props: ChannelContextProps) => {
   const sdk = globalStore?.stores?.sdkStore?.sdk;
   const sdkInit = globalStore?.stores?.sdkStore?.initialized;
   const globalConfigs = globalStore?.config;
+  const { configs: uikitConfig } = useUIKitConfig();
 
   const [initialTimeStamp, setInitialTimeStamp] = useState(startingPoint);
   useEffect(() => {
@@ -441,6 +444,19 @@ const ChannelProvider = (props: ChannelContextProps) => {
   });
 
   return (
+    <UIKitConfigProvider
+      storage={uikitConfigStorage}
+      localConfigs={{
+        ...uikitConfig,
+        groupChannel: {
+          ...uikitConfig.groupChannel,
+          channel: {
+            ...uikitConfig.groupChannel.channel,
+            enableMarkAsUnread: false,
+          },
+        },
+      }
+    }>
     <ChannelContext.Provider value={{
       // props
       channelUrl,
@@ -519,6 +535,7 @@ const ChannelProvider = (props: ChannelContextProps) => {
         {children}
       </UserProfileProvider>
     </ChannelContext.Provider>
+    </UIKitConfigProvider>
   );
 };
 

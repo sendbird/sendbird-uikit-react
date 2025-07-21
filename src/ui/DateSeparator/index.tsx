@@ -14,11 +14,13 @@ export interface DateSeparatorProps {
   className?: string | Array<string>;
   separatorColor?: Colors;
 }
+
 const DateSeparator = ({
   children = undefined,
   className = '',
   separatorColor = Colors.ONBACKGROUND_4,
 }: DateSeparatorProps): ReactElement => {
+
   return (
     <div
       className={[

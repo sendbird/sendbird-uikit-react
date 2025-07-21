@@ -11,6 +11,7 @@ interface CommonMessageMenuContextProps {
   showRemove: (bool: boolean) => void;
   deleteMessage: (message: SendableMessageType) => void;
   resendMessage: (message: SendableMessageType) => void;
+  markAsUnread?: (message: SendableMessageType, source?: 'manual' | 'internal') => void;
   isOnline: boolean;
   disableDeleteMessage: boolean | null;
   triggerRef: MutableRefObject<null>;

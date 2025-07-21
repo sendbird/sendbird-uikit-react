@@ -16,6 +16,7 @@ import {
   EditMenuItem,
   ResendMenuItem,
   DeleteMenuItem,
+  MarkAsUnreadMenuItem,
 } from './menuItems/MessageMenuItems';
 import { ReplyType } from '../../types';
 import {
@@ -23,6 +24,7 @@ import {
   showMenuItemCopy,
   showMenuItemDelete,
   showMenuItemEdit,
+  showMenuItemMarkAsUnread,
   showMenuItemOpenInChannel,
   showMenuItemReply,
   showMenuItemResend,
@@ -41,6 +43,7 @@ export type RenderMenuItemsParams = {
     EditMenuItem: (props: PrebuildMenuItemPropsType) => ReactElement;
     ResendMenuItem: (props: PrebuildMenuItemPropsType) => ReactElement;
     DeleteMenuItem: (props: PrebuildMenuItemPropsType) => ReactElement;
+    MarkAsUnreadMenuItem: (props: PrebuildMenuItemPropsType) => ReactElement;
   };
 };
 export interface MessageMenuProps {
@@ -56,6 +59,7 @@ export interface MessageMenuProps {
   showRemove?: (bool: boolean) => void;
   deleteMessage?: (message: SendableMessageType) => void;
   resendMessage?: (message: SendableMessageType) => void;
+  markAsUnread?: (message: SendableMessageType) => void;
   setQuoteMessage?: (message: SendableMessageType) => void;
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
   onMoveToParentMessage?: () => void;
@@ -75,11 +79,12 @@ export const MessageMenu = ({
   showRemove = noop,
   deleteMessage,
   resendMessage,
+  markAsUnread,
   setQuoteMessage,
   onReplyInThread,
   onMoveToParentMessage,
 }: MessageMenuProps) => {
-  const { state: { config: { isOnline } } } = useSendbird();
+  const { state: { config: { isOnline, groupChannel: { enableMarkAsUnread } } } } = useSendbird();
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -114,6 +119,7 @@ export const MessageMenu = ({
         showRemove,
         deleteMessage,
         resendMessage,
+        markAsUnread,
         isOnline,
         disableDeleteMessage,
         triggerRef,
@@ -135,6 +141,7 @@ export const MessageMenu = ({
                 ThreadMenuItem,
                 OpenInChannelMenuItem,
                 EditMenuItem,
+                MarkAsUnreadMenuItem,
                 ResendMenuItem,
                 DeleteMenuItem,
               },
@@ -145,6 +152,7 @@ export const MessageMenu = ({
                   {showMenuItemThread(params) && <ThreadMenuItem />}
                   {showMenuItemOpenInChannel(params) && <OpenInChannelMenuItem />}
                   {showMenuItemEdit(params) && <EditMenuItem />}
+                  {enableMarkAsUnread && showMenuItemMarkAsUnread(params) && <MarkAsUnreadMenuItem />}
                   {showMenuItemResend(params) && <ResendMenuItem />}
                   {showMenuItemDelete(params) && <DeleteMenuItem />}
                 </>

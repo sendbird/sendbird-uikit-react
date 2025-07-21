@@ -59,6 +59,7 @@ export function changeTypeToIconClassName(type: Types): string {
     case Types.GIF: return 'sendbird-icon-gif';
     case Types.INFO: return 'sendbird-icon-info';
     case Types.LEAVE: return 'sendbird-icon-leave';
+    case Types.MARK_AS_UNREAD: return 'sendbird-icon-mark-as-unread';
     case Types.MEMBERS: return 'sendbird-icon-members';
     case Types.MESSAGE: return 'sendbird-icon-message';
     case Types.MODERATIONS: return 'sendbird-icon-moderations';

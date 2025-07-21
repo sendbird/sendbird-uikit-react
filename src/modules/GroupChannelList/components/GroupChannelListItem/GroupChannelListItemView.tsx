@@ -176,8 +176,9 @@ export const GroupChannelListItemView = ({
                * Do not show unread count for focused channel. This is because of the limitation where
                * isScrollBottom and hasNext states needs to be added globally but they are from channel context
                * so channel list cannot see them with the current architecture.
+               * However, when enableMarkAsUnread is true, we show unread count even for selected channels.
                */
-              !isSelected && !channel.isEphemeral && (
+              (!isSelected || config.groupChannel.enableMarkAsUnread) && !channel.isEphemeral && (
                 <div className="sendbird-channel-preview__content__lower__unread-message-count">
                   {isMentionEnabled && channel.unreadMentionCount > 0 ? (
                     <MentionUserLabel

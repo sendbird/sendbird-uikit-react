@@ -2748,8 +2748,8 @@ __metadata:
   linkType: hard
 
 "@sendbird/chat@npm:^4.19.2":
-  version: 4.19.2
-  resolution: "@sendbird/chat@npm:4.19.2"
+  version: 4.19.4
+  resolution: "@sendbird/chat@npm:4.19.4"
   peerDependencies:
     "@react-native-async-storage/async-storage": ^1.17.6
     react-native-mmkv: ">=2.0.0"
@@ -2758,7 +2758,7 @@ __metadata:
       optional: true
     react-native-mmkv:
       optional: true
-  checksum: 6cb69158f19633252f474c6edd1ae1e55d1d46dc1dcf628a0a5c5108ee1b9cafd5a2cde63aeb011237d9fdc5789c8388209ced2fc97b0d9841d5c5aa2bb6d9da
+  checksum: 3b7c5aa799e1f6794a4c035699a578e346dc437b42368152032f212a1568b8784356953bc2e73e77b990abdc33e27b6e9eb57114f36b2a0164dc0914558d3657
   languageName: node
   linkType: hard
 

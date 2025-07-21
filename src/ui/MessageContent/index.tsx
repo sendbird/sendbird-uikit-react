@@ -77,6 +77,7 @@ export interface MessageContentProps extends MessageComponentRenderers {
   deleteMessage?: (message: CoreMessageType) => Promise<void>;
   toggleReaction?: (message: SendableMessageType, reactionKey: string, isReacted: boolean) => void;
   setQuoteMessage?: (message: SendableMessageType) => void;
+  markAsUnread?: (message: SendableMessageType) => void;
   // onClick listener for thread replies view (for open thread module)
   onReplyInThread?: (props: { message: SendableMessageType }) => void;
   // onClick listener for thread quote message view (for open thread module)
@@ -120,6 +121,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     deleteMessage,
     toggleReaction,
     setQuoteMessage,
+    markAsUnread,
     onReplyInThread,
     onQuoteMessageClick,
     onMessageHeightChange,
@@ -310,6 +312,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
               showRemove,
               resendMessage,
               setQuoteMessage,
+              markAsUnread,
               onReplyInThread: ({ message }) => {
                 if (threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onReplyInThread?.({ message });
@@ -543,6 +546,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
               showRemove,
               resendMessage,
               setQuoteMessage,
+              markAsUnread,
               onReplyInThread: ({ message }) => {
                 if (threadReplySelectType === ThreadReplySelectType.THREAD) {
                   onReplyInThread?.({ message });
@@ -574,6 +578,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
           setQuoteMessage,
           toggleReaction,
           showEdit,
+          markAsUnread,
           onReplyInThread: ({ message }) => {
             if (threadReplySelectType === ThreadReplySelectType.THREAD) {
               onReplyInThread?.({ message });
