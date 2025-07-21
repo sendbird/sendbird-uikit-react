@@ -162,12 +162,13 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   const checkDisplayedNewMessageSeparator = useCallback((isNewMessageSeparatorVisible: boolean) => {
     if (!isInitializedRef.current || !firstUnreadMessage) return;
 
-    if (isNewMessageSeparatorVisible) {
+    if (isNewMessageSeparatorVisible && markAsUnreadSourceRef?.current !== 'manual') {
       setShowUnreadCount(false);
       if (newMessages?.length > 0) {
+        console.log('MADOKA #1 newMessages', newMessages);
         markAsUnread(newMessages[0] as SendableMessageType, 'internal');
         separatorMessageRef.current = undefined;
-      } else if (firstUnreadMessage && markAsUnreadSourceRef?.current !== 'manual') {
+      } else if (firstUnreadMessage) {
         if (!separatorMessageRef.current || separatorMessageRef.current.messageId !== firstUnreadMessage.messageId) {
           separatorMessageRef.current = firstUnreadMessage;
         }
@@ -210,6 +211,9 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
             count={currentChannel?.unreadMessageCount ?? 0}
             isFrozenChannel={currentChannel?.isFrozen || false}
             onClick={() => {
+              if (newMessages.length > 0) {
+                resetNewMessages();
+              }
               markAsReadAll(currentChannel);
             }}
           />
