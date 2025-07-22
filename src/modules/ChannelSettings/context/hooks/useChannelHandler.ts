@@ -31,13 +31,17 @@ export const useChannelHandler = ({
       onUserLeft: (channel, user) => {
         if (compareIds(channel?.url, channelUrl)) {
           logger.info('ChannelSettings: onUserLeft', { channel, user });
-          forceUpdateUI();
+          if (user.userId !== sdk.currentUser?.userId) {
+            forceUpdateUI();
+          }
         }
       },
       onUserBanned: (channel, user) => {
         if (compareIds(channel?.url, channelUrl) && channel.isGroupChannel()) {
           logger.info('ChannelSettings: onUserBanned', { channel, user });
-          forceUpdateUI();
+          if (user.userId !== sdk.currentUser?.userId) {
+            forceUpdateUI();
+          }
         }
       },
     });
