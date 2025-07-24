@@ -41,6 +41,7 @@ export function uikitConfigMapper({
       suggestedRepliesDirection: uikitOptions.groupChannel?.suggestedRepliesDirection,
       enableMarkdownForUserMessage: uikitOptions.groupChannel?.enableMarkdownForUserMessage,
       enableFormTypeMessage: uikitOptions.groupChannel?.enableFormTypeMessage,
+      enableMarkAsUnread: uikitOptions.groupChannel?.enableMarkAsUnread,
     },
     groupChannelList: {
       enableTypingIndicator: uikitOptions.groupChannelList?.enableTypingIndicator ?? isTypingIndicatorEnabledOnChannelList,
