@@ -59,7 +59,7 @@ export interface ThreadState extends ThreadProviderProps {
   nicknamesMap: Map<string, string>;
 }
 
-const initialState: ThreadState = {
+const initialState = () => ({
   channelUrl: '',
   message: null,
   onHeaderActionClick: undefined,
@@ -86,12 +86,12 @@ const initialState: ThreadState = {
   currentUserId: '',
   typingMembers: [],
   nicknamesMap: null,
-};
+} as ThreadState);
 
 export const ThreadContext = React.createContext<ReturnType<typeof createStore<ThreadState>> | null>(null);
 
 const createThreadStore = (props?: Partial<ThreadState>) => createStore({
-  ...initialState,
+  ...initialState(),
   ...props,
 });
 
@@ -248,5 +248,5 @@ export const useThreadContext = () => {
 };
 
 const useThreadStore = () => {
-  return useStore(ThreadContext, state => state, initialState);
+  return useStore(ThreadContext, state => state, initialState());
 };

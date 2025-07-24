@@ -33,7 +33,7 @@ import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
 import { deleteNullish } from '../../../utils/utils';
 
-const initialState = {
+const initialState = () => ({
   currentChannel: null,
   channelUrl: '',
   fetchChannelError: null,
@@ -60,12 +60,12 @@ const initialState = {
   disableMarkAsRead: false,
   scrollBehavior: 'auto',
   scrollPubSub: null,
-} as GroupChannelState;
+} as GroupChannelState);
 
 export const GroupChannelContext = createContext<ReturnType<typeof createStore<GroupChannelState>> | null>(null);
 
 const createGroupChannelStore = (props?: Partial<GroupChannelState>) => createStore({
-  ...initialState,
+  ...initialState(),
   ...props,
 });
 
@@ -378,7 +378,7 @@ const GroupChannelProvider: React.FC<GroupChannelProviderProps> = (props) => {
  * @returns {ReturnType<typeof createStore<GroupChannelState>>}
  */
 const useGroupChannelStore = () => {
-  return useStore(GroupChannelContext, state => state, initialState);
+  return useStore(GroupChannelContext, state => state, initialState());
 };
 
 // Keep this function for backward compatibility.
