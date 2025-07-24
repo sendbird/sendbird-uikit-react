@@ -38,6 +38,7 @@ describe('uikitConfigMapper', () => {
     expect(result).toHaveProperty('groupChannel.enableTypingIndicator');
     expect(result).toHaveProperty('groupChannel.threadReplySelectType');
     expect(result).toHaveProperty('groupChannel.input.enableDocument');
+    expect(result).toHaveProperty('groupChannel.enableMarkAsUnread');
 
     expect(result).toHaveProperty('openChannel.enableOgtag');
     expect(result).toHaveProperty('openChannel.input.enableDocument');
@@ -50,6 +51,7 @@ describe('uikitConfigMapper', () => {
     const uikitOptions = {
       groupChannel: {
         enableMention: false,
+        enableMarkAsUnread: true,
       },
       groupChannelSettings: {
         enableMessageSearch: false,
@@ -58,6 +60,7 @@ describe('uikitConfigMapper', () => {
     const result = uikitConfigMapper({ legacyConfig, uikitOptions });
 
     expect(result.groupChannel?.enableMention).toBe(false);
+    expect(result.groupChannel?.enableMarkAsUnread).toBe(true);
     expect(result.groupChannelSettings?.enableMessageSearch).toBe(false);
   });
   it('should return true <-> false flipped result for disableUserProfile when its converted into enableUsingDefaultUserProfile', () => {
@@ -73,5 +76,15 @@ describe('uikitConfigMapper', () => {
       uikitConfigMapper({ legacyConfig: { disableUserProfile: true } })
         .common?.enableUsingDefaultUserProfile,
     ).toBe(false);
+  });
+  it('should correctly handle enableMarkAsUnread from uikitOptions', () => {
+    const uikitOptions = {
+      groupChannel: {
+        enableMarkAsUnread: true,
+      },
+    } as UIKitOptions;
+    const result = uikitConfigMapper({ legacyConfig: mockLegacyConfig, uikitOptions });
+
+    expect(result.groupChannel?.enableMarkAsUnread).toBe(true);
   });
 });
