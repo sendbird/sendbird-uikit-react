@@ -62,7 +62,7 @@ export const GroupChannelListContext = React.createContext<ReturnType<typeof cre
 export interface GroupChannelListState extends GroupChannelListContextType {
 }
 
-const initialState: GroupChannelListState = {
+const initialState = () => ({
   className: '',
   selectedChannelUrl: '',
   disableAutoSelect: false,
@@ -82,13 +82,13 @@ const initialState: GroupChannelListState = {
   refresh: null,
   loadMore: null,
   scrollRef: { current: null },
-};
+} as GroupChannelListState);
 
 /**
  * @returns {ReturnType<typeof createStore<GroupChannelListState>>}
  */
 export const useGroupChannelListStore = () => {
-  return useStore(GroupChannelListContext, state => state, initialState);
+  return useStore(GroupChannelListContext, state => state, initialState());
 };
 
 export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = ({
@@ -229,7 +229,7 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
 };
 
 const createGroupChannelListStore = (props?: Partial<GroupChannelListState>) => createStore({
-  ...initialState,
+  ...initialState(),
   ...props,
 });
 
