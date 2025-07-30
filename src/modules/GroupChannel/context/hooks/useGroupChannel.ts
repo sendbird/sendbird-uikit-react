@@ -83,7 +83,7 @@ export const useGroupChannel = () => {
     if (state.currentChannel && !state.hasNext()) {
       state.resetNewMessages();
       if (!state.disableMarkAsRead) {
-        if (!config.groupChannel.enableMarkAsUnread) {
+        if (!config.groupChannel.enableMarkAsUnread && state.currentChannel.myMemberState !== 'none') {
           markAsReadScheduler.push(state.currentChannel);
         }
       }
@@ -170,16 +170,16 @@ export const useGroupChannel = () => {
     scrollToBottom,
   });
 
-  const setCurrentChannel = useCallback((channel: GroupChannel) => {
+  const setCurrentChannel = useCallback((channel: GroupChannel | null) => {
     store.setState(state => ({
       ...state,
       currentChannel: channel,
       fetchChannelError: null,
       quoteMessage: null,
       animatedMessageId: null,
-      nicknamesMap: new Map(
+      nicknamesMap: channel ? new Map(
         channel.members.map(({ userId, nickname }) => [userId, nickname]),
-      ),
+      ) : new Map(),
     }), true);
   }, []);
 

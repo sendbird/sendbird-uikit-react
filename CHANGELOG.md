@@ -1,5 +1,9 @@
 # Changelog - v3
 
+## [v3.16.12] (July 22 2025)
+### Fixes:
+- Fixed a bug that caused a runtime exception when leaving or deleting a channel
+
 ## [v3.16.11] (July 10 2025)
 ### Fixes:
 - Fixed an issue where the layout would break when selecting a member from the invite list
