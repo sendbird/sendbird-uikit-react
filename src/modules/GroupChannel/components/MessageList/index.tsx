@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useCallback, useLayoutEffect } from 'react';
 import type { Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
@@ -24,6 +24,7 @@ import { InfiniteList } from './InfiniteList';
 import { useGroupChannel } from '../../context/hooks/useGroupChannel';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import { useLocalization } from '../../../../lib/LocalizationContext';
+import PUBSUB_TOPICS from '../../../../lib/pubSub/topics';
 
 export interface GroupChannelMessageListProps {
   className?: string;
@@ -106,6 +107,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
 
   const isInitializedRef = useRef(false);
   const separatorMessageRef = useRef<CoreMessageType | undefined>(undefined);
+  const isUnreadMessageExistInChannel = useRef<boolean>(false);
 
   // Find the first unread message
   const firstUnreadMessage = useMemo(() => {
@@ -113,7 +115,10 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       return undefined;
     }
 
-    if (readState === 'unread') separatorMessageRef.current = undefined;
+    if (readState === 'unread') {
+      separatorMessageRef.current = undefined;
+      isUnreadMessageExistInChannel.current = true;
+    }
 
     const myLastRead = currentChannel.myLastRead;
     const willFindMessageCreatedAt = myLastRead + 1;
@@ -134,6 +139,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       // done get channel and messages
       setShowUnreadCount(currentChannel?.unreadMessageCount > 0);
       isInitializedRef.current = true;
+      isUnreadMessageExistInChannel.current = currentChannel?.lastMessage?.createdAt > currentChannel?.myLastRead;
     }
   }, [currentChannel?.url, loading]);
 
@@ -150,7 +156,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     } else if (isScrollBottomReached) {
       if (markAsUnreadSourceRef?.current !== 'manual') {
         if (currentChannel?.unreadMessageCount > 0) {
-          if (separatorMessageRef.current) {
+          if (separatorMessageRef.current || !isUnreadMessageExistInChannel.current) {
             // called markAsReadAll as after the first unread message is displayed
             markAsReadAll(currentChannel);
           }
@@ -162,10 +168,14 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   const checkDisplayedNewMessageSeparator = useCallback((isNewMessageSeparatorVisible: boolean) => {
     if (!isInitializedRef.current || !firstUnreadMessage) return;
 
-    if (isNewMessageSeparatorVisible && markAsUnreadSourceRef?.current !== 'manual') {
+    if (isNewMessageSeparatorVisible && currentChannel?.unreadMessageCount > 0) {
       setShowUnreadCount(false);
+    } else if (!isNewMessageSeparatorVisible && currentChannel?.unreadMessageCount > 0) {
+      setShowUnreadCount(true);
+    }
+
+    if (isNewMessageSeparatorVisible && markAsUnreadSourceRef?.current !== 'manual') {
       if (newMessages?.length > 0) {
-        console.log('MADOKA #1 newMessages', newMessages);
         markAsUnread(newMessages[0] as SendableMessageType, 'internal');
         separatorMessageRef.current = undefined;
       } else if (firstUnreadMessage) {
@@ -174,8 +184,6 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
         }
         markAsReadAll(currentChannel);
       }
-    } else if (currentChannel?.unreadMessageCount > 0) {
-      setShowUnreadCount(true);
     }
   }, [firstUnreadMessage, markAsUnread, markAsReadAll, currentChannel?.unreadMessageCount]);
 
@@ -283,8 +291,12 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
           onLoadPrevious={loadPrevious}
           onScrollPosition={(it) => {
             const isScrollBottomReached = it === 'bottom';
-            if (isInitializedRef.current && isScrollBottomReached && newMessages.length > 0) {
-              resetNewMessages();
+            if (isInitializedRef.current && isScrollBottomReached) {
+              if (newMessages.length > 0) {
+                resetNewMessages();
+              } else if (!isUnreadMessageExistInChannel.current && currentChannel?.unreadMessageCount === 0) {
+                markAsReadAll(currentChannel);
+              }
             }
             setIsScrollBottomReached(isScrollBottomReached);
           }}
@@ -301,6 +313,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
               currentMessage: message as CoreMessageType,
               currentChannel: currentChannel!,
               firstUnreadMessageId: finalFirstUnreadMessageId,
+              isUnreadMessageExistInChannel,
             });
 
             const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === state.config.userId;

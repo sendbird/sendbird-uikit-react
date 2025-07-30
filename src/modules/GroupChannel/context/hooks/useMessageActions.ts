@@ -151,8 +151,12 @@ export function useMessageActions(params: Params): MessageActions {
       async (params) => {
         const internalParams = buildInternalMessageParams<UserMessageCreateParams>(params);
         const processedParams = await processParams(onBeforeSendUserMessage, internalParams, 'user') as UserMessageCreateParams;
-        // return sendUserMessage(processedParams, asyncScrollToBottom);
         const message = await sendUserMessage(processedParams, asyncScrollToBottom);
+        pubSub.publish(PUBSUB_TOPICS.SEND_USER_MESSAGE, {
+          channel: currentChannel,
+          message,
+          publishingModules: [PublishingModuleType.CHANNEL],
+        });
         return message;
       },
       [buildInternalMessageParams, sendUserMessage, scrollToBottom, processParams],
@@ -162,6 +166,13 @@ export function useMessageActions(params: Params): MessageActions {
         const internalParams = buildInternalMessageParams<FileMessageCreateParams>(params);
         const processedParams = await processParams(onBeforeSendFileMessage, internalParams, 'file') as FileMessageCreateParams;
         const message = await sendFileMessage(processedParams, asyncScrollToBottom);
+
+        pubSub.publish(PUBSUB_TOPICS.SEND_FILE_MESSAGE, {
+          channel: currentChannel,
+          message,
+          publishingModules: [PublishingModuleType.CHANNEL],
+        });
+
         return message;
       },
       [buildInternalMessageParams, sendFileMessage, scrollToBottom, processParams],
@@ -170,7 +181,13 @@ export function useMessageActions(params: Params): MessageActions {
       async (params) => {
         const internalParams = buildInternalMessageParams<MultipleFilesMessageCreateParams>(params);
         const processedParams = await processParams(onBeforeSendMultipleFilesMessage, internalParams, 'multipleFiles') as MultipleFilesMessageCreateParams;
-        return sendMultipleFilesMessage(processedParams, asyncScrollToBottom);
+        const message = await sendMultipleFilesMessage(processedParams, asyncScrollToBottom);
+        pubSub.publish(PUBSUB_TOPICS.SEND_FILE_MESSAGE, {
+          channel: currentChannel,
+          message,
+          publishingModules: [PublishingModuleType.CHANNEL],
+        });
+        return message;
       },
       [buildInternalMessageParams, sendMultipleFilesMessage, scrollToBottom, processParams],
     ),

@@ -278,8 +278,8 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
     if (pubSub?.subscribe === undefined) return;
     const subscriptions = [
-      config.pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, handleExternalMessage),
-      config.pubSub.subscribe(PUBSUB_TOPICS.SEND_FILE_MESSAGE, handleExternalMessage),
+      pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, handleExternalMessage),
+      pubSub.subscribe(PUBSUB_TOPICS.SEND_FILE_MESSAGE, handleExternalMessage),
     ];
 
     return () => {
