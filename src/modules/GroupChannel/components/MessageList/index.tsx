@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { useEffect, useState, useRef, useMemo, useCallback, useLayoutEffect } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import type { Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
@@ -24,7 +24,6 @@ import { InfiniteList } from './InfiniteList';
 import { useGroupChannel } from '../../context/hooks/useGroupChannel';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import { useLocalization } from '../../../../lib/LocalizationContext';
-import PUBSUB_TOPICS from '../../../../lib/pubSub/topics';
 
 export interface GroupChannelMessageListProps {
   className?: string;
@@ -111,11 +110,14 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
 
   // Find the first unread message
   const firstUnreadMessage = useMemo(() => {
-    if (!enableMarkAsUnread || !isInitializedRef.current || messages.length === 0 || readState === 'read') {
+    if (!enableMarkAsUnread || !isInitializedRef.current || messages.length === 0) {
       return undefined;
     }
 
-    if (readState === 'unread') {
+    if (readState === 'read') {
+      separatorMessageRef.current = undefined;
+      isUnreadMessageExistInChannel.current = false;
+    } else if (readState === 'unread') {
       separatorMessageRef.current = undefined;
       isUnreadMessageExistInChannel.current = true;
     }
