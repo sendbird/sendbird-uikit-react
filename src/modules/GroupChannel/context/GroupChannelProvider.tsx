@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useRef, createContext } from 'react';
+import React, { useMemo, useEffect, useRef, createContext, useCallback } from 'react';
 import {
   ReplyType as ChatReplyType,
 } from '@sendbird/chat/message';
@@ -32,6 +32,7 @@ import type {
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
 import { deleteNullish } from '../../../utils/utils';
+import { CollectionEventSource } from '@sendbird/chat';
 
 const initialState = () => ({
   currentChannel: null,
@@ -45,6 +46,7 @@ const initialState = () => ({
   quoteMessage: null,
   animatedMessageId: null,
   isScrollBottomReached: true,
+  readState: null,
 
   scrollRef: { current: null },
   scrollDistanceFromBottomRef: { current: 0 },
@@ -149,7 +151,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   const { updateState } = useGroupChannelStore();
   const { state: { config, stores } } = useSendbird();
   const { sdkStore } = stores;
-  const { markAsReadScheduler, logger, pubSub } = config;
+  const { userId, markAsReadScheduler, logger, pubSub } = config;
 
   // ScrollHandler initialization
   const {
@@ -177,6 +179,31 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     return ChatReplyType.ONLY_REPLY_TO_CHANNEL;
   });
 
+  const markAsUnreadSourceRef = useRef<'manual' | 'internal' | undefined>(undefined);
+
+  const markAsUnread = useCallback((message: any, source?: 'manual' | 'internal') => {
+    if (!config.groupChannel.enableMarkAsUnread) return;
+    if (!state.currentChannel) {
+      logger?.error?.('GroupChannelProvider: channel is required for markAsUnread');
+      return;
+    }
+
+    try {
+      if (state.currentChannel.markAsUnread) {
+        state.currentChannel.markAsUnread(message);
+        logger?.info?.('GroupChannelProvider: markAsUnread called for message', {
+          messageId: message.messageId,
+          source: source || 'unknown',
+        });
+        markAsUnreadSourceRef.current = source || 'internal';
+      } else {
+        logger?.error?.('GroupChannelProvider: markAsUnread method not available in current SDK version');
+      }
+    } catch (error) {
+      logger?.error?.('GroupChannelProvider: markAsUnread failed', error);
+    }
+  }, [state.currentChannel, logger, config.groupChannel.enableMarkAsUnread]);
+
   // Message Collection setup
   const messageDataSource = useGroupChannelMessages(sdkStore.sdk, state.currentChannel!, {
     startingPoint,
@@ -184,8 +211,10 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     collectionCreator: getCollectionCreator(state.currentChannel!, messageListQueryParams),
     shouldCountNewMessages: () => !isScrollBottomReached,
     markAsRead: (channels) => {
-      if (isScrollBottomReached && !disableMarkAsRead) {
-        channels.forEach((it) => markAsReadScheduler.push(it));
+      if (!config.groupChannel.enableMarkAsUnread) {
+        if (isScrollBottomReached && !disableMarkAsRead) {
+          channels.forEach((it) => markAsReadScheduler.push(it));
+        }
       }
     },
     onMessagesReceived: (messages) => {
@@ -195,7 +224,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
         // even though the next messages and the current messages length are the same.
         // So added this condition to check if they are the same to prevent unnecessary calling scrollToBottom action
         && messages.length !== state.messages.length) {
-        setTimeout(() => actions.scrollToBottom(true), 10);
+        setTimeout(async () => actions.scrollToBottom(true), 10);
       }
     },
     onChannelDeleted: () => {
@@ -206,7 +235,17 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       actions.setCurrentChannel(null);
       onBackClick?.();
     },
-    onChannelUpdated: (channel) => {
+    onChannelUpdated: (channel, ctx) => {
+      if (ctx.source === CollectionEventSource.EVENT_CHANNEL_UNREAD
+        && ctx.userIds.includes(userId)
+      ) {
+        actions.setReadStateChanged('unread');
+      }
+      if (ctx.source === CollectionEventSource.EVENT_CHANNEL_READ
+        && ctx.userIds.includes(userId)
+      ) {
+        actions.setReadStateChanged('read');
+      }
       actions.setCurrentChannel(channel);
     },
     logger: logger as any,
@@ -239,8 +278,8 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
     if (pubSub?.subscribe === undefined) return;
     const subscriptions = [
-      config.pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, handleExternalMessage),
-      config.pubSub.subscribe(PUBSUB_TOPICS.SEND_FILE_MESSAGE, handleExternalMessage),
+      pubSub.subscribe(PUBSUB_TOPICS.SEND_USER_MESSAGE, handleExternalMessage),
+      pubSub.subscribe(PUBSUB_TOPICS.SEND_FILE_MESSAGE, handleExternalMessage),
     ];
 
     return () => {
@@ -345,6 +384,8 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
       // Message data source & actions
       ...messageDataSource,
+      markAsUnread,
+      markAsUnreadSourceRef,
     });
   }, [
     channelUrl,
@@ -363,7 +404,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
 const GroupChannelProvider: React.FC<GroupChannelProviderProps> = (props) => {
   return (
-    <InternalGroupChannelProvider {...props}>
+    <InternalGroupChannelProvider key={props.channelUrl} {...props}>
       <GroupChannelManager {...props}>
         <UserProfileProvider {...props}>
           {props.children}

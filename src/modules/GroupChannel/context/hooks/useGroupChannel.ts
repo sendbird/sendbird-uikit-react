@@ -24,6 +24,10 @@ export interface GroupChannelActions extends MessageActions {
   // Channel actions
   setCurrentChannel: (channel: GroupChannel) => void;
   handleChannelError: (error: SendbirdError) => void;
+  markAsReadAll: (channel: GroupChannel) => void;
+  markAsUnread: (message: SendableMessageType, source?: 'manual' | 'internal') => void;
+  setReadStateChanged: (state: string) => void;
+  setFirstUnreadMessageId: (messageId: number | string | null) => void;
 
   // Message actions
   sendUserMessage: (params: UserMessageCreateParams) => Promise<UserMessage>;
@@ -73,15 +77,24 @@ export const useGroupChannel = () => {
     if (config.isOnline && state.hasNext()) {
       await state.resetWithStartingPoint(Number.MAX_SAFE_INTEGER);
     }
+
     state.scrollPubSub.publish('scrollToBottom', { animated });
 
     if (state.currentChannel && !state.hasNext()) {
       state.resetNewMessages();
-      if (!state.disableMarkAsRead && state.currentChannel.myMemberState !== 'none') {
-        markAsReadScheduler.push(state.currentChannel);
+      if (!state.disableMarkAsRead) {
+        if (!config.groupChannel.enableMarkAsUnread && state.currentChannel.myMemberState !== 'none') {
+          markAsReadScheduler.push(state.currentChannel);
+        }
       }
     }
-  }, [state.scrollRef.current, config.isOnline, markAsReadScheduler]);
+  }, [state.scrollRef.current, config.isOnline, markAsReadScheduler, config.groupChannel.enableMarkAsUnread]);
+
+  const markAsReadAll = useCallback((channel: GroupChannel) => {
+    if (config.isOnline && !state.disableMarkAsRead && channel) {
+      markAsReadScheduler?.push(channel);
+    }
+  }, [config.isOnline, state.disableMarkAsRead]);
 
   const scrollToMessage = useCallback(async (
     createdAt: number,
@@ -184,10 +197,22 @@ export const useGroupChannel = () => {
     store.setState(state => ({ ...state, quoteMessage: message }));
   }, []);
 
+  const setReadStateChanged = useCallback((readState: string) => {
+    store.setState(state => ({ ...state, readState }));
+  }, []);
+
+  const setFirstUnreadMessageId = useCallback((messageId: number | null) => {
+    store.setState(state => ({ ...state, firstUnreadMessageId: messageId }));
+  }, []);
+
   const actions: GroupChannelActions = useMemo(() => {
     return {
       setCurrentChannel,
       handleChannelError,
+      markAsReadAll,
+      markAsUnread: state.markAsUnread,
+      setReadStateChanged,
+      setFirstUnreadMessageId,
       setQuoteMessage,
       scrollToBottom,
       scrollToMessage,
@@ -199,6 +224,10 @@ export const useGroupChannel = () => {
   }, [
     setCurrentChannel,
     handleChannelError,
+    markAsReadAll,
+    state.markAsUnread,
+    setReadStateChanged,
+    setFirstUnreadMessageId,
     setQuoteMessage,
     scrollToBottom,
     scrollToMessage,

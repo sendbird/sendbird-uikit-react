@@ -29,6 +29,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
       onMessageAnimated,
       onBeforeDownloadFileMessage,
       messages,
+      markAsUnread,
     },
     actions: {
       toggleReaction,
@@ -85,6 +86,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
       updateUserMessage={updateUserMessage}
       resendMessage={resendMessage}
       deleteMessage={deleteMessage as any}
+      markAsUnread={markAsUnread}
       animatedMessageId={animatedMessageId}
       setAnimatedMessageId={setAnimatedMessageId}
       onMessageAnimated={onMessageAnimated}

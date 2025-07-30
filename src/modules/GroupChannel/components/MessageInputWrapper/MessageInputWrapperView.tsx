@@ -183,7 +183,9 @@ export const MessageInputWrapperView = React.forwardRef((
       )}
       {quoteMessage && (
         <div className="sendbird-message-input-wrapper__quote-message-input">
-          <QuoteMessageInput replyingMessage={quoteMessage} onClose={() => setQuoteMessage(null)} />
+          <QuoteMessageInput replyingMessage={quoteMessage} onClose={() => {
+            setQuoteMessage(null);
+          }} />
         </div>
       )}
       {showVoiceMessageInput ? (

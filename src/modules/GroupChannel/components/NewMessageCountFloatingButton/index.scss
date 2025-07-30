@@ -1,0 +1,63 @@
+/**
+ * We operate the CSS files for Channel&GroupChannel modules in the GroupChannel.
+ * So keep in mind that you should consider both components when you make changes in this file.
+ */
+@import '../../../../styles/variables';
+
+// Floating NewMessageCount button - positioned at the bottom of MessageList
+.sendbird-new-message-floating-button {
+  position: absolute;
+  bottom: 8px; // Bottom position for new message count
+  left: 50%;
+  transform: translateX(-50%);
+  width: 155px;
+  height: 40px;
+  border-radius: 20px;
+  gap: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease-in-out;
+  z-index: 5;
+  background-color: #FFFFFF;
+    
+  &:hover {
+    cursor: pointer;
+    transform: translateX(-50%) translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    background-color: #F5F5F5;
+  }
+
+  .sendbird-new-message-floating-button__text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #742DDD;
+    line-height: 1;
+    font-size: 14px;
+    text-align: center;
+    height: 100%;
+  }
+
+  // Icon fixed to right side
+  .sendbird-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+   
+    svg {
+      display: block;
+      vertical-align: middle;
+    }
+  }
+}
+
+.sendbird-new-message-floating-button--hide {
+  display: none;
+} 

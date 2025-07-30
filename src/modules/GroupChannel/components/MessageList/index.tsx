@@ -1,15 +1,17 @@
 import './index.scss';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import type { Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
-import { CoreMessageType, isSendableMessage, getHTMLTextDirection } from '../../../../utils';
+import { CoreMessageType, isSendableMessage, getHTMLTextDirection, SendableMessageType, isAdminMessage } from '../../../../utils';
 import { EveryMessage, RenderMessageParamsType, TypingIndicatorType } from '../../../../types';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
 import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import Message from '../Message';
 import UnreadCount from '../UnreadCount';
+import UnreadCountFloatingButton from '../UnreadCountFloatingButton';
+import NewMessageCountFloatingButton from '../NewMessageCountFloatingButton';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
 import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
@@ -85,25 +87,107 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       scrollRef,
       scrollPositionRef,
       scrollDistanceFromBottomRef,
+      markAsUnreadSourceRef,
+      readState,
     },
     actions: {
       scrollToBottom,
       setIsScrollBottomReached,
+      markAsReadAll,
+      markAsUnread,
     },
   } = useGroupChannel();
 
-  const { state } = useSendbird();
+  const { state, state: { config: { groupChannel: { enableMarkAsUnread } } } } = useSendbird();
   const { stringSet } = useLocalization();
 
   const [unreadSinceDate, setUnreadSinceDate] = useState<Date>();
+  const [showUnreadCount, setShowUnreadCount] = useState(false);
+
+  const isInitializedRef = useRef(false);
+  const separatorMessageRef = useRef<CoreMessageType | undefined>(undefined);
+  const isUnreadMessageExistInChannel = useRef<boolean>(false);
+
+  // Find the first unread message
+  const firstUnreadMessage = useMemo(() => {
+    if (!enableMarkAsUnread || !isInitializedRef.current || messages.length === 0) {
+      return undefined;
+    }
+
+    if (readState === 'read') {
+      separatorMessageRef.current = undefined;
+      isUnreadMessageExistInChannel.current = false;
+    } else if (readState === 'unread') {
+      separatorMessageRef.current = undefined;
+      isUnreadMessageExistInChannel.current = true;
+    }
+
+    const myLastRead = currentChannel.myLastRead;
+    const willFindMessageCreatedAt = myLastRead + 1;
+
+    // 조건 1: 정확히 myLastRead + 1인 메시지 찾기
+    const exactMatchMessage = messages.find((message) => message.createdAt === willFindMessageCreatedAt);
+
+    if (exactMatchMessage) {
+      return exactMatchMessage as CoreMessageType;
+    }
+
+    // 조건 2: myLastRead + 1보다 큰 첫 번째 메시지 찾기 (Admin 메시지 제외)
+    return messages.find((message) => message.createdAt > willFindMessageCreatedAt && !isAdminMessage(message as any)) as CoreMessageType | undefined;
+  }, [messages, currentChannel?.myLastRead, readState]);
 
   useEffect(() => {
-    if (isScrollBottomReached) {
-      setUnreadSinceDate(undefined);
-    } else {
-      setUnreadSinceDate(new Date());
+    if (currentChannel?.url && loading) {
+      // done get channel and messages
+      setShowUnreadCount(currentChannel?.unreadMessageCount > 0);
+      isInitializedRef.current = true;
+      isUnreadMessageExistInChannel.current = currentChannel?.lastMessage?.createdAt > currentChannel?.myLastRead;
+    }
+  }, [currentChannel?.url, loading]);
+
+  useEffect(() => {
+    if (!isInitializedRef.current) return;
+
+    if (!enableMarkAsUnread) {
+      // backward compatibility
+      if (isScrollBottomReached) {
+        setUnreadSinceDate(undefined);
+      } else {
+        setUnreadSinceDate(new Date());
+      }
+    } else if (isScrollBottomReached) {
+      if (markAsUnreadSourceRef?.current !== 'manual') {
+        if (currentChannel?.unreadMessageCount > 0) {
+          if (separatorMessageRef.current || !isUnreadMessageExistInChannel.current) {
+            // called markAsReadAll as after the first unread message is displayed
+            markAsReadAll(currentChannel);
+          }
+        }
+      }
     }
   }, [isScrollBottomReached]);
+
+  const checkDisplayedNewMessageSeparator = useCallback((isNewMessageSeparatorVisible: boolean) => {
+    if (!isInitializedRef.current || !firstUnreadMessage) return;
+
+    if (isNewMessageSeparatorVisible && currentChannel?.unreadMessageCount > 0) {
+      setShowUnreadCount(false);
+    } else if (!isNewMessageSeparatorVisible && currentChannel?.unreadMessageCount > 0) {
+      setShowUnreadCount(true);
+    }
+
+    if (isNewMessageSeparatorVisible && markAsUnreadSourceRef?.current !== 'manual') {
+      if (newMessages?.length > 0) {
+        markAsUnread(newMessages[0] as SendableMessageType, 'internal');
+        separatorMessageRef.current = undefined;
+      } else if (firstUnreadMessage) {
+        if (!separatorMessageRef.current || separatorMessageRef.current.messageId !== firstUnreadMessage.messageId) {
+          separatorMessageRef.current = firstUnreadMessage;
+        }
+        markAsReadAll(currentChannel);
+      }
+    }
+  }, [firstUnreadMessage, markAsUnread, markAsReadAll, currentChannel?.unreadMessageCount]);
 
   /**
    * 1. Move the message list scroll
@@ -129,6 +213,22 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       return renderFrozenNotification();
     },
     unreadMessagesNotification() {
+      if (enableMarkAsUnread) {
+        if (!showUnreadCount || currentChannel?.unreadMessageCount === 0) return null;
+        return (
+          <UnreadCountFloatingButton
+            className="sendbird-unread-messages-count"
+            count={currentChannel?.unreadMessageCount ?? 0}
+            isFrozenChannel={currentChannel?.isFrozen || false}
+            onClick={() => {
+              if (newMessages.length > 0) {
+                resetNewMessages();
+              }
+              markAsReadAll(currentChannel);
+            }}
+          />
+        );
+      }
       if (isScrollBottomReached || !unreadSinceDate) return null;
       return (
         <UnreadCount
@@ -152,6 +252,17 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
         >
           <Icon width="24px" height="24px" type={IconTypes.CHEVRON_DOWN} fillColor={IconColors.PRIMARY} />
         </div>
+      );
+    },
+    newMessageCount() {
+      // 스크롤이 bottom에 있을 때는 new message count를 표시하지 않음
+      if (isScrollBottomReached) return null;
+      return (
+        <NewMessageCountFloatingButton
+          className="sendbird-new-messages-count"
+          count={newMessages.length}
+          onClick={() => scrollToBottom()}
+        />
       );
     },
   };
@@ -182,14 +293,20 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
           onLoadPrevious={loadPrevious}
           onScrollPosition={(it) => {
             const isScrollBottomReached = it === 'bottom';
-            if (newMessages.length > 0 && isScrollBottomReached) {
-              resetNewMessages();
+            if (isInitializedRef.current && isScrollBottomReached) {
+              if (newMessages.length > 0) {
+                resetNewMessages();
+              } else if (!isUnreadMessageExistInChannel.current && currentChannel?.unreadMessageCount === 0) {
+                markAsReadAll(currentChannel);
+              }
             }
             setIsScrollBottomReached(isScrollBottomReached);
           }}
           messages={messages}
           renderMessage={({ message, index }) => {
-            const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
+            const finalFirstUnreadMessageId = separatorMessageRef.current?.messageId || firstUnreadMessage?.messageId;
+
+            const { chainTop, chainBottom, hasSeparator, hasNewMessageSeparator } = getMessagePartsInfo({
               allMessages: messages as CoreMessageType[],
               stringSet,
               replyType: replyType ?? 'NONE',
@@ -197,19 +314,25 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
               currentIndex: index,
               currentMessage: message as CoreMessageType,
               currentChannel: currentChannel!,
+              firstUnreadMessageId: finalFirstUnreadMessageId,
+              isUnreadMessageExistInChannel,
             });
+
             const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === state.config.userId;
+
             return (
               <MessageProvider message={message} key={getComponentKeyFromMessage(message)} isByMe={isOutgoingMessage}>
                 {renderMessage({
                   handleScroll: onMessageContentSizeChanged,
                   message: message as EveryMessage,
                   hasSeparator,
+                  hasNewMessageSeparator,
                   chainTop,
                   chainBottom,
                   renderMessageContent,
                   renderSuggestedReplies,
                   renderCustomSeparator,
+                  onNewMessageSeparatorVisibilityChange: checkDisplayedNewMessageSeparator,
                 })}
               </MessageProvider>
             );
@@ -225,6 +348,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
         <>{renderer.frozenNotification()}</>
         <>{renderer.unreadMessagesNotification()}</>
         <>{renderer.scrollToBottomButton()}</>
+        <>{renderer.newMessageCount()}</>
       </div>
     </>
   );

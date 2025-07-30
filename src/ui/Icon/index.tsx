@@ -68,6 +68,8 @@ import IconToggleOn from '../../svgs/icon-toggleon.svg';
 import IconUser from '../../svgs/icon-user.svg';
 import IconFeedbackLike from '../../svgs/icon-feedback-like.svg';
 import IconFeedbackDislike from '../../svgs/icon-feedback-dislike.svg';
+import IconMarkAsUnread from '../../svgs/icon-mark-as-unread.svg';
+import IconFloatingButtonClose from '../../svgs/icon-floating-button-close.svg';
 
 import { noop } from '../../utils/utils';
 
@@ -133,6 +135,8 @@ function changeTypeToIconComponent(type: Types) {
     case Types.USER: return <IconUser />;
     case Types.FEEDBACK_LIKE: return <IconFeedbackLike />;
     case Types.FEEDBACK_DISLIKE: return <IconFeedbackDislike />;
+    case Types.MARK_AS_UNREAD: return <IconMarkAsUnread />;
+    case Types.FLOATING_BUTTON_CLOSE: return <IconFloatingButtonClose />;
     default: return 'icon'; // If you see this text 'icon' replace icon for it
   }
 }

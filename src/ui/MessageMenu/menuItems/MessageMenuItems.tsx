@@ -179,3 +179,23 @@ export const DeleteMenuItem = (props: PrebuildMenuItemPropsType) => {
     </MenuItem>
   );
 };
+
+export const MarkAsUnreadMenuItem = (props: PrebuildMenuItemPropsType) => {
+  const { stringSet } = useLocalization();
+  const { message, hideMenu, markAsUnread } = useMessageMenuContext();
+
+  return (
+    <MenuItem
+      {...props}
+      onClick={(e) => {
+        if (markAsUnread) {
+          markAsUnread(message, 'manual');
+        }
+        hideMenu();
+        props.onClick?.(e);
+      }}
+    >
+      {props.children ?? stringSet.MESSAGE_MENU__MARK_AS_UNREAD}
+    </MenuItem>
+  );
+};

@@ -29,6 +29,7 @@ import {
   ThreadMenuItem,
   DeleteMenuItem,
   DownloadMenuItem,
+  MarkAsUnreadMenuItem,
 } from '../MessageMenu/menuItems/BottomSheetMenuItems';
 import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 
@@ -56,7 +57,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     renderMenuItems,
   } = props;
   const isByMe = message?.sender?.userId === userId;
-  const { state: { config: { isOnline } } } = useSendbird();
+  const { state: { config: { isOnline, groupChannel: { enableMarkAsUnread } } } } = useSendbird();
   const showMenuItemCopy: boolean = isUserMessage(message as UserMessage);
   const showMenuItemEdit: boolean = (isUserMessage(message as UserMessage) && isSentMessage(message) && isByMe);
   const showMenuItemResend: boolean = (isOnline && isFailedMessage(message) && message?.isResendable && isByMe);
@@ -82,6 +83,11 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     && !isThreadMessage(message)
     && (channel?.isGroupChannel() && !(channel as GroupChannel)?.isBroadcast);
 
+  const showMenuItemMarkAsUnread: boolean = !isFailedMessage(message)
+    && !isPendingMessage(message)
+    && channel?.isGroupChannel?.()
+    && replyType !== 'THREAD';
+
   const maxEmojisPerRow = Math.floor(window.innerWidth / EMOJI_SIZE) - 1;
   const [showEmojisOnly, setShowEmojisOnly] = useState<boolean>(false);
   const emojis = emojiContainer && getEmojiListAll(emojiContainer);
@@ -98,6 +104,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     showRemove,
     deleteMessage,
     resendMessage,
+    markAsUnread: props.markAsUnread,
     isOnline,
     disableDeleteMessage: disableDelete,
     triggerRef: null,
@@ -192,18 +199,20 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                   ReplyMenuItem,
                   ThreadMenuItem,
                   DeleteMenuItem,
+                  MarkAsUnreadMenuItem,
                 },
               }) ?? (
                   <>
                     {showMenuItemCopy && <CopyMenuItem />}
                     {showMenuItemEdit && <EditMenuItem />}
+                    {enableMarkAsUnread && showMenuItemMarkAsUnread && <MarkAsUnreadMenuItem />}
                     {showMenuItemResend && <ResendMenuItem />}
                     {showMenuItemReply && <ReplyMenuItem />}
                     {showMenuItemThread && <ThreadMenuItem />}
                     {showMenuItemDeleteFinal && <DeleteMenuItem />}
                     {showMenuItemDownload && <DownloadMenuItem />}
                   </>
-              )}
+              )}ß
             </div>
           )}
         </div>

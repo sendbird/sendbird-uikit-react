@@ -23,6 +23,7 @@ import {
   ResendMenuItem,
   DeleteMenuItem,
   DownloadMenuItem,
+  MarkAsUnreadMenuItem,
 } from '../MessageMenu/menuItems/MobileMenuItems';
 import { MenuItems } from '../ContextMenu';
 import { noop } from '../../utils/utils';
@@ -48,7 +49,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
     hideMenu: hideMobileMenu,
   } = props;
   const isByMe = message?.sender?.userId === userId;
-  const { state: { config: { isOnline } } } = useSendbird();
+  const { state: { config: { isOnline, groupChannel: { enableMarkAsUnread } } } } = useSendbird();
 
   // Menu Items condition
   const showMenuItemCopy = isUserMessage(message as UserMessage);
@@ -60,6 +61,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
   const showMenuItemDownload = !isPendingMessage(message) && isFileMessage(message) && !(isVoiceMessage(message) && (channel as GroupChannel)?.isSuper || (channel as GroupChannel)?.isBroadcast);
   const showMenuItemReply = replyType === 'QUOTE_REPLY' && !isFailedMessage(message) && !isPendingMessage(message) && channel?.isGroupChannel();
   const showMenuItemThread = replyType === 'THREAD' && !isOpenedFromThread && !isFailedMessage(message) && !isPendingMessage(message) && !isThreadMessage(message) && channel?.isGroupChannel();
+  const showMenuItemMarkAsUnread = !isFailedMessage(message) && !isPendingMessage(message) && message.parentMessageId <= 0 && channel?.isGroupChannel?.();
   const disableDeleteMessage = (deleteMenuState !== undefined && deleteMenuState === 'DISABLE') || (message?.threadInfo?.replyCount ?? 0) > 0;
 
   const contextValue: MobileMessageMenuContextProps = {
@@ -72,6 +74,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
     showRemove,
     deleteMessage,
     resendMessage,
+    markAsUnread: props.markAsUnread,
     isOnline,
     disableDeleteMessage,
     triggerRef: parentRef as MutableRefObject<null>,
@@ -94,6 +97,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               ReplyMenuItem,
               ThreadMenuItem,
               EditMenuItem,
+              MarkAsUnreadMenuItem,
               ResendMenuItem,
               DeleteMenuItem,
             },
@@ -103,6 +107,7 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
               {showMenuItemReply && <ReplyMenuItem />}
               {showMenuItemThread && <ThreadMenuItem />}
               {showMenuItemEdit && <EditMenuItem />}
+              {enableMarkAsUnread && showMenuItemMarkAsUnread && <MarkAsUnreadMenuItem />}
               {showMenuItemResend && <ResendMenuItem />}
               {showMenuItemDeleteFinal && <DeleteMenuItem />}
               {showMenuItemDownload && <DownloadMenuItem />}

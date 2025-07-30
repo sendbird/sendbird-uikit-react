@@ -22,10 +22,12 @@ import SuggestedMentionListView from '../SuggestedMentionList/SuggestedMentionLi
 import type { OnBeforeDownloadFileMessageType } from '../../context/types';
 import { classnames, deleteNullish } from '../../../../utils/utils';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import NewMessageIndicator from '../../../../ui/NewMessageSeparator';
 
 export interface MessageProps {
   message: EveryMessage;
   hasSeparator?: boolean;
+  hasNewMessageSeparator?: boolean;
   chainTop?: boolean;
   chainBottom?: boolean;
   handleScroll?: (isBottomMessageAffected?: boolean) => void;
@@ -49,6 +51,10 @@ export interface MessageProps {
    * A function that customizes the rendering of the edit input portion of the message component.
    * */
   renderEditInput?: () => React.ReactElement;
+  /**
+   * A function that is called when the new message separator visibility changes.
+   */
+  onNewMessageSeparatorVisibilityChange?: (isVisible: boolean) => void;
   /**
    * @deprecated Please use `children` instead
    * @description Customizes all child components of the message.
@@ -79,6 +85,7 @@ export interface MessageViewProps extends MessageProps {
   updateUserMessage: (messageId: number, params: UserMessageUpdateParams) => void;
   resendMessage: (failedMessage: SendableMessageType) => void;
   deleteMessage: (message: CoreMessageType) => Promise<void>;
+  markAsUnread?: (message: SendableMessageType) => void;
 
   renderFileViewer: (props: { message: FileMessage; onCancel: () => void }) => React.ReactElement;
   renderRemoveMessageModal?: (props: { message: EveryMessage; onCancel: () => void }) => React.ReactElement;
@@ -107,9 +114,11 @@ const MessageView = (props: MessageViewProps) => {
     message,
     children,
     hasSeparator,
+    hasNewMessageSeparator,
     chainTop,
     chainBottom,
     handleScroll,
+    onNewMessageSeparatorVisibilityChange,
 
     // MessageViewProps
     channel,
@@ -132,6 +141,7 @@ const MessageView = (props: MessageViewProps) => {
     updateUserMessage,
     resendMessage,
     deleteMessage,
+    markAsUnread,
 
     setAnimatedMessageId,
     animatedMessageId,
@@ -288,6 +298,7 @@ const MessageView = (props: MessageViewProps) => {
           onMessageHeightChange: handleScroll,
           onBeforeDownloadFileMessage,
           filterEmojiCategoryIds,
+          markAsUnread,
         })}
         { /* Suggested Replies */ }
         {
@@ -415,6 +426,15 @@ const MessageView = (props: MessageViewProps) => {
             </Label>
           </DateSeparator>
         ))}
+      {/* new message indicator */}
+      {hasNewMessageSeparator
+        && (
+          <NewMessageIndicator onVisibilityChange={onNewMessageSeparatorVisibilityChange}>
+            <Label type={LabelTypography.CAPTION_2} color={LabelColors.PRIMARY}>
+              New Messages
+            </Label>
+          </NewMessageIndicator>
+        )}
       {renderChildren()}
     </div>
   );
