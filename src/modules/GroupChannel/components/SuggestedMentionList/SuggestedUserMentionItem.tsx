@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useContext, useEffect, useMemo, useRef } from 'react';
+import React, { MutableRefObject, useContext, useEffect, useRef } from 'react';
 import type { Member } from '@sendbird/chat/groupChannel';
 import type { User } from '@sendbird/chat';
 
@@ -44,24 +44,17 @@ function SuggestedUserMentionItem(props: SuggestedUserMentionItemProps): JSX.Ele
       scrollRef.current.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     }
   }, [isFocused]);
-  const customMentionItem = useMemo(() => {
-    if (renderUserMentionItem) {
-      return (
-        <div
-          className="sendbird-mention-suggest-list__user-item"
-          onClick={(event) => onClick?.({ event, member: (member as Member), itemRef: scrollRef })}
-          onMouseOver={(event) => onMouseOver?.({ event, member: (member as Member), itemRef: scrollRef })}
-          onMouseMove={(event) => onMouseMove?.({ event, member: (member as Member), itemRef: scrollRef })}
-          key={member?.userId || uuidv4()}
-          ref={scrollRef}
-        >
-          {renderUserMentionItem({ user: member })}
-        </div>
-      );
-    }
-  }, [renderUserMentionItem]);
-  if (customMentionItem) {
-    return customMentionItem;
+  if (renderUserMentionItem) {
+    return <div
+      className={classnames('sendbird-mention-suggest-list__user-item', isFocused && 'focused')}
+      onClick={(event) => onClick?.({ event, member: (member as Member), itemRef: scrollRef })}
+      onMouseOver={(event) => onMouseOver?.({ event, member: (member as Member), itemRef: scrollRef })}
+      onMouseMove={(event) => onMouseMove?.({ event, member: (member as Member), itemRef: scrollRef })}
+      key={member?.userId || uuidv4()}
+      ref={scrollRef}
+    >
+      {renderUserMentionItem({ user: member })}
+    </div>;
   }
   return (
     <div
