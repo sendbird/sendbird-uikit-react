@@ -110,14 +110,11 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
 
   // Find the first unread message
   const firstUnreadMessage = useMemo(() => {
-    if (!enableMarkAsUnread || !isInitializedRef.current || messages.length === 0) {
+    if (!enableMarkAsUnread || !isInitializedRef.current || messages.length === 0 || readState === 'read') {
       return undefined;
     }
 
-    if (readState === 'read') {
-      separatorMessageRef.current = undefined;
-      isUnreadMessageExistInChannel.current = false;
-    } else if (readState === 'unread') {
+    if (readState === 'unread') {
       separatorMessageRef.current = undefined;
       isUnreadMessageExistInChannel.current = true;
     }
@@ -224,6 +221,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
               if (newMessages.length > 0) {
                 resetNewMessages();
               }
+              isUnreadMessageExistInChannel.current = false;
               markAsReadAll(currentChannel);
             }}
           />
