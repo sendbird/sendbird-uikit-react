@@ -1,5 +1,31 @@
 # Changelog - v3
 
+## [v3.17.0] (July 31 2025)
+### Features
+- Added `mark as unread` functionality for messages in Group Channel
+  - Added `enableMarkAsUnread` global option
+    - How to use?
+    ```tsx
+    <App
+      appId={appId}
+      userId={userId}
+      uikitOptions={{
+        groupChannel: {
+          // Below turns on the mark as unread feature. Default value is false.
+          enableMarkAsUnread: true,
+        }
+      }}
+    />
+    ```
+
+### Fixes
+- Fixed a bug Where Multiple Chat Windows cause unexpected behavior
+
+### Chore
+- Updated `@sendbird/chat` version to `^4.19.6`
+- Updated `@sendbird/uikit-tools` dependency version to `^0.0.10`
+- Updated `@sendbird/react-uikit-message-template-view` dependency version to `^0.0.10`
+
 ## [v3.16.12] (July 22 2025)
 ### Fixes:
 - Fixed a bug that caused a runtime exception when leaving or deleting a channel
