@@ -22,7 +22,7 @@
 - Fixed a bug Where Multiple Chat Windows cause unexpected behavior
 
 ### Chore
-- Updated `@sendbird/chat` version to `^4.19.6`
+- Updated `@sendbird/chat` version to `^4.18.0`
 - Updated `@sendbird/uikit-tools` dependency version to `^0.0.10`
 - Updated `@sendbird/react-uikit-message-template-view` dependency version to `^0.0.10`
 
