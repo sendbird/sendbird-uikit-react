@@ -1,5 +1,9 @@
 # Changelog - v3
 
+## [v3.17.1] (Aug 6 2025)
+### Fixes
+- Fixed a bug in the Custom emoji category rendering
+
 ## [v3.17.0] (July 31 2025)
 ### Features
 - Added `mark as unread` functionality for messages in Group Channel
