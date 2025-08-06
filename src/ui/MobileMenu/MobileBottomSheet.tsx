@@ -212,7 +212,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
                     {showMenuItemDeleteFinal && <DeleteMenuItem />}
                     {showMenuItemDownload && <DownloadMenuItem />}
                   </>
-              )}ß
+              )}
             </div>
           )}
         </div>
