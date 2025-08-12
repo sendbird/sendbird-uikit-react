@@ -50,7 +50,7 @@ export default function MessageStatus({
   const { stringSet, dateLocale } = useLocalization();
   const status = getOutgoingMessageState(channel, message);
   const hideMessageStatusIcon = channel?.isGroupChannel?.() && (
-    (channel.isSuper || channel.isPublic || channel.isBroadcast)
+    (channel.isSuper || channel.isBroadcast)
     && !(status === OutgoingMessageStates.PENDING || status === OutgoingMessageStates.FAILED)
   );
 

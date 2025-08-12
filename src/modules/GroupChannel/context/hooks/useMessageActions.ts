@@ -159,7 +159,7 @@ export function useMessageActions(params: Params): MessageActions {
         });
         return message;
       },
-      [buildInternalMessageParams, sendUserMessage, scrollToBottom, processParams],
+      [buildInternalMessageParams, sendUserMessage, scrollToBottom, processParams, currentChannel?.url],
     ),
     sendFileMessage: useCallback(
       async (params) => {
@@ -175,7 +175,7 @@ export function useMessageActions(params: Params): MessageActions {
 
         return message;
       },
-      [buildInternalMessageParams, sendFileMessage, scrollToBottom, processParams],
+      [buildInternalMessageParams, sendFileMessage, scrollToBottom, processParams, currentChannel?.url],
     ),
     sendMultipleFilesMessage: useCallback(
       async (params) => {
@@ -189,7 +189,7 @@ export function useMessageActions(params: Params): MessageActions {
         });
         return message;
       },
-      [buildInternalMessageParams, sendMultipleFilesMessage, scrollToBottom, processParams],
+      [buildInternalMessageParams, sendMultipleFilesMessage, scrollToBottom, processParams, currentChannel?.url],
     ),
     sendVoiceMessage: useCallback(
       async (params: FileMessageCreateParams, duration: number) => {
@@ -211,7 +211,7 @@ export function useMessageActions(params: Params): MessageActions {
         const processedParams = await processParams(onBeforeSendVoiceMessage, internalParams, 'voice');
         return sendFileMessage(processedParams, asyncScrollToBottom);
       },
-      [buildInternalMessageParams, sendFileMessage, scrollToBottom, processParams],
+      [buildInternalMessageParams, sendFileMessage, scrollToBottom, processParams, currentChannel?.url],
     ),
     updateUserMessage: useCallback(
       async (messageId: number, params: UserMessageUpdateParams) => {
