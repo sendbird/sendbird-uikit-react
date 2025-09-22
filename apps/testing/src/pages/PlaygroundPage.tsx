@@ -9,7 +9,6 @@ export function PlaygroundPage() {
     groupChannel: {
       replyType: 'thread',
     },
-    
   }}
   />;
 }
