@@ -410,7 +410,7 @@ const useThread = () => {
           return m;
         }),
       };
-    }), [store]),
+    }, true), [store]),
 
     onUserMuted: useCallback((channel: GroupChannel, user: User) => store.setState(state => {
       if (state.currentChannel?.url !== channel?.url || state.currentUserId !== user?.userId) {

@@ -60,7 +60,9 @@ export default function useHandleChannelEvents({
         },
         onReactionUpdated(channel, reactionEvent) {
           logger.info('Thread | useHandleChannelEvents: onReactionUpdated', { channel, reactionEvent });
-          onReactionUpdated(reactionEvent);
+          if (compareIds(channel?.url, currentChannel.url)) {
+            onReactionUpdated(reactionEvent);
+          }
         },
         // user status change
         onUserMuted(channel, user) {
