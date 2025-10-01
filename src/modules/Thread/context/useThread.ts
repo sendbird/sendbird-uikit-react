@@ -27,6 +27,8 @@ import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
 import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
 import { useThreadFetchers } from './hooks/useThreadFetchers';
 
+import { cloneDeep } from 'lodash';
+
 function hasReqId<T extends object>(
   message: T,
 ): message is T & { reqId: string } {
@@ -416,14 +418,15 @@ const useThread = () => {
     onReactionUpdated: useCallback((reactionEvent: ReactionEvent) => store.setState(state => {
       let updatedParentMessage = state.parentMessage;
       if (state.parentMessage?.messageId === reactionEvent?.messageId) {
-        state.parentMessage.applyReactionEvent?.(reactionEvent);
-        updatedParentMessage = state.parentMessage;
+        updatedParentMessage = cloneDeep(state.parentMessage as SendableMessageType);
+        updatedParentMessage.applyReactionEvent(reactionEvent);
       }
 
       const updatedMessages = state.allThreadMessages.map((m) => {
         if (reactionEvent?.messageId === m?.messageId) {
-          (m as CoreMessageType).applyReactionEvent?.(reactionEvent);
-          return m;
+          const updatedMessage = cloneDeep(m as CoreMessageType);
+          updatedMessage.applyReactionEvent(reactionEvent);
+          return updatedMessage;
         }
         return m;
       });

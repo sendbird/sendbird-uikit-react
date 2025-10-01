@@ -19,12 +19,6 @@ export function hasStateChanged<T>(prevState: T, updates: Partial<T>): boolean {
       return false;
     }
 
-    // Special handling for arrays - use shallow comparison for better performance
-    // and to handle cases where array contents are mutated but references change
-    if (Array.isArray(prevState[key as keyof T]) && Array.isArray(value)) {
-      return prevState[key as keyof T] !== value; // Shallow comparison for arrays
-    }
-
     return !isEqual(prevState[key as keyof T], value);
   });
 }
