@@ -56,6 +56,10 @@ const useThread = () => {
 
   const sendMessageStatusActions = {
     sendMessageStart: useCallback((message: SendableMessageType) => store.setState(state => {
+      if ('sendingStatus' in message) {
+        (message as any).sendingStatus = 'pending';
+      }
+
       return {
         ...state,
         localThreadMessages: [
@@ -66,6 +70,10 @@ const useThread = () => {
     }), [store]),
 
     sendMessageSuccess: useCallback((message: SendableMessageType) => store.setState(state => {
+      if ('sendingStatus' in message) {
+        (message as any).sendingStatus = 'succeeded';
+      }
+
       return {
         ...state,
         allThreadMessages: [
@@ -81,6 +89,10 @@ const useThread = () => {
     }), [store]),
 
     sendMessageFailure: useCallback((message: SendableMessageType) => store.setState(state => {
+      if ('sendingStatus' in message) {
+        (message as any).sendingStatus = 'failed';
+      }
+
       return {
         ...state,
         localThreadMessages: state.localThreadMessages.map((m) => (
@@ -92,6 +104,10 @@ const useThread = () => {
     }), [store]),
 
     resendMessageStart: useCallback((message: SendableMessageType) => store.setState(state => {
+      if ('sendingStatus' in message) {
+        (message as any).sendingStatus = 'pending';
+      }
+
       return {
         ...state,
         localThreadMessages: state.localThreadMessages.map((m) => (
@@ -235,16 +251,20 @@ const useThread = () => {
 
     initializeThreadListSuccess: useCallback((parentMessage: BaseMessage, anchorMessage: SendableMessageType, threadedMessages: BaseMessage[]) => store.setState(state => {
       const anchorMessageCreatedAt = (!anchorMessage?.messageId) ? parentMessage?.createdAt : anchorMessage?.createdAt;
-      const anchorIndex = threadedMessages.findIndex((message) => message?.createdAt > anchorMessageCreatedAt);
+      const anchorIndex = threadedMessages.findIndex((message) => message?.createdAt === anchorMessageCreatedAt);
       const prevThreadMessages = anchorIndex > -1 ? threadedMessages.slice(0, anchorIndex) : threadedMessages;
-      const anchorThreadMessage = anchorMessage?.messageId ? [anchorMessage] : [];
       const nextThreadMessages = anchorIndex > -1 ? threadedMessages.slice(anchorIndex) : [];
+
+      const allThreadMessages = [].concat(
+        ...prevThreadMessages, ...nextThreadMessages,
+      ) as CoreMessageType[];
+
       return {
         ...state,
         threadListState: ThreadListStateTypes.INITIALIZED,
         hasMorePrev: anchorIndex === -1 || anchorIndex === PREV_THREADS_FETCH_SIZE,
         hasMoreNext: threadedMessages.length - anchorIndex === NEXT_THREADS_FETCH_SIZE,
-        allThreadMessages: [prevThreadMessages, anchorThreadMessage, nextThreadMessages].flat() as CoreMessageType[],
+        allThreadMessages,
       };
     }), [store]),
 
@@ -397,18 +417,26 @@ const useThread = () => {
     }), [store]),
 
     onReactionUpdated: useCallback((reactionEvent: ReactionEvent) => store.setState(state => {
-      if (state?.parentMessage?.messageId === reactionEvent?.messageId) {
-        state.parentMessage?.applyReactionEvent?.(reactionEvent);
+      let updatedParentMessage = state.parentMessage;
+      if (state.parentMessage?.messageId === reactionEvent?.messageId) {
+        // 원본 객체를 직접 수정 (SDK 메시지 객체는 immutable 패턴을 따르지 않음)
+        state.parentMessage.applyReactionEvent?.(reactionEvent);
+        updatedParentMessage = state.parentMessage;
       }
+
+      const updatedMessages = state.allThreadMessages.map((m) => {
+        if (reactionEvent?.messageId === m?.messageId) {
+          // SDK 메시지 객체를 직접 수정 (SDK가 내부적으로 처리)
+          (m as any).applyReactionEvent?.(reactionEvent);
+          return m;
+        }
+        return m;
+      });
+
       return {
         ...state,
-        allThreadMessages: state.allThreadMessages.map((m) => {
-          if (reactionEvent?.messageId === m?.messageId) {
-            m?.applyReactionEvent?.(reactionEvent);
-            return m;
-          }
-          return m;
-        }),
+        parentMessage: updatedParentMessage,
+        allThreadMessages: [...updatedMessages], // 새 배열 참조로 리렌더링 트리거
       };
     }), [store]),
 

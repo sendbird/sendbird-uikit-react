@@ -121,7 +121,6 @@ function useHandleChannelEvents({
         },
         onUserMarkedUnread: (channel, userIds) => {
           logger.info('Channel | useHandleChannelEvents: onUserMarkedUnread', channel, userIds);
-          // TODO:: MADOKA 이 부분에 대해서 명확하게 확인해야 함.
           if (compareIds(channel?.url, channelUrl)) {
             messagesDispatcher({
               type: messageActions.MARK_AS_UNREAD,
@@ -169,11 +168,13 @@ function useHandleChannelEvents({
           });
         },
         onReactionUpdated: (channel, reactionEvent) => {
-          logger.info('Channel | useHandleChannelEvents: onReactionUpdated', { channel, reactionEvent });
-          messagesDispatcher({
-            type: messageActions.ON_REACTION_UPDATED,
-            payload: reactionEvent,
-          });
+          if (channel.isGroupChannel() && compareIds(channel?.url, channelUrl)) {
+            logger.info('Channel | useHandleChannelEvents: onReactionUpdated', { channel, reactionEvent });
+            messagesDispatcher({
+              type: messageActions.ON_REACTION_UPDATED,
+              payload: reactionEvent,
+            });
+          }
         },
         onChannelChanged: (channel) => {
           if (channel.isGroupChannel() && compareIds(channel?.url, channelUrl)) {

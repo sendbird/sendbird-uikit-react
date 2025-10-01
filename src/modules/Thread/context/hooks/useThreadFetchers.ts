@@ -30,6 +30,7 @@ function getThreadMessageListParams(params?: Partial<ThreadedMessageListParams>)
     prevResultSize: PREV_THREADS_FETCH_SIZE,
     nextResultSize: NEXT_THREADS_FETCH_SIZE,
     includeMetaArray: true,
+    isInclusive: true,
     ...params,
   };
 }
