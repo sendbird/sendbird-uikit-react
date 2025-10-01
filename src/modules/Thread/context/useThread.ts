@@ -10,6 +10,7 @@ import {
   BaseMessage,
   MultipleFilesMessage,
   ReactionEvent,
+  SendingStatus,
   UserMessage,
 } from '@sendbird/chat/message';
 import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from '../consts';
@@ -57,7 +58,7 @@ const useThread = () => {
   const sendMessageStatusActions = {
     sendMessageStart: useCallback((message: SendableMessageType) => store.setState(state => {
       if ('sendingStatus' in message) {
-        (message as any).sendingStatus = 'pending';
+        (message as SendableMessageType).sendingStatus = SendingStatus.PENDING;
       }
 
       return {
@@ -71,7 +72,7 @@ const useThread = () => {
 
     sendMessageSuccess: useCallback((message: SendableMessageType) => store.setState(state => {
       if ('sendingStatus' in message) {
-        (message as any).sendingStatus = 'succeeded';
+        (message as SendableMessageType).sendingStatus = SendingStatus.SUCCEEDED;
       }
 
       return {
@@ -90,7 +91,7 @@ const useThread = () => {
 
     sendMessageFailure: useCallback((message: SendableMessageType) => store.setState(state => {
       if ('sendingStatus' in message) {
-        (message as any).sendingStatus = 'failed';
+        (message as SendableMessageType).sendingStatus = SendingStatus.FAILED;
       }
 
       return {
@@ -105,7 +106,7 @@ const useThread = () => {
 
     resendMessageStart: useCallback((message: SendableMessageType) => store.setState(state => {
       if ('sendingStatus' in message) {
-        (message as any).sendingStatus = 'pending';
+        (message as SendableMessageType).sendingStatus = SendingStatus.PENDING;
       }
 
       return {
@@ -255,16 +256,12 @@ const useThread = () => {
       const prevThreadMessages = anchorIndex > -1 ? threadedMessages.slice(0, anchorIndex) : threadedMessages;
       const nextThreadMessages = anchorIndex > -1 ? threadedMessages.slice(anchorIndex) : [];
 
-      const allThreadMessages = [].concat(
-        ...prevThreadMessages, ...nextThreadMessages,
-      ) as CoreMessageType[];
-
       return {
         ...state,
         threadListState: ThreadListStateTypes.INITIALIZED,
         hasMorePrev: anchorIndex === -1 || anchorIndex === PREV_THREADS_FETCH_SIZE,
         hasMoreNext: threadedMessages.length - anchorIndex === NEXT_THREADS_FETCH_SIZE,
-        allThreadMessages,
+        allThreadMessages: [...prevThreadMessages, ...nextThreadMessages] as CoreMessageType[],
       };
     }), [store]),
 
