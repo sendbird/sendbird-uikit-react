@@ -416,15 +416,13 @@ const useThread = () => {
     onReactionUpdated: useCallback((reactionEvent: ReactionEvent) => store.setState(state => {
       let updatedParentMessage = state.parentMessage;
       if (state.parentMessage?.messageId === reactionEvent?.messageId) {
-        // 원본 객체를 직접 수정 (SDK 메시지 객체는 immutable 패턴을 따르지 않음)
         state.parentMessage.applyReactionEvent?.(reactionEvent);
         updatedParentMessage = state.parentMessage;
       }
 
       const updatedMessages = state.allThreadMessages.map((m) => {
         if (reactionEvent?.messageId === m?.messageId) {
-          // SDK 메시지 객체를 직접 수정 (SDK가 내부적으로 처리)
-          (m as any).applyReactionEvent?.(reactionEvent);
+          (m as CoreMessageType).applyReactionEvent?.(reactionEvent);
           return m;
         }
         return m;
