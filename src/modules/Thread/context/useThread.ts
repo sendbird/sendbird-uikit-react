@@ -434,7 +434,7 @@ const useThread = () => {
       return {
         ...state,
         parentMessage: updatedParentMessage,
-        allThreadMessages: [...updatedMessages], // 새 배열 참조로 리렌더링 트리거
+        allThreadMessages: [...updatedMessages], // Create new array reference to trigger re-render
       };
     }), [store]),
 
