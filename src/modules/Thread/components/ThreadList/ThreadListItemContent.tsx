@@ -332,6 +332,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
           toggleReaction,
           isOpenedFromThread: true,
           deleteMessage,
+          resendMessage,
           onDownloadClick: async (e) => {
             if (!onBeforeDownloadFileMessage) return;
 

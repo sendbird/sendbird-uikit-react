@@ -10,6 +10,7 @@ import {
   BaseMessage,
   MultipleFilesMessage,
   ReactionEvent,
+  SendingStatus,
   UserMessage,
 } from '@sendbird/chat/message';
 import { NEXT_THREADS_FETCH_SIZE, PREV_THREADS_FETCH_SIZE } from '../consts';
@@ -25,6 +26,8 @@ import useResendMessageCallback from './hooks/useResendMessageCallback';
 import useUpdateMessageCallback from './hooks/useUpdateMessageCallback';
 import useDeleteMessageCallback from './hooks/useDeleteMessageCallback';
 import { useThreadFetchers } from './hooks/useThreadFetchers';
+
+import { cloneDeep } from 'lodash';
 
 function hasReqId<T extends object>(
   message: T,
@@ -56,6 +59,10 @@ const useThread = () => {
 
   const sendMessageStatusActions = {
     sendMessageStart: useCallback((message: SendableMessageType) => store.setState(state => {
+      if ('sendingStatus' in message) {
+        (message as SendableMessageType).sendingStatus = SendingStatus.PENDING;
+      }
+
       return {
         ...state,
         localThreadMessages: [
@@ -66,6 +73,10 @@ const useThread = () => {
     }), [store]),
 
     sendMessageSuccess: useCallback((message: SendableMessageType) => store.setState(state => {
+      if ('sendingStatus' in message) {
+        (message as SendableMessageType).sendingStatus = SendingStatus.SUCCEEDED;
+      }
+
       return {
         ...state,
         allThreadMessages: [
@@ -81,6 +92,10 @@ const useThread = () => {
     }), [store]),
 
     sendMessageFailure: useCallback((message: SendableMessageType) => store.setState(state => {
+      if ('sendingStatus' in message) {
+        (message as SendableMessageType).sendingStatus = SendingStatus.FAILED;
+      }
+
       return {
         ...state,
         localThreadMessages: state.localThreadMessages.map((m) => (
@@ -92,6 +107,10 @@ const useThread = () => {
     }), [store]),
 
     resendMessageStart: useCallback((message: SendableMessageType) => store.setState(state => {
+      if ('sendingStatus' in message) {
+        (message as SendableMessageType).sendingStatus = SendingStatus.PENDING;
+      }
+
       return {
         ...state,
         localThreadMessages: state.localThreadMessages.map((m) => (
@@ -235,16 +254,16 @@ const useThread = () => {
 
     initializeThreadListSuccess: useCallback((parentMessage: BaseMessage, anchorMessage: SendableMessageType, threadedMessages: BaseMessage[]) => store.setState(state => {
       const anchorMessageCreatedAt = (!anchorMessage?.messageId) ? parentMessage?.createdAt : anchorMessage?.createdAt;
-      const anchorIndex = threadedMessages.findIndex((message) => message?.createdAt > anchorMessageCreatedAt);
+      const anchorIndex = threadedMessages.findIndex((message) => message?.createdAt === anchorMessageCreatedAt);
       const prevThreadMessages = anchorIndex > -1 ? threadedMessages.slice(0, anchorIndex) : threadedMessages;
-      const anchorThreadMessage = anchorMessage?.messageId ? [anchorMessage] : [];
       const nextThreadMessages = anchorIndex > -1 ? threadedMessages.slice(anchorIndex) : [];
+
       return {
         ...state,
         threadListState: ThreadListStateTypes.INITIALIZED,
         hasMorePrev: anchorIndex === -1 || anchorIndex === PREV_THREADS_FETCH_SIZE,
         hasMoreNext: threadedMessages.length - anchorIndex === NEXT_THREADS_FETCH_SIZE,
-        allThreadMessages: [prevThreadMessages, anchorThreadMessage, nextThreadMessages].flat() as CoreMessageType[],
+        allThreadMessages: [...prevThreadMessages, ...nextThreadMessages] as CoreMessageType[],
       };
     }), [store]),
 
@@ -397,18 +416,25 @@ const useThread = () => {
     }), [store]),
 
     onReactionUpdated: useCallback((reactionEvent: ReactionEvent) => store.setState(state => {
-      if (state?.parentMessage?.messageId === reactionEvent?.messageId) {
-        state.parentMessage?.applyReactionEvent?.(reactionEvent);
+      let updatedParentMessage = state.parentMessage;
+      if (state.parentMessage?.messageId === reactionEvent?.messageId) {
+        updatedParentMessage = cloneDeep(state.parentMessage as SendableMessageType);
+        updatedParentMessage.applyReactionEvent(reactionEvent);
       }
+
+      const updatedMessages = state.allThreadMessages.map((m) => {
+        if (reactionEvent?.messageId === m?.messageId) {
+          const updatedMessage = cloneDeep(m as CoreMessageType);
+          updatedMessage.applyReactionEvent(reactionEvent);
+          return updatedMessage;
+        }
+        return m;
+      });
+
       return {
         ...state,
-        allThreadMessages: state.allThreadMessages.map((m) => {
-          if (reactionEvent?.messageId === m?.messageId) {
-            m?.applyReactionEvent?.(reactionEvent);
-            return m;
-          }
-          return m;
-        }),
+        parentMessage: updatedParentMessage,
+        allThreadMessages: [...updatedMessages], // Create new array reference to trigger re-render
       };
     }), [store]),
 

@@ -18,6 +18,7 @@ export function hasStateChanged<T>(prevState: T, updates: Partial<T>): boolean {
        */
       return false;
     }
+
     return !isEqual(prevState[key as keyof T], value);
   });
 }
