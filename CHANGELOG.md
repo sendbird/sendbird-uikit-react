@@ -1,5 +1,11 @@
 # Changelog - v3
 
+## [v3.17.3] (OCT 2 2025)
+### Fixes
+- Fixed a bug where failed message can't be resend
+- Fixed a bug where Reaction is not updated in Thread
+- Fixed RTL syntax
+
 ## [v3.17.2] (Aug 13 2025)
 ### Fixes
 - Fixed a bug that did not display `the read/delivered` status icon in the `publicGroupChannel`
