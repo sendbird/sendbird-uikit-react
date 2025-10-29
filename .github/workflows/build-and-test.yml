@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize]
 
   push:
-    branches-ignore:
+    branches:
       - main
 concurrency:
   group: build-and-test-${{ github.head_ref || github.ref_name }}
