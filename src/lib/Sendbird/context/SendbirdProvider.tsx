@@ -232,17 +232,6 @@ const SendbirdContextManager = ({
     configs.groupChannel.setting,
     configs.openChannel.channel,
   ]);
-  const storeState = useMemo(() => ({
-    stores: {
-      sdkStore: state.stores.sdkStore,
-      userStore: state.stores.userStore,
-      appInfoStore: state.stores.appInfoStore,
-    },
-  }), [
-    state.stores.sdkStore,
-    state.stores.userStore,
-    state.stores.appInfoStore,
-  ]);
   const uikitUploadSizeLimit = useMemo(() => (uploadSizeLimit ?? DEFAULT_UPLOAD_SIZE_LIMIT), [uploadSizeLimit, DEFAULT_UPLOAD_SIZE_LIMIT]);
   const configImageCompression = useMemo<ImageCompressionOptions>(() => ({
     compressionRate: 0.7,
@@ -354,14 +343,12 @@ const SendbirdContextManager = ({
 
   useDeepCompareEffect(() => {
     updateState({
-      ...storeState,
       ...utilsState,
       ...configState,
       eventHandlers,
       emojiManager,
     });
   }, [
-    storeState,
     configState,
     eventHandlers,
     emojiManager,
