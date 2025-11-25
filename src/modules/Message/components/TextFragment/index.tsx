@@ -50,6 +50,8 @@ export default function TextFragment({
                             : 'sendbird-label--color-onbackground-1'
                         }
                         href={asSafeURL(groups[2])}
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <TextFragment tokens={tokenizeMarkdown({ messageText: groups[1] })}/>
                       </a>
