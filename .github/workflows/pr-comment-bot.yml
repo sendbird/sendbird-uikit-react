@@ -11,7 +11,7 @@ jobs:
       # see list of commands: https://github.com/sendbird/release-automation-action#commands
       - uses: sendbird/release-automation-action@latest
         with:
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          gh_token: ${{ secrets.BOT_GH_TOKEN }}
           product: 'uikit'
           platform: 'js'
           framework: 'react'
