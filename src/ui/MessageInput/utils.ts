@@ -34,10 +34,12 @@ function isHTMLElement(node: ChildNode): node is HTMLElement {
 export function extractTextAndMentions(childNodes: NodeListOf<ChildNode>) {
   let messageText = '';
   let mentionTemplate = '';
+  let isMentionedMessage = false;
   childNodes.forEach((node) => {
     if (isHTMLElement(node) && node.nodeName === NodeNames.Span) {
       const { innerText, dataset = {} } = node;
       const { userid = '' } = dataset;
+      if (userid) isMentionedMessage = true;
       messageText += innerText;
       mentionTemplate += `${USER_MENTION_TEMP_CHAR}{${userid}}`;
     } else if (isHTMLElement(node) && node.nodeName === NodeNames.Br) {
@@ -53,5 +55,5 @@ export function extractTextAndMentions(childNodes: NodeListOf<ChildNode>) {
       mentionTemplate += textContent;
     }
   });
-  return { messageText, mentionTemplate };
+  return { messageText, mentionTemplate, isMentionedMessage };
 }

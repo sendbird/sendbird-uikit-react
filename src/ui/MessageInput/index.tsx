@@ -349,8 +349,9 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
     try {
       const textField = internalRef?.current;
       if (!isEdit && textField?.textContent) {
-        const { messageText, mentionTemplate } = extractTextAndMentions(textField.childNodes);
+        const { messageText, mentionTemplate, isMentionedMessage } = extractTextAndMentions(textField.childNodes);
         const params = { message: messageText, mentionTemplate };
+        if (!isMentionedMessage) params.mentionTemplate = '';
         onSendMessage(params);
         resetInput(internalRef);
         /**
