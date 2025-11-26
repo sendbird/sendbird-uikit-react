@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: sendbird/release-automation-action@latest
         with:
-          gh_token: ${{ env.BOT_GH_TOKEN }}
+          gh_token: ${{ secrets.BOT_GH_TOKEN }}
           product: 'uikit'
           platform: 'js'
           framework: 'react'
