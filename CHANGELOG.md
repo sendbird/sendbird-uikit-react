@@ -1,5 +1,12 @@
 # Changelog - v3
 
+## [v3.17.4] (NOV 26 2025)
+### Fixes
+- Fixed a Bug where SDK initialization could fail or remain uninitialized in React 17
+- Fixed a bug where `mentionedMessageTemplate` is being set even when the message is not a mentioned message
+- Fixed a bug where URL links inside Markdown-type messages do not open in a new tab
+
+
 ## [v3.17.3] (OCT 2 2025)
 ### Fixes
 - Fixed a bug where failed message can't be resend
