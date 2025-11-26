@@ -1,6 +1,6 @@
 {
   "name": "@sendbird/uikit-react",
-  "version": "3.17.3",
+  "version": "3.17.4",
   "description": "Sendbird UIKit for React: A feature-rich and customizable chat UI kit with messaging, channel management, and user authentication.",
   "keywords": [
     "sendbird",
@@ -70,9 +70,9 @@
     "react-dom": "^16.8.6 || ^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "dependencies": {
-    "@sendbird/chat": "^4.20.0",
-    "@sendbird/react-uikit-message-template-view": "^0.0.18",
-    "@sendbird/uikit-tools": "^0.0.18",
+    "@sendbird/chat": "^4.20.2",
+    "@sendbird/react-uikit-message-template-view": "^0.0.21",
+    "@sendbird/uikit-tools": "^0.0.21",
     "css-vars-ponyfill": "^2.3.2",
     "date-fns": "^2.16.1",
     "dompurify": "^3.2.4"
