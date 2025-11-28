@@ -84,7 +84,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
     onSearchClick: () => {
       setShowSettings(false);
       setShowThread(false);
-      setShowSearch(!showSearch);
+      setShowSearch((prev: boolean) => { return !prev; });
     },
     onReplyInThread: onClickThreadReply,
     onQuoteMessageClick: ({ message }) => {

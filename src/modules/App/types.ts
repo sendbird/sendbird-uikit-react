@@ -43,7 +43,7 @@ export interface DesktopLayoutProps extends AppLayoutProps, SubLayoutCommonProps
   showSettings: boolean;
   setShowSettings: React.Dispatch<boolean>;
   showSearch: boolean;
-  setShowSearch: React.Dispatch<boolean>;
+  setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
   // thread
   showThread: boolean;
   setShowThread: React.Dispatch<boolean>;
