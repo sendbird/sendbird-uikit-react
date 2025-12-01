@@ -56,6 +56,10 @@ export interface MessageProps {
    */
   onNewMessageSeparatorVisibilityChange?: (isVisible: boolean) => void;
   /**
+   * A function that forces scroll to message when new message is received.
+   */
+  forceScrollToMessage?: (ref: React.MutableRefObject<any>, message: CoreMessageType) => void;
+  /**
    * @deprecated Please use `children` instead
    * @description Customizes all child components of the message.
    * */
@@ -97,6 +101,10 @@ export interface MessageViewProps extends MessageProps {
 
   animatedMessageId: number | null;
   setAnimatedMessageId: React.Dispatch<React.SetStateAction<number | null>>;
+
+  newMessageIds?: number[] | null;
+  setNewMessageIds?: (ids: number[]) => void;
+
   onMessageAnimated?: () => void;
   /** @deprecated * */
   highLightedMessageId?: number | null;
@@ -119,6 +127,7 @@ const MessageView = (props: MessageViewProps) => {
     chainBottom,
     handleScroll,
     onNewMessageSeparatorVisibilityChange,
+    forceScrollToMessage,
 
     // MessageViewProps
     channel,
@@ -147,6 +156,9 @@ const MessageView = (props: MessageViewProps) => {
     animatedMessageId,
     onMessageAnimated,
     usedInLegacy = true,
+
+    newMessageIds,
+    setNewMessageIds,
   } = props;
 
   const {
@@ -256,6 +268,23 @@ const MessageView = (props: MessageViewProps) => {
       timeouts.forEach((it) => clearTimeout(it));
     };
   }, [animatedMessageId, messageScrollRef.current, message.messageId]);
+
+  useLayoutEffect(() => {
+    if (newMessageIds?.length > 0 && newMessageIds.includes(message.messageId)) {
+      let rafId: number | null = null;
+
+      rafId = requestAnimationFrame(() => {
+        forceScrollToMessage(messageScrollRef, message);
+        setNewMessageIds([]);
+      });
+
+      return () => {
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+        }
+      };
+    }
+  }, [newMessageIds]);
 
   const renderedCustomSeparator = useMemo(() => renderCustomSeparator?.({ message }) ?? null, [message, renderCustomSeparator]);
 

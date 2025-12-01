@@ -56,6 +56,7 @@ const initialState = () => ({
   isReactionEnabled: false,
   isMessageGroupingEnabled: true,
   isMultipleFilesMessageEnabled: false,
+  isFocusOnLastMessage: false,
   showSearchIcon: true,
   replyType: 'NONE',
   threadReplySelectType: ThreadReplySelectType.PARENT,
@@ -83,6 +84,7 @@ export const InternalGroupChannelProvider = (props: GroupChannelProviderProps) =
     isReactionEnabled: props?.isReactionEnabled,
     isMessageGroupingEnabled: props?.isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled: props?.isMultipleFilesMessageEnabled,
+    isFocusOnLastMessage: props?.isFocusOnLastMessage,
     showSearchIcon: props?.showSearchIcon,
     threadReplySelectType: props?.threadReplySelectType,
     disableMarkAsRead: props?.disableMarkAsRead,
@@ -125,6 +127,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     threadReplySelectType: moduleThreadReplySelectType,
     isMessageGroupingEnabled = true,
     isMultipleFilesMessageEnabled,
+    isFocusOnLastMessage,
     showSearchIcon,
     disableMarkAsRead = false,
     scrollBehavior = 'auto',
@@ -224,7 +227,11 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
         // even though the next messages and the current messages length are the same.
         // So added this condition to check if they are the same to prevent unnecessary calling scrollToBottom action
         && messages.length !== state.messages.length) {
-        setTimeout(async () => actions.scrollToBottom(true), 10);
+        if (!isFocusOnLastMessage) {
+          setTimeout(async () => actions.scrollToBottom(true), 10);
+        } else {
+          actions.setNewMessageIds(messages.map(it => it.messageId));
+        }
       }
     },
     onChannelDeleted: () => {
@@ -271,6 +278,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     }
 
     const handleExternalMessage = (data) => {
+      // send message
       if (data.channel.url === state.currentChannel?.url) {
         actions.scrollToBottom(true);
       }
@@ -339,6 +347,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     isReactionEnabled: resolvedIsReactionEnabled,
     isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled,
+    isFocusOnLastMessage: isFocusOnLastMessage ?? false,
     replyType: resolvedReplyType,
     threadReplySelectType: resolvedThreadReplySelectType,
     showSearchIcon: showSearchIcon ?? config.groupChannelSettings.enableMessageSearch,
@@ -348,6 +357,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     resolvedIsReactionEnabled,
     isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled,
+    isFocusOnLastMessage,
     resolvedReplyType,
     resolvedThreadReplySelectType,
     showSearchIcon,

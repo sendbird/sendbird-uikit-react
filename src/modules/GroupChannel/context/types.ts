@@ -47,6 +47,7 @@ interface InternalGroupChannelState extends MessageDataSource {
   animatedMessageId: number | null;
   isScrollBottomReached: boolean;
   readState: string | null;
+  newMessageIds: number[] | null;
 
   // References - will be managed together
   scrollRef: React.RefObject<HTMLDivElement>;
@@ -58,6 +59,7 @@ interface InternalGroupChannelState extends MessageDataSource {
   isReactionEnabled: boolean;
   isMessageGroupingEnabled: boolean;
   isMultipleFilesMessageEnabled: boolean;
+  isFocusOnLastMessage: boolean;
   showSearchIcon: boolean;
   replyType: ReplyType;
   threadReplySelectType: ThreadReplySelectType;
@@ -86,6 +88,7 @@ export interface GroupChannelProviderProps extends PropsWithChildren<
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
   isMultipleFilesMessageEnabled?: boolean;
+  isFocusOnLastMessage?: boolean;
   showSearchIcon?: boolean;
   replyType?: ReplyType;
   threadReplySelectType?: ThreadReplySelectType;

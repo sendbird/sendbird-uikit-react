@@ -29,6 +29,7 @@ export interface AppProps {
   config?: SendbirdProviderProps['config'];
   voiceRecord?: SendbirdProviderProps['voiceRecord'];
   isMultipleFilesMessageEnabled?: SendbirdProviderProps['isMultipleFilesMessageEnabled'];
+  isFocusOnLastMessage?: SendbirdProviderProps['isFocusOnLastMessage'];
   colorSet?: SendbirdProviderProps['colorSet'];
   stringSet?: SendbirdProviderProps['stringSet'];
   allowProfileEdit?: SendbirdProviderProps['allowProfileEdit'];
@@ -99,6 +100,7 @@ export default function App(props: AppProps) {
     customExtensionParams,
     eventHandlers,
     isMultipleFilesMessageEnabled,
+    isFocusOnLastMessage = false,
     isUserIdUsedForNickname = true,
     enableLegacyChannelModules = false,
     uikitOptions,
@@ -138,6 +140,7 @@ export default function App(props: AppProps) {
       renderUserProfile={renderUserProfile}
       imageCompression={imageCompression}
       isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
+      isFocusOnLastMessage={isFocusOnLastMessage}
       voiceRecord={voiceRecord}
       onStartDirectMessage={(channel) => {
         setCurrentChannel(channel);
@@ -159,6 +162,7 @@ export default function App(props: AppProps) {
       forceLeftToRightMessageLayout={forceLeftToRightMessageLayout}
     >
       <AppLayout
+        isFocusOnLastMessage={isFocusOnLastMessage}
         isMessageGroupingEnabled={isMessageGroupingEnabled}
         allowProfileEdit={allowProfileEdit}
         onProfileEditSuccess={onProfileEditSuccess}

@@ -30,6 +30,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
       onBeforeDownloadFileMessage,
       messages,
       markAsUnread,
+      newMessageIds,
     },
     actions: {
       toggleReaction,
@@ -40,6 +41,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
       sendUserMessage,
       resendMessage,
       deleteMessage,
+      setNewMessageIds,
     },
   } = useGroupChannel();
 
@@ -94,6 +96,8 @@ export const Message = (props: MessageProps): React.ReactElement => {
       renderRemoveMessageModal={(props) => <RemoveMessageModal {...props} />}
       usedInLegacy={false}
       onBeforeDownloadFileMessage={onBeforeDownloadFileMessage}
+      newMessageIds={newMessageIds}
+      setNewMessageIds={setNewMessageIds}
     />
   );
 };
