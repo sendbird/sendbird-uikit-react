@@ -89,12 +89,14 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       scrollDistanceFromBottomRef,
       markAsUnreadSourceRef,
       readState,
+      autoscrollMessageOverflowToTop,
     },
     actions: {
       scrollToBottom,
       setIsScrollBottomReached,
       markAsReadAll,
       markAsUnread,
+      scrollToMessage,
     },
   } = useGroupChannel();
 
@@ -201,6 +203,24 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
         // Move the scroll as much as the height of the message has changed
         scrollPubSub.publish('scroll', { top: elem.scrollTop + diff, lazy: false, animated: false });
       }
+    }
+  };
+
+  /**
+   * Force scroll to message
+   * when new message is received
+   * and the message content height is over the current scroll height
+   */
+  const scrollMessageOverflowToTop = (ref: React.MutableRefObject<any>, message: CoreMessageType) => {
+    if (!autoscrollMessageOverflowToTop) return;
+    const messageComponent = ref.current;
+    const messageComponentHeight = messageComponent?.clientHeight;
+    const currentScrollHeight = scrollRef.current?.offsetHeight;
+
+    if (messageComponentHeight > currentScrollHeight) {
+      scrollToMessage(message.createdAt, message.messageId);
+    } else if (isScrollBottomReached) {
+      scrollToBottom();
     }
   };
 
@@ -331,6 +351,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
                   renderSuggestedReplies,
                   renderCustomSeparator,
                   onNewMessageSeparatorVisibilityChange: checkDisplayedNewMessageSeparator,
+                  scrollMessageOverflowToTop,
                 })}
               </MessageProvider>
             );

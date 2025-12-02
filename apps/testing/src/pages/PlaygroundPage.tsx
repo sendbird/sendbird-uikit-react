@@ -10,5 +10,6 @@ export function PlaygroundPage() {
         replyType: 'thread',
       }
     }}
+    // autoscrollMessageOverflowToTop={true}
   />;
 }

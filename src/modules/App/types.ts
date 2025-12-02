@@ -18,6 +18,7 @@ export interface AppLayoutProps {
   forceLeftToRightMessageLayout?: boolean;
   isMessageGroupingEnabled?: boolean;
   isMultipleFilesMessageEnabled?: boolean;
+  autoscrollMessageOverflowToTop?: boolean;
   allowProfileEdit?: boolean;
   showSearchIcon?: boolean;
   onProfileEditSuccess?(user: User): void; // TODO: Unused props, deprecate it

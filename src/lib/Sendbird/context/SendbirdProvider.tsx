@@ -72,6 +72,7 @@ const SendbirdContextManager = ({
   sdkInitParams,
   customExtensionParams,
   isMultipleFilesMessageEnabled = false,
+  autoscrollMessageOverflowToTop = false,
   eventHandlers,
   htmlTextDirection = 'ltr',
   forceLeftToRightMessageLayout = false,
@@ -288,6 +289,7 @@ const SendbirdContextManager = ({
       setCurrentTheme,
       setCurrenttheme: setCurrentTheme, // deprecated: typo
       isMultipleFilesMessageEnabled,
+      autoscrollMessageOverflowToTop,
       uikitMultipleFilesMessageLimit,
       logger,
       pubSub,
@@ -316,6 +318,7 @@ const SendbirdContextManager = ({
     currentTheme,
     setCurrentTheme,
     isMultipleFilesMessageEnabled,
+    autoscrollMessageOverflowToTop,
     uikitMultipleFilesMessageLimit,
     logger,
     pubSub,
@@ -395,6 +398,7 @@ const InternalSendbirdProvider = (props: SendbirdProviderProps & { logger: Logge
       },
       disableMarkAsDelivered: props?.disableMarkAsDelivered,
       isMultipleFilesMessageEnabled: props?.isMultipleFilesMessageEnabled,
+      autoscrollMessageOverflowToTop: props?.autoscrollMessageOverflowToTop,
     },
     eventHandlers: props?.eventHandlers,
   });

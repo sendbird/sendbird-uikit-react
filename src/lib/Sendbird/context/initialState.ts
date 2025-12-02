@@ -33,6 +33,7 @@ const config: SendbirdStateConfig = {
   forceLeftToRightMessageLayout: false,
   disableMarkAsDelivered: false,
   isMultipleFilesMessageEnabled: false,
+  autoscrollMessageOverflowToTop: false,
   htmlTextDirection: 'ltr',
   uikitUploadSizeLimit: DEFAULT_UPLOAD_SIZE_LIMIT,
   uikitMultipleFilesMessageLimit: DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT,

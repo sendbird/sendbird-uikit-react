@@ -35,6 +35,8 @@ export interface GroupChannelActions extends MessageActions {
   sendMultipleFilesMessage: (params: MultipleFilesMessageCreateParams) => Promise<MultipleFilesMessage>;
   updateUserMessage: (messageId: number, params: UserMessageUpdateParams) => Promise<UserMessage>;
 
+  setNewMessageIds: (ids: number[]) => void;
+
   // UI actions
   setQuoteMessage: (message: SendableMessageType | null) => void;
   setAnimatedMessageId: (messageId: number | null) => void;
@@ -205,6 +207,10 @@ export const useGroupChannel = () => {
     store.setState(state => ({ ...state, firstUnreadMessageId: messageId }));
   }, []);
 
+  const setNewMessageIds = useCallback((newMessageIds: number[]) => {
+    store.setState(state => ({ ...state, newMessageIds }));
+  }, []);
+
   const actions: GroupChannelActions = useMemo(() => {
     return {
       setCurrentChannel,
@@ -213,6 +219,7 @@ export const useGroupChannel = () => {
       markAsUnread: state.markAsUnread,
       setReadStateChanged,
       setFirstUnreadMessageId,
+      setNewMessageIds,
       setQuoteMessage,
       scrollToBottom,
       scrollToMessage,

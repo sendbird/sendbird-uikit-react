@@ -218,6 +218,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   sdkInitParams?: SendbirdChatInitParams;
   customExtensionParams?: CustomExtensionParams;
   isMultipleFilesMessageEnabled?: boolean;
+  autoscrollMessageOverflowToTop?: boolean;
   // UserProfile
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   onStartDirectMessage?: (channel: GroupChannel) => void;
@@ -260,6 +261,7 @@ export interface SendbirdStateConfig {
   markAsDeliveredScheduler: MarkAsDeliveredSchedulerType;
   disableMarkAsDelivered: boolean;
   isMultipleFilesMessageEnabled: boolean;
+  autoscrollMessageOverflowToTop: boolean;
   // Remote configs set from dashboard by UIKit feature configuration
   common: {
     enableUsingDefaultUserProfile: SBUConfig['common']['enableUsingDefaultUserProfile'];
