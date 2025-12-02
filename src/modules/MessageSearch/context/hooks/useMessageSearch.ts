@@ -60,7 +60,7 @@ const useMessageSearch = () => {
     store.setState(state => ({ ...state, allMessages: [] }));
   }, [store]);
 
-  const setSelectedMessageId = (messageId: number) => useCallback(() => {
+  const setSelectedMessageId = useCallback((messageId: number) => {
     store.setState(state => ({ ...state, selectedMessageId: messageId }));
   }, [store]);
 
