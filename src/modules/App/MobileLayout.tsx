@@ -32,7 +32,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
     replyType,
     isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled,
-    isFocusOnLastMessage,
+    autoscrollMessageOverflowToTop,
     allowProfileEdit,
     isReactionEnabled,
     showSearchIcon,
@@ -156,7 +156,7 @@ export const MobileLayout: React.FC<MobileLayoutProps> = (props: MobileLayoutPro
     replyType,
     isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled,
-    isFocusOnLastMessage,
+    autoscrollMessageOverflowToTop,
     // for GroupChannel
     animatedMessageId: highlightedMessage,
     onReplyInThreadClick: ({ message }) => {

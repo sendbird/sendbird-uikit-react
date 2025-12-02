@@ -59,7 +59,7 @@ interface InternalGroupChannelState extends MessageDataSource {
   isReactionEnabled: boolean;
   isMessageGroupingEnabled: boolean;
   isMultipleFilesMessageEnabled: boolean;
-  isFocusOnLastMessage: boolean;
+  autoscrollMessageOverflowToTop: boolean;
   showSearchIcon: boolean;
   replyType: ReplyType;
   threadReplySelectType: ThreadReplySelectType;
@@ -88,7 +88,7 @@ export interface GroupChannelProviderProps extends PropsWithChildren<
   isReactionEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
   isMultipleFilesMessageEnabled?: boolean;
-  isFocusOnLastMessage?: boolean;
+  autoscrollMessageOverflowToTop?: boolean;
   showSearchIcon?: boolean;
   replyType?: ReplyType;
   threadReplySelectType?: ThreadReplySelectType;

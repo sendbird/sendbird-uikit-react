@@ -21,7 +21,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
     replyType,
     isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled,
-    isFocusOnLastMessage,
+    autoscrollMessageOverflowToTop,
     allowProfileEdit,
     showSearchIcon,
     onProfileEditSuccess,
@@ -105,7 +105,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props: DesktopLayout
     replyType: replyType,
     isMessageGroupingEnabled: isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled: isMultipleFilesMessageEnabled,
-    isFocusOnLastMessage: isFocusOnLastMessage,
+    autoscrollMessageOverflowToTop: autoscrollMessageOverflowToTop,
     // for GroupChannel
     animatedMessageId: highlightedMessage,
     onReplyInThreadClick: onClickThreadReply,

@@ -13,7 +13,7 @@ import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
 export const AppLayout = (props: AppLayoutProps) => {
   const {
     isMessageGroupingEnabled,
-    isFocusOnLastMessage,
+    autoscrollMessageOverflowToTop,
     allowProfileEdit,
     onProfileEditSuccess,
     disableAutoSelect,
@@ -51,7 +51,7 @@ export const AppLayout = (props: AppLayoutProps) => {
               showSearchIcon={showSearchIcon}
               isReactionEnabled={isReactionEnabled}
               isMessageGroupingEnabled={isMessageGroupingEnabled}
-              isFocusOnLastMessage={isFocusOnLastMessage}
+              autoscrollMessageOverflowToTop={autoscrollMessageOverflowToTop}
               allowProfileEdit={allowProfileEdit}
               onProfileEditSuccess={onProfileEditSuccess}
               currentChannel={currentChannel}
@@ -71,7 +71,7 @@ export const AppLayout = (props: AppLayoutProps) => {
               isReactionEnabled={isReactionEnabled}
               showSearchIcon={showSearchIcon}
               isMessageGroupingEnabled={isMessageGroupingEnabled}
-              isFocusOnLastMessage={isFocusOnLastMessage}
+              autoscrollMessageOverflowToTop={autoscrollMessageOverflowToTop}
               allowProfileEdit={allowProfileEdit}
               onProfileEditSuccess={onProfileEditSuccess}
               disableAutoSelect={disableAutoSelect}

@@ -89,7 +89,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       scrollDistanceFromBottomRef,
       markAsUnreadSourceRef,
       readState,
-      isFocusOnLastMessage,
+      autoscrollMessageOverflowToTop,
     },
     actions: {
       scrollToBottom,
@@ -211,8 +211,8 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
    * when new message is received
    * and the message content height is over the current scroll height
    */
-  const forceScrollToMessage = (ref: React.MutableRefObject<any>, message: CoreMessageType) => {
-    if (!isFocusOnLastMessage) return;
+  const scrollMessageOverflowToTop = (ref: React.MutableRefObject<any>, message: CoreMessageType) => {
+    if (!autoscrollMessageOverflowToTop) return;
     const messageComponent = ref.current;
     const messageComponentHeight = messageComponent?.clientHeight;
     const currentScrollHeight = scrollRef.current?.offsetHeight;
@@ -351,7 +351,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
                   renderSuggestedReplies,
                   renderCustomSeparator,
                   onNewMessageSeparatorVisibilityChange: checkDisplayedNewMessageSeparator,
-                  forceScrollToMessage,
+                  scrollMessageOverflowToTop,
                 })}
               </MessageProvider>
             );

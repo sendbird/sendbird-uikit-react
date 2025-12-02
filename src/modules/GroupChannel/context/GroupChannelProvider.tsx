@@ -56,7 +56,7 @@ const initialState = () => ({
   isReactionEnabled: false,
   isMessageGroupingEnabled: true,
   isMultipleFilesMessageEnabled: false,
-  isFocusOnLastMessage: false,
+  autoscrollMessageOverflowToTop: false,
   showSearchIcon: true,
   replyType: 'NONE',
   threadReplySelectType: ThreadReplySelectType.PARENT,
@@ -84,7 +84,7 @@ export const InternalGroupChannelProvider = (props: GroupChannelProviderProps) =
     isReactionEnabled: props?.isReactionEnabled,
     isMessageGroupingEnabled: props?.isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled: props?.isMultipleFilesMessageEnabled,
-    isFocusOnLastMessage: props?.isFocusOnLastMessage,
+    autoscrollMessageOverflowToTop: props?.autoscrollMessageOverflowToTop,
     showSearchIcon: props?.showSearchIcon,
     threadReplySelectType: props?.threadReplySelectType,
     disableMarkAsRead: props?.disableMarkAsRead,
@@ -127,7 +127,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     threadReplySelectType: moduleThreadReplySelectType,
     isMessageGroupingEnabled = true,
     isMultipleFilesMessageEnabled,
-    isFocusOnLastMessage,
+    autoscrollMessageOverflowToTop,
     showSearchIcon,
     disableMarkAsRead = false,
     scrollBehavior = 'auto',
@@ -227,7 +227,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
         // even though the next messages and the current messages length are the same.
         // So added this condition to check if they are the same to prevent unnecessary calling scrollToBottom action
         && messages.length !== state.messages.length) {
-        if (!isFocusOnLastMessage) {
+        if (!autoscrollMessageOverflowToTop) {
           setTimeout(async () => actions.scrollToBottom(true), 10);
         } else {
           actions.setNewMessageIds(messages.map(it => it.messageId));
@@ -347,7 +347,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     isReactionEnabled: resolvedIsReactionEnabled,
     isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled,
-    isFocusOnLastMessage: isFocusOnLastMessage ?? false,
+    autoscrollMessageOverflowToTop: autoscrollMessageOverflowToTop ?? false,
     replyType: resolvedReplyType,
     threadReplySelectType: resolvedThreadReplySelectType,
     showSearchIcon: showSearchIcon ?? config.groupChannelSettings.enableMessageSearch,
@@ -357,7 +357,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     resolvedIsReactionEnabled,
     isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled,
-    isFocusOnLastMessage,
+    autoscrollMessageOverflowToTop,
     resolvedReplyType,
     resolvedThreadReplySelectType,
     showSearchIcon,

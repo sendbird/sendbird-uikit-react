@@ -58,7 +58,7 @@ export interface MessageProps {
   /**
    * A function that forces scroll to message when new message is received.
    */
-  forceScrollToMessage?: (ref: React.MutableRefObject<any>, message: CoreMessageType) => void;
+  scrollMessageOverflowToTop?: (ref: React.MutableRefObject<any>, message: CoreMessageType) => void;
   /**
    * @deprecated Please use `children` instead
    * @description Customizes all child components of the message.
@@ -127,7 +127,7 @@ const MessageView = (props: MessageViewProps) => {
     chainBottom,
     handleScroll,
     onNewMessageSeparatorVisibilityChange,
-    forceScrollToMessage,
+    scrollMessageOverflowToTop,
 
     // MessageViewProps
     channel,
@@ -274,7 +274,7 @@ const MessageView = (props: MessageViewProps) => {
       let rafId: number | null = null;
 
       rafId = requestAnimationFrame(() => {
-        forceScrollToMessage(messageScrollRef, message);
+        scrollMessageOverflowToTop(messageScrollRef, message);
         setNewMessageIds([]);
       });
 
