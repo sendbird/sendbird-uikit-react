@@ -6,7 +6,7 @@
   When enabled, if a newly received message is taller than the viewport, the scroll position no longer auto-jumps to the bottom. Instead, the view scrolls to the top of the new message to keep its start in focus.
   - How to use?
   ```tsx
-    App
+    <App
       appId={appId}
       userId={userId}
       autoscrollMessageOverflowToTop={true}
