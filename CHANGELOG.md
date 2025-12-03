@@ -1,4 +1,20 @@
 # Changelog - v3
+## [v3.17.5] (DEC 03 2025)
+### Features
+- Added `autoscrollMessageOverflowToTop` global option
+
+  When enabled, if a newly received message is taller than the viewport, the scroll position no longer auto-jumps to the bottom. Instead, the view scrolls to the top of the new message to keep its start in focus.
+  - How to use?
+  ```tsx
+    App
+      appId={appId}
+      userId={userId}
+      autoscrollMessageOverflowToTop={true}
+    />
+  ```
+### Fixes
+- Fixed a bug where scrollToMessage
+
 
 ## [v3.17.4] (NOV 26 2025)
 ### Fixes
