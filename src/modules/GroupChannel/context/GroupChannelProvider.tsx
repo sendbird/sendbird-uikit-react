@@ -166,6 +166,8 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
   const { isScrollBottomReached } = state;
 
+  const isAutoscrollMessageOverflowToTop = autoscrollMessageOverflowToTop ?? config.autoscrollMessageOverflowToTop ?? false;
+
   // Configuration resolution
   const resolvedReplyType = getCaseResolvedReplyType(moduleReplyType ?? config.groupChannel.replyType).upperCase;
   const resolvedThreadReplySelectType = getCaseResolvedThreadReplySelectType(
@@ -227,7 +229,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
         // even though the next messages and the current messages length are the same.
         // So added this condition to check if they are the same to prevent unnecessary calling scrollToBottom action
         && messages.length !== state.messages.length) {
-        if (!autoscrollMessageOverflowToTop) {
+        if (!isAutoscrollMessageOverflowToTop) {
           setTimeout(async () => actions.scrollToBottom(true), 10);
         } else {
           actions.setNewMessageIds(messages.map(it => it.messageId));
@@ -347,7 +349,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     isReactionEnabled: resolvedIsReactionEnabled,
     isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled,
-    autoscrollMessageOverflowToTop: autoscrollMessageOverflowToTop ?? false,
+    autoscrollMessageOverflowToTop: autoscrollMessageOverflowToTop ?? config.autoscrollMessageOverflowToTop ?? false,
     replyType: resolvedReplyType,
     threadReplySelectType: resolvedThreadReplySelectType,
     showSearchIcon: showSearchIcon ?? config.groupChannelSettings.enableMessageSearch,
@@ -364,6 +366,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     disableMarkAsRead,
     scrollBehavior,
     config.groupChannelSettings.enableMessageSearch,
+    config.autoscrollMessageOverflowToTop,
   ]);
 
   const scrollState = useMemo(() => ({
