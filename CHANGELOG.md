@@ -1,4 +1,9 @@
 # Changelog - v3
+## [v3.17.6] (DEC 10 2025)
+### Fixes
+- Fix a bug where `autoscrollMessageOverflowToTop` set on `SendbirdProvider` was not being passed down to child components
+
+
 ## [v3.17.5] (DEC 03 2025)
 ### Features
 - Added `autoscrollMessageOverflowToTop` global option
