@@ -71,7 +71,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
     renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
     renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
-    renderTypingIndicatorBubble,
+    renderTypingIndicatorBubble = (props: TypingIndicatorBubbleProps) => <TypingIndicatorBubble {...props} />,
   } = deleteNullish(props);
 
   const {
