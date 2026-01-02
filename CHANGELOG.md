@@ -1,4 +1,20 @@
 # Changelog - v3
+## [v3.17.7] (JAN 02 2026)
+### Features
+- Add a `renderTypingIndicatorBubble` to customize typingIndicator
+
+  Enables customization of bubble-type typing indicators in addition to the existing customization of text-type typing indicators(`renderTypingIndicator`).
+  - How to use?
+  ```tsx
+    <GroupChannel
+      channelUrl="ChannelURL"
+      renderTypingIndicatorBubble={(props) => {
+        ...
+        return <CustomComponent typingMembers={props.typingMembers} />
+      }}
+    />
+  ```
+
 ## [v3.17.6] (DEC 10 2025)
 ### Fixes
 - Fix a bug where `autoscrollMessageOverflowToTop` set on `SendbirdProvider` was not being passed down to child components
