@@ -3,7 +3,7 @@
 ### Features
 - Add a `renderTypingIndicatorBubble` to customize typingIndicator
 
-  Enables customization of bubble-type typing indicators.
+  Enables customization of bubble-type typing indicators in addition to the existing customization of text-type typing indicators(`renderTypingIndicator`).
   - How to use?
   ```tsx
     <GroupChannel
