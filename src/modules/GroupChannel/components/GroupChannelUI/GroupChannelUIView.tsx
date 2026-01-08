@@ -13,6 +13,7 @@ import type { MessageContentProps } from '../../../../ui/MessageContent';
 import { SuggestedRepliesProps } from '../SuggestedReplies';
 import { deleteNullish } from '../../../../utils/utils';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
+import { TypingIndicatorBubbleProps } from '../../../../ui/TypingIndicatorBubble';
 
 export interface GroupChannelUIBasicProps {
   // Components
@@ -81,6 +82,10 @@ export interface GroupChannelUIBasicProps {
    * A function that customizes the rendering of the typing indicator component.
    */
   renderTypingIndicator?: () => React.ReactElement;
+  /**
+   * A function that customizes the rendering of the typing indicator bubble component.
+   */
+  renderTypingIndicatorBubble?: (props: TypingIndicatorBubbleProps) => React.ReactElement;
 }
 
 export interface GroupChannelUIViewProps extends GroupChannelUIBasicProps {
@@ -142,7 +147,7 @@ export const GroupChannelUIView = (props: GroupChannelUIViewProps) => {
   return (
     <div className="sendbird-conversation">
       {renderChannelHeader?.({ className: 'sendbird-conversation__channel-header' })}
-      {renderMessageList?.(props)}
+      {renderMessageList?.({ ...props })}
       <div className="sendbird-conversation__footer">
         {renderMessageInput?.()}
         <div className="sendbird-conversation__footer__typing-indicator">

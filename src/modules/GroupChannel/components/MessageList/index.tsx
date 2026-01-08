@@ -14,7 +14,7 @@ import UnreadCountFloatingButton from '../UnreadCountFloatingButton';
 import NewMessageCountFloatingButton from '../NewMessageCountFloatingButton';
 import FrozenNotification from '../FrozenNotification';
 import { SCROLL_BUFFER } from '../../../../utils/consts';
-import TypingIndicatorBubble from '../../../../ui/TypingIndicatorBubble';
+import TypingIndicatorBubble, { TypingIndicatorBubbleProps } from '../../../../ui/TypingIndicatorBubble';
 import { GroupChannelUIBasicProps } from '../GroupChannelUI/GroupChannelUIView';
 import { deleteNullish } from '../../../../utils/utils';
 import { getMessagePartsInfo } from './getMessagePartsInfo';
@@ -55,6 +55,10 @@ export interface GroupChannelMessageListProps {
    * A function that customizes the rendering of a suggested replies component.
    */
   renderSuggestedReplies?: GroupChannelUIBasicProps['renderSuggestedReplies'];
+  /**
+   * A function that customizes the rendering of a Typing Indicator Bubble component.
+   */
+  renderTypingIndicatorBubble?: GroupChannelUIBasicProps['renderTypingIndicatorBubble'];
 }
 
 export const MessageList = (props: GroupChannelMessageListProps) => {
@@ -67,6 +71,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     renderPlaceholderLoader = () => <PlaceHolder type={PlaceHolderTypes.LOADING} />,
     renderPlaceholderEmpty = () => <PlaceHolder className="sendbird-conversation__no-messages" type={PlaceHolderTypes.NO_MESSAGES} />,
     renderFrozenNotification = () => <FrozenNotification className="sendbird-conversation__messages__notification" />,
+    renderTypingIndicatorBubble = (props: TypingIndicatorBubbleProps) => <TypingIndicatorBubble {...props} />,
   } = deleteNullish(props);
 
   const {
@@ -360,7 +365,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
             !hasNext()
             && state?.config?.groupChannel?.enableTypingIndicator
             && state?.config?.groupChannel?.typingIndicatorTypes?.has(TypingIndicatorType.Bubble) && (
-              <TypingIndicatorBubbleWrapper channelUrl={channelUrl} handleScroll={onMessageContentSizeChanged} />
+              <TypingIndicatorBubbleWrapper channelUrl={channelUrl} renderTypingIndicatorBubble={renderTypingIndicatorBubble} handleScroll={onMessageContentSizeChanged} />
             )
           }
         />
@@ -373,7 +378,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   );
 };
 
-const TypingIndicatorBubbleWrapper = (props: { handleScroll: () => void; channelUrl: string }) => {
+const TypingIndicatorBubbleWrapper = (props: { handleScroll: () => void; channelUrl: string; renderTypingIndicatorBubble?: (props: TypingIndicatorBubbleProps) => React.ReactElement; }) => {
   const { state: { stores } } = useSendbird();
   const {
     state: {
@@ -400,7 +405,8 @@ const TypingIndicatorBubbleWrapper = (props: { handleScroll: () => void; channel
     },
   });
 
-  return <TypingIndicatorBubble typingMembers={typingMembers} handleScroll={props.handleScroll} />;
+  return (props.renderTypingIndicatorBubble?.({ typingMembers, handleScroll: props.handleScroll })
+    || (<TypingIndicatorBubble typingMembers={typingMembers} handleScroll={props.handleScroll} />));
 };
 
 export default MessageList;
