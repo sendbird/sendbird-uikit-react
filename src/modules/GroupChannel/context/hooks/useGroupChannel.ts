@@ -80,7 +80,11 @@ export const useGroupChannel = () => {
       await state.resetWithStartingPoint(Number.MAX_SAFE_INTEGER);
     }
 
-    state.scrollPubSub.publish('scrollToBottom', { animated });
+    // Wait for DOM to be updated after resetWithStartingPoint or state changes
+    // Use requestAnimationFrame to ensure DOM is fully rendered (compatible with React 16-19)
+    requestAnimationFrame(() => {
+      state.scrollPubSub?.publish('scrollToBottom', { animated });
+    });
 
     if (state.currentChannel && !state.hasNext()) {
       state.resetNewMessages();

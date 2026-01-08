@@ -8,6 +8,7 @@ export function PlaygroundPage() {
     uikitOptions={{
       groupChannel: {
         replyType: 'thread',
+        typingIndicatorTypes: new Set(['text', 'bubble']),
       }
     }}
     // autoscrollMessageOverflowToTop={true}

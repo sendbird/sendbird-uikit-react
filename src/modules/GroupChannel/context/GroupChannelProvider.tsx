@@ -230,7 +230,10 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
         // So added this condition to check if they are the same to prevent unnecessary calling scrollToBottom action
         && messages.length !== state.messages.length) {
         if (!isAutoscrollMessageOverflowToTop) {
-          setTimeout(async () => actions.scrollToBottom(true), 10);
+          // The requestAnimationFrame already ensures DOM is updated
+          requestAnimationFrame(() => {
+            actions?.scrollToBottom(true);
+          });
         } else {
           actions.setNewMessageIds(messages.map(it => it.messageId));
         }
