@@ -395,9 +395,12 @@ const TypingIndicatorBubbleWrapper = (props: { handleScroll: () => void; channel
       }
 
       if (isScrollBottomReached && isContextMenuClosed()) {
-        setTimeout(() => {
-          scrollPubSub.publish('scrollToBottom', {});
-        }, 10);
+        // Wait for DOM to be updated after typing status change
+        requestAnimationFrame(() => {
+          if (scrollPubSub) {
+            scrollPubSub.publish('scrollToBottom', {});
+          }
+        });
       }
     },
   });

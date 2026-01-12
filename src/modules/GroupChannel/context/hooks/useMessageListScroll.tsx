@@ -48,6 +48,7 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto', deps: Dependen
 
     unsubscribes.push(
       scrollPubSub.subscribe('scrollToBottom', ({ resolve, animated }) => {
+        // Use lazy: false since scrollToBottom action already waits for DOM update via requestAnimationFrame
         runCallback(() => {
           if (!scrollRef.current) {
             if (resolve) resolve();
@@ -65,7 +66,7 @@ export function useMessageListScroll(behavior: 'smooth' | 'auto', deps: Dependen
           setIsScrollBottomReached(true);
 
           if (resolve) resolve();
-        });
+        }, false);
       }),
     );
 
