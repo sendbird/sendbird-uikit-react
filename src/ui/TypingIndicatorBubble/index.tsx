@@ -85,8 +85,11 @@ const TypingIndicatorBubble = (props: TypingIndicatorBubbleProps) => {
 
   useLayoutEffect(() => {
     // Keep the scrollBottom value after fetching new message list
-    handleScroll?.(true);
-  }, []);
+    // Also adjust scroll when typing members change
+    if (typingMembers.length > 0) {
+      handleScroll?.(true);
+    }
+  }, [typingMembers.length, handleScroll]);
 
   if (typingMembers.length === 0) return null;
 
