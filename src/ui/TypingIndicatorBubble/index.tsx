@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { Member } from '@sendbird/chat/groupChannel';
 import Avatar from '../Avatar';
 import TypingDots from './TypingDots';
@@ -82,14 +82,21 @@ const TypingIndicatorBubbleAvatar = (props: TypingIndicatorBubbleProps) => {
 
 const TypingIndicatorBubble = (props: TypingIndicatorBubbleProps) => {
   const { typingMembers, handleScroll } = props;
+  const didMountRef = useRef(false);
 
   useLayoutEffect(() => {
     // Keep the scrollBottom value after fetching new message list
-    // Also adjust scroll when typing members change
-    if (typingMembers.length > 0) {
+    // Also adjust scroll when typing indicator appears (0 -> 1+)
+    const shouldAdjustScroll = !didMountRef.current || typingMembers.length > 0;
+    didMountRef.current = true;
+    if (!shouldAdjustScroll) return;
+    const rafId = requestAnimationFrame(() => {
       handleScroll?.(true);
-    }
-  }, [typingMembers.length, handleScroll]);
+    });
+    return () => {
+      cancelAnimationFrame(rafId);
+    };
+  }, [handleScroll, typingMembers.length]);
 
   if (typingMembers.length === 0) return null;
 
