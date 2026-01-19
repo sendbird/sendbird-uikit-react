@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { Member } from '@sendbird/chat/groupChannel';
 import Avatar from '../Avatar';
 import TypingDots from './TypingDots';
