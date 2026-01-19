@@ -82,14 +82,11 @@ const TypingIndicatorBubbleAvatar = (props: TypingIndicatorBubbleProps) => {
 
 const TypingIndicatorBubble = (props: TypingIndicatorBubbleProps) => {
   const { typingMembers, handleScroll } = props;
-  const didMountRef = useRef(false);
 
   useLayoutEffect(() => {
     // Keep the scrollBottom value after fetching new message list
     // Also adjust scroll when typing indicator appears (0 -> 1+)
-    const shouldAdjustScroll = !didMountRef.current || typingMembers.length > 0;
-    didMountRef.current = true;
-    if (!shouldAdjustScroll) return;
+    if (typingMembers.length === 0) return;
     const rafId = requestAnimationFrame(() => {
       handleScroll?.(true);
     });
