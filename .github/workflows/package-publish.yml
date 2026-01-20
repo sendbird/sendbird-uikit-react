@@ -77,16 +77,25 @@ jobs:
           
           echo "Verifying package publication: $PACKAGE_NAME@$PACKAGE_VERSION"
           
-          # Wait a moment for npm registry to update
-          sleep 10
-          
-          # Check if package exists and get version info
-          if npm view $PACKAGE_NAME@$PACKAGE_VERSION version > /dev/null 2>&1; then
-            echo "✅ Package $PACKAGE_NAME@$PACKAGE_VERSION successfully published to npm"
-          else
-            echo "❌ Package $PACKAGE_NAME@$PACKAGE_VERSION not found on npm registry"
-            exit 1
-          fi
+          max_check_count=3
+
+          while [ $max_check_count -gt 0 ]; do
+            # Wait a moment for npm registry to update
+            sleep 10
+
+            # Check if package exists and get version info
+            if npm view $PACKAGE_NAME@$PACKAGE_VERSION version > /dev/null 2>&1; then
+              echo "✅ Package $PACKAGE_NAME@$PACKAGE_VERSION successfully published to npm"
+              break
+            else
+              max_check_count=$((max_check_count - 1))
+              if [ $max_check_count -eq 0 ]; then
+                echo "❌ Package $PACKAGE_NAME@$PACKAGE_VERSION not found on npm registry"
+                exit 1
+              fi
+            fi
+          done
+
           cd -
       - name: Tag new target and push to origin
         if: env.SKIP_REST != 'true'
