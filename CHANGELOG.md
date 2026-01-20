@@ -1,4 +1,9 @@
 # Changelog - v3
+## [v3.17.8] (JAN 20 2026)
+### Fixes
+- Fixed a bug where sometimes does not scroll to bottom when new message comes in
+- Fixed a bug where scrolling to the bottom was not triggered when the bubble-type typing indicator reappeared
+
 ## [v3.17.7] (JAN 02 2026)
 ### Features
 - Add a `renderTypingIndicatorBubble` to customize typingIndicator
