@@ -8,7 +8,7 @@ jobs:
     if : ${{ github.event.issue.pull_request}}
     runs-on: ubuntu-latest
     env:
-      BOT_GH_TOKEN: ${{ secrets.BOT_GH_TOKEN }}
+      BOT_GH_TOKEN: ${{ secrets.SDK_GH_BOT1_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: sendbird/release-automation-action@latest

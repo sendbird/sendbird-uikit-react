@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      BOT_GH_TOKEN: ${{ secrets.BOT_GH_TOKEN }}
+      BOT_GH_TOKEN: ${{ secrets.SDK_GH_BOT1_TOKEN }}
 
     steps:
       - name: Checkout code
