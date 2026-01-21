@@ -51,6 +51,10 @@ export default function OpenChannelApp({
               onCloseClick={() => {
                 setShowSettings(false);
               }}
+              onDeleteChannel={() => {
+                setShowSettings(false);
+                setChannelUrl(undefined);
+              }}
             />
           </div>
         )}
