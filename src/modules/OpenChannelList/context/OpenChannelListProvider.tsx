@@ -1,6 +1,8 @@
 import React, { useContext, useReducer, useEffect } from 'react';
+import { OpenChannelHandler } from '@sendbird/chat/openChannel';
 
 import pubSubTopics from '../../../lib/pubSub/topics';
+import uuidv4 from '../../../utils/uuid';
 
 import openChannelListReducer from './dux/reducer';
 import openChannelListInitialState, { OpenChannelListInitialInterface } from './dux/initialState';
@@ -76,6 +78,29 @@ export const OpenChannelListProvider: React.FC<OpenChannelListProviderProps> = (
       subscriber.forEach((it) => it?.remove());
     };
   }, [sdkInitialized, pubSub?.subscribe]);
+
+  // Channel event handler for deletion
+  useEffect(() => {
+    const channelHandlerId = uuidv4();
+    if (sdkInitialized && sdk?.openChannel?.addOpenChannelHandler) {
+      const channelHandler = new OpenChannelHandler({
+        onChannelDeleted: (channelUrl) => {
+          logger.info('OpenChannelList: onChannelDeleted', channelUrl);
+          openChannelListDispatcher({
+            type: OpenChannelListActionTypes.DELETE_OPEN_CHANNEL,
+            payload: channelUrl,
+          });
+        },
+      });
+      sdk.openChannel.addOpenChannelHandler(channelHandlerId, channelHandler);
+      logger.info('OpenChannelList: Added channel handler', channelHandlerId);
+    }
+    return () => {
+      if (sdk?.openChannel?.removeOpenChannelHandler) {
+        sdk.openChannel.removeOpenChannelHandler(channelHandlerId);
+      }
+    };
+  }, [sdkInitialized]);
 
   // Fetch next channels by scroll event
   const fetchNextChannels = useFetchNextCallback({
