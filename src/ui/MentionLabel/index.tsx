@@ -13,6 +13,7 @@ import Label, { LabelTypography, LabelColors } from '../Label';
 import UserProfile from '../UserProfile';
 import { classnames } from '../../utils/utils';
 import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { useUserProfileContext } from '../../lib/UserProfileContext';
 
 interface MentionLabelProps {
   mentionTemplate: string;
@@ -29,6 +30,7 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
     isByMe,
   } = props;
 
+  const { disableUserProfile, renderUserProfile } = useUserProfileContext();
   const mentionRef = useRef<HTMLAnchorElement>();
 
   const { state } = useSendbird();
@@ -62,7 +64,11 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
             'sendbird-word__mention',
             amIBeingMentioned && 'sendbird-word__mention--me',
           )}
-          onClick={() => fetchUser(toggleDropdown)}
+          onClick={() => {
+            if (!disableUserProfile) {
+              fetchUser(toggleDropdown);
+            }
+          }}
           ref={mentionRef}
           data-userid={mentionedUserId}
           data-nickname={mentionedUserNickname}
@@ -76,23 +82,34 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
           </Label>
         </a>
       )}
-      menuItems={(closeDropdown: () => void): ReactElement => (
-        <MenuItems
-          /**
-          * parentRef: For catching location(x, y) of MenuItems
-          * parentContainRef: For toggling more options(menus & reactions)
-          */
-          parentRef={mentionRef}
-          parentContainRef={mentionRef}
-          closeDropdown={closeDropdown}
-          style={{ paddingTop: '0px', paddingBottom: '0px' }}
-        >
-          <UserProfile
-            user={user}
-            onSuccess={closeDropdown}
-            currentUserId={userId}
-          />
-        </MenuItems>
+      menuItems={(closeDropdown) => (
+        renderUserProfile
+          ? (
+            renderUserProfile({
+              user,
+              close: closeDropdown,
+              currentUserId: userId,
+              avatarRef: mentionRef,
+            })
+          )
+          : (
+            <MenuItems
+              /**
+              * parentRef: For catching location(x, y) of MenuItems
+              * parentContainRef: For toggling more options(menus & reactions)
+              */
+              parentRef={mentionRef}
+              parentContainRef={mentionRef}
+              closeDropdown={closeDropdown}
+              style={{ paddingTop: '0px', paddingBottom: '0px' }}
+            >
+              <UserProfile
+                user={user}
+                onSuccess={closeDropdown}
+                currentUserId={userId}
+              />
+            </MenuItems>
+          )
       )}
     />
   );
