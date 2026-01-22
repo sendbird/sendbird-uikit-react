@@ -10,6 +10,7 @@ import Icon, {
   IconColors,
 } from '../../../../ui/Icon';
 import { useOpenChannelSettingsContext } from '../../context/OpenChannelSettingsProvider';
+import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import OpenChannelProfile from '../OpenChannelProfile';
 import DeleteChannel from './DeleteOpenChannel';
 import ParticipantsAccordion from '../ParticipantUI';
@@ -54,6 +55,10 @@ export const OperatorUI: React.FC<OperatorUIProps> = ({
     onCloseClick,
     channel,
   } = useOpenChannelSettingsContext();
+  const { state } = useSendbird();
+  const theme = state?.config?.theme;
+  const iconColor = theme === 'dark' ? IconColors.CONTENT_INVERSE : IconColors.PRIMARY;
+
   return (
     <>
       <div className="sendbird-openchannel-settings__header">
@@ -63,6 +68,7 @@ export const OperatorUI: React.FC<OperatorUIProps> = ({
         <Icon
           className="sendbird-openchannel-settings__close-icon"
           type={IconTypes.CLOSE}
+          fillColor={iconColor}
           height="24px"
           width="24px"
           onClick={() => {

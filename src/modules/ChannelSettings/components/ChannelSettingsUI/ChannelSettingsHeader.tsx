@@ -2,7 +2,7 @@ import React, { MouseEvent } from 'react';
 
 import { useLocalization } from '../../../../lib/LocalizationContext';
 
-import { IconTypes } from '../../../../ui/Icon';
+import { IconColors, IconTypes } from '../../../../ui/Icon';
 import Header, { type HeaderCustomProps } from '../../../../ui/Header';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
@@ -19,7 +19,8 @@ export const ChannelSettingsHeader = ({
   const { stringSet } = useLocalization();
   const { state } = useSendbird();
   const { config } = state;
-  const { logger } = config;
+  const { logger, theme } = config;
+  const iconColor = theme === 'dark' ? IconColors.CONTENT_INVERSE : IconColors.PRIMARY;
 
   return (
     <Header
@@ -32,6 +33,7 @@ export const ChannelSettingsHeader = ({
         <div className="sendbird-channel-settings__header-icon">
           <Header.IconButton
             type={IconTypes.CLOSE}
+            color={iconColor}
             onClick={(e) => {
               logger.info('ChannelSettings: Click close');
               onCloseClick(e);

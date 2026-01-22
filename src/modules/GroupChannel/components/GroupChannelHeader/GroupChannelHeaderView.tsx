@@ -40,6 +40,7 @@ export const GroupChannelHeaderView = ({
   const { stringSet } = useLocalization();
 
   const isMuted = currentChannel?.myMutedState === 'muted';
+  const iconColor = theme === 'dark' ? IconColors.CONTENT_INVERSE : IconColors.PRIMARY;
   const channelTitle = getChannelTitle(currentChannel, userId, stringSet);
 
   return (
@@ -85,7 +86,7 @@ export const GroupChannelHeaderView = ({
               className="sendbird-chat-header__right__search"
               onClick={onSearchClick}
               type={IconTypes.SEARCH}
-              color={IconColors.PRIMARY}
+              color={iconColor}
               renderIcon={(props) => <Header.Icon {...props} width="24px" height="24px" />}
             />
           )}
@@ -93,7 +94,7 @@ export const GroupChannelHeaderView = ({
             className="sendbird-chat-header__right__info"
             onClick={onChatHeaderActionClick}
             type={IconTypes.INFO}
-            color={IconColors.PRIMARY}
+            color={iconColor}
             renderIcon={(props) => <Header.Icon {...props} width="24px" height="24px" />}
           />
         </>

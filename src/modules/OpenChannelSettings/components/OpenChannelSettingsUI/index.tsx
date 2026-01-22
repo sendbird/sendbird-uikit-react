@@ -9,7 +9,7 @@ import OperatorUI from '../OperatorUI';
 import ParticipantUI from '../ParticipantUI';
 
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
-import Icon, { IconTypes } from '../../../../ui/Icon';
+import Icon, { IconColors, IconTypes } from '../../../../ui/Icon';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 export interface OpenChannelUIProps {
@@ -28,7 +28,9 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
   } = useOpenChannelSettingsContext();
   const { state } = useSendbird();
   const logger = state?.config?.logger;
+  const theme = state?.config?.theme;
   const user = state?.stores?.userStore?.user;
+  const iconColor = theme === 'dark' ? IconColors.CONTENT_INVERSE : IconColors.PRIMARY;
 
   const { stringSet } = useContext(LocalizationContext);
   if (isChannelInitialized && !channel) {
@@ -62,6 +64,7 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
               <Icon
                 type={IconTypes.CLOSE}
                 className="sendbird-openchannel-settings__close-icon"
+                fillColor={iconColor}
                 height="24px"
                 width="24px"
                 onClick={() => {
