@@ -7,13 +7,11 @@ jobs:
   pr-comment:
     if : ${{ github.event.issue.pull_request}}
     runs-on: ubuntu-latest
-    env:
-      BOT_GH_TOKEN: ${{ secrets.SDK_GH_BOT1_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: sendbird/release-automation-action@latest
         with:
-          gh_token: ${{ env.BOT_GH_TOKEN }}
+          gh_token: ${{ secrets.SDK_GH_BOT1_TOKEN }}
           product: 'uikit'
           platform: 'js'
           framework: 'react'
