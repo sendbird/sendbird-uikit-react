@@ -67,7 +67,7 @@ export default function OGMessageItemBody({
     >
       <Label type={LabelTypography.BODY_1} color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}>
         <div className={OG_MESSAGE_BODY_CLASSNAME}>
-          <TextFragment tokens={tokens} />
+          <TextFragment tokens={tokens} isByMe={isByMe} />
           {isEditedMessage(message) && (
             <Label
               className="sendbird-og-message-item-body__text-bubble__message"

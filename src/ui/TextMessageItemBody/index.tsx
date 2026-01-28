@@ -59,7 +59,7 @@ export default function TextMessageItemBody({
         mouseHover ? 'mouse-hover' : '',
         (isReactionEnabled && message?.reactions?.length > 0) ? 'reactions' : '',
       ])}>
-        <TextFragment tokens={tokens} />
+        <TextFragment tokens={tokens} isByMe={isByMe} />
         {
           isEditedMessage(message) && (
             <Label
