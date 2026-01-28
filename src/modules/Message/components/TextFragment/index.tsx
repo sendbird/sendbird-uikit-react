@@ -14,15 +14,17 @@ import { asSafeURL } from '../../utils/tokens/asSafeURL';
 
 export type TextFragmentProps = {
   tokens: Token[];
+  isByMe?: boolean;
 };
 
 export default function TextFragment({
   tokens,
+  isByMe: isByMeProp,
 }: TextFragmentProps): React.ReactElement {
   const messageStore = useMessageContext();
 
   const message = messageStore?.message as UserMessage;
-  const isByMe = messageStore?.isByMe;
+  const isByMe = isByMeProp ?? messageStore?.isByMe;
   const { updatedAt, createdAt } = message;
 
   return (
@@ -38,7 +40,7 @@ export default function TextFragment({
                 match(markdownToken.markdownType)
                   .with('bold', () => (
                     <span style={{ fontWeight: 'bold' }}>
-                      <TextFragment tokens={tokenizeMarkdown({ messageText: groups[1] })}/>
+                      <TextFragment tokens={tokenizeMarkdown({ messageText: groups[1] })} isByMe={isByMe}/>
                     </span>
                   ))
                   .with('url', () => {
@@ -53,7 +55,7 @@ export default function TextFragment({
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <TextFragment tokens={tokenizeMarkdown({ messageText: groups[1] })}/>
+                        <TextFragment tokens={tokenizeMarkdown({ messageText: groups[1] })} isByMe={isByMe}/>
                       </a>
                     );
                   })
