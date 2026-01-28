@@ -138,7 +138,7 @@ export default function ParentMessageInfoItem({
           type={LabelTypography.BODY_1}
           color={LabelColors.ONBACKGROUND_1}
         >
-          <TextFragment tokens={tokens} isByMe={false} />
+          <TextFragment tokens={tokens} />
           {isEditedMessage(message) && (
             <Label
               className="sendbird-parent-message-info-item__text-message edited"

@@ -206,7 +206,7 @@ export default function OpenChannelOGMessage({
                 type={LabelTypography.BODY_1}
                 color={LabelColors.ONBACKGROUND_1}
               >
-                <TextFragment tokens={tokens} isByMe={false} />
+                <TextFragment tokens={tokens} />
                 {
                   ((message?.updatedAt ?? 0) > 0) && (
                     <Label
