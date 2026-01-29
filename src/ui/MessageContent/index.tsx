@@ -378,6 +378,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
         <div
           className={classnames(
             'sendbird-message-content__middle__body-container',
+            isThumbnailMessage(message) && 'sendbird-message-content__middle__body-container--thumbnail',
           )}
         >
           {/* message status component when sent by me */}
