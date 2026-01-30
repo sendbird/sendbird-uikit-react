@@ -21,6 +21,7 @@ export default function DeleteChannel(): ReactElement {
   const deleteChannel = () => {
     channel?.delete().then((response) => {
       logger.info('OpenChannelSettings: Delete channel success', response);
+      setShowDeleteChannelModal(false);
       if (onDeleteChannel) {
         onDeleteChannel(channel);
       }
@@ -68,7 +69,7 @@ export default function DeleteChannel(): ReactElement {
         showDeleteChannelModal && (
           <Modal
             isFullScreenOnMobile
-            onCancel={() => {
+            onClose={() => {
               setShowDeleteChannelModal(false);
             }}
             onSubmit={() => {

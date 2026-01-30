@@ -79,6 +79,15 @@ export default function reducer(
           : action.payload,
       };
     }
+    case actionTypes.DELETE_OPEN_CHANNEL: {
+      const channelUrl = action.payload;
+      const updatedChannels = state.allChannels.filter((channel) => channel?.url !== channelUrl);
+      return {
+        ...state,
+        allChannels: updatedChannels,
+        currentChannel: state.currentChannel?.url === channelUrl ? null : state.currentChannel,
+      };
+    }
     default: {
       return state;
     }
