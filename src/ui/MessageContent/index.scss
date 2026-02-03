@@ -17,7 +17,7 @@
   .sendbird-message-content__middle {
     max-width: 400px;
     @include mobile() {
-      max-width: calc(100vw - 140px);
+      width: calc(100vw - 140px);
     }
   }
 
@@ -211,7 +211,6 @@
 
     .sendbird-message-content__middle__body-container {
       position: relative;
-      width: 100%;
 
       .sendbird-message-content__middle__body-container__created-at {
         bottom: 2px;
@@ -288,6 +287,13 @@
 }
 .sendbird-message-content__middle__body-container:has(.sendbird-message-content__middle__message-item-body.reactions) {
   align-items: unset;
+}
+
+.sendbird-message-content__middle__body-container--thumbnail {
+  @include mobile() {
+    width: 100%;
+    align-items: stretch;
+  }
 }
 
 .sendbird-message-content-reactions {
