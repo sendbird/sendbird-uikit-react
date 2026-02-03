@@ -126,9 +126,22 @@ export const useGroupChannel = () => {
     clickHandler.deactivate();
 
     setAnimatedMessageId(null);
-    const message = state.messages.find(
-      (it) => it.messageId === messageId || it.createdAt === createdAt,
-    );
+
+    let message = null;
+    if (messageId) {
+      message = state.messages.find((it) => it.messageId === messageId);
+    } else if (createdAt) {
+      let distance = Number.MAX_SAFE_INTEGER;
+      for (const it of state.messages) {
+        const diff = Math.abs(it.createdAt - createdAt);
+        if (diff <= distance) {
+          distance = diff;
+          message = it;
+        } else {
+          break;
+        }
+      }
+    }
 
     if (message) {
       const topOffset = getMessageTopOffset(message.createdAt);

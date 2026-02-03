@@ -302,10 +302,10 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
   // Starting point handling
   useEffect(() => {
-    if (typeof startingPoint === 'number' && messageDataSource.initialized) {
+    if (typeof startingPoint === 'number' && state.initialized) {
       actions.scrollToMessage(startingPoint, 0, false, false);
     }
-  }, [messageDataSource.initialized, startingPoint]);
+  }, [state.initialized, startingPoint]);
 
   // Animated message handling
   useEffect(() => {
