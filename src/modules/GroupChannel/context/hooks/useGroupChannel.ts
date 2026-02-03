@@ -181,7 +181,7 @@ export const useGroupChannel = () => {
       ...state,
       currentChannel: channel,
       fetchChannelError: null,
-      quoteMessage: null,
+      quoteMessage: state.currentChannel?.url === channel?.url ? state.quoteMessage : null,
       animatedMessageId: null,
       nicknamesMap: channel ? new Map(
         channel.members.map(({ userId, nickname }) => [userId, nickname]),
