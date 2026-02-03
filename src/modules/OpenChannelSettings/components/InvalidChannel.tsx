@@ -3,7 +3,8 @@ import React, { ReactElement, useContext } from 'react';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 
 import Label, { LabelTypography, LabelColors } from '../../../ui/Label';
-import Icon, { IconTypes } from '../../../ui/Icon';
+import Icon, { IconColors, IconTypes } from '../../../ui/Icon';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../ui/PlaceHolder';
 
@@ -15,6 +16,10 @@ export default function InvalidChannel({
   onCloseClick,
 }: Props): ReactElement {
   const { stringSet } = useContext(LocalizationContext);
+  const { state } = useSendbird();
+  const theme = state?.config?.theme;
+  const iconColor = theme === 'dark' ? IconColors.CONTENT_INVERSE : IconColors.PRIMARY;
+
   return (
     <div className="sendbird-openchannel-settings">
       <div className="sendbird-openchannel-settings__header">
@@ -24,6 +29,7 @@ export default function InvalidChannel({
         <Icon
           type={IconTypes.CLOSE}
           className="sendbird-openchannel-settings__close-icon"
+          fillColor={iconColor}
           height="24px"
           width="24px"
           onClick={() => {
