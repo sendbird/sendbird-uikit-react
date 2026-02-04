@@ -35,6 +35,8 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
 
   menuRef: React.RefObject<HTMLUListElement> = React.createRef();
 
+  private resizeRafId: number | null = null;
+
   componentDidMount(): void {
     this.setupEvents();
     this.getMenuPosition();
@@ -43,6 +45,14 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
   componentWillUnmount(): void {
     this.cleanUpEvents();
   }
+
+  handleResize = (): void => {
+    if (this.resizeRafId !== null) return;
+    this.resizeRafId = requestAnimationFrame(() => {
+      this.resizeRafId = null;
+      this.getMenuPosition();
+    });
+  };
 
   setupEvents = (): void => {
     const { closeDropdown } = this.props;
@@ -57,6 +67,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
     });
 
     document.addEventListener('mousedown', handleClickOutside);
+    window.addEventListener('resize', this.handleResize);
   };
 
   cleanUpEvents = (): void => {
@@ -64,6 +75,11 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
       handleClickOutside,
     } = this.state;
     document.removeEventListener('mousedown', handleClickOutside);
+    window.removeEventListener('resize', this.handleResize);
+    if (this.resizeRafId !== null) {
+      cancelAnimationFrame(this.resizeRafId);
+      this.resizeRafId = null;
+    }
   };
 
   getMenuPosition = (): MenuStyleType => {
@@ -76,7 +92,6 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
       height: window.innerHeight,
     } as DOMRect;
     const parentRect = parentRef?.current?.getBoundingClientRect?.();
-
     const x = (parentRect?.x || parentRect?.left || 0) - portalRect.left;
     const y = (parentRect?.y || parentRect?.top || 0) - portalRect.top;
     const menuStyle = {
