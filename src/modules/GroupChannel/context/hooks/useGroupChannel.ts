@@ -126,9 +126,8 @@ export const useGroupChannel = () => {
     clickHandler.deactivate();
 
     setAnimatedMessageId(null);
-    const message = state.messages.find(
-      (it) => it.messageId === messageId || it.createdAt === createdAt,
-    );
+
+    const message = state.messages.find((it) => it.messageId === messageId || it.createdAt === createdAt);
 
     if (message) {
       const topOffset = getMessageTopOffset(message.createdAt);
@@ -137,7 +136,23 @@ export const useGroupChannel = () => {
     } else if (state.initialized) {
       await state.resetWithStartingPoint(createdAt);
       setTimeout(() => {
-        const topOffset = getMessageTopOffset(createdAt);
+        // NOTE: Inside setTimeout callback, the closure-captured `state` is a stale snapshot (before reset).
+        // Use store.getState() to get the latest state (including updated messages) at callback execution time.
+        const currentState = store.getState();
+
+        if (currentState.messages.length === 0) return; // empty channel case.
+        let message = null;
+        let distance = Number.MAX_SAFE_INTEGER;
+        for (const it of currentState.messages) {
+          if (it.createdAt > createdAt) break;
+          const diff = Math.abs(it.createdAt - createdAt);
+          if (diff < distance) {
+            distance = diff;
+            message = it;
+          }
+        }
+
+        const topOffset = getMessageTopOffset(message.createdAt);
         if (topOffset !== null) {
           state.scrollPubSub.publish('scroll', {
             top: topOffset,

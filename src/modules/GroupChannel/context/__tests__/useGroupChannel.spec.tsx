@@ -301,7 +301,12 @@ describe('useGroupChannel', () => {
       });
       it('loads message and scrolls when message does not exist', async () => {
         const mockScrollPubSub = { publish: jest.fn() };
-        const mockResetWithStartingPoint = jest.fn().mockResolvedValue(undefined);
+        const mockResetWithStartingPoint = jest.fn().mockImplementation(async (startingPoint: number) => {
+          mockStore.setState((prev) => ({
+            ...prev,
+            messages: [{ createdAt: startingPoint, messageId: 123 }],
+          } as typeof prev));
+        });
         const mockStore = createMockStore({
           messages: [],
           initialized: true,
