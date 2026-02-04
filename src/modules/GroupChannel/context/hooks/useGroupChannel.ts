@@ -139,6 +139,8 @@ export const useGroupChannel = () => {
         // NOTE: Inside setTimeout callback, the closure-captured `state` is a stale snapshot (before reset).
         // Use store.getState() to get the latest state (including updated messages) at callback execution time.
         const currentState = store.getState();
+
+        if (currentState.messages.length === 0) return; // empty channel case.
         let message = null;
         let distance = Number.MAX_SAFE_INTEGER;
         for (const it of currentState.messages) {
