@@ -58,7 +58,6 @@ export interface MessageMenuProps {
   disableDeleteMessage?: boolean;
   showEdit?: (bool: boolean) => void;
   showRemove?: (bool: boolean) => void;
-  showMarkAsUnread?: (bool: boolean) => void;
   deleteMessage?: (message: SendableMessageType) => void;
   resendMessage?: (message: SendableMessageType) => void;
   markAsUnread?: (message: SendableMessageType) => void;
@@ -104,8 +103,6 @@ export const MessageMenu = ({
     onReplyInThread,
     onMoveToParentMessage,
   };
-
-  console.log('MADOKA inThreadList', inThreadList);
 
   return (
     <div
