@@ -42,10 +42,6 @@ export const UserListItemMenu = (props: UserListItemMenuProps) => {
     setMenuVisibility(false);
   };
 
-  if (user.userId === currentUserId) {
-    return null;
-  }
-
   useEffect(() => {
     const root = containerRef.current?.closest?.('.sendbird-user-list-item--small, .sendbird-user-list-item') as HTMLElement | null;
     if (!root) return;
@@ -55,6 +51,10 @@ export const UserListItemMenu = (props: UserListItemMenuProps) => {
 
     return () => root.classList.remove('sendbird-icon--pressed');
   }, [isMenuVisible]);
+
+  if (user.userId === currentUserId) {
+    return null;
+  }
 
   return (
     <div
