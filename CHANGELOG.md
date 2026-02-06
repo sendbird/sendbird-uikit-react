@@ -1,4 +1,18 @@
 # Changelog - v3
+## [v3.17.9] (FEB 06 2026)
+### Fixes
+- Fixed a bug where the open channel delete modal did not close after successful deletion
+- Fixed a bug where the open channel list was not updated after a channel was deleted
+- Fixed close button visibility in ChannelSettings header on dark mode
+- Fixed search and info button visibility in GroupChannel header on dark mode
+- Fixed bugs where styles were broken in some components
+- Fixed a bug where video thumbnails were rendered differently in Open Channels and Group Channels
+- Fixed a bug where the message list did not scroll to the `startingPoint` set on the `GroupChannel`
+- Fixed a bug where the input field disappeared when a new message arrived while composing a quote message
+- Fixed a bug MenuItem is over-place when app area is narrow
+- Fixed a bug where the `markAsUnread` menu was not displayed correctly when replyType was set to thread 
+
+
 ## [v3.17.8] (JAN 20 2026)
 ### Fixes
 - Fixed a bug where sometimes does not scroll to bottom when new message comes in
