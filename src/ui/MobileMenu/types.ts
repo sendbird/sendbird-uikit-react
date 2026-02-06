@@ -19,6 +19,7 @@ export interface BaseMenuProps {
   hideMenu(): void;
   isByMe?: boolean;
   replyType?: ReplyType;
+  inThreadList?: boolean;
   disabled?: boolean;
   // This should take precedence over logic inside the component
   deleteMenuState?: DeleteMenuStates;

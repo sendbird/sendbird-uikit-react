@@ -52,6 +52,7 @@ export interface MessageMenuProps {
   channel: GroupChannel | OpenChannel | null;
   isByMe?: boolean;
   replyType?: ReplyType;
+  inThreadList?: boolean;
   renderTrigger?: (params: TriggerIconProps) => ReactElement;
   renderMenuItems?: (params: RenderMenuItemsParams) => ReactElement;
   disableDeleteMessage?: boolean;
@@ -71,6 +72,7 @@ export const MessageMenu = ({
   channel,
   isByMe,
   replyType,
+  inThreadList = false,
   renderTrigger = TriggerIcon,
   renderMenuItems,
 
@@ -152,7 +154,7 @@ export const MessageMenu = ({
                   {showMenuItemThread(params) && <ThreadMenuItem />}
                   {showMenuItemOpenInChannel(params) && <OpenInChannelMenuItem />}
                   {showMenuItemEdit(params) && <EditMenuItem />}
-                  {enableMarkAsUnread && showMenuItemMarkAsUnread(params) && <MarkAsUnreadMenuItem />}
+                  {enableMarkAsUnread && !inThreadList && showMenuItemMarkAsUnread(params) && <MarkAsUnreadMenuItem />}
                   {showMenuItemResend(params) && <ResendMenuItem />}
                   {showMenuItemDelete(params) && <DeleteMenuItem />}
                 </>

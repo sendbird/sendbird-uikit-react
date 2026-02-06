@@ -179,6 +179,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
               message: message as SendableMessageType,
               isByMe: isByMe,
               replyType: replyType,
+              inThreadList: true,
               showEdit: showEdit,
               showRemove: showRemove,
               resendMessage: resendMessage,
@@ -306,6 +307,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
               message: message as SendableMessageType,
               isByMe: isByMe,
               replyType: replyType,
+              inThreadList: true,
               showRemove: showRemove,
               resendMessage: resendMessage,
               onReplyInThread: onReplyInThread,
@@ -321,6 +323,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
           message,
           userId,
           replyType,
+          inThreadList: true,
           hideMenu: () => {
             setShowMobileMenu(false);
           },
