@@ -1,4 +1,4 @@
-import React, { MutableRefObject, ReactElement, useRef, useState } from 'react';
+import React, { MutableRefObject, ReactElement, useEffect, useRef, useState } from 'react';
 
 import type { ToggleMenuItemProps } from './UserListItemMenuItems';
 import { UserListItemMenuProvider, UserListItemMenuProviderProps } from './context';
@@ -42,9 +42,20 @@ export const UserListItemMenu = (props: UserListItemMenuProps) => {
     setMenuVisibility(false);
   };
 
+  useEffect(() => {
+    const root = containerRef.current?.closest?.('.sendbird-user-list-item--small, .sendbird-user-list-item') as HTMLElement | null;
+    if (!root) return;
+
+    if (isMenuVisible) root.classList.add('sendbird-icon--pressed');
+    else root.classList.remove('sendbird-icon--pressed');
+
+    return () => root.classList.remove('sendbird-icon--pressed');
+  }, [isMenuVisible]);
+
   if (user.userId === currentUserId) {
     return null;
   }
+
   return (
     <div
       className={classnames('sendbird-user-list-item-menu', className)}
