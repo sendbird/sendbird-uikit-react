@@ -77,14 +77,22 @@ jobs:
           
           echo "Verifying package publication: $PACKAGE_NAME@$PACKAGE_VERSION"
           
-          # Wait a moment for npm registry to update
-          sleep 10
-          
-          # Check if package exists and get version info
-          if npm view $PACKAGE_NAME@$PACKAGE_VERSION version > /dev/null 2>&1; then
-            echo "✅ Package $PACKAGE_NAME@$PACKAGE_VERSION successfully published to npm"
-          else
-            echo "❌ Package $PACKAGE_NAME@$PACKAGE_VERSION not found on npm registry"
+          # npm registry can be eventually consistent right after publish.
+          # Retry for up to ~2 minutes with a short backoff.
+          max_attempts=6
+          attempt=1
+          while [ $attempt -le $max_attempts ]; do
+            if npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version > /dev/null 2>&1; then
+              echo "✅ Package $PACKAGE_NAME@$PACKAGE_VERSION successfully published to npm"
+              break
+            fi
+            echo "Attempt $attempt/$max_attempts: not visible yet. Waiting..."
+            sleep 20
+            attempt=$((attempt + 1))
+          done
+
+          if [ $attempt -gt $max_attempts ]; then
+            echo "❌ Package $PACKAGE_NAME@$PACKAGE_VERSION not found on npm registry after retries"
             exit 1
           fi
           cd -
