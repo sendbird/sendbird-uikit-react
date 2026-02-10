@@ -308,6 +308,9 @@ export const isThreadMessage = (message: CoreMessageType): boolean => (
   !!message.parentMessageId && !!message.parentMessage
 );
 
+/**
+ * @deprecated This feature is deprecated and will be removed in May 2026.
+ */
 export const isFormMessage = (message: CoreMessageType): boolean => !!(
   message.messageForm
 );

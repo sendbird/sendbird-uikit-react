@@ -192,7 +192,8 @@ export function MessageContent(props: MessageContentProps): ReactElement {
   const isFeedbackMessage = !isByMe
     && !!message?.myFeedbackStatus
     && message.myFeedbackStatus !== SbFeedbackStatus.NOT_APPLICABLE;
-  const isFeedbackEnabled = !!config?.groupChannel?.enableFeedback && isFeedbackMessage;
+  // Force-disable feedback regardless of config/message state.
+  const isFeedbackEnabled = false && isFeedbackMessage;
   const hasFeedback = message?.myFeedback?.rating;
 
   /**
@@ -635,11 +636,11 @@ export function MessageContent(props: MessageContentProps): ReactElement {
             message={message}
             onUpdate={async (selectedFeedback: FeedbackRating, comment: string) => {
               if (message.myFeedback !== null) {
-                const newFeedback: Feedback = new Feedback({
+                const newFeedback: Feedback = {
                   id: message.myFeedback.id,
                   rating: selectedFeedback,
                   comment,
-                });
+                };
                 try {
                   await message.updateFeedback(newFeedback);
                 } catch (error) {

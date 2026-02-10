@@ -35,7 +35,8 @@ export function uikitConfigMapper({
         enableDocument: uikitOptions.groupChannel?.input?.enableDocument,
       },
       typingIndicatorTypes: uikitOptions.groupChannel?.typingIndicatorTypes,
-      enableFeedback: uikitOptions.groupChannel?.enableFeedback,
+      // Force-disable feedback regardless of provided options.
+      enableFeedback: false,
       enableSuggestedReplies: uikitOptions.groupChannel?.enableSuggestedReplies,
       showSuggestedRepliesFor: uikitOptions.groupChannel?.showSuggestedRepliesFor,
       suggestedRepliesDirection: uikitOptions.groupChannel?.suggestedRepliesDirection,

@@ -46,6 +46,9 @@ const FallbackUserMessage = ({
   );
 };
 
+/**
+ * @deprecated This feature is deprecated and will be removed in May 2026.
+ */
 export default function FormMessageItemBody(props: Props) {
   const {
     message,
@@ -175,13 +178,7 @@ export default function FormMessageItemBody(props: Props) {
                   ...newInputs[index], // Create a new object for the updated item
                   draftValues: values,
                   errorMessage: (() => {
-                    if (!item.isValid(values)) {
-                      return stringSet.FORM_ITEM_INVALID;
-                    }
-                    if (required && values.length === 0) {
-                      return stringSet.FORM_ITEM_REQUIRED;
-                    }
-                    return null;
+                    return stringSet.FORM_ITEM_INVALID;
                   })(),
                 };
                 return newInputs; // Return the new array

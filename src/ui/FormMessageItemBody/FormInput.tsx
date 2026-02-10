@@ -21,6 +21,9 @@ export const InputLabel = ({ children }: InputLabelProps): ReactElement => (
     </Label>
 );
 
+/**
+ * @deprecated This feature is deprecated and will be removed in May 2026.
+ */
 export interface InputProps {
   name: string;
   style: MessageFormItemStyle;
@@ -47,6 +50,9 @@ interface ChipData {
   option: string;
 }
 
+/**
+ * @deprecated This feature is deprecated and will be removed in May 2026.
+ */
 const FormInput = (props: InputProps) => {
   const {
     name,

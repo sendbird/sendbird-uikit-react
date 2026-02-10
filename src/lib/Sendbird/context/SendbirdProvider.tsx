@@ -205,7 +205,8 @@ const SendbirdContextManager = ({
       enableVoiceMessage: configs.groupChannel.channel.enableVoiceMessage,
       enableDocument: configs.groupChannel.channel.input.enableDocument,
       typingIndicatorTypes: configs.groupChannel.channel.typingIndicatorTypes,
-      enableFeedback: configs.groupChannel.channel.enableFeedback,
+      // Force-disable feedback regardless of dashboard/app configs.
+      enableFeedback: false,
       enableSuggestedReplies: configs.groupChannel.channel.enableSuggestedReplies,
       showSuggestedRepliesFor: configs.groupChannel.channel.showSuggestedRepliesFor,
       suggestedRepliesDirection: configs.groupChannel.channel.suggestedRepliesDirection,

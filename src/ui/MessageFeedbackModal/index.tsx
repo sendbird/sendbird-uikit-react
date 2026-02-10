@@ -10,6 +10,9 @@ import { CoreMessageType } from '../../utils';
 import { FeedbackRating } from '@sendbird/chat/message';
 import { useKeyDown } from '../../hooks/useKeyDown/useKeyDown';
 
+/**
+ * @deprecated This feature is deprecated and will be removed in May 2026.
+ */
 export interface MessageFeedbackModalProps {
   selectedFeedback: FeedbackRating | undefined;
   message: CoreMessageType;
@@ -19,6 +22,9 @@ export interface MessageFeedbackModalProps {
   onRemove?: () => void;
 }
 
+/**
+ * @deprecated This feature is deprecated and will be removed in May 2026.
+ */
 export default function MessageFeedbackModal(props: MessageFeedbackModalProps): ReactElement {
   const {
     selectedFeedback,

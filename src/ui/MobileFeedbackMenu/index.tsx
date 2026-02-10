@@ -4,6 +4,9 @@ import Label, { LabelColors, LabelTypography } from '../Label';
 import './index.scss';
 import { useLocalization } from '../../lib/LocalizationContext';
 
+/**
+ * @deprecated This feature is deprecated and will be removed in May 2026.
+ */
 export interface MobileFeedbackMenuProps {
   hideMenu(): void;
   onEditFeedback(): void;

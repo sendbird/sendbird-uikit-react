@@ -6,11 +6,18 @@ import Label, { LabelColors, LabelTypography } from '../Label';
 import '../MessageFeedbackModal/index.scss';
 import { useKeyDown } from '../../hooks/useKeyDown/useKeyDown';
 
+
+/**
+ * @deprecated This feature is deprecated and will be removed in May 2026.
+ */
 export interface MessageFeedbackFailedModalProps {
   text: string;
   onCancel?: () => void;
 }
 
+/**
+ * @deprecated This feature is deprecated and will be removed in May 2026.
+ */
 export default function MessageFeedbackFailedModal(props: MessageFeedbackFailedModalProps): ReactElement {
   const {
     text,
