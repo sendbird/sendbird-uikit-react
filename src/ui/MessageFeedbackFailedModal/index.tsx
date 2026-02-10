@@ -6,7 +6,6 @@ import Label, { LabelColors, LabelTypography } from '../Label';
 import '../MessageFeedbackModal/index.scss';
 import { useKeyDown } from '../../hooks/useKeyDown/useKeyDown';
 
-
 /**
  * @deprecated This feature is deprecated and will be removed in May 2026.
  */
