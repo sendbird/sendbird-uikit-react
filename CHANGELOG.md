@@ -1,4 +1,8 @@
 # Changelog - v3
+## [v3.17.10] (FEB 11 2026)
+### Fixes
+- Fixed an unintended build issue caused by deprecating `MessageFeedBack` and `MessageForm`
+
 ## [v3.17.9] (FEB 06 2026)
 ### Fixes
 - Fixed a bug where the open channel delete modal did not close after successful deletion
