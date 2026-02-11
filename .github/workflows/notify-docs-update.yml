@@ -1,0 +1,80 @@
+# Template: SDK Release Documentation Notification
+#
+# Copy this workflow to your SDK repository and configure the SDK_TYPE variable.
+# When a release is published, it will notify the sendbird-docs repository to
+# generate documentation updates based on the release notes.
+#
+# Required setup:
+# 1. Copy this file to your SDK repo: .github/workflows/notify-docs-update.yml
+# 2. Update the SDK_TYPE environment variable to match your SDK
+# 3. Create a GitHub Personal Access Token with 'repo' scope
+# 4. Add the token as a secret named DOCS_REPO_TOKEN in your SDK repo
+#
+# SDK_TYPE options:
+#   - chat-sdk-javascript
+#   - chat-sdk-ios
+#   - chat-sdk-android
+#   - chat-sdk-flutter
+#   - chat-sdk-unity
+#   - uikit-react
+#   - uikit-react-native
+#   - uikit-ios
+#   - uikit-android
+#   - uikit-swiftui
+
+name: Notify Docs Repository on Release
+
+on:
+  release:
+    types: [published]
+
+env:
+  # UPDATE THIS: Set to your SDK type (see options above)
+  SDK_TYPE: uikit-react
+  DOCS_REPO: sendbird/sendbird-docs
+
+jobs:
+  notify-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger documentation update
+        env:
+          GH_TOKEN: ${{ secrets.DOCS_REPO_TOKEN }}
+        run: |
+          # Extract repository info
+          SDK_REPO="${{ github.repository }}"
+          RELEASE_TAG="${{ github.event.release.tag_name }}"
+          RELEASE_URL="${{ github.event.release.html_url }}"
+
+          echo "Triggering docs update for:"
+          echo "  SDK Repo: $SDK_REPO"
+          echo "  Release Tag: $RELEASE_TAG"
+          echo "  SDK Type: $SDK_TYPE"
+
+          # Trigger repository_dispatch event on docs repo
+          curl -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ env.DOCS_REPO }}/dispatches" \
+            -d "{
+              \"event_type\": \"sdk-release\",
+              \"client_payload\": {
+                \"sdk_repo\": \"$SDK_REPO\",
+                \"release_tag\": \"$RELEASE_TAG\",
+                \"sdk_type\": \"${{ env.SDK_TYPE }}\",
+                \"release_url\": \"$RELEASE_URL\"
+              }
+            }"
+
+          echo "Documentation update triggered successfully!"
+
+      - name: Summary
+        run: |
+          echo "## Documentation Update Triggered" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "A documentation update request has been sent to the docs repository." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **SDK:** ${{ env.SDK_TYPE }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release:** ${{ github.event.release.tag_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Docs Repo:** ${{ env.DOCS_REPO }}" >> $GITHUB_STEP_SUMMARY
