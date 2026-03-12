@@ -1,4 +1,8 @@
 # Changelog - v3
+## [v3.17.11] (MAR 12 2026)
+### Fixes
+- Fix a security vulnerability by upgrading dompurify to v3.3.2 (CVE range: >=3.1.3, <=3.3.1)
+
 ## [v3.17.10] (FEB 11 2026)
 ### Fixes
 - Fixed an unintended build issue caused by deprecating `MessageFeedBack` and `MessageForm`
