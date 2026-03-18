@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import type { SendbirdError } from '@sendbird/chat';
 import type { BaseMessage } from '@sendbird/chat/message';
 import { CoreMessageType } from '../../../../utils';
@@ -23,19 +23,30 @@ function useScrollCallback(
   const {
     state: {
       currentMessageSearchQuery,
-      hasMoreResult,
     },
     actions: {
       getNextSearchedMessages,
     },
   } = useMessageSearch();
 
+  const queryRef = useRef(currentMessageSearchQuery);
+  queryRef.current = currentMessageSearchQuery;
+
   return useCallback((cb) => {
-    if (!hasMoreResult) {
-      logger.warning('MessageSearch | useScrollCallback: no more searched results', hasMoreResult);
+    const query = queryRef.current;
+
+    if (!navigator.onLine) {
+      logger.warning('MessageSearch | useScrollCallback: offline, skip loading more results');
+      return;
     }
-    if (currentMessageSearchQuery && currentMessageSearchQuery.hasNext) {
-      currentMessageSearchQuery
+
+    if (query?.isLoading) {
+      logger.warning('MessageSearch | useScrollCallback: query already in progress');
+      return;
+    }
+    
+    if (query && query.hasNext) {
+      query
         .next()
         .then((messages) => {
           logger.info('MessageSearch | useScrollCallback: succeeded getting searched messages', messages);
@@ -53,9 +64,9 @@ function useScrollCallback(
           }
         });
     } else {
-      logger.warning('MessageSearch | useScrollCallback: no currentMessageSearchQuery');
+      logger.warning('MessageSearch | useScrollCallback: no currentMessageSearchQuery or no more results');
     }
-  }, [currentMessageSearchQuery, hasMoreResult]);
+  }, []);
 }
 
 export default useScrollCallback;
