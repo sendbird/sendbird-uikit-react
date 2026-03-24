@@ -203,7 +203,7 @@ const stringSet = {
     THREAD__INPUT__REPLY_IN_THREAD: 'Reply in thread',
     // Feature - Mention
     MENTION_NAME__NO_NAME: '(No name)',
-    MENTION_COUNT__OVER_LIMIT: 'You can mention up to %d times at a time.',
+    MENTION_COUNT__OVER_LIMIT: 'You can have up to %d mentions per message.',
     UI__FILE_VIEWER__UNSUPPORT: 'Unsupported message',
     // Feature - Voice Message
     VOICE_RECORDING_PERMISSION_DENIED: `You cannot record the voice since
