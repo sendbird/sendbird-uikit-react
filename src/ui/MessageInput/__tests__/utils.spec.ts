@@ -1,5 +1,5 @@
 import jsdom from 'jsdom';
-import { nodeListToArray, sanitizeString } from '../utils';
+import { extractTextAndMentions, nodeListToArray, sanitizeString, stripZeroWidthSpace } from '../utils';
 
 describe('MessageInputUtils/nodeListToArray', () => {
   it('should convert node list to array', () => {
@@ -88,5 +88,31 @@ describe('Utils/sanitizeString', () => {
     const input = 'Hello\u200BWorld'; // Zero-width space (U+200B)
     const expectedOutput = 'Hello\u200BWorld';
     expect(sanitizeString(input)).toBe(expectedOutput);
+  });
+});
+
+describe('Utils/stripZeroWidthSpace', () => {
+  it('should remove zero-width spaces', () => {
+    const input = 'Hello\u200BWorld\u200B';
+    expect(stripZeroWidthSpace(input)).toBe('HelloWorld');
+  });
+
+  it('should return an empty string if input is undefined', () => {
+    expect(stripZeroWidthSpace(undefined)).toBe('');
+  });
+});
+
+describe('Utils/extractTextAndMentions', () => {
+  it('should remove zero-width spaces from extracted text', () => {
+    const dom = new jsdom.JSDOM('<div id="root">Hello\u200BWorld\u200B</div>');
+    const root = dom.window.document.getElementById('root');
+
+    const result = extractTextAndMentions(root?.childNodes as NodeListOf<ChildNode>);
+
+    expect(result).toEqual({
+      isMentionedMessage: false,
+      mentionTemplate: 'HelloWorld',
+      messageText: 'HelloWorld',
+    });
   });
 });

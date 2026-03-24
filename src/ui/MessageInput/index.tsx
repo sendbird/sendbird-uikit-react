@@ -11,7 +11,13 @@ import Icon, { IconColors, IconTypes } from '../Icon';
 import Label, { LabelColors, LabelTypography } from '../Label';
 import { useLocalization } from '../../lib/LocalizationContext';
 
-import { extractTextAndMentions, isChannelTypeSupportsMultipleFilesMessage, nodeListToArray, sanitizeString } from './utils';
+import {
+  extractTextAndMentions,
+  isChannelTypeSupportsMultipleFilesMessage,
+  nodeListToArray,
+  sanitizeString,
+  stripZeroWidthSpace,
+} from './utils';
 import { arrayEqual, getMimeTypesUIKitAccepts } from '../../utils';
 import { usePaste } from './hooks/usePaste';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
@@ -36,6 +42,14 @@ const resetInput = (ref: MutableRefObject<HTMLInputElement | null> | null) => {
   if (ref && ref.current) {
     ref.current.innerHTML = '';
   }
+};
+
+const getTextContentWithoutZeroWidthSpace = (node?: { textContent?: string | null } | null) => {
+  return stripZeroWidthSpace(node?.textContent ?? '');
+};
+
+const hasTextContentWithoutZeroWidthSpace = (node?: { textContent?: string | null } | null) => {
+  return getTextContentWithoutZeroWidthSpace(node).trim().length > 0;
 };
 
 interface TargetStringInfo {
@@ -145,7 +159,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   useEffect(() => {
     const textField = internalRef?.current;
     setMentionedUserIds([]);
-    setIsInput(textField?.textContent ? textField.textContent.trim().length > 0 : false);
+    setIsInput(hasTextContentWithoutZeroWidthSpace(textField));
   }, [initialValue]);
 
   // #Mention | Clear input value when channel changes
@@ -199,7 +213,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         }
         setMentionedUserIds([]);
       }
-      setIsInput(textField?.textContent ? textField?.textContent?.trim().length > 0 : false);
+      setIsInput(hasTextContentWithoutZeroWidthSpace(textField));
     }
   }, [isEdit, message]);
 
@@ -216,7 +230,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         setMentionedUserIds(newMentionedUserIds);
       }
     }
-    setIsInput(textField?.textContent ? textField.textContent?.trim().length > 0 : false);
+    setIsInput(hasTextContentWithoutZeroWidthSpace(textField));
   }, [targetStringInfo, isMentionEnabled]);
 
   // #Mention | Replace selected user nickname to the MentionedUserLabel
@@ -348,8 +362,9 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
   const sendMessage = () => {
     try {
       const textField = internalRef?.current;
-      if (!isEdit && textField?.textContent) {
+      if (!isEdit && textField) {
         const { messageText, mentionTemplate, isMentionedMessage } = extractTextAndMentions(textField.childNodes);
+        if (messageText.trim().length === 0) return;
         const params = { message: messageText, mentionTemplate };
         if (!isMentionedMessage) params.mentionTemplate = '';
         onSendMessage(params);
@@ -372,13 +387,14 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
       eventHandlers?.message?.onSendMessageFailed?.(message, error);
     }
   };
-  const isEditDisabled = !internalRef?.current?.textContent?.trim();
+  const isEditDisabled = !hasTextContentWithoutZeroWidthSpace(internalRef?.current);
   const editMessage = () => {
     try {
       const textField = internalRef?.current;
       const messageId = message?.messageId;
       if (isEdit && messageId && textField) {
         const { messageText, mentionTemplate } = extractTextAndMentions(textField.childNodes);
+        if (messageText.trim().length === 0) return;
         const params = { messageId, message: messageText, mentionTemplate };
         onUpdateMessage(params);
         resetInput(internalRef);
@@ -470,8 +486,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
                 !e.shiftKey
                 && e.key === MessageInputKeys.Enter
                 && !isMobile
-                && internalRef?.current?.textContent
-                && internalRef.current.textContent.trim().length > 0
+                && hasTextContentWithoutZeroWidthSpace(internalRef?.current)
                 && e?.nativeEvent?.isComposing !== true
                 /**
                  * NOTE: What isComposing does?
@@ -506,7 +521,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           }}
           onInput={() => {
             onStartTyping();
-            setIsInput(internalRef?.current?.textContent ? internalRef.current.textContent.trim().length > 0 : false);
+            setIsInput(hasTextContentWithoutZeroWidthSpace(internalRef?.current));
             useMentionedLabelDetection();
           }}
           onPaste={(e) => {
@@ -515,7 +530,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
           }}
         />
         {/* placeholder */}
-        {(internalRef?.current?.textContent?.length ?? 0) === 0 && (
+        {getTextContentWithoutZeroWidthSpace(internalRef?.current).length === 0 && (
           <Label
             className="sendbird-message-input--placeholder"
             type={LabelTypography.BODY_1}

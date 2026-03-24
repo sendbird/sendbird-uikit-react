@@ -12,6 +12,11 @@ export const sanitizeString = (str: string = ''): string => {
   return str.replace(/[<>]/g, (char) => (char === '<' ? '&#60;' : '&#62;'));
 };
 
+export const stripZeroWidthSpace = (str: string = ''): string => {
+  if (!str) return '';
+  return str.replace(/\u200B/g, '');
+};
+
 /**
  * NodeList cannot be used with Array methods
  * @param {NodeListOf<ChildNode>} childNodes
@@ -40,17 +45,17 @@ export function extractTextAndMentions(childNodes: NodeListOf<ChildNode>) {
       const { innerText, dataset = {} } = node;
       const { userid = '' } = dataset;
       if (userid) isMentionedMessage = true;
-      messageText += innerText;
+      messageText += stripZeroWidthSpace(innerText);
       mentionTemplate += `${USER_MENTION_TEMP_CHAR}{${userid}}`;
     } else if (isHTMLElement(node) && node.nodeName === NodeNames.Br) {
       messageText += '\n';
       mentionTemplate += '\n';
     } else if (isHTMLElement(node) && node.nodeName === NodeNames.Div) {
-      const { textContent = '' } = node;
+      const textContent = stripZeroWidthSpace(node.textContent ?? '');
       messageText += `\n${textContent}`;
       mentionTemplate += `\n${textContent}`;
     } else {
-      const { textContent = '' } = node;
+      const textContent = stripZeroWidthSpace(node.textContent ?? '');
       messageText += textContent;
       mentionTemplate += textContent;
     }
