@@ -106,8 +106,9 @@ describe('Utils/extractTextAndMentions', () => {
   it('should remove zero-width spaces from extracted text', () => {
     const dom = new jsdom.JSDOM('<div id="root">Hello\u200BWorld\u200B</div>');
     const root = dom.window.document.getElementById('root');
+    if (!root) throw new Error('root element not found');
 
-    const result = extractTextAndMentions(root?.childNodes as NodeListOf<ChildNode>);
+    const result = extractTextAndMentions(root.childNodes);
 
     expect(result).toEqual({
       isMentionedMessage: false,
