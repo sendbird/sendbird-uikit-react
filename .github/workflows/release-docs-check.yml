@@ -1,0 +1,119 @@
+name: Release Docs Check
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag (e.g., 3.17.0)'
+        required: false
+        type: string
+        default: ''
+
+# ============================================
+# PLATFORM CONFIG — Change these for your SDK
+# ============================================
+env:
+  SDK_TYPE: uikit-react
+  PLATFORM: react
+
+jobs:
+  config:
+    runs-on: ubuntu-latest
+    outputs:
+      sdk_type: ${{ steps.set.outputs.sdk_type }}
+      platform: ${{ steps.set.outputs.platform }}
+      release_tag: ${{ steps.tag.outputs.release_tag }}
+      should_run: ${{ steps.tag.outputs.should_run }}
+    steps:
+      - id: set
+        run: |
+          echo "sdk_type=$SDK_TYPE" >> "$GITHUB_OUTPUT"
+          echo "platform=$PLATFORM" >> "$GITHUB_OUTPUT"
+      - id: tag
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_REF: ${{ github.event.workflow_run.head_branch }}
+          CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          INPUT_TAG: ${{ inputs.release_tag }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_run" ]; then
+            if [ "$CONCLUSION" != "success" ]; then
+              echo "Release workflow did not succeed ($CONCLUSION). Skipping."
+              echo "should_run=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            TAG=$(echo "$HEAD_REF" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | tail -1)
+            if [ -z "$TAG" ]; then
+              TAG=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" --jq '.inputs.version // .inputs.release_tag // empty' 2>/dev/null)
+            fi
+            if [ -n "$TAG" ]; then
+              echo "release_tag=$TAG" >> "$GITHUB_OUTPUT"
+              echo "should_run=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "::warning::Could not determine release tag from branch '$HEAD_REF' or workflow inputs"
+              echo "should_run=false" >> "$GITHUB_OUTPUT"
+            fi
+          elif [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "release_tag=$INPUT_TAG" >> "$GITHUB_OUTPUT"
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  docs-check:
+    needs: config
+    if: needs.config.outputs.should_run == 'true'
+    uses: sendbird/client-workflows/.github/workflows/claude-docs-validation.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    secrets: inherit
+    with:
+      sdk_type: ${{ needs.config.outputs.sdk_type }}
+      platform: ${{ needs.config.outputs.platform }}
+      release_tag: ${{ needs.config.outputs.release_tag }}
+
+  # Extract PR branch info for comment-triggered runs
+  pr-info:
+    if: |
+      github.event_name == 'issue_comment' &&
+      contains(github.event.comment.html_url, '/pull/') &&
+      contains(github.event.comment.body, '/docs-validation')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      release_tag: ${{ steps.extract.outputs.release_tag }}
+    steps:
+      - name: Extract release tag from PR branch
+        id: extract
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          BRANCH=$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json headRefName --jq '.headRefName')
+          echo "PR branch: $BRANCH"
+          RELEASE_TAG=$(echo "$BRANCH" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | tail -1)
+          if [ -z "$RELEASE_TAG" ]; then
+            echo "::error::PR branch '$BRANCH' does not contain a version number"
+            exit 1
+          fi
+          echo "release_tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+
+  docs-check-on-comment:
+    needs: [config, pr-info]
+    if: |
+      contains(github.event.comment.html_url, '/pull/') &&
+      contains(github.event.comment.body, '/docs-validation')
+    uses: sendbird/client-workflows/.github/workflows/claude-docs-validation.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    secrets: inherit
+    with:
+      sdk_type: ${{ needs.config.outputs.sdk_type }}
+      platform: ${{ needs.config.outputs.platform }}
+      release_tag: ${{ needs.pr-info.outputs.release_tag }}
