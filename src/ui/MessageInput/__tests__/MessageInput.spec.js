@@ -204,6 +204,19 @@ describe('ui/MessageInput', () => {
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(onSendMessage).not.toHaveBeenCalledWith({ mentionTemplate: '', message: mockText });
   });
+
+  it('should not call sendMessage with only zero-width spaces', () => {
+    const onSendMessage = jest.fn();
+    render(<MessageInput onSendMessage={onSendMessage} />);
+
+    const input = screen.getByRole('textbox');
+    input.textContent = '\u200B';
+
+    fireEvent.input(input);
+    fireEvent.keyDown(input, { key: 'Enter' });
+
+    expect(onSendMessage).not.toHaveBeenCalled();
+  });
   
   it('should render send icon if text is present', async() => {
     const onSendMessage = jest.fn();
@@ -366,5 +379,4 @@ describe('MessageInput error handling', () => {
     expect(eventHandlers.message.onFileUploadFailed).toHaveBeenCalled();
   });
 });
-
 
