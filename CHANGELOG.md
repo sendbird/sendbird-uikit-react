@@ -1,4 +1,8 @@
 # Changelog - v3
+## [v3.17.12] (MAR 26 2026)
+### Fixes
+- Fixed a bug where invisible zero-width spaces inserted during paste in `MessageInput` could be included in sent or updated messages
+
 ## [v3.17.11] (MAR 12 2026)
 ### Fixes
 - Fix a security vulnerability by upgrading dompurify to v3.3.2 (CVE range: >=3.1.3, <=3.3.1)
