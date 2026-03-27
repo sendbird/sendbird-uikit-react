@@ -63,15 +63,24 @@ jobs:
   docs-check:
     needs: config
     if: needs.config.outputs.should_run == 'true'
-    uses: sendbird/client-workflows/.github/workflows/claude-docs-validation.yml@main
-    permissions:
-      contents: read
-      id-token: write
-    secrets: inherit
-    with:
-      sdk_type: ${{ needs.config.outputs.sdk_type }}
-      platform: ${{ needs.config.outputs.platform }}
-      release_tag: ${{ needs.config.outputs.release_tag }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.SDK_REPO_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'sendbird',
+              repo: 'client-workflows',
+              workflow_id: 'claude-docs-validation.yml',
+              ref: 'main',
+              inputs: {
+                sdk_type: '${{ needs.config.outputs.sdk_type }}',
+                platform: '${{ needs.config.outputs.platform }}',
+                release_tag: '${{ needs.config.outputs.release_tag }}',
+                source_repo: '${{ github.repository }}'
+              }
+            });
 
   pr-info:
     if: |
@@ -108,12 +117,21 @@ jobs:
       contains(github.event.comment.html_url, '/pull/') &&
       contains(github.event.comment.body, '/docs-validation') &&
       github.event.comment.author_association != 'NONE'
-    uses: sendbird/client-workflows/.github/workflows/claude-docs-validation.yml@main
-    permissions:
-      contents: read
-      id-token: write
-    secrets: inherit
-    with:
-      sdk_type: ${{ needs.config.outputs.sdk_type }}
-      platform: ${{ needs.config.outputs.platform }}
-      release_tag: ${{ needs.pr-info.outputs.release_tag }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.SDK_REPO_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'sendbird',
+              repo: 'client-workflows',
+              workflow_id: 'claude-docs-validation.yml',
+              ref: 'main',
+              inputs: {
+                sdk_type: '${{ needs.config.outputs.sdk_type }}',
+                platform: '${{ needs.config.outputs.platform }}',
+                release_tag: '${{ needs.pr-info.outputs.release_tag }}',
+                source_repo: '${{ github.repository }}'
+              }
+            });
