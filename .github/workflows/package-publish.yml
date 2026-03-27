@@ -60,12 +60,14 @@ jobs:
           yarn install
           yarn build
       - name: Publish to npm
+        env:
+          NPM_TAG: ${{ github.event.inputs.npm_tag }}
         run: |
           cd ./dist
-          if [ -z "${{ github.event.inputs.npm_tag }}" ]; then
+          if [ -z "$NPM_TAG" ]; then
             npm publish --access=public --provenance
           else
-            npm publish --tag ${{ github.event.inputs.npm_tag }} --access=public --provenance
+            npm publish --tag "$NPM_TAG" --access=public --provenance
             echo "npm_tag is provided; Skipping the rest of the steps."
             echo "SKIP_REST=true" >> $GITHUB_ENV
           fi
