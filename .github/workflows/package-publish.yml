@@ -20,11 +20,11 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           token: ${{ secrets.SDK_GH_BOT1_TOKEN }}
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 18.x
           cache: 'yarn'
@@ -59,7 +59,7 @@ jobs:
       - name: Publish to npm
         run: |
           cd ./dist
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.npm_token }}" > .npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
           if [ -z "${{ github.event.inputs.npm_tag }}" ]; then
             npm publish --access=public
           else

@@ -1,0 +1,141 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_ticket_key:
+        description: 'Release Ticket Key (e.g., UIKIT-1234)'
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    env:
+      BOT_GH_TOKEN: ${{ secrets.SDK_GH_BOT1_TOKEN }}
+      JIRA_AUTH_USER: ${{ secrets.JIRA_AUTH_USER }}
+      JIRA_AUTH_API_TOKEN: ${{ secrets.JIRA_AUTH_API_TOKEN }}
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      RELEASE_TICKET_KEY: ${{ inputs.release_ticket_key }}
+      SLACK_RELEASE_CHANNEL_ID: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          token: ${{ env.BOT_GH_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '18'
+          cache: 'yarn'
+
+      - name: Install dependencies and build
+        run: |
+          yarn install --immutable
+          yarn build
+
+      - name: Extract release version
+        run: |
+          pip3 install requests
+          git config --global user.email "sha.sdk_deployment@sendbird.com"
+          git config --global user.name "sendbird-sdk-deployment"
+          git clone --depth 1 --branch main https://${{ env.BOT_GH_TOKEN }}@github.com/sendbird/sdk-deployment.git ~/sdk-deployment
+          release_version=$(python3 ~/sdk-deployment/scripts/v1.2/extract_version.py --branch_name ${{ github.ref_name }})
+          echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
+
+      - name: Publish to npm
+        run: |
+          cd ./dist
+          echo "//registry.npmjs.org/:_authToken=${{ env.NPM_TOKEN }}" > .npmrc
+          npm publish --access=public
+
+      - name: Verify npm package publication
+        run: |
+          cd ./dist
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          max_attempts=6
+          attempt=1
+          while [ $attempt -le $max_attempts ]; do
+            if npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version > /dev/null 2>&1; then
+              echo "Package $PACKAGE_NAME@$PACKAGE_VERSION successfully published to npm"
+              exit 0
+            fi
+            echo "Attempt $attempt/$max_attempts: Package not visible yet. Waiting 20s..."
+            sleep 20
+            attempt=$((attempt + 1))
+          done
+          echo "Package $PACKAGE_NAME@$PACKAGE_VERSION not found on npm registry after $max_attempts attempts"
+          exit 1
+
+      - name: Merge release branch to main
+        run: |
+          python3 ~/sdk-deployment/scripts/v1.2/github_pr_merge.py \
+            --github_api_token ${{ env.BOT_GH_TOKEN }} \
+            --repo_name ${{ github.event.repository.name }} \
+            --branch_name ${{ github.ref_name }}
+          git fetch origin main
+          git switch main
+          git pull origin main
+
+      - name: Create git tag
+        run: |
+          git tag "v${{ env.RELEASE_VERSION }}"
+          git push origin "v${{ env.RELEASE_VERSION }}"
+
+      - name: Create GitHub Release
+        run: |
+          python3 ~/sdk-deployment/scripts/v1.2/create_github_release.py \
+            --github_api_token ${{ env.BOT_GH_TOKEN }} \
+            --repo_name ${{ github.event.repository.name }} \
+            --tag_name "v${{ env.RELEASE_VERSION }}" \
+            --target_commitish main \
+            --body_path "$GITHUB_WORKSPACE/CHANGELOG_DRAFT.md"
+
+      - name: Slack notification
+        if: ${{ success() }}
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v1.24.0
+        env:
+          SLACK_BOT_TOKEN: ${{ env.SLACK_BOT_TOKEN }}
+        with:
+          channel-id: ${{ env.SLACK_RELEASE_CHANNEL_ID }}
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":tada: <https://github.com/${{ github.repository }}/releases/tag/v${{ env.RELEASE_VERSION }}|@sendbird/uikit-react ${{ env.RELEASE_VERSION }}> has been released!"
+                  }
+                }
+              ]
+            }
+
+      - name: Jira - Transition to RELEASED
+        if: ${{ success() }}
+        run: |
+          python3 ~/sdk-deployment/scripts/v1.2/transit_ticket.py \
+            --jira_auth_user ${{ env.JIRA_AUTH_USER }} \
+            --jira_auth_api_token ${{ env.JIRA_AUTH_API_TOKEN }} \
+            --issue_key ${{ env.RELEASE_TICKET_KEY }} \
+            --from_issue_state RELEASING \
+            --to_issue_state RELEASED
+
+      - name: Jira - Rollback on failure
+        if: ${{ failure() }}
+        run: |
+          pip3 install requests 2>/dev/null || true
+          git clone --depth 1 --branch main https://${{ env.BOT_GH_TOKEN }}@github.com/sendbird/sdk-deployment.git ~/sdk-deployment 2>/dev/null || true
+          python3 ~/sdk-deployment/scripts/v1.2/transit_ticket.py \
+            --jira_auth_user ${{ env.JIRA_AUTH_USER }} \
+            --jira_auth_api_token ${{ env.JIRA_AUTH_API_TOKEN }} \
+            --issue_key ${{ env.RELEASE_TICKET_KEY }} \
+            --from_issue_state RELEASING \
+            --to_issue_state CONDITIONAL_RELEASE_APPROVED
