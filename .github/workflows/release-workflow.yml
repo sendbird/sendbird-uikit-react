@@ -20,6 +20,7 @@ jobs:
       JIRA_AUTH_USER: ${{ secrets.JIRA_AUTH_USER }}
       JIRA_AUTH_API_TOKEN: ${{ secrets.JIRA_AUTH_API_TOKEN }}
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      RELEASE_VERSION: '' # Set by "Extract release version" step
       RELEASE_TICKET_KEY: ${{ inputs.release_ticket_key }}
       SLACK_RELEASE_CHANNEL_ID: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
 
