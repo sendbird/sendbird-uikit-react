@@ -43,4 +43,4 @@ jobs:
         if: ${{ success() }}
         timeout-minutes: 15
         run: |
-          node --unhandled-rejections=warn ./node_modules/.bin/jest --forceExit --runInBand
+          yarn test --forceExit --runInBand
