@@ -19,12 +19,14 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      SKIP_REST: '' # Set to 'true' when npm_tag is provided
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           token: ${{ secrets.SDK_GH_BOT1_TOKEN }}
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 18.x
           cache: 'yarn'
@@ -57,13 +59,15 @@ jobs:
           yarn install
           yarn build
       - name: Publish to npm
+        env:
+          NPM_TAG: ${{ github.event.inputs.npm_tag }}
         run: |
           cd ./dist
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.npm_token }}" > .npmrc
-          if [ -z "${{ github.event.inputs.npm_tag }}" ]; then
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+          if [ -z "$NPM_TAG" ]; then
             npm publish --access=public
           else
-            npm publish --tag ${{ github.event.inputs.npm_tag }} --access=public
+            npm publish --tag "$NPM_TAG" --access=public
             echo "npm_tag is provided; Skipping the rest of the steps."
             echo "SKIP_REST=true" >> $GITHUB_ENV
           fi

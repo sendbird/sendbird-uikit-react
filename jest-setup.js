@@ -66,3 +66,11 @@ class MockMediaRecorder {
 global.MediaRecorder = MockMediaRecorder;
 
 copyProps(window, global);
+
+// Mock global fetch to prevent actual network requests in tests (Node 24+ has native fetch)
+global.fetch = jest.fn(() => Promise.resolve({
+  ok: true,
+  status: 200,
+  json: () => Promise.resolve({}),
+  text: () => Promise.resolve(''),
+}));
