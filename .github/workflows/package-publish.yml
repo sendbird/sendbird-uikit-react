@@ -19,6 +19,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      SKIP_REST: '' # Set to 'true' when npm_tag is provided
     steps:
       - uses: actions/checkout@v6
         with:
