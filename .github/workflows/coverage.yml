@@ -1,11 +1,11 @@
+name: Coverage Report
+
 on:
-  issue_comment:
-    types: [created, edited]
+  workflow_dispatch:
 
 jobs:
-    coverage:
-        runs-on: ubuntu-latest
-        if: github.event.issue.pull_request && contains(github.event.comment.body, './coverage')
-        steps:
-            - uses: actions/checkout@v3
-            - uses: ArtiomTr/jest-coverage-report-action@v2
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ArtiomTr/jest-coverage-report-action@v2
