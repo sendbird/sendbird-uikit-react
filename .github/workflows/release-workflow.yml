@@ -11,13 +11,15 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     env:
       BOT_GH_TOKEN: ${{ secrets.SDK_GH_BOT1_TOKEN }}
       JIRA_AUTH_USER: ${{ secrets.JIRA_AUTH_USER }}
       JIRA_AUTH_API_TOKEN: ${{ secrets.JIRA_AUTH_API_TOKEN }}
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       RELEASE_TICKET_KEY: ${{ inputs.release_ticket_key }}
       SLACK_RELEASE_CHANNEL_ID: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
 
@@ -31,7 +33,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '18'
+          node-version: '24'
           cache: 'yarn'
 
       - name: Install dependencies and build
@@ -51,8 +53,7 @@ jobs:
       - name: Publish to npm
         run: |
           cd ./dist
-          echo "//registry.npmjs.org/:_authToken=${{ env.NPM_TOKEN }}" > .npmrc
-          npm publish --access=public
+          npm publish --access=public --provenance
 
       - name: Verify npm package publication
         run: |
