@@ -1,5 +1,12 @@
 name: Coverage Report
 
+# Manual trigger only. To restore PR comment trigger, replace workflow_dispatch with:
+# on:
+#   issue_comment:
+#     types: [created, edited]
+# And add this condition to the job:
+#   if: github.event.issue.pull_request && contains(github.event.comment.body, './coverage')
+
 on:
   workflow_dispatch:
 
