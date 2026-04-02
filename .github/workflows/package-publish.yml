@@ -19,6 +19,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,8 +29,10 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 18
           cache: 'yarn'
+      - name: Update npm to latest
+        run: npm install -g npm@latest
       - name: Check if the release branch exists
         run: |
           set -x
@@ -57,13 +62,14 @@ jobs:
           yarn install
           yarn build
       - name: Publish to npm
+        env:
+          NPM_TAG: ${{ github.event.inputs.npm_tag }}
         run: |
           cd ./dist
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.npm_token }}" > .npmrc
-          if [ -z "${{ github.event.inputs.npm_tag }}" ]; then
-            npm publish --access=public
+          if [ -z "$NPM_TAG" ]; then
+            npm publish --access=public --provenance
           else
-            npm publish --tag ${{ github.event.inputs.npm_tag }} --access=public
+            npm publish --tag "$NPM_TAG" --access=public --provenance
             echo "npm_tag is provided; Skipping the rest of the steps."
             echo "SKIP_REST=true" >> $GITHUB_ENV
           fi
