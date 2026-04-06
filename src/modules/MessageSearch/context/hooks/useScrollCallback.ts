@@ -32,6 +32,9 @@ function useScrollCallback(
   const queryRef = useRef(currentMessageSearchQuery);
   queryRef.current = currentMessageSearchQuery;
 
+  const onResultLoadedRef = useRef(onResultLoaded);
+  onResultLoadedRef.current = onResultLoaded;
+
   return useCallback((cb) => {
     const query = queryRef.current;
 
@@ -44,7 +47,7 @@ function useScrollCallback(
       logger.warning('MessageSearch | useScrollCallback: query already in progress');
       return;
     }
-    
+
     if (query && query.hasNext) {
       query
         .next()
@@ -52,15 +55,15 @@ function useScrollCallback(
           logger.info('MessageSearch | useScrollCallback: succeeded getting searched messages', messages);
           getNextSearchedMessages(messages as ClientSentMessages[]);
           cb(messages, null);
-          if (onResultLoaded && typeof onResultLoaded === 'function') {
-            onResultLoaded(messages as CoreMessageType[], null);
+          if (onResultLoadedRef.current && typeof onResultLoadedRef.current === 'function') {
+            onResultLoadedRef.current(messages as CoreMessageType[], null);
           }
         })
         .catch((error) => {
           logger.warning('MessageSearch | useScrollCallback: failed getting searched messages', error);
           cb(null, error);
-          if (onResultLoaded && typeof onResultLoaded === 'function') {
-            onResultLoaded(null, error);
+          if (onResultLoadedRef.current && typeof onResultLoadedRef.current === 'function') {
+            onResultLoadedRef.current(null, error);
           }
         });
     } else {
