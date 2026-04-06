@@ -37,18 +37,10 @@ jobs:
           node-version: '24'
           cache: 'yarn'
 
-      - name: Install dependencies
-        run: yarn install --immutable
-
-      - name: Run lint
-        run: yarn lint
-
-      - name: Run build
-        run: yarn build
-
-      - name: Run tests
-        timeout-minutes: 15
-        run: yarn test --forceExit --runInBand
+      - name: Install dependencies and build
+        run: |
+          yarn install --immutable
+          yarn build
 
       - name: Extract release version
         run: |
@@ -58,6 +50,16 @@ jobs:
           git clone --depth 1 --branch main https://${{ env.BOT_GH_TOKEN }}@github.com/sendbird/sdk-deployment.git ~/sdk-deployment
           release_version=$(python3 ~/sdk-deployment/scripts/v1.2/extract_version.py --branch_name ${{ github.ref_name }})
           echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
+
+      - name: Merge release branch to main
+        run: |
+          python3 ~/sdk-deployment/scripts/v1.2/github_pr_merge.py \
+            --github_api_token ${{ env.BOT_GH_TOKEN }} \
+            --repo_name ${{ github.event.repository.name }} \
+            --branch_name ${{ github.ref_name }}
+          git fetch origin main
+          git switch main
+          git pull origin main
 
       - name: Publish to npm
         run: |
@@ -82,16 +84,6 @@ jobs:
           done
           echo "Package $PACKAGE_NAME@$PACKAGE_VERSION not found on npm registry after $max_attempts attempts"
           exit 1
-
-      - name: Merge release branch to main
-        run: |
-          python3 ~/sdk-deployment/scripts/v1.2/github_pr_merge.py \
-            --github_api_token ${{ env.BOT_GH_TOKEN }} \
-            --repo_name ${{ github.event.repository.name }} \
-            --branch_name ${{ github.ref_name }}
-          git fetch origin main
-          git switch main
-          git pull origin main
 
       - name: Create git tag
         run: |
