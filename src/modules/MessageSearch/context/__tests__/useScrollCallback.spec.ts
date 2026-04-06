@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import useScrollCallback from '../hooks/useScrollCallback';
 import useMessageSearch from '../hooks/useMessageSearch';
 
@@ -16,12 +16,17 @@ describe('useScrollCallback', () => {
   const mockOnResultLoaded = jest.fn();
   const mockGetNextSearchedMessages = jest.fn();
 
+  const originalNavigator = { ...navigator };
+
   beforeEach(() => {
     jest.clearAllMocks();
+    Object.defineProperty(global, 'navigator', {
+      value: { ...originalNavigator, onLine: true },
+      writable: true,
+    });
     (useMessageSearch as jest.Mock).mockReturnValue({
       state: {
         currentMessageSearchQuery: null,
-        hasMoreResult: false,
       },
       actions: {
         getNextSearchedMessages: mockGetNextSearchedMessages,
@@ -29,27 +34,33 @@ describe('useScrollCallback', () => {
     });
   });
 
-  it('should log warning when there are no more results', () => {
+  it('should log warning when offline', () => {
+    Object.defineProperty(global, 'navigator', {
+      value: { ...originalNavigator, onLine: false },
+      writable: true,
+    });
+
     const { result } = renderHook(() => useScrollCallback(
       { onResultLoaded: mockOnResultLoaded },
       { logger: mockLogger as any },
-    ),
-    );
+    ));
 
     const callback = jest.fn();
     result.current(callback);
 
     expect(mockLogger.warning).toHaveBeenCalledWith(
-      'MessageSearch | useScrollCallback: no more searched results',
-      false,
+      'MessageSearch | useScrollCallback: offline, skip loading more results',
     );
   });
 
-  it('should log warning when there is no currentMessageSearchQuery', () => {
+  it('should log warning when query is already loading', () => {
     (useMessageSearch as jest.Mock).mockReturnValue({
       state: {
-        currentMessageSearchQuery: null,
-        hasMoreResult: true,
+        currentMessageSearchQuery: {
+          hasNext: true,
+          isLoading: true,
+          next: jest.fn(),
+        },
       },
       actions: {
         getNextSearchedMessages: mockGetNextSearchedMessages,
@@ -59,14 +70,27 @@ describe('useScrollCallback', () => {
     const { result } = renderHook(() => useScrollCallback(
       { onResultLoaded: mockOnResultLoaded },
       { logger: mockLogger as any },
-    ),
-    );
+    ));
 
     const callback = jest.fn();
     result.current(callback);
 
     expect(mockLogger.warning).toHaveBeenCalledWith(
-      'MessageSearch | useScrollCallback: no currentMessageSearchQuery',
+      'MessageSearch | useScrollCallback: query already in progress',
+    );
+  });
+
+  it('should log warning when there is no currentMessageSearchQuery or no more results', () => {
+    const { result } = renderHook(() => useScrollCallback(
+      { onResultLoaded: mockOnResultLoaded },
+      { logger: mockLogger as any },
+    ));
+
+    const callback = jest.fn();
+    result.current(callback);
+
+    expect(mockLogger.warning).toHaveBeenCalledWith(
+      'MessageSearch | useScrollCallback: no currentMessageSearchQuery or no more results',
     );
   });
 
@@ -78,9 +102,9 @@ describe('useScrollCallback', () => {
       state: {
         currentMessageSearchQuery: {
           hasNext: true,
+          isLoading: false,
           next: mockNext,
         },
-        hasMoreResult: true,
       },
       actions: {
         getNextSearchedMessages: mockGetNextSearchedMessages,
@@ -90,11 +114,12 @@ describe('useScrollCallback', () => {
     const { result } = renderHook(() => useScrollCallback(
       { onResultLoaded: mockOnResultLoaded },
       { logger: mockLogger as any },
-    ),
-    );
+    ));
 
     const callback = jest.fn();
-    await result.current(callback);
+    await act(async () => {
+      await result.current(callback);
+    });
 
     expect(mockNext).toHaveBeenCalled();
     expect(mockLogger.info).toHaveBeenCalledWith(
@@ -114,9 +139,9 @@ describe('useScrollCallback', () => {
       state: {
         currentMessageSearchQuery: {
           hasNext: true,
+          isLoading: false,
           next: mockNext,
         },
-        hasMoreResult: true,
       },
       actions: {
         getNextSearchedMessages: mockGetNextSearchedMessages,
@@ -126,16 +151,17 @@ describe('useScrollCallback', () => {
     const { result } = renderHook(() => useScrollCallback(
       { onResultLoaded: mockOnResultLoaded },
       { logger: mockLogger as any },
-    ),
-    );
+    ));
 
     const callback = jest.fn();
 
-    try {
-      await result.current(callback);
-    } catch (error) {
-      // execute even if error occurs
-    }
+    await act(async () => {
+      try {
+        await result.current(callback);
+      } catch (error) {
+        // expected
+      }
+    });
 
     // eslint-disable-next-line no-promise-executor-return
     await new Promise(resolve => setTimeout(resolve, 0));
@@ -157,9 +183,9 @@ describe('useScrollCallback', () => {
       state: {
         currentMessageSearchQuery: {
           hasNext: true,
+          isLoading: false,
           next: mockNext,
         },
-        hasMoreResult: true,
       },
       actions: {
         getNextSearchedMessages: mockGetNextSearchedMessages,
@@ -169,11 +195,12 @@ describe('useScrollCallback', () => {
     const { result } = renderHook(() => useScrollCallback(
       { onResultLoaded: undefined },
       { logger: mockLogger as any },
-    ),
-    );
+    ));
 
     const callback = jest.fn();
-    await result.current(callback);
+    await act(async () => {
+      await result.current(callback);
+    });
 
     expect(mockNext).toHaveBeenCalled();
     expect(callback).toHaveBeenCalledWith(mockMessages, null);
@@ -185,8 +212,8 @@ describe('useScrollCallback', () => {
       state: {
         currentMessageSearchQuery: {
           hasNext: false,
+          isLoading: false,
         },
-        hasMoreResult: true,
       },
       actions: {
         getNextSearchedMessages: mockGetNextSearchedMessages,
@@ -196,14 +223,59 @@ describe('useScrollCallback', () => {
     const { result } = renderHook(() => useScrollCallback(
       { onResultLoaded: mockOnResultLoaded },
       { logger: mockLogger as any },
-    ),
-    );
+    ));
 
     const callback = jest.fn();
     result.current(callback);
 
     expect(mockLogger.warning).toHaveBeenCalledWith(
-      'MessageSearch | useScrollCallback: no currentMessageSearchQuery',
+      'MessageSearch | useScrollCallback: no currentMessageSearchQuery or no more results',
     );
+  });
+
+  it('should use latest query via ref when callback is called', () => {
+    const mockNext1 = jest.fn();
+    const mockNext2 = jest.fn().mockResolvedValue([]);
+
+    // Initial render with query1
+    (useMessageSearch as jest.Mock).mockReturnValue({
+      state: {
+        currentMessageSearchQuery: {
+          hasNext: true,
+          isLoading: false,
+          next: mockNext1,
+        },
+      },
+      actions: {
+        getNextSearchedMessages: mockGetNextSearchedMessages,
+      },
+    });
+
+    const { result, rerender } = renderHook(() => useScrollCallback(
+      { onResultLoaded: mockOnResultLoaded },
+      { logger: mockLogger as any },
+    ));
+
+    // Update to query2
+    (useMessageSearch as jest.Mock).mockReturnValue({
+      state: {
+        currentMessageSearchQuery: {
+          hasNext: true,
+          isLoading: false,
+          next: mockNext2,
+        },
+      },
+      actions: {
+        getNextSearchedMessages: mockGetNextSearchedMessages,
+      },
+    });
+
+    rerender();
+
+    // Callback should use query2 (latest), not query1
+    result.current(jest.fn());
+
+    expect(mockNext1).not.toHaveBeenCalled();
+    expect(mockNext2).toHaveBeenCalled();
   });
 });

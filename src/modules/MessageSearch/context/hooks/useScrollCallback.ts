@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import type { SendbirdError } from '@sendbird/chat';
 import type { BaseMessage } from '@sendbird/chat/message';
 import { CoreMessageType } from '../../../../utils';
@@ -23,39 +23,53 @@ function useScrollCallback(
   const {
     state: {
       currentMessageSearchQuery,
-      hasMoreResult,
     },
     actions: {
       getNextSearchedMessages,
     },
   } = useMessageSearch();
 
+  const queryRef = useRef(currentMessageSearchQuery);
+  queryRef.current = currentMessageSearchQuery;
+
+  const onResultLoadedRef = useRef(onResultLoaded);
+  onResultLoadedRef.current = onResultLoaded;
+
   return useCallback((cb) => {
-    if (!hasMoreResult) {
-      logger.warning('MessageSearch | useScrollCallback: no more searched results', hasMoreResult);
+    const query = queryRef.current;
+
+    if (!navigator.onLine) {
+      logger.warning('MessageSearch | useScrollCallback: offline, skip loading more results');
+      return;
     }
-    if (currentMessageSearchQuery && currentMessageSearchQuery.hasNext) {
-      currentMessageSearchQuery
+
+    if (query?.isLoading) {
+      logger.warning('MessageSearch | useScrollCallback: query already in progress');
+      return;
+    }
+
+    if (query && query.hasNext) {
+      query
         .next()
         .then((messages) => {
           logger.info('MessageSearch | useScrollCallback: succeeded getting searched messages', messages);
           getNextSearchedMessages(messages as ClientSentMessages[]);
           cb(messages, null);
-          if (onResultLoaded && typeof onResultLoaded === 'function') {
-            onResultLoaded(messages as CoreMessageType[], null);
+          if (onResultLoadedRef.current && typeof onResultLoadedRef.current === 'function') {
+            onResultLoadedRef.current(messages as CoreMessageType[], null);
           }
         })
         .catch((error) => {
           logger.warning('MessageSearch | useScrollCallback: failed getting searched messages', error);
           cb(null, error);
-          if (onResultLoaded && typeof onResultLoaded === 'function') {
-            onResultLoaded(null, error);
+          if (onResultLoadedRef.current && typeof onResultLoadedRef.current === 'function') {
+            onResultLoadedRef.current(null, error);
           }
         });
     } else {
-      logger.warning('MessageSearch | useScrollCallback: no currentMessageSearchQuery');
+      logger.warning('MessageSearch | useScrollCallback: no currentMessageSearchQuery or no more results');
     }
-  }, [currentMessageSearchQuery, hasMoreResult]);
+  }, []);
 }
 
 export default useScrollCallback;
