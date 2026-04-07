@@ -23,6 +23,8 @@ jobs:
       RELEASE_VERSION: '' # Set by "Extract release version" step
       RELEASE_TICKET_KEY: ${{ inputs.release_ticket_key }}
       SLACK_RELEASE_CHANNEL_ID: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
+      BRANCH_NAME: ${{ github.ref_name }}
+      REPO_NAME: ${{ github.event.repository.name }}
 
     steps:
       - name: Checkout code
@@ -48,15 +50,15 @@ jobs:
           git config --global user.email "sha.sdk_deployment@sendbird.com"
           git config --global user.name "sendbird-sdk-deployment"
           git clone --depth 1 --branch main https://${{ env.BOT_GH_TOKEN }}@github.com/sendbird/sdk-deployment.git ~/sdk-deployment
-          release_version=$(python3 ~/sdk-deployment/scripts/v1.2/extract_version.py --branch_name ${{ github.ref_name }})
+          release_version=$(python3 ~/sdk-deployment/scripts/v1.2/extract_version.py --branch_name "$BRANCH_NAME")
           echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
 
       - name: Merge release branch to main
         run: |
           python3 ~/sdk-deployment/scripts/v1.2/github_pr_merge.py \
-            --github_api_token ${{ env.BOT_GH_TOKEN }} \
-            --repo_name ${{ github.event.repository.name }} \
-            --branch_name ${{ github.ref_name }}
+            --github_api_token "$BOT_GH_TOKEN" \
+            --repo_name "$REPO_NAME" \
+            --branch_name "$BRANCH_NAME"
           git fetch origin main
           git switch main
           git pull origin main
@@ -93,8 +95,8 @@ jobs:
       - name: Create GitHub Release
         run: |
           python3 ~/sdk-deployment/scripts/v1.2/create_github_release.py \
-            --github_api_token ${{ env.BOT_GH_TOKEN }} \
-            --repo_name ${{ github.event.repository.name }} \
+            --github_api_token "$BOT_GH_TOKEN" \
+            --repo_name "$REPO_NAME" \
             --tag_name "v${{ env.RELEASE_VERSION }}" \
             --target_commitish main \
             --body_path "$GITHUB_WORKSPACE/CHANGELOG_DRAFT.md"
@@ -124,20 +126,26 @@ jobs:
         if: ${{ success() }}
         run: |
           python3 ~/sdk-deployment/scripts/v1.2/transit_ticket.py \
-            --jira_auth_user ${{ env.JIRA_AUTH_USER }} \
-            --jira_auth_api_token ${{ env.JIRA_AUTH_API_TOKEN }} \
-            --issue_key ${{ env.RELEASE_TICKET_KEY }} \
+            --jira_auth_user "$JIRA_AUTH_USER" \
+            --jira_auth_api_token "$JIRA_AUTH_API_TOKEN" \
+            --issue_key "$RELEASE_TICKET_KEY" \
             --from_issue_state RELEASING \
             --to_issue_state RELEASED
 
       - name: Jira - Rollback on failure
         if: ${{ failure() }}
         run: |
-          pip3 install requests 2>/dev/null || true
-          git clone --depth 1 --branch main https://${{ env.BOT_GH_TOKEN }}@github.com/sendbird/sdk-deployment.git ~/sdk-deployment 2>/dev/null || true
+          if ! command -v requests &>/dev/null; then
+            echo "Installing requests (not yet available)..."
+            pip3 install requests
+          fi
+          if [ ! -d ~/sdk-deployment ]; then
+            echo "Cloning sdk-deployment (not yet available)..."
+            git clone --depth 1 --branch main https://${{ env.BOT_GH_TOKEN }}@github.com/sendbird/sdk-deployment.git ~/sdk-deployment
+          fi
           python3 ~/sdk-deployment/scripts/v1.2/transit_ticket.py \
-            --jira_auth_user ${{ env.JIRA_AUTH_USER }} \
-            --jira_auth_api_token ${{ env.JIRA_AUTH_API_TOKEN }} \
-            --issue_key ${{ env.RELEASE_TICKET_KEY }} \
+            --jira_auth_user "$JIRA_AUTH_USER" \
+            --jira_auth_api_token "$JIRA_AUTH_API_TOKEN" \
+            --issue_key "$RELEASE_TICKET_KEY" \
             --from_issue_state RELEASING \
             --to_issue_state CONDITIONAL_RELEASE_APPROVED
