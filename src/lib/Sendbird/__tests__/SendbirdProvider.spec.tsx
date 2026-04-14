@@ -55,9 +55,69 @@ describe('SendbirdProvider', () => {
     expect(mockActions.connect).toHaveBeenCalledWith(
       expect.objectContaining({
         appId: 'mockAppId',
+        isNewApp: true,
         userId: 'mockUserId',
       }),
     );
+  });
+
+  it('should preserve the legacy isNewApp behavior across app and user changes', () => {
+    const { rerender } = render(
+      <SendbirdContextProvider appId="mockAppId" userId="mockUserId">
+        <div data-testid="child">Child Component</div>
+      </SendbirdContextProvider>,
+    );
+
+    expect(mockActions.connect).toHaveBeenNthCalledWith(1, expect.objectContaining({
+      appId: 'mockAppId',
+      isNewApp: true,
+      userId: 'mockUserId',
+    }));
+
+    rerender(
+      <SendbirdContextProvider appId="mockAppId" userId="nextUserId">
+        <div data-testid="child">Child Component</div>
+      </SendbirdContextProvider>,
+    );
+
+    expect(mockActions.connect).toHaveBeenNthCalledWith(2, expect.objectContaining({
+      appId: 'mockAppId',
+      isNewApp: false,
+      userId: 'nextUserId',
+    }));
+
+    rerender(
+      <SendbirdContextProvider appId="nextAppId" userId="nextUserId">
+        <div data-testid="child">Child Component</div>
+      </SendbirdContextProvider>,
+    );
+
+    expect(mockActions.connect).toHaveBeenNthCalledWith(3, expect.objectContaining({
+      appId: 'nextAppId',
+      isNewApp: true,
+      userId: 'nextUserId',
+    }));
+  });
+
+  it('should reconnect on StrictMode remount with the same appId and userId', () => {
+    render(
+      <React.StrictMode>
+        <SendbirdContextProvider appId="mockAppId" userId="mockUserId">
+          <div data-testid="child">Child Component</div>
+        </SendbirdContextProvider>
+      </React.StrictMode>,
+    );
+
+    expect(mockActions.connect).toHaveBeenCalledTimes(2);
+    expect(mockActions.connect).toHaveBeenNthCalledWith(1, expect.objectContaining({
+      appId: 'mockAppId',
+      isNewApp: true,
+      userId: 'mockUserId',
+    }));
+    expect(mockActions.connect).toHaveBeenNthCalledWith(2, expect.objectContaining({
+      appId: 'mockAppId',
+      userId: 'mockUserId',
+    }));
   });
 
   it('should call disconnect on unmount', () => {

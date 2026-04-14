@@ -362,10 +362,31 @@ describe('useSendbird', () => {
         appId: 'mockAppId',
         customApiHost: undefined,
         customWebSocketHost: undefined,
+        isNewApp: false,
         sdkInitParams: {},
       });
 
       expect(mockSetupSDK).toHaveBeenCalled();
+    });
+
+    it('should pass isNewApp through to initSDK during connect', async () => {
+      const { result } = renderHook(() => useSendbird(), { wrapper });
+      const mockInitSDK = jest.requireMock('../utils').initSDK;
+
+      await act(async () => {
+        await result.current.actions.connect({
+          logger: mockLogger,
+          userId: 'mockUserId',
+          appId: 'mockAppId',
+          accessToken: 'mockAccessToken',
+          isNewApp: true,
+        });
+      });
+
+      expect(mockInitSDK).toHaveBeenCalledWith(expect.objectContaining({
+        appId: 'mockAppId',
+        isNewApp: true,
+      }));
     });
 
     it('should handle connection failure and trigger onFailed event handler', async () => {

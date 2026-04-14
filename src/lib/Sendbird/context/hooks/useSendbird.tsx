@@ -178,6 +178,7 @@ export const useSendbird = () => {
       logger,
       userId,
       appId,
+      isNewApp = false,
       accessToken,
       nickname,
       profileUrl,
@@ -197,6 +198,7 @@ export const useSendbird = () => {
 
     const sdk = initSDK({
       appId,
+      isNewApp,
       customApiHost,
       customWebSocketHost,
       sdkInitParams,

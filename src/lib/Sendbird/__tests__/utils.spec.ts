@@ -109,6 +109,37 @@ describe('initSDK', () => {
       }),
     );
   });
+
+  it('uses isNewApp to set the newInstance init option', () => {
+    initSDK({
+      appId: 'testAppId',
+      isNewApp: true,
+    });
+
+    expect(SendbirdChat.init).toHaveBeenCalledWith(
+      expect.objectContaining({
+        appId: 'testAppId',
+        newInstance: true,
+      }),
+    );
+  });
+
+  it('preserves an explicit sdkInitParams.newInstance override', () => {
+    initSDK({
+      appId: 'testAppId',
+      isNewApp: false,
+      sdkInitParams: {
+        newInstance: true,
+      },
+    });
+
+    expect(SendbirdChat.init).toHaveBeenCalledWith(
+      expect.objectContaining({
+        appId: 'testAppId',
+        newInstance: true,
+      }),
+    );
+  });
 });
 
 const mockSdk = {

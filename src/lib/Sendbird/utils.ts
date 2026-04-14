@@ -2,7 +2,7 @@ import SendbirdChat, { DeviceOsPlatform, SendbirdChatWith, SendbirdPlatform, Sen
 import { GroupChannelModule } from '@sendbird/chat/groupChannel';
 import { OpenChannelModule } from '@sendbird/chat/openChannel';
 
-import type { AppInfoStore, CustomExtensionParams, SdkStore, SendbirdState, UserStore } from './types';
+import type { AppInfoStore, CustomExtensionParams, SdkStore, SendbirdChatInitParams, SendbirdState, UserStore } from './types';
 import { LoggerInterface } from '../Logger';
 
 type UpdateAppInfoStoreType = (state: SendbirdState, payload: AppInfoStore) => SendbirdState;
@@ -47,21 +47,24 @@ export const updateUserStore: UpdateUserStoreType = (state, payload) => {
 
 export function initSDK({
   appId,
+  isNewApp = false,
   customApiHost,
   customWebSocketHost,
   sdkInitParams = {},
 }: {
   appId: string;
+  isNewApp?: boolean;
   customApiHost?: string;
   customWebSocketHost?: string;
-  sdkInitParams?: Record<string, any>;
+  sdkInitParams?: SendbirdChatInitParams;
 }) {
-  const params = Object.assign(sdkInitParams, {
+  const params = {
+    ...sdkInitParams,
     appId,
     modules: [new GroupChannelModule(), new OpenChannelModule()],
-    // newInstance: isNewApp,
+    newInstance: typeof sdkInitParams.newInstance !== 'undefined' ? sdkInitParams.newInstance : isNewApp,
     localCacheEnabled: typeof sdkInitParams.localCacheEnabled !== 'undefined' ? sdkInitParams.localCacheEnabled : true,
-  });
+  };
 
   if (customApiHost) params.customApiHost = customApiHost;
   if (customWebSocketHost) params.customWebSocketHost = customWebSocketHost;
