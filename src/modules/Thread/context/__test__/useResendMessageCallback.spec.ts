@@ -274,4 +274,154 @@ describe('useResendMessageCallback', () => {
     expect(mockSendMessageSuccess).toHaveBeenCalledWith(mockMultipleFilesMessage);
     expect(mockPubSub.publish).toHaveBeenCalledTimes(2); // onFileUploaded and onSucceeded
   });
+
+  const renderWith = (channel: any) => renderHook(() => useResendMessageCallback(
+    {
+      currentChannel: channel as GroupChannel,
+      resendMessageStart: mockResendMessageStart,
+      sendMessageSuccess: mockSendMessageSuccess,
+      sendMessageFailure: mockSendMessageFailure,
+    },
+    { logger: mockLogger, pubSub: mockPubSub },
+  ));
+
+  it('handles synchronous throw when resending a user message', () => {
+    const userMsg = {
+      isResendable: true,
+      messageType: MessageType.USER,
+      isUserMessage: () => true,
+    } as UserMessage;
+    const channel = {
+      resendMessage: jest.fn(() => { throw new Error('boom'); }),
+    };
+    renderWith(channel).result.current(userMsg);
+    expect(mockSendMessageFailure).toHaveBeenCalledWith(userMsg);
+    expect(userMsg.sendingStatus).toBe(SendingStatus.FAILED);
+  });
+
+  it('handles file message resend failure via onFailed callback', () => {
+    const fileMsg = {
+      isResendable: true,
+      isFileMessage: () => true,
+    } as FileMessage;
+    const chain = {
+      onPending: jest.fn().mockImplementation(function (this: any) { return this; }),
+      onSucceeded: jest.fn().mockImplementation(function (this: any) { return this; }),
+      onFailed: jest.fn().mockImplementation(function (this: any, cb: (e: Error) => void) {
+        cb(new Error('upload failed'));
+        return this;
+      }),
+    };
+    const channel = { resendMessage: jest.fn(() => chain) };
+    renderWith(channel).result.current(fileMsg);
+    expect(mockSendMessageFailure).toHaveBeenCalledWith(fileMsg);
+    expect(fileMsg.sendingStatus).toBe(SendingStatus.FAILED);
+    expect(mockLogger.warning).toHaveBeenCalledWith(
+      'Thread | useResendMessageCallback: Resending file message failed.',
+      expect.any(Error),
+    );
+  });
+
+  it('handles synchronous throw when resending a file message', () => {
+    const fileMsg = {
+      isResendable: true,
+      isFileMessage: () => true,
+    } as FileMessage;
+    const channel = { resendMessage: jest.fn(() => { throw new Error('boom'); }) };
+    renderWith(channel).result.current(fileMsg);
+    expect(mockSendMessageFailure).toHaveBeenCalledWith(fileMsg);
+    expect(fileMsg.sendingStatus).toBe(SendingStatus.FAILED);
+  });
+
+  it('handles MFM resend failure via onFailed callback', () => {
+    const mfm = {
+      isResendable: true,
+      isMultipleFilesMessage: () => true,
+    } as MultipleFilesMessage;
+    const failedMessage = { ...mfm } as MultipleFilesMessage;
+    const chain: any = {
+      onPending: jest.fn().mockImplementation(function (this: any) { return this; }),
+      onFileUploaded: jest.fn().mockImplementation(function (this: any) { return this; }),
+      onSucceeded: jest.fn().mockImplementation(function (this: any) { return this; }),
+      onFailed: jest.fn().mockImplementation(function (this: any, cb: (e: Error, m: MultipleFilesMessage) => void) {
+        cb(new Error('mfm upload failed'), failedMessage);
+        return this;
+      }),
+    };
+    const channel = { url: 'channel-url', resendMessage: jest.fn(() => chain) };
+    renderWith(channel).result.current(mfm);
+    expect(mockSendMessageFailure).toHaveBeenCalledWith(failedMessage);
+    expect(mockLogger.warning).toHaveBeenCalledWith(
+      'Thread | useResendMessageCallback: Resending MFM failed.',
+      expect.any(Error),
+    );
+  });
+
+  it('handles synchronous throw when resending a MFM', () => {
+    const mfm = {
+      isResendable: true,
+      isMultipleFilesMessage: () => true,
+    } as MultipleFilesMessage;
+    const channel = { url: 'c', resendMessage: jest.fn(() => { throw new Error('boom'); }) };
+    renderWith(channel).result.current(mfm);
+    expect(mockSendMessageFailure).toHaveBeenCalledWith(mfm);
+  });
+
+  it('falls into the unsupported message branch when none of isUser/isFile/isMFM match', () => {
+    const weirdMsg = {
+      isResendable: true,
+      isUserMessage: () => false,
+      isFileMessage: () => false,
+      isMultipleFilesMessage: () => false,
+    } as unknown as SendableMessageType;
+    renderWith({}).result.current(weirdMsg);
+    expect(mockSendMessageFailure).toHaveBeenCalledWith(weirdMsg);
+    expect(weirdMsg.sendingStatus).toBe(SendingStatus.FAILED);
+    expect(mockLogger.warning).toHaveBeenCalledWith(
+      'Thread | useResendMessageCallback: Message is not resendable.',
+      weirdMsg,
+    );
+  });
+
+  it('handles user message resend failure via the onFailed callback (proper chain)', () => {
+    const userMsg = {
+      isResendable: true,
+      messageType: MessageType.USER,
+      isUserMessage: () => true,
+    } as UserMessage;
+    const chain: any = {
+      onPending: jest.fn().mockImplementation(function (this: any) { return this; }),
+      onSucceeded: jest.fn().mockImplementation(function (this: any) { return this; }),
+      onFailed: jest.fn().mockImplementation(function (this: any, cb: (e: Error) => void) {
+        cb(new Error('user-fail'));
+        return this;
+      }),
+    };
+    const channel = { resendMessage: jest.fn(() => chain) };
+    renderWith(channel).result.current(userMsg);
+    expect(userMsg.sendingStatus).toBe(SendingStatus.FAILED);
+    expect(mockSendMessageFailure).toHaveBeenCalledWith(userMsg);
+    expect(mockLogger.warning).toHaveBeenCalledWith(
+      'Thread | useResendMessageCallback: Resending user message failed.',
+      expect.any(Error),
+    );
+  });
+
+  it('treats a pending user message (messageType USER, no isUserMessage method) as user-resend', () => {
+    const userMsg = {
+      isResendable: true,
+      messageType: MessageType.USER,
+    } as unknown as UserMessage;
+    const chain: any = {
+      onPending: jest.fn().mockImplementation(function (this: any) { return this; }),
+      onSucceeded: jest.fn().mockImplementation(function (this: any, cb: (m: UserMessage) => void) {
+        cb(userMsg); return this;
+      }),
+      onFailed: jest.fn().mockImplementation(function (this: any) { return this; }),
+    };
+    const channel = { resendMessage: jest.fn(() => chain) };
+    renderWith(channel).result.current(userMsg);
+    expect(channel.resendMessage).toHaveBeenCalledWith(userMsg);
+    expect(mockSendMessageSuccess).toHaveBeenCalledWith(userMsg);
+  });
 });

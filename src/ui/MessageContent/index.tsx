@@ -462,8 +462,9 @@ export function MessageContent(props: MessageContentProps): ReactElement {
             ref={threadRepliesRef}
           />
         )}
-        {/* Feedback buttons */}
+        {/* Feedback buttons — permanently disabled via `isFeedbackEnabled = false && …`; cover when re-enabled */}
         {
+          /* istanbul ignore next */
           isFeedbackEnabled && <div
             className="sendbird-message-content__middle__body-container__feedback-buttons-container"
             ref={feedbackButtonsRef}
@@ -604,7 +605,9 @@ export function MessageContent(props: MessageContentProps): ReactElement {
           },
         })
       }
+      {/* MobileFeedbackMenu — only opens via the disabled feedback buttons above */}
       {
+        /* istanbul ignore next */
         message?.myFeedback?.rating && showFeedbackOptionsMenu && (
           <MobileFeedbackMenu
             hideMenu={() => {
@@ -628,8 +631,9 @@ export function MessageContent(props: MessageContentProps): ReactElement {
           />
         )
       }
-      {/* Feedback modal */}
+      {/* Feedback modal — only opens via the disabled feedback buttons above */}
       {
+        /* istanbul ignore next */
         message?.myFeedback?.rating && showFeedbackModal && (
           <MessageFeedbackModal
             selectedFeedback={message.myFeedback.rating}
@@ -665,8 +669,9 @@ export function MessageContent(props: MessageContentProps): ReactElement {
           />
         )
       }
-      {/* Feedback failed modal */}
+      {/* Feedback failed modal — only opens via the disabled feedback buttons above */}
       {
+        /* istanbul ignore next */
         feedbackFailedText && (
           <MessageFeedbackFailedModal
             text={feedbackFailedText}

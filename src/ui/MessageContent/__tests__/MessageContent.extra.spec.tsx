@@ -247,6 +247,120 @@ describe('MessageContent extra branches', () => {
     expect(scrollToMessage).toHaveBeenCalledWith(770, 77);
   });
 
+  it('renders the right-side menu when receiving a message on desktop and routes thread reply via PARENT path', () => {
+    const scrollToMessage = jest.fn();
+    const onReplyInThread = jest.fn();
+    const message = createMessage({
+      sender: { userId: 'other' },
+      parentMessageId: 42,
+      parentMessage: { messageId: 42, createdAt: 420 },
+    });
+    render(
+      <MessageContent
+        userId="me"
+        channel={baseChannel as any}
+        message={message as any}
+        replyType="THREAD"
+        threadReplySelectType={ThreadReplySelectType.PARENT}
+        isReactionEnabled
+        scrollToMessage={scrollToMessage}
+        onReplyInThread={onReplyInThread}
+        renderMessageBody={() => <div>body</div>}
+        renderMessageMenu={(props) => (
+          <button type="button" data-testid={`menu-${props.className ?? 'no-class'}`} onClick={() => props.onReplyInThread?.({ message: message as any })}>menu</button>
+        )}
+        renderEmojiMenu={(props) => (
+          <button type="button" data-testid={`emoji-menu-${props.className ?? 'no-class'}`}>emoji</button>
+        )}
+      />,
+    );
+    // When showRightContent is true, the right-side menu container exists with its own className-suffixed buttons
+    expect(screen.getByTestId('sendbird-message-content__right')).toBeInTheDocument();
+    expect(screen.getByTestId('menu-sendbird-message-content-menu__normal-menu')).toBeInTheDocument();
+    expect(screen.getByTestId('emoji-menu-sendbird-message-content-menu__reaction-menu')).toBeInTheDocument();
+
+    // Click the right-side normal menu — fires the inline onReplyInThread which in PARENT mode calls scrollToMessage
+    fireEvent.click(screen.getByTestId('menu-sendbird-message-content-menu__normal-menu'));
+    expect(scrollToMessage).toHaveBeenCalledWith(420, 42);
+    expect(onReplyInThread).not.toHaveBeenCalled();
+  });
+
+  it('routes right-side menu thread reply via THREAD path when select type is THREAD', () => {
+    const scrollToMessage = jest.fn();
+    const onReplyInThread = jest.fn();
+    const message = createMessage({
+      sender: { userId: 'other' },
+      parentMessageId: 7,
+      parentMessage: { messageId: 7, createdAt: 70 },
+    });
+    render(
+      <MessageContent
+        userId="me"
+        channel={baseChannel as any}
+        message={message as any}
+        replyType="THREAD"
+        threadReplySelectType={ThreadReplySelectType.THREAD}
+        isReactionEnabled
+        scrollToMessage={scrollToMessage}
+        onReplyInThread={onReplyInThread}
+        renderMessageBody={() => <div>body</div>}
+        renderMessageMenu={(props) => (
+          <button type="button" data-testid={`menu-${props.className ?? 'no-class'}`} onClick={() => props.onReplyInThread?.({ message: message as any })}>menu</button>
+        )}
+      />,
+    );
+    fireEvent.click(screen.getByTestId('menu-sendbird-message-content-menu__normal-menu'));
+    expect(onReplyInThread).toHaveBeenCalledWith({ message });
+    expect(scrollToMessage).not.toHaveBeenCalled();
+  });
+
+  it('mobile download short-circuits when no onBeforeDownloadFileMessage is provided', () => {
+    setup({ isMobile: true });
+    const message = createMessage({ sender: { userId: 'other' } });
+    render(
+      <MessageContent
+        userId="me"
+        channel={baseChannel as any}
+        message={message as any}
+        renderMessageBody={() => <div>body</div>}
+        renderMobileMenuOnLongPress={(props) => (
+          <button type="button" data-testid="dl-no-guard" onClick={(e) => props.onDownloadClick?.(e as any)}>dl</button>
+        )}
+      />,
+    );
+    fireEvent.mouseDown(screen.getByTestId('sendbird-message-content__middle'));
+    fireEvent.click(screen.getByTestId('dl-no-guard'));
+    // No throw, no logger calls — early return path
+    expect(logger.info).not.toHaveBeenCalled();
+    expect(logger.error).not.toHaveBeenCalled();
+  });
+
+  it('mobile menu onReplyInThread routes to PARENT via scrollToMessage when select type is PARENT', () => {
+    setup({ isMobile: true });
+    const scrollToMessage = jest.fn();
+    const message = createMessage({
+      sender: { userId: 'other' },
+      parentMessageId: 99,
+      parentMessage: { messageId: 99, createdAt: 990 },
+    });
+    render(
+      <MessageContent
+        userId="me"
+        channel={baseChannel as any}
+        message={message as any}
+        threadReplySelectType={ThreadReplySelectType.PARENT}
+        scrollToMessage={scrollToMessage}
+        renderMessageBody={() => <div>body</div>}
+        renderMobileMenuOnLongPress={(props) => (
+          <button type="button" data-testid="mob-reply" onClick={() => props.onReplyInThread?.({ message: message as any })}>reply</button>
+        )}
+      />,
+    );
+    fireEvent.mouseDown(screen.getByTestId('sendbird-message-content__middle'));
+    fireEvent.click(screen.getByTestId('mob-reply'));
+    expect(scrollToMessage).toHaveBeenCalledWith(990, 99);
+  });
+
   it('opens the mobile long-press menu and handles guarded downloads', async () => {
     setup({ isMobile: true });
     const onBeforeDownloadFileMessage = jest.fn()

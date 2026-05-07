@@ -1,5 +1,11 @@
 import jsdom from 'jsdom';
-import { extractTextAndMentions, nodeListToArray, sanitizeString, stripZeroWidthSpace } from '../utils';
+import {
+  extractTextAndMentions,
+  isChannelTypeSupportsMultipleFilesMessage,
+  nodeListToArray,
+  sanitizeString,
+  stripZeroWidthSpace,
+} from '../utils';
 
 describe('MessageInputUtils/nodeListToArray', () => {
   it('should convert node list to array', () => {
@@ -115,5 +121,111 @@ describe('Utils/extractTextAndMentions', () => {
       mentionTemplate: 'HelloWorld',
       messageText: 'HelloWorld',
     });
+  });
+
+  it('should detect mention via SPAN with data-userid', () => {
+    const dom = new jsdom.JSDOM(
+      '<div id="root">Hi <span data-userid="user-1">@Alice</span>!</div>',
+    );
+    const root = dom.window.document.getElementById('root');
+    if (!root) throw new Error('root element not found');
+
+    // jsdom does not implement HTMLElement.innerText, so we polyfill it from textContent
+    Object.defineProperty(dom.window.HTMLElement.prototype, 'innerText', {
+      get() { return this.textContent ?? ''; },
+      configurable: true,
+    });
+
+    const result = extractTextAndMentions(root.childNodes);
+    expect(result.isMentionedMessage).toBe(true);
+    expect(result.mentionTemplate).toBe('Hi @{user-1}!');
+    expect(result.messageText).toBe('Hi @Alice!');
+  });
+
+  it('should treat SPAN without data-userid as plain text and not flag mention', () => {
+    const dom = new jsdom.JSDOM('<div id="root"><span>plain</span></div>');
+    const root = dom.window.document.getElementById('root');
+    if (!root) throw new Error('root element not found');
+    Object.defineProperty(dom.window.HTMLElement.prototype, 'innerText', {
+      get() { return this.textContent ?? ''; },
+      configurable: true,
+    });
+
+    const result = extractTextAndMentions(root.childNodes);
+    expect(result.isMentionedMessage).toBe(false);
+    // userid is empty string \u2192 mentionTemplate appends `@{}`
+    expect(result.mentionTemplate).toBe('@{}');
+    expect(result.messageText).toBe('plain');
+  });
+
+  it('should convert BR to a newline in both text and template', () => {
+    const dom = new jsdom.JSDOM('<div id="root">a<br>b</div>');
+    const root = dom.window.document.getElementById('root');
+    if (!root) throw new Error('root element not found');
+    const result = extractTextAndMentions(root.childNodes);
+    expect(result.messageText).toBe('a\nb');
+    expect(result.mentionTemplate).toBe('a\nb');
+    expect(result.isMentionedMessage).toBe(false);
+  });
+
+  it('should prepend a newline for nested DIV blocks', () => {
+    const dom = new jsdom.JSDOM('<div id="root">first<div>second</div></div>');
+    const root = dom.window.document.getElementById('root');
+    if (!root) throw new Error('root element not found');
+    const result = extractTextAndMentions(root.childNodes);
+    expect(result.messageText).toBe('first\nsecond');
+    expect(result.mentionTemplate).toBe('first\nsecond');
+  });
+
+  it('should fall back to textContent for non-HTMLElement nodes', () => {
+    const dom = new jsdom.JSDOM('<div id="root">just text</div>');
+    const root = dom.window.document.getElementById('root');
+    if (!root) throw new Error('root element not found');
+    const result = extractTextAndMentions(root.childNodes);
+    expect(result.messageText).toBe('just text');
+  });
+
+  it('should handle empty NodeList without throwing', () => {
+    const dom = new jsdom.JSDOM('<div id="root"></div>');
+    const root = dom.window.document.getElementById('root');
+    if (!root) throw new Error('root element not found');
+    const result = extractTextAndMentions(root.childNodes);
+    expect(result).toEqual({ isMentionedMessage: false, mentionTemplate: '', messageText: '' });
+  });
+});
+
+describe('Utils/isChannelTypeSupportsMultipleFilesMessage', () => {
+  const buildChannel = (overrides: Partial<{
+    isGroupChannel: () => boolean;
+    isBroadcast: boolean;
+    isSuper: boolean;
+  }> = {}) => ({
+    isGroupChannel: () => true,
+    isBroadcast: false,
+    isSuper: false,
+    ...overrides,
+  });
+
+  it('returns true for a non-broadcast non-super group channel', () => {
+    expect(isChannelTypeSupportsMultipleFilesMessage(buildChannel() as any)).toBe(true);
+  });
+
+  it('returns false when channel is null/undefined', () => {
+    expect(isChannelTypeSupportsMultipleFilesMessage(null as any)).toBeFalsy();
+    expect(isChannelTypeSupportsMultipleFilesMessage(undefined as any)).toBeFalsy();
+  });
+
+  it('returns false for an open channel (isGroupChannel missing or returns false)', () => {
+    expect(isChannelTypeSupportsMultipleFilesMessage(buildChannel({ isGroupChannel: () => false }) as any)).toBe(false);
+    // isGroupChannel?.() chain \u2014 when method is missing
+    expect(isChannelTypeSupportsMultipleFilesMessage({ isBroadcast: false, isSuper: false } as any)).toBeFalsy();
+  });
+
+  it('returns false for a broadcast group channel', () => {
+    expect(isChannelTypeSupportsMultipleFilesMessage(buildChannel({ isBroadcast: true }) as any)).toBe(false);
+  });
+
+  it('returns false for a super group channel', () => {
+    expect(isChannelTypeSupportsMultipleFilesMessage(buildChannel({ isSuper: true }) as any)).toBe(false);
   });
 });
