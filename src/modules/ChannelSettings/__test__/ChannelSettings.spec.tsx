@@ -20,6 +20,8 @@ jest.mock('react-dom', () => ({
   createPortal: (node) => node,
 }));
 
+jest.mock('../../../lib/Sendbird/context/SendbirdProvider', () => jest.requireActual('../../../../__mocks__/mockSendbirdProvider'));
+
 describe('ChannelSettings Unit Tests', () => {
   const defaultProps = {
     channelUrl: 'mockChannelUrl',

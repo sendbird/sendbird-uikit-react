@@ -139,7 +139,7 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
         sdk.openChannel.removeOpenChannelHandler?.(channelHandlerId);
       }
     };
-  }, [channelUrl]);
+  }, [channelUrl, currentChannel?.url, currentUserId, sdk?.openChannel]);
 
   return (
     <OpenChannelSettingsContext.Provider value={{

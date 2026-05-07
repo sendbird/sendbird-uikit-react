@@ -758,4 +758,351 @@ describe('Messages-Reducers', () => {
     expect(onMessageUpdatedState.allMessages[0].message).toEqual(updatingMessage.message);
     expect(onMessageUpdatedState.allMessages[0].message).not.toEqual(changingMessage);
   });
+
+  it('filters succeeded sendable messages when initial fetch starts', () => {
+    const { stringSet } = useLocalization();
+    const nextState = reducers({
+      ...initialState,
+      stringSet,
+      allMessages: [
+        { messageId: 1, sender: {}, sendingStatus: 'succeeded' },
+        { messageId: 2, sender: {}, sendingStatus: 'failed' },
+        { messageId: 3, messageType: 'admin' },
+      ],
+      localMessages: [{ messageId: 4 }],
+    }, {
+      type: actionTypes.FETCH_INITIAL_MESSAGES_START,
+    });
+
+    expect(nextState.loading).toBe(true);
+    expect(nextState.localMessages).toEqual([]);
+    expect(nextState.allMessages.map((message) => message.messageId)).toEqual([2, 3]);
+  });
+
+  it('ignores message fetch success actions for another channel', () => {
+    const { stringSet } = useLocalization();
+    const mockData = generateMockChannel();
+    const wrongChannel = { url: 'another-channel' };
+
+    expect(reducers({ ...mockData, stringSet }, {
+      type: actionTypes.FETCH_INITIAL_MESSAGES_SUCCESS,
+      payload: { currentGroupChannel: wrongChannel, messages: [mockMessage1] },
+    })).toEqual({ ...mockData, stringSet });
+    expect(reducers({ ...mockData, stringSet }, {
+      type: actionTypes.FETCH_PREV_MESSAGES_SUCCESS,
+      payload: { currentGroupChannel: wrongChannel, messages: [mockMessage1] },
+    })).toEqual({ ...mockData, stringSet });
+    expect(reducers({ ...mockData, stringSet }, {
+      type: actionTypes.FETCH_NEXT_MESSAGES_SUCCESS,
+      payload: { currentGroupChannel: wrongChannel, messages: [mockMessage1] },
+    })).toEqual({ ...mockData, stringSet });
+  });
+
+  it('deduplicates previous messages and keeps the newest version', () => {
+    const { stringSet } = useLocalization();
+    const mockData = generateMockChannel();
+    const existing = {
+      ...mockData.allMessages[0],
+      messageId: 'duplicate-message',
+      updatedAt: 10,
+      message: 'old',
+    };
+    const incomingDuplicate = {
+      ...existing,
+      updatedAt: 20,
+      message: 'new',
+    };
+    const incomingNew = {
+      ...mockMessage1,
+      messageId: 'new-previous-message',
+    };
+
+    const nextState = reducers({
+      ...mockData,
+      stringSet,
+      allMessages: [existing, ...mockData.allMessages.slice(1)],
+    }, {
+      type: actionTypes.FETCH_PREV_MESSAGES_SUCCESS,
+      payload: {
+        currentGroupChannel: mockData.currentGroupChannel,
+        messages: [incomingNew, incomingDuplicate],
+      },
+    });
+
+    expect(nextState.allMessages[0]).toEqual(incomingNew);
+    expect(nextState.allMessages.find((message) => message.messageId === 'duplicate-message').message).toBe('new');
+    expect(nextState.allMessages.filter((message) => message.messageId === 'duplicate-message')).toHaveLength(1);
+  });
+
+  it('handles fetch failures for matching and mismatching channels', () => {
+    const { stringSet } = useLocalization();
+    const mockData = generateMockChannel();
+    const wrongChannel = { url: 'wrong-channel' };
+
+    const initialFailure = reducers({ ...mockData, stringSet, loading: true }, {
+      type: actionTypes.FETCH_INITIAL_MESSAGES_FAILURE,
+      payload: { currentGroupChannel: mockData.currentGroupChannel },
+    });
+    expect(initialFailure.loading).toBe(false);
+    expect(initialFailure.isInvalid).toBe(true);
+    expect(initialFailure.initialized).toBe(false);
+    expect(initialFailure.allMessages).toEqual([]);
+    expect(initialFailure.oldestMessageTimeStamp).toBeNull();
+
+    const nextFailure = reducers({ ...mockData, stringSet, loading: true }, {
+      type: actionTypes.FETCH_NEXT_MESSAGES_FAILURE,
+      payload: { currentGroupChannel: mockData.currentGroupChannel },
+    });
+    expect(nextFailure.isInvalid).toBe(false);
+    expect(nextFailure.allMessages).toEqual([]);
+
+    const mismatchFailure = reducers({ ...mockData, stringSet }, {
+      type: actionTypes.FETCH_PREV_MESSAGES_FAILURE,
+      payload: { currentGroupChannel: wrongChannel },
+    });
+    expect(mismatchFailure).toEqual({ ...mockData, stringSet });
+  });
+
+  it('marks failed local messages and replaces resending messages by reqId', () => {
+    const { stringSet } = useLocalization();
+    const mockData = generateMockChannel();
+    const pending = { ...generateMockMessage('pending'), reqId: 'req-1', sendingStatus: 'pending' };
+    const failed = { ...pending, sendingStatus: 'failed' };
+    const resending = { ...pending, sendingStatus: 'pending-resend' };
+
+    const failedState = reducers({
+      ...mockData,
+      stringSet,
+      localMessages: [pending, { ...generateMockMessage('other'), reqId: 'req-2' }],
+    }, {
+      type: actionTypes.SEND_MESSAGE_FAILURE,
+      payload: failed,
+    });
+
+    expect(failedState.localMessages[0]).toEqual({ ...failed, failed: true });
+    expect(failed.failed).toBe(true);
+    expect(failedState.localMessages[1].reqId).toBe('req-2');
+
+    const resendState = reducers(failedState, {
+      type: actionTypes.RESEND_MESSAGE_START,
+      payload: resending,
+    });
+    expect(resendState.localMessages[0]).toEqual(resending);
+  });
+
+  it('clears channel and messages when channel becomes invalid', () => {
+    const { stringSet } = useLocalization();
+    const mockData = generateMockChannel();
+    const nextState = reducers({
+      ...mockData,
+      stringSet,
+      localMessages: [mockMessage1],
+    }, {
+      type: actionTypes.SET_CHANNEL_INVALID,
+    });
+
+    expect(nextState.currentGroupChannel).toBeNull();
+    expect(nextState.allMessages).toEqual([]);
+    expect(nextState.localMessages).toEqual([]);
+    expect(nextState.isInvalid).toBe(true);
+  });
+
+  it('handles received admin messages and sender profile changes', () => {
+    const { stringSet } = useLocalization();
+    const mockData = generateMockChannel();
+    const adminMessage = {
+      ...generateMockMessage('admin-message'),
+      isAdminMessage: () => true,
+    };
+    const adminState = reducers({ ...mockData, stringSet }, {
+      type: actionTypes.ON_MESSAGE_RECEIVED,
+      payload: {
+        channel: mockData.currentGroupChannel,
+        message: adminMessage,
+      },
+    });
+    expect(getLastMessageOf(adminState.allMessages)).toEqual(adminMessage);
+
+    const sender = {
+      userId: 'profile-user',
+      nickname: 'new nickname',
+      friendName: 'new friend',
+      profileUrl: 'new-profile',
+    };
+    const channel = {
+      ...mockData.currentGroupChannel,
+      members: [{
+        userId: 'profile-user',
+        nickname: 'old nickname',
+        friendName: 'old friend',
+        profileUrl: 'old-profile',
+      }],
+    };
+    const message = {
+      ...generateMockMessage('profile-message'),
+      sender,
+      isAdminMessage: () => false,
+    };
+    const profileState = reducers({
+      ...mockData,
+      stringSet,
+      allMessages: [],
+      unreadSince: null,
+      unreadSinceDate: null,
+    }, {
+      type: actionTypes.ON_MESSAGE_RECEIVED,
+      payload: { channel, message },
+    });
+
+    expect(profileState.currentGroupChannel.members[0]).toEqual(sender);
+    expect(profileState.unreadSince).toBeTruthy();
+    expect(profileState.unreadSinceDate).toBeInstanceOf(Date);
+    expect(profileState.allMessages).toEqual([message]);
+  });
+
+  it('ignores received and updated messages from other channels', () => {
+    const { stringSet } = useLocalization();
+    const mockData = generateMockChannel();
+    const wrongChannel = { url: 'wrong-channel' };
+
+    expect(reducers({ ...mockData, stringSet }, {
+      type: actionTypes.ON_MESSAGE_RECEIVED,
+      payload: { channel: wrongChannel, message: generateMockMessage('received') },
+    })).toEqual({ ...mockData, stringSet });
+
+    expect(reducers({ ...mockData, stringSet }, {
+      type: actionTypes.ON_MESSAGE_UPDATED,
+      payload: { channel: wrongChannel, message: generateMockMessage('updated') },
+    })).toEqual({ ...mockData, stringSet });
+  });
+
+  it('updates child parentMessage when the parent message is updated', () => {
+    const { stringSet } = useLocalization();
+    const mockData = generateMockChannel();
+    const parent = { ...generateMockMessage('parent'), message: 'old parent' };
+    const child = { ...generateMockMessage('child'), parentMessageId: 'parent', parentMessage: null };
+    const updatedParent = { ...parent, message: 'updated parent' };
+
+    const nextState = reducers({
+      ...mockData,
+      stringSet,
+      allMessages: [parent, child],
+    }, {
+      type: actionTypes.ON_MESSAGE_UPDATED,
+      payload: {
+        channel: mockData.currentGroupChannel,
+        message: updatedParent,
+      },
+    });
+
+    expect(nextState.allMessages[0]).toEqual(updatedParent);
+    expect(nextState.allMessages[1].parentMessage).toEqual(updatedParent);
+  });
+
+  it('handles read state, local deletion, reactions, typing, and unknown actions', () => {
+    const { stringSet } = useLocalization();
+    const mockData = generateMockChannel();
+    const readState = {
+      ...mockData,
+      stringSet,
+      unreadSince: '10:00',
+      unreadSinceDate: new Date(2020, 1, 1),
+    };
+
+    expect(reducers(readState, {
+      type: actionTypes.MARK_AS_READ,
+      payload: { channel: { url: 'wrong-channel' } },
+    })).toEqual(readState);
+
+    const markedRead = reducers(readState, {
+      type: actionTypes.MARK_AS_READ,
+      payload: { channel: mockData.currentGroupChannel },
+    });
+    expect(markedRead.unreadSince).toBeNull();
+    expect(markedRead.unreadSinceDate).toBeNull();
+
+    const localMessages = [
+      { ...generateMockMessage('local-1'), reqId: 'req-1' },
+      { ...generateMockMessage('local-2'), reqId: 'req-2' },
+    ];
+    const deletedLocal = reducers({ ...mockData, stringSet, localMessages }, {
+      type: actionTypes.ON_MESSAGE_DELETED_BY_REQ_ID,
+      payload: 'req-1',
+    });
+    expect(deletedLocal.localMessages.map((message) => message.reqId)).toEqual(['req-2']);
+
+    const reactionState = reducers({
+      ...mockData,
+      stringSet,
+      allMessages: [generateMockMessage('reaction-target'), generateMockMessage('reaction-other')],
+    }, {
+      type: actionTypes.ON_REACTION_UPDATED,
+      payload: { messageId: 'reaction-other', reactions: [{ key: 'smile' }] },
+    });
+    expect(reactionState.allMessages[0].reactions).toEqual([]);
+    expect(reactionState.allMessages[1].reactions).toEqual([{ key: 'smile' }]);
+
+    const typingMembers = [{ userId: 'typing-user' }];
+    expect(reducers({ ...mockData, stringSet }, {
+      type: actionTypes.ON_TYPING_STATUS_UPDATED,
+      payload: { channel: { url: 'wrong-channel' }, typingMembers },
+    })).toEqual({ ...mockData, stringSet });
+    expect(reducers({ ...mockData, stringSet }, {
+      type: actionTypes.ON_TYPING_STATUS_UPDATED,
+      payload: { channel: mockData.currentGroupChannel, typingMembers },
+    }).typingMembers).toEqual(typingMembers);
+
+    expect(reducers({ ...mockData, stringSet }, { type: 'UNKNOWN_ACTION' })).toEqual({ ...mockData, stringSet });
+  });
+
+  it('updates uploaded file info only for matching channel without errors', () => {
+    const { stringSet } = useLocalization();
+    const mockData = generateMockChannel();
+    const uploadableFileInfo = { fileName: 'image.png', fileSize: 100 };
+    const localMessage = {
+      ...generateMockMessage('multi-file-message'),
+      reqId: 'request-1',
+      messageParams: {
+        fileInfoList: [null, null],
+      },
+    };
+    const state = {
+      ...mockData,
+      stringSet,
+      localMessages: [localMessage],
+    };
+
+    expect(reducers(state, {
+      type: actionTypes.ON_FILE_INFO_UPLOADED,
+      payload: {
+        channelUrl: 'wrong-channel',
+        requestId: 'request-1',
+        index: 1,
+        uploadableFileInfo,
+      },
+    })).toBe(state);
+
+    expect(reducers(state, {
+      type: actionTypes.ON_FILE_INFO_UPLOADED,
+      payload: {
+        channelUrl: mockData.currentGroupChannel.url,
+        requestId: 'request-1',
+        index: 1,
+        uploadableFileInfo,
+        error: new Error('failed'),
+      },
+    })).toBe(state);
+
+    const nextState = reducers(state, {
+      type: actionTypes.ON_FILE_INFO_UPLOADED,
+      payload: {
+        channelUrl: mockData.currentGroupChannel.url,
+        requestId: 'request-1',
+        index: 1,
+        uploadableFileInfo,
+      },
+    });
+
+    expect(nextState.localMessages[0].messageParams.fileInfoList[1]).toEqual(uploadableFileInfo);
+  });
 });

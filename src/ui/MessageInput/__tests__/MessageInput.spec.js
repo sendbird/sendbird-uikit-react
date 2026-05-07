@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import MessageInput from "../index";
 import { useLocalization } from '../../../lib/LocalizationContext';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import { isMobileIOS } from '../../../utils/browser';
 
 const noop = () => {};
 
@@ -18,6 +19,21 @@ jest.mock('../../../lib/LocalizationContext', () => ({
   ...jest.requireActual('../../../lib/LocalizationContext'),
   useLocalization: jest.fn(),
 }));
+jest.mock('../../../utils/browser', () => ({
+  ...jest.requireActual('../../../utils/browser'),
+  isMobileIOS: jest.fn(() => false),
+}));
+
+const placeCaretInTextNode = (element, offset) => {
+  const textNode = element.firstChild;
+  const range = document.createRange();
+  range.setStart(textNode, offset ?? textNode.textContent.length);
+  range.collapse(true);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+  return range;
+};
 
 describe('ui/MessageInput', () => {
   /** Mocking necessary hooks */
@@ -37,6 +53,7 @@ describe('ui/MessageInput', () => {
 
     useSendbird.mockReturnValue(stateContextValue);
     useLocalization.mockReturnValue(localeContextValue);
+    isMobileIOS.mockReturnValue(false);
 
     renderHook(() => useSendbird());
     renderHook(() => useLocalization());
@@ -259,6 +276,216 @@ describe('ui/MessageInput', () => {
       container.getElementsByClassName('sendbird-message-input--edit-action').length
     ).toBe(1);
   });
+
+  it('should call update and cancel callbacks in edit mode', async () => {
+    const messageId = 123;
+    const onUpdateMessage = jest.fn();
+    const onCancelEdit = jest.fn();
+
+    render(
+      <MessageInput
+        isEdit
+        message={{ messageId }}
+        onUpdateMessage={onUpdateMessage}
+        onCancelEdit={onCancelEdit}
+      />
+    );
+
+    const input = screen.getByRole('textbox');
+    await userEvent.type(input, 'edited message');
+    fireEvent.click(document.getElementsByClassName('sendbird-message-input--edit-action__save')[0]);
+    fireEvent.click(document.getElementsByClassName('sendbird-message-input--edit-action__cancel')[0]);
+
+    expect(onUpdateMessage).toHaveBeenCalledWith({
+      messageId,
+      message: 'edited message',
+      mentionTemplate: 'edited message',
+    });
+    expect(onCancelEdit).toHaveBeenCalled();
+    expect(input.innerHTML).toBe('');
+  });
+
+  it('should call file upload callback and reset the native file input', () => {
+    const onFileUpload = jest.fn();
+    const file = new File(['hello'], 'hello.txt', { type: 'text/plain' });
+
+    render(<MessageInput onFileUpload={onFileUpload} />);
+
+    const fileInput = document.getElementsByClassName('sendbird-message-input--attach-input')[0];
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
+    expect(onFileUpload).toHaveBeenCalledWith([file]);
+    expect(fileInput.value).toBe('');
+  });
+
+  it('should render custom action icons when render props are provided', async () => {
+    const onVoiceMessageIconClick = jest.fn();
+    const { rerender } = render(
+      <MessageInput
+        renderFileUploadIcon={() => <button type="button" data-testid="custom-upload">upload</button>}
+        renderVoiceMessageIcon={() => <span data-testid="custom-voice">voice</span>}
+        onVoiceMessageIconClick={onVoiceMessageIconClick}
+      />
+    );
+
+    expect(screen.getByTestId('custom-upload')).toBeInTheDocument();
+    expect(screen.getByTestId('custom-voice')).toBeInTheDocument();
+    fireEvent.click(document.getElementsByClassName('sendbird-message-input--voice-message')[0]);
+    expect(onVoiceMessageIconClick).toHaveBeenCalled();
+
+    rerender(
+      <MessageInput
+        renderSendMessageIcon={() => <span data-testid="custom-send">send</span>}
+      />
+    );
+    await userEvent.type(screen.getByRole('textbox'), 'message');
+    expect(screen.getByTestId('custom-send')).toBeInTheDocument();
+  });
+
+  it('should let consumer keydown handler prevent enter send', () => {
+    const onSendMessage = jest.fn();
+    const onKeyDown = jest.fn(() => true);
+
+    render(<MessageInput onSendMessage={onSendMessage} onKeyDown={onKeyDown} />);
+
+    const input = screen.getByRole('textbox');
+    input.textContent = 'blocked';
+    fireEvent.input(input);
+    fireEvent.keyDown(input, { key: 'Enter' });
+
+    expect(onKeyDown).toHaveBeenCalled();
+    expect(onSendMessage).not.toHaveBeenCalled();
+  });
+
+  it('hydrates edit mode with mention labels from mentioned message templates', () => {
+    render(
+      <MessageInput
+        isEdit
+        isMentionEnabled
+        channel={{ isGroupChannel: () => true }}
+        message={{
+          messageId: 200,
+          message: 'hello Alice',
+          mentionedUsers: [{ userId: 'u1', nickname: 'Alice' }],
+          mentionedMessageTemplate: 'hello @{u1}',
+        }}
+      />,
+    );
+
+    const input = screen.getByRole('textbox');
+    expect(input.querySelector('.sendbird-mention-user-label')).toBeTruthy();
+    expect(input.innerHTML).toContain('Alice');
+  });
+
+  it('detects mention strings and replaces them with selected users', () => {
+    const onMentionStringChange = jest.fn();
+    const onUserMentioned = jest.fn();
+    const onMentionedUserIdsUpdated = jest.fn();
+    const baseProps = {
+      isMentionEnabled: true,
+      channel: { isGroupChannel: () => true },
+      onMentionStringChange,
+      onUserMentioned,
+      onMentionedUserIdsUpdated,
+    };
+    const { rerender } = render(<MessageInput {...baseProps} />);
+    const input = screen.getByRole('textbox');
+
+    input.textContent = 'hello @ali';
+    placeCaretInTextNode(input);
+    fireEvent.keyUp(input, { key: 'i' });
+    expect(onMentionStringChange).toHaveBeenCalledWith('@ali');
+
+    rerender(
+      <MessageInput
+        {...baseProps}
+        mentionSelectedUser={{ userId: 'u1', nickname: 'Alice' }}
+      />,
+    );
+
+    expect(onUserMentioned).toHaveBeenCalledWith({ userId: 'u1', nickname: 'Alice' });
+    expect(input.querySelector('.sendbird-mention-user-label')).toBeTruthy();
+    expect(onMentionedUserIdsUpdated).toHaveBeenCalledWith(['u1']);
+  });
+
+  it('removes an orphan mention label on backspace', () => {
+    render(<MessageInput isMentionEnabled channel={{ isGroupChannel: () => true }} />);
+    const input = screen.getByRole('textbox');
+    const mention = document.createElement('span');
+    mention.className = 'sendbird-mention-user-label';
+    mention.dataset.userid = 'u1';
+    input.appendChild(document.createTextNode(''));
+    input.appendChild(mention);
+
+    fireEvent.keyDown(input, { key: 'Backspace' });
+
+    expect(input.querySelector('.sendbird-mention-user-label')).toBeNull();
+  });
+
+  it('keeps the iOS keyboard focus after sending', async () => {
+    const originalRaf = window.requestAnimationFrame;
+    const originalGlobalRaf = global.requestAnimationFrame;
+    isMobileIOS.mockReturnValue(true);
+    const rafMock = jest.fn((callback) => {
+      callback();
+      return 1;
+    });
+    window.requestAnimationFrame = rafMock;
+    global.requestAnimationFrame = rafMock;
+
+    try {
+      const onSendMessage = jest.fn();
+      const { container } = render(<MessageInput onSendMessage={onSendMessage} />);
+      const input = container.querySelector('.sendbird-message-input--textarea');
+
+      await userEvent.type(input, 'ios message');
+      fireEvent.keyDown(input, { key: 'Enter' });
+
+      expect(document.getElementById('ghost-input-reset-ime-cjk')).toBeTruthy();
+      expect(onSendMessage).toHaveBeenCalledWith({ message: 'ios message', mentionTemplate: '' });
+      expect(rafMock).toHaveBeenCalled();
+    } finally {
+      isMobileIOS.mockReturnValue(false);
+      window.requestAnimationFrame = originalRaf;
+      global.requestAnimationFrame = originalGlobalRaf;
+    }
+  });
+
+  it('adjusts scroll position after paste based on caret bounds', () => {
+    jest.useFakeTimers();
+    try {
+      render(<MessageInput />);
+      const input = screen.getByRole('textbox');
+      Object.defineProperty(input, 'getBoundingClientRect', {
+        configurable: true,
+        value: () => ({ top: 0, bottom: 100 }),
+      });
+      Object.defineProperty(input, 'scrollHeight', { configurable: true, value: 300 });
+      Object.defineProperty(input, 'clientHeight', { configurable: true, value: 50 });
+      input.textContent = 'paste target';
+      const range = placeCaretInTextNode(input);
+      range.getBoundingClientRect = jest.fn(() => ({ top: 190, bottom: 200 }));
+
+      fireEvent.paste(input, {
+        clipboardData: {
+          getData: jest.fn((type) => (type === 'text' ? 'down' : '')),
+        },
+      });
+      jest.runOnlyPendingTimers();
+      expect(input.scrollTop).toBe(100);
+
+      range.getBoundingClientRect = jest.fn(() => ({ top: -20, bottom: -10 }));
+      fireEvent.paste(input, {
+        clipboardData: {
+          getData: jest.fn((type) => (type === 'text' ? 'up' : '')),
+        },
+      });
+      jest.runOnlyPendingTimers();
+      expect(input.scrollTop).toBe(80);
+    } finally {
+      jest.useRealTimers();
+    }
+  });
 });
 
 describe('MessageInput error handling', () => {
@@ -379,4 +606,3 @@ describe('MessageInput error handling', () => {
     expect(eventHandlers.message.onFileUploadFailed).toHaveBeenCalled();
   });
 });
-

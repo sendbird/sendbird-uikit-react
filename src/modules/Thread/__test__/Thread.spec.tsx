@@ -11,6 +11,8 @@ import ThreadList from '../components/ThreadList';
 import ThreadListItem from '../components/ThreadList/ThreadListItem';
 import ThreadMessageInput from '../components/ThreadMessageInput';
 
+jest.mock('../../../lib/Sendbird/context/SendbirdProvider', () => jest.requireActual('../../../../__mocks__/mockSendbirdProvider'));
+
 describe('Thread Unit Tests', () => {
   const defaultProps = {
     channelUrl: 'test-channel',

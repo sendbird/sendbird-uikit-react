@@ -21,6 +21,8 @@ jest.mock('../components/InviteUsers/utils', () => ({
   }),
 }));
 
+jest.mock('../../../lib/Sendbird/context/SendbirdProvider', () => jest.requireActual('../../../../__mocks__/mockSendbirdProvider'));
+
 describe('CreateChannel Unit Tests', () => {
   const defaultProps = {
     onChannelCreated: () => jest.fn(),

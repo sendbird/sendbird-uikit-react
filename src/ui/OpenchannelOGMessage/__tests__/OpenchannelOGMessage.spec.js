@@ -1,19 +1,46 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import OpenchannelOGMessage from "../index";
 import { MessageProvider } from '../../../modules/Message/context/MessageProvider';
+import { MenuRoot } from '../../ContextMenu';
+import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import { useMediaQueryContext } from '../../../lib/MediaQueryContext';
+import { openURL } from '../../../utils/utils';
+import { URL_REG, checkOGIsEnalbed, createUrlTester } from '../utils';
 
 // mock date-fns to avoid problems from snapshot timestamping
 // between testing in different locations
 // ideally we want to mock date-fns globally - needs more research
 jest.mock('date-fns/format', () => () => ('mock-date'));
+jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
+jest.mock('../../../lib/MediaQueryContext', () => ({
+  ...jest.requireActual('../../../lib/MediaQueryContext'),
+  useMediaQueryContext: jest.fn(),
+}));
+jest.mock('../../../hooks/useLongPress', () => ({
+  __esModule: true,
+  default: jest.fn(({ onLongPress, onClick }) => ({
+    onMouseDown: onLongPress,
+    onTouchStart: onLongPress,
+    onMouseUp: onClick,
+    onTouchEnd: onClick,
+  })),
+}));
+jest.mock('../../../utils/utils', () => ({
+  ...jest.requireActual('../../../utils/utils'),
+  openURL: jest.fn(),
+}));
 
 const userId = 'hh-1234';
 const getMockMessage = (callback) => {
   const message = {
     messageType: 'user',
     message: 'I am the Message',
+    sendingStatus: 'succeeded',
     createdAt: 1111,
     updatedAt: 0,
     ogMetaData: {
@@ -31,7 +58,8 @@ const getMockMessage = (callback) => {
       nickname: 'Honn',
       userId,
     },
-    isResendable: () => false,
+    isUserMessage: () => true,
+    isResendable: false,
   };
   if (callback) {
     return callback(message);
@@ -40,6 +68,54 @@ const getMockMessage = (callback) => {
 };
 
 describe('ui/OpenchannelOGMessage', () => {
+  const renderOGMessage = (message = getMockMessage(), props = {}) => {
+    const defaultProps = {
+      showEdit: jest.fn(),
+      showRemove: jest.fn(),
+      resendMessage: jest.fn(),
+      userId,
+      ...props,
+    };
+    const view = render(
+      <>
+        <MenuRoot />
+        <MessageProvider message={message}>
+          <OpenchannelOGMessage
+            message={message}
+            {...defaultProps}
+          />
+        </MessageProvider>
+      </>,
+    );
+    return { ...view, props: defaultProps };
+  };
+
+  const openDesktopMenu = (container) => {
+    const trigger = container.querySelector('.sendbird-openchannel-og-message__top__context-menu--icon');
+    expect(trigger).toBeTruthy();
+    fireEvent.click(trigger);
+  };
+
+  const clickMenuItem = (testID) => {
+    const item = document.querySelector(`[data-testid="${testID}"]`);
+    expect(item).toBeTruthy();
+    fireEvent.click(item);
+  };
+
+  beforeEach(() => {
+    useSendbird.mockReturnValue({
+      state: {
+        config: {
+          userId,
+        },
+      },
+    });
+    useMediaQueryContext.mockReturnValue({ isMobile: false });
+    openURL.mockClear();
+    document.queryCommandSupported = jest.fn(() => true);
+    document.execCommand = jest.fn(() => true);
+  });
+
   it('should have default elements', function() {
     const message = getMockMessage();
     const { container } = render(
@@ -252,6 +328,7 @@ describe('ui/OpenchannelOGMessage', () => {
     const message = {
       messageType: 'user',
       message: 'I am the Message',
+      sendingStatus: 'succeeded',
       createdAt: 1111,
       updatedAt: 0,
       ogMetaData: {
@@ -269,7 +346,8 @@ describe('ui/OpenchannelOGMessage', () => {
         nickname: 'Honn',
         userId: 'hh-1234',
       },
-      isResendable: () => false,
+      isUserMessage: () => true,
+      isResendable: false,
     };
     const { asFragment } = render(
       <MessageProvider message={message}>
@@ -281,5 +359,108 @@ describe('ui/OpenchannelOGMessage', () => {
       </MessageProvider>,
     );
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('invokes desktop copy, edit, delete, and link actions', () => {
+    const message = getMockMessage();
+    const { container, props } = renderOGMessage(message);
+
+    openDesktopMenu(container);
+    clickMenuItem('open_channel_og_message_menu_copy');
+    expect(document.execCommand).toHaveBeenCalledWith('copy');
+
+    openDesktopMenu(container);
+    clickMenuItem('open_channel_og_message_menu_edit');
+    expect(props.showEdit).toHaveBeenCalledWith(true);
+
+    openDesktopMenu(container);
+    clickMenuItem('open_channel_og_message_menu_delete');
+    expect(props.showRemove).toHaveBeenCalledWith(true);
+
+    fireEvent.click(container.querySelector('.sendbird-openchannel-og-message__bottom__og-tag__thumbnail'));
+    expect(openURL).toHaveBeenCalledWith('https://sendbird.com/');
+  });
+
+  it('invokes desktop resend and respects disabled edit/delete actions', () => {
+    const failedMessage = getMockMessage((message) => ({
+      ...message,
+      sendingStatus: 'failed',
+      isResendable: true,
+    }));
+    const failedView = renderOGMessage(failedMessage);
+
+    openDesktopMenu(failedView.container);
+    clickMenuItem('open_channel_og_message_menu_resend');
+    expect(failedView.props.resendMessage).toHaveBeenCalledWith(failedMessage);
+
+    failedView.unmount();
+    const disabledView = renderOGMessage(getMockMessage(), { disabled: true });
+
+    openDesktopMenu(disabledView.container);
+    clickMenuItem('open_channel_og_message_menu_edit');
+    clickMenuItem('open_channel_og_message_menu_delete');
+    expect(disabledView.props.showEdit).not.toHaveBeenCalled();
+    expect(disabledView.props.showRemove).not.toHaveBeenCalled();
+  });
+
+  it('renders edited labels and ignores non-user messages', () => {
+    const editedView = renderOGMessage(getMockMessage((message) => ({
+      ...message,
+      updatedAt: 1000,
+    })));
+
+    expect(screen.getByText('(edited)')).toBeTruthy();
+
+    editedView.unmount();
+    const { container } = renderOGMessage({
+      messageType: 'admin',
+      message: 'admin message',
+      ogMetaData: {},
+    });
+
+    expect(container.querySelector('.sendbird-openchannel-og-message')).toBeNull();
+  });
+
+  it('opens the mobile menu from long press callbacks', () => {
+    useMediaQueryContext.mockReturnValue({ isMobile: true });
+    const message = getMockMessage();
+    const { container, props } = renderOGMessage(message);
+
+    fireEvent.mouseDown(container.querySelector('.sendbird-openchannel-og-message'));
+    clickMenuItem('open_channel_mobile_context_menu_copy');
+    expect(document.execCommand).toHaveBeenCalledWith('copy');
+
+    fireEvent.mouseDown(container.querySelector('.sendbird-openchannel-og-message'));
+    clickMenuItem('open_channel_mobile_context_menu_edit');
+    expect(props.showEdit).toHaveBeenCalledWith(true);
+
+    fireEvent.mouseDown(container.querySelector('.sendbird-openchannel-og-message'));
+    clickMenuItem('open_channel_mobile_context_menu_delete');
+    expect(props.showRemove).toHaveBeenCalledWith(true);
+  });
+
+  it('invokes mobile resend for failed messages', () => {
+    useMediaQueryContext.mockReturnValue({ isMobile: true });
+    const message = getMockMessage((message) => ({
+      ...message,
+      sendingStatus: 'failed',
+      isResendable: true,
+    }));
+    const { container, props } = renderOGMessage(message);
+
+    fireEvent.mouseDown(container.querySelector('.sendbird-openchannel-og-message'));
+    clickMenuItem('open_channel_mobile_context_menu_resend');
+
+    expect(props.resendMessage).toHaveBeenCalledWith(message);
+  });
+
+  it('validates OG metadata helpers', () => {
+    const testUrl = createUrlTester(URL_REG);
+
+    expect(testUrl('sendbird.com/uikit')).toBe(true);
+    expect(testUrl('not a url')).toBe(false);
+    expect(checkOGIsEnalbed({})).toBe(false);
+    expect(checkOGIsEnalbed({ ogMetaData: {} })).toBe(false);
+    expect(checkOGIsEnalbed({ ogMetaData: { url: 'https://sendbird.com/' } })).toBe(true);
   });
 });

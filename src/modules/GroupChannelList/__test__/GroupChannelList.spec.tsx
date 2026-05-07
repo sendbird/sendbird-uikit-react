@@ -10,6 +10,8 @@ import { GroupChannelListItem } from '../components/GroupChannelListItem';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import GroupChannelPreviewAction from '../components/GroupChannelPreviewAction';
 
+jest.mock('../../../lib/Sendbird/context/SendbirdProvider', () => jest.requireActual('../../../../__mocks__/mockSendbirdProvider'));
+
 describe('GroupChannelList Unit Tests', () => {
   const defaultProps = {
     onChannelSelect: () => jest.fn(),

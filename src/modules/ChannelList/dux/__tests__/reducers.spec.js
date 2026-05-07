@@ -971,4 +971,121 @@ describe('Channels-Reducers', () => {
       expect(nextState).not.toEqual(prevState);
     });
   });
+
+  it('handles initialization, reset, refresh, and unknown actions', () => {
+    const started = reducers(initialState, {
+      type: actionTypes.INIT_CHANNELS_START,
+      payload: { currentUserId: user1.userId },
+    });
+    expect(started.loading).toBe(true);
+    expect(started.currentUserId).toBe(user1.userId);
+
+    const refreshed = reducers({ ...mockData, loading: true }, {
+      type: actionTypes.REFRESH_CHANNELS_SUCCESS,
+      payload: {
+        channelList: [channel0, channel1],
+        currentChannel: channel1,
+      },
+    });
+    expect(refreshed.loading).toBe(false);
+    expect(refreshed.allChannels).toEqual([channel0, channel1]);
+    expect(refreshed.currentChannel).toEqual(channel1);
+
+    expect(reducers(mockData, { type: actionTypes.RESET_CHANNEL_LIST })).toEqual(initialState);
+    expect(reducers(mockData, { type: 'UNKNOWN_ACTION' })).toEqual(mockData);
+  });
+
+  it('updates last message channel snapshots by channel url', () => {
+    const updatedChannel = {
+      ...mockData.allChannels[1],
+      lastMessage: {
+        message: 'updated last message',
+      },
+    };
+
+    const nextState = reducers(mockData, {
+      type: actionTypes.ON_LAST_MESSAGE_UPDATED,
+      payload: updatedChannel,
+    });
+
+    expect(nextState.allChannels[1]).toEqual(updatedChannel);
+    expect(nextState.allChannels[0]).toEqual(mockData.allChannels[0]);
+  });
+
+  it('toggles frozen state without channelListQuery', () => {
+    const channels = mockData.allChannels.map((channel) => ({ ...channel }));
+    const targetChannel = channels[1];
+
+    const frozenState = reducers({ ...mockData, allChannels: channels }, {
+      type: actionTypes.ON_CHANNEL_FROZEN,
+      payload: targetChannel,
+    });
+    expect(frozenState.allChannels[1].isFrozen).toBe(true);
+    expect(frozenState.allChannels[0].isFrozen).toBe(false);
+
+    const unfrozenState = reducers(frozenState, {
+      type: actionTypes.ON_CHANNEL_UNFROZEN,
+      payload: targetChannel,
+    });
+    expect(unfrozenState.allChannels[1].isFrozen).toBe(false);
+  });
+
+  it('upserts or filters frozen channels when channelListQuery is present', () => {
+    const frozenChannel = {
+      ...mockData.allChannels[0],
+      isFrozen: true,
+      name: 'frozen channel',
+    };
+    const matchingState = reducers({
+      ...mockData,
+      channelListQuery: { includeFrozen: true },
+    }, {
+      type: actionTypes.ON_CHANNEL_FROZEN,
+      payload: frozenChannel,
+    });
+    expect(matchingState.allChannels.find((channel) => channel.url === frozenChannel.url).name).toBe('frozen channel');
+
+    const filteredState = reducers({
+      ...mockData,
+      currentChannel: frozenChannel,
+      channelListQuery: { includeFrozen: false },
+    }, {
+      type: actionTypes.ON_CHANNEL_FROZEN,
+      payload: frozenChannel,
+    });
+    expect(filteredState.allChannels.find((channel) => channel.url === frozenChannel.url)).toBeUndefined();
+    expect(filteredState.currentChannel?.url).not.toBe(frozenChannel.url);
+  });
+
+  it('upserts or filters unfrozen channels when channelListQuery is present', () => {
+    const matchingChannel = {
+      ...mockData.allChannels[0],
+      isFrozen: false,
+      customType: 'keep',
+      name: 'unfrozen channel',
+    };
+    const matchingState = reducers({
+      ...mockData,
+      channelListQuery: { customTypesFilter: ['keep'] },
+    }, {
+      type: actionTypes.ON_CHANNEL_UNFROZEN,
+      payload: matchingChannel,
+    });
+    expect(matchingState.allChannels.find((channel) => channel.url === matchingChannel.url).name).toBe('unfrozen channel');
+
+    const filteredChannel = {
+      ...matchingChannel,
+      customType: 'drop',
+    };
+    const filteredState = reducers({
+      ...mockData,
+      currentChannel: filteredChannel,
+      channelListQuery: { customTypesFilter: ['keep'] },
+    }, {
+      type: actionTypes.ON_CHANNEL_UNFROZEN,
+      payload: filteredChannel,
+    });
+    expect(filteredState.allChannels.find((channel) => channel.url === filteredChannel.url)).toBeUndefined();
+    expect(filteredState.currentChannel?.url).not.toBe(filteredChannel.url);
+  });
 });

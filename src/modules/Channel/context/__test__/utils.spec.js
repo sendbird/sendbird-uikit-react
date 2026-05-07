@@ -4,7 +4,19 @@
 //   const unique = getUniqueListByMessageId(mergedMessages);
 //   return unique;
 
-import { mergeAndSortMessages, scrollToRenderedMessage } from "../utils";
+import {
+  getAllEmojisMapFromEmojiContainer,
+  getNicknamesMapFromMembers,
+  isAboutSame,
+  isDisabledBecauseFrozen,
+  isDisabledBecauseMuted,
+  isOperator,
+  mergeAndSortMessages,
+  passUnsuccessfullMessages,
+  pxToNumber,
+  scrollIntoLast,
+  scrollToRenderedMessage,
+} from "../utils";
 
 const oldMessages = [
   {
@@ -102,5 +114,70 @@ describe('scrollToRenderedMessage', () => {
     // Ensure that scrollTop is modified
     expect(mockRefCurrent.scrollTop).toBe(200);
     expect(mockSetIsScrolled).toHaveBeenCalledWith(true);
+  });
+});
+
+describe('channel context utils', () => {
+  it('scrolls to the bottom of the current container and marks as scrolled', () => {
+    const setIsScrolled = jest.fn();
+    const scrollDOM = { scrollHeight: 300, scrollTop: 0 };
+
+    scrollIntoLast(0, { current: scrollDOM }, setIsScrolled);
+
+    expect(scrollDOM.scrollTop).toBe(300);
+    expect(setIsScrolled).toHaveBeenCalledWith(true);
+  });
+
+  it('stops retrying scrollIntoLast after the maximum attempts', () => {
+    const setIsScrolled = jest.fn();
+
+    scrollIntoLast(11, { current: null }, setIsScrolled);
+
+    expect(setIsScrolled).toHaveBeenCalledWith(true);
+  });
+
+  it('evaluates channel permission helpers', () => {
+    expect(isOperator({ myRole: 'operator' })).toBe(true);
+    expect(isOperator({ myRole: 'none' })).toBe(false);
+    expect(isDisabledBecauseFrozen({ isFrozen: true, myRole: 'none' })).toBe(true);
+    expect(isDisabledBecauseFrozen({ isFrozen: true, myRole: 'operator' })).toBe(false);
+    expect(isDisabledBecauseMuted({ myMutedState: 'muted' })).toBe(true);
+    expect(isDisabledBecauseMuted({ myMutedState: 'unmuted' })).toBe(false);
+  });
+
+  it('maps emoji container entries and member nicknames by key', () => {
+    const emojiMap = getAllEmojisMapFromEmojiContainer({
+      emojiCategories: [
+        { emojis: [{ key: 'smile', url: 'smile.png' }] },
+        { emojis: [{ key: 'wave', url: 'wave.png' }] },
+      ],
+    });
+    const nicknameMap = getNicknamesMapFromMembers([
+      { userId: 'user-1', nickname: 'Ada' },
+      { userId: 'user-2', nickname: 'Grace' },
+    ]);
+
+    expect(emojiMap.get('smile')).toBe('smile.png');
+    expect(emojiMap.get('wave')).toBe('wave.png');
+    expect(nicknameMap.get('user-1')).toBe('Ada');
+    expect(nicknameMap.get('user-2')).toBe('Grace');
+  });
+
+  it('inserts successful local messages before failed messages', () => {
+    const succeeded = { messageId: 1, sendingStatus: 'succeeded', isAdminMessage: () => false };
+    const failed = { messageId: 2, sendingStatus: 'failed', isAdminMessage: () => false };
+    const pending = { messageId: 3, sendingStatus: 'pending', isAdminMessage: () => false };
+
+    expect(passUnsuccessfullMessages([succeeded, failed], pending)).toEqual([succeeded, pending, failed]);
+    expect(passUnsuccessfullMessages([succeeded], { messageId: 4, isAdminMessage: () => false }))
+      .toEqual([succeeded, { messageId: 4, isAdminMessage: expect.any(Function) }]);
+  });
+
+  it('parses pixel values and compares nearby numbers', () => {
+    expect(pxToNumber(12)).toBe(12);
+    expect(pxToNumber('12.5px')).toBe(12.5);
+    expect(pxToNumber('not-a-size')).toBeNull();
+    expect(isAboutSame(10, 14, 4)).toBe(true);
+    expect(isAboutSame(10, 15, 4)).toBe(false);
   });
 });

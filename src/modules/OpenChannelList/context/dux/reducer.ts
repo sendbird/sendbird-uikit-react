@@ -75,8 +75,8 @@ export default function reducer(
           channel?.url === action.payload?.url ? action.payload : channel
         )),
         currentChannel: (state.currentChannel?.url === action?.payload?.url)
-          ? state.currentChannel
-          : action.payload,
+          ? action.payload
+          : state.currentChannel,
       };
     }
     case actionTypes.DELETE_OPEN_CHANNEL: {

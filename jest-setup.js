@@ -26,6 +26,16 @@ global.cancelAnimationFrame = function (id) {
   clearTimeout(id);
 };
 
+global.fetch = jest.fn(() => Promise.resolve({
+  ok: true,
+  status: 200,
+  json: () => Promise.resolve({}),
+  text: () => Promise.resolve(''),
+  blob: () => Promise.resolve(new Blob()),
+  arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
+  headers: new Headers(),
+}));
+
 // MediaRecorder and MediaRecorder.isTypeSupported are used within SendbirdProvider's internal logic.
 class MockMediaRecorder {
   static isTypeSupported(type) {
