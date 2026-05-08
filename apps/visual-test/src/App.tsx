@@ -5,6 +5,7 @@ import SendbirdChat from '@sendbird/chat';
 import { mockUserMessage } from '../mock-data/form.ts';
 import { getMockMessageForm } from './utils.ts';
 // TODO: Need to change below imports into a single import later.
+import '../../../src/lib/index.scss';
 import '../../../src/ui/TextMessageItemBody/index.scss';
 import '../../../src/ui/Input/index.scss';
 import '../../../src/ui/FormMessageItemBody/index.scss';
@@ -25,13 +26,15 @@ const App = () => {
     
     try {
       const parsedJson = JSON.parse(text);
+      const messageForm = getMockMessageForm(parsedJson);
       const mockedMessage = {
         ...mockUserMessage,
-        'extendedMessagePayload': {
-          'message_form': getMockMessageForm(parsedJson),
+        extended_message_payload: {
+          message_form: messageForm,
         },
       };
       const built: UserMessage = chat.message.buildMessageFromSerializedData(mockedMessage) as UserMessage;
+      built.messageForm = messageForm;
       built.submitMessageForm = async () => {};
       setMessage(built);
     } catch (e) {

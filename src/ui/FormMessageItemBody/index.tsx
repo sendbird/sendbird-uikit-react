@@ -26,6 +26,32 @@ interface FormValue {
   isInvalidated: boolean;
 }
 
+interface FormValidator {
+  key: string;
+  regex?: string;
+  min_length?: number;
+  max_length?: number;
+}
+
+const isValueInvalid = (value: string, validators: FormValidator[] = []) => {
+  if (!value) return false;
+
+  return validators.some((validator) => {
+    switch (validator.key) {
+      case 'regex':
+        return validator.regex ? !(new RegExp(validator.regex).test(value)) : false;
+      case 'text': {
+        const { min_length: minLength, max_length: maxLength } = validator;
+        if (typeof minLength === 'number' && value.length < minLength) return true;
+        if (typeof maxLength === 'number' && value.length > maxLength) return true;
+        return false;
+      }
+      default:
+        return false;
+    }
+  });
+};
+
 const FallbackUserMessage = ({
   isByMe,
   text,
@@ -174,12 +200,12 @@ export default function FormMessageItemBody(props: Props) {
             }}
             onChange={(values) => {
               setFormValues(([...newInputs]) => {
+                const { validators } = item as typeof item & { validators?: FormValidator[] };
+                const hasInvalidValue = values.some((value) => isValueInvalid(value, validators));
                 newInputs[index] = {
                   ...newInputs[index], // Create a new object for the updated item
                   draftValues: values,
-                  errorMessage: (() => {
-                    return stringSet.FORM_ITEM_INVALID;
-                  })(),
+                  errorMessage: hasInvalidValue ? stringSet.FORM_ITEM_INVALID : null,
                 };
                 return newInputs; // Return the new array
               });
