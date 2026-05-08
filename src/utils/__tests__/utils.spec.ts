@@ -237,41 +237,40 @@ describe('deleteNullish', () => {
 });
 
 describe('delay', () => {
-  const errorBound = 10;
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
 
   it('should resolve after the specified time', async () => {
-    const start = Date.now();
     const delayTime = 100;
+    const onResolve = jest.fn();
 
-    await delay(delayTime);
+    const promise = delay(delayTime).then(onResolve);
 
-    const end = Date.now();
-    const elapsed = end - start;
+    jest.advanceTimersByTime(delayTime - 1);
+    await Promise.resolve();
+    expect(onResolve).not.toHaveBeenCalled();
 
-    // Check if the elapsed time is at least the delay time
-    expect(elapsed).toBeGreaterThanOrEqual(delayTime - errorBound);
+    jest.advanceTimersByTime(1);
+    await promise;
+    expect(onResolve).toHaveBeenCalledTimes(1);
   });
 
   it('should resolve immediately for 0 milliseconds', async () => {
-    const start = Date.now();
+    const promise = delay(0);
 
-    await delay(0);
-
-    const end = Date.now();
-    const elapsed = end - start;
-
-    // Check if the elapsed time is very small
-    expect(elapsed).toBeLessThan(errorBound);
+    jest.runOnlyPendingTimers();
+    await expect(promise).resolves.toBeUndefined();
   });
   it('should resolve immediately when no parameter is provided', async () => {
-    const start = Date.now();
+    const promise = delay();
 
-    await delay();
-
-    const end = Date.now();
-    const elapsed = end - start;
-
-    expect(elapsed).toBeLessThan(errorBound);
+    jest.runOnlyPendingTimers();
+    await expect(promise).resolves.toBeUndefined();
   });
 });
 

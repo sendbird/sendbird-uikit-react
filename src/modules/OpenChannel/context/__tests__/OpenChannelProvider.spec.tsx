@@ -14,7 +14,7 @@ const mockLogger = {
 const mockSubscribers = new Map<string, SubscriberCallback>();
 const mockSubscribe = jest.fn((topic, callback) => {
   mockSubscribers.set(topic, callback);
-  return { remove: jest.fn() };
+  return { remove: jest.fn(() => mockSubscribers.delete(topic)) };
 });
 const mockOperator = { userId: 'operator-user' };
 const mockOpenChannel = {
@@ -84,6 +84,10 @@ jest.mock('../hooks/useUpdateMessageCallback', () => ({ __esModule: true, defaul
 jest.mock('../hooks/useDeleteMessageCallback', () => ({ __esModule: true, default: jest.fn(() => jest.fn()) }));
 jest.mock('../hooks/useResendMessageCallback', () => ({ __esModule: true, default: jest.fn(() => jest.fn()) }));
 jest.mock('../hooks/useTrimMessageList', () => ({ __esModule: true, default: jest.fn() }));
+jest.mock('../utils', () => ({
+  ...jest.requireActual('../utils'),
+  scrollIntoLast: jest.fn(),
+}));
 
 describe('OpenChannelProvider', () => {
   const wrapper = ({ children }) => (
