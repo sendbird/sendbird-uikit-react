@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
-import { GroupChannelProvider, GroupChannelContext } from '../GroupChannelProvider';
+import { GroupChannelContext } from '../GroupChannelProvider';
 import { useGroupChannel } from '../hooks/useGroupChannel';
 import { SendableMessageType } from '../../../../utils';
 
@@ -103,15 +103,19 @@ const createWrapper = (mockStore) => {
 };
 
 describe('useGroupChannel', () => {
-  const wrapper = ({ children }) => (
-    <GroupChannelProvider channelUrl={mockChannel.url}>
-      {children}
-    </GroupChannelProvider>
-  );
+  const renderUseGroupChannel = (initialState = {}) => {
+    const mockStore = createMockStore({
+      channelUrl: mockChannel.url,
+      ...initialState,
+    });
+    return renderHook(() => useGroupChannel(), {
+      wrapper: createWrapper(mockStore),
+    });
+  };
 
   describe('State management', () => {
     it('provides initial state', () => {
-      const { result } = renderHook(() => useGroupChannel(), { wrapper });
+      const { result } = renderUseGroupChannel();
 
       expect(result.current.state).toMatchObject({
         currentChannel: null,
@@ -124,7 +128,7 @@ describe('useGroupChannel', () => {
     });
 
     it('updates channel state', () => {
-      const { result } = renderHook(() => useGroupChannel(), { wrapper });
+      const { result } = renderUseGroupChannel();
 
       act(() => {
         result.current.actions.setCurrentChannel(mockChannel as unknown as GroupChannel);
@@ -138,7 +142,7 @@ describe('useGroupChannel', () => {
     });
 
     it('handles channel error', () => {
-      const { result } = renderHook(() => useGroupChannel(), { wrapper });
+      const { result } = renderUseGroupChannel();
       const error = new Error('Failed to fetch channel');
 
       act(() => {
@@ -152,7 +156,7 @@ describe('useGroupChannel', () => {
     });
 
     it('manages quote message state', () => {
-      const { result } = renderHook(() => useGroupChannel(), { wrapper });
+      const { result } = renderUseGroupChannel();
       const mockMessage = { messageId: 1, message: 'test' } as SendableMessageType;
 
       act(() => {
@@ -169,7 +173,7 @@ describe('useGroupChannel', () => {
     });
 
     it('manages animated message state', () => {
-      const { result } = renderHook(() => useGroupChannel(), { wrapper });
+      const { result } = renderUseGroupChannel();
 
       act(() => {
         result.current.actions.setAnimatedMessageId(123);
@@ -185,7 +189,7 @@ describe('useGroupChannel', () => {
     });
 
     it('manages scroll bottom reached state', () => {
-      const { result } = renderHook(() => useGroupChannel(), { wrapper });
+      const { result } = renderUseGroupChannel();
 
       expect(result.current.state.isScrollBottomReached).toBe(true); // initial state
 
@@ -300,6 +304,7 @@ describe('useGroupChannel', () => {
         });
       });
       it('loads message and scrolls when message does not exist', async () => {
+        jest.useFakeTimers();
         const mockScrollPubSub = { publish: jest.fn() };
         const mockResetWithStartingPoint = jest.fn().mockImplementation(async (startingPoint: number) => {
           mockStore.setState((prev) => ({
@@ -321,19 +326,19 @@ describe('useGroupChannel', () => {
         });
         await act(async () => {
           await result.current.actions.scrollToMessage(1000, 123, true, true);
-          await waitFor(() => {
-            expect(mockResetWithStartingPoint).toHaveBeenCalledWith(1000);
-            // mocking setTimeout
-            jest.runAllTimers();
-            expect(mockStore.getState().scrollPubSub.publish)
-              .toHaveBeenCalledWith('scroll', {
-                top: 100,
-                lazy: false,
-                animated: true,
-              });
-            expect(mockStore.getState().animatedMessageId).toBe(123);
-          });
         });
+        expect(mockResetWithStartingPoint).toHaveBeenCalledWith(1000);
+        act(() => {
+          jest.advanceTimersByTime(500);
+        });
+        expect(mockStore.getState().scrollPubSub.publish)
+          .toHaveBeenCalledWith('scroll', {
+            top: 100,
+            lazy: false,
+            animated: true,
+          });
+        expect(mockStore.getState().animatedMessageId).toBe(123);
+        jest.useRealTimers();
       });
     });
     it('processes reaction toggle', async () => {
@@ -343,7 +348,7 @@ describe('useGroupChannel', () => {
         deleteReaction: jest.fn().mockResolvedValue({}),
       };
 
-      const { result } = renderHook(() => useGroupChannel(), { wrapper });
+      const { result } = renderUseGroupChannel();
 
       act(() => {
         result.current.actions.setCurrentChannel(mockChannelWithReactions as any);
@@ -384,7 +389,7 @@ describe('useGroupChannel', () => {
         deleteReaction,
       };
 
-      const { result } = renderHook(() => useGroupChannel(), { wrapper });
+      const { result } = renderUseGroupChannel();
 
       act(() => {
         result.current.actions.setCurrentChannel(mockChannelWithReactions as any);
@@ -398,7 +403,7 @@ describe('useGroupChannel', () => {
         );
       });
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(mockChannelWithReactions.deleteReaction).toHaveBeenCalled();
         expect(mockLogger.warning).toHaveBeenCalledWith(
           'Failed to delete reaction:',
@@ -446,13 +451,13 @@ describe('useGroupChannel', () => {
           deleteReaction: jest.fn().mockResolvedValue({}),
         };
 
-        const { result } = renderHook(() => useGroupChannel(), { wrapper });
+        const { result } = renderUseGroupChannel();
 
         act(() => {
           result.current.actions.setCurrentChannel(mockChannelWithReactions as any);
         });
 
-        act(async () => {
+        await act(async () => {
           result.current.actions.toggleReaction(
             { messageId: 1 } as SendableMessageType,
             'thumbs_up',
@@ -464,7 +469,7 @@ describe('useGroupChannel', () => {
           });
         });
 
-        act(async () => {
+        await act(async () => {
           result.current.actions.toggleReaction(
             { messageId: 1 } as SendableMessageType,
             'thumbs_up',

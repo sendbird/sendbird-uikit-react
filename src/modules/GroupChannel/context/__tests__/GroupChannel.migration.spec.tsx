@@ -39,6 +39,11 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   useSendbird: jest.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
+const flushProviderEffects = async () => {
+  await Promise.resolve();
+  await Promise.resolve();
+};
+
 const mockProps: GroupChannelProviderProps = {
   // from ContextBaseType
   channelUrl: 'channel-1',
@@ -93,22 +98,29 @@ describe('GroupChannel Migration Compatibility Tests', () => {
   // 1. Provider Props Interface test
   describe('GroupChannelProvider Props Compatibility', () => {
     it('should accept all legacy props without type errors', async () => {
-      const { rerender } = await act(async () => render(
-        <GroupChannelProvider {...mockProps}>
-          {mockProps.children}
-        </GroupChannelProvider>,
-      ));
+      let view: ReturnType<typeof render>;
+      await act(async () => {
+        view = render(
+          <GroupChannelProvider {...mockProps}>
+            {mockProps.children}
+          </GroupChannelProvider>,
+        );
+        await flushProviderEffects();
+      });
 
       // Props change scenario test
-      await act(async () => rerender(
-        <GroupChannelProvider
-          {...mockProps}
-          isReactionEnabled={false}
-          onBackClick={() => {}}
-        >
-          {mockProps.children}
-        </GroupChannelProvider>,
-      ));
+      await act(async () => {
+        view.rerender(
+          <GroupChannelProvider
+            {...mockProps}
+            isReactionEnabled={false}
+            onBackClick={() => {}}
+          >
+            {mockProps.children}
+          </GroupChannelProvider>,
+        );
+        await flushProviderEffects();
+      });
     });
   });
 
@@ -204,12 +216,15 @@ describe('GroupChannel Migration Compatibility Tests', () => {
       );
     };
 
-    it('should provide all legacy context values', () => {
-      render(
-        <GroupChannelProvider {...mockProps}>
-          <TestComponent />
-        </GroupChannelProvider>,
-      );
+    it('should provide all legacy context values', async () => {
+      await act(async () => {
+        render(
+          <GroupChannelProvider {...mockProps}>
+            <TestComponent />
+          </GroupChannelProvider>,
+        );
+        await flushProviderEffects();
+      });
 
       expectedProps.forEach(prop => {
         const element = screen.getByTestId(`prop-${prop}`);

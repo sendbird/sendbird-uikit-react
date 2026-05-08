@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, RefObject, useState } from 'react';
+import React, { ReactElement, ReactNode, RefObject, useEffect, useState } from 'react';
 
 import './index.scss';
 
@@ -34,7 +34,10 @@ const Input = React.forwardRef((props: InputProps, ref: RefObject<HTMLInputEleme
     placeHolder,
     autoFocus = false,
   } = props;
-  const [inputValue, setInputValue] = useState(value);
+  const [inputValue, setInputValue] = useState(value ?? '');
+  useEffect(() => {
+    setInputValue(value ?? '');
+  }, [value]);
   return (
     <div className="sendbird-input">
       <input

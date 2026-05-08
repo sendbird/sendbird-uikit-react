@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import MenuItems from '../MenuItems';
 import { MENU_OBSERVING_CLASS_NAME, MENU_ROOT_ID } from '..';
@@ -138,7 +138,9 @@ describe('ContextMenu MenuItems', () => {
 
     expect(screen.getByTestId('sendbird-dropdown-menu')).toHaveStyle({ left: '70px', top: '52px' });
 
-    window.dispatchEvent(new window.Event('resize'));
+    act(() => {
+      window.dispatchEvent(new window.Event('resize'));
+    });
     expect(raf).toHaveBeenCalled();
 
     unmount();

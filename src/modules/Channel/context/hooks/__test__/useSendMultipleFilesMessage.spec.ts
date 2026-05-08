@@ -26,8 +26,36 @@ type GlobalContextType = {
 const globalContext: GlobalContextType = {};
 const mockFileList = [new File([], 'fileOne'), new File([], 'fileTwo')];
 
-// FIXME: Tests expect SEND_MESSAGE_START but ON_FILE_INFO_UPLOADED arrives. Both should be expected.
-describe.skip('useSendMultipleFilesMessage', () => {
+const expectPublishedMessage = (topic: string, mockMessageType: MockMessageStateType) => {
+  expect(globalContext.pubSub?.publish)
+    .toHaveBeenCalledWith(
+      topic,
+      expect.objectContaining({
+        message: expect.objectContaining({ mockMessageType }),
+        channel: globalContext.currentChannel,
+        publishingModules: [],
+      }),
+    );
+};
+
+const expectFileUploadPublished = () => {
+  expect(globalContext.pubSub?.publish)
+    .toHaveBeenCalledWith(
+      PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED,
+      expect.objectContaining({
+        response: expect.objectContaining({
+          channelUrl: globalContext.currentChannel?.url,
+          requestId: 0,
+          index: 0,
+          uploadableFileInfo: {},
+          error: null,
+        }),
+        publishingModules: [],
+      }),
+    );
+};
+
+describe('useSendMultipleFilesMessage', () => {
   // URL.createObjectURL seems it doesn't work in the jest env.
   beforeAll(() => {
     global.URL.createObjectURL = jest.fn();
@@ -61,7 +89,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
     globalContext.scrollRef = createRef<HTMLDivElement>();
   });
 
-  it('should check sending MFM', () => {
+  it('should check sending MFM', async () => {
     const { result } = renderHook(() => (
       useSendMultipleFilesMessage({
         currentChannel: globalContext.currentChannel as GroupChannel,
@@ -74,7 +102,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
     ));
     const [sendMultipleFilesMessage] = result.current;
 
-    sendMultipleFilesMessage(mockFileList);
+    await sendMultipleFilesMessage(mockFileList);
 
     expect(globalContext.currentChannel?.sendMultipleFilesMessage)
       .toHaveBeenCalledWith({
@@ -94,52 +122,25 @@ describe.skip('useSendMultipleFilesMessage', () => {
         ],
       });
 
-    expect(globalContext.pubSub?.publish)
-      .toHaveBeenCalledWith(
-        PUBSUB_TOPICS.SEND_MESSAGE_START,
-        {
-          message: {
-            mockMessageType: MockMessageStateType.PENDING,
-            fileInfoList: expect.any(Array<2>),
-          },
-          channel: {
-            url: globalContext.currentChannel?.url,
-            sendMultipleFilesMessage: expect.any(Function),
-          },
-        },
-      );
+    expectFileUploadPublished();
+    expectPublishedMessage(PUBSUB_TOPICS.SEND_MESSAGE_START, MockMessageStateType.PENDING);
     expect(globalContext.pubSub?.publish)
       .not.toHaveBeenCalledWith(
         PUBSUB_TOPICS.SEND_MESSAGE_FAILED,
-        {
-          message: { mockMessageType: MockMessageStateType.FAILED },
-          channel: {
-            url: globalContext.currentChannel?.url,
-            sendMultipleFilesMessage: expect.any(Function),
-          },
-        },
+        expect.anything(),
       );
-    expect(globalContext.pubSub?.publish)
-      .toHaveBeenCalledWith(
-        PUBSUB_TOPICS.SEND_FILE_MESSAGE,
-        {
-          message: { mockMessageType: MockMessageStateType.SUCCEEDED },
-          channel: {
-            url: globalContext.currentChannel?.url,
-            sendMultipleFilesMessage: expect.any(Function),
-          },
-        },
-      );
+    expectPublishedMessage(PUBSUB_TOPICS.SEND_FILE_MESSAGE, MockMessageStateType.SUCCEEDED);
   });
 
-  it('should check sending MFM failed', () => {
+  it('should check sending MFM failed', async () => {
+    const currentChannel = {
+      ...globalContext.currentChannel,
+      sendMultipleFilesMessage: jest.fn(() => getMockMessageRequestHandler(false)),
+    } as unknown as GroupChannel;
     const { result } = renderHook(() => (
       useSendMultipleFilesMessage({
         // this mock channel will fail sending MFM -> getMockMessageRequestHandler(false)
-        currentChannel: {
-          ...globalContext.currentChannel,
-          sendMultipleFilesMessage: jest.fn(() => getMockMessageRequestHandler(false)),
-        } as unknown as GroupChannel,
+        currentChannel,
         onBeforeSendMultipleFilesMessage: globalContext.onBeforeSendMultipleFilesMessage,
       }, {
         logger: globalContext.logger as Logger,
@@ -149,43 +150,34 @@ describe.skip('useSendMultipleFilesMessage', () => {
     ));
     const [sendMultipleFilesMessage] = result.current;
 
-    sendMultipleFilesMessage(mockFileList);
+    await expect(sendMultipleFilesMessage(mockFileList)).rejects.toBeDefined();
 
     expect(globalContext.currentChannel?.sendMultipleFilesMessage)
       .not.toHaveBeenCalled();
+    expect(currentChannel.sendMultipleFilesMessage)
+      .toHaveBeenCalled();
     expect(globalContext.pubSub?.publish)
       .not.toHaveBeenCalledWith(
         PUBSUB_TOPICS.SEND_MESSAGE_START,
-        {
-          message: { mockMessageType: MockMessageStateType.PENDING },
-          channel: {
-            url: globalContext.currentChannel?.url,
-            sendMultipleFilesMessage: expect.any(Function),
-          },
-        },
+        expect.anything(),
       );
     expect(globalContext.pubSub?.publish)
       .toHaveBeenCalledWith(
         PUBSUB_TOPICS.SEND_MESSAGE_FAILED,
-        {
-          message: { mockMessageType: MockMessageStateType.FAILED },
-          channel: {
-            url: globalContext.currentChannel?.url,
-            sendMultipleFilesMessage: expect.any(Function),
-          },
-        },
+        expect.objectContaining({
+          message: expect.objectContaining({ mockMessageType: MockMessageStateType.FAILED }),
+          channel: currentChannel,
+          publishingModules: [],
+        }),
       );
     expect(globalContext.pubSub?.publish)
       .not.toHaveBeenCalledWith(
         PUBSUB_TOPICS.SEND_FILE_MESSAGE,
-        {
-          message: { mockMessageType: MockMessageStateType.SUCCEEDED },
-          channel: globalContext.currentChannel,
-        },
+        expect.anything(),
       );
   });
 
-  it('should not send message when receiving empty files', () => {
+  it('should not send message when receiving empty files', async () => {
     const { result } = renderHook(() => (
       useSendMultipleFilesMessage({
         currentChannel: globalContext.currentChannel as GroupChannel,
@@ -199,7 +191,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
     const [sendMultipleFilesMessage] = result.current;
 
     // receiving an empty array
-    sendMultipleFilesMessage([]);
+    await expect(sendMultipleFilesMessage([])).rejects.toBeUndefined();
 
     expect(globalContext.currentChannel?.sendMultipleFilesMessage)
       .not.toHaveBeenCalled();
@@ -207,7 +199,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
       .not.toHaveBeenCalled();
   });
 
-  it('should not send message when receiving an array of one file', () => {
+  it('should not send message when receiving an array of one file', async () => {
     const { result } = renderHook(() => (
       useSendMultipleFilesMessage({
         currentChannel: globalContext.currentChannel as GroupChannel,
@@ -221,7 +213,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
     const [sendMultipleFilesMessage] = result.current;
 
     // receiving only one file
-    sendMultipleFilesMessage([mockFileList[0]]);
+    await expect(sendMultipleFilesMessage([mockFileList[0]])).rejects.toBeUndefined();
 
     expect(globalContext.currentChannel?.sendMultipleFilesMessage)
       .not.toHaveBeenCalled();
@@ -229,7 +221,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
       .not.toHaveBeenCalled();
   });
 
-  it('should apply the quoteMessage', () => {
+  it('should apply the quoteMessage', async () => {
     const { result } = renderHook(() => (
       useSendMultipleFilesMessage({
         currentChannel: globalContext.currentChannel as GroupChannel,
@@ -243,7 +235,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
     const [sendMultipleFilesMessage] = result.current;
 
     // send multiple files message with a quote message
-    sendMultipleFilesMessage(mockFileList, mockSentMessage as unknown as UserMessage);
+    await sendMultipleFilesMessage(mockFileList, mockSentMessage as unknown as UserMessage);
 
     expect(globalContext.currentChannel?.sendMultipleFilesMessage)
       .toHaveBeenCalledWith({
@@ -264,37 +256,18 @@ describe.skip('useSendMultipleFilesMessage', () => {
         isReplyToChannel: true,
         parentMessageId: mockSentMessage.messageId,
       });
-    expect(globalContext.pubSub?.publish)
-      .toHaveBeenCalledWith(
-        PUBSUB_TOPICS.SEND_MESSAGE_START,
-        {
-          message: {
-            mockMessageType: MockMessageStateType.PENDING,
-            fileInfoList: expect.any(Array<2>),
-          },
-          channel: globalContext.currentChannel,
-        },
-      );
+    expectFileUploadPublished();
+    expectPublishedMessage(PUBSUB_TOPICS.SEND_MESSAGE_START, MockMessageStateType.PENDING);
 
     expect(globalContext.pubSub?.publish)
       .not.toHaveBeenCalledWith(
         PUBSUB_TOPICS.SEND_MESSAGE_FAILED,
-        {
-          message: { mockMessageType: MockMessageStateType.FAILED },
-          channel: globalContext.currentChannel,
-        },
+        expect.anything(),
       );
-    expect(globalContext.pubSub?.publish)
-      .toHaveBeenCalledWith(
-        PUBSUB_TOPICS.SEND_FILE_MESSAGE,
-        {
-          message: { mockMessageType: MockMessageStateType.SUCCEEDED },
-          channel: globalContext.currentChannel,
-        },
-      );
+    expectPublishedMessage(PUBSUB_TOPICS.SEND_FILE_MESSAGE, MockMessageStateType.SUCCEEDED);
   });
 
-  it('should apply the onBeforeSendMultipleFilesMessage', () => {
+  it('should apply the onBeforeSendMultipleFilesMessage', async () => {
     const newParamsOptions = {
       customType: 'custom-type',
       fileInfoList: [new File([], 'newFileOne'), new File([], 'newFileTwo')].map((file) => ({ file })),
@@ -315,40 +288,21 @@ describe.skip('useSendMultipleFilesMessage', () => {
     ));
     const [sendMultipleFilesMessage] = result.current;
 
-    sendMultipleFilesMessage(mockFileList);
+    await sendMultipleFilesMessage(mockFileList);
 
     expect(globalContext.currentChannel?.sendMultipleFilesMessage)
       .toHaveBeenCalledWith(newParamsOptions);
-    expect(globalContext.pubSub?.publish)
-      .toHaveBeenCalledWith(
-        PUBSUB_TOPICS.SEND_MESSAGE_START,
-        {
-          message: {
-            mockMessageType: MockMessageStateType.PENDING,
-            fileInfoList: expect.any(Array<2>),
-          },
-          channel: globalContext.currentChannel,
-        },
-      );
+    expectFileUploadPublished();
+    expectPublishedMessage(PUBSUB_TOPICS.SEND_MESSAGE_START, MockMessageStateType.PENDING);
     expect(globalContext.pubSub?.publish)
       .not.toHaveBeenCalledWith(
         PUBSUB_TOPICS.SEND_MESSAGE_FAILED,
-        {
-          message: { mockMessageType: MockMessageStateType.FAILED },
-          channel: globalContext.currentChannel,
-        },
+        expect.anything(),
       );
-    expect(globalContext.pubSub?.publish)
-      .toHaveBeenCalledWith(
-        PUBSUB_TOPICS.SEND_FILE_MESSAGE,
-        {
-          message: { mockMessageType: MockMessageStateType.SUCCEEDED },
-          channel: globalContext.currentChannel,
-        },
-      );
+    expectPublishedMessage(PUBSUB_TOPICS.SEND_FILE_MESSAGE, MockMessageStateType.SUCCEEDED);
   });
 
-  it('should have higher priority with onBeforeSendMultipleFilesMessage rather than quoteMessage', () => {
+  it('should have higher priority with onBeforeSendMultipleFilesMessage rather than quoteMessage', async () => {
     const newParamsOptions = {
       customType: 'custom-type',
       fileInfoList: [new File([], 'newFileOne'), new File([], 'newFileTwo')].map((file) => ({ file })),
@@ -372,7 +326,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
     const [sendMultipleFilesMessage] = result.current;
 
     // send multiple files message with a quote message
-    sendMultipleFilesMessage(mockFileList, mockSentMessage as unknown as UserMessage);
+    await sendMultipleFilesMessage(mockFileList, mockSentMessage as unknown as UserMessage);
 
     expect(globalContext.currentChannel?.sendMultipleFilesMessage)
       .toHaveBeenCalledWith({
@@ -386,32 +340,13 @@ describe.skip('useSendMultipleFilesMessage', () => {
         isReplyToChannel: true,
         parentMessageId: mockSentMessage.messageId,
       });
-    expect(globalContext.pubSub?.publish)
-      .toHaveBeenCalledWith(
-        PUBSUB_TOPICS.SEND_MESSAGE_START,
-        {
-          message: {
-            mockMessageType: MockMessageStateType.PENDING,
-            fileInfoList: expect.any(Array<2>),
-          },
-          channel: globalContext.currentChannel,
-        },
-      );
+    expectFileUploadPublished();
+    expectPublishedMessage(PUBSUB_TOPICS.SEND_MESSAGE_START, MockMessageStateType.PENDING);
     expect(globalContext.pubSub?.publish)
       .not.toHaveBeenCalledWith(
         PUBSUB_TOPICS.SEND_MESSAGE_FAILED,
-        {
-          message: { mockMessageType: MockMessageStateType.FAILED },
-          channel: globalContext.currentChannel,
-        },
+        expect.anything(),
       );
-    expect(globalContext.pubSub?.publish)
-      .toHaveBeenCalledWith(
-        PUBSUB_TOPICS.SEND_FILE_MESSAGE,
-        {
-          message: { mockMessageType: MockMessageStateType.SUCCEEDED },
-          channel: globalContext.currentChannel,
-        },
-      );
+    expectPublishedMessage(PUBSUB_TOPICS.SEND_FILE_MESSAGE, MockMessageStateType.SUCCEEDED);
   });
 });

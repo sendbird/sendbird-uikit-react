@@ -1,11 +1,16 @@
 import React from 'react';
-import { renderHook, screen, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, renderHook, screen, fireEvent, render, waitFor } from '@testing-library/react';
 import useLongPress from '../useLongPress';
 
 describe('useLongPress', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('handle long press correctly', async () => {
@@ -23,8 +28,8 @@ describe('useLongPress', () => {
 
     const element = screen.getByText('touch this');
     fireEvent.touchStart(element);
-    await new Promise(resolve => {
-      setTimeout(resolve, 1000);
+    act(() => {
+      jest.advanceTimersByTime(1000);
     });
     fireEvent.touchEnd(element);
 
@@ -48,8 +53,8 @@ describe('useLongPress', () => {
 
     const element = screen.getByText('touch this');
     fireEvent.touchStart(element);
-    await new Promise(resolve => {
-      setTimeout(resolve, 100);
+    act(() => {
+      jest.advanceTimersByTime(100);
     });
     fireEvent.touchEnd(element);
 

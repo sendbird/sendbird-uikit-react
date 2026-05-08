@@ -96,6 +96,11 @@ const installBrowserMocks = ({
   });
 };
 
+const flushWebAudioUtilsImport = () => act(async () => {
+  await Promise.resolve();
+  await Promise.resolve();
+});
+
 describe('VoiceRecorderProvider', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -121,7 +126,7 @@ describe('VoiceRecorderProvider', () => {
     delete (navigator as any).mediaDevices;
   });
 
-  it('logs an error when the browser supports none of the recorder mime types', () => {
+  it('logs an error when the browser supports none of the recorder mime types', async () => {
     MockMediaRecorder.isTypeSupported.mockReturnValue(false);
 
     render(
@@ -134,9 +139,10 @@ describe('VoiceRecorderProvider', () => {
       'VoiceRecorder: Browser does not support mimeType',
       expect.objectContaining({ mimmeTypes: expect.any(Array) }),
     );
+    await flushWebAudioUtilsImport();
   });
 
-  it('does not start while the audio processor module is still loading', () => {
+  it('does not start while the audio processor module is still loading', async () => {
     render(
       <VoiceRecorderProvider>
         <Consumer />
@@ -148,6 +154,7 @@ describe('VoiceRecorderProvider', () => {
     });
 
     expect(logger.error).toHaveBeenCalledWith('VoiceRecorder: Recording audio processor is being loaded.');
+    await flushWebAudioUtilsImport();
   });
 
   it('starts, stops, converts audio, and emits a converted file', async () => {
@@ -158,10 +165,7 @@ describe('VoiceRecorderProvider', () => {
         <Consumer />
       </VoiceRecorderProvider>
     );
-    await act(async () => {
-      await Promise.resolve();
-      await Promise.resolve();
-    });
+    await flushWebAudioUtilsImport();
 
     await act(async () => {
       latestRecorderContext.start({ onRecordingStarted, onRecordingEnded });
@@ -191,10 +195,7 @@ describe('VoiceRecorderProvider', () => {
         <Consumer />
       </VoiceRecorderProvider>
     );
-    await act(async () => {
-      await Promise.resolve();
-      await Promise.resolve();
-    });
+    await flushWebAudioUtilsImport();
 
     await act(async () => {
       latestRecorderContext.start();
@@ -217,10 +218,7 @@ describe('VoiceRecorderProvider', () => {
         <Consumer />
       </VoiceRecorderProvider>
     );
-    await act(async () => {
-      await Promise.resolve();
-      await Promise.resolve();
-    });
+    await flushWebAudioUtilsImport();
 
     await act(async () => {
       latestRecorderContext.start();

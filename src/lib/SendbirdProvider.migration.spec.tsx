@@ -24,18 +24,26 @@ jest.mock('@sendbird/chat', () => {
 
   const mockSdk = {
     init: jest.fn().mockImplementation(() => mockSdk),
+    appId: 'test-app-id',
     connect: mockConnect,
     disconnect: mockDisconnect,
     updateCurrentUserInfo: mockUpdateCurrentUserInfo,
     addExtension: mockAddExtension,
     addSendbirdExtensions: mockAddSendbirdExtensions,
+    getUIKitConfiguration: jest.fn().mockRejectedValue(new Error('No remote config')),
     GroupChannel: { createMyGroupChannelListQuery: jest.fn() },
     message: {
       getMessageTemplatesByToken: mockGetMessageTemplatesByToken,
     },
     appInfo: {
-      uploadSizeLimit: 1024 * 1024 * 5,
+      uploadSizeLimit: 25 * 1024 * 1024,
       multipleFilesMessageFileCountLimit: 10,
+      messageTemplateInfo: {
+        token: null,
+      },
+      uikitConfigInfo: {
+        lastUpdatedAt: 0,
+      },
     },
   };
 
@@ -62,7 +70,7 @@ const mockProps: SendbirdProviderProps = {
   customApiHost: 'api.sendbird.com',
   customWebSocketHost: 'socket.sendbird.com',
   theme: 'light',
-  config: { logLevel: 'info', isREMUnitEnabled: true },
+  config: { logLevel: 'error', isREMUnitEnabled: true },
   nickname: 'test-nickname',
   colorSet: { primary: '#000' },
   stringSet: { CHANNEL_PREVIEW_MOBILE_LEAVE: 'Leave Channel' },
@@ -86,6 +94,13 @@ const mockProps: SendbirdProviderProps = {
   onUserProfileMessage: jest.fn(),
   eventHandlers: {},
   children: <div>Test Child</div>,
+};
+
+const flushProviderEffects = async () => {
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
 };
 
 describe('SendbirdProvider Props & Context Interface Validation', () => {
@@ -134,21 +149,24 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
   });
 
   it('should accept all legacy props without type errors', async () => {
-    const { rerender } = await act(async () => (
-      render(
+    let view: ReturnType<typeof render>;
+    await act(async () => {
+      view = render(
         <SendbirdProvider {...mockProps}>
           {mockProps.children}
         </SendbirdProvider>,
-      )
-    ));
+      );
+      await flushProviderEffects();
+    });
 
-    await act(async () => (
-      rerender(
+    await act(async () => {
+      view.rerender(
         <SendbirdProvider {...mockProps}>
           {mockProps.children}
         </SendbirdProvider>,
-      )
-    ));
+      );
+      await flushProviderEffects();
+    });
   });
 
   it('should provide all expected keys in context', async () => {
@@ -177,13 +195,14 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
       );
     };
 
-    await act(() => (
+    await act(async () => {
       render(
         <SendbirdProvider appId="test-app-id" userId="test-user-id">
           <TestComponent />
         </SendbirdProvider>,
-      )
-    ));
+      );
+      await flushProviderEffects();
+    });
 
     expectedKeys.forEach((key) => {
       const element = screen.getByTestId(`context-${key}`);
@@ -215,6 +234,7 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
     let result;
     await act(async () => {
       result = renderHook(() => useSendbirdStateContext(), { wrapper }).result;
+      await flushProviderEffects();
     });
 
     const config = result.current.config;
@@ -253,6 +273,7 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
     let result;
     await act(async () => {
       result = renderHook(() => useSendbirdStateContext(), { wrapper }).result;
+      await flushProviderEffects();
     });
 
     expect(result.current.config.pubSub).toBeDefined();

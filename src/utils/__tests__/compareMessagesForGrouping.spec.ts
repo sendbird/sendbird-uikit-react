@@ -1,9 +1,8 @@
-import { compareMessagesForGrouping, isSameGroup } from '../../utils/messages';
+import { compareMessagesForGrouping } from '../../utils/messages';
 
-jest.mock('../../utils/messages', () => ({
-  ...jest.requireActual('../../utils/messages'),
-  isSameGroup: jest.fn(),
-}));
+const stringSet = {
+  DATE_FORMAT__MESSAGE_CREATED_AT: 'p',
+} as any;
 
 describe('compareMessagesForGrouping', () => {
   it('should return false for both chainTop and chainBottom when replyType is THREAD and currentMessage has threadInfo', () => {
@@ -12,76 +11,101 @@ describe('compareMessagesForGrouping', () => {
       threadInfo: {},
     };
     const nextMessage = {};
-    const currentChannel = {};
+    const currentChannel = { channelType: 'group' };
     const replyType = 'THREAD';
     // @ts-ignore
-    const result = compareMessagesForGrouping(prevMessage, currMessage, nextMessage, currentChannel, replyType);
+    const result = compareMessagesForGrouping(prevMessage, currMessage, nextMessage, stringSet, currentChannel, replyType);
     expect(result).toEqual([false, false]);
   });
 
-  // NOTE: Using jest.mock to mock methods of a specific module is not functioning as expected.
-  //  Nevertheless, even aside from that, since this test is not intended to validate something, it will be skipped.
-  it.skip('should return [true, true] when on same group', () => {
-    // @ts-ignore
-    isSameGroup.mockImplementation(() => true);
+  it('should return [true, true] when on same group', () => {
     const prevMessage = {
       sendingStatus: 'succeeded',
       messageType: 'user',
       sender: { userId: 'tester1' },
-      createdAt: 0,
+      createdAt: 1000,
     };
     const currMessage = {
       sendingStatus: 'succeeded',
+      messageType: 'user',
+      sender: { userId: 'tester1' },
+      createdAt: 1000,
     };
     const nextMessage = {
       sendingStatus: 'succeeded',
+      messageType: 'user',
+      sender: { userId: 'tester1' },
+      createdAt: 1000,
     };
     const currentChannel = {
+      channelType: 'group',
       isGroupChannel: () => true,
       getUnreadMemberCount: () => 1,
       getUndeliveredMemberCount: () => 1,
     };
     const replyType = 'QUOTE_REPLY';
     // @ts-ignore
-    const result = compareMessagesForGrouping(prevMessage, currMessage, nextMessage, currentChannel, replyType);
+    const result = compareMessagesForGrouping(prevMessage, currMessage, nextMessage, stringSet, currentChannel, replyType);
     expect(result).toEqual([true, true]);
   });
 
   it('should return [false, false] when on same group but sendingStatus is pending', () => {
-    // @ts-ignore
-    isSameGroup.mockImplementation(() => true);
     const prevMessage = {
       sendingStatus: 'succeeded',
+      messageType: 'user',
+      sender: { userId: 'tester1' },
+      createdAt: 1000,
     };
     const currMessage = {
       sendingStatus: 'pending',
+      messageType: 'user',
+      sender: { userId: 'tester1' },
+      createdAt: 1000,
     };
     const nextMessage = {
       sendingStatus: 'succeeded',
+      messageType: 'user',
+      sender: { userId: 'tester1' },
+      createdAt: 1000,
     };
-    const currentChannel = {};
+    const currentChannel = {
+      channelType: 'group',
+      getUnreadMemberCount: () => 1,
+      getUndeliveredMemberCount: () => 1,
+    };
     const replyType = 'QUOTE_REPLY';
     // @ts-ignore
-    const result = compareMessagesForGrouping(prevMessage, currMessage, nextMessage, currentChannel, replyType);
+    const result = compareMessagesForGrouping(prevMessage, currMessage, nextMessage, stringSet, currentChannel, replyType);
     expect(result).toEqual([false, false]);
   });
 
   it('should return [false, false] when on same group but sendingStatus is failed', () => {
-    // @ts-ignore
-    isSameGroup.mockImplementation(() => true);
     const prevMessage = {
       sendingStatus: 'succeeded',
+      messageType: 'user',
+      sender: { userId: 'tester1' },
+      createdAt: 1000,
     };
     const currMessage = {
       sendingStatus: 'failed',
+      messageType: 'user',
+      sender: { userId: 'tester1' },
+      createdAt: 1000,
     };
     const nextMessage = {
       sendingStatus: 'succeeded',
+      messageType: 'user',
+      sender: { userId: 'tester1' },
+      createdAt: 1000,
     };
-    const currentChannel = {};
+    const currentChannel = {
+      channelType: 'group',
+      getUnreadMemberCount: () => 1,
+      getUndeliveredMemberCount: () => 1,
+    };
     const replyType = 'QUOTE_REPLY';
     // @ts-ignore
-    const result = compareMessagesForGrouping(prevMessage, currMessage, nextMessage, currentChannel, replyType);
+    const result = compareMessagesForGrouping(prevMessage, currMessage, nextMessage, stringSet, currentChannel, replyType);
     expect(result).toEqual([false, false]);
   });
 });

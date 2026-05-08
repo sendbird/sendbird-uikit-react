@@ -37,6 +37,7 @@ jest.mock('../../../../../ui/Modal', () => (props: any) => {
 
 jest.mock('../../../../../ui/UserListItem', () => (props: any) => {
   const React = require('react');
+  const menu = props.renderListItemMenu?.({ user: props.user, channel: props.channel });
   return React.createElement('div', {}, [
     React.createElement('button', {
       key: 'user',
@@ -45,7 +46,7 @@ jest.mock('../../../../../ui/UserListItem', () => (props: any) => {
       'data-testid': `user-${props.user.userId}`,
       onClick: () => props.onChange?.({ target: { id: props.user.userId, checked: !props.checked } }),
     }, `${props.user.nickname || props.user.userId}${props.checked ? ':checked' : ''}`),
-    props.renderListItemMenu?.({ user: props.user, channel: props.channel }),
+    menu && React.createElement(React.Fragment, { key: 'menu' }, menu),
   ]);
 });
 
@@ -138,19 +139,22 @@ const setupChannelSettings = (channelOverrides = {}) => {
     hasNext: true,
     next: jest.fn()
       .mockResolvedValueOnce(firstPage)
-      .mockResolvedValueOnce([member('member-b')]),
+      .mockResolvedValueOnce([member('member-b')])
+      .mockResolvedValue([]),
   };
   const operatorQuery = {
     hasNext: true,
     next: jest.fn()
       .mockResolvedValueOnce([member('operator-a')])
-      .mockResolvedValueOnce([member('operator-b')]),
+      .mockResolvedValueOnce([member('operator-b')])
+      .mockResolvedValue([]),
   };
   const bannedQuery = {
     hasNext: true,
     next: jest.fn()
       .mockResolvedValueOnce([member('banned-a')])
-      .mockResolvedValueOnce([member('banned-b')]),
+      .mockResolvedValueOnce([member('banned-b')])
+      .mockResolvedValue([]),
   };
   const channel = {
     url: 'channel-url',
@@ -305,14 +309,20 @@ describe('ChannelSettings moderation member and invite components', () => {
 
     renderWithLocale(<BannedUserList />);
     expect(await screen.findByTestId('user-banned-a')).toBeInTheDocument();
-    fireEvent.click(screen.getByText('All banned users'));
+    await act(async () => {
+      fireEvent.click(screen.getByText('All banned users'));
+      await Promise.resolve();
+    });
     expect(screen.getAllByText('All banned users').length).toBeGreaterThan(0);
 
     jest.useRealTimers();
   });
 
   it('loads and removes banned and muted users in their modals', async () => {
-    renderWithLocale(<BannedUsersModal onCancel={jest.fn()} />);
+    await act(async () => {
+      renderWithLocale(<BannedUsersModal onCancel={jest.fn()} />);
+      await Promise.resolve();
+    });
     expect(await screen.findByTestId('user-banned-a')).toBeInTheDocument();
     fireEvent.scroll(document.querySelector('.sendbird-more-members__popup-scroll') as Element);
     expect(await screen.findByTestId('user-banned-b')).toBeInTheDocument();

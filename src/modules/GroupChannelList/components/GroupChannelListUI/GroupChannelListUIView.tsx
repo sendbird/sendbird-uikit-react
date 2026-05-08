@@ -139,7 +139,13 @@ const ChannelListComponent = <T, >(props: {
   return (
     <div className='sendbird-channel-list__body' onScroll={onScroll} ref={scrollRef}>
       {placeholderError}
-      <div>{data.map((item, index) => renderItem({ item, index }))}</div>
+      <div>
+        {data.map((item, index) => (
+          <React.Fragment key={(item as { url?: string })?.url ?? index}>
+            {renderItem({ item, index })}
+          </React.Fragment>
+        ))}
+      </div>
       {placeholderLoading}
       {data.length === 0 && placeholderEmpty}
     </div>

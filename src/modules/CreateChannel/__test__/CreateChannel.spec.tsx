@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import SendbirdProvider from '../../../lib/Sendbird/context/SendbirdProvider';
 import { CreateChannelProvider } from '../context';
@@ -28,40 +28,29 @@ describe('CreateChannel Unit Tests', () => {
     onChannelCreated: () => jest.fn(),
   };
 
-  it('renders CreateChannelUI with default value', () => {
-    expect(() => {
+  const renderWithCreateChannelProvider = async (children: React.ReactElement) => {
+    await act(async () => {
       render(
         <SendbirdProvider appId="mockAppId" userId="mockUserId">
           <CreateChannelProvider {...defaultProps}>
-            <CreateChannelUI />
-          </CreateChannelProvider>,
+            {children}
+          </CreateChannelProvider>
         </SendbirdProvider>,
       );
-    }).not.toThrow();
+      await Promise.resolve();
+    });
+  };
+
+  it('renders CreateChannelUI with default value', async () => {
+    await renderWithCreateChannelProvider(<CreateChannelUI />);
   });
 
-  it('renders InviteUsers with default value', () => {
-    expect(() => {
-      render(
-        <SendbirdProvider appId="mockAppId" userId="mockUserId">
-          <CreateChannelProvider {...defaultProps}>
-            <InviteUsers />
-          </CreateChannelProvider>,
-        </SendbirdProvider>,
-      );
-    }).not.toThrow();
+  it('renders InviteUsers with default value', async () => {
+    await renderWithCreateChannelProvider(<InviteUsers />);
   });
 
-  it('renders SelectChannelType with default value', () => {
-    expect(() => {
-      render(
-        <SendbirdProvider appId="mockAppId" userId="mockUserId">
-          <CreateChannelProvider {...defaultProps}>
-            <SelectChannelType />
-          </CreateChannelProvider>,
-        </SendbirdProvider>,
-      );
-    }).not.toThrow();
+  it('renders SelectChannelType with default value', async () => {
+    await renderWithCreateChannelProvider(<SelectChannelType />);
   });
 
 });

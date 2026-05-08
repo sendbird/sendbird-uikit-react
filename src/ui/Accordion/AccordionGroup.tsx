@@ -36,8 +36,7 @@ export const AccordionGroupProvider = ({
       if (!allowMultipleOpen) {
         return [key];
       }
-      prevList.push(key);
-      return prevList;
+      return prevList.includes(key) ? prevList : [...prevList, key];
     });
   };
   const removeOpenedListKey: AGCType['removeOpenedListKey'] = (key) => {

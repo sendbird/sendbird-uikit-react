@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactElement, useState } from 'react';
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 import './index.scss';
 
 export interface CheckboxProps {
@@ -15,6 +15,10 @@ export default function Checkbox({
   onChange,
 }: CheckboxProps): ReactElement {
   const [isChecked, setIsCheck] = useState(checked);
+  useEffect(() => {
+    setIsCheck(checked);
+  }, [checked]);
+
   return (
     <label
       className={[
@@ -28,10 +32,10 @@ export default function Checkbox({
         id={id}
         type="checkbox"
         checked={isChecked}
-        onClick={() => {
-          if (!disabled) setIsCheck(!isChecked);
+        onChange={(event) => {
+          if (!disabled) setIsCheck(event.target.checked);
+          onChange?.(event);
         }}
-        onChange={onChange}
       />
       <span
         className={[

@@ -67,22 +67,24 @@ export function BannedUsersModal({
           })}
         >
           {members.map((member) => (
-            renderUserListItem({
-              user: member,
-              channel,
-              renderListItemMenu: (props) => (
-                <UserListItemMenu
-                  {...props}
-                  isBanned
-                  onToggleBanState={() => {
-                    setMembers(members.filter(m => {
-                      return (m.userId !== member.userId);
-                    }));
-                  }}
-                  renderMenuItems={({ items }) => <items.BanToggleMenuItem />}
-                />
-              ),
-            })
+            <React.Fragment key={member.userId}>
+              {renderUserListItem({
+                user: member,
+                channel,
+                renderListItemMenu: (props) => (
+                  <UserListItemMenu
+                    {...props}
+                    isBanned
+                    onToggleBanState={() => {
+                      setMembers(members.filter(m => {
+                        return (m.userId !== member.userId);
+                      }));
+                    }}
+                    renderMenuItems={({ items }) => <items.BanToggleMenuItem />}
+                  />
+                ),
+              })}
+            </React.Fragment>
           ))}
         </div>
       </Modal>

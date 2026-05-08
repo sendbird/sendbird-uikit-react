@@ -47,7 +47,7 @@ export type SendMFMFunctionType = (files: Array<File>, quoteMessage?: SendableMe
 export const useSendMultipleFilesMessage = ({
   currentChannel,
   onBeforeSendMultipleFilesMessage,
-  publishingModules,
+  publishingModules = [],
 }: UseSendMFMDynamicParams, {
   logger,
   pubSub,
@@ -61,10 +61,12 @@ export const useSendMultipleFilesMessage = ({
       if (!currentChannel) {
         logger.warning('Channel: Sending MFm failed, because currentChannel is null.', { currentChannel });
         reject();
+        return;
       }
       if (files.length <= 1) {
         logger.warning('Channel: Sending MFM failed, because there are no multiple files.', { files });
         reject();
+        return;
       }
       let messageParams: MultipleFilesMessageCreateParams = {
         fileInfoList: files.map((file: File): UploadableFileInfo => ({
