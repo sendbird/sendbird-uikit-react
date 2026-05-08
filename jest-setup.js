@@ -76,3 +76,4 @@ class MockMediaRecorder {
 global.MediaRecorder = MockMediaRecorder;
 
 copyProps(window, global);
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;

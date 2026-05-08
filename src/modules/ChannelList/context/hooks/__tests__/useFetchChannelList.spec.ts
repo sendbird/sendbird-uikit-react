@@ -1,13 +1,12 @@
-import { act } from 'react-dom/test-utils';
 import { renderHook } from '@testing-library/react';
 import { GroupChannelListQuery } from '@sendbird/chat/groupChannel';
+import React, { act } from 'react';
 
 import { useFetchChannelList } from '../useFetchChannelList';
 import { mockChannelList } from '../channelList.mock';
 import { Nullable } from '../../../../../types';
 import { MarkAsDeliveredSchedulerType } from '../../../../../lib/hooks/useMarkAsDeliveredScheduler';
 import * as channelListActions from '../../../dux/actionTypes';
-import React from 'react';
 import { ChannelListActionTypes } from '../../../dux/actionTypes';
 import { LoggerInterface } from '../../../../../lib/Logger';
 

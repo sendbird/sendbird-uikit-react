@@ -62,9 +62,7 @@ describe('ui/MessageItemMenu', () => {
           className={className}
           message={createMockMessage()}
           channel={createMockChannel()}
-          setSupposedHover={() => {
-            console.log('무야호')
-          }}
+          setSupposedHover={jest.fn()}
         />
       </div>
     );

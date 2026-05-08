@@ -8,8 +8,10 @@ jest.mock('../../../lib/MediaQueryContext', () => ({
   useMediaQueryContext: () => mockUseMediaQueryContext(),
 }));
 
+const TemplateItem = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
+
 const createItem = (label: string, width: number | 'fill') => React.createElement(
-  'div',
+  TemplateItem,
   {
     templateItems: [{
       width: width === 'fill'

@@ -13,7 +13,6 @@ interface ItemPosition {
 }
 
 interface CarouselItemProps {
-  key: string;
   item: ReactElement;
   defaultWidth: string;
 }
@@ -28,11 +27,10 @@ function shouldRenderAsFixed(item: ReactElement) {
 }
 
 function CarouselItem({
-  key,
   item,
   defaultWidth,
 }: CarouselItemProps): ReactElement {
-  return <div key={key} style={shouldRenderAsFixed(item) ? { width: 'fit-content' } : { minWidth: defaultWidth }}>
+  return <div style={shouldRenderAsFixed(item) ? { width: 'fit-content' } : { minWidth: defaultWidth }}>
     {item}
   </div>;
 }

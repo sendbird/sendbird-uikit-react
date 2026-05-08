@@ -1,5 +1,5 @@
 import React from 'react';
-import { waitFor, renderHook } from '@testing-library/react';
+import { act, waitFor, renderHook } from '@testing-library/react';
 import { ThreadProvider, ThreadState } from '../ThreadProvider';
 import useThread from '../useThread';
 import { SendableMessageType } from '../../../../utils';
@@ -30,7 +30,7 @@ class MockMessageMethod {
       } else {
         this._onFailed?.(message);
       }
-    }, 300);
+    }, 0);
   }
 
   onPending(func) {
@@ -63,7 +63,26 @@ const mockNewMessage = (message) => ({
   message: message ?? 'new message',
 });
 
-const mockGetChannel = jest.fn().mockResolvedValue(mockChannel);
+const mockGetChannel = jest.fn();
+const mockLogger = {
+  info: jest.fn(),
+  warning: jest.fn(),
+  error: jest.fn(),
+};
+
+const createDeferred = <T,>() => {
+  let resolve!: (value: T) => void;
+  let reject!: (reason?: unknown) => void;
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return {
+    promise,
+    resolve,
+    reject,
+  };
+};
 
 const mockState = {
   stores: {
@@ -78,7 +97,7 @@ const mockState = {
     userStore: { user: { userId: 'test-user-id' } },
   },
   config: {
-    logger: console,
+    logger: mockLogger,
     pubSub: {
       publish: jest.fn(),
     },
@@ -94,6 +113,8 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
 }));
 
 describe('ThreadProvider', () => {
+  let getChannelDeferred: ReturnType<typeof createDeferred<typeof mockChannel>>;
+
   const initialState: ThreadState = {
     channelUrl: 'test-channel-url',
     message: undefined,
@@ -129,10 +150,22 @@ describe('ThreadProvider', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    getChannelDeferred = createDeferred<typeof mockChannel>();
+    mockGetChannel.mockReturnValue(getChannelDeferred.promise);
     const stateContextValue = { state: mockState };
     (useSendbird as jest.Mock).mockReturnValue(stateContextValue);
     renderHook(() => useSendbird());
   });
+
+  const resolveGetChannel = async () => {
+    await waitFor(() => {
+      expect(mockGetChannel).toHaveBeenCalled();
+    });
+    await act(async () => {
+      getChannelDeferred.resolve(mockChannel);
+      await getChannelDeferred.promise;
+    });
+  };
 
   it('provides the correct initial state', async () => {
     const wrapper = ({ children }) => (
@@ -141,6 +174,9 @@ describe('ThreadProvider', () => {
 
     const { result } = renderHook(() => useThread(), { wrapper });
 
+    await waitFor(() => {
+      expect(result.current.state.channelState).toBe(ChannelStateTypes.LOADING);
+    });
     expect(result.current.state).toMatchObject(initialState);
   });
 
@@ -211,11 +247,15 @@ describe('ThreadProvider', () => {
 
     const { result } = renderHook(() => useThread(), { wrapper });
 
+    await resolveGetChannel();
+
     await waitFor(() => {
       expect(result.current.state.currentChannel).not.toBe(undefined);
     });
 
-    result.current.actions.setCurrentUserId('new-user-id');
+    await act(async () => {
+      result.current.actions.setCurrentUserId('new-user-id');
+    });
 
     await waitFor(() => {
       expect(result.current.state.currentUserId).toEqual('new-user-id');
@@ -231,15 +271,22 @@ describe('ThreadProvider', () => {
 
     const { result } = renderHook(() => useThread(), { wrapper });
 
+    await resolveGetChannel();
+
     await waitFor(() => {
       expect(result.current.state.currentChannel).not.toBe(undefined);
     });
 
     mockSendUserMessage.mockImplementation((propsMessage) => new MockMessageMethod(mockNewMessage(propsMessage), true));
-    result.current.actions.sendMessage({ message: 'Test Message' });
+    act(() => {
+      result.current.actions.sendMessage({ message: 'Test Message' });
+    });
 
     await waitFor(() => {
       expect(result.current.state.localThreadMessages.at(-1)).toHaveProperty('messageId', 42);
+    });
+    await waitFor(() => {
+      expect(mockState.config.pubSub.publish).toHaveBeenCalledTimes(1);
     });
   });
 
