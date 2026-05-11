@@ -96,6 +96,19 @@ describe('OpenChannelSettingsProvider', () => {
     expect(result.current.channel).toBeNull();
   });
 
+  it('keeps channel null when entering fails', async () => {
+    const enterError = new Error('enter failed');
+    mockEnter.mockRejectedValue(enterError);
+
+    const { result } = renderHook(() => useOpenChannelSettingsContext(), { wrapper });
+
+    await waitFor(() => {
+      expect(mockLogger.warning).toHaveBeenCalledWith('OpenChannelSettings | Failed to enter channel', enterError);
+    });
+    expect(result.current.channel).toBeNull();
+    expect(result.current.isChannelInitialized).toBe(false);
+  });
+
   it('updates channel state from open channel handler events', async () => {
     const { result } = renderHook(() => useOpenChannelSettingsContext(), { wrapper });
 
@@ -118,5 +131,64 @@ describe('OpenChannelSettingsProvider', () => {
     });
 
     expect(result.current.channel).toBeNull();
+  });
+
+  it('handles current-user moderation events from the open channel handler', async () => {
+    const { result } = renderHook(() => useOpenChannelSettingsContext(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.channel).toBe(mockChannel);
+      expect(mockAddOpenChannelHandler).toHaveBeenCalledTimes(1);
+    });
+
+    const handler = mockAddOpenChannelHandler.mock.calls[0][1];
+    const updatedChannel = { ...mockChannel, name: 'Updated by handler' };
+    const currentUser = { userId: 'current-user' };
+    const otherUser = { userId: 'other-user' };
+
+    act(() => {
+      handler.onOperatorUpdated(updatedChannel);
+      handler.onUserMuted(updatedChannel, currentUser);
+      handler.onUserUnmuted(updatedChannel, currentUser);
+    });
+    expect(result.current.channel).toBe(updatedChannel);
+
+    act(() => {
+      handler.onUserMuted({ ...mockChannel, name: 'Ignored mute' }, otherUser);
+    });
+    expect(result.current.channel).toBe(updatedChannel);
+
+    act(() => {
+      handler.onUserBanned(updatedChannel, currentUser);
+    });
+    expect(result.current.channel).toBeNull();
+
+    act(() => {
+      handler.onUserUnbanned(updatedChannel, currentUser);
+    });
+    expect(result.current.channel).toBe(updatedChannel);
+
+    act(() => {
+      handler.onUserBanned({ ...mockChannel, name: 'Ignored ban' }, otherUser);
+    });
+    expect(result.current.channel).toBe(updatedChannel);
+  });
+
+  it('removes the open channel handler on unmount', async () => {
+    const { result, unmount } = renderHook(() => useOpenChannelSettingsContext(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.channel).toBe(mockChannel);
+      expect(mockAddOpenChannelHandler).toHaveBeenCalledTimes(1);
+    });
+
+    const removeCallCountBeforeUnmount = mockRemoveOpenChannelHandler.mock.calls.length;
+    unmount();
+
+    expect(mockRemoveOpenChannelHandler).toHaveBeenCalledTimes(removeCallCountBeforeUnmount + 1);
+    expect(mockLogger.info).toHaveBeenCalledWith(
+      'OpenChannelSettings | Removing channel handlers',
+      expect.any(String),
+    );
   });
 });

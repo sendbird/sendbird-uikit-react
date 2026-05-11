@@ -4,6 +4,7 @@ import OpenChannelListActionTypes from '../../dux/actionTypes';
 import createChannelListQuery from '../createChannelListQuery';
 import useFetchNextCallback from '../useFetchNextCallback';
 import useRefreshOpenChannelList from '../useRefreshOpenChannelList';
+import useSetupOpenChannelList from '../useSetupOpenChannelList';
 
 const logger = {
   info: jest.fn(),
@@ -228,5 +229,92 @@ describe('OpenChannelList context hooks', () => {
     act(() => result.current(callback));
     expect(query.next).not.toHaveBeenCalled();
     expect(logger.info).toHaveBeenCalledWith('OpenChannelList|useFetchNextCallback : There is no more channels');
+  });
+
+  it('sets up the initial open channel list and dispatches success', async () => {
+    const channels = [{ url: 'initial-open-channel' }];
+    const query = createQuery({ next: jest.fn().mockResolvedValue(channels) });
+    const dispatch = jest.fn();
+
+    renderHook(() => useSetupOpenChannelList({
+      sdk: createSdk(query) as any,
+      sdkInitialized: true,
+      openChannelListQuery: { limit: 7 },
+    }, {
+      logger: logger as any,
+      openChannelListDispatcher: dispatch,
+    }));
+
+    expect(dispatch).toHaveBeenCalledWith({
+      type: OpenChannelListActionTypes.UPDATE_OPEN_CHANNEL_LIST_QUERY,
+      payload: query,
+    });
+    expect(dispatch).toHaveBeenCalledWith({
+      type: OpenChannelListActionTypes.INIT_OPEN_CHANNEL_LIST_START,
+      payload: null,
+    });
+
+    await waitFor(() => {
+      expect(dispatch).toHaveBeenCalledWith({
+        type: OpenChannelListActionTypes.INIT_OPEN_CHANNEL_LIST_SUCCESS,
+        payload: channels,
+      });
+    });
+  });
+
+  it('handles setup reset, unavailable SDK modules, exhausted queries, and failures', async () => {
+    const dispatch = jest.fn();
+
+    renderHook(() => useSetupOpenChannelList({
+      sdk: null as any,
+      sdkInitialized: false,
+    }, {
+      logger: logger as any,
+      openChannelListDispatcher: dispatch,
+    }));
+    expect(dispatch).toHaveBeenCalledWith({
+      type: OpenChannelListActionTypes.RESET_OPEN_CHANNEL_LIST,
+      payload: null,
+    });
+
+    renderHook(() => useSetupOpenChannelList({
+      sdk: {} as any,
+      sdkInitialized: true,
+    }, {
+      logger: logger as any,
+      openChannelListDispatcher: dispatch,
+    }));
+    expect(logger.warning).toHaveBeenCalledWith(
+      'OpenChannelList|useSetupOpenChannelList: openChannel is not included in the Chat SDK',
+      {},
+    );
+
+    const exhaustedQuery = createQuery({ hasNext: false });
+    renderHook(() => useSetupOpenChannelList({
+      sdk: createSdk(exhaustedQuery) as any,
+      sdkInitialized: true,
+    }, {
+      logger: logger as any,
+      openChannelListDispatcher: dispatch,
+    }));
+    expect(logger.info).toHaveBeenCalledWith('OpenChannelList|useSetupOpenChannelList: There is no more channels');
+
+    const error = new Error('setup failed');
+    const failingQuery = createQuery({ next: jest.fn().mockRejectedValue(error) });
+    renderHook(() => useSetupOpenChannelList({
+      sdk: createSdk(failingQuery) as any,
+      sdkInitialized: true,
+    }, {
+      logger: logger as any,
+      openChannelListDispatcher: dispatch,
+    }));
+
+    await waitFor(() => {
+      expect(dispatch).toHaveBeenCalledWith({
+        type: OpenChannelListActionTypes.INIT_OPEN_CHANNEL_LIST_FAILURE,
+        payload: null,
+      });
+    });
+    expect(logger.error).toHaveBeenCalledWith('OpenChannelList|useSetupOpenChannelList: Failed fetching channels', error);
   });
 });
