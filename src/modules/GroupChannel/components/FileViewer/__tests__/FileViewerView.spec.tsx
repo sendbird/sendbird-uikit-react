@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 
 import { FileViewerComponent } from '../FileViewerView';
 
@@ -55,16 +55,11 @@ describe('GroupChannel/FileViewerView', () => {
     expect(downloadLink?.getAttribute('download')).toBe(baseProps.name);
   });
 
-  it('confirms before deleting a file', () => {
+  it('deletes a file immediately', () => {
     render(<FileViewerComponent {...baseProps} isByMe />);
 
     const deleteButton = document.querySelector('.sendbird-fileviewer__header__right__actions__delete .sendbird-icon');
     fireEvent.click(deleteButton as Element);
-
-    expect(baseProps.onDelete).not.toHaveBeenCalled();
-    expect(screen.getByText('Delete this message?')).toBeInTheDocument();
-
-    fireEvent.click(screen.getByText('Delete'));
 
     expect(baseProps.onDelete).toHaveBeenCalledTimes(1);
   });

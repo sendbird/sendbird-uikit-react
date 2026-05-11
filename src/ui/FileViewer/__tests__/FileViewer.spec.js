@@ -135,7 +135,7 @@ describe('ui/FileViewer', () => {
     expect(downloadLink.getAttribute('download')).toBe(name);
   });
 
-  it('should confirm before deleting a file', function () {
+  it('should delete a file immediately', function () {
     const {
       sender,
       type,
@@ -161,11 +161,6 @@ describe('ui/FileViewer', () => {
 
     const deleteButton = document.querySelector(`#${MODAL_ROOT} .sendbird-fileviewer__header__right__actions__delete .sendbird-icon`);
     fireEvent.click(deleteButton);
-
-    expect(onDelete).not.toHaveBeenCalled();
-    expect(screen.getByText('Delete this message?')).toBeInTheDocument();
-
-    fireEvent.click(screen.getByText('Delete'));
 
     expect(onDelete).toHaveBeenCalledTimes(1);
   });
