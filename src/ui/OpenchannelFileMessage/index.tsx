@@ -28,6 +28,8 @@ import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
 import useLongPress from '../../hooks/useLongPress';
 import { openURL } from '../../utils/utils';
 
+type FileMessageWithPlainUrl = FileMessage & { plainUrl?: string };
+
 interface OpenChannelFileMessageProps {
   className?: string | Array<string>;
   message: FileMessage;
@@ -60,7 +62,8 @@ export default function OpenChannelFileMessage({
   const { disableUserProfile, renderUserProfile } = useUserProfileContext();
 
   const { isMobile } = useMediaQueryContext();
-  const openFileUrl = () => openURL(message.url);
+  const fileUrl = message.url || (message as FileMessageWithPlainUrl).plainUrl || '';
+  const openFileUrl = () => openURL(fileUrl);
 
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
@@ -168,10 +171,10 @@ export default function OpenChannelFileMessage({
             {...(isMobile ? { ...longPress } : {})}
           >
             {
-              checkFileType(message.url) && (
+              checkFileType(fileUrl) && (
                 <Icon
                   className="sendbird-openchannel-file-message__right__body__icon"
-                  type={checkFileType(message.url)}
+                  type={checkFileType(fileUrl)}
                   fillColor={IconColors.PRIMARY}
                   width="48px"
                   height="48px"
@@ -187,7 +190,7 @@ export default function OpenChannelFileMessage({
                 type={LabelTypography.BODY_1}
                 color={LabelColors.ONBACKGROUND_1}
               >
-                {truncate(message.name || message.url, 40)}
+                {truncate(message.name || fileUrl, 40)}
               </Label>
             </TextButton>
           </div>
@@ -298,6 +301,7 @@ export default function OpenChannelFileMessage({
         contextMenu && (
           <OpenChannelMobileMenu
             message={message}
+            isEphemeral={isEphemeral}
             hideMenu={() => {
               setContextMenu(false);
             }}

@@ -9,10 +9,8 @@ exports[`ui/MessageSearchFileItem should do a snapshot test of the MessageSearch
       class="sendbird-message-search-file-item__left"
     >
       <div
-        class="sendbird-message-search-file-item__left__sender-avatar sendbird-avatar"
-        role="button"
+        class="sendbird-message-search-file-item__left__sender-avatar sendbird-avatar "
         style="height: 56px; width: 56px; z-index: 0;"
-        tabindex="0"
       >
         <div
           class="sendbird-avatar-img sendbird-image-renderer"
@@ -46,9 +44,7 @@ exports[`ui/MessageSearchFileItem should do a snapshot test of the MessageSearch
         >
           <div
             class=" sendbird-icon sendbird-icon-file-document sendbird-icon-color--primary"
-            role="button"
             style="width: 18px; min-width: 18px; height: 18px; min-height: 18px;"
-            tabindex="0"
           >
             <test-file-stub />
           </div>

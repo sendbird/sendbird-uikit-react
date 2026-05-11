@@ -79,7 +79,7 @@ export default function useResendMessageCallback({
             sendMessageSuccess(message);
             pubSub.publish(topics.SEND_FILE_MESSAGE, {
               channel: currentChannel,
-              message: failedMessage,
+              message,
               publishingModules: [PublishingModuleType.THREAD],
             });
           })

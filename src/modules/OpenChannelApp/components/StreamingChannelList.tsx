@@ -35,7 +35,7 @@ function StreamingChannelList({
       if (openChannels.length > 0) {
         setCurrentChannel(openChannels[0]);
       }
-    });
+    }).catch(() => undefined);
   }, [sdk]);
 
   return (

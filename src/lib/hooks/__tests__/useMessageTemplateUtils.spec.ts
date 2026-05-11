@@ -190,6 +190,20 @@ describe('useMessageTemplateUtils', () => {
     expect(actions.markErrorWaitingTemplateKeys).not.toHaveBeenCalled();
   });
 
+  it('stores fetched templates as a flat cache when no previous cache exists', async () => {
+    const incoming = createTemplate('incoming');
+    const sdk = createSdk([
+      { hasMore: false, token: null, templates: [{ template: JSON.stringify(incoming) }] },
+    ]);
+    const { result } = renderUtils({ sdk });
+
+    await act(async () => {
+      await result.current.updateMessageTemplatesInfo(['incoming'], 99, 1000);
+    });
+
+    expect(JSON.parse(localStorage.getItem(CACHED_MESSAGE_TEMPLATES_KEY) as string)).toEqual([incoming]);
+  });
+
   it('marks waiting keys as errored when fetching templates fails or returns none', async () => {
     const error = new Error('failed');
     const sdk = {

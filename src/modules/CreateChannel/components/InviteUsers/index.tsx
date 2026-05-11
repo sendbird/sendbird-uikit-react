@@ -12,7 +12,7 @@ import { ButtonTypes } from '../../../../ui/Button';
 import UserListItem from '../../../../ui/UserListItem';
 
 import { createDefaultUserListQuery, filterUser, setChannelType } from './utils';
-import { noop } from '../../../../utils/utils';
+import { getWindowInnerHeight, noop } from '../../../../utils/utils';
 import { UserListQuery } from '../../../../types';
 import useCreateChannel from '../../context/useCreateChannel';
 
@@ -51,22 +51,30 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const titleText = stringSet.MODAL__CREATE_CHANNEL__TITLE;
   const submitText = stringSet.BUTTON__CREATE;
   const { isMobile } = useMediaQueryContext();
-  const [scrollableAreaHeight, setScrollableAreaHeight] = useState<number>(window.innerHeight);
+  const [scrollableAreaHeight, setScrollableAreaHeight] = useState<number>(() => getWindowInnerHeight());
+  const selectableUsers = users.filter((user) => !filterUser(idsToFilter)(user.userId));
 
   useEffect(() => {
+    let disposed = false;
     const applicationUserListQuery = userListQuery ? userListQuery() : createDefaultUserListQuery({ sdk });
     setUsersDataSource(applicationUserListQuery);
     if (!applicationUserListQuery?.isLoading) {
       applicationUserListQuery.next().then((it) => {
+        if (disposed) return;
         setUsers(it);
-      });
+      }).catch(() => undefined);
     }
-  }, []);
+    return () => {
+      disposed = true;
+    };
+  }, [userListQuery]);
 
   // To fix navbar break in mobile we set dynamic height to the scrollable area
   useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
     const scrollableAreaHeight = () => {
-      setScrollableAreaHeight(window.innerHeight);
+      setScrollableAreaHeight(getWindowInnerHeight());
     };
     window.addEventListener('resize', scrollableAreaHeight);
     return () => {
@@ -83,7 +91,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
       // Disable the create button if no users are selected,
       // but if there's only the logged-in user in the user list,
       // then the create button should be enabled
-      disabled={users.length > 1 && Object.keys(selectedUsers).length === 0}
+      disabled={selectableUsers.length > 0 && selectedCount === 0}
       onCancel={onCancel}
       onSubmit={() => {
         const selectedUserList = Object.keys(selectedUsers).length > 0
@@ -139,16 +147,16 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
 
             if (hasNext && fetchMore && !isLoading) {
               usersDataSource.next().then((usersBatch) => {
-                setUsers([
-                  ...users,
+                setUsers((currentUsers) => [
+                  ...currentUsers,
                   ...usersBatch,
                 ]);
-              });
+              }).catch(() => undefined);
             }
           }}
         >
           {
-            users.map((user) => (!filterUser(idsToFilter)(user.userId)) && (
+            selectableUsers.map((user) => (
               <UserListItem
                 key={user.userId}
                 user={user}

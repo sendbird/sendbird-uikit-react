@@ -4,7 +4,7 @@ export { default as SendBirdProvider } from './lib/Sendbird';
 // complete app component - If user wants an out of the box solution
 export { default as App } from './modules/App/index';
 
-// Individual smart components
+// Individual modules
 export { default as ChannelSettings } from './modules/ChannelSettings';
 export { default as ChannelList } from './modules/ChannelList';
 export { default as Channel } from './modules/Channel';

@@ -68,9 +68,9 @@ describe('ChannelList utils', () => {
     });
   });
 
-  it('sets up handlers, fetches initial channels, sorts, auto-selects, and schedules delivery receipt', async () => {
-    const firstChannel = createChannel({ url: 'b' });
-    const secondChannel = createChannel({ url: 'a' });
+  it('sets up handlers, fetches initial channels, sorts, auto-selects, and schedules delivery receipt for unread channels', async () => {
+    const firstChannel = createChannel({ url: 'b', unreadMessageCount: 0 });
+    const secondChannel = createChannel({ url: 'a', unreadMessageCount: 2 });
     const sortedChannels = [secondChannel, firstChannel];
     const query = {
       hasNext: true,
@@ -119,8 +119,8 @@ describe('ChannelList utils', () => {
         disableAutoSelect: false,
       },
     });
+    expect(markAsDeliveredScheduler.push).toHaveBeenCalledTimes(1);
     expect(markAsDeliveredScheduler.push).toHaveBeenCalledWith(secondChannel);
-    expect(markAsDeliveredScheduler.push).toHaveBeenCalledWith(firstChannel);
   });
 
   it('logs setup warnings, no-more-channel state, and fetch failures', async () => {

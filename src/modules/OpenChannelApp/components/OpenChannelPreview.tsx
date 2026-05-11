@@ -40,7 +40,7 @@ export default function OpenChannelPreview({
       }
     }
     return channelMeta;
-  }, [isStreaming]);
+  }, [isStreaming, channel?.data]);
   return (
     <div
       className={classnames('channel-preview', selected && 'channel-preview--selected', isStreaming && 'channel-preview--streaming')}

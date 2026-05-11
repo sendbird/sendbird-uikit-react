@@ -44,9 +44,9 @@ describe('GroupChannelUIView Integration Tests', () => {
   });
 
   it('renders loading placeholder when isLoading is true', () => {
-    render(<GroupChannelUIView {...defaultProps} isLoading={true} />);
-    // Placeholder is a just loading spinner in this case
-    expect(screen.getByRole('button')).toHaveClass('sendbird-icon-spinner');
+    const { container } = render(<GroupChannelUIView {...defaultProps} isLoading={true} />);
+    expect(container.querySelector('.sendbird-loader')).toBeInTheDocument();
+    expect(container.querySelector('.sendbird-icon-spinner')).toBeInTheDocument();
   });
 
   it('renders invalid placeholder when channelUrl is missing', () => {

@@ -85,6 +85,7 @@ export const useMenuItems = (): MenuItems => {
         accordionComponent: () => <MemberList renderUserListItem={renderUserListItem} />,
       },
       mutedUsers: {
+        hideMenu: channel?.isBroadcast,
         icon: { ...commonIconProps, type: IconTypes.MUTE },
         label: { ...commonLabelProps, children: stringSet.CHANNEL_SETTING__MUTED_MEMBERS__TITLE },
         accordionComponent: () => <MutedMemberList renderUserListItem={renderUserListItem} />,
@@ -129,7 +130,7 @@ export const useMenuItems = (): MenuItems => {
         ),
         accordionComponent: () => <MemberList renderUserListItem={renderUserListItem} />,
       },
-    } }), [channel?.url, frozen]);
+    } }), [channel, frozen, renderUserListItem, stringSet]);
 };
 
 export default useMenuItems;

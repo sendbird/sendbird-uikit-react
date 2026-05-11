@@ -43,7 +43,7 @@ export default function AddOperatorsModal({
     });
     memberListQuery?.next().then((members) => {
       setMembers(members);
-    });
+    }).catch(() => undefined);
     setMemberQuery(memberListQuery ?? null);
   }, []);
 
@@ -80,7 +80,7 @@ export default function AddOperatorsModal({
                     ...members,
                     ...o,
                   ]);
-                });
+                }).catch(() => undefined);
               }
             },
           })}

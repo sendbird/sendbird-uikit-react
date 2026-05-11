@@ -230,10 +230,14 @@ describe('GroupChannel MessageView', () => {
     rerender(
       <MessageView
         {...baseProps}
-        renderMessage={(props) => <div data-testid="render-message">{props.message.messageId}</div>}
+        renderMessage={(props) => (
+          <div data-testid="render-message">
+            {props.message.messageId}:{props.currentChannel?.url}
+          </div>
+        )}
       />,
     );
-    expect(screen.getByTestId('render-message')).toHaveTextContent('10');
+    expect(screen.getByTestId('render-message')).toHaveTextContent('10:channel-url');
   });
 
   it('runs animation and new-message overflow effects', () => {

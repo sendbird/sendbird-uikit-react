@@ -166,9 +166,10 @@ describe('OpenChannel lifecycle hooks', () => {
     const channel = { url: currentOpenChannel.url };
     const message = { messageId: 10 };
     const user = { userId: 'member' };
+    const checkScrollBottom = jest.fn(() => true);
 
     const { unmount } = renderHook(() => useHandleChannelEvents(
-      { currentOpenChannel: currentOpenChannel as any, checkScrollBottom: jest.fn(() => true) },
+      { currentOpenChannel: currentOpenChannel as any, checkScrollBottom },
       { sdk: sdk as any, logger: logger as any, messagesDispatcher: dispatcher, scrollRef },
     ));
 
@@ -200,6 +201,8 @@ describe('OpenChannel lifecycle hooks', () => {
       jest.runOnlyPendingTimers();
     });
 
+    expect(checkScrollBottom).toHaveBeenCalledTimes(2);
+    expect(openChannelUtils.scrollIntoLast).toHaveBeenCalledTimes(2);
     expect(openChannelUtils.scrollIntoLast).toHaveBeenCalledWith(0, scrollRef);
     [
       actionTypes.ON_MESSAGE_RECEIVED,
@@ -297,6 +300,89 @@ describe('OpenChannel lifecycle hooks', () => {
         type: actionTypes.FETCH_MUTED_USER_LIST,
         payload: { channel: memberChannel, users: [memberSdk.currentUser] },
       });
+    });
+  });
+
+  it('exits and clears messages when channelUrl is empty', () => {
+    const previousChannel = createOpenChannel({ url: 'previous-channel' });
+    const dispatcher = jest.fn();
+
+    renderHook(() => useSetChannel(
+      {
+        channelUrl: '',
+        sdkInit: true,
+        fetchingParticipants: false,
+        userId: 'member',
+        currentOpenChannel: previousChannel as any,
+      },
+      { sdk: createSdk(previousChannel) as any, logger: logger as any, messagesDispatcher: dispatcher },
+    ));
+
+    expect(previousChannel.exit).toHaveBeenCalledTimes(1);
+    expect(dispatcher).toHaveBeenCalledWith({
+      type: actionTypes.EXIT_CURRENT_CHANNEL,
+      payload: previousChannel,
+    });
+    expect(dispatcher).toHaveBeenCalledWith({
+      type: actionTypes.RESET_MESSAGES,
+      payload: null,
+    });
+  });
+
+  it('ignores stale open-channel fetch results after channelUrl changes', async () => {
+    const firstChannel = createOpenChannel({ url: 'first-open-channel' });
+    const secondChannel = createOpenChannel({ url: 'second-open-channel' });
+    let resolveFirst!: (channel: ReturnType<typeof createOpenChannel>) => void;
+    let resolveSecond!: (channel: ReturnType<typeof createOpenChannel>) => void;
+    const firstFetch = new Promise<ReturnType<typeof createOpenChannel>>((resolve) => {
+      resolveFirst = resolve;
+    });
+    const secondFetch = new Promise<ReturnType<typeof createOpenChannel>>((resolve) => {
+      resolveSecond = resolve;
+    });
+    const sdk = {
+      currentUser: { userId: 'current-user' },
+      openChannel: {
+        getChannel: jest.fn((url: string) => (url === 'first-open-channel' ? firstFetch : secondFetch)),
+      },
+    };
+    const dispatcher = jest.fn();
+    const { rerender } = renderHook(
+      ({ channelUrl }) => useSetChannel(
+        {
+          channelUrl,
+          sdkInit: true,
+          fetchingParticipants: false,
+          userId: 'member',
+          currentOpenChannel: null,
+        },
+        { sdk: sdk as any, logger: logger as any, messagesDispatcher: dispatcher },
+      ),
+      { initialProps: { channelUrl: 'first-open-channel' } },
+    );
+
+    rerender({ channelUrl: 'second-open-channel' });
+
+    await act(async () => {
+      resolveSecond(secondChannel);
+      await secondFetch;
+    });
+
+    await waitFor(() => {
+      expect(dispatcher).toHaveBeenCalledWith({
+        type: actionTypes.SET_CURRENT_CHANNEL,
+        payload: secondChannel,
+      });
+    });
+
+    await act(async () => {
+      resolveFirst(firstChannel);
+      await firstFetch;
+    });
+
+    expect(dispatcher).not.toHaveBeenCalledWith({
+      type: actionTypes.SET_CURRENT_CHANNEL,
+      payload: firstChannel,
     });
   });
 

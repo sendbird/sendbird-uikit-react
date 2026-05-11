@@ -9,6 +9,7 @@ import OpenChannelAdminMessage from '../../../../ui/OpenChannelAdminMessage';
 import OpenChannelOGMessage from '../../../../ui/OpenchannelOGMessage';
 import OpenChannelThumbnailMessage from '../../../../ui/OpenchannelThumbnailMessage';
 import OpenChannelFileMessage from '../../../../ui/OpenchannelFileMessage';
+import UnknownMessageItemBody from '../../../../ui/UnknownMessageItemBody';
 
 import DateSeparator from '../../../../ui/DateSeparator';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
@@ -202,9 +203,12 @@ export default function OpenChannelMessage(
               }
             })(),
             [MessageTypes.UNKNOWN]: (() => {
-              // return (
-              //   <OpenChannelUnknownMessage message={message} />
-              // );
+              return (
+                <UnknownMessageItemBody
+                  message={message as SendableMessageType}
+                  isByMe={isByMe}
+                />
+              );
             })(),
           }[getMessageType(message, { isOgMessageEnabledInOpenChannel })]
         }

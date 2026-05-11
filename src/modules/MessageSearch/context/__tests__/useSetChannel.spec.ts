@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import useSetChannel from '../hooks/useSetChannel';
 import useMessageSearch from '../hooks/useMessageSearch';
 
@@ -79,7 +79,7 @@ describe('useSetChannel', () => {
     expect(mockSetChannelInvalid).not.toHaveBeenCalled();
   });
 
-  it('should not attempt to get channel if channelUrl is empty', () => {
+  it('should clear channel when channelUrl is empty', () => {
     renderHook(() => useSetChannel(
       { channelUrl: '', sdkInit: true },
       { sdk: mockSdk as any, logger: mockLogger as any },
@@ -87,7 +87,7 @@ describe('useSetChannel', () => {
 
     expect(mockSdk.groupChannel.getChannel).not.toHaveBeenCalled();
     expect(mockSetCurrentChannel).not.toHaveBeenCalled();
-    expect(mockSetChannelInvalid).not.toHaveBeenCalled();
+    expect(mockSetChannelInvalid).toHaveBeenCalled();
   });
 
   it('should handle missing sdk gracefully', () => {
@@ -99,5 +99,43 @@ describe('useSetChannel', () => {
     expect(mockSdk.groupChannel.getChannel).not.toHaveBeenCalled();
     expect(mockSetCurrentChannel).not.toHaveBeenCalled();
     expect(mockSetChannelInvalid).not.toHaveBeenCalled();
+  });
+
+  it('ignores stale getChannel results after channelUrl changes', async () => {
+    const firstChannel = { url: 'first-channel' };
+    const secondChannel = { url: 'second-channel' };
+    let resolveFirst!: (channel: typeof firstChannel) => void;
+    let resolveSecond!: (channel: typeof secondChannel) => void;
+    const firstFetch = new Promise<typeof firstChannel>((resolve) => {
+      resolveFirst = resolve;
+    });
+    const secondFetch = new Promise<typeof secondChannel>((resolve) => {
+      resolveSecond = resolve;
+    });
+    mockSdk.groupChannel.getChannel.mockImplementation((url) => (
+      url === 'first-channel' ? firstFetch : secondFetch
+    ));
+
+    const { rerender } = renderHook(
+      ({ channelUrl }) => useSetChannel(
+        { channelUrl, sdkInit: true },
+        { sdk: mockSdk as any, logger: mockLogger as any },
+      ),
+      { initialProps: { channelUrl: 'first-channel' } },
+    );
+
+    rerender({ channelUrl: 'second-channel' });
+
+    await act(async () => {
+      resolveSecond(secondChannel);
+      await secondFetch;
+    });
+    expect(mockSetCurrentChannel).toHaveBeenCalledWith(secondChannel);
+
+    await act(async () => {
+      resolveFirst(firstChannel);
+      await firstFetch;
+    });
+    expect(mockSetCurrentChannel).not.toHaveBeenCalledWith(firstChannel);
   });
 });

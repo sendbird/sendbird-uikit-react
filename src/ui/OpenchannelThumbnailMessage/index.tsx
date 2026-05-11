@@ -34,6 +34,7 @@ import useLongPress from '../../hooks/useLongPress';
 
 interface LocalUrl {
   localUrl?: string;
+  plainUrl?: string;
 }
 interface OpenChannelThumbnailMessageProps {
   className?: string | Array<string>;
@@ -64,9 +65,11 @@ export default function OpenchannelThumbnailMessage({
   const {
     type,
     url,
+    plainUrl,
     thumbnails,
     localUrl,
   }: FileMessage & LocalUrl = message;
+  const fileUrl = url || plainUrl;
   const status = message?.sendingStatus;
   const thumbnailUrl = (thumbnails && thumbnails.length > 0 && thumbnails[0].url) || null;
   const { stringSet, dateLocale } = useLocalization();
@@ -221,7 +224,7 @@ export default function OpenchannelThumbnailMessage({
               {
                 {
                   [SUPPORTING_TYPES.VIDEO]: (
-                    (url || localUrl)
+                    (fileUrl || localUrl)
                       ? (
                         <div className="sendbird-openchannel-thumbnail-message__right__body__wrap__video" >
                           {
@@ -238,7 +241,7 @@ export default function OpenchannelThumbnailMessage({
                               )
                               : (
                                 <video className="sendbird-openchannel-thumbnail-message__right__body__wrap__video__video">
-                                  <source src={url || localUrl} type={type} />
+                                  <source src={fileUrl || localUrl} type={type} />
                                 </video>
                               )
                           }
@@ -262,11 +265,11 @@ export default function OpenchannelThumbnailMessage({
                       )
                   ),
                   [SUPPORTING_TYPES.IMAGE]: (
-                    (url || localUrl)
+                    (fileUrl || localUrl)
                       ? (
                         <ImageRenderer
                           className="sendbird-openchannel-thumbnail-message__right__body__wrap__image"
-                          url={thumbnailUrl || url || localUrl || ''}
+                          url={thumbnailUrl || fileUrl || localUrl || ''}
                           alt="image"
                           width={messageWidth}
                           height="270px"
@@ -405,6 +408,7 @@ export default function OpenchannelThumbnailMessage({
         contextMenu && (
           <OpenChannelMobileMenu
             message={message}
+            isEphemeral={isEphemeral}
             parentRef={mobileMenuRef}
             hideMenu={() => {
               setContextMenu(false);

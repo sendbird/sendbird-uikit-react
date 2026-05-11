@@ -2,6 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import QuoteMessageItemBody from '../index';
+import { getMessageFirstFileUrl } from '../utils';
 
 const parentMessage = {
   messageId: 1,
@@ -65,5 +66,22 @@ describe('ui/QuoteMessage', () => {
     fireEvent.touchEnd(screen.getByText('Message unavailable'));
 
     expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('uses plainUrl as file URL fallback', () => {
+    expect(getMessageFirstFileUrl({
+      messageType: 'file',
+      url: '',
+      plainUrl: 'https://sendbird.com/plain-file',
+      isFileMessage: () => true,
+      isMultipleFilesMessage: () => false,
+    })).toBe('https://sendbird.com/plain-file');
+
+    expect(getMessageFirstFileUrl({
+      messageType: 'multiple_files',
+      fileInfoList: [{ url: '', plainUrl: 'https://sendbird.com/plain-multiple-file' }],
+      isFileMessage: () => false,
+      isMultipleFilesMessage: () => true,
+    })).toBe('https://sendbird.com/plain-multiple-file');
   });
 });

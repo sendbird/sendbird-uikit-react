@@ -51,6 +51,17 @@ describe('ui/UnknownMessageItemBody', () => {
     ).toHaveLength(0);
   });
 
+  it('should render default unknown message text', () => {
+    render(
+      <UnknownMessageItemBody
+        message={createMockMessage()}
+      />
+    );
+
+    expect(screen.getByText('(Unknown message type)')).toBeInTheDocument();
+    expect(screen.getByText('Cannot read this message.')).toBeInTheDocument();
+  });
+
   it('should have class name when isByMe is true', () => {
     const { container } = render(
       <UnknownMessageItemBody

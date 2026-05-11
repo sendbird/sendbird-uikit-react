@@ -218,10 +218,17 @@ export const useSendbird = () => {
       userActions.initUser(user);
 
       if (nickname || profileUrl) {
-        await sdk.updateCurrentUserInfo({
-          nickname: nickname || user.nickname || '',
-          profileUrl: profileUrl || user.profileUrl,
-        });
+        try {
+          const updatedUser = await sdk.updateCurrentUserInfo({
+            nickname: nickname || user.nickname || '',
+            profileUrl: profileUrl || user.profileUrl,
+          });
+          if (updatedUser?.userId) {
+            userActions.updateUserInfo(updatedUser);
+          }
+        } catch (error) {
+          logger.warning?.('SendbirdProvider | useSendbird/updateCurrentUserInfo failed', error);
+        }
       }
 
       await initializeMessageTemplatesInfo?.(sdk);

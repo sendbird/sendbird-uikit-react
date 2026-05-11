@@ -2,9 +2,10 @@ import reducer from '../reducers';
 import initialState from '../initialState';
 import * as actionTypes from '../actionTypes';
 
-const createChannel = (url = 'open-channel-url', operators = []) => ({
+const createChannel = (url = 'open-channel-url', operators = [], isFrozen = false) => ({
   url,
   operators,
+  isFrozen,
 });
 
 const createMessage = (messageId: number, reqId?: string) => ({
@@ -17,7 +18,7 @@ const createMessage = (messageId: number, reqId?: string) => ({
 describe('OpenChannel reducer', () => {
   it('sets the current channel and resets channel-scoped moderation state', () => {
     const operator = { userId: 'operator-1' };
-    const channel = createChannel('open-channel-url', [operator]);
+    const channel = createChannel('open-channel-url', [operator], true);
 
     const nextState = reducer(
       {
@@ -34,6 +35,7 @@ describe('OpenChannel reducer', () => {
 
     expect(nextState.currentOpenChannel).toBe(channel);
     expect(nextState.isInvalid).toBe(false);
+    expect(nextState.frozen).toBe(true);
     expect(nextState.operators).toEqual([operator]);
     expect(nextState.participants).toEqual([operator]);
     expect(nextState.bannedParticipantIds).toEqual([]);
@@ -234,6 +236,10 @@ describe('OpenChannel reducer', () => {
 
     expect(failedState.allMessages).toEqual([failedMessage]);
     expect((failedState.allMessages[0] as any).sendingStatus).toBe('failed');
+    expect(reducer(existingState, {
+      type: actionTypes.SENDING_MESSAGE_FAILED,
+      payload: undefined,
+    })).toBe(existingState);
   });
 
   it('trims messages only when the limit is valid and smaller than the current list', () => {
@@ -346,7 +352,7 @@ describe('OpenChannel reducer', () => {
 
   it('handles operator, participant, ban, unban, freeze, change, and delete events', () => {
     const channel = createChannel();
-    const changedChannel = createChannel('open-channel-url', [{ userId: 'operator-2' }]);
+    const changedChannel = createChannel('open-channel-url', [{ userId: 'operator-2' }], false);
     const participant = { userId: 'participant-1' };
     const bannedUser = { userId: 'banned-user' };
     const state = {
@@ -378,8 +384,12 @@ describe('OpenChannel reducer', () => {
       payload: { channel, user: bannedUser },
     }).bannedParticipantIds).toEqual([]);
     expect(reducer(state, { type: actionTypes.ON_CHANNEL_UNFROZEN, payload: channel }).frozen).toBe(false);
-    expect(reducer(state, { type: actionTypes.ON_CHANNEL_CHANGED, payload: changedChannel }).currentOpenChannel).toBe(changedChannel);
-    expect(reducer(state, { type: actionTypes.ON_CHANNEL_DELETED, payload: channel.url }).currentOpenChannel).toBeNull();
+    const changedState = reducer(state, { type: actionTypes.ON_CHANNEL_CHANGED, payload: changedChannel });
+    expect(changedState.currentOpenChannel).toBe(changedChannel);
+    expect(changedState.frozen).toBe(false);
+    const deletedState = reducer(state, { type: actionTypes.ON_CHANNEL_DELETED, payload: channel.url });
+    expect(deletedState.currentOpenChannel).toBeNull();
+    expect(deletedState.frozen).toBe(false);
   });
 
   it('returns current state for stale events, metadata events, mentions, and unknown actions', () => {

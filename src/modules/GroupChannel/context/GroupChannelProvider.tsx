@@ -5,7 +5,6 @@ import {
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { MessageFilter } from '@sendbird/chat/groupChannel';
 import {
-  useAsyncEffect,
   useAsyncLayoutEffect,
   useIIFE,
   useGroupChannelMessages,
@@ -18,6 +17,7 @@ import {
   getCaseResolvedReplyType,
   getCaseResolvedThreadReplySelectType,
 } from '../../../lib/utils/resolvedReplyType';
+import { CoreMessageType, isAdminMessage } from '../../../utils';
 import { isContextMenuClosed } from './utils';
 import PUBSUB_TOPICS from '../../../lib/pubSub/topics';
 import { createStore } from '../../../utils/storeManager';
@@ -226,19 +226,25 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       }
     },
     onMessagesReceived: (messages) => {
+      const visibleMessages = messages.filter(message => !isAdminMessage(message as CoreMessageType));
+      const existingVisibleMessageIds = new Set(
+        state.messages
+          .filter(message => !isAdminMessage(message as CoreMessageType))
+          .map(message => message.messageId),
+      );
+      const addedVisibleMessages = visibleMessages.filter(message => !existingVisibleMessageIds.has(message.messageId));
+      if (addedVisibleMessages.length === 0) {
+        return;
+      }
       if (isScrollBottomReached
-        && isContextMenuClosed()
-        // Note: this shouldn't happen ideally, but it happens on re-rendering GroupChannelManager
-        // even though the next messages and the current messages length are the same.
-        // So added this condition to check if they are the same to prevent unnecessary calling scrollToBottom action
-        && messages.length !== state.messages.length) {
+        && isContextMenuClosed()) {
         if (!isAutoscrollMessageOverflowToTop) {
           // The requestAnimationFrame already ensures DOM is updated
           requestAnimationFrame(() => {
             actions?.scrollToBottom(true);
           });
         } else {
-          actions.setNewMessageIds(messages.map(it => it.messageId));
+          actions.setNewMessageIds(addedVisibleMessages.map(it => it.messageId));
         }
       }
     },
@@ -267,16 +273,33 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   });
 
   // Channel initialization
-  useAsyncEffect(async () => {
-    if (sdkStore.initialized && channelUrl) {
-      try {
-        const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
-        actions.setCurrentChannel(channel);
-      } catch (error) {
-        actions.handleChannelError(error);
-        logger?.error?.('GroupChannelProvider: error when fetching channel', error);
-      }
+  useEffect(() => {
+    if (!sdkStore.initialized) {
+      return;
     }
+
+    if (!channelUrl) {
+      actions.setCurrentChannel(null);
+      return;
+    }
+
+    let disposed = false;
+    sdkStore.sdk.groupChannel.getChannel(channelUrl)
+      .then((channel) => {
+        if (!disposed) {
+          actions.setCurrentChannel(channel);
+        }
+      })
+      .catch((error) => {
+        if (!disposed) {
+          actions.handleChannelError(error);
+          logger?.error?.('GroupChannelProvider: error when fetching channel', error);
+        }
+      });
+
+    return () => {
+      disposed = true;
+    };
   }, [sdkStore.initialized, sdkStore.sdk, channelUrl]);
 
   // Message sync effect

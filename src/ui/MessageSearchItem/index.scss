@@ -41,6 +41,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       word-break: keep-all;
+      white-space: nowrap;
     }
     .sendbird-message-search-item__right__message-text {
       box-sizing: border-box;

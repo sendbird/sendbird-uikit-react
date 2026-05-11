@@ -60,6 +60,26 @@ describe('MessageSearchPannel', () => {
     expect(screen.getByTestId('message-search-provider')).toHaveAttribute('data-search-string', '');
   });
 
+  it('debounces only the latest input value', () => {
+    renderPanel();
+    const input = screen.getByPlaceholderText('Search');
+
+    fireEvent.change(input, { target: { value: 'hello' } });
+    act(() => {
+      jest.advanceTimersByTime(250);
+    });
+    fireEvent.change(input, { target: { value: 'hello world' } });
+    act(() => {
+      jest.advanceTimersByTime(250);
+    });
+    expect(screen.getByTestId('message-search-provider')).toHaveAttribute('data-search-string', '');
+
+    act(() => {
+      jest.advanceTimersByTime(250);
+    });
+    expect(screen.getByTestId('message-search-provider')).toHaveAttribute('data-search-string', 'hello world');
+  });
+
   it('renders header title and invokes close handler', () => {
     const onCloseClick = jest.fn();
     const { container } = renderPanel({ onCloseClick });

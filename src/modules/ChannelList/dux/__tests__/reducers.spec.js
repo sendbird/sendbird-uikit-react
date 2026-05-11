@@ -59,6 +59,24 @@ describe('Channels-Reducers', () => {
     expect(nextState.allChannels.find(c => c.url === channelUrl)).toBeUndefined();
   });
 
+  it('clears a left current channel even when it is not in allChannels', () => {
+    const detachedCurrentChannel = { ...channel1, url: 'detached-channel' };
+    const nextState = reducers({
+      ...mockData,
+      disableAutoSelect: true,
+      currentChannel: detachedCurrentChannel,
+    }, {
+      type: actionTypes.ON_USER_LEFT,
+      payload: {
+        channel: detachedCurrentChannel,
+        isMe: true,
+      },
+    });
+
+    expect(nextState.currentChannel).toBeNull();
+    expect(nextState.allChannels).toEqual(mockData.allChannels);
+  });
+
   it('should handle push changed channel to the top on ON_CHANNEL_CHANGED', () => {
     const lastMessage = "new last message";
     const payload = {

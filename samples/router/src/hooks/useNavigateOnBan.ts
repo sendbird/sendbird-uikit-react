@@ -11,7 +11,6 @@ function uuid() {
 
 // Navigate to the home page if the current user is banned from the channel
 export function useNavigateOnBan() {
-  const handlerId = uuid()
   const store = useSendbirdStateContext()
   const sb = store?.stores?.sdkStore?.sdk as SendbirdGroupChat
 
@@ -19,6 +18,7 @@ export function useNavigateOnBan() {
   const { channelUrl } = useParams()
 
   useEffect(() => {
+    const handlerId = uuid()
     const channelHandler = new GroupChannelHandler({
       onUserBanned(channel, user) {
         if (user.userId === sb?.currentUser?.userId
@@ -29,9 +29,9 @@ export function useNavigateOnBan() {
     })
 
     sb?.groupChannel?.addGroupChannelHandler(handlerId, channelHandler)
-  })
 
-  return () => {
-    sb?.groupChannel?.removeGroupChannelHandler(handlerId)
-  }
+    return () => {
+      sb?.groupChannel?.removeGroupChannelHandler(handlerId)
+    }
+  }, [sb, channelUrl, navigate])
 }

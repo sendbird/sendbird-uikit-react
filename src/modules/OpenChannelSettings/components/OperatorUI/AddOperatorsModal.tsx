@@ -40,7 +40,7 @@ export default function AddOperatorsModal({
     if (participantListQuery) {
       participantListQuery.next().then((users) => {
         setParticipants(users);
-      });
+      }).catch(() => undefined);
       setParticipantQuery(participantListQuery);
     }
   }, []);
@@ -81,7 +81,7 @@ export default function AddOperatorsModal({
                   ...participants,
                   ...o,
                 ]);
-              });
+              }).catch(() => undefined);
             }
           }}
         >

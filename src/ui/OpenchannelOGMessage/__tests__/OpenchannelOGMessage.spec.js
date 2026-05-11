@@ -291,6 +291,22 @@ describe('ui/OpenchannelOGMessage', () => {
     ).toBe(0);
   });
 
+  it('does not render a blank clickable thumbnail when OG image metadata is absent', () => {
+    const message = getMockMessage((message) => ({
+      ...message,
+      ogMetaData: {
+        url: 'https://sendbird.com/',
+        title: 'This is the TITLE',
+        description: 'I am description',
+      },
+    }));
+    const { container } = renderOGMessage(message);
+
+    expect(container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__url').length).toBe(1);
+    expect(container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__title').length).toBe(1);
+    expect(container.getElementsByClassName('sendbird-openchannel-og-message__bottom__og-tag__thumbnail').length).toBe(0);
+  });
+
   it('should render pending icon if status is pending', function() {
     const message = getMockMessage((message) => ({ ...message, sendingStatus: 'pending' }));
     const { container } = render(
@@ -437,6 +453,17 @@ describe('ui/OpenchannelOGMessage', () => {
     fireEvent.mouseDown(container.querySelector('.sendbird-openchannel-og-message'));
     clickMenuItem('open_channel_mobile_context_menu_delete');
     expect(props.showRemove).toHaveBeenCalledWith(true);
+  });
+
+  it('does not expose mobile edit or delete actions in ephemeral mode', () => {
+    useMediaQueryContext.mockReturnValue({ isMobile: true });
+    const { container } = renderOGMessage(getMockMessage(), { isEphemeral: true });
+
+    fireEvent.mouseDown(container.querySelector('.sendbird-openchannel-og-message'));
+
+    expect(document.querySelector('[data-testid="open_channel_mobile_context_menu_edit"]')).toBeNull();
+    expect(document.querySelector('[data-testid="open_channel_mobile_context_menu_delete"]')).toBeNull();
+    expect(document.querySelector('[data-testid="open_channel_mobile_context_menu_copy"]')).toBeTruthy();
   });
 
   it('invokes mobile resend for failed messages', () => {

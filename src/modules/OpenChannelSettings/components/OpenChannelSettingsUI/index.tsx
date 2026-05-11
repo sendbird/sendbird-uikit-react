@@ -33,6 +33,9 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
   const iconColor = theme === 'dark' ? IconColors.CONTENT_INVERSE : IconColors.PRIMARY;
 
   const { stringSet } = useContext(LocalizationContext);
+  if (!isChannelInitialized) {
+    return <div className='sendbird-openchannel-settings' />;
+  }
   if (isChannelInitialized && !channel) {
     return (
       <InvalidChannel

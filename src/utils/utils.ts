@@ -22,9 +22,17 @@ export const deleteNullish = <T>(obj: T): T => {
   return cleaned;
 };
 
+export const getWindowInnerWidth = (fallback = 0): number => (
+  typeof window === 'undefined' ? fallback : window.innerWidth
+);
+
+export const getWindowInnerHeight = (fallback = 0): number => (
+  typeof window === 'undefined' ? fallback : window.innerHeight
+);
+
 export function openURL(url?: string | null) {
   let safeURL = url;
-  if (safeURL) {
+  if (safeURL && typeof window !== 'undefined') {
     if (!safeURL.startsWith('http://') && !safeURL.startsWith('https://')) {
       safeURL = 'https://' + safeURL;
     }

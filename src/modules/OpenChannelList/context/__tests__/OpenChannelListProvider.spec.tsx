@@ -4,6 +4,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { OpenChannelListProvider, useOpenChannelListContext } from '../OpenChannelListProvider';
 import actionTypes from '../dux/actionTypes';
 import { OpenChannelListFetchingStatus } from '../OpenChannelListInterfaces';
+import pubSubTopics from '../../../../lib/pubSub/topics';
 
 const mockLogger = {
   info: jest.fn(),
@@ -16,7 +17,8 @@ const mockChannels = [
 ];
 const mockAddOpenChannelHandler = jest.fn();
 const mockRemoveOpenChannelHandler = jest.fn();
-const mockSubscribe = jest.fn(() => ({ remove: jest.fn() }));
+const mockSubscriberRemove = jest.fn();
+const mockSubscribe = jest.fn(() => ({ remove: mockSubscriberRemove }));
 const mockFetchNextChannels = jest.fn();
 const mockRefreshOpenChannelList = jest.fn();
 
@@ -110,5 +112,44 @@ describe('OpenChannelListProvider', () => {
 
     expect(result.current.allChannels).toEqual([]);
     expect(result.current.fetchingStatus).toBe(OpenChannelListFetchingStatus.EMPTY);
+  });
+
+  it('updates and removes open channels from pubsub and SDK events, then cleans up handlers', async () => {
+    const { result, unmount } = renderHook(() => useOpenChannelListContext(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.allChannels).toEqual(mockChannels);
+    });
+
+    act(() => {
+      result.current.openChannelListDispatcher({
+        type: actionTypes.SET_CURRENT_OPEN_CHANNEL,
+        payload: mockChannels[0],
+      });
+    });
+
+    const updatedChannel = { ...mockChannels[0], name: 'Updated open channel' };
+    const pubSubUpdateHandler = mockSubscribe.mock.calls.find(([topic]) => (
+      topic === pubSubTopics.UPDATE_OPEN_CHANNEL
+    ))?.[1];
+    act(() => {
+      pubSubUpdateHandler(updatedChannel);
+    });
+
+    expect(result.current.allChannels).toEqual([updatedChannel, mockChannels[1]]);
+    expect(result.current.currentChannel).toBe(updatedChannel);
+
+    const openChannelHandler = mockAddOpenChannelHandler.mock.calls[0][1];
+    act(() => {
+      openChannelHandler.onChannelDeleted(updatedChannel.url);
+    });
+
+    expect(result.current.allChannels).toEqual([mockChannels[1]]);
+    expect(result.current.currentChannel).toBeNull();
+
+    unmount();
+
+    expect(mockSubscriberRemove).toHaveBeenCalledTimes(1);
+    expect(mockRemoveOpenChannelHandler).toHaveBeenCalledWith(mockAddOpenChannelHandler.mock.calls[0][0]);
   });
 });

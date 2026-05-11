@@ -11,14 +11,23 @@ const LocalizationContextDefault = {
 const LocalizationContext = React.createContext(LocalizationContextDefault);
 
 interface LocalizationProviderProps {
-  stringSet: StringSet;
-  dateLocale?: Locale;
+  stringSet?: StringSet | null;
+  dateLocale?: Locale | null;
   children: React.ReactElement;
 }
 
 const LocalizationProvider = (props: LocalizationProviderProps): React.ReactElement => {
-  const { children } = props;
-  return <LocalizationContext.Provider value={{ ...LocalizationContextDefault, ...props }}>{children}</LocalizationContext.Provider>;
+  const { children, stringSet, dateLocale } = props;
+  return (
+    <LocalizationContext.Provider
+      value={{
+        stringSet: stringSet ?? LocalizationContextDefault.stringSet,
+        dateLocale: dateLocale ?? LocalizationContextDefault.dateLocale,
+      }}
+    >
+      {children}
+    </LocalizationContext.Provider>
+  );
 };
 
 const useLocalization = () => {

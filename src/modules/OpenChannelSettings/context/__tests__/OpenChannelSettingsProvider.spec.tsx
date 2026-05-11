@@ -94,9 +94,10 @@ describe('OpenChannelSettingsProvider', () => {
       expect(mockLogger.error).toHaveBeenCalledWith('open channel setting: error fetching', fetchError);
     });
     expect(result.current.channel).toBeNull();
+    expect(result.current.isChannelInitialized).toBe(true);
   });
 
-  it('keeps channel null when entering fails', async () => {
+  it('marks initialization complete with channel null when entering fails', async () => {
     const enterError = new Error('enter failed');
     mockEnter.mockRejectedValue(enterError);
 
@@ -106,7 +107,7 @@ describe('OpenChannelSettingsProvider', () => {
       expect(mockLogger.warning).toHaveBeenCalledWith('OpenChannelSettings | Failed to enter channel', enterError);
     });
     expect(result.current.channel).toBeNull();
-    expect(result.current.isChannelInitialized).toBe(false);
+    expect(result.current.isChannelInitialized).toBe(true);
   });
 
   it('updates channel state from open channel handler events', async () => {

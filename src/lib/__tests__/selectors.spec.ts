@@ -271,7 +271,9 @@ describe('selectors', () => {
     const state = createState({}, pubSub);
     const { callbacks, request } = createRequest();
     const channel = { sendFileMessage: jest.fn(() => request) };
-    const handler = getSendFileMessage(state)(channel as any, { file: new File(['x'], 'x.txt') } as any);
+    const params = { file: new File(['x'], 'x.txt') };
+    const progressHandler = jest.fn();
+    const handler = getSendFileMessage(state)(channel as any, params as any, progressHandler);
     const failed = jest.fn();
     const fileMessage = { messageId: 20, isResendable: false };
     const error = new Error('file failed');
@@ -281,6 +283,7 @@ describe('selectors', () => {
     callbacks.failed(error, fileMessage);
     callbacks.succeeded(fileMessage);
 
+    expect(channel.sendFileMessage).toHaveBeenCalledWith({ ...params, progressHandler });
     expect(pubSub.publish).toHaveBeenCalledWith(topics.SEND_MESSAGE_START, { message: fileMessage, channel, publishingModules: [] });
     expect(pubSub.publish).toHaveBeenCalledWith(topics.SEND_MESSAGE_FAILED, { error, message: fileMessage, channel, publishingModules: [] });
     expect(pubSub.publish).toHaveBeenCalledWith(topics.SEND_FILE_MESSAGE, { message: fileMessage, channel, publishingModules: [] });

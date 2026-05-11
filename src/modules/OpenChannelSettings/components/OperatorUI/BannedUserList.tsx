@@ -38,7 +38,7 @@ export const BannedUserList = (): ReactElement => {
     bannedUserListQuery.next().then((users) => {
       setBannedUsers(users);
       setHasNext(bannedUserListQuery.hasNext);
-    });
+    }).catch(() => undefined);
   }, [channel]);
 
   const refreshList = useCallback(() => {
@@ -50,7 +50,7 @@ export const BannedUserList = (): ReactElement => {
     bannedUserListQuery.next().then((users) => {
       setBannedUsers(users);
       setHasNext(bannedUserListQuery.hasNext);
-    });
+    }).catch(() => undefined);
   }, [channel]);
   return (
     <>

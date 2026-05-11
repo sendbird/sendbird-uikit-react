@@ -23,17 +23,42 @@ function useSetChannel(
   } = useMessageSearch();
 
   useEffect(() => {
+    let disposed = false;
+
+    if (!sdkInit) {
+      return () => {
+        disposed = true;
+      };
+    }
+
+    if (!channelUrl) {
+      setChannelInvalid();
+      return () => {
+        disposed = true;
+      };
+    }
+
     if (channelUrl && sdkInit && sdk?.groupChannel) {
       sdk.groupChannel.getChannel(channelUrl)
         .then((groupChannel) => {
+          if (disposed) {
+            return;
+          }
           logger.info('MessageSearch | useSetChannel group channel', groupChannel);
           setCurrentChannel(groupChannel);
         })
         .catch(() => {
+          if (disposed) {
+            return;
+          }
           setChannelInvalid();
         });
     }
-  }, [channelUrl, sdkInit]);
+
+    return () => {
+      disposed = true;
+    };
+  }, [channelUrl, sdkInit, sdk, logger, setCurrentChannel, setChannelInvalid]);
 }
 
 export default useSetChannel;

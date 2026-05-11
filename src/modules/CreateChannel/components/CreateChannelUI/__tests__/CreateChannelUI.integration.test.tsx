@@ -1,7 +1,7 @@
 import React from 'react';
 import * as useCreateChannelModule from '../../../context/useCreateChannel';
 import { CHANNEL_TYPE } from '../../../types';
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { LocalizationContext } from '../../../../../lib/LocalizationContext';
 import CreateChannelUI from '../index';
@@ -44,6 +44,7 @@ jest.mock('../../../context/useCreateChannel');
 
 const mockStringSet = {
   MODAL__CREATE_CHANNEL__TITLE: 'CREATE_CHANNEL',
+  MODAL__CREATE_CHANNEL__GROUP: 'GROUP_CHANNEL',
   MODAL__INVITE_MEMBER__SELECTED: 'USERS_SELECTED',
 };
 
@@ -101,6 +102,28 @@ describe('CreateChannelUI Integration Tests', () => {
     renderComponent({ pageStep: 0 });
 
     expect(screen.getByText('CREATE_CHANNEL')).toBeInTheDocument();
+  });
+
+  it('selects the channel type with enter or space only', () => {
+    const setType = jest.fn();
+    const setPageStep = jest.fn();
+    renderComponent({ pageStep: 0 }, { setType, setPageStep });
+
+    const groupTypeButton = screen.getByRole('button', { name: 'GROUP_CHANNEL' });
+
+    fireEvent.keyDown(groupTypeButton, { key: 'Tab' });
+    expect(setType).not.toHaveBeenCalled();
+    expect(setPageStep).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(groupTypeButton, { key: 'Enter' });
+    expect(setType).toHaveBeenCalledWith(CHANNEL_TYPE.GROUP);
+    expect(setPageStep).toHaveBeenCalledWith(1);
+
+    setType.mockClear();
+    setPageStep.mockClear();
+    fireEvent.keyDown(groupTypeButton, { key: ' ' });
+    expect(setType).toHaveBeenCalledWith(CHANNEL_TYPE.GROUP);
+    expect(setPageStep).toHaveBeenCalledWith(1);
   });
 
   it('display InviteUsers when pageStep is 1', async () => {

@@ -10,9 +10,7 @@ exports[`ui/PlaceHolder should do a snapshot test of the PlaceHolder DOM 1`] = `
     >
       <div
         class="sendbird-place-holder__body__icon sendbird-icon sendbird-icon-error sendbird-icon-color--on-background-3"
-        role="button"
         style="width: 64px; min-width: 64px; height: 64px; min-height: 64px;"
-        tabindex="0"
       >
         <test-file-stub />
       </div>

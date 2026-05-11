@@ -48,12 +48,22 @@ function useHandleChannelEvents(
           }
         },
         onMessageUpdated: (channel, message) => {
+          const scrollToEnd = checkScrollBottom();
           const channelUrl = channel?.url;
           logger.info('OpenChannel | useHandleChannelEvents: onMessageUpdated', { channelUrl, message });
           messagesDispatcher({
             type: messageActionTypes.ON_MESSAGE_UPDATED,
             payload: { channel, message },
           });
+          if (scrollToEnd) {
+            try {
+              setTimeout(() => {
+                scrollIntoLast(0, scrollRef);
+              });
+            } catch (error) {
+              logger.warning('OpenChannel | onMessageUpdated | scroll to end failed');
+            }
+          }
         },
         onMessageDeleted: (channel, messageId) => {
           const channelUrl = channel?.url;

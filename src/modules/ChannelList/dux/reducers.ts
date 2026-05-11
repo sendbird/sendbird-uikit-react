@@ -140,14 +140,14 @@ export default function channelListReducer(
         /* `1` and `2-1-1` */
         if (isMe || (channelListQuery && !filterChannelListParams(channelListQuery, channel, currentUserId))) {
           const channelAt = allChannels.findIndex((ch: GroupChannel) => ch.url === channel.url);
+          nextChannel = getNextChannel({
+            channel,
+            currentChannel,
+            allChannels,
+            disableAutoSelect,
+          });
           if (channelAt > -1) {
             nextChannels.splice(channelAt, 1);
-            nextChannel = getNextChannel({
-              channel,
-              currentChannel,
-              allChannels,
-              disableAutoSelect,
-            });
           }
         } else {
           /* `2-1-2` and `2-2` */

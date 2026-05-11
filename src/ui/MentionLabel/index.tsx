@@ -50,9 +50,11 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
           setUser(members[0]);
         }
         toggleDropdown();
+      }).catch(() => {
+        toggleDropdown();
       });
     },
-    [sdk, mentionedUserId],
+    [sdk, mentionedUserId, user],
   );
   return (
     <ContextMenu

@@ -1,4 +1,4 @@
-import type { UserMessageCreateParams } from '@sendbird/chat/message';
+import type { UserMessageCreateParams, UserMessageUpdateParams } from '@sendbird/chat/message';
 import type { OpenChannel } from '@sendbird/chat/openChannel';
 
 import React, { useCallback } from 'react';
@@ -9,7 +9,15 @@ import { SendableMessage } from '@sendbird/chat/lib/__definition';
 
 interface DynamicParams {
   currentOpenChannel: OpenChannel | null;
-  onBeforeSendUserMessage?: (text: string) => UserMessageCreateParams;
+  onBeforeSendUserMessage?: (
+    text: string,
+  ) => (
+    UserMessageCreateParams
+    | UserMessageUpdateParams
+    | Promise<UserMessageCreateParams | UserMessageUpdateParams>
+    | void
+    | Promise<void>
+  );
   checkScrollBottom: () => boolean;
   messageInputRef: React.RefObject<HTMLInputElement>;
 }
@@ -23,8 +31,8 @@ interface StaticParams {
 function useSendMessageCallback(
   { currentOpenChannel, onBeforeSendUserMessage, messageInputRef }: DynamicParams,
   { sdk, logger, messagesDispatcher, scrollRef }: StaticParams,
-): () => void {
-  return useCallback(() => {
+): () => Promise<void> {
+  return useCallback(async () => {
     if (sdk) {
       const text = messageInputRef.current?.innerText;
       const createParamsDefault = (txt: string | number): UserMessageCreateParams => {
@@ -38,7 +46,8 @@ function useSendMessageCallback(
       if (createCustomParams) {
         logger.info('OpenChannel | useSendMessageCallback: Creating params using onBeforeSendUserMessage', onBeforeSendUserMessage);
       }
-      const params = onBeforeSendUserMessage ? onBeforeSendUserMessage(text ?? '') : createParamsDefault(text ?? '');
+      const customParams = await onBeforeSendUserMessage?.(text ?? '');
+      const params = (customParams || createParamsDefault(text ?? '')) as UserMessageCreateParams;
       logger.info('OpenChannel | useSendMessageCallback: Sending message has started', params);
 
       let pendingMsg: SendableMessage | undefined;
@@ -62,11 +71,11 @@ function useSendMessageCallback(
             payload: message,
           });
         })
-        .onFailed((error) => {
+        .onFailed((error, message) => {
           logger.warning('OpenChannel | useSendMessageCallback: Sending message failed', error);
           messagesDispatcher({
             type: messageActionTypes.SENDING_MESSAGE_FAILED,
-            payload: pendingMsg,
+            payload: message ?? pendingMsg,
           });
           // https://sendbird.com/docs/chat/v3/javascript/guides/error-codes#2-server-error-codes
           // TODO: Do we need to handle the error cases?

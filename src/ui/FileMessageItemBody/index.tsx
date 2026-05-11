@@ -41,8 +41,9 @@ export default function FileMessageItemBody({
   }
   const { isMobile } = useMediaQueryContext();
   const truncateMaxNum = truncateLimit ?? (isMobile ? 20 : undefined);
+  const fileUrl = message?.url || (message as FileMessage & { plainUrl?: string })?.plainUrl || '';
 
-  const downloadFileWithUrl = () => openURL(message?.url);
+  const downloadFileWithUrl = () => openURL(fileUrl);
   const handleOnClickTextButton = onBeforeDownloadFileMessage
     ? async () => {
       try {
@@ -92,7 +93,7 @@ export default function FileMessageItemBody({
           type={LabelTypography.BODY_1}
           color={isByMe ? LabelColors.ONCONTENT_1 : LabelColors.ONBACKGROUND_1}
         >
-          {truncateString(message?.name || message?.url, truncateMaxNum)}
+          {truncateString(message?.name || fileUrl, truncateMaxNum)}
         </Label>
       </TextButton>
     </div>

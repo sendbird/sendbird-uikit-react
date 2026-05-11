@@ -22,11 +22,26 @@ function useGetChannel(
   { messagesDispatcher, sdk, logger, markAsReadScheduler }: UseGetChannelParams,
 ) {
   useEffect(() => {
+    let disposed = false;
+
+    if (sdkInit && !channelUrl) {
+      messagesDispatcher({
+        type: messageActionTypes.SET_CURRENT_CHANNEL,
+        payload: null,
+      });
+      messagesDispatcher({
+        type: messageActionTypes.RESET_MESSAGES,
+        payload: null,
+      });
+      return;
+    }
+
     if (channelUrl && sdkInit && sdk && sdk.groupChannel) {
       logger.info('Channel | useSetChannel fetching channel', channelUrl);
       sdk.groupChannel
         .getChannel(channelUrl)
         .then((groupChannel) => {
+          if (disposed) return;
           logger.info('Channel | useSetChannel fetched channel', groupChannel);
           messagesDispatcher({
             type: messageActionTypes.SET_CURRENT_CHANNEL,
@@ -39,6 +54,7 @@ function useGetChannel(
           }
         })
         .catch((e) => {
+          if (disposed) return;
           logger.warning('Channel | useSetChannel fetch channel failed', { channelUrl, e });
           messagesDispatcher({
             type: messageActionTypes.SET_CHANNEL_INVALID,
@@ -47,6 +63,7 @@ function useGetChannel(
       sdk
         .getAllEmoji()
         .then((emojiContainer_) => {
+          if (disposed) return;
           logger.info('Channel: Getting emojis success', emojiContainer_);
           messagesDispatcher({
             type: messageActionTypes.SET_EMOJI_CONTAINER,
@@ -54,9 +71,13 @@ function useGetChannel(
           });
         })
         .catch((err) => {
+          if (disposed) return;
           logger.error('Channel: Getting emojis failed', err);
         });
     }
+    return () => {
+      disposed = true;
+    };
   }, [channelUrl, sdkInit]);
 }
 

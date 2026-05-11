@@ -29,7 +29,7 @@ import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 export interface GroupChannelListItemBasicProps {
   tabIndex: number;
   channel: GroupChannel;
-  onClick: () => void;
+  onClick: (event?: React.MouseEvent) => void;
   renderChannelAction: (props: GroupChannelPreviewActionProps) => React.ReactElement;
   isSelected?: boolean;
   isTyping?: boolean;

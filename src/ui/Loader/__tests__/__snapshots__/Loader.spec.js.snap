@@ -7,10 +7,8 @@ exports[`ui/Loader should do a snapshot test of the default Loader DOM 1`] = `
     style="width: 26px; height: 26px;"
   >
     <div
-      class=" sendbird-icon sendbird-icon-spinner "
-      role="button"
+      class=" sendbird-icon sendbird-icon-spinner sendbird-icon-color--primary"
       style="width: 26px; min-width: 26px; height: 26px; min-height: 26px;"
-      tabindex="0"
     >
       <test-file-stub />
     </div>

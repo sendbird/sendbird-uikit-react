@@ -93,12 +93,13 @@ const setupMocks = ({
   initialized = true,
   messages = [{ messageId: 1, serialize: () => ({ messageId: 1 }) }],
   autoscrollMessageOverflowToTop = false,
+  getChannel,
 } = {}) => {
   const actions = createActions();
-  const getChannel = jest.fn().mockResolvedValue(currentChannel);
+  const getChannelMock = getChannel ?? jest.fn().mockResolvedValue(currentChannel);
   const sdk = {
     groupChannel: {
-      getChannel,
+      getChannel: getChannelMock,
     },
   };
   pubSubSubscriptions.splice(0, pubSubSubscriptions.length, { remove: jest.fn() }, { remove: jest.fn() });
@@ -208,6 +209,75 @@ describe('GroupChannelManager', () => {
     });
   });
 
+  it('clears the current channel when channelUrl becomes empty', async () => {
+    const { actions, sdk } = setupMocks();
+    const { rerender } = render(
+      <GroupChannelManager channelUrl="channel-url">
+        <div>child</div>
+      </GroupChannelManager>,
+    );
+
+    await waitFor(() => {
+      expect(sdk.groupChannel.getChannel).toHaveBeenCalledWith('channel-url');
+    });
+
+    jest.clearAllMocks();
+
+    rerender(
+      <GroupChannelManager channelUrl="">
+        <div>child</div>
+      </GroupChannelManager>,
+    );
+
+    await waitFor(() => {
+      expect(actions.setCurrentChannel).toHaveBeenCalledWith(null);
+    });
+    expect(sdk.groupChannel.getChannel).not.toHaveBeenCalled();
+  });
+
+  it('ignores stale channel fetch results after channelUrl changes', async () => {
+    const firstChannel = createChannel({ url: 'first-channel' });
+    const secondChannel = createChannel({ url: 'second-channel' });
+    let resolveFirst!: (channel: ReturnType<typeof createChannel>) => void;
+    let resolveSecond!: (channel: ReturnType<typeof createChannel>) => void;
+    const firstFetch = new Promise<ReturnType<typeof createChannel>>((resolve) => {
+      resolveFirst = resolve;
+    });
+    const secondFetch = new Promise<ReturnType<typeof createChannel>>((resolve) => {
+      resolveSecond = resolve;
+    });
+    const getChannel = jest.fn((url: string) => (url === 'first-channel' ? firstFetch : secondFetch));
+    const { actions } = setupMocks({ currentChannel: firstChannel, getChannel });
+
+    const { rerender } = render(
+      <GroupChannelManager channelUrl="first-channel">
+        <div>child</div>
+      </GroupChannelManager>,
+    );
+
+    rerender(
+      <GroupChannelManager channelUrl="second-channel">
+        <div>child</div>
+      </GroupChannelManager>,
+    );
+
+    await act(async () => {
+      resolveSecond(secondChannel);
+      await secondFetch;
+    });
+
+    await waitFor(() => {
+      expect(actions.setCurrentChannel).toHaveBeenCalledWith(secondChannel);
+    });
+
+    await act(async () => {
+      resolveFirst(firstChannel);
+      await firstFetch;
+    });
+
+    expect(actions.setCurrentChannel).not.toHaveBeenCalledWith(firstChannel);
+  });
+
   it('exercises message collection callbacks and collection creation', () => {
     const onBackClick = jest.fn();
     const { actions, currentChannel } = setupMocks();
@@ -281,7 +351,16 @@ describe('GroupChannelManager', () => {
     options.markAsRead([currentChannel]);
     expect(markAsReadScheduler.push).not.toHaveBeenCalled();
     options.onMessagesReceived([{ messageId: 1 }, { messageId: 2 }]);
-    expect(actions.setNewMessageIds).toHaveBeenCalledWith([1, 2]);
+    expect(actions.setNewMessageIds).toHaveBeenCalledWith([2]);
+    actions.setNewMessageIds.mockClear();
+    options.onMessagesReceived([
+      { messageId: 3, messageType: 'admin', isAdminMessage: () => true },
+      { messageId: 4, messageType: 'user', isAdminMessage: () => false },
+    ]);
+    expect(actions.setNewMessageIds).toHaveBeenCalledWith([4]);
+    actions.setNewMessageIds.mockClear();
+    options.onMessagesReceived([{ messageId: 5, messageType: 'admin', isAdminMessage: () => true }]);
+    expect(actions.setNewMessageIds).not.toHaveBeenCalled();
   });
 
   it('handles channel fetch and mark-as-unread errors', async () => {

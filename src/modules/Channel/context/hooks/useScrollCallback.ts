@@ -73,7 +73,16 @@ function useScrollCallback(
           payload: { currentGroupChannel },
         });
       });
-  }, [currentGroupChannel, oldestMessageTimeStamp, replyType]);
+  }, [
+    currentGroupChannel,
+    oldestMessageTimeStamp,
+    userFilledMessageListQuery,
+    replyType,
+    hasMorePrev,
+    logger,
+    messagesDispatcher,
+    sdk?.appInfo?.useReaction,
+  ]);
 }
 
 export default useScrollCallback;

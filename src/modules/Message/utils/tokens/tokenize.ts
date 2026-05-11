@@ -16,19 +16,24 @@ import {
  */
 const MarkdownRegex = /\[(.*?)\]\((.*?)\)|\*\*(.*?)\*\*/g;
 
+const escapeRegExp = (value: string): string => value.replace(
+  /([.*+?^${}()|[\]\\])/g,
+  '\\$1',
+);
+
+const getMentionTemplate = (templatePrefix: string, userId: string): string => `${templatePrefix}{${userId}}`;
+
 export function getUserMentionRegex(mentionedUsers: User[], templatePrefix_: string): RegExp {
   const templatePrefix = templatePrefix_ || USER_MENTION_PREFIX;
+  const escapedTemplatePrefix = escapeRegExp(templatePrefix);
 
   return RegExp(`(${mentionedUsers.map(u => {
-    const userId = u.userId.replace(
-      // If user.id includes these patterns, need to convert it into an escaped one
-      /([.*+?^${}()|[\]\\])/g,
-      '\\$1');
-      /**
-       * //{ And //} are also for escaping
-       * because curly braces `{}` are metacharacters in regular expressions used to specify repetition
-       */
-    return `${templatePrefix}\\{${userId}\\}`;
+    const userId = escapeRegExp(u.userId);
+    /**
+     * //{ And //} are also for escaping
+     * because curly braces `{}` are metacharacters in regular expressions used to specify repetition
+     */
+    return `${escapedTemplatePrefix}\\{${userId}\\}`;
   }).join('|')})`, 'g');
 }
 
@@ -52,7 +57,7 @@ export function identifyMentions({
 
     const tokens = parts.map((part) => {
       if (part.match(userMentionRegex)) {
-        const matchedUser = mentionedUsers.find((user) => `@{${user?.userId}}` === part);
+        const matchedUser = mentionedUsers.find((user) => getMentionTemplate(templatePrefix, user.userId) === part);
         const nickname = matchedUser?.nickname || '(No name)';
         return { value: nickname, type: TOKEN_TYPES.mention, userId: matchedUser?.userId };
       } else {
@@ -239,10 +244,11 @@ export function tokenizeMarkdown({
  * Or!!! -> convert any space or tab in leading/trailing to nbsp
  * to preserve the leading & trailing white spaces
  */
-export function getWhiteSpacePreservedText(text: string): string {
+export function getWhiteSpacePreservedText(text?: string | null): string {
   const NON_BREAKING_SPACE = '\u00A0';
+  const sourceText = typeof text === 'string' ? text : '';
   // Split the input string into lines
-  const lines = text.split('\n');
+  const lines = sourceText.split('\n');
 
   // Process each line and convert leading and trailing white spaces to "\u00A0"
   const processedLines = lines.map((line) => {

@@ -57,7 +57,7 @@ function OpenChannelMessageList(props: OpenChannelMessageListProps, ref: React.F
       return (
         allMessages.map((message, index) => {
           const previousMessage = allMessages[index - 1];
-          const nextMessage = allMessages[index - 1];
+          const nextMessage = allMessages[index + 1];
 
           const previousMessageCreatedAt = previousMessage && previousMessage.createdAt;
           const currentCreatedAt = message?.createdAt;
@@ -93,7 +93,7 @@ function OpenChannelMessageList(props: OpenChannelMessageListProps, ref: React.F
         />
       )
     );
-  }, [allMessages]);
+  }, [allMessages, isMessageGroupingEnabled, props?.renderMessage, props?.renderPlaceHolderEmptyList, stringSet, userId]);
 
   return (
     <div className="sendbird-openchannel-conversation-scroll">

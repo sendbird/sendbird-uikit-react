@@ -54,35 +54,53 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
   const [currentChannel, setChannel] = useState<OpenChannel | null>(null);
   const [isChannelInitialized, setChannelInitialized] = useState(false);
   useEffect(() => {
-    if (!channelUrl || !sdk.openChannel) {
+    let canceled = false;
+    let channelToExit: OpenChannel | null = null;
+    const finishInitialization = (channel: OpenChannel | null) => {
+      if (!canceled) {
+        setChannel(channel);
+        setChannelInitialized(true);
+      }
+    };
+
+    setChannel(null);
+    setChannelInitialized(false);
+
+    if (!channelUrl) {
+      finishInitialization(null);
+      return undefined;
+    }
+
+    if (!isSDKInitialized || !sdk?.openChannel) {
       setChannel(null);
-      return;
+      return undefined;
     }
 
     sdk.openChannel.getChannel(channelUrl)
       .then((channel) => {
+        channelToExit = channel;
         logger.info('open channel setting: fetched', channel);
         // TODO: Add pending status
         channel.enter()
           .then(() => {
-            setChannel(channel);
             logger.info('OpenChannelSettings | Succeeded to enter channel', channel?.url);
-            setChannelInitialized(true);
+            finishInitialization(channel);
           })
           .catch((error) => {
-            setChannel(null);
             logger.warning('OpenChannelSettings | Failed to enter channel', error);
+            finishInitialization(null);
           });
       })
       .catch((error) => {
         logger.error('open channel setting: error fetching', error);
-        setChannel(null);
+        finishInitialization(null);
       });
     return () => {
-      if (currentChannel && currentChannel.exit) {
-        currentChannel.exit()
+      canceled = true;
+      if (channelToExit && channelToExit.exit) {
+        channelToExit.exit()
           .then(() => {
-            logger.info('OpenChannelSettings | Succeeded to exit channel', currentChannel?.url);
+            logger.info('OpenChannelSettings | Succeeded to exit channel', channelToExit?.url);
           })
           .catch((error) => {
             logger.warning('OpenChannelSettings | Failed to exit channel', error);

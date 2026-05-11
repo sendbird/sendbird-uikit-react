@@ -22,7 +22,17 @@ jest.mock('../../../../../lib/LocalizationContext', () => ({
   }),
 }));
 
-jest.mock('../../Message', () => (props: any) => <button type="button" data-testid={`message-${props.message.messageId}`} onClick={() => props.handleScroll?.()}>message</button>);
+jest.mock('../../Message', () => (props: any) => (
+  <button
+    type="button"
+    data-testid={`message-${props.message.messageId}`}
+    data-previous-message-id={props.previousMessage?.messageId ?? ''}
+    data-next-message-id={props.nextMessage?.messageId ?? ''}
+    onClick={() => props.handleScroll?.()}
+  >
+    message
+  </button>
+));
 jest.mock('../../FrozenNotification', () => (props: any) => <div data-testid="frozen" className={props.className}>frozen</div>);
 jest.mock('../../UnreadCount', () => (props: any) => <button type="button" data-testid="unread" onClick={props.onClick}>{props.count}</button>);
 jest.mock('../../../../GroupChannel/components/MessageList/getMessagePartsInfo', () => ({
@@ -155,5 +165,22 @@ describe('deprecated Channel MessageList', () => {
 
     expect(screen.queryByTestId('message-1')).not.toBeInTheDocument();
     expect(screen.getByTestId('message-2')).toBeInTheDocument();
+  });
+
+  it('passes adjacent message data through legacy message props', () => {
+    (useChannelContext as jest.Mock).mockReturnValue(createChannelContext({
+      currentGroupChannel: { url: 'channel-url', isFrozen: false, unreadMessageCount: 0 },
+      unreadSince: null,
+      unreadSinceDate: null,
+    }));
+
+    render(<MessageList />);
+
+    expect(screen.getByTestId('message-1')).toHaveAttribute('data-previous-message-id', '');
+    expect(screen.getByTestId('message-1')).toHaveAttribute('data-next-message-id', '2');
+    expect(screen.getByTestId('message-2')).toHaveAttribute('data-previous-message-id', '1');
+    expect(screen.getByTestId('message-2')).toHaveAttribute('data-next-message-id', '3');
+    expect(screen.getByTestId('message-3')).toHaveAttribute('data-previous-message-id', '2');
+    expect(screen.getByTestId('message-3')).toHaveAttribute('data-next-message-id', '');
   });
 });

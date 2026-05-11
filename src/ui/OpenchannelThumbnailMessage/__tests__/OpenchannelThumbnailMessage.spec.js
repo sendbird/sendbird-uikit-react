@@ -96,6 +96,47 @@ describe('ui/OpenchannelThumbnailMessage', () => {
     ).toBe(0);
   });
 
+  it('should render image thumbnail message with plainUrl when url is empty', function() {
+    const mockMessage = getMockMessage();
+    mockMessage.url = '';
+    mockMessage.plainUrl = 'https://sendbird.com/plain-image.png';
+    const { container } = render(
+      <OpenchannelThumbnailMessage
+        message={mockMessage}
+        status="succeeded"
+        userId="hoon102"
+      />
+    );
+
+    expect(
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__image').length
+    ).toBe(1);
+    expect(
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__image--icon').length
+    ).toBe(0);
+  });
+
+  it('should render svg thumbnail message as image', function() {
+    const mockMessage = getMockMessage((message) => {
+      message.url = 'https://sendbird.com/icon.svg';
+      message.type = 'image/svg+xml';
+    });
+    const { container } = render(
+      <OpenchannelThumbnailMessage
+        message={mockMessage}
+        status="succeeded"
+        userId="hoon102"
+      />
+    );
+
+    expect(
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__image').length
+    ).toBe(1);
+    expect(
+      container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__unknown').length
+    ).toBe(0);
+  });
+
 
   it('should render for video thumbnail message', function() {
     const { container } = render(

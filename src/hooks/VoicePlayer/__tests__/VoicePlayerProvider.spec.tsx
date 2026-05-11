@@ -82,6 +82,7 @@ describe('VoicePlayerProvider', () => {
 
     await waitFor(() => expect(screen.getByTestId('current-group')).toHaveTextContent('group-1'));
     expect(document.getElementById(VOICE_PLAYER_ROOT_ID)?.querySelector(`#${VOICE_PLAYER_AUDIO_ID}`)).toBeInTheDocument();
+    expect(audioElements[0].dataset.sbGroupKey).toBe('group-1');
     expect(audioElements[0].play).toHaveBeenCalledTimes(1);
 
     await act(async () => {

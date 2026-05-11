@@ -21,6 +21,7 @@ export interface MessageSearchProviderProps {
   children?: React.ReactElement;
   searchString?: string;
   messageSearchQuery?: MessageSearchQueryParams;
+  onCloseClick?(): void;
   onResultLoaded?(messages?: Array<CoreMessageType> | null, error?: SendbirdError | null): void;
   onResultClick?(message: ClientSentMessages): void;
 }
@@ -78,6 +79,8 @@ const MessageSearchManager: React.FC<MessageSearchProviderProps> = ({
   const sdkInit = stores?.sdkStore?.initialized;
   const { logger } = config;
   const scrollRef = useRef<HTMLDivElement>(null);
+  const stateRef = useRef(state);
+  const onScrollRef = useRef<ReturnType<typeof useScrollCallback>>();
 
   useSetChannel(
     { channelUrl, sdkInit },
@@ -105,19 +108,31 @@ const MessageSearchManager: React.FC<MessageSearchProviderProps> = ({
     { logger },
   );
 
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
+
+  useEffect(() => {
+    onScrollRef.current = onScroll;
+  }, [onScroll]);
+
+  const scroll = useCallback<ReturnType<typeof useScrollCallback>>((callback) => {
+    onScrollRef.current?.(callback);
+  }, []);
+
   const handleOnScroll = useCallback((e: React.BaseSyntheticEvent) => {
     const scrollElement = e.target as HTMLDivElement;
     const { scrollTop, scrollHeight, clientHeight } = scrollElement;
 
-    if (!state.hasMoreResult) {
+    if (!stateRef.current.hasMoreResult) {
       return;
     }
     if (scrollTop + clientHeight >= scrollHeight) {
-      onScroll(() => {
+      onScrollRef.current?.(() => {
         // after load more searched messages
       });
     }
-  }, [state.hasMoreResult, onScroll]);
+  }, []);
 
   useEffect(() => {
     updateState({
@@ -125,12 +140,12 @@ const MessageSearchManager: React.FC<MessageSearchProviderProps> = ({
       searchString: _searchString,
       messageSearchQuery,
       onResultClick,
-      onScroll,
+      onScroll: scroll,
       handleOnScroll,
       scrollRef,
       requestString,
     });
-  }, [channelUrl, searchString, messageSearchQuery, onResultClick, updateState, requestString]);
+  }, [channelUrl, _searchString, messageSearchQuery, onResultClick, scroll, handleOnScroll, updateState, requestString]);
 
   return null;
 };

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import createChannelListQuery from './createChannelListQuery';
@@ -26,6 +26,8 @@ function useRefreshOpenChannelList(
     openChannelListDispatcher,
   }: StaticParams,
 ): () => void {
+  const openChannelListQueryKey = JSON.stringify(openChannelListQuery ?? {});
+  const stableOpenChannelListQuery = useMemo(() => openChannelListQuery, [openChannelListQueryKey]);
   return useCallback(() => {
     if (!sdkInitialized) {
       logger.info('OpenChannelList|useRefreshOpenChannelList: Reset OpenChannelList', { sdkInitialized });
@@ -49,7 +51,7 @@ function useRefreshOpenChannelList(
     const channelListQuery = createChannelListQuery({
       sdk,
       logger,
-      openChannelListQuery,
+      openChannelListQuery: stableOpenChannelListQuery,
       openChannelListDispatcher,
       logMessage: 'OpenChannelList|useRefreshOpenChannelList: Succeeded create channelListQuery',
     });
@@ -78,7 +80,7 @@ function useRefreshOpenChannelList(
     } else {
       logger.info('OpenChannelList|useRefreshOpenChannelList: There is no more channels');
     }
-  }, [sdkInitialized, openChannelListQuery]);
+  }, [sdkInitialized, stableOpenChannelListQuery]);
 }
 
 export default useRefreshOpenChannelList;

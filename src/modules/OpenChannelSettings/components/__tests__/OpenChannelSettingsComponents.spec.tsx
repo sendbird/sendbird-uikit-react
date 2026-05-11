@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import EditDetailsModal from '../EditDetailsModal';
 import OpenChannelProfile from '../OpenChannelProfile';
+import OpenChannelUI from '../OpenChannelSettingsUI';
 import { OperatorUI, copyToClipboard } from '../OperatorUI';
 import AddOperatorsModal from '../OperatorUI/AddOperatorsModal';
 import BannedUserList from '../OperatorUI/BannedUserList';
@@ -441,6 +442,20 @@ describe('OpenChannelSettings components', () => {
     expect(document.queryCommandSupported).toHaveBeenCalledWith('copy');
   });
 
+  it('does not show participant settings before channel initialization completes', () => {
+    mockUseOpenChannelSettingsContext.mockReturnValue({
+      channelUrl: channel.url,
+      channel: null,
+      isChannelInitialized: false,
+      onCloseClick,
+    });
+
+    const { container } = renderWithProviders(<OpenChannelUI />);
+
+    expect(container.querySelector('.sendbird-openchannel-settings')).toBeInTheDocument();
+    expect(screen.queryByText('OPEN_CHANNEL_SETTINGS__PARTICIPANTS_TITLE')).not.toBeInTheDocument();
+  });
+
   it('manages operator list modals and operator actions', async () => {
     renderWithProviders(<OperatorList />);
 
@@ -529,6 +544,33 @@ describe('OpenChannelSettings components', () => {
     fireEvent.click(screen.getAllByText('All banned members')[0]);
     await waitFor(() => {
       expect(screen.getAllByRole('dialog', { name: 'Muted members' }).length).toBeGreaterThan(0);
+    });
+  });
+
+  it('catches rejected open channel list queries without crashing', async () => {
+    const rejectedQuery = {
+      hasNext: false,
+      next: jest.fn().mockRejectedValue(new Error('query failed')),
+    };
+    const rejectingChannel = createChannel({
+      createParticipantListQuery: jest.fn(() => rejectedQuery),
+      createOperatorListQuery: jest.fn(() => rejectedQuery),
+      createMutedUserListQuery: jest.fn(() => rejectedQuery),
+      createBannedUserListQuery: jest.fn(() => rejectedQuery),
+    });
+    mockUseOpenChannelSettingsContext.mockReturnValue({ channel: rejectingChannel });
+
+    renderWithProviders(
+      <>
+        <OperatorList />
+        <MutedParticipantList />
+        <BannedUserList />
+        <ParticipantList isOperatorView />
+      </>,
+    );
+
+    await waitFor(() => {
+      expect(rejectedQuery.next).toHaveBeenCalled();
     });
   });
 

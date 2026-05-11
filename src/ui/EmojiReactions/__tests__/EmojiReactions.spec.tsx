@@ -293,4 +293,42 @@ describe('EmojiReactions', () => {
 
     expect(screen.queryByTestId('sendbird-emoji-reactions__add-reaction-badge')).not.toBeInTheDocument();
   });
+
+  it('recomputes filtered add-reaction emojis when the target message changes', () => {
+    const filterEmojiCategoryIds = jest.fn((message) => message.categoryIds);
+    const firstMessage = {
+      messageId: 4,
+      categoryIds: [1],
+      reactions: [],
+    };
+    const secondMessage = {
+      messageId: 5,
+      categoryIds: [2],
+      reactions: [],
+    };
+    const { rerender } = renderComponent({
+      message: firstMessage,
+      filterEmojiCategoryIds,
+    });
+
+    expect(screen.getByTestId('ui_emoji_reactions_menu_smile')).toBeInTheDocument();
+    expect(screen.queryByTestId('ui_emoji_reactions_menu_wave')).not.toBeInTheDocument();
+
+    rerender(
+      <LocalizationContext.Provider value={{ stringSet } as any}>
+        <EmojiReactions
+          userId="current-user"
+          message={secondMessage as any}
+          channel={channel as any}
+          emojiContainer={emojiContainer as any}
+          memberNicknamesMap={memberNicknamesMap}
+          toggleReaction={jest.fn()}
+          filterEmojiCategoryIds={filterEmojiCategoryIds}
+        />
+      </LocalizationContext.Provider>,
+    );
+
+    expect(screen.queryByTestId('ui_emoji_reactions_menu_smile')).not.toBeInTheDocument();
+    expect(screen.getByTestId('ui_emoji_reactions_menu_wave')).toBeInTheDocument();
+  });
 });

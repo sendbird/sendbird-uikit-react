@@ -163,6 +163,30 @@ describe('ChannelListUI', () => {
     expect(logger.error).toHaveBeenCalledWith('ChannelList: Leaving channel failed', expect.any(Error));
   });
 
+  it('handles custom preview selection once when the child calls onClick', () => {
+    render(
+      <ChannelListUI
+        renderChannelPreview={(props) => (
+          <button
+            type="button"
+            data-testid={`custom-select-${props.channel.url}`}
+            onClick={() => props.onClick()}
+          >
+            {props.channel.url}
+          </button>
+        )}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId('custom-select-channel-b'));
+
+    expect(channelListDispatcher).toHaveBeenCalledTimes(1);
+    expect(channelListDispatcher).toHaveBeenCalledWith({
+      type: channelListActions.SET_CURRENT_CHANNEL,
+      payload: channels[1],
+    });
+  });
+
   it('does not select channels while offline without cached SDK support', () => {
     (useSendbird as jest.Mock).mockReturnValue({
       state: {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import ChannelAvatar from "../index";
 import * as utils from '../utils';
@@ -7,8 +7,8 @@ import * as utils from '../utils';
 describe('ui/ChannelAvatar', () => {
   it('should render a normal default channel avatar', function() {
     const targetClassName = "sendbird-chat-header--avatar--group-channel";
-    render(<ChannelAvatar channel={{}} />);
-    expect(screen.getAllByRole('button')[0].className).toContain(targetClassName);
+    const { container } = render(<ChannelAvatar channel={{}} />);
+    expect(container.getElementsByClassName(targetClassName)[0].className).toContain(targetClassName);
   });
 
   it('should render a default avatar of broadcastChannel', function() {
@@ -20,8 +20,8 @@ describe('ui/ChannelAvatar', () => {
   it('should render an avatar broadcastChannel with non default url', function() {
     const targetClassName = "sendbird-chat-header--avatar--broadcast-channel";
     const coverUrl = '123';
-    render(<ChannelAvatar channel={{ isBroadcast: true, coverUrl }} />);
-    expect(screen.getByRole('button').className).toContain(targetClassName);
+    const { container } = render(<ChannelAvatar channel={{ isBroadcast: true, coverUrl }} />);
+    expect(container.getElementsByClassName(targetClassName)[0].className).toContain(targetClassName);
   });
 });
 

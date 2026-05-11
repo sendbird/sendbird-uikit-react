@@ -44,7 +44,7 @@ export const MemberList = ({
     memberUserListQuery.next().then((members) => {
       setMembers(members);
       setHasNext(memberUserListQuery.hasNext);
-    });
+    }).catch(() => undefined);
   }, [channel?.url, channel?.createMemberListQuery]);
   useEffect(refreshList, [channel?.url]);
 

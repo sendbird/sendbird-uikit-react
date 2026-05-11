@@ -182,6 +182,11 @@ export const MessageList = (props: MessageListProps) => {
     return renderPlaceholderEmpty();
   }
 
+  const visibleMessages = [
+    ...allMessagesFiltered,
+    ...localMessages,
+  ];
+
   return (
     <>
       {!isScrolled && <PlaceHolder type={PlaceHolderTypes.LOADING} />}
@@ -205,6 +210,8 @@ export const MessageList = (props: MessageListProps) => {
             }}
           >
             {allMessagesFiltered.map((m, idx) => {
+              const previousMessage = visibleMessages[idx - 1] as EveryMessage | undefined;
+              const nextMessage = visibleMessages[idx + 1] as EveryMessage | undefined;
               const { chainTop, chainBottom, hasSeparator } = getMessagePartsInfo({
                 allMessages: allMessagesFiltered,
                 stringSet,
@@ -220,6 +227,8 @@ export const MessageList = (props: MessageListProps) => {
                   <Message
                     handleScroll={moveScroll}
                     message={m as EveryMessage}
+                    previousMessage={previousMessage}
+                    nextMessage={nextMessage}
                     hasSeparator={hasSeparator}
                     chainTop={chainTop}
                     chainBottom={chainBottom}
@@ -233,12 +242,15 @@ export const MessageList = (props: MessageListProps) => {
               );
             })}
             {localMessages.map((m, idx) => {
+              const messageIndex = allMessagesFiltered.length + idx;
+              const previousMessage = visibleMessages[messageIndex - 1] as EveryMessage | undefined;
+              const nextMessage = visibleMessages[messageIndex + 1] as EveryMessage | undefined;
               const { chainTop, chainBottom } = getMessagePartsInfo({
-                allMessages: allMessagesFiltered,
+                allMessages: visibleMessages,
                 stringSet,
                 replyType,
                 isMessageGroupingEnabled,
-                currentIndex: idx,
+                currentIndex: messageIndex,
                 currentMessage: m,
                 currentChannel: currentGroupChannel,
               });
@@ -248,6 +260,8 @@ export const MessageList = (props: MessageListProps) => {
                   <Message
                     handleScroll={moveScroll}
                     message={m as EveryMessage}
+                    previousMessage={previousMessage}
+                    nextMessage={nextMessage}
                     chainTop={chainTop}
                     chainBottom={chainBottom}
                     renderMessageContent={renderMessageContent}

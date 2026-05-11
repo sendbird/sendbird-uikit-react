@@ -68,11 +68,14 @@ const EmojiReactions = ({
   const [showEmojiList, setShowEmojiList] = useState(false);
   const [selectedEmojiKey, setSelectedEmojiKey] = useState('');
 
-  const emojisMap = getEmojiMapAll(emojiContainer);
+  const emojisMap = useMemo(() => getEmojiMapAll(emojiContainer), [emojiContainer]);
   const filteredEmojis = useMemo(() => {
     return getEmojiListByCategoryIds(emojiContainer, filterEmojiCategoryIds?.(message));
-  }, [emojiContainer, filterEmojiCategoryIds]);
-  const showAddReactionBadge = (message.reactions?.length ?? 0) < emojisMap.size;
+  }, [emojiContainer, filterEmojiCategoryIds, message]);
+  const reactedFilteredEmojiCount = filteredEmojis
+    .filter((emoji) => message.reactions?.some((reaction) => reaction.key === emoji.key))
+    .length;
+  const showAddReactionBadge = reactedFilteredEmojiCount < filteredEmojis.length;
 
   return (
     <div className={getClassName([

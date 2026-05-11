@@ -26,6 +26,9 @@ import NewMessageIndicator from '../../../../ui/NewMessageSeparator';
 
 export interface MessageProps {
   message: EveryMessage;
+  currentChannel?: GroupChannel;
+  previousMessage?: EveryMessage;
+  nextMessage?: EveryMessage;
   hasSeparator?: boolean;
   hasNewMessageSeparator?: boolean;
   chainTop?: boolean;
@@ -296,7 +299,7 @@ const MessageView = (props: MessageViewProps) => {
     }
 
     if (renderMessage) {
-      const messageProps = { ...props, renderMessage: undefined };
+      const messageProps = { ...props, currentChannel: channel, renderMessage: undefined };
       return renderMessage(messageProps);
     }
 

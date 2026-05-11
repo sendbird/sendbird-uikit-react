@@ -32,7 +32,7 @@ import useLongPress from '../../hooks/useLongPress';
 import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
 import TextFragment from '../../modules/Message/components/TextFragment';
 import { tokenizeMessage } from '../../modules/Message/utils/tokens/tokenize';
-import { openURL } from '../../utils/utils';
+import { getWindowInnerWidth, openURL } from '../../utils/utils';
 
 interface OpenChannelOGMessageProps {
   message: UserMessage;
@@ -87,6 +87,7 @@ export default function OpenChannelOGMessage({
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
   const sender = getSenderFromMessage(message);
+  const windowInnerWidth = getWindowInnerWidth();
 
   const tokens = useMemo(() => {
     return tokenizeMessage({
@@ -101,7 +102,7 @@ export default function OpenChannelOGMessage({
     } else {
       setContextStyle({ top: '2px' });
     }
-  }, [window.innerWidth]);
+  }, [windowInnerWidth]);
 
   if (!message || message.messageType !== 'user') {
     return <></>;
@@ -364,7 +365,7 @@ export default function OpenChannelOGMessage({
               )
             }
             {
-              ogMetaData?.url && (
+              defaultImage && (
                 <div
                   className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail"
                   role="button"
@@ -372,26 +373,22 @@ export default function OpenChannelOGMessage({
                   onKeyDown={openLink}
                   tabIndex={0}
                 >
-                  {
-                    defaultImage && (
-                      <ImageRenderer
-                        className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail__image"
-                        url={defaultImage.url || ''}
-                        alt={defaultImage.alt || ''}
-                        width="334px"
-                        height="189px"
-                        defaultComponent={(
-                          <div className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail__image--placeholder">
-                            <Icon
-                              type={IconTypes.THUMBNAIL_NONE}
-                              width="56px"
-                              height="56px"
-                            />
-                          </div>
-                        )}
-                      />
-                    )
-                  }
+                  <ImageRenderer
+                    className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail__image"
+                    url={defaultImage.url || ''}
+                    alt={defaultImage.alt || ''}
+                    width="334px"
+                    height="189px"
+                    defaultComponent={(
+                      <div className="sendbird-openchannel-og-message__bottom__og-tag__thumbnail__image--placeholder">
+                        <Icon
+                          type={IconTypes.THUMBNAIL_NONE}
+                          width="56px"
+                          height="56px"
+                        />
+                      </div>
+                    )}
+                  />
                 </div>
               )
             }
@@ -435,6 +432,7 @@ export default function OpenChannelOGMessage({
         showContextMenu && (
           <OpenChannelMobileMenu
             message={message}
+            isEphemeral={isEphemeral}
             parentRef={mobileMenuRef}
             hideMenu={() => {
               setShowContextMenu(false);

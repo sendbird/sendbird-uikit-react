@@ -36,7 +36,7 @@ export function OperatorsModal({
     const operatorListQuery = channel?.createOperatorListQuery({ limit: 20, ...operatorListQueryParams });
     operatorListQuery?.next().then((operators) => {
       setOperators(operators);
-    });
+    }).catch(() => undefined);
     setOperatorQuery(operatorListQuery ?? null);
   }, []);
   return (
@@ -57,7 +57,7 @@ export function OperatorsModal({
                     ...operators,
                     ...o,
                   ]);
-                });
+                }).catch(() => undefined);
               }
             },
           })}

@@ -138,13 +138,37 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
   });
 
   const { refreshing, initialized, groupChannels, refresh, loadMore } = channelListDataSource;
+  const refreshRef = useRef<ChannelListDataSource['refresh']>(refresh);
+  const loadMoreRef = useRef<ChannelListDataSource['loadMore']>(loadMore);
+
+  useEffect(() => {
+    refreshRef.current = refresh;
+  }, [refresh]);
+
+  useEffect(() => {
+    loadMoreRef.current = loadMore;
+  }, [loadMore]);
+
+  const stableRefresh = useMemo<ChannelListDataSource['refresh']>(() => (
+    refresh ? () => refreshRef.current?.() : refresh
+  ), [Boolean(refresh)]);
+  const stableLoadMore = useMemo<ChannelListDataSource['loadMore']>(() => (
+    loadMore ? () => loadMoreRef.current?.() : loadMore
+  ), [Boolean(loadMore)]);
 
   // SideEffect: Auto select channel
   useEffect(() => {
     if (!disableAutoSelect && stores.sdkStore.initialized && initialized) {
       if (!selectedChannelUrl) onChannelSelect(groupChannels[0] ?? null);
     }
-  }, [disableAutoSelect, stores.sdkStore.initialized, initialized, selectedChannelUrl]);
+  }, [
+    disableAutoSelect,
+    stores.sdkStore.initialized,
+    initialized,
+    selectedChannelUrl,
+    groupChannels[0]?.url,
+    onChannelSelect,
+  ]);
 
   // Recreates the GroupChannelCollection when `channelListQueryParams` change
   useEffect(() => {
@@ -203,8 +227,9 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
     typingChannelUrls,
     refreshing,
     initialized,
-    refresh,
-    loadMore,
+    refresh: stableRefresh,
+    loadMore: stableLoadMore,
+    scrollRef,
   }), [
     className,
     selectedChannelUrl,
@@ -216,6 +241,8 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
     typingChannelUrls,
     refreshing,
     initialized,
+    stableRefresh,
+    stableLoadMore,
     scrollRef,
   ]);
   useDeepCompareEffect(() => {

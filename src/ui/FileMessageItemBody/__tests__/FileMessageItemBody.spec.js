@@ -60,6 +60,15 @@ describe('ui/FileMessageItemBody', () => {
     ).toContain('sendbird-file-message-item-body__file-name__text');
   });
 
+  it('should render plainUrl when name and url do not exist', () => {
+    const plainUrl = 'https://sendbird.com/plain-file';
+    const createdMsg = createMockMessage((mock) => ({ ...mock, name: '', url: '', plainUrl }));
+    render(<FileMessageItemBody message={createdMsg} />);
+    expect(
+      screen.getByText(plainUrl).className
+    ).toContain('sendbird-file-message-item-body__file-name__text');
+  });
+
   it('should have class name by isByMe is true', () => {
     const { container } = render(
       <FileMessageItemBody

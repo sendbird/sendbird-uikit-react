@@ -80,7 +80,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       hasNext,
       loading,
       messages,
-      newMessages,
+      newMessages = [],
       isScrollBottomReached,
       isMessageGroupingEnabled,
       currentChannel,
@@ -114,6 +114,10 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   const isInitializedRef = useRef(false);
   const separatorMessageRef = useRef<CoreMessageType | undefined>(undefined);
   const isUnreadMessageExistInChannel = useRef<boolean>(false);
+  const visibleNewMessages = useMemo(
+    () => newMessages.filter(message => !isAdminMessage(message as CoreMessageType)),
+    [newMessages],
+  );
 
   // Find the first unread message
   const firstUnreadMessage = useMemo(() => {
@@ -279,11 +283,11 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     },
     newMessageCount() {
       // 스크롤이 bottom에 있을 때는 new message count를 표시하지 않음
-      if (isScrollBottomReached) return null;
+      if (isScrollBottomReached || visibleNewMessages.length === 0) return null;
       return (
         <NewMessageCountFloatingButton
           className="sendbird-new-messages-count"
-          count={newMessages.length}
+          count={visibleNewMessages.length}
           onClick={() => scrollToBottom()}
         />
       );
@@ -342,12 +346,16 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
             });
 
             const isOutgoingMessage = isSendableMessage(message) && message.sender.userId === state.config.userId;
+            const previousMessage = messages[index - 1] as EveryMessage | undefined;
+            const nextMessage = messages[index + 1] as EveryMessage | undefined;
 
             return (
               <MessageProvider message={message} key={getComponentKeyFromMessage(message)} isByMe={isOutgoingMessage}>
                 {renderMessage({
                   handleScroll: onMessageContentSizeChanged,
                   message: message as EveryMessage,
+                  previousMessage,
+                  nextMessage,
                   hasSeparator,
                   hasNewMessageSeparator,
                   chainTop,

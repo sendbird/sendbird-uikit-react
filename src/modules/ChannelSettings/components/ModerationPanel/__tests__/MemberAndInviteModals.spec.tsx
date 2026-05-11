@@ -248,6 +248,35 @@ describe('ChannelSettings moderation member and invite components', () => {
     }));
   });
 
+  it('catches rejected invite user queries without crashing', async () => {
+    const appUsersQuery = {
+      hasNext: false,
+      next: jest.fn().mockRejectedValue(new Error('query failed')),
+    };
+    (useSendbird as jest.Mock).mockReturnValue({
+      state: {
+        stores: {
+          sdkStore: {
+            sdk: {
+              currentUser: member('current-user'),
+              createApplicationUserListQuery: jest.fn(() => appUsersQuery),
+            },
+          },
+        },
+        config: {
+          userListQuery: null,
+        },
+      },
+    });
+
+    renderWithLocale(<InviteUsersModal onCancel={jest.fn()} onSubmit={jest.fn()} />);
+
+    await waitFor(() => {
+      expect(appUsersQuery.next).toHaveBeenCalled();
+    });
+    expect(screen.getByText('Invite')).toBeInTheDocument();
+  });
+
   it('renders member list actions and updates local member state', async () => {
     setupChannelSettings();
     renderWithLocale(<MemberList />);

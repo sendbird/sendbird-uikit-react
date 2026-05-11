@@ -44,6 +44,7 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
 
   const renderListItem = (renderProps: { item: GroupChannel; index: number }) => {
     const { item: channel, index } = renderProps;
+    let isClickHandled = false;
 
     const itemProps: GroupChannelItemProps = {
       channel,
@@ -51,7 +52,14 @@ export const GroupChannelListUI = (props: GroupChannelListUIProps) => {
       isSelected: channel.url === selectedChannelUrl,
       isTyping: typingChannelUrls.includes(channel.url),
       renderChannelAction: (props) => <GroupChannelPreviewAction {...props} />,
-      onClick() {
+      onClick(event) {
+        event?.stopPropagation?.();
+        if (isClickHandled) return;
+        isClickHandled = true;
+        setTimeout(() => {
+          isClickHandled = false;
+        }, 0);
+
         if (isOnline || sdk?.isCacheEnabled) {
           logger.info('ChannelList: Clicked on channel:', channel);
           onChannelSelect(channel);

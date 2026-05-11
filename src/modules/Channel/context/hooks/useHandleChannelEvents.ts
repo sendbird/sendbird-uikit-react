@@ -160,12 +160,14 @@ function useHandleChannelEvents({
           }
         },
         onMessageDeleted: (channel, messageId) => {
-          logger.info('Channel | useHandleChannelEvents: onMessageDeleted', { channel, messageId });
-          setQuoteMessage(null);
-          messagesDispatcher({
-            type: messageActions.ON_MESSAGE_DELETED,
-            payload: messageId,
-          });
+          if (channel.isGroupChannel() && compareIds(channel?.url, channelUrl)) {
+            logger.info('Channel | useHandleChannelEvents: onMessageDeleted', { channel, messageId });
+            setQuoteMessage(null);
+            messagesDispatcher({
+              type: messageActions.ON_MESSAGE_DELETED,
+              payload: messageId,
+            });
+          }
         },
         onReactionUpdated: (channel, reactionEvent) => {
           if (channel.isGroupChannel() && compareIds(channel?.url, channelUrl)) {

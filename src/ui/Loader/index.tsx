@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 
 import './index.scss';
 
-import Icon, { IconTypes } from '../Icon';
+import Icon, { IconColors, IconTypes } from '../Icon';
 
 export interface LoaderProps {
   className?: string | Array<string>;
@@ -36,6 +36,7 @@ export default function Loader({
         || (
           <Icon
             type={IconTypes.SPINNER}
+            fillColor={IconColors.PRIMARY}
             width="26px"
             height="26px"
           />

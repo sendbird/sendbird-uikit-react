@@ -174,7 +174,7 @@ export const VoicePlayerProvider = ({
             payload: { groupKey },
           });
         };
-        audioPlayer.dataset.sbGroupId = groupKey;
+        audioPlayer.dataset.sbGroupKey = groupKey;
         // clean up the previous audio player
         try {
           voicePlayerRoot?.childNodes.forEach((node) => {

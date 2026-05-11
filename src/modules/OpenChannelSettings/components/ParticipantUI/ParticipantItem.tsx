@@ -166,7 +166,7 @@ export default function ParticipantsAccordion(props: ParticipantsAccordionProps)
     const participantListQuery = channel?.createParticipantListQuery({});
     participantListQuery.next().then((participantList) => {
       setParticipants(participantList);
-    });
+    }).catch(() => undefined);
   }, [channel]);
 
   return (

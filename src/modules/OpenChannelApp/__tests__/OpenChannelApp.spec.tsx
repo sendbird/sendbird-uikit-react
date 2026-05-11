@@ -306,4 +306,31 @@ describe('OpenChannelApp examples', () => {
     expect(screen.getByText('Image User')).toBeInTheDocument();
     expect(screen.getByText('No Image')).toBeInTheDocument();
   });
+
+  it('updates streaming preview metadata when channel data changes', () => {
+    const onPreviewClick = jest.fn();
+    const { rerender } = render(
+      <OpenChannelPreview channel={mockChannels[0] as any} selected={false} onClick={onPreviewClick} isStreaming />,
+    );
+
+    expect(screen.getByText('Ada')).toBeInTheDocument();
+
+    rerender(
+      <OpenChannelPreview
+        channel={{
+          ...mockChannels[0],
+          data: JSON.stringify({
+            name: 'Live event',
+            creator_info: { name: 'Grace', id: 'grace', profile_url: 'grace.png' },
+          }),
+        } as any}
+        selected={false}
+        onClick={onPreviewClick}
+        isStreaming
+      />,
+    );
+
+    expect(screen.getByText('Grace')).toBeInTheDocument();
+    expect(screen.queryByText('Ada')).not.toBeInTheDocument();
+  });
 });

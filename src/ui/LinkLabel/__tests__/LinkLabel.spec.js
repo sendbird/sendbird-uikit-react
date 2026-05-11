@@ -34,6 +34,18 @@ describe('ui/LinkLabel', () => {
     ).toContain(`${LINK_LABEL}__label`);
   });
 
+  it('should render protocol-less links as absolute urls', function() {
+    const { container } = render(
+      <LinkLabel src="www.sendbird.com">
+        Sendbird
+      </LinkLabel>
+    );
+
+    expect(
+      container.getElementsByClassName('sendbird-link-label')[0].getAttribute('href')
+    ).toBe('http://www.sendbird.com');
+  });
+
   it('should do a snapshot test of the LinkLabel DOM', function() {
     const text = 'example-text';
     const { asFragment } = render(

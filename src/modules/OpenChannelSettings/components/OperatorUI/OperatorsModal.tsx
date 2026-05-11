@@ -34,7 +34,7 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
     if (operatorListQuery) {
       operatorListQuery.next().then((participants) => {
         setUsers(participants);
-      });
+      }).catch(() => undefined);
       setOperatorQuery(operatorListQuery);
     }
   }, []);
@@ -61,7 +61,7 @@ export default function OperatorListModal({ onCancel }: Props): ReactElement {
                   ...users,
                   ...o,
                 ]);
-              });
+              }).catch(() => undefined);
             }
           }}
         >

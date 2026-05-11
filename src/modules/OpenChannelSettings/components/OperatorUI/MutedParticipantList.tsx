@@ -39,7 +39,7 @@ export const MutedParticipantList = (): ReactElement => {
     mutedUserListQuery.next().then((members) => {
       setMutedUsers(members);
       setHasNext(mutedUserListQuery.hasNext);
-    });
+    }).catch(() => undefined);
   }, [channel]);
 
   const refreshList = useCallback(() => {
@@ -54,7 +54,7 @@ export const MutedParticipantList = (): ReactElement => {
     mutedUserListQuery.next().then((members) => {
       setMutedUsers(members);
       setHasNext(mutedUserListQuery.hasNext);
-    });
+    }).catch(() => undefined);
   }, [channel]);
   return (
     <>

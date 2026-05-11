@@ -94,7 +94,7 @@ export interface ModalProps {
   /** @deprecated Please use `onClose` instead, we will remove `onCancel` in v4. * */
   onCancel?: () => void;
 }
-export function Modal(props: ModalProps): ReactElement {
+export function Modal(props: ModalProps): ReactElement | null {
   const {
     children = null,
     className = '',
@@ -122,6 +122,15 @@ export function Modal(props: ModalProps): ReactElement {
   }, []);
 
   const { isMobile } = useMediaQueryContext();
+  if (typeof document === 'undefined') return null;
+
+  let modalRoot = document.getElementById(MODAL_ROOT);
+  if (!modalRoot) {
+    modalRoot = document.createElement('div');
+    modalRoot.setAttribute('id', MODAL_ROOT);
+    document.body.appendChild(modalRoot);
+  }
+
   return createPortal(
     <div className={classnames('sendbird-modal', className, isFullScreenOnMobile && isMobile && 'sendbird-modal--full-mobile')}>
       <div className={classnames('sendbird-modal__content', ...(Array.isArray(contentClassName) ? contentClassName : [contentClassName]))}>
@@ -142,7 +151,7 @@ export function Modal(props: ModalProps): ReactElement {
         }}
       />
     </div>,
-    document.getElementById(MODAL_ROOT) as HTMLElement,
+    modalRoot,
   );
 }
 export default Modal;

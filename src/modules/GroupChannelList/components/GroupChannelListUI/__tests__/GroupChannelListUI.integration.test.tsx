@@ -202,4 +202,36 @@ describe('GroupChannelListUI Integration Tests', () => {
     expect(onChannelSelect).toHaveBeenCalledTimes(1);
   });
 
+  it('handles custom preview selection once when the child calls onClick', () => {
+    const onChannelSelect = jest.fn();
+    const mockUseGroupChannelList = useGroupChannelListModule as jest.Mock;
+
+    mockUseGroupChannelList.mockReturnValue({
+      state: {
+        ...defaultMockState,
+        groupChannels: [
+          { name: 'test-group-channel-1', url: 'test-group-channel-url-1' },
+        ],
+        initialized: true,
+        onChannelSelect,
+      },
+    });
+
+    render(
+      <LocalizationContext.Provider value={{ stringSet: mockStringSet } as any}>
+        <GroupChannelListUI
+          renderChannelPreview={({ channel, onClick }) => (
+            <button type="button" data-testid="custom-channel-preview" onClick={() => onClick()}>
+              {channel.name}
+            </button>
+          )}
+        />
+      </LocalizationContext.Provider>,
+    );
+
+    fireEvent.click(screen.getByTestId('custom-channel-preview'));
+
+    expect(onChannelSelect).toHaveBeenCalledTimes(1);
+  });
+
 });

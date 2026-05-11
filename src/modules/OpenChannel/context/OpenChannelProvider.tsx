@@ -4,7 +4,11 @@ import React, {
   useReducer,
   useMemo,
 } from 'react';
-import type { FileMessageCreateParams, UserMessageCreateParams } from '@sendbird/chat/message';
+import type {
+  FileMessageCreateParams,
+  UserMessageCreateParams,
+  UserMessageUpdateParams,
+} from '@sendbird/chat/message';
 
 import * as utils from './utils';
 import { UserProfileProvider } from '../../../lib/UserProfileContext';
@@ -55,6 +59,15 @@ type OpenChannelQueries = {
 type OnBeforeSendFileMessage = (
   file: File,
 ) => FileMessageCreateParams | Promise<FileMessageCreateParams> | void | Promise<void>;
+type OnBeforeSendUserMessage = (
+  text: string,
+) => (
+  UserMessageCreateParams
+  | UserMessageUpdateParams
+  | Promise<UserMessageCreateParams | UserMessageUpdateParams>
+  | void
+  | Promise<void>
+);
 
 export interface OpenChannelProviderProps {
   channelUrl: string;
@@ -62,9 +75,9 @@ export interface OpenChannelProviderProps {
   isMessageGroupingEnabled?: boolean;
   queries?: OpenChannelQueries;
   messageLimit?: number;
-  onBeforeSendUserMessage?(text: string): UserMessageCreateParams;
+  onBeforeSendUserMessage?: OnBeforeSendUserMessage;
   onBeforeSendFileMessage?: OnBeforeSendFileMessage;
-  onChatHeaderActionClick?(): void;
+  onChatHeaderActionClick?(event: React.MouseEvent<HTMLElement>): void;
   onBackClick?(): void;
   disableUserProfile?: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
@@ -130,6 +143,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     isInvalid,
     hasMore,
     lastMessageTimestamp,
+    frozen,
     operators,
     bannedParticipantIds,
     mutedParticipantIds,
@@ -142,7 +156,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
   const userFilledMessageListParams = queries?.messageListParams;
   const disabled = !initialized
     || !isOnline
-    || utils.isDisabledBecauseFrozen(currentOpenChannel, userId)
+    || Boolean(frozen && currentOpenChannel && !utils.isOperator(currentOpenChannel, userId))
     || utils.isDisabledBecauseMuted(mutedParticipantIds, userId);
 
   // useMemo
@@ -238,7 +252,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
       if (channel && (channelUrl === channel?.url)) {
         messagesDispatcher({
           type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
-          payload: { message, channel },
+          payload: message,
         });
       }
     }));
@@ -312,7 +326,7 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
       updateMessage,
       deleteMessage,
       resendMessage,
-      frozen: messagesStore.frozen,
+      frozen,
       disableUserProfile,
       renderUserProfile,
       participants: messagesStore.participants,

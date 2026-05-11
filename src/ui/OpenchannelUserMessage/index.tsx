@@ -34,6 +34,7 @@ import { useMediaQueryContext } from '../../lib/MediaQueryContext';
 import OpenChannelMobileMenu from '../OpenChannelMobileMenu';
 import useLongPress from '../../hooks/useLongPress';
 import { isEditedMessage } from '../../utils';
+import { getWindowInnerWidth } from '../../utils/utils';
 
 interface OpenChannelUserMessageProps {
   className?: string | Array<string>;
@@ -76,6 +77,7 @@ export default function OpenchannelUserMessage({
   const isPending = checkIsPending(status);
   const isFailed = checkIsFailed(status);
   const sender = getSenderFromMessage(message);
+  const windowInnerWidth = getWindowInnerWidth();
 
   // place context menu top depending clientHeight of message component
   useEffect(() => {
@@ -84,7 +86,7 @@ export default function OpenchannelUserMessage({
     } else {
       setContextStyle({ top: '2px' });
     }
-  }, [window.innerWidth]);
+  }, [windowInnerWidth]);
 
   const onLongPress = useLongPress({
     onLongPress: () => {
@@ -349,6 +351,7 @@ export default function OpenchannelUserMessage({
         contextMenu && (
           <OpenChannelMobileMenu
             message={message}
+            isEphemeral={isEphemeral}
             parentRef={mobileMenuRef}
             hideMenu={() => {
               setContextMenu(false);

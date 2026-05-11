@@ -33,6 +33,7 @@ const mockUseOpenChannelContext = useOpenChannelContext as jest.Mock;
 
 const defaultContext = {
   currentOpenChannel: { url: 'open-channel-url', isFrozen: false },
+  frozen: false,
   amIBanned: false,
   loading: false,
   isInvalid: false,
@@ -84,6 +85,40 @@ describe('OpenChannelUI integration tests', () => {
     expect(screen.getByText('Error Placeholder')).toBeInTheDocument();
   });
 
+  it('keeps the loading placeholder ahead of the missing channel placeholder', () => {
+    mockUseOpenChannelContext.mockReturnValue({
+      ...defaultContext,
+      currentOpenChannel: null,
+      loading: true,
+    });
+
+    render(
+      <OpenChannelUI
+        renderPlaceHolderLoading={() => <div>Loading Placeholder</div>}
+        renderPlaceHolderError={() => <div>Error Placeholder</div>}
+      />,
+    );
+
+    expect(screen.getByText('Loading Placeholder')).toBeInTheDocument();
+    expect(screen.queryByText('Error Placeholder')).not.toBeInTheDocument();
+  });
+
+  it('keeps the invalid placeholder ahead of the missing channel placeholder', () => {
+    mockUseOpenChannelContext.mockReturnValue({
+      ...defaultContext,
+      currentOpenChannel: null,
+      isInvalid: true,
+    });
+
+    render(
+      <OpenChannelUI
+        renderPlaceHolderError={() => <div>Invalid Placeholder</div>}
+      />,
+    );
+
+    expect(screen.getByText('Invalid Placeholder')).toBeInTheDocument();
+  });
+
   it('renders an error placeholder when channel is missing or current user is banned', () => {
     mockUseOpenChannelContext.mockReturnValue({
       ...defaultContext,
@@ -103,7 +138,8 @@ describe('OpenChannelUI integration tests', () => {
   it('renders frozen notification for frozen open channels', () => {
     mockUseOpenChannelContext.mockReturnValue({
       ...defaultContext,
-      currentOpenChannel: { url: 'open-channel-url', isFrozen: true },
+      currentOpenChannel: { url: 'open-channel-url', isFrozen: false },
+      frozen: true,
     });
 
     render(<OpenChannelUI />);

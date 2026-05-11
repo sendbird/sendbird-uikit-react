@@ -41,7 +41,7 @@ export const OperatorList = ({
     operatorListQuery.next().then((operators) => {
       setOperators(operators);
       setHasNext(operatorListQuery.hasNext);
-    });
+    }).catch(() => undefined);
   }, [channel?.url, channel?.createOperatorListQuery]);
   useEffect(refreshList, [channel?.url]);
 

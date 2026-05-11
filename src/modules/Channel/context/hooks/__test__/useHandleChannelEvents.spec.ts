@@ -6,6 +6,8 @@ import * as messageActions from '../../dux/actionTypes';
 const mockMarkAsReadScheduler = { push: jest.fn() };
 const mockMarkAsDeliveredScheduler = { push: jest.fn() };
 const mockScrollIntoLast = jest.fn();
+let mockDisableMarkAsDelivered = false;
+let mockPremiumFeatureList = ['delivery_receipt'];
 
 jest.mock('@sendbird/chat/groupChannel', () => {
   const actual = jest.requireActual('@sendbird/chat/groupChannel');
@@ -26,12 +28,12 @@ jest.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
       config: {
         markAsReadScheduler: mockMarkAsReadScheduler,
         markAsDeliveredScheduler: mockMarkAsDeliveredScheduler,
-        disableMarkAsDelivered: false,
+        disableMarkAsDelivered: mockDisableMarkAsDelivered,
       },
       stores: {
         sdkStore: {
           sdk: {
-            appInfo: { premiumFeatureList: ['delivery_receipt'] },
+            appInfo: { premiumFeatureList: mockPremiumFeatureList },
           },
         },
       },
@@ -94,6 +96,8 @@ const renderUseHandleChannelEvents = ({
 describe('useHandleChannelEvents', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockDisableMarkAsDelivered = false;
+    mockPremiumFeatureList = ['delivery_receipt'];
     jest.useFakeTimers();
     document.body.innerHTML = '<div id="sendbird-dropdown-portal"></div><div id="sendbird-emoji-list-portal"></div>';
   });
@@ -152,6 +156,41 @@ describe('useHandleChannelEvents', () => {
     expect(mockMarkAsDeliveredScheduler.push).toHaveBeenCalledWith(currentGroupChannel);
   });
 
+  it('honors disabled read and delivery side-effect options for received messages', () => {
+    const currentGroupChannel = createChannel();
+    const { handler } = renderUseHandleChannelEvents({
+      currentGroupChannel,
+      disableMarkAsRead: true,
+    });
+
+    handler.onMessageReceived(currentGroupChannel, { messageId: 1 });
+    jest.runOnlyPendingTimers();
+
+    expect(mockMarkAsReadScheduler.push).not.toHaveBeenCalled();
+    expect(mockMarkAsDeliveredScheduler.push).toHaveBeenCalledWith(currentGroupChannel);
+
+    jest.clearAllMocks();
+    mockDisableMarkAsDelivered = true;
+    const disabledDelivered = renderUseHandleChannelEvents({ currentGroupChannel });
+
+    disabledDelivered.handler.onMessageReceived(currentGroupChannel, { messageId: 2 });
+    jest.runOnlyPendingTimers();
+
+    expect(mockMarkAsReadScheduler.push).toHaveBeenCalledWith(currentGroupChannel);
+    expect(mockMarkAsDeliveredScheduler.push).not.toHaveBeenCalled();
+
+    jest.clearAllMocks();
+    mockPremiumFeatureList = [];
+    mockDisableMarkAsDelivered = false;
+    const unavailableDeliveryReceipt = renderUseHandleChannelEvents({ currentGroupChannel });
+
+    unavailableDeliveryReceipt.handler.onMessageReceived(currentGroupChannel, { messageId: 3 });
+    jest.runOnlyPendingTimers();
+
+    expect(mockMarkAsReadScheduler.push).toHaveBeenCalledWith(currentGroupChannel);
+    expect(mockMarkAsDeliveredScheduler.push).not.toHaveBeenCalled();
+  });
+
   it('skips message receive side effects for stale, non-group, menu-open, or non-bottom channels', () => {
     const currentGroupChannel = createChannel();
     const { handler, messagesDispatcher } = renderUseHandleChannelEvents({ currentGroupChannel });
@@ -204,6 +243,19 @@ describe('useHandleChannelEvents', () => {
       payload: { channel: currentGroupChannel, typingMembers: [{ userId: 'typing-user' }] },
     });
     expect(setQuoteMessage).toHaveBeenCalledWith(null);
+  });
+
+  it('ignores message delete events from stale or non-group channels', () => {
+    const currentGroupChannel = createChannel();
+    const { handler, messagesDispatcher, setQuoteMessage } = renderUseHandleChannelEvents({ currentGroupChannel });
+    const staleChannel = createChannel('stale-url');
+    const nonGroupChannel = createChannel('channel-url', { isGroupChannel: jest.fn(() => false) });
+
+    handler.onMessageDeleted(staleChannel, 1);
+    handler.onMessageDeleted(nonGroupChannel, 2);
+
+    expect(messagesDispatcher).not.toHaveBeenCalled();
+    expect(setQuoteMessage).not.toHaveBeenCalled();
   });
 
   it('clears the channel when the current user is banned or leaves', () => {

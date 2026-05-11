@@ -304,6 +304,82 @@ describe('useSendbird', () => {
       expect(userStore.user).toEqual({ userId: 'mockUserId' });
     });
 
+    it('should sync the user store with the profile returned from updateCurrentUserInfo', async () => {
+      const connectedUser = {
+        userId: 'mockUserId',
+        nickname: 'Old nickname',
+        profileUrl: 'old-profile-url',
+      };
+      const updatedUser = {
+        userId: 'mockUserId',
+        nickname: 'Updated nickname',
+        profileUrl: 'updated-profile-url',
+      };
+      const mockSdk = {
+        connect: jest.fn().mockResolvedValue(connectedUser),
+        updateCurrentUserInfo: jest.fn().mockResolvedValue(updatedUser),
+      };
+      jest.requireMock('../utils').initSDK.mockReturnValueOnce(mockSdk);
+
+      const { result } = renderHook(() => useSendbird(), { wrapper });
+
+      await act(async () => {
+        await result.current.actions.connect({
+          logger: mockLogger,
+          userId: 'mockUserId',
+          appId: 'mockAppId',
+          nickname: 'Updated nickname',
+          profileUrl: 'updated-profile-url',
+        });
+      });
+
+      expect(mockSdk.updateCurrentUserInfo).toHaveBeenCalledWith({
+        nickname: 'Updated nickname',
+        profileUrl: 'updated-profile-url',
+      });
+      expect(mockStore.getState().stores.userStore.user).toEqual(updatedUser);
+    });
+
+    it('keeps the connection when updating current user info fails', async () => {
+      const connectedUser = {
+        userId: 'mockUserId',
+        nickname: 'Connected nickname',
+      };
+      const updateError = new Error('profile update failed');
+      const mockOnConnected = jest.fn();
+      const logger = { error: jest.fn(), info: jest.fn(), warning: jest.fn() };
+      const mockSdk = {
+        connect: jest.fn().mockResolvedValue(connectedUser),
+        updateCurrentUserInfo: jest.fn().mockRejectedValue(updateError),
+      };
+      jest.requireMock('../utils').initSDK.mockReturnValueOnce(mockSdk);
+
+      const { result } = renderHook(() => useSendbird(), { wrapper });
+
+      await act(async () => {
+        await result.current.actions.connect({
+          logger,
+          userId: 'mockUserId',
+          appId: 'mockAppId',
+          nickname: 'Updated nickname',
+          eventHandlers: {
+            connection: {
+              onConnected: mockOnConnected,
+            },
+          },
+        });
+      });
+
+      const sdkStore = mockStore.getState().stores.sdkStore;
+      expect(sdkStore.initialized).toBe(true);
+      expect(mockStore.getState().stores.userStore.user).toEqual(connectedUser);
+      expect(logger.warning).toHaveBeenCalledWith(
+        'SendbirdProvider | useSendbird/updateCurrentUserInfo failed',
+        updateError,
+      );
+      expect(mockOnConnected).toHaveBeenCalledWith(connectedUser);
+    });
+
     it('should disconnect and reset SDK correctly', async () => {
       const { result } = renderHook(() => useSendbird(), { wrapper });
 
@@ -386,6 +462,29 @@ describe('useSendbird', () => {
       expect(mockInitSDK).toHaveBeenCalledWith(expect.objectContaining({
         appId: 'mockAppId',
         isNewApp: true,
+      }));
+    });
+
+    it('should pass custom API and WebSocket hosts through to initSDK during connect', async () => {
+      const { result } = renderHook(() => useSendbird(), { wrapper });
+      const mockInitSDK = jest.requireMock('../utils').initSDK;
+      mockInitSDK.mockClear();
+
+      await act(async () => {
+        await result.current.actions.connect({
+          logger: mockLogger,
+          userId: 'mockUserId',
+          appId: 'mockAppId',
+          accessToken: 'mockAccessToken',
+          customApiHost: 'https://custom.api',
+          customWebSocketHost: 'wss://custom.websocket',
+        });
+      });
+
+      expect(mockInitSDK).toHaveBeenCalledWith(expect.objectContaining({
+        appId: 'mockAppId',
+        customApiHost: 'https://custom.api',
+        customWebSocketHost: 'wss://custom.websocket',
       }));
     });
 

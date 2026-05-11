@@ -15,7 +15,7 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
           class="sendbird-context-menu"
         >
           <div
-            class="sendbird-openchannel-og-message__top__left__avatar sendbird-avatar"
+            class="sendbird-openchannel-og-message__top__left__avatar sendbird-avatar sendbird-avatar--interactive"
             role="button"
             style="height: 28px; width: 28px; z-index: 0;"
             tabindex="0"
@@ -81,9 +81,7 @@ exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGM
             >
               <div
                 class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
-                role="button"
                 style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
-                tabindex="0"
               >
                 <test-file-stub />
               </div>

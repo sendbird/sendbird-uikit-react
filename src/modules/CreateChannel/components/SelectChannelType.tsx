@@ -37,6 +37,20 @@ const SelectChannelType: React.FC<SelectChannelTypeProps> = (props: SelectChanne
   const isBroadcastAvailable = isBroadcastChannelEnabled(sdk);
   const isSupergroupAvailable = isSuperGroupChannelEnabled(sdk);
 
+  const selectChannelType = (channelType: CHANNEL_TYPE) => {
+    setType(channelType);
+    setPageStep(1);
+  };
+
+  const handleChannelTypeKeyDown = (
+    event: React.KeyboardEvent<HTMLDivElement>,
+    channelType: CHANNEL_TYPE,
+  ) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    selectChannelType(channelType);
+  };
+
   return (
     <Modal
       titleText={stringSet?.MODAL__CREATE_CHANNEL__TITLE}
@@ -47,16 +61,10 @@ const SelectChannelType: React.FC<SelectChannelTypeProps> = (props: SelectChanne
       <div className="sendbird-add-channel__rectangle-wrap">
         <div
           className="sendbird-add-channel__rectangle"
-          onClick={() => {
-            setType(CHANNEL_TYPE.GROUP);
-            setPageStep(1);
-          }}
+          onClick={() => selectChannelType(CHANNEL_TYPE.GROUP)}
           role="button"
           tabIndex={0}
-          onKeyDown={() => {
-            setType(CHANNEL_TYPE.GROUP);
-            setPageStep(1);
-          }}
+          onKeyDown={(event) => handleChannelTypeKeyDown(event, CHANNEL_TYPE.GROUP)}
         >
           <Icon
             className="sendbird-add-channel__rectangle__chat-icon"
@@ -73,16 +81,10 @@ const SelectChannelType: React.FC<SelectChannelTypeProps> = (props: SelectChanne
           isSupergroupAvailable && (
             <div
               className="sendbird-add-channel__rectangle"
-              onClick={() => {
-                setType(CHANNEL_TYPE.SUPERGROUP);
-                setPageStep(1);
-              }}
+              onClick={() => selectChannelType(CHANNEL_TYPE.SUPERGROUP)}
               role="button"
               tabIndex={0}
-              onKeyDown={() => {
-                setType(CHANNEL_TYPE.SUPERGROUP);
-                setPageStep(1);
-              }}
+              onKeyDown={(event) => handleChannelTypeKeyDown(event, CHANNEL_TYPE.SUPERGROUP)}
             >
               <Icon
                 className="sendbird-add-channel__rectangle__supergroup-icon"
@@ -101,16 +103,10 @@ const SelectChannelType: React.FC<SelectChannelTypeProps> = (props: SelectChanne
           isBroadcastAvailable && (
             <div
               className="sendbird-add-channel__rectangle"
-              onClick={() => {
-                setType(CHANNEL_TYPE.BROADCAST);
-                setPageStep(1);
-              }}
+              onClick={() => selectChannelType(CHANNEL_TYPE.BROADCAST)}
               role="button"
               tabIndex={0}
-              onKeyDown={() => {
-                setType(CHANNEL_TYPE.BROADCAST);
-                setPageStep(1);
-              }}
+              onKeyDown={(event) => handleChannelTypeKeyDown(event, CHANNEL_TYPE.BROADCAST)}
             >
               <Icon
                 className="sendbird-add-channel__rectangle__broadcast-icon"

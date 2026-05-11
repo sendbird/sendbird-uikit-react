@@ -16,7 +16,8 @@ export const PlaybackTime = ({
   labelType = LabelTypography.CAPTION_2,
   labelColor = LabelColors.ONCONTENT_1,
 }: PlaybackTimeProps): React.ReactElement => {
-  const naturalTime = time < 0 ? 0 : time;
+  const safeTime = Number.isFinite(time) ? time : 0;
+  const naturalTime = safeTime < 0 ? 0 : safeTime;
 
   const hour = Math.floor(naturalTime / 3600000);
   const min = Math.floor(naturalTime % 3600000 / 60000);

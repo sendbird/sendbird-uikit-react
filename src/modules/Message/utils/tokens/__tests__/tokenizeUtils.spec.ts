@@ -105,6 +105,15 @@ describe('getUserMentionRegex', () => {
     const result = getUserMentionRegex(mentionedUsers, templatePrefix);
     expect(result).toEqual(/(@\{1\*\}|@\{2\+\})/g);
   });
+
+  it('should escape custom template prefixes in the regex pattern', () => {
+    const mentionedUsers = [
+      { userId: '1', nickname: 'user1' },
+      { userId: '2', nickname: 'user2' },
+    ] as User[];
+    const result = getUserMentionRegex(mentionedUsers, '$');
+    expect(result).toEqual(/(\$\{1\}|\$\{2\})/g);
+  });
 });
 
 describe('identifyMentions', () => {
@@ -118,6 +127,28 @@ describe('identifyMentions', () => {
     ] as User[];
     const templatePrefix = '@';
     const result = identifyMentions({ tokens, mentionedUsers, templatePrefix });
+    expect(result).toEqual([{
+      type: 'undetermined',
+      value: 'abc ',
+    }, {
+      type: 'mention',
+      value: 'User A',
+      userId: 'userA',
+    }, {
+      type: 'undetermined',
+      value: ' 123',
+    }]);
+  });
+
+  it('should match mentioned users with a custom template prefix', () => {
+    const tokens = [{
+      type: 'undetermined',
+      value: `abc ${'$'}{userA} 123`,
+    }] as UndeterminedToken[];
+    const mentionedUsers = [
+      { userId: 'userA', nickname: 'User A' },
+    ] as User[];
+    const result = identifyMentions({ tokens, mentionedUsers, templatePrefix: '$' });
     expect(result).toEqual([{
       type: 'undetermined',
       value: 'abc ',
@@ -327,5 +358,10 @@ describe('getWhiteSpacePreservedText', () => {
     const text = '';
     const result = getWhiteSpacePreservedText(text);
     expect(result).toEqual('');
+  });
+
+  it('should handle nullish input as empty string', () => {
+    expect(getWhiteSpacePreservedText(undefined)).toEqual('');
+    expect(getWhiteSpacePreservedText(null)).toEqual('');
   });
 });

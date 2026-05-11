@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import OpenChannelListActionTypes from '../dux/actionTypes';
@@ -26,6 +26,8 @@ function useSetupOpenChannelList(
     openChannelListDispatcher,
   }: StaticParams,
 ): void {
+  const openChannelListQueryKey = JSON.stringify(openChannelListQuery ?? {});
+  const stableOpenChannelListQuery = useMemo(() => openChannelListQuery, [openChannelListQueryKey]);
   useEffect(() => {
     if (sdkInitialized) {
       if (sdk?.openChannel) {
@@ -33,7 +35,7 @@ function useSetupOpenChannelList(
         const channelListQuery = createChannelListQuery({
           sdk,
           logger,
-          openChannelListQuery,
+          openChannelListQuery: stableOpenChannelListQuery,
           openChannelListDispatcher,
           logMessage: 'OpenChannelList|useSetupOpenChannelList: Succeeded create channelListQuery',
         });
@@ -72,7 +74,7 @@ function useSetupOpenChannelList(
         payload: null,
       });
     }
-  }, [sdkInitialized, openChannelListQuery]);
+  }, [sdkInitialized, stableOpenChannelListQuery]);
 }
 
 export default useSetupOpenChannelList;

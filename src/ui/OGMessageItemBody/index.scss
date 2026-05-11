@@ -3,13 +3,9 @@
 .sendbird-og-message-item-body {
   position: relative;
   display: inline-block;
-  // TODO: Change fixing width and height lengths
-  width: 320px;
-  min-width: 320px;
-  @include mobile() {
-    max-width: calc(100vw - 140px);
-    min-width: 160px;
-  }
+  width: 100%;
+  min-width: 160px;
+  max-width: 320px;
 
   .sendbird-og-message-item-body__text-bubble {
     position: relative;

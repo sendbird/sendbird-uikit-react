@@ -50,7 +50,7 @@ describe('ui/Icon', () => {
     );
 
     fireEvent.click(getByTestId('custom-icon'));
-    fireEvent.keyDown(getByTestId('custom-icon'));
+    fireEvent.keyDown(getByTestId('custom-icon'), { key: 'Enter' });
 
     expect(getByTestId('custom-icon')).toHaveTextContent('custom');
     expect(getByTestId('custom-icon')).toHaveClass('custom-one');

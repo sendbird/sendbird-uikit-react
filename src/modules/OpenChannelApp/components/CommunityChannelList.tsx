@@ -67,7 +67,7 @@ function CommunityChannelList({
       if (openChannels.length > 0) {
         setCurrentChannel(openChannels[0]);
       }
-    });
+    }).catch(() => undefined);
 
   }, [sdk]);
 
@@ -202,7 +202,7 @@ function CommunityChannelList({
           if (fetchMore && channelSource?.hasNext) {
             channelSource.next().then((openChannels) => {
               setChannels([...channels, ...openChannels]);
-            });
+            }).catch(() => undefined);
           }
         }}
       >

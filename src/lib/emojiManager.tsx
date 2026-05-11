@@ -22,7 +22,7 @@ export interface EmojiManagerParams {
 }
 
 export class EmojiManager {
-  private _emojiContainer!: EmojiContainer;
+  private _emojiContainer?: EmojiContainer;
 
   constructor(props: EmojiManagerParams) {
     const { sdk, logger } = props;
@@ -37,19 +37,18 @@ export class EmojiManager {
   }
 
   private get AllEmojisAsArray() {
-    return this._emojiContainer.emojiCategories.flatMap((category: EmojiCategory) => category.emojis);
+    return this._emojiContainer?.emojiCategories?.flatMap((category: EmojiCategory) => category.emojis) ?? [];
   }
 
   private get AllEmojisAsMap() {
-    return this._emojiContainer.emojiCategories
-      .flatMap((category: EmojiCategory) => category.emojis)
+    return this.AllEmojisAsArray
       .reduce((map: Map<string, string>, emoji: Emoji) => {
         map.set(emoji.key, emoji.url);
         return map;
       }, new Map<string, string>());
   }
 
-  public getAllEmojis(type: string) {
+  public getAllEmojis(type = 'array') {
     return match(type)
       .when((type) => ['array', 'arr'].includes(type), () => this.AllEmojisAsArray)
       .when((type) => ['map'].includes(type), () => this.AllEmojisAsMap)

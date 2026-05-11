@@ -47,6 +47,7 @@ export default function reducer(
         ...state,
         currentOpenChannel: gottenChannel,
         isInvalid: false,
+        frozen: Boolean(gottenChannel.isFrozen),
         operators: operators,
         participants: operators,
         bannedParticipantIds: [],
@@ -132,13 +133,16 @@ export default function reducer(
     }
     case actionTypes.SENDING_MESSAGE_FAILED: {
       const sentMessage = action.payload;
+      if (!sentMessage) {
+        return state;
+      }
       sentMessage.sendingStatus = 'failed';
       if (!(state.allMessages.some((m) => (m as SendableMessageType)?.reqId === sentMessage?.reqId))) {
         // Handling failed first than sending start issue
         return {
           ...state,
           allMessages: [
-            ...state.allMessages.filter((m) => !compareIds((m as SendableMessageType).reqId, sentMessage)),
+            ...state.allMessages.filter((m) => !compareIds((m as SendableMessageType).reqId, sentMessage.reqId)),
             sentMessage,
           ],
         };
@@ -421,6 +425,7 @@ export default function reducer(
       return {
         ...state,
         currentOpenChannel: changedChannel,
+        frozen: Boolean(changedChannel.isFrozen),
       };
     }
     case actionTypes.ON_CHANNEL_DELETED: {
@@ -430,6 +435,7 @@ export default function reducer(
         return {
           ...state,
           currentOpenChannel: null,
+          frozen: false,
         };
       }
       return state;

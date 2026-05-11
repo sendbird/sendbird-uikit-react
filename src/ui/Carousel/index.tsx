@@ -1,6 +1,7 @@
 import './index.scss';
 import React, { ReactElement, useRef, useState } from 'react';
 import { useMediaQueryContext } from '../../lib/MediaQueryContext';
+import { getWindowInnerWidth } from '../../utils/utils';
 
 const PADDING_WIDTH = 24;
 const CONTENT_LEFT_WIDTH = 40;
@@ -48,7 +49,7 @@ export function Carousel({
 }: CarouselProps): ReactElement {
   const { isMobile } = useMediaQueryContext();
   const carouselRef = useRef<HTMLDivElement>(null);
-  const screenWidth = window.innerWidth;
+  const screenWidth = getWindowInnerWidth();
   const defaultItemWidth = carouselRef.current?.clientWidth ?? 0;
   const itemWidths = items.map((item) => {
     if (shouldRenderAsFixed(item)) {

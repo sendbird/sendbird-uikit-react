@@ -42,7 +42,7 @@ export default function ParticipantList({
     setParticipantListQuery(participantListQuery);
     participantListQuery.next().then((participants) => {
       setParticipants(participants);
-    });
+    }).catch(() => undefined);
   }, [channel]);
   const refreshList = useCallback(() => {
     if (!channel) {
@@ -52,7 +52,7 @@ export default function ParticipantList({
     const participantListQuery = channel?.createParticipantListQuery({ limit: 10 });
     participantListQuery.next().then((participants) => {
       setParticipants(participants);
-    });
+    }).catch(() => undefined);
   }, [channel]);
   return (
     <div
@@ -71,7 +71,7 @@ export default function ParticipantList({
                 ...(participants ?? []),
                 ...fetchedParticipants,
               ]);
-            });
+            }).catch(() => undefined);
           }
         }
       }}

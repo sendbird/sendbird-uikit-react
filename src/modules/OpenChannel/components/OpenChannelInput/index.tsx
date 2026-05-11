@@ -8,7 +8,15 @@ export type MessageInputWrapperProps = {
 };
 
 export default React.forwardRef<HTMLInputElement, MessageInputWrapperProps>((props, ref) => {
-  const { currentOpenChannel, disabled, handleSendMessage, handleFileUpload, amIMuted } = useOpenChannelContext();
+  const {
+    currentOpenChannel,
+    disabled,
+    handleSendMessage,
+    handleFileUpload,
+    amIMuted,
+    amIOperator,
+    frozen,
+  } = useOpenChannelContext();
 
   const channel = currentOpenChannel;
 
@@ -16,6 +24,9 @@ export default React.forwardRef<HTMLInputElement, MessageInputWrapperProps>((pro
   const { value } = props;
 
   function getPlaceHolderString() {
+    if (frozen && !amIOperator) {
+      return stringSet.MESSAGE_INPUT__PLACE_HOLDER__FROZEN || stringSet.MESSAGE_INPUT__PLACE_HOLDER__DISABLED;
+    }
     if (amIMuted) {
       return stringSet.MESSAGE_INPUT__PLACE_HOLDER__MUTED;
     }

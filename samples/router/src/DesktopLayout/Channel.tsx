@@ -12,6 +12,8 @@ export default function Channel() {
   const [searchParams] = useSearchParams()
   const messageId = searchParams.get('messageId')
   const createdAt = searchParams.get('createdAt')
+  const startingPoint = createdAt ? Number(createdAt) : undefined
+  const animatedMessageId = messageId ? Number(messageId) : undefined
   const navigate = useNavigate()
   return (
     <div className='sendbird-chat-desktop__channel'>
@@ -23,8 +25,8 @@ export default function Channel() {
         onSearchClick={() => {
           navigate(`/channels/${channelUrl}/search`)
         }}
-        startingPoint={Number(createdAt)}
-        animatedMessageId={Number(messageId)}
+        startingPoint={startingPoint}
+        animatedMessageId={animatedMessageId}
         showSearchIcon
         onChatHeaderActionClick={() => {
           navigate(`/channels/${channelUrl}/settings`)

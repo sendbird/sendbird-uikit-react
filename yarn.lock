@@ -2812,6 +2812,7 @@ __metadata:
     "@rollup/plugin-typescript": ^11.1.5
     "@sendbird/chat": ^4.21.0
     "@sendbird/react-uikit-message-template-view": ^0.1.0
+    "@sendbird/uikit-message-template": ^0.1.0
     "@sendbird/uikit-tools": ^0.1.0
     "@storybook/addon-essentials": ^8.6.15
     "@storybook/manager-api": ^8.6.15

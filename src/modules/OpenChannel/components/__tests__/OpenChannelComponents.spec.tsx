@@ -63,6 +63,9 @@ jest.mock('../../../../ui/OpenchannelFileMessage', () => (props: any) => (
 jest.mock('../../../../ui/OpenchannelThumbnailMessage', () => (props: any) => (
   <button type="button" data-testid="thumbnail-message" onClick={() => props.onClick(true)}>{props.message.name}</button>
 ));
+jest.mock('../../../../ui/UnknownMessageItemBody', () => (props: any) => (
+  <div data-testid="unknown-message">{props.message.messageId}</div>
+));
 jest.mock('../OpenChannelMessage/RemoveMessageModal', () => (props: any) => (
   <div data-testid="remove-modal">
     <button type="button" data-testid="delete-message" onClick={props.onDeleteMessage}>delete</button>
@@ -84,10 +87,12 @@ jest.mock('../OpenChannelHeader', () => jest.requireActual('../OpenChannelHeader
 jest.mock('../OpenChannelInput', () => jest.requireActual('../OpenChannelInput').default);
 
 const stringSet = {
+  DATE_FORMAT__MESSAGE_CREATED_AT: 'p',
   DATE_FORMAT__MESSAGE_LIST__DATE_SEPARATOR: 'PP',
   OPEN_CHANNEL_CONVERSATION__TITLE_PARTICIPANTS: 'participants',
   NO_TITLE: 'No title',
   CHANNEL_FROZEN: 'Frozen',
+  MESSAGE_INPUT__PLACE_HOLDER__FROZEN: 'Frozen input',
   MESSAGE_INPUT__PLACE_HOLDER__MUTED: 'Muted',
   MESSAGE_INPUT__PLACE_HOLDER__DISABLED: 'Disabled',
 };
@@ -109,6 +114,7 @@ const context = {
   handleSendMessage: jest.fn(),
   handleFileUpload: jest.fn(),
   disabled: false,
+  frozen: false,
   amIMuted: false,
   amIBanned: false,
   loading: false,
@@ -173,6 +179,9 @@ describe('OpenChannel legacy components', () => {
     fireEvent.click(screen.getByTestId('thumbnail-message'));
     fireEvent.click(screen.getByTestId('delete-file'));
     expect(context.deleteMessage).toHaveBeenCalledWith(expect.objectContaining({ messageId: 5 }));
+
+    rerender(<OpenChannelMessage message={{ messageId: 6, messageType: 'unknown', sender: { userId: 'other' } } as any} />);
+    expect(screen.getByTestId('unknown-message')).toHaveTextContent('6');
   });
 
   it('renders message list empty and populated states plus scroll button', () => {
@@ -193,6 +202,31 @@ describe('OpenChannel legacy components', () => {
     fireEvent.scroll(scrollContainer);
     fireEvent.click(container.querySelector('.sendbird-openchannel-conversation-scroll__container__scroll-bottom-button') as Element);
     expect(scrollTo).toHaveBeenCalledWith(0, 300);
+  });
+
+  it('passes adjacent open channel messages into grouping calculation', () => {
+    const createdAt = new Date('2024-01-01T00:00:00.000Z').valueOf();
+    setup({
+      allMessages: [
+        { messageId: 1, createdAt, messageType: 'user', message: 'first', sendingStatus: 'succeeded', sender: { userId: 'other' } },
+        { messageId: 2, createdAt, messageType: 'user', message: 'second', sendingStatus: 'succeeded', sender: { userId: 'other' } },
+      ],
+    });
+
+    render(
+      <OpenChannelMessageList
+        renderMessage={({ message, chainTop, chainBottom }) => (
+          <div data-testid={`grouping-${message.messageId}`}>
+            {String(chainTop)}
+            -
+            {String(chainBottom)}
+          </div>
+        )}
+      />,
+    );
+
+    expect(screen.getByTestId('grouping-1')).toHaveTextContent('false-true');
+    expect(screen.getByTestId('grouping-2')).toHaveTextContent('true-false');
   });
 
   it('renders header, input placeholders, and OpenChannelUI states', () => {
@@ -224,6 +258,19 @@ describe('OpenChannel legacy components', () => {
     );
     expect(screen.getByTestId('placeholder')).toHaveTextContent('Muted');
 
+    setup({
+      currentOpenChannel: { ...currentOpenChannel, isFrozen: false },
+      disabled: true,
+      frozen: true,
+      amIOperator: false,
+    });
+    rerender(
+      <LocalizationContext.Provider value={{ stringSet } as any}>
+        <OpenChannelInput />
+      </LocalizationContext.Provider>,
+    );
+    expect(screen.getByTestId('placeholder')).toHaveTextContent('Frozen input');
+
     setup({ currentOpenChannel: null });
     rerender(
       <LocalizationContext.Provider value={{ stringSet } as any}>
@@ -232,7 +279,7 @@ describe('OpenChannel legacy components', () => {
     );
     expect(screen.queryByTestId('message-input')).toBeNull();
 
-    setup({ currentOpenChannel: { ...currentOpenChannel, isFrozen: true } });
+    setup({ currentOpenChannel: { ...currentOpenChannel, isFrozen: false }, frozen: true });
     rerender(<OpenChannelUI renderHeader={() => <div>header</div>} renderMessageInput={() => <div>input</div>} />);
     expect(screen.getByText('header')).toBeInTheDocument();
     expect(screen.getByTestId('frozen')).toBeInTheDocument();

@@ -9,6 +9,7 @@ import useDeleteMessageCallback from '../useDeleteMessageCallback';
 import useFileUploadCallback from '../useFileUploadCallback';
 import useResendMessageCallback from '../useResendMessageCallback';
 import useSendMessageCallback from '../useSendMessageCallback';
+import useUpdateMessageCallback from '../useUpdateMessageCallback';
 
 jest.mock('../../../../../utils/compressImages', () => ({
   compressImages: jest.fn(),
@@ -81,7 +82,7 @@ describe('OpenChannel message callback hooks', () => {
     jest.restoreAllMocks();
   });
 
-  it('sends open-channel user messages and handles muted failures', () => {
+  it('sends open-channel user messages and handles muted failures', async () => {
     const chain = createChain();
     const channel = { sendUserMessage: jest.fn(() => chain) };
     const dispatcher = jest.fn();
@@ -92,8 +93,8 @@ describe('OpenChannel message callback hooks', () => {
       { sdk: sdk as any, logger: logger as any, messagesDispatcher: dispatcher, scrollRef: { current: document.createElement('div') } },
     ));
 
-    act(() => {
-      result.current();
+    await act(async () => {
+      await result.current();
     });
 
     expect(channel.sendUserMessage).toHaveBeenCalledWith({ message: 'hello' });
@@ -108,7 +109,7 @@ describe('OpenChannel message callback hooks', () => {
     expect(openChannelUtils.scrollIntoLast).toHaveBeenCalled();
   });
 
-  it('uses custom open-channel send params when provided', () => {
+  it('uses custom open-channel send params when provided', async () => {
     const channel = { sendUserMessage: jest.fn(() => createChain()) };
     const onBeforeSendUserMessage = jest.fn(() => ({ message: 'custom' }));
     const { result } = renderHook(() => useSendMessageCallback(
@@ -121,12 +122,110 @@ describe('OpenChannel message callback hooks', () => {
       { sdk: {} as any, logger: logger as any, messagesDispatcher: jest.fn(), scrollRef: { current: null } },
     ));
 
-    act(() => {
-      result.current();
+    await act(async () => {
+      await result.current();
     });
 
     expect(onBeforeSendUserMessage).toHaveBeenCalledWith('original');
     expect(channel.sendUserMessage).toHaveBeenCalledWith({ message: 'custom' });
+  });
+
+  it('keeps the failed message returned by the open-channel send callback', async () => {
+    const failedMessage = { messageId: 3, reqId: 'req-3' };
+    const chain: any = {
+      onPending: jest.fn(() => chain),
+      onSucceeded: jest.fn(() => chain),
+      onFailed: jest.fn((callback) => {
+        callback({ code: 500, message: 'failed' }, failedMessage);
+        return chain;
+      }),
+    };
+    const channel = { sendUserMessage: jest.fn(() => chain) };
+    const dispatcher = jest.fn();
+    const { result } = renderHook(() => useSendMessageCallback(
+      {
+        currentOpenChannel: channel as any,
+        messageInputRef: { current: { innerText: 'hello' } } as any,
+        checkScrollBottom: jest.fn(),
+      },
+      { sdk: {} as any, logger: logger as any, messagesDispatcher: dispatcher, scrollRef: { current: null } },
+    ));
+
+    await act(async () => {
+      await result.current();
+    });
+
+    expect(dispatcher).toHaveBeenCalledWith({
+      type: actionTypes.SENDING_MESSAGE_FAILED,
+      payload: failedMessage,
+    });
+  });
+
+  it('awaits async custom open-channel send params and falls back when the hook returns void', async () => {
+    const asyncChannel = { sendUserMessage: jest.fn(() => createChain()) };
+    const onBeforeAsync = jest.fn().mockResolvedValue({ message: 'async-custom' });
+    const asyncHook = renderHook(() => useSendMessageCallback(
+      {
+        currentOpenChannel: asyncChannel as any,
+        onBeforeSendUserMessage: onBeforeAsync,
+        messageInputRef: { current: { innerText: 'original' } } as any,
+        checkScrollBottom: jest.fn(),
+      },
+      { sdk: {} as any, logger: logger as any, messagesDispatcher: jest.fn(), scrollRef: { current: null } },
+    ));
+
+    await act(async () => {
+      await asyncHook.result.current();
+    });
+
+    expect(asyncChannel.sendUserMessage).toHaveBeenCalledWith({ message: 'async-custom' });
+
+    const voidChannel = { sendUserMessage: jest.fn(() => createChain()) };
+    const onBeforeVoid = jest.fn();
+    const voidHook = renderHook(() => useSendMessageCallback(
+      {
+        currentOpenChannel: voidChannel as any,
+        onBeforeSendUserMessage: onBeforeVoid,
+        messageInputRef: { current: { innerText: 'fallback' } } as any,
+        checkScrollBottom: jest.fn(),
+      },
+      { sdk: {} as any, logger: logger as any, messagesDispatcher: jest.fn(), scrollRef: { current: null } },
+    ));
+
+    await act(async () => {
+      await voidHook.result.current();
+    });
+
+    expect(voidChannel.sendUserMessage).toHaveBeenCalledWith({ message: 'fallback' });
+  });
+
+  it('awaits async custom open-channel update params', async () => {
+    const updatedMessage = { messageId: 10, message: 'async-edit' };
+    const channel = {
+      updateUserMessage: jest.fn().mockResolvedValue(updatedMessage),
+    };
+    const onBeforeSendUserMessage = jest.fn().mockResolvedValue({ message: 'async-edit' });
+    const callback = jest.fn();
+    const dispatcher = jest.fn();
+    const { result } = renderHook(() => useUpdateMessageCallback(
+      { currentOpenChannel: channel as any, onBeforeSendUserMessage },
+      { logger: logger as any, messagesDispatcher: dispatcher },
+    ));
+
+    await act(async () => {
+      await result.current(10, 'original-edit', callback);
+    });
+
+    expect(onBeforeSendUserMessage).toHaveBeenCalledWith('original-edit');
+    expect(channel.updateUserMessage).toHaveBeenCalledWith(10, { message: 'async-edit' });
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(dispatcher).toHaveBeenCalledWith(expect.objectContaining({
+      type: actionTypes.ON_MESSAGE_UPDATED,
+      payload: {
+        channel,
+        message: updatedMessage,
+      },
+    }));
   });
 
   it('uploads compressed files and opens the size-limit modal for oversized files', async () => {

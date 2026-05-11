@@ -21,6 +21,8 @@ const BottomSheet: React.FunctionComponent<BottomSheetProps> = (props: BottomShe
 
   // https://github.com/testing-library/react-testing-library/issues/62#issuecomment-438653348
   const portalRoot = useRef<HTMLElement| null>();
+  if (typeof document === 'undefined') return null;
+
   portalRoot.current = document.getElementById(MODAL_ROOT);
   if (!portalRoot.current) {
     portalRoot.current = document.createElement('div');

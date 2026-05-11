@@ -239,7 +239,9 @@ function setupChannelList({
 
         if (canSetMarkAsDelivered && !disableMarkAsDelivered) {
           sortedChannelList.forEach((channel) => {
-            markAsDeliveredScheduler.push(channel);
+            if (channel?.unreadMessageCount > 0) {
+              markAsDeliveredScheduler.push(channel);
+            }
           });
         }
       })

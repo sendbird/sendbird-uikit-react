@@ -1,5 +1,6 @@
 import topics from './pubSub/topics';
 import type {
+  UploadProgressHandler,
   User,
   UserUpdateParams,
 } from '@sendbird/chat';
@@ -506,16 +507,22 @@ export const getSendUserMessage = (state: SendbirdState, publishingModules: Publ
  * sendFileMessage(
  *  channel: GroupChannel | OpenChannel,
  *  params: FileMessageCreateParams,
+ *  progressHandler?: UploadProgressHandler,
  * )
  *  .onPending((message) => {})
  *  .onFailed((error, message) => {})
  *  .onSucceeded((message) => {})
  */
 export const getSendFileMessage = (state: SendbirdState, publishingModules: PublishingModuleType[] = []) => (
-  (channel: GroupChannel | OpenChannel, params: FileMessageCreateParams): UikitMessageHandler => {
+  (
+    channel: GroupChannel | OpenChannel,
+    params: FileMessageCreateParams,
+    progressHandler?: UploadProgressHandler,
+  ): UikitMessageHandler => {
     const handler = new UikitMessageHandler();
     const pubSub = getPubSub(state);
-    channel.sendFileMessage(params)
+    const messageParams = progressHandler ? { ...params, progressHandler } : params;
+    channel.sendFileMessage(messageParams)
       .onFailed((error, message) => {
         pubSub.publish(
           topics.SEND_MESSAGE_FAILED,

@@ -174,6 +174,11 @@ describe('useResendMessageCallback', () => {
       isResendable: true,
       isFileMessage: () => true,
     } as FileMessage;
+    const sentFileMessage = {
+      ...mockFileMessage,
+      messageId: 100,
+      sendingStatus: SendingStatus.SUCCEEDED,
+    } as FileMessage;
 
     const createMockPromise = () => {
       const chainMethods = {
@@ -188,7 +193,7 @@ describe('useResendMessageCallback', () => {
       });
 
       chainMethods.onSucceeded.mockImplementation((cb) => {
-        cb(mockFileMessage);
+        cb(sentFileMessage);
         return chainMethods;
       });
 
@@ -215,8 +220,13 @@ describe('useResendMessageCallback', () => {
     result.current(mockFileMessage);
 
     expect(mockResendMessageStart).toHaveBeenCalledWith(mockFileMessage);
-    expect(mockSendMessageSuccess).toHaveBeenCalledWith(mockFileMessage);
-    expect(mockPubSub.publish).toHaveBeenCalled();
+    expect(mockSendMessageSuccess).toHaveBeenCalledWith(sentFileMessage);
+    expect(mockPubSub.publish).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        message: sentFileMessage,
+      }),
+    );
   });
 
   it('should resend multiple files message successfully', () => {

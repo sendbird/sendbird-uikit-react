@@ -96,6 +96,31 @@ describe('ui/MentionLabel', () => {
     });
   });
 
+  it('does not re-query the sdk after the mentioned user has been fetched', async () => {
+    const fakeUser = { userId: 'other', nickname: 'Other' };
+    const sdk = mkSdk([fakeUser]);
+    renderWithState({ sdk });
+
+    const { container } = render(
+      <MentionLabel
+        mentionTemplate="@"
+        mentionedUserId="other"
+        mentionedUserNickname="Other"
+        isByMe={false}
+      />,
+    );
+    const anchor = container.querySelector('a.sendbird-word__mention') as HTMLAnchorElement;
+    fireEvent.click(anchor);
+
+    await waitFor(() => {
+      expect(sdk.createApplicationUserListQuery).toHaveBeenCalledTimes(1);
+    });
+
+    fireEvent.click(container.querySelector('a.sendbird-word__mention') as HTMLAnchorElement);
+
+    expect(sdk.createApplicationUserListQuery).toHaveBeenCalledTimes(1);
+  });
+
   it('passes the mentioned user id as the userIdsFilter on the query', async () => {
     const fakeUser = { userId: 'someone', nickname: 'Someone' };
     const sdk = mkSdk([fakeUser]);
@@ -144,5 +169,27 @@ describe('ui/MentionLabel', () => {
     );
     fireEvent.click(container.querySelector('a.sendbird-word__mention') as HTMLAnchorElement);
     await waitFor(() => expect(sdk.createApplicationUserListQuery).toHaveBeenCalled());
+  });
+
+  it('catches rejected member lookup queries without crashing', async () => {
+    const query = {
+      next: jest.fn().mockRejectedValue(new Error('query failed')),
+    };
+    const sdk = {
+      createApplicationUserListQuery: jest.fn().mockReturnValue(query),
+    };
+    renderWithState({ sdk });
+
+    const { container } = render(
+      <MentionLabel
+        mentionTemplate="@"
+        mentionedUserId="other"
+        mentionedUserNickname="Other"
+        isByMe={false}
+      />,
+    );
+    fireEvent.click(container.querySelector('a.sendbird-word__mention') as HTMLAnchorElement);
+
+    await waitFor(() => expect(query.next).toHaveBeenCalled());
   });
 });

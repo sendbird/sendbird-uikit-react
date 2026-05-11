@@ -47,6 +47,27 @@ describe('EmojiManager', () => {
     expect(manager.emojiContainer).toBe(emojiContainer);
   });
 
+  it('returns empty emoji data before the SDK emoji request resolves', async () => {
+    const logger = { info: jest.fn(), warning: jest.fn() };
+    let resolveEmojis: (value: typeof emojiContainer) => void = jest.fn();
+    const sdk = {
+      getAllEmoji: jest.fn().mockImplementation(() => new Promise((resolve) => {
+        resolveEmojis = resolve;
+      })),
+    };
+
+    const manager = new EmojiManager({ sdk: sdk as any, logger: logger as any });
+
+    expect(manager.getAllEmojis()).toEqual([]);
+    expect(manager.getAllEmojis('map')).toEqual(new Map());
+    expect(manager.getEmojiUrl('smile')).toBe('');
+
+    resolveEmojis(emojiContainer);
+    await Promise.resolve();
+
+    expect(manager.getEmojiUrl('smile')).toBe('smile.png');
+  });
+
   it('logs a warning when emoji loading fails', async () => {
     const logger = { info: jest.fn(), warning: jest.fn() };
     const sdk = {

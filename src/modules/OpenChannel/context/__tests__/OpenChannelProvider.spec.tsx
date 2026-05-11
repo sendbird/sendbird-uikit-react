@@ -144,5 +144,25 @@ describe('OpenChannelProvider', () => {
     });
 
     expect(result.current.allMessages).toEqual([sentMessage]);
+
+    const pendingFileMessage = { messageId: 2, reqId: 'req-2' };
+    act(() => {
+      mockSubscribers.get(topics.SEND_MESSAGE_START)?.({
+        channel: mockOpenChannel,
+        message: pendingFileMessage,
+      });
+    });
+
+    expect(result.current.allMessages).toEqual([sentMessage, pendingFileMessage]);
+
+    const sentFileMessage = { messageId: 20, reqId: 'req-2' };
+    act(() => {
+      mockSubscribers.get(topics.SEND_FILE_MESSAGE)?.({
+        channel: mockOpenChannel,
+        message: sentFileMessage,
+      });
+    });
+
+    expect(result.current.allMessages).toEqual([sentMessage, sentFileMessage]);
   });
 });

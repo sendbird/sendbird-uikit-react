@@ -41,7 +41,7 @@ export function MembersModal({
     });
     memberListQuery?.next().then((members) => {
       setMembers(members);
-    });
+    }).catch(() => undefined);
     setMemberQuery(memberListQuery ?? null);
   }, []);
   return (
@@ -63,7 +63,7 @@ export function MembersModal({
                     ...members,
                     ...o,
                   ]);
-                });
+                }).catch(() => undefined);
               }
             },
           })}

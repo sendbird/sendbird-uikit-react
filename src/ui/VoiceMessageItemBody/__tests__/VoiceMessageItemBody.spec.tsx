@@ -85,4 +85,28 @@ describe('VoiceMessageItemBody', () => {
     fireEvent.click(container.querySelector('.sendbird-voice-message-item-body__status-button__button') as Element);
     expect(pause).toHaveBeenCalledTimes(1);
   });
+
+  it('does not render NaN playback time when voice duration metadata is invalid', () => {
+    (useVoicePlayer as jest.Mock).mockReturnValue({
+      play,
+      pause,
+      playbackTime: 0,
+      duration: 0,
+      playingStatus: VOICE_PLAYER_STATUS.IDLE,
+    });
+
+    const { container } = render(
+      <VoiceMessageItemBody
+        channelUrl="channel-url"
+        message={createMessage({
+          metaArrays: [
+            { key: 'KEY_VOICE_MESSAGE_DURATION', value: ['invalid'] },
+          ],
+        }) as any}
+      />,
+    );
+
+    expect(container.textContent).toContain('00:00');
+    expect(container.textContent).not.toContain('NaN');
+  });
 });

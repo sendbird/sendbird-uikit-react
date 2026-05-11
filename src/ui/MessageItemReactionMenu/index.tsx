@@ -40,7 +40,7 @@ export function MessageEmojiMenu({
   const containerRef = useRef(null);
   const filteredEmojis = useMemo(() => {
     return getEmojiListByCategoryIds(emojiContainer, filterEmojiCategoryIds?.(message));
-  }, [emojiContainer, filterEmojiCategoryIds]);
+  }, [emojiContainer, filterEmojiCategoryIds, message]);
 
   if (isPendingMessage(message) || isFailedMessage(message)) {
     return null;

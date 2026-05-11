@@ -177,7 +177,7 @@ export default function useMessageTemplateUtils({
         });
         localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify(parsedTemplates));
       } else {
-        localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify([newParsedTemplates]));
+        localStorage.setItem(CACHED_MESSAGE_TEMPLATES_KEY, JSON.stringify(newParsedTemplates));
       }
       // Update memory
       actions.upsertMessageTemplates({

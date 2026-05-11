@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, ChangeEventHandler } from 'react';
+import React, { useState, useContext, useEffect, useRef, ChangeEventHandler } from 'react';
 import './index.scss';
 
 import MessageSearch, { MessageSearchUIProps } from './components/MessageSearchUI';
@@ -29,17 +29,23 @@ function MessageSearchPannel(props: MessageSearchPannelProps): JSX.Element {
   const [inputString, setInputString] = useState('');
   const [loading, setLoading] = useState(false);
   const { stringSet } = useContext(LocalizationContext);
+  const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  let timeout: any = null;
   useEffect(() => {
-    if (timeout) {
-      clearTimeout(timeout);
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
-    timeout = setTimeout(() => {
+    debounceTimeoutRef.current = setTimeout(() => {
       setSearchString(inputString);
-      setLoading(true);
-      timeout = null;
+      setLoading(Boolean(inputString));
+      debounceTimeoutRef.current = null;
     }, 500);
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+        debounceTimeoutRef.current = null;
+      }
+    };
   }, [inputString]);
 
   const handleOnChangeInputString: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -54,6 +60,7 @@ function MessageSearchPannel(props: MessageSearchPannelProps): JSX.Element {
     e.stopPropagation();
     setInputString('');
     setSearchString('');
+    setLoading(false);
   };
 
   return (

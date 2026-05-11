@@ -46,7 +46,7 @@ export const BannedUserList = ({
     bannedUserListQuery.next().then((users) => {
       setMembers(users);
       setHasNext(bannedUserListQuery.hasNext);
-    });
+    }).catch(() => undefined);
   }, [channel?.url, channel?.createBannedUserListQuery]);
   useEffect(refreshList, [channel?.url]);
 

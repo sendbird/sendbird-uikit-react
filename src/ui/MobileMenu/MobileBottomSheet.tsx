@@ -19,7 +19,7 @@ import BottomSheet from '../BottomSheet';
 import ImageRenderer from '../ImageRenderer';
 import ReactionButton from '../ReactionButton';
 import Icon, { IconTypes, IconColors } from '../Icon';
-import { classnames } from '../../utils/utils';
+import { classnames, getWindowInnerWidth } from '../../utils/utils';
 import { MessageMenuProvider, MobileMessageMenuContextProps } from '../MessageMenu/MessageMenuProvider';
 import {
   CopyMenuItem,
@@ -97,7 +97,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     || showMenuItemDownload;
   const canRenderMenuItems = !!renderMenuItems || hasDefaultMenuItems;
 
-  const maxEmojisPerRow = Math.floor(window.innerWidth / EMOJI_SIZE) - 1;
+  const maxEmojisPerRow = Math.max(1, Math.floor(getWindowInnerWidth(EMOJI_SIZE * 2) / EMOJI_SIZE) - 1);
   const [showEmojisOnly, setShowEmojisOnly] = useState<boolean>(false);
   const emojis = emojiContainer && getEmojiListAll(emojiContainer);
   const visibleEmojis = showEmojisOnly ? emojis : emojis?.slice(0, maxEmojisPerRow);

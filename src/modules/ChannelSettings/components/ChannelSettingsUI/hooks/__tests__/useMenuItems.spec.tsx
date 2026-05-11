@@ -56,6 +56,7 @@ describe('useMenuItems', () => {
 
     expect(result.current.operator.operators.label.children).toBe('Operators');
     expect(result.current.operator.freezeChannel.hideMenu).toBe(true);
+    expect(result.current.operator.mutedUsers.hideMenu).toBe(true);
     expect(result.current.nonOperator.allUsers.label.children).toBe('Members');
 
     render(<>{result.current.operator.allUsers.rightComponent?.({ onClick: jest.fn() } as any)}</>);

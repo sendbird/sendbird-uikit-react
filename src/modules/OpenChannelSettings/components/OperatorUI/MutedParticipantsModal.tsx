@@ -37,7 +37,7 @@ export default function MutedParticipantsModal({
     });
     mutedUserListQuery?.next().then((users) => {
       setMutedUsers(users);
-    });
+    }).catch(() => undefined);
     if (mutedUserListQuery) { setUserListQuery(mutedUserListQuery); }
   }, []);
   return (
@@ -64,7 +64,7 @@ export default function MutedParticipantsModal({
                   ...mutedUsers,
                   ...o,
                 ]);
-              });
+              }).catch(() => undefined);
             }
           }}
         >

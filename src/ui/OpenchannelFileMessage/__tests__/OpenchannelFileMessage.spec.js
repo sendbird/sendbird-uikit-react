@@ -49,6 +49,22 @@ describe('ui/OpenchannelFileMessage', () => {
     ).toBe(0);
   });
 
+  it('should render plainUrl when url is empty', function() {
+    const plainUrl = 'fallback-file.pdf';
+    render(
+      <OpenchannelFileMessage
+        message={getFileMessage((m) => ({
+          ...m,
+          name: '',
+          url: '',
+          plainUrl,
+        }))}
+      />
+    );
+
+    expect(screen.getByText(plainUrl)).toBeTruthy();
+  });
+
   it('should not render elements when chainTop is true', function() {
     const { container } = render(
       <OpenchannelFileMessage

@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
+import { renderToString } from 'react-dom/server';
 import Carousel from '../index';
 
 const mockUseMediaQueryContext = jest.fn();
@@ -59,6 +60,21 @@ describe('Carousel', () => {
     fireEvent.mouseMove(carousel, { clientX: 100 });
     fireEvent.mouseLeave(carousel);
     expect(wrapper.style.transform).toBe('translateX(0px)');
+  });
+
+  it('renders without window during server-side rendering', () => {
+    const windowDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'window');
+    Object.defineProperty(globalThis, 'window', { configurable: true, value: undefined });
+
+    try {
+      expect(() => renderToString(
+        <Carousel id="ssr-carousel" items={[createItem('First', 80), createItem('Second', 80)]} />,
+      )).not.toThrow();
+    } finally {
+      if (windowDescriptor) {
+        Object.defineProperty(globalThis, 'window', windowDescriptor);
+      }
+    }
   });
 
   it('ignores desktop mouse movement before dragging and below the swipe threshold', () => {

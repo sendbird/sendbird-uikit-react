@@ -41,16 +41,8 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
     isInvalid,
     messageInputRef,
     conversationScrollRef,
+    frozen,
   } = useOpenChannelContext();
-  if (
-    !currentOpenChannel
-    || !currentOpenChannel?.url
-    || amIBanned
-  ) {
-    return (renderPlaceHolderError?.()
-      || <div className={COMPONENT_CLASS_NAME}><PlaceHolder type={PlaceHolderTypes.NO_CHANNELS} /></div>
-    );
-  }
   if (loading) {
     return (renderPlaceHolderLoading?.()
       || <div className={COMPONENT_CLASS_NAME}><PlaceHolder type={PlaceHolderTypes.LOADING} /></div>
@@ -61,13 +53,22 @@ const OpenChannelUI: React.FC<OpenChannelUIProps> = ({
       || <div className={COMPONENT_CLASS_NAME}><PlaceHolder type={PlaceHolderTypes.WRONG} /></div>
     );
   }
+  if (
+    !currentOpenChannel
+    || !currentOpenChannel?.url
+    || amIBanned
+  ) {
+    return (renderPlaceHolderError?.()
+      || <div className={COMPONENT_CLASS_NAME}><PlaceHolder type={PlaceHolderTypes.NO_CHANNELS} /></div>
+    );
+  }
 
   const renderInputComponent = renderMessageInput || renderInput;
 
   return (
     <div className={COMPONENT_CLASS_NAME}>
       {renderHeader?.() || <OpenChannelHeader />}
-      {currentOpenChannel?.isFrozen && <FrozenChannelNotification />}
+      {frozen && <FrozenChannelNotification />}
       <OpenChannelMessageList
         ref={conversationScrollRef}
         renderMessage={renderMessage}

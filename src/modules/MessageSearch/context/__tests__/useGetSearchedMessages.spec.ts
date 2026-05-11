@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import useGetSearchedMessages from '../hooks/useGetSearchedMessages';
 import useMessageSearch from '../hooks/useMessageSearch';
@@ -297,5 +297,53 @@ describe('useGetSearchedMessages', () => {
 
     expect(mockStartMessageSearch).toHaveBeenCalledTimes(2);
     expect(mockChannel.refresh).toHaveBeenCalledTimes(2);
+  });
+
+  it('ignores search results after unmount', async () => {
+    const mockMessages = [{ messageId: 1 }];
+    let resolveSearch!: (messages: typeof mockMessages) => void;
+    const searchRequest = new Promise<typeof mockMessages>((resolve) => {
+      resolveSearch = resolve;
+    });
+    const mockQuery = {
+      next: jest.fn(() => searchRequest),
+    };
+
+    mockSdk.createMessageSearchQuery.mockReturnValue(mockQuery);
+
+    const mockChannel = {
+      url: 'channel-url',
+      refresh: jest.fn().mockResolvedValue({
+        invitedAt: 1234567890,
+      }),
+    };
+
+    const { unmount } = renderHook(
+      () => useGetSearchedMessages(
+        {
+          currentChannel: mockChannel as unknown as GroupChannel,
+          channelUrl: 'channel-url',
+          requestString: 'search-term',
+          onResultLoaded: mockOnResultLoaded,
+        },
+        {
+          sdk: mockSdk as any,
+          logger: mockLogger as any,
+        },
+      ),
+    );
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+    unmount();
+
+    await act(async () => {
+      resolveSearch(mockMessages);
+      await searchRequest;
+    });
+
+    expect(mockGetSearchedMessages).not.toHaveBeenCalled();
+    expect(mockOnResultLoaded).not.toHaveBeenCalled();
   });
 });

@@ -6,13 +6,10 @@
   box-sizing: border-box;
   overflow: hidden;
   width: 100%;
-  min-width: 360px;
-  max-width: 400px;
+  min-width: 160px;
+  max-width: 360px;
   height: 270px;
   border-radius: 16px;
-  @include mobile() {
-    min-width: 160px;
-  }
   &.reactions {
     border-radius: 16px 16px 0px 0px;
   }

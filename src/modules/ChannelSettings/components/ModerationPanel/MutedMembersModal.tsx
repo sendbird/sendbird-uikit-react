@@ -41,7 +41,7 @@ export function MutedMembersModal({
     });
     memberUserListQuery?.next().then((members) => {
       setMembers(members);
-    });
+    }).catch(() => undefined);
     setMemberQuery(memberUserListQuery ?? null);
   }, []);
   return (
@@ -64,7 +64,7 @@ export function MutedMembersModal({
                     ...members,
                     ...o,
                   ]);
-                });
+                }).catch(() => undefined);
               }
             },
           })}

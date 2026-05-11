@@ -57,6 +57,16 @@ const createMessage = (messageId: number, userId = 'other') => ({
   isFileMessage: () => false,
 });
 
+const createAdminMessage = (messageId: number) => ({
+  messageId,
+  createdAt: messageId,
+  messageType: 'admin',
+  reactions: [],
+  isAdminMessage: () => true,
+  isUserMessage: () => false,
+  isFileMessage: () => false,
+});
+
 const scrollRef = { current: null as HTMLDivElement | null };
 
 const createGroupChannelState = (overrides = {}) => ({
@@ -176,6 +186,26 @@ describe('GroupChannel MessageList', () => {
     expect(context.actions.scrollToBottom).toHaveBeenCalledTimes(2);
   });
 
+  it('does not render a new-message count for admin-only received messages', () => {
+    const context = createGroupChannelState({
+      messages: [createMessage(1)],
+      newMessages: [createAdminMessage(2)],
+      isScrollBottomReached: false,
+      currentChannel: {
+        url: 'channel-url',
+        isFrozen: false,
+        unreadMessageCount: 0,
+        myLastRead: 1,
+        lastMessage: { createdAt: 2 },
+      },
+    });
+    (useGroupChannel as jest.Mock).mockReturnValue(context);
+
+    render(<MessageList renderMessage={({ message }: any) => <div>message-{message.messageId}</div>} />);
+
+    expect(screen.queryByTestId('new-count')).toBeNull();
+  });
+
   it('marks read when scrolled to the bottom with no unread separator pending', () => {
     const context = createGroupChannelState({
       messages: [createMessage(1), createMessage(2, 'me')],
@@ -199,6 +229,34 @@ describe('GroupChannel MessageList', () => {
     fireEvent.scroll(container);
 
     expect(context.actions.setIsScrollBottomReached).toHaveBeenCalledWith(true);
+  });
+
+  it('passes adjacent message data to renderMessage callbacks', () => {
+    const context = createGroupChannelState({
+      messages: [createMessage(1), createMessage(2), createMessage(3)],
+      currentChannel: {
+        url: 'channel-url',
+        isFrozen: false,
+        unreadMessageCount: 0,
+        myLastRead: 3,
+        lastMessage: { createdAt: 3 },
+      },
+    });
+    (useGroupChannel as jest.Mock).mockReturnValue(context);
+
+    render(
+      <MessageList
+        renderMessage={({ message, previousMessage, nextMessage }: any) => (
+          <div data-testid={`message-${message.messageId}`}>
+            {`${previousMessage?.messageId ?? 'none'}-${message.messageId}-${nextMessage?.messageId ?? 'none'}`}
+          </div>
+        )}
+      />,
+    );
+
+    expect(screen.getByTestId('message-1')).toHaveTextContent('none-1-2');
+    expect(screen.getByTestId('message-2')).toHaveTextContent('1-2-3');
+    expect(screen.getByTestId('message-3')).toHaveTextContent('2-3-none');
   });
 
   it('uses default renderers for messages and legacy unread notification', () => {

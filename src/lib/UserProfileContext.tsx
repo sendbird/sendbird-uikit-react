@@ -52,7 +52,7 @@ export const UserProfileProvider = ({
     <UserProfileContext.Provider
       value={{
         isOpenChannel,
-        disableUserProfile: _disableUserProfile ?? !config.common.enableUsingDefaultUserProfile,
+        disableUserProfile: _disableUserProfile ?? !config.common?.enableUsingDefaultUserProfile,
         renderUserProfile: _renderUserProfile ?? config.renderUserProfile,
         onStartDirectMessage,
         /** legacy of onStartDirectMessage */

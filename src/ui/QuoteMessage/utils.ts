@@ -3,6 +3,9 @@ import { match } from 'ts-pattern';
 import { FileMessage, MultipleFilesMessage, UploadedFileInfo } from '@sendbird/chat/message';
 import { Thumbnail } from '@sendbird/chat/lib/__definition';
 
+type FileMessageWithPlainUrl = FileMessage & { plainUrl?: string };
+type UploadedFileInfoWithPlainUrl = UploadedFileInfo & { plainUrl?: string };
+
 export function getMessageFirstFileType(message: CoreMessageType): string {
   return match(message)
     .when(isFileMessage, () => {
@@ -37,10 +40,12 @@ export function getMessageFirstFileName(message: CoreMessageType): string {
 export function getMessageFirstFileUrl(message: CoreMessageType): string {
   return match(message)
     .when(isFileMessage, () => {
-      return (message as FileMessage)?.url ?? '';
+      const fileMessage = message as FileMessageWithPlainUrl;
+      return fileMessage?.url || fileMessage?.plainUrl || '';
     })
     .when(isMultipleFilesMessage, () => {
-      return getFirstFileInfo(message as MultipleFilesMessage)?.url ?? '';
+      const firstFileInfo = getFirstFileInfo(message as MultipleFilesMessage) as UploadedFileInfoWithPlainUrl | null;
+      return firstFileInfo?.url || firstFileInfo?.plainUrl || '';
     })
     .otherwise(() => {
       return '';

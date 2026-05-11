@@ -55,7 +55,8 @@ export const VoiceMessageItemBody = ({
     const DEFAULT_MAX_SIZE = 1;
     if (message?.metaArrays) {
       const duration = message?.metaArrays.find((metaArray) => metaArray.key === 'KEY_VOICE_MESSAGE_DURATION')?.value[0];
-      return duration ? parseInt(duration) : DEFAULT_MAX_SIZE;
+      const parsedDuration = duration ? parseInt(duration) : DEFAULT_MAX_SIZE;
+      return Number.isFinite(parsedDuration) ? parsedDuration : DEFAULT_MAX_SIZE;
     }
     return DEFAULT_MAX_SIZE;
   }, [message?.metaArrays]);

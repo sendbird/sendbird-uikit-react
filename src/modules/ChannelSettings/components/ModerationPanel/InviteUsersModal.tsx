@@ -36,7 +36,7 @@ export function InviteUsersModal({
   const onScroll = useOnScrollPositionChangeDetector({
     async onReachedBottom() {
       if (userListQuery?.hasNext) {
-        const users = await userListQuery.next();
+        const users = await userListQuery.next().catch(() => []);
         setUsers((prev) => [...prev, ...users]);
       }
     },
@@ -77,7 +77,7 @@ export function InviteUsersModal({
     const fetchUsersAndSetQuery = async () => {
       const query: UserListQuery = globalUserListQuery?.() ?? sdk?.createApplicationUserListQuery(queries?.applicationUserListQuery);
       if (query) {
-        const users = await query.next();
+        const users = await query.next().catch(() => []);
         setUserListQuery(query);
         setUsers(users);
       }

@@ -50,10 +50,16 @@ function useGetSearchedMessages(
   }, [logger, setQueryInvalid, onResultLoaded]);
 
   useEffect(() => {
+    let disposed = false;
+
     startMessageSearch();
     if (sdk && channelUrl && sdk.createMessageSearchQuery && currentChannel && requestString) {
       currentChannel.refresh()
         .then((channel) => {
+          if (disposed) {
+            return;
+          }
+
           const inputSearchMessageQueryObject: MessageSearchQueryParams = {
             order: MessageSearchOrder.TIMESTAMP,
             channelUrl,
@@ -65,21 +71,47 @@ function useGetSearchedMessages(
           startGettingSearchedMessages(createdQuery);
 
           createdQuery.next().then((messages) => {
+            if (disposed) {
+              return;
+            }
             logger.info('MessageSearch | useGetSearchedMessages: succeeded getting messages', messages);
             getSearchedMessages(messages as ClientSentMessages[], createdQuery);
             if (onResultLoaded && typeof onResultLoaded === 'function') {
               onResultLoaded(messages as CoreMessageType[], undefined);
             }
-          }).catch(handleSearchError);
+          }).catch((error) => {
+            if (!disposed) {
+              handleSearchError(error);
+            }
+          });
         })
         .catch((error) => {
+          if (disposed) {
+            return;
+          }
           logger.warning('MessageSearch | useGetSearchedMessages: failed getting channel.', error);
           handleSearchError(error);
         });
     } else if (!requestString) {
       logger.info('MessageSearch | useGetSearchedMessages: search string is empty');
     }
-  }, [channelUrl, messageSearchQuery, requestString, currentChannel, retryCount]);
+
+    return () => {
+      disposed = true;
+    };
+  }, [
+    channelUrl,
+    messageSearchQuery,
+    requestString,
+    currentChannel,
+    retryCount,
+    sdk,
+    logger,
+    startMessageSearch,
+    getSearchedMessages,
+    startGettingSearchedMessages,
+    handleSearchError,
+  ]);
 }
 
 export default useGetSearchedMessages;

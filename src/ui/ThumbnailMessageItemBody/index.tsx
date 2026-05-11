@@ -57,7 +57,8 @@ export default function ThumbnailMessageItemBody({
         className="sendbird-thumbnail-message-item-body__thumbnail"
         url={thumbnailUrl || getMessageFirstFileUrl(message)}
         alt={getMessageFirstFileType(message)}
-        width={style?.width || '360px'}
+        width={style?.width || '100%'}
+        maxSideLength="360px"
         height={style?.height || '270px'}
         onLoad={() => { setImageRendered(true); }}
         placeHolder={({ style }) => (

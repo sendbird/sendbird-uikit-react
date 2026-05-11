@@ -36,7 +36,7 @@ export function BannedUsersModal({
     if (bannedUserListQuery) {
       bannedUserListQuery.next().then((users) => {
         setMembers(users);
-      });
+      }).catch(() => undefined);
       setMemberQuery(bannedUserListQuery);
     }
   }, []);
@@ -61,7 +61,7 @@ export function BannedUsersModal({
                     ...members,
                     ...o,
                   ]);
-                });
+                }).catch(() => undefined);
               }
             },
           })}

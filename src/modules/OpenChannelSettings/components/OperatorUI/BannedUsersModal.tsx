@@ -35,7 +35,7 @@ export default function BannedUsersModal({
     const bannedUserListQuery = channel?.createBannedUserListQuery();
     bannedUserListQuery?.next().then((users) => {
       setBannedUsers(users);
-    });
+    }).catch(() => undefined);
     setUserListQuery(bannedUserListQuery ?? null);
   }, []);
   return (
@@ -62,7 +62,7 @@ export default function BannedUsersModal({
                   ...bannedUsers,
                   ...o,
                 ]);
-              });
+              }).catch(() => undefined);
             }
           }}
         >

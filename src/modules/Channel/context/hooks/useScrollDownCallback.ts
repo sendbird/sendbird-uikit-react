@@ -76,7 +76,16 @@ function useScrollDownCallback(
           setTimeout(() => cb([null, error]));
         });
     },
-    [currentGroupChannel, latestMessageTimeStamp, hasMoreNext, replyType],
+    [
+      currentGroupChannel,
+      latestMessageTimeStamp,
+      userFilledMessageListQuery,
+      hasMoreNext,
+      replyType,
+      logger,
+      messagesDispatcher,
+      sdk?.appInfo?.useReaction,
+    ],
   );
 }
 

@@ -6,6 +6,8 @@ import { MessageSearchProvider } from '../MessageSearchProvider';
 import useMessageSearch from '../hooks/useMessageSearch';
 import useScrollCallback from '../hooks/useScrollCallback';
 
+const mockScrollCallback = jest.fn();
+
 jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
   default: jest.fn(() => ({
@@ -37,7 +39,7 @@ jest.mock('../hooks/useGetSearchedMessages', () => ({
 
 jest.mock('../hooks/useScrollCallback', () => ({
   __esModule: true,
-  default: jest.fn(() => jest.fn()),
+  default: jest.fn(() => mockScrollCallback),
 }));
 
 jest.mock('../hooks/useSearchStringEffect', () => ({
@@ -81,6 +83,38 @@ describe('MessageSearchProvider', () => {
     const { result } = renderHook(() => useMessageSearch(), { wrapper });
 
     expect(result.current.state).toMatchObject(initialState);
+  });
+
+  it('refreshes handleOnScroll when search results become pageable', async () => {
+    const wrapper = ({ children }) => (
+      <MessageSearchProvider channelUrl="test-channel">
+        {children}
+      </MessageSearchProvider>
+    );
+
+    const { result } = renderHook(() => useMessageSearch(), { wrapper });
+    const mockQuery = { channelUrl: 'test-channel', hasNext: true };
+
+    await act(async () => {
+      result.current.actions.startGettingSearchedMessages(mockQuery as any);
+      result.current.actions.getSearchedMessages([{ messageId: 1 }] as any, mockQuery as any);
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.hasMoreResult).toBe(true);
+    });
+
+    act(() => {
+      result.current.state.handleOnScroll({
+        target: {
+          scrollTop: 100,
+          scrollHeight: 150,
+          clientHeight: 50,
+        },
+      });
+    });
+
+    expect(mockScrollCallback).toHaveBeenCalledWith(expect.any(Function));
   });
 
   it('updates state correctly when props change', async () => {

@@ -40,7 +40,7 @@ export default function ParticipantsModal({
     setParticipantListQuery(participantListQuery);
     participantListQuery.next().then((participantList) => {
       setParticipants(participantList);
-    });
+    }).catch(() => undefined);
   }, []);
   return (
     <div>
@@ -67,7 +67,7 @@ export default function ParticipantsModal({
                     ...(participants ?? []),
                     ...fetchedParticipants,
                   ]);
-                });
+                }).catch(() => undefined);
               }
             }
           }}

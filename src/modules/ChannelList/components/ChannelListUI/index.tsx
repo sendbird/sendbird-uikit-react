@@ -51,6 +51,7 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
 
   const renderListItem = (props: { item: GroupChannel; index: number }) => {
     const { item: channel, index } = props;
+    let isClickHandled = false;
 
     const previewProps: ChannelPreviewProps = {
       channel,
@@ -58,7 +59,14 @@ const ChannelListUI: React.FC<ChannelListUIProps> = (props: ChannelListUIProps) 
       isSelected: channel?.url === currentChannel?.url,
       isTyping: typingChannels?.some(({ url }) => url === channel?.url),
       renderChannelAction: (props) => <ChannelPreviewAction {...props} />,
-      onClick() {
+      onClick(event) {
+        event?.stopPropagation?.();
+        if (isClickHandled) return;
+        isClickHandled = true;
+        setTimeout(() => {
+          isClickHandled = false;
+        }, 0);
+
         if (!isOnline && !sdk?.isCacheEnabled) {
           logger.warning('ChannelList: Inactivated clicking channel item during offline.');
           return;

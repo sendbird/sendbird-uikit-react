@@ -164,6 +164,109 @@ describe('legacy channel callbacks', () => {
     jest.useRealTimers();
   });
 
+  it('refreshes legacy Channel scroll callbacks when pagination or query params change', async () => {
+    const prevMessages = [{ messageId: 1 }];
+    const nextMessages = [{ messageId: 2 }];
+    const channel = {
+      getMessagesByTimestamp: jest.fn()
+        .mockResolvedValueOnce(prevMessages)
+        .mockResolvedValueOnce(nextMessages),
+    };
+    const messagesDispatcher = jest.fn();
+
+    const { result: prev, rerender: rerenderPrev } = renderHook(
+      ({ hasMorePrev, query, useReaction }) => useScrollCallback(
+        {
+          currentGroupChannel: channel as any,
+          oldestMessageTimeStamp: 10,
+          userFilledMessageListQuery: query,
+          replyType: 'NONE' as any,
+        },
+        {
+          hasMorePrev,
+          logger: logger as any,
+          messagesDispatcher,
+          sdk: { appInfo: { useReaction } } as any,
+        },
+      ),
+      {
+        initialProps: {
+          hasMorePrev: false,
+          query: { prevResultSize: 4 },
+          useReaction: false,
+        },
+      },
+    );
+
+    prev.current(jest.fn());
+    expect(channel.getMessagesByTimestamp).not.toHaveBeenCalled();
+
+    rerenderPrev({
+      hasMorePrev: true,
+      query: { prevResultSize: 7 },
+      useReaction: true,
+    });
+    prev.current(jest.fn());
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(channel.getMessagesByTimestamp).toHaveBeenNthCalledWith(1, 10, expect.objectContaining({
+      prevResultSize: 7,
+      includeReactions: true,
+    }));
+    expect(messagesDispatcher).toHaveBeenCalledWith({
+      type: actionTypes.FETCH_PREV_MESSAGES_SUCCESS,
+      payload: { currentGroupChannel: channel, messages: prevMessages },
+    });
+
+    const { result: next, rerender: rerenderNext } = renderHook(
+      ({ hasMoreNext, query, useReaction }) => useScrollDownCallback(
+        {
+          currentGroupChannel: channel as any,
+          latestMessageTimeStamp: 20,
+          userFilledMessageListQuery: query,
+          hasMoreNext,
+          replyType: 'NONE' as any,
+        },
+        {
+          logger: logger as any,
+          messagesDispatcher,
+          sdk: { appInfo: { useReaction } } as any,
+        },
+      ),
+      {
+        initialProps: {
+          hasMoreNext: false,
+          query: { nextResultSize: 4 },
+          useReaction: false,
+        },
+      },
+    );
+
+    next.current(jest.fn());
+    expect(channel.getMessagesByTimestamp).toHaveBeenCalledTimes(1);
+
+    rerenderNext({
+      hasMoreNext: true,
+      query: { nextResultSize: 8 },
+      useReaction: true,
+    });
+    next.current(jest.fn());
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(channel.getMessagesByTimestamp).toHaveBeenNthCalledWith(2, 20, expect.objectContaining({
+      nextResultSize: 8,
+      includeReactions: true,
+    }));
+    expect(messagesDispatcher).toHaveBeenCalledWith({
+      type: actionTypes.FETCH_NEXT_MESSAGES_SUCCESS,
+      payload: { currentGroupChannel: channel, messages: nextMessages },
+    });
+  });
+
   it('updates, deletes, sends voice messages, and toggles reactions', async () => {
     jest.useFakeTimers();
     const messagesDispatcher = jest.fn();
