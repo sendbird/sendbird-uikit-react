@@ -25,6 +25,11 @@ import useThread from './useThread';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
 
+type OnBeforeSendFileMessage = (
+  file: File,
+  quotedMessage?: SendableMessageType,
+) => FileMessageCreateParams | Promise<FileMessageCreateParams> | void | Promise<void>;
+
 export interface ThreadProviderProps extends
   Pick<UserProfileProviderProps, 'disableUserProfile' | 'renderUserProfile'> {
   children?: React.ReactElement;
@@ -33,7 +38,7 @@ export interface ThreadProviderProps extends
   onHeaderActionClick?: () => void;
   onMoveToParentMessage?: (props: { message: SendableMessageType, channel: GroupChannel }) => void;
   onBeforeSendUserMessage?: (message: string, quotedMessage?: SendableMessageType) => UserMessageCreateParams;
-  onBeforeSendFileMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
+  onBeforeSendFileMessage?: OnBeforeSendFileMessage;
   onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
   onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;
   onBeforeDownloadFileMessage?: OnBeforeDownloadFileMessageType;

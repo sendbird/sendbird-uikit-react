@@ -206,7 +206,49 @@ describe('useSendFileMessage', () => {
       },
     ));
 
-    result.current(mockFile, mockQuoteMessage);
+    await act(async () => {
+      result.current(mockFile, mockQuoteMessage);
+      await Promise.resolve();
+    });
+
+    expect(mockOnBeforeSendFileMessage).toHaveBeenCalledWith(mockFile, mockQuoteMessage);
+    expect(mockChannel.sendFileMessage).toHaveBeenCalledWith(mockCustomParams);
+  });
+
+  it('awaits promise params from onBeforeSendFileMessage', async () => {
+    const mockCustomParams = {
+      file: mockFile,
+      customField: 'async-test',
+    };
+    const mockOnBeforeSendFileMessage = jest.fn().mockResolvedValue(mockCustomParams);
+
+    const mockSendFileMessagePromise = {
+      onPending: jest.fn().mockReturnThis(),
+      onSucceeded: jest.fn().mockReturnThis(),
+      onFailed: jest.fn().mockReturnThis(),
+    };
+
+    const mockChannel = {
+      sendFileMessage: jest.fn().mockReturnValue(mockSendFileMessagePromise),
+    } as unknown as GroupChannel;
+
+    const { result } = renderHook(() => useSendFileMessage(
+      {
+        currentChannel: mockChannel,
+        onBeforeSendFileMessage: mockOnBeforeSendFileMessage,
+        sendMessageStart: mockSendMessageStart,
+        sendMessageFailure: mockSendMessageFailure,
+      },
+      {
+        logger: mockLogger,
+        pubSub: mockPubSub,
+      },
+    ));
+
+    await act(async () => {
+      result.current(mockFile, mockQuoteMessage);
+      await Promise.resolve();
+    });
 
     expect(mockOnBeforeSendFileMessage).toHaveBeenCalledWith(mockFile, mockQuoteMessage);
     expect(mockChannel.sendFileMessage).toHaveBeenCalledWith(mockCustomParams);

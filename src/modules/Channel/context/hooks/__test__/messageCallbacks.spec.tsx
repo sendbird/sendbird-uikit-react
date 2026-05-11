@@ -141,6 +141,24 @@ describe('Channel message callback hooks', () => {
     expect(dispatcher).toHaveBeenCalledWith(expect.objectContaining({ type: actionTypes.SEND_MESSAGE_SUCCESS }));
   });
 
+  it('awaits promise params from onBeforeSendFileMessage', async () => {
+    const chain = createChain();
+    const channel = {
+      sendFileMessage: jest.fn(() => chain),
+    };
+    const file = new File(['file'], 'file.png', { type: 'image/png' });
+    const onBeforeSendFileMessage = jest.fn().mockResolvedValue({ fileUrl: 'custom-url' });
+    const { result } = renderHook(() => useSendFileMessageCallback(
+      { currentGroupChannel: channel as any, onBeforeSendFileMessage },
+      { logger: logger as any, pubSub: pubSub as any, scrollRef: { current: null }, messagesDispatcher: jest.fn() },
+    ));
+
+    await expect(result.current[0](file)).rejects.toThrow('failed');
+
+    expect(onBeforeSendFileMessage).toHaveBeenCalledWith(file, undefined);
+    expect(channel.sendFileMessage).toHaveBeenCalledWith({ fileUrl: 'custom-url' });
+  });
+
   it('resends user, file, and multiple-files messages and publishes upload progress', () => {
     const channel = {
       url: 'channel-url',

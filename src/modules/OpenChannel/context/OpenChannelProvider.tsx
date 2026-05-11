@@ -52,6 +52,10 @@ type OpenChannelQueries = {
   },
 };
 
+type OnBeforeSendFileMessage = (
+  file: File,
+) => FileMessageCreateParams | Promise<FileMessageCreateParams> | void | Promise<void>;
+
 export interface OpenChannelProviderProps {
   channelUrl: string;
   children?: React.ReactElement;
@@ -59,7 +63,7 @@ export interface OpenChannelProviderProps {
   queries?: OpenChannelQueries;
   messageLimit?: number;
   onBeforeSendUserMessage?(text: string): UserMessageCreateParams;
-  onBeforeSendFileMessage?(file_: File): FileMessageCreateParams;
+  onBeforeSendFileMessage?: OnBeforeSendFileMessage;
   onChatHeaderActionClick?(): void;
   onBackClick?(): void;
   disableUserProfile?: boolean;

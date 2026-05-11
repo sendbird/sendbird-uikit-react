@@ -15,7 +15,9 @@ import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 
 interface DynamicParams {
   currentOpenChannel: OpenChannel | null;
-  onBeforeSendFileMessage?: (file: File) => FileMessageCreateParams;
+  onBeforeSendFileMessage?: (
+    file: File,
+  ) => FileMessageCreateParams | Promise<FileMessageCreateParams> | void | Promise<void>;
   checkScrollBottom: () => boolean;
   imageCompression?: ImageCompressionOptions;
 }
@@ -90,7 +92,8 @@ function useFileUploadCallback({
       if (createCustomParams) {
         logger.info('OpenChannel | useFileUploadCallback: Creating params using onBeforeSendFileMessage', onBeforeSendFileMessage);
       }
-      const params = onBeforeSendFileMessage ? onBeforeSendFileMessage(compressedFile) : createParamsDefault(compressedFile);
+      const customParams = await onBeforeSendFileMessage?.(compressedFile);
+      const params = customParams || createParamsDefault(compressedFile);
       logger.info('OpenChannel | useFileUploadCallback: Uploading file message start', params);
 
       currentOpenChannel?.sendFileMessage(params)

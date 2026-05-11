@@ -38,7 +38,7 @@ export const useUserProfileContext = () => useContext(UserProfileContext);
 
 export const UserProfileProvider = ({
   isOpenChannel = false,
-  disableUserProfile: _disableUserProfile = false,
+  disableUserProfile: _disableUserProfile,
   renderUserProfile: _renderUserProfile,
   onUserProfileMessage: _onUserProfileMessage,
   onStartDirectMessage: _onStartDirectMessage,

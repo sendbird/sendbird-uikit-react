@@ -210,7 +210,7 @@ describe('GroupChannel MessageInputWrapper useHandleUploadFiles', () => {
       ]);
     });
     expect(openModal).toHaveBeenLastCalledWith(expect.objectContaining({
-      modalProps: expect.objectContaining({ titleText: 'Only 1048576 files' }),
+      modalProps: expect.objectContaining({ titleText: 'Only 2 files' }),
     }));
 
     await act(async () => {

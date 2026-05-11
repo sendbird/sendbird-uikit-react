@@ -12,8 +12,9 @@ export interface TypingIndicatorTextProps {
 }
 
 export const TypingIndicatorText = ({ members }: TypingIndicatorTextProps) => {
+  const { stringSet } = useContext(LocalizationContext);
+
   function getText() {
-    const { stringSet } = useContext(LocalizationContext);
     if (!members || members.length === 0) {
       return '';
     }

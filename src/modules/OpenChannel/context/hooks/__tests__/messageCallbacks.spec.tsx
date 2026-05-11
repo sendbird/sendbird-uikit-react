@@ -175,6 +175,22 @@ describe('OpenChannel message callback hooks', () => {
     expect(channel.sendFileMessage).toHaveBeenCalledWith({ fileUrl: 'custom' });
   });
 
+  it('awaits promise params from onBeforeSendFileMessage', async () => {
+    const channel = { sendFileMessage: jest.fn(() => createChain()) };
+    const onBeforeSendFileMessage = jest.fn().mockResolvedValue({ fileUrl: 'async-custom' });
+    const { result } = renderHook(() => useFileUploadCallback(
+      { currentOpenChannel: channel as any, onBeforeSendFileMessage },
+      { sdk: {} as any, logger: logger as any, messagesDispatcher: jest.fn(), scrollRef: { current: null } },
+    ));
+
+    await act(async () => {
+      await result.current(new File(['file'], 'file.png'));
+    });
+
+    expect(onBeforeSendFileMessage).toHaveBeenCalledWith(expect.any(File));
+    expect(channel.sendFileMessage).toHaveBeenCalledWith({ fileUrl: 'async-custom' });
+  });
+
   it('resends user and file messages and logs non-resendable messages', () => {
     const channel = { resendMessage: jest.fn(() => createChain()) };
     const dispatcher = jest.fn();

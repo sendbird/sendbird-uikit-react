@@ -65,6 +65,11 @@ export type ChannelQueries = {
   messageListParams?: MessageListParams;
 };
 
+type OnBeforeSendFileMessage = (
+  file: File,
+  quotedMessage?: SendableMessageType,
+) => FileMessageCreateParams | Promise<FileMessageCreateParams> | void | Promise<void>;
+
 export interface ChannelContextProps extends
   Pick<UserProfileProviderProps, 'disableUserProfile' | 'renderUserProfile'> {
   children?: React.ReactElement;
@@ -78,7 +83,7 @@ export interface ChannelContextProps extends
   highlightedMessage?: number | null;
   startingPoint?: number | null;
   onBeforeSendUserMessage?(text: string, quotedMessage?: SendableMessageType): UserMessageCreateParams;
-  onBeforeSendFileMessage?(file: File, quotedMessage?: SendableMessageType): FileMessageCreateParams;
+  onBeforeSendFileMessage?: OnBeforeSendFileMessage;
   onBeforeUpdateUserMessage?(text: string): UserMessageUpdateParams;
   onBeforeSendVoiceMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
   onBeforeSendMultipleFilesMessage?: (files: Array<File>, quotedMessage?: SendableMessageType) => MultipleFilesMessageCreateParams;

@@ -11,7 +11,10 @@ import { SCROLL_BOTTOM_DELAY_FOR_SEND } from '../../../../utils/consts';
 
 interface DynamicProps {
   currentChannel: GroupChannel | null;
-  onBeforeSendFileMessage?: (file: File, quotedMessage?: SendableMessageType) => FileMessageCreateParams;
+  onBeforeSendFileMessage?: (
+    file: File,
+    quotedMessage?: SendableMessageType,
+  ) => FileMessageCreateParams | Promise<FileMessageCreateParams> | void | Promise<void>;
   sendMessageStart: (message: SendableMessageType) => void;
   sendMessageFailure: (message: SendableMessageType) => void;
 }
@@ -36,18 +39,20 @@ export default function useSendFileMessageCallback({
   logger,
   pubSub,
 }: StaticProps): SendFileMessageFunctionType {
-  return useCallback((file, quoteMessage): Promise<FileMessage> => {
+  return useCallback(async (file, quoteMessage): Promise<FileMessage> => {
+    const createParamsDefault = () => {
+      const params = {} as FileMessageCreateParams;
+      params.file = file;
+      if (quoteMessage) {
+        params.isReplyToChannel = true;
+        params.parentMessageId = quoteMessage.messageId;
+      }
+      return params;
+    };
+    const customParams = await onBeforeSendFileMessage?.(file, quoteMessage);
+    const params = customParams || createParamsDefault();
+
     return new Promise((resolve, reject) => {
-      const createParamsDefault = () => {
-        const params = {} as FileMessageCreateParams;
-        params.file = file;
-        if (quoteMessage) {
-          params.isReplyToChannel = true;
-          params.parentMessageId = quoteMessage.messageId;
-        }
-        return params;
-      };
-      const params = onBeforeSendFileMessage?.(file, quoteMessage) ?? createParamsDefault();
       logger.info('Thread | useSendFileMessageCallback: Sending file message start.', params);
 
       if (currentChannel == null) {
