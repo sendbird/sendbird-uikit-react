@@ -22,5 +22,38 @@ export { default as sendbirdSelectors } from './lib/selectors';
 // for legacy parity, slowly remove
 export { default as sendBirdSelectors } from './lib/selectors';
 
-// Public enum included in AppProps
+// Public types included in module props and render callbacks
 export { TypingIndicatorType } from './types';
+export type {
+  ClientAdminMessage,
+  ClientFileMessage,
+  ClientMessage,
+  ClientMultipleFilesMessage,
+  ClientSentMessages,
+  ClientUserMessage,
+  EveryMessage,
+  HTMLTextDirection,
+  Nullable,
+  RenderCustomSeparatorProps,
+  RenderMessageParamsType,
+  RenderMessageProps,
+  RenderUserProfileProps,
+  ReplyType,
+  SendBirdProviderConfig,
+  SendbirdTheme,
+  SpaceFromTriggerType,
+  UploadedFileInfoWithUpload,
+  UserListQuery,
+} from './types';
+
+// Frequently requested non-smart helpers
+export {
+  getUIKitMessageType,
+  getUIKitMessageTypes,
+  isAdminMessage,
+  isFileMessage,
+  isMultipleFilesMessage,
+  isUserMessage,
+  isVoiceMessage,
+  isVoiceMessageMimeType,
+} from './utils';

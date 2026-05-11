@@ -85,6 +85,15 @@ describe('GroupChannelListItem', () => {
         isMultipleFilesMessage: () => true,
       }
     };
+    const adminMessageChannel = {
+      lastMessage: {
+        message: 'Admin notice',
+        isAdminMessage: () => true,
+        isUserMessage: () => false,
+        isFileMessage: () => false,
+        isMultipleFilesMessage: () => false,
+      }
+    };
     expect(
       getLastMessageText(channel, LabelStringSet)
     ).toBe('');
@@ -109,6 +118,9 @@ describe('GroupChannelListItem', () => {
     expect(
         getLastMessageText(mfmPhotoChannel, LabelStringSet)
     ).toBe(LabelStringSet.CHANNEL_PREVIEW_LAST_MESSAGE_FILE_TYPE_PHOTO);
+    expect(
+      getLastMessageText(adminMessageChannel, LabelStringSet)
+    ).toBe('Admin notice');
   });
 
   test('utils/getChannelTitle returns channelTitle', function () {

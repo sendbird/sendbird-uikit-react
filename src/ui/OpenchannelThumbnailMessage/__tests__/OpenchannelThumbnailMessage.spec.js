@@ -39,6 +39,7 @@ describe('ui/OpenchannelThumbnailMessage', () => {
     expect(
       container.getElementsByClassName('sendbird-openchannel-thumbnail-message__right__body__wrap__image').length
     ).toBe(1);
+    expect(screen.getByTestId('sendbird-openchannel-thumbnail-message__right__body__wrap__loader')).toBeTruthy();
     expect(
       container.getElementsByClassName('sendbird-openchannel-thumbnail-message__context-menu--icon').length
     ).toBe(1);

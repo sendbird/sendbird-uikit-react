@@ -21,6 +21,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
       replyType,
       threadReplySelectType,
       isReactionEnabled,
+      isMessageStatusEnabled,
       nicknamesMap,
       renderUserMentionItem,
       filterEmojiCategoryIds,
@@ -74,6 +75,7 @@ export const Message = (props: MessageProps): React.ReactElement => {
       }
       shouldRenderSuggestedReplies={shouldRenderSuggestedReplies}
       isReactionEnabled={isReactionEnabled ?? false}
+      isMessageStatusEnabled={isMessageStatusEnabled ?? true}
       replyType={replyType ?? 'NONE'}
       threadReplySelectType={threadReplySelectType ?? ThreadReplySelectType.PARENT}
       nicknamesMap={nicknamesMap}

@@ -79,6 +79,7 @@ export default function OpenchannelConversationHeader(): JSX.Element {
       </div>
       <div className="sendbird-openchannel-conversation-header__right">
         <IconButton
+          aria-label={amIOperator ? 'Channel information' : 'Members'}
           className="sendbird-openchannel-conversation-header__right__trigger"
           width="32px"
           height="32px"

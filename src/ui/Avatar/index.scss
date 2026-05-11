@@ -10,6 +10,14 @@
     outline: none;
   }
 
+  &.sendbird-avatar--interactive:focus-visible {
+    outline: 2px solid;
+    outline-offset: 2px;
+    @include themed() {
+      outline-color: t(primary-3);
+    }
+  }
+
   .sendbird-avatar-img {
     align-items: center;
     display: flex;

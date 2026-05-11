@@ -19,7 +19,7 @@ interface MenuItemsProps {
 type MenuStyleType = { top: number, left: number };
 interface MenuItemsState {
   menuStyle: MenuStyleType;
-  handleClickOutside: (e: MouseEvent) => void;
+  handleClickOutside: (e: MouseEvent | TouchEvent) => void;
 }
 
 const HEIGHT_PADDING = 60;
@@ -57,8 +57,9 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
   setupEvents = (): void => {
     const { closeDropdown } = this.props;
     const { menuRef } = this;
-    const handleClickOutside = (event: any) => {
-      if (menuRef?.current && !menuRef?.current?.contains?.(event.target)) {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target;
+      if (menuRef?.current && target instanceof Node && !menuRef.current.contains(target)) {
         closeDropdown?.();
       }
     };
@@ -67,6 +68,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
     });
 
     document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
     window.addEventListener('resize', this.handleResize);
   };
 
@@ -75,6 +77,7 @@ export default class MenuItems extends React.Component<MenuItemsProps, MenuItems
       handleClickOutside,
     } = this.state;
     document.removeEventListener('mousedown', handleClickOutside);
+    document.removeEventListener('touchstart', handleClickOutside);
     window.removeEventListener('resize', this.handleResize);
     if (this.resizeRafId !== null) {
       cancelAnimationFrame(this.resizeRafId);

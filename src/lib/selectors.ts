@@ -4,7 +4,14 @@ import type {
   UserUpdateParams,
 } from '@sendbird/chat';
 
-import { FailedMessageHandler, MessageHandler, UserMessage, UserMessageCreateParams } from '@sendbird/chat/message';
+import {
+  FailedMessageHandler,
+  MessageHandler,
+  MultipleFilesMessage,
+  MultipleFilesMessageCreateParams,
+  UserMessage,
+  UserMessageCreateParams,
+} from '@sendbird/chat/message';
 import { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
 import { OpenChannel, OpenChannelCreateParams } from '@sendbird/chat/openChannel';
 import { FileMessage, FileMessageCreateParams, SendableMessage, UserMessageUpdateParams } from '@sendbird/chat/lib/__definition';
@@ -40,11 +47,13 @@ import { PublishingModuleType } from '../modules/internalInterfaces';
  * 4. Message
  *    a. getSendUserMessage
  *    b. getSendFileMessage
- *    c. getUpdateUserMessage
- *    d. x - getUpdateFileMessage
- *    e. getDeleteMessage
- *    f. getResendUserMessage
- *    g. getResendFileMessage
+ *    c. getSendFileMessages
+ *    d. getSendMultipleFilesMessage
+ *    e. getUpdateUserMessage
+ *    f. x - getUpdateFileMessage
+ *    g. getDeleteMessage
+ *    h. getResendUserMessage
+ *    i. getResendFileMessage
  */
 
 /**
@@ -533,6 +542,86 @@ export const getSendFileMessage = (state: SendbirdState, publishingModules: Publ
 );
 
 /**
+ * const sendFileMessages = selectors.getSendFileMessages(state);
+ * sendFileMessages(
+ *  channel: GroupChannel,
+ *  paramsList: FileMessageCreateParams[],
+ * )
+ *  .onPending((message) => {})
+ *  .onFailed((error, message) => {})
+ *  .onSucceeded((message) => {})
+ */
+export const getSendFileMessages = (state: SendbirdState, publishingModules: PublishingModuleType[] = []) => (
+  (channel: GroupChannel, paramsList: FileMessageCreateParams[]): UikitMessageHandler<FileMessage> => {
+    const handler = new UikitMessageHandler<FileMessage>();
+    const pubSub = getPubSub(state);
+    channel.sendFileMessages(paramsList)
+      .onFailed((error, message) => {
+        pubSub.publish(
+          topics.SEND_MESSAGE_FAILED,
+          { error, message: message as FileMessage, channel, publishingModules },
+        );
+        handler.triggerFailed(error, message as FileMessage);
+      })
+      .onPending((message) => {
+        pubSub.publish(
+          topics.SEND_MESSAGE_START,
+          { message: message as FileMessage, channel, publishingModules },
+        );
+        handler.triggerPending(message as FileMessage);
+      })
+      .onSucceeded((message) => {
+        pubSub.publish(
+          topics.SEND_FILE_MESSAGE,
+          { message: message as FileMessage, channel, publishingModules },
+        );
+        handler.triggerSucceeded(message as FileMessage);
+      });
+    return handler;
+  }
+);
+
+/**
+ * const sendMultipleFilesMessage = selectors.getSendMultipleFilesMessage(state);
+ * sendMultipleFilesMessage(
+ *  channel: GroupChannel,
+ *  params: MultipleFilesMessageCreateParams,
+ * )
+ *  .onPending((message) => {})
+ *  .onFailed((error, message) => {})
+ *  .onSucceeded((message) => {})
+ */
+export const getSendMultipleFilesMessage = (state: SendbirdState, publishingModules: PublishingModuleType[] = []) => (
+  (channel: GroupChannel, params: MultipleFilesMessageCreateParams): UikitMessageHandler<MultipleFilesMessage> => {
+    const handler = new UikitMessageHandler<MultipleFilesMessage>();
+    const pubSub = getPubSub(state);
+    channel.sendMultipleFilesMessage(params)
+      .onFailed((error, message) => {
+        pubSub.publish(
+          topics.SEND_MESSAGE_FAILED,
+          { error, message: message as MultipleFilesMessage, channel, publishingModules },
+        );
+        handler.triggerFailed(error, message as MultipleFilesMessage);
+      })
+      .onPending((message) => {
+        pubSub.publish(
+          topics.SEND_MESSAGE_START,
+          { message: message as MultipleFilesMessage, channel, publishingModules },
+        );
+        handler.triggerPending(message as MultipleFilesMessage);
+      })
+      .onSucceeded((message) => {
+        pubSub.publish(
+          topics.SEND_FILE_MESSAGE,
+          { message: message as MultipleFilesMessage, channel, publishingModules },
+        );
+        handler.triggerSucceeded(message as MultipleFilesMessage);
+      });
+    return handler;
+  }
+);
+
+/**
  * const updateUserMessage = selectors.getUpdateUserMessage(state);
  * updateUserMessage(
  *  channel: GroupChannel | OpenChannel,
@@ -684,6 +773,8 @@ const sendbirdSelectors = {
   getUnfreezeChannel,
   getSendUserMessage,
   getSendFileMessage,
+  getSendFileMessages,
+  getSendMultipleFilesMessage,
   getUpdateUserMessage,
   getDeleteMessage,
   getResendUserMessage,

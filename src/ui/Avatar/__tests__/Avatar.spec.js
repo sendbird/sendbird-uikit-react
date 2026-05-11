@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import Avatar from '../index';
 
@@ -42,5 +42,21 @@ describe('ui/Avatar', () => {
       <Avatar src={[src, src1, src2, src3]} />
     );
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('should only expose button semantics when interactive', function() {
+    const onClick = jest.fn();
+    const { rerender } = render(<Avatar />);
+
+    expect(screen.queryByRole('button')).toBeNull();
+
+    rerender(<Avatar onClick={onClick} />);
+
+    const avatarButton = screen.getByRole('button');
+    fireEvent.keyDown(avatarButton, { key: 'Enter' });
+    fireEvent.keyDown(avatarButton, { key: ' ' });
+    fireEvent.keyDown(avatarButton, { key: 'Escape' });
+
+    expect(onClick).toHaveBeenCalledTimes(2);
   });
 });

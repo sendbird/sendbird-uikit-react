@@ -228,6 +228,8 @@ describe('identifyUrlsAndStrings', () => {
     const invalidURLs = [
       // with number top-level domain
       'abcd.1234',
+      // bare email addresses should not be treated as web URLs
+      'team_engineering@inkle.io',
     ];
 
     invalidURLs.forEach((url) => {

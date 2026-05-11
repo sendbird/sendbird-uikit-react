@@ -73,6 +73,7 @@ export interface MessageViewProps extends MessageProps {
   editInputDisabled: boolean;
   shouldRenderSuggestedReplies: boolean;
   isReactionEnabled?: boolean;
+  isMessageStatusEnabled?: boolean;
   replyType: ReplyType;
   threadReplySelectType: ThreadReplySelectType;
   nicknamesMap: Map<string, string>;
@@ -135,6 +136,7 @@ const MessageView = (props: MessageViewProps) => {
     editInputDisabled,
     shouldRenderSuggestedReplies,
     isReactionEnabled,
+    isMessageStatusEnabled = true,
     replyType,
     threadReplySelectType,
     nicknamesMap,
@@ -311,6 +313,7 @@ const MessageView = (props: MessageViewProps) => {
           chainTop,
           chainBottom,
           isReactionEnabled,
+          isMessageStatusEnabled,
           replyType,
           threadReplySelectType,
           nicknamesMap,

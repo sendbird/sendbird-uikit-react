@@ -16,6 +16,8 @@ import selectors, {
   getResendUserMessage,
   getSdk,
   getSendFileMessage,
+  getSendFileMessages,
+  getSendMultipleFilesMessage,
   getSendUserMessage,
   getUnfreezeChannel,
   getUpdateUserInfo,
@@ -73,6 +75,8 @@ describe('selectors', () => {
       getUnfreezeChannel,
       getSendUserMessage,
       getSendFileMessage,
+      getSendFileMessages,
+      getSendMultipleFilesMessage,
       getUpdateUserMessage,
       getDeleteMessage,
       getResendUserMessage,
@@ -281,6 +285,60 @@ describe('selectors', () => {
     expect(pubSub.publish).toHaveBeenCalledWith(topics.SEND_MESSAGE_FAILED, { error, message: fileMessage, channel, publishingModules: [] });
     expect(pubSub.publish).toHaveBeenCalledWith(topics.SEND_FILE_MESSAGE, { message: fileMessage, channel, publishingModules: [] });
     expect(failed).toHaveBeenCalledWith(error, null);
+  });
+
+  it('publishes send file messages lifecycle events', () => {
+    const pubSub = createPubSub();
+    const state = createState({}, pubSub);
+    const { callbacks, request } = createRequest();
+    const paramsList = [{ file: new File(['x'], 'x.txt') }];
+    const channel = { sendFileMessages: jest.fn(() => request) };
+    const handler = getSendFileMessages(state, ['module' as any])(channel as any, paramsList as any);
+    const pending = jest.fn();
+    const failed = jest.fn();
+    const succeeded = jest.fn();
+    const message = { messageId: 25, isResendable: true };
+    const error = new Error('file batch failed');
+
+    handler.onPending(pending).onFailed(failed).onSucceeded(succeeded);
+    callbacks.pending(message);
+    callbacks.failed(error, message);
+    callbacks.succeeded(message);
+
+    expect(channel.sendFileMessages).toHaveBeenCalledWith(paramsList);
+    expect(pubSub.publish).toHaveBeenCalledWith(topics.SEND_MESSAGE_START, { message, channel, publishingModules: ['module'] });
+    expect(pubSub.publish).toHaveBeenCalledWith(topics.SEND_MESSAGE_FAILED, { error, message, channel, publishingModules: ['module'] });
+    expect(pubSub.publish).toHaveBeenCalledWith(topics.SEND_FILE_MESSAGE, { message, channel, publishingModules: ['module'] });
+    expect(pending).toHaveBeenCalledWith(message);
+    expect(failed).toHaveBeenCalledWith(error, message);
+    expect(succeeded).toHaveBeenCalledWith(message);
+  });
+
+  it('publishes send multiple files message lifecycle events', () => {
+    const pubSub = createPubSub();
+    const state = createState({}, pubSub);
+    const { callbacks, request } = createRequest();
+    const params = { fileInfoList: [] };
+    const channel = { sendMultipleFilesMessage: jest.fn(() => request) };
+    const handler = getSendMultipleFilesMessage(state, ['module' as any])(channel as any, params as any);
+    const pending = jest.fn();
+    const failed = jest.fn();
+    const succeeded = jest.fn();
+    const message = { messageId: 30, isResendable: true };
+    const error = new Error('multiple files failed');
+
+    handler.onPending(pending).onFailed(failed).onSucceeded(succeeded);
+    callbacks.pending(message);
+    callbacks.failed(error, message);
+    callbacks.succeeded(message);
+
+    expect(channel.sendMultipleFilesMessage).toHaveBeenCalledWith(params);
+    expect(pubSub.publish).toHaveBeenCalledWith(topics.SEND_MESSAGE_START, { message, channel, publishingModules: ['module'] });
+    expect(pubSub.publish).toHaveBeenCalledWith(topics.SEND_MESSAGE_FAILED, { error, message, channel, publishingModules: ['module'] });
+    expect(pubSub.publish).toHaveBeenCalledWith(topics.SEND_FILE_MESSAGE, { message, channel, publishingModules: ['module'] });
+    expect(pending).toHaveBeenCalledWith(message);
+    expect(failed).toHaveBeenCalledWith(error, message);
+    expect(succeeded).toHaveBeenCalledWith(message);
   });
 
   it('publishes update, delete, and resend message events', async () => {

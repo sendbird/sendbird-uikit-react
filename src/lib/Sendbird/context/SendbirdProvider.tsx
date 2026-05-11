@@ -201,9 +201,9 @@ const SendbirdContextManager = ({
       enableUsingDefaultUserProfile: configs.common.enableUsingDefaultUserProfile,
     },
     groupChannel: {
-      enableOgtag: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableOgtag,
+      enableOgtag: sdkInitialized && configsWithAppAttr(sdk)?.groupChannel?.channel?.enableOgtag,
       enableTypingIndicator: configs.groupChannel.channel.enableTypingIndicator,
-      enableReactions: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactions,
+      enableReactions: sdkInitialized && configsWithAppAttr(sdk)?.groupChannel?.channel?.enableReactions,
       enableMention: configs.groupChannel.channel.enableMention,
       replyType: configs.groupChannel.channel.replyType,
       threadReplySelectType: configs.groupChannel.channel.threadReplySelectType,
@@ -218,17 +218,17 @@ const SendbirdContextManager = ({
       enableMarkdownForUserMessage: configs.groupChannel.channel.enableMarkdownForUserMessage,
       enableFormTypeMessage: configs.groupChannel.channel.enableFormTypeMessage,
       enableMarkAsUnread: configs.groupChannel.channel.enableMarkAsUnread,
-      enableReactionsSupergroup: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactionsSupergroup as never,
+      enableReactionsSupergroup: sdkInitialized && configsWithAppAttr(sdk)?.groupChannel?.channel?.enableReactionsSupergroup as never,
     },
     groupChannelList: {
       enableTypingIndicator: configs.groupChannel.channelList.enableTypingIndicator,
       enableMessageReceiptStatus: configs.groupChannel.channelList.enableMessageReceiptStatus,
     },
     groupChannelSettings: {
-      enableMessageSearch: sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
+      enableMessageSearch: sdkInitialized && configsWithAppAttr(sdk)?.groupChannel?.setting?.enableMessageSearch,
     },
     openChannel: {
-      enableOgtag: sdkInitialized && configsWithAppAttr(sdk).openChannel.channel.enableOgtag,
+      enableOgtag: sdkInitialized && configsWithAppAttr(sdk)?.openChannel?.channel?.enableOgtag,
       enableDocument: configs.openChannel.channel.input.enableDocument,
     },
   }), [
@@ -261,13 +261,13 @@ const SendbirdContextManager = ({
   ]);
   const deprecatedConfigs = useMemo(() => ({
     disableUserProfile: !configs.common.enableUsingDefaultUserProfile,
-    isReactionEnabled: sdkInitialized && configsWithAppAttr(sdk).groupChannel.channel.enableReactions,
+    isReactionEnabled: sdkInitialized && configsWithAppAttr(sdk)?.groupChannel?.channel?.enableReactions,
     isMentionEnabled: configs.groupChannel.channel.enableMention,
     isVoiceMessageEnabled: configs.groupChannel.channel.enableVoiceMessage,
     replyType: getCaseResolvedReplyType(configs.groupChannel.channel.replyType).upperCase,
     isTypingIndicatorEnabledOnChannelList: configs.groupChannel.channelList.enableTypingIndicator,
     isMessageReceiptStatusEnabledOnChannelList: configs.groupChannel.channelList.enableMessageReceiptStatus,
-    showSearchIcon: sdkInitialized && configsWithAppAttr(sdk).groupChannel.setting.enableMessageSearch,
+    showSearchIcon: sdkInitialized && configsWithAppAttr(sdk)?.groupChannel?.setting?.enableMessageSearch,
   }), [
     sdkInitialized,
     configsWithAppAttr,

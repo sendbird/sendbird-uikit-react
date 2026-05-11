@@ -95,6 +95,9 @@ describe('ContextMenu MenuItems', () => {
 
     fireEvent.mouseDown(document.body);
     expect(closeDropdown).toHaveBeenCalledTimes(1);
+
+    fireEvent.touchStart(document.body);
+    expect(closeDropdown).toHaveBeenCalledTimes(2);
   });
 
   it('uses openLeft positioning and recomputes on window resize', () => {

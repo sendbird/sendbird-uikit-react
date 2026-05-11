@@ -90,6 +90,7 @@ export interface ChannelListProviderProps extends
   typingChannels?: Array<GroupChannel>;
   isTypingIndicatorEnabled?: boolean;
   isMessageReceiptStatusEnabled?: boolean;
+  isMemberCountEnabled?: boolean;
   reconnectOnIdle?: boolean;
 }
 
@@ -129,6 +130,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
     activeChannelUrl,
     isTypingIndicatorEnabled = null,
     isMessageReceiptStatusEnabled = null,
+    isMemberCountEnabled = true,
     reconnectOnIdle,
   } = props;
   // disable autoselect, if activeChannelUrl is provided
@@ -376,6 +378,7 @@ const ChannelListProvider: React.FC<ChannelListProviderProps> = (props: ChannelL
         typingChannels,
         isTypingIndicatorEnabled: isTypingIndicatorEnabled ?? config.groupChannelList.enableTypingIndicator,
         isMessageReceiptStatusEnabled: isMessageReceiptStatusEnabled ?? config.groupChannelList.enableMessageReceiptStatus,
+        isMemberCountEnabled,
         fetchChannelList,
       }}
     >

@@ -133,7 +133,7 @@ describe('OpenChannelSettingsProvider', () => {
     expect(result.current.channel).toBeNull();
   });
 
-  it('handles current-user moderation events from the open channel handler', async () => {
+  it('handles moderation events from the open channel handler', async () => {
     const { result } = renderHook(() => useOpenChannelSettingsContext(), { wrapper });
 
     await waitFor(() => {
@@ -153,10 +153,18 @@ describe('OpenChannelSettingsProvider', () => {
     });
     expect(result.current.channel).toBe(updatedChannel);
 
+    const otherUserMutedChannel = { ...mockChannel, name: 'Other user muted' };
+    const otherUserUnmutedChannel = { ...mockChannel, name: 'Other user unmuted' };
+
     act(() => {
-      handler.onUserMuted({ ...mockChannel, name: 'Ignored mute' }, otherUser);
+      handler.onUserMuted(otherUserMutedChannel, otherUser);
     });
-    expect(result.current.channel).toBe(updatedChannel);
+    expect(result.current.channel).toBe(otherUserMutedChannel);
+
+    act(() => {
+      handler.onUserUnmuted(otherUserUnmutedChannel, otherUser);
+    });
+    expect(result.current.channel).toBe(otherUserUnmutedChannel);
 
     act(() => {
       handler.onUserBanned(updatedChannel, currentUser);

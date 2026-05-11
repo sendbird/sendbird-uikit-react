@@ -65,7 +65,7 @@ export function identifyMentions({
 }
 
 export function identifyUrlsAndStrings(token: Token[]): Token[] {
-  const URL_REG = /(?:https?:\/\/|www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.(xn--)?[a-z]{2,20}\b([-a-zA-Z0-9@:%_+[\],.~#?&/=]*[-a-zA-Z0-9@:%_+~#?&/=])*/g;
+  const URL_REG = /(?:https?:\/\/|www\.)?[-a-zA-Z0-9:%._+~#=]{1,256}\.(xn--)?[a-z]{2,20}\b([-a-zA-Z0-9@:%_+[\],.~#?&/=]*[-a-zA-Z0-9@:%_+~#?&/=])*/g;
   const results: Token[] = token.map((token) => {
     if (token.type !== TOKEN_TYPES.undetermined) {
       return token;
@@ -78,7 +78,7 @@ export function identifyUrlsAndStrings(token: Token[]): Token[] {
       const start = value.index ?? 0;
       const end = start + text.length;
       return { text, start, end };
-    });
+    }).filter(({ start }) => value[start - 1] !== '@');
 
     const items: Token[] = [{ value, type: TOKEN_TYPES.string }];
     let cursor = 0;

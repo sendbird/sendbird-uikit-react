@@ -57,6 +57,7 @@ interface InternalGroupChannelState extends MessageDataSource {
 
   // Configuration
   isReactionEnabled: boolean;
+  isMessageStatusEnabled: boolean;
   isMessageGroupingEnabled: boolean;
   isMultipleFilesMessageEnabled: boolean;
   autoscrollMessageOverflowToTop: boolean;
@@ -86,6 +87,7 @@ export interface GroupChannelProviderProps extends PropsWithChildren<
 
   // Flags
   isReactionEnabled?: boolean;
+  isMessageStatusEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
   isMultipleFilesMessageEnabled?: boolean;
   autoscrollMessageOverflowToTop?: boolean;

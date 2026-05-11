@@ -122,7 +122,7 @@ export const useHandleUploadFiles = (
             if (imageFiles.length === 0) {
               return Promise.resolve();
             } else if (imageFiles.length === 1) {
-              return sendFileMessage({ file: imageFiles[0] });
+              return sendFileMessage({ file: imageFiles[0], parentMessageId: quoteMessage?.messageId });
             } else {
               return sendMultipleFilesMessage({
                 fileInfoList: imageFiles.map((file) => ({

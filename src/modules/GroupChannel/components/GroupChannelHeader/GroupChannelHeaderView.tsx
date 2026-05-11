@@ -83,6 +83,7 @@ export const GroupChannelHeaderView = ({
           )}
           {(showSearchIcon && !currentChannel?.isEphemeral) && (
             <Header.IconButton
+              aria-label="Search in channel"
               className="sendbird-chat-header__right__search"
               onClick={onSearchClick}
               type={IconTypes.SEARCH}
@@ -91,6 +92,7 @@ export const GroupChannelHeaderView = ({
             />
           )}
           <Header.IconButton
+            aria-label="Channel information"
             className="sendbird-chat-header__right__info"
             onClick={onChatHeaderActionClick}
             type={IconTypes.INFO}

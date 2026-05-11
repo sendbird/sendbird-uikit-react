@@ -32,6 +32,15 @@ describe('tokenizeMessage', () => {
     ]);
   });
 
+  it('should not tokenize currency or bare email addresses as urls', () => {
+    const tokens = tokenizeMessage({
+      messageText: 'Please send me $123.12 and email team_engineering@inkle.io when free',
+    });
+    expect(tokens).toEqual([
+      { type: 'string', value: 'Please send me $123.12 and email team_engineering@inkle.io when free' },
+    ]);
+  });
+
   it('should tokenize a string with mention and a string', () => {
     const tokens = tokenizeMessage({
       messageText: 'Hello world @{userA} and more https://example.com',

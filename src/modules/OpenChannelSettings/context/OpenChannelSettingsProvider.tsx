@@ -100,13 +100,13 @@ const OpenChannelSettingsProvider: React.FC<OpenChannelSettingsContextProps> = (
             setChannel(channel as OpenChannel);
           }
         },
-        onUserMuted(channel, user) {
-          if (channel?.url === currentChannel?.url && user?.userId === currentUserId) {
+        onUserMuted(channel) {
+          if (channel?.url === currentChannel?.url) {
             setChannel(channel as OpenChannel);
           }
         },
-        onUserUnmuted(channel, user) {
-          if (channel?.url === currentChannel?.url && user?.userId === currentUserId) {
+        onUserUnmuted(channel) {
+          if (channel?.url === currentChannel?.url) {
             setChannel(channel as OpenChannel);
           }
         },

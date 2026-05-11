@@ -9,6 +9,7 @@ import ParentMessageInfo from '../ParentMessageInfo';
 import ThreadHeader from '../ThreadHeader';
 import ThreadList from '../ThreadList';
 import ThreadMessageInput from '../ThreadMessageInput';
+import FrozenNotification from '../../../GroupChannel/components/FrozenNotification';
 import useMemorizedHeader from './useMemorizedHeader';
 import useMemorizedParentMessageInfo from './useMemorizedParentMessageInfo';
 import useMemorizedThreadList from './useMemorizedThreadList';
@@ -33,6 +34,7 @@ export interface ThreadUIProps {
   renderVoiceMessageIcon?: () => React.ReactElement;
   renderSendMessageIcon?: () => React.ReactElement;
   renderMessageInput?: () => React.ReactElement;
+  renderFrozenNotification?: () => React.ReactElement;
   renderCustomSeparator?: () => React.ReactElement;
   renderParentMessageInfoPlaceholder?: (type: ParentMessageStateTypes) => React.ReactElement;
   renderThreadListPlaceHolder?: (type: ThreadListStateTypes) => React.ReactElement;
@@ -43,6 +45,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
   renderParentMessageInfo = () => <ParentMessageInfo className="sendbird-thread-ui__parent-message-info" />,
   renderMessage,
   renderMessageInput,
+  renderFrozenNotification = () => <FrozenNotification className="sendbird-thread-ui__frozen-notification" />,
   renderCustomSeparator,
   renderParentMessageInfoPlaceholder,
   renderThreadListPlaceHolder,
@@ -62,6 +65,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
       parentMessage,
       parentMessageState,
       threadListState,
+      isChannelFrozen,
       hasMorePrev,
       hasMoreNext,
       onHeaderActionClick,
@@ -183,6 +187,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
           )
         }
       </div>
+      {isChannelFrozen && renderFrozenNotification()}
       {/* MessageInput */}
       {
         renderMessageInput?.() || (

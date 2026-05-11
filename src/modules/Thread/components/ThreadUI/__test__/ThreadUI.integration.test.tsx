@@ -67,6 +67,7 @@ jest.mock('../../../context/useThread');
 
 const mockStringSet = {
   DATE_FORMAT__MESSAGE_CREATED_AT: 'p',
+  CHANNEL_FROZEN: 'Channel is frozen',
 };
 
 const mockLocalizationContext = {
@@ -157,6 +158,27 @@ describe('CreateChannelUI Integration Tests', () => {
 
     expect(screen.getByText('parent message')).toBeInTheDocument();
     expect(screen.getByText('threaded message 1')).toBeInTheDocument();
+  });
+
+  it('renders frozen notification when the thread channel is frozen', async () => {
+    await act(async () => {
+      renderComponent({
+        isChannelFrozen: true,
+        parentMessage: {
+          messageId: 1,
+          message: 'parent message',
+          isUserMessage: () => true,
+          isTextMessage: true,
+          createdAt: 0,
+          sender: {
+            userId: 'test-user-id',
+          },
+        },
+      });
+    });
+
+    expect(screen.getByTestId('sendbird-notification')).toBeInTheDocument();
+    expect(screen.getByText('Channel is frozen')).toBeInTheDocument();
   });
 
   it('fetchPrevThread is correctly called when scroll is top', async () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import ThumbnailMessageItemBody from "../index";
 
@@ -53,6 +53,7 @@ describe('ui/ThumbnailMessageItemBody', () => {
     expect(
       container.querySelectorAll('.sendbird-thumbnail-message-item-body__placeholder')
     ).toHaveLength(1);
+    expect(screen.getByTestId('sendbird-thumbnail-message-item-body__placeholder__loader')).toBeTruthy();
     expect(
       container.querySelectorAll('.sendbird-thumbnail-message-item-body__video')
     ).toHaveLength(0);

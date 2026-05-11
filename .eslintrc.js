@@ -89,6 +89,52 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/order': 'off',
     'import/no-named-as-default-member': 'off',
+    'no-restricted-imports': [
+      'error',
+      {
+        paths: [
+          {
+            name: 'react',
+            importNames: [
+              'useDeferredValue',
+              'useId',
+              'useInsertionEffect',
+              'useSyncExternalStore',
+              'useTransition',
+            ],
+            message: 'UIKit React still supports React 16/17. Use a compatible abstraction or shim instead of React 18-only hooks.',
+          },
+        ],
+      },
+    ],
+    'no-restricted-properties': [
+      'error',
+      {
+        object: 'React',
+        property: 'useDeferredValue',
+        message: 'UIKit React still supports React 16/17. Use a compatible abstraction instead of React.useDeferredValue.',
+      },
+      {
+        object: 'React',
+        property: 'useId',
+        message: 'UIKit React still supports React 16/17. Use a compatible abstraction instead of React.useId.',
+      },
+      {
+        object: 'React',
+        property: 'useInsertionEffect',
+        message: 'UIKit React still supports React 16/17. Use a compatible abstraction instead of React.useInsertionEffect.',
+      },
+      {
+        object: 'React',
+        property: 'useSyncExternalStore',
+        message: 'UIKit React still supports React 16/17. Use `use-sync-external-store/shim` instead of React.useSyncExternalStore.',
+      },
+      {
+        object: 'React',
+        property: 'useTransition',
+        message: 'UIKit React still supports React 16/17. Use a compatible abstraction instead of React.useTransition.',
+      },
+    ],
     'object-curly-newline': 'off',
     'object-shorthand': 'off',
     'consistent-return': 'off',

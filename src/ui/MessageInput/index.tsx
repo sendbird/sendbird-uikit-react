@@ -541,7 +541,14 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         )}
         {/* send icon */}
         {!isEdit && isInput && (
-          <IconButton className="sendbird-message-input--send" height="32px" width="32px" onClick={() => sendMessage()} testID="sendbird-message-input-send-button">
+          <IconButton
+            aria-label="Send message"
+            className="sendbird-message-input--send"
+            height="32px"
+            width="32px"
+            onClick={() => sendMessage()}
+            testID="sendbird-message-input-send-button"
+          >
             {renderSendMessageIcon?.() || (
               <Icon
                 type={IconTypes.SEND}
@@ -560,6 +567,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
             // renderFileUploadIcon which is set in code level
             || (isFileUploadEnabled && (
               <IconButton
+                aria-label="Upload file"
                 className={classnames('sendbird-message-input--attach', isVoiceMessageEnabled && 'is-voice-message-enabled')}
                 height="32px"
                 width="32px"
@@ -588,6 +596,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>((prop
         {/* voice message input trigger */}
         {isVoiceMessageEnabled && !isEdit && !isInput && (
           <IconButton
+            aria-label={stringSet.VOICE_MESSAGE || 'Voice message'}
             className="sendbird-message-input--voice-message"
             width="32px"
             height="32px"

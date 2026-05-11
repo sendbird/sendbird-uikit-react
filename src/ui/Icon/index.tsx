@@ -71,8 +71,6 @@ import IconFeedbackDislike from '../../svgs/icon-feedback-dislike.svg';
 import IconMarkAsUnread from '../../svgs/icon-mark-as-unread.svg';
 import IconFloatingButtonClose from '../../svgs/icon-floating-button-close.svg';
 
-import { noop } from '../../utils/utils';
-
 function changeTypeToIconComponent(type: Types) {
   switch (type) {
     case Types.ADD: return <IconAdd />;
@@ -159,10 +157,11 @@ export default function Icon({
   fillColor = Colors.DEFAULT,
   width = 26,
   height = 26,
-  onClick = noop,
+  onClick,
   children = null,
   testID,
 }: IconProps) {
+  const isInteractive = typeof onClick === 'function';
   const iconStyle = {
     width: typeof width === 'string' ? width : `${width}px`,
     minWidth: typeof width === 'string' ? width : `${width}px`,
@@ -178,10 +177,15 @@ export default function Icon({
         changeColorToClassName(fillColor),
       ].join(' ')}
       data-testid={testID}
-      role={'button'}
+      role={isInteractive ? 'button' : undefined}
       onClick={onClick}
-      onKeyDown={onClick}
-      tabIndex={0}
+      onKeyDown={(event) => {
+        if (isInteractive && (event.key === 'Enter' || event.key === ' ')) {
+          event.preventDefault();
+          onClick?.(event);
+        }
+      }}
+      tabIndex={isInteractive ? 0 : undefined}
       style={iconStyle}
     >
       {children || changeTypeToIconComponent(type)}

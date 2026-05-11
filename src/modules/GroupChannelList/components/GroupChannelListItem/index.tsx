@@ -25,6 +25,7 @@ export const GroupChannelListItem = ({
     state: {
       isTypingIndicatorEnabled,
       isMessageReceiptStatusEnabled,
+      isMemberCountEnabled,
     },
   } = useGroupChannelList();
 
@@ -41,6 +42,7 @@ export const GroupChannelListItem = ({
       isTyping={isTypingIndicatorEnabled && isTyping}
       isSelected={isSelected}
       isMessageStatusEnabled={isMessageStatusEnabled}
+      isMemberCountEnabled={isMemberCountEnabled}
       onClick={onClick}
       onLeaveChannel={onLeaveChannel}
       renderChannelAction={renderChannelAction}

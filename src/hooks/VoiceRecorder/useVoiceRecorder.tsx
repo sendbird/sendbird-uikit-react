@@ -34,7 +34,7 @@ export const useVoiceRecorder = ({
   const { state } = useSendbird();
   const { config } = state;
   const { voiceRecord } = config;
-  const maxRecordingTime = voiceRecord?.maxRecordingTime;
+  const maxRecordingTime = voiceRecord?.maxRecordingTime ?? Number.MAX_SAFE_INTEGER;
   const voiceRecorder = useVoiceRecorderContext();
   const { isRecordable } = voiceRecorder;
 
@@ -73,18 +73,18 @@ export const useVoiceRecorder = ({
   // Timer
   const [recordingTime, setRecordingTime] = useState<number>(0);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const recordingStartedAt = useRef<number>(0);
   function startTimer() {
     stopTimer();
+    recordingStartedAt.current = Date.now();
     setRecordingTime(0);
 
     timer.current = setInterval(() => {
-      setRecordingTime(prevTime => {
-        const newTime = prevTime + 100;
-        if (newTime > maxRecordingTime) {
-          stopTimer();
-        }
-        return newTime;
-      });
+      const elapsedTime = Date.now() - recordingStartedAt.current;
+      if (elapsedTime >= maxRecordingTime) {
+        stopTimer();
+      }
+      setRecordingTime(Math.min(elapsedTime, maxRecordingTime));
     }, 100);
   }
   function stopTimer() {
@@ -94,7 +94,7 @@ export const useVoiceRecorder = ({
     }
   }
   useEffect(() => {
-    if (recordingTime > maxRecordingTime) {
+    if (recordingTime >= maxRecordingTime) {
       stop();
     }
   }, [recordingTime, maxRecordingTime, stop]);

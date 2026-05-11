@@ -10,6 +10,8 @@ import React, {
 import './index.scss';
 
 export interface IconButtonProps {
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
   className?: string | Array<string>;
   children: ReactNode;
   disabled?: boolean;
@@ -37,11 +39,15 @@ const IconButton = React.forwardRef((
     onBlur = () => { /* noop */ },
     onClick = () => { /* noop */ },
     testID,
+    'aria-label': ariaLabel,
+    'aria-labelledby': ariaLabelledby,
   } = props;
   const [isPressed, setIsPressed] = useState(false);
   return (
     <button
       data-testid={testID}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledby}
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-iconbutton',

@@ -83,6 +83,33 @@ describe('GroupChannel InfiniteList', () => {
     expect(onLoadPrevious).toHaveBeenCalled();
   });
 
+  it('keeps the visible position when previous messages are prepended', async () => {
+    const scrollPositionRef = { current: 0 };
+    const scrollDistanceFromBottomRef = { current: 0 };
+    const onLoadPrevious = jest.fn().mockResolvedValue(undefined);
+    const { props, rerender } = renderList({ scrollPositionRef, scrollDistanceFromBottomRef, onLoadPrevious });
+    const container = screen.getByTestId('sendbird-message-list-container');
+    setScrollMetrics(container, { scrollTop: 0, scrollHeight: 500, clientHeight: 100 });
+
+    await act(async () => {
+      fireEvent.scroll(container);
+    });
+
+    setScrollMetrics(container, { scrollTop: 0, scrollHeight: 800, clientHeight: 100 });
+    rerender(
+      <InfiniteList
+        {...(props as any)}
+        messages={[
+          { messageId: 0, createdAt: 0 },
+          { messageId: 1, createdAt: 1 },
+          { messageId: 2, createdAt: 2 },
+        ]}
+      />,
+    );
+
+    expect(container.scrollTop).toBe(300);
+  });
+
   it('loads next messages when the scroll reaches the bottom threshold', async () => {
     const onLoadNext = jest.fn().mockResolvedValue(undefined);
     const onScrollPosition = jest.fn();

@@ -70,6 +70,7 @@ export interface ChannelContextProps extends
   children?: React.ReactElement;
   channelUrl: string;
   isReactionEnabled?: boolean;
+  isMessageStatusEnabled?: boolean;
   isMessageGroupingEnabled?: boolean;
   isMultipleFilesMessageEnabled?: boolean;
   showSearchIcon?: boolean;
@@ -177,6 +178,7 @@ const ChannelProvider = (props: ChannelContextProps) => {
     channelUrl,
     children,
     isReactionEnabled,
+    isMessageStatusEnabled = true,
     isMessageGroupingEnabled = true,
     isMultipleFilesMessageEnabled,
     showSearchIcon,
@@ -461,6 +463,7 @@ const ChannelProvider = (props: ChannelContextProps) => {
       // props
       channelUrl,
       isReactionEnabled: usingReaction,
+      isMessageStatusEnabled,
       isMessageGroupingEnabled,
       isMultipleFilesMessageEnabled,
       showSearchIcon: showSearchIcon ?? globalConfigs.groupChannelSettings.enableMessageSearch,

@@ -116,6 +116,8 @@ export const Title = ({
 };
 
 export interface HeaderIconButtonProps {
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
   className?: string;
   onClick?: (e: MouseEvent) => void;
   type: IconTypes;
@@ -132,8 +134,12 @@ export const IconButton = ({
   width = '32px',
   height = '32px',
   renderIcon = (props) => <Icon {...props} />,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
 }: HeaderIconButtonProps) => (
   <UIIconButton
+    aria-label={ariaLabel}
+    aria-labelledby={ariaLabelledby}
     className={className}
     width={width}
     height={height}

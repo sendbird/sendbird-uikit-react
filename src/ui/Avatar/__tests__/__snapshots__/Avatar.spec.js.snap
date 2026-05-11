@@ -3,10 +3,8 @@
 exports[`ui/Avatar should do a snapshot test of the Avatar DOM with four elements 1`] = `
 <DocumentFragment>
   <div
-    class=" sendbird-avatar"
-    role="button"
+    class=" sendbird-avatar "
     style="height: 56px; width: 56px; z-index: 0;"
-    tabindex="0"
   >
     <div
       class="sendbird-avatar--inner__four-child"
@@ -63,9 +61,7 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with four element
         >
           <div
             class=" sendbird-icon sendbird-icon-user sendbird-icon-color--content"
-            role="button"
             style="width: 32.199999999999996px; min-width: 32.199999999999996px; height: 32.199999999999996px; min-height: 32.199999999999996px;"
-            tabindex="0"
           >
             <test-file-stub />
           </div>
@@ -79,10 +75,8 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with four element
 exports[`ui/Avatar should do a snapshot test of the Avatar DOM with single element 1`] = `
 <DocumentFragment>
   <div
-    class=" sendbird-avatar"
-    role="button"
+    class=" sendbird-avatar "
     style="height: 56px; width: 56px; z-index: 0;"
-    tabindex="0"
   >
     <div
       class="sendbird-avatar-img sendbird-image-renderer"
@@ -105,10 +99,8 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with single eleme
 exports[`ui/Avatar should do a snapshot test of the Avatar DOM with three elements 1`] = `
 <DocumentFragment>
   <div
-    class=" sendbird-avatar"
-    role="button"
+    class=" sendbird-avatar "
     style="height: 56px; width: 56px; z-index: 0;"
-    tabindex="0"
   >
     <div
       class="sendbird-avatar--inner__three-child--upper"
@@ -167,10 +159,8 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with three elemen
 exports[`ui/Avatar should do a snapshot test of the Avatar DOM with two elements 1`] = `
 <DocumentFragment>
   <div
-    class=" sendbird-avatar"
-    role="button"
+    class=" sendbird-avatar "
     style="height: 56px; width: 56px; z-index: 0;"
-    tabindex="0"
   >
     <div
       class="sendbird-avatar--inner__two-child"
@@ -211,10 +201,8 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with two elements
 exports[`ui/Avatar should render default image if src is empty 1`] = `
 <DocumentFragment>
   <div
-    class=" sendbird-avatar"
-    role="button"
+    class=" sendbird-avatar "
     style="height: 56px; width: 56px; z-index: 0;"
-    tabindex="0"
   >
     <div
       class="sendbird-avatar-img sendbird-image-renderer"
@@ -226,9 +214,7 @@ exports[`ui/Avatar should render default image if src is empty 1`] = `
       >
         <div
           class=" sendbird-icon sendbird-icon-user sendbird-icon-color--content"
-          role="button"
           style="width: 32.199999999999996px; min-width: 32.199999999999996px; height: 32.199999999999996px; min-height: 32.199999999999996px;"
-          tabindex="0"
         >
           <test-file-stub />
         </div>

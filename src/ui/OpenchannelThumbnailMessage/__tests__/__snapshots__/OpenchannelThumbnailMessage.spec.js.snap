@@ -12,7 +12,7 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
         class="sendbird-context-menu"
       >
         <div
-          class="sendbird-openchannel-thumbnail-message__left__avatar sendbird-avatar"
+          class="sendbird-openchannel-thumbnail-message__left__avatar sendbird-avatar sendbird-avatar--interactive"
           role="button"
           style="height: 28px; width: 28px; z-index: 0;"
           tabindex="0"
@@ -70,12 +70,16 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
               style="width: 100%; min-width: min(400px, -80px); max-width: 400px; position: absolute; display: flex; justify-content: center; align-items: center;"
             >
               <div
-                class=" sendbird-icon sendbird-icon-photo sendbird-icon-color--on-background-2"
-                role="button"
-                style="width: 56px; min-width: 56px; height: 56px; min-height: 56px;"
-                tabindex="0"
+                class="sendbird-openchannel-thumbnail-message__right__body__wrap__loader sendbird-loader"
+                data-testid="sendbird-openchannel-thumbnail-message__right__body__wrap__loader"
+                style="width: 56px; height: 56px;"
               >
-                <test-file-stub />
+                <div
+                  class=" sendbird-icon sendbird-icon-spinner sendbird-icon-color--primary"
+                  style="width: 56px; min-width: 56px; height: 56px; min-height: 56px;"
+                >
+                  <test-file-stub />
+                </div>
               </div>
             </div>
             <div
@@ -107,9 +111,7 @@ exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the Opencha
           >
             <div
               class=" sendbird-icon sendbird-icon-more sendbird-icon-color--content-inverse"
-              role="button"
               style="width: 24px; min-width: 24px; height: 24px; min-height: 24px;"
-              tabindex="0"
             >
               <test-file-stub />
             </div>

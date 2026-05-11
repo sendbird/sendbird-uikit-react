@@ -63,6 +63,18 @@ const MobileContextMenu: React.FunctionComponent<BaseMenuProps> = (props: BaseMe
   const showMenuItemThread = replyType === 'THREAD' && !isOpenedFromThread && !isFailedMessage(message) && !isPendingMessage(message) && !isThreadMessage(message) && channel?.isGroupChannel();
   const showMenuItemMarkAsUnread = !isFailedMessage(message) && !isPendingMessage(message) && message.parentMessageId <= 0 && channel?.isGroupChannel?.();
   const disableDeleteMessage = (deleteMenuState !== undefined && deleteMenuState === 'DISABLE') || (message?.threadInfo?.replyCount ?? 0) > 0;
+  const hasDefaultMenuItems = showMenuItemCopy
+    || showMenuItemReply
+    || showMenuItemThread
+    || showMenuItemEdit
+    || (enableMarkAsUnread && showMenuItemMarkAsUnread)
+    || showMenuItemResend
+    || showMenuItemDeleteFinal
+    || showMenuItemDownload;
+
+  if (!renderMenuItems && !hasDefaultMenuItems) {
+    return null;
+  }
 
   const contextValue: MobileMessageMenuContextProps = {
     message,

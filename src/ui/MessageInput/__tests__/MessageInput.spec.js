@@ -342,6 +342,16 @@ describe('ui/MessageInput', () => {
     expect(screen.getByTestId('custom-send')).toBeInTheDocument();
   });
 
+  it('should label default action buttons for assistive technology', async () => {
+    render(<MessageInput channel={{ channelType: 'group' }} />);
+
+    expect(screen.getByRole('button', { name: 'Upload file' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Voice message' })).toBeInTheDocument();
+
+    await userEvent.type(screen.getByRole('textbox'), 'message');
+    expect(screen.getByRole('button', { name: 'Send message' })).toBeInTheDocument();
+  });
+
   it('should let consumer keydown handler prevent enter send', () => {
     const onSendMessage = jest.fn();
     const onKeyDown = jest.fn(() => true);

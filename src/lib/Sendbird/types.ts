@@ -23,6 +23,7 @@ import type {
 } from '@sendbird/chat/openChannel';
 import type {
   FileMessageCreateParams,
+  MultipleFilesMessageCreateParams,
   UserMessage,
   UserMessageCreateParams,
   UserMessageUpdateParams,
@@ -431,6 +432,18 @@ export interface sendbirdSelectorsInterface {
   ) => (
     channel: GroupChannel | OpenChannel,
     fileMessageParams: FileMessageCreateParams
+  ) => any; // Replace with specific type
+  getSendFileMessages: (
+    store: SendbirdState
+  ) => (
+    channel: GroupChannel,
+    fileMessageParamsList: FileMessageCreateParams[]
+  ) => any; // Replace with specific type
+  getSendMultipleFilesMessage: (
+    store: SendbirdState
+  ) => (
+    channel: GroupChannel,
+    multipleFilesMessageParams: MultipleFilesMessageCreateParams
   ) => any; // Replace with specific type
   getUpdateUserMessage: (
     store: SendbirdState

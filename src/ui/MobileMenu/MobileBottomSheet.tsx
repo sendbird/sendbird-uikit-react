@@ -87,12 +87,25 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
     && !isPendingMessage(message)
     && channel?.isGroupChannel?.()
     && replyType !== 'THREAD';
+  const hasDefaultMenuItems = showMenuItemCopy
+    || showMenuItemEdit
+    || (enableMarkAsUnread && showMenuItemMarkAsUnread)
+    || showMenuItemResend
+    || showMenuItemReply
+    || showMenuItemThread
+    || showMenuItemDeleteFinal
+    || showMenuItemDownload;
+  const canRenderMenuItems = !!renderMenuItems || hasDefaultMenuItems;
 
   const maxEmojisPerRow = Math.floor(window.innerWidth / EMOJI_SIZE) - 1;
   const [showEmojisOnly, setShowEmojisOnly] = useState<boolean>(false);
   const emojis = emojiContainer && getEmojiListAll(emojiContainer);
   const visibleEmojis = showEmojisOnly ? emojis : emojis?.slice(0, maxEmojisPerRow);
   const canShowMoreEmojis = emojis && emojis.length > maxEmojisPerRow;
+
+  if (!showReaction && !canRenderMenuItems) {
+    return null;
+  }
 
   const contextValue: MobileMessageMenuContextProps = {
     message,
@@ -189,7 +202,7 @@ const MobileBottomSheet: React.FunctionComponent<MobileBottomSheetProps> = (prop
               </ul>
             </div>
           )}
-          {!showEmojisOnly && (
+          {!showEmojisOnly && canRenderMenuItems && (
             <div className="sendbird-message__bottomsheet--actions">
               {renderMenuItems?.({
                 items: {

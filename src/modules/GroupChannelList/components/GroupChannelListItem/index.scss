@@ -121,6 +121,8 @@
       }
 
       .sendbird-channel-preview__content__lower__last-message {
+        flex: 1 1 auto;
+        min-width: 0;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -128,6 +130,7 @@
       }
 
       .sendbird-channel-preview__content__lower__unread-message-count {
+        flex: 0 0 auto;
         display: flex;
         align-items: center;
         margin-left: 8px;

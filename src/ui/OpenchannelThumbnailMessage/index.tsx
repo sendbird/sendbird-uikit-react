@@ -83,14 +83,21 @@ export default function OpenchannelThumbnailMessage({
   });
   const { isMobile } = useMediaQueryContext();
 
-  const memorizedThumbnailPlaceHolder = useMemo(() => (type) => ({ style }) => ( // eslint-disable-line
+  const memorizedThumbnailPlaceHolder = useMemo(() => () => ({ style }) => (
     <div style={style}>
-      <Icon
-        type={type}
-        fillColor={IconColors.ON_BACKGROUND_2}
+      <Loader
+        className="sendbird-openchannel-thumbnail-message__right__body__wrap__loader"
         width="56px"
         height="56px"
-      />
+        testID="sendbird-openchannel-thumbnail-message__right__body__wrap__loader"
+      >
+        <Icon
+          type={IconTypes.SPINNER}
+          fillColor={IconColors.PRIMARY}
+          width="56px"
+          height="56px"
+        />
+      </Loader>
     </div>
   ), []);
 
@@ -226,7 +233,7 @@ export default function OpenchannelThumbnailMessage({
                                   width={messageWidth}
                                   height="270px"
                                   alt="image"
-                                  placeHolder={memorizedThumbnailPlaceHolder(IconTypes.PLAY)}
+                                  placeHolder={memorizedThumbnailPlaceHolder()}
                                 />
                               )
                               : (
@@ -263,7 +270,7 @@ export default function OpenchannelThumbnailMessage({
                           alt="image"
                           width={messageWidth}
                           height="270px"
-                          placeHolder={memorizedThumbnailPlaceHolder(IconTypes.PHOTO)}
+                          placeHolder={memorizedThumbnailPlaceHolder()}
                         />
                       )
                       : (

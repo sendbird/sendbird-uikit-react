@@ -65,6 +65,7 @@ function MessageSearchPannel(props: MessageSearchPannelProps): JSX.Element {
         )}
         renderRight={() => (
           <Header.IconButton
+            aria-label="Close search"
             className="sendbird-message-search-pannel__header__close-button"
             onClick={onCloseClick}
             type={IconTypes.CLOSE}

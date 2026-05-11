@@ -4,6 +4,7 @@ import type { FileMessage } from '@sendbird/chat/message';
 
 import Icon, { IconTypes, IconColors } from '../Icon';
 import ImageRenderer from '../ImageRenderer';
+import Loader from '../Loader';
 import { getClassName, isGifMessage, isSentMessage, isVideoMessage } from '../../utils';
 import { noop } from '../../utils/utils';
 import useLongPress from '../../hooks/useLongPress';
@@ -63,7 +64,21 @@ export default function ThumbnailMessageItemBody({
           <div
             className="sendbird-thumbnail-message-item-body__placeholder"
             style={style}
-          />
+          >
+            <Loader
+              className="sendbird-thumbnail-message-item-body__placeholder__loader"
+              width="32px"
+              height="32px"
+              testID="sendbird-thumbnail-message-item-body__placeholder__loader"
+            >
+              <Icon
+                type={IconTypes.SPINNER}
+                fillColor={IconColors.PRIMARY}
+                width="32px"
+                height="32px"
+              />
+            </Loader>
+          </div>
         )}
       />
       {

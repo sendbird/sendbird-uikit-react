@@ -26,6 +26,7 @@ const Message = (props: MessageProps) => {
     replyType,
     threadReplySelectType,
     isReactionEnabled,
+    isMessageStatusEnabled,
     toggleReaction,
     emojiContainer,
     nicknamesMap,
@@ -67,6 +68,7 @@ const Message = (props: MessageProps) => {
         && getSuggestedReplies(message).length > 0
       }
       isReactionEnabled={isReactionEnabled}
+      isMessageStatusEnabled={isMessageStatusEnabled ?? true}
       replyType={replyType}
       threadReplySelectType={threadReplySelectType}
       nicknamesMap={nicknamesMap}

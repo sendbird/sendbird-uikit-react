@@ -10,12 +10,10 @@ export const setChannelType = (
   type: CHANNEL_TYPE,
 ): GroupChannelCreateParams => {
   if (type === 'broadcast') {
-    // eslint-disable-next-line no-param-reassign
-    params.isBroadcast = true;
+    Object.assign(params, { isBroadcast: true });
   }
   if (type === 'supergroup') {
-    // eslint-disable-next-line no-param-reassign
-    params.isSuper = true;
+    Object.assign(params, { isSuper: true });
   }
   return params;
 };

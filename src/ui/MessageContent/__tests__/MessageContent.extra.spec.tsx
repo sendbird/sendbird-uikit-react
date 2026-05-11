@@ -26,7 +26,13 @@ jest.mock('../../../hooks/useLongPress', () => jest.fn((handlers) => ({
 })));
 jest.mock('../../AdminMessage', () => (props: any) => <div data-testid="admin-message">{props.message.message}</div>);
 jest.mock('../../QuoteMessage', () => (props: any) => (
-  <button type="button" data-testid="quote-message" onClick={props.onClick}>
+  <button
+    type="button"
+    data-testid="quote-message"
+    onClick={() => {
+      if (!props.isUnavailable) props.onClick?.();
+    }}
+  >
     quote {String(props.isUnavailable)}
   </button>
 ));
@@ -242,6 +248,8 @@ describe('MessageContent extra branches', () => {
 
     expect(screen.getByTestId('quote-message')).toHaveTextContent('true');
     fireEvent.click(screen.getByTestId('quote-message'));
+    expect(scrollToMessage).not.toHaveBeenCalled();
+
     fireEvent.click(screen.getByTestId('parent-menu'));
 
     expect(scrollToMessage).toHaveBeenCalledWith(770, 77);
@@ -283,6 +291,23 @@ describe('MessageContent extra branches', () => {
     fireEvent.click(screen.getByTestId('menu-sendbird-message-content-menu__normal-menu'));
     expect(scrollToMessage).toHaveBeenCalledWith(420, 42);
     expect(onReplyInThread).not.toHaveBeenCalled();
+  });
+
+  it('hides outgoing message status when disabled', () => {
+    const message = createMessage({
+      sender: { userId: 'me' },
+    });
+    const { container } = render(
+      <MessageContent
+        userId="me"
+        channel={baseChannel as any}
+        message={message as any}
+        isMessageStatusEnabled={false}
+        renderMessageBody={() => <div>body</div>}
+      />,
+    );
+
+    expect(container.querySelector('.sendbird-message-status')).toBeNull();
   });
 
   it('routes right-side menu thread reply via THREAD path when select type is THREAD', () => {

@@ -21,6 +21,7 @@ jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
 describe('useVoiceRecorder', () => {
   beforeEach(() => {
     jest.useFakeTimers();
+    jest.setSystemTime(0);
     jest.clearAllMocks();
     mockVoiceRecorder.start.mockReset();
     mockVoiceRecorder.stop.mockReset();
@@ -103,7 +104,21 @@ describe('useVoiceRecorder', () => {
       jest.advanceTimersByTime(300);
     });
 
-    expect(result.current.recordingTime).toBe(300);
+    expect(result.current.recordingTime).toBe(250);
+    expect(mockVoiceRecorder.stop).toHaveBeenCalled();
+  });
+
+  it('uses wall-clock elapsed time when timer ticks are delayed', () => {
+    const { result } = renderHook(() => useVoiceRecorder({}));
+
+    act(() => {
+      result.current.start();
+      mockVoiceRecorder.start.mock.calls[0][0].onRecordingStarted();
+      jest.setSystemTime(300);
+      jest.advanceTimersByTime(100);
+    });
+
+    expect(result.current.recordingTime).toBe(250);
     expect(mockVoiceRecorder.stop).toHaveBeenCalled();
   });
 

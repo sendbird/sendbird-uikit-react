@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, renderHook } from '@testing-library/react';
+import { fireEvent, render, screen, renderHook } from '@testing-library/react';
 
 import { FileViewerComponent as FileViewer } from "../index";
 import { msg0, msg1 } from '../data.mock';
@@ -102,9 +102,72 @@ describe('ui/FileViewer', () => {
 
     expect(videoElement.className).not.toContain('sendbird-fileviewer__content__img');
     expect(videoElement.className).toBe('sendbird-fileviewer__content__video');
+    expect(videoElement.getAttribute('playsinline')).not.toBeNull();
+    expect(videoElement.getAttribute('preload')).toBe('metadata');
 
     const videoChild = videoElement.children[0];
     expect(videoChild.src).toEqual(url);
+  });
+
+  it('should render download link with file name', function () {
+    const {
+      sender,
+      type,
+      url,
+      name = '',
+    } = msg0;
+    const { profileUrl, nickname = '' } = sender;
+    render(
+      <SendbirdContext.Provider value={{}}>
+        <FileViewer
+          profileUrl={profileUrl}
+          nickname={nickname}
+          type={type}
+          url={url}
+          name={name}
+          onClose={() => { }}
+          onDelete={() => { }}
+        />
+      </SendbirdContext.Provider>
+    );
+
+    const downloadLink = document.querySelector(`#${MODAL_ROOT} .sendbird-fileviewer__header__right__actions__download`);
+    expect(downloadLink.getAttribute('download')).toBe(name);
+  });
+
+  it('should confirm before deleting a file', function () {
+    const {
+      sender,
+      type,
+      url,
+      name = '',
+    } = msg0;
+    const { profileUrl, nickname = '' } = sender;
+    const onDelete = jest.fn();
+    render(
+      <SendbirdContext.Provider value={{}}>
+        <FileViewer
+          profileUrl={profileUrl}
+          nickname={nickname}
+          type={type}
+          url={url}
+          name={name}
+          isByMe
+          onClose={() => { }}
+          onDelete={onDelete}
+        />
+      </SendbirdContext.Provider>
+    );
+
+    const deleteButton = document.querySelector(`#${MODAL_ROOT} .sendbird-fileviewer__header__right__actions__delete .sendbird-icon`);
+    fireEvent.click(deleteButton);
+
+    expect(onDelete).not.toHaveBeenCalled();
+    expect(screen.getByText('Delete this message?')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('Delete'));
+
+    expect(onDelete).toHaveBeenCalledTimes(1);
   });
 
   it('should handle unsupported msg', function () {

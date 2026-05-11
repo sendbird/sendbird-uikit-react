@@ -52,6 +52,7 @@ const defaultMockState = {
   allowProfileEdit: false,
   isTypingIndicatorEnabled: false,
   isMessageReceiptStatusEnabled: false,
+  isMemberCountEnabled: true,
   onChannelSelect: undefined,
   onChannelCreated: undefined,
   onThemeChange: undefined,
@@ -168,6 +169,19 @@ describe('GroupChannelListUI Integration Tests', () => {
 
     expect(screen.getByText(mockStringSet.TYPING_INDICATOR__IS_TYPING, { exact: false })).toBeInTheDocument();
     expect(screen.getByText(mockStringSet.TYPING_INDICATOR__ARE_TYPING, { exact: false })).toBeInTheDocument();
+  });
+
+  it('hides member count when disabled', () => {
+    renderComponent({
+      groupChannels: [
+        { name: 'test-group-channel-1', url: 'test-group-channel-url-1', memberCount: 3 },
+      ],
+      isMemberCountEnabled: false,
+      initialized: true,
+    });
+
+    expect(screen.getByText('test-group-channel-1')).toBeInTheDocument();
+    expect(screen.queryByText('3')).not.toBeInTheDocument();
   });
 
   it('handle onChannelSelect', () => {

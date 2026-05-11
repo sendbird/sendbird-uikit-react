@@ -215,4 +215,52 @@ describe('MobileMenu sheets', () => {
 
     expect(screen.getByTestId('context-copy')).toBeInTheDocument();
   });
+
+  it('does not render empty mobile menus when no default actions are available', () => {
+    const voiceReplyMessage = {
+      messageId: 2,
+      sender: { userId: 'sender' },
+      messageType: 'file',
+      sendingStatus: 'succeeded',
+      parentMessageId: 1,
+      parentMessage: { messageId: 1 },
+      threadInfo: { replyCount: 0 },
+      type: 'audio/m4a;sbu_type=voice',
+      isUserMessage: () => false,
+      isFileMessage: () => true,
+      isResendable: false,
+    };
+    const channel = {
+      isGroupChannel: () => true,
+      isSuper: true,
+      isBroadcast: true,
+    };
+
+    render(
+      <MobileContextMenu
+        hideMenu={jest.fn()}
+        parentRef={{ current: document.createElement('div') }}
+        channel={channel as any}
+        message={voiceReplyMessage as any}
+        replyType="THREAD"
+        userId="other-user"
+        isOpenedFromThread
+      />,
+    );
+
+    expect(screen.queryByTestId('mobile-context-menu')).toBeNull();
+
+    render(
+      <MobileBottomSheet
+        hideMenu={jest.fn()}
+        channel={channel as any}
+        message={voiceReplyMessage as any}
+        replyType="THREAD"
+        userId="other-user"
+        isOpenedFromThread
+      />,
+    );
+
+    expect(screen.queryByTestId('bottom-sheet')).toBeNull();
+  });
 });

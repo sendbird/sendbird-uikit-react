@@ -256,6 +256,7 @@ describe('GroupChannel MessageInputWrapper useHandleUploadFiles', () => {
     await act(async () => {
       await result.current([imageA, doc]);
     });
+    expect(sendFileMessage).toHaveBeenCalledWith({ file: imageA, parentMessageId: 77 });
     expect(sendFileMessage).toHaveBeenLastCalledWith({ file: doc, parentMessageId: 77 });
   });
 });

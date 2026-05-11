@@ -169,13 +169,15 @@ function Avatar(
   }: AvatarProps,
   ref: RefObject<HTMLDivElement>,
 ): ReactElement {
+  const isInteractive = typeof onClick === 'function';
   return (
     <div
       className={[
         ...(Array.isArray(className) ? className : [className]),
         'sendbird-avatar',
+        isInteractive ? 'sendbird-avatar--interactive' : '',
       ].join(' ')}
-      role="button"
+      role={isInteractive ? 'button' : undefined}
       ref={ref}
       style={{
         height,
@@ -185,8 +187,13 @@ function Avatar(
         bottom,
       }}
       onClick={onClick}
-      onKeyDown={onClick}
-      tabIndex={0}
+      onKeyDown={(event) => {
+        if (isInteractive && (event.key === 'Enter' || event.key === ' ')) {
+          event.preventDefault();
+          onClick?.();
+        }
+      }}
+      tabIndex={isInteractive ? 0 : undefined}
     >
       <AvatarInner
         src={src}

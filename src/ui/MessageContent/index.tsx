@@ -64,6 +64,7 @@ export interface MessageContentProps extends MessageComponentRenderers {
   chainTop?: boolean;
   chainBottom?: boolean;
   isReactionEnabled?: boolean;
+  isMessageStatusEnabled?: boolean;
   disableQuoteMessage?: boolean;
   replyType?: ReplyType;
   threadReplySelectType?: ThreadReplySelectType;
@@ -108,6 +109,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     chainTop = false,
     chainBottom = false,
     isReactionEnabled = false,
+    isMessageStatusEnabled = true,
     disableQuoteMessage = false,
     replyType,
     threadReplySelectType,
@@ -383,7 +385,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
           )}
         >
           {/* message status component when sent by me */}
-          {(isByMe && !chainBottom) && (
+          {(isMessageStatusEnabled && isByMe && !chainBottom) && (
             <div
               className={classnames(
                 'sendbird-message-content__middle__body-container__created-at',

@@ -37,6 +37,7 @@ interface ContextBaseType {
   disableAutoSelect: boolean;
   isTypingIndicatorEnabled: boolean;
   isMessageReceiptStatusEnabled: boolean;
+  isMemberCountEnabled: boolean;
 
   // Custom
   // Partial props - because we are doing null check before calling these functions
@@ -69,6 +70,7 @@ const initialState = () => ({
   allowProfileEdit: false,
   isTypingIndicatorEnabled: false,
   isMessageReceiptStatusEnabled: false,
+  isMemberCountEnabled: true,
   onChannelSelect: () => {},
   onChannelCreated: () => {},
   onThemeChange: noop,
@@ -173,6 +175,7 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
   const allowProfileEdit = props.allowProfileEdit ?? config.allowProfileEdit ?? true;
   const isTypingIndicatorEnabled = props.isTypingIndicatorEnabled ?? config.groupChannelList.enableTypingIndicator ?? false;
   const isMessageReceiptStatusEnabled = props.isMessageReceiptStatusEnabled ?? config.groupChannelList.enableMessageReceiptStatus ?? false;
+  const isMemberCountEnabled = props.isMemberCountEnabled ?? true;
 
   const eventHandlers = useMemo(() => ({
     onChannelSelect,
@@ -196,6 +199,7 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
     allowProfileEdit,
     isTypingIndicatorEnabled,
     isMessageReceiptStatusEnabled,
+    isMemberCountEnabled,
     typingChannelUrls,
     refreshing,
     initialized,
@@ -208,6 +212,7 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
     allowProfileEdit,
     isTypingIndicatorEnabled,
     isMessageReceiptStatusEnabled,
+    isMemberCountEnabled,
     typingChannelUrls,
     refreshing,
     initialized,
@@ -245,6 +250,7 @@ const InternalGroupChannelListProvider = (props: GroupChannelListProviderProps) 
     disableAutoSelect: props?.disableAutoSelect,
     isTypingIndicatorEnabled: props?.isTypingIndicatorEnabled,
     isMessageReceiptStatusEnabled: props?.isMessageReceiptStatusEnabled,
+    isMemberCountEnabled: props?.isMemberCountEnabled,
     channelListQueryParams: props?.channelListQueryParams,
     onThemeChange: props?.onThemeChange,
     onCreateChannelClick: props?.onCreateChannelClick,

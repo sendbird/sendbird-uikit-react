@@ -54,6 +54,7 @@ const initialState = () => ({
   messageInputRef: { current: null },
 
   isReactionEnabled: false,
+  isMessageStatusEnabled: true,
   isMessageGroupingEnabled: true,
   isMultipleFilesMessageEnabled: false,
   autoscrollMessageOverflowToTop: false,
@@ -82,6 +83,7 @@ export const InternalGroupChannelProvider = (props: GroupChannelProviderProps) =
     onUserProfileMessage: props?.onUserProfileMessage,
     onStartDirectMessage: props?.onStartDirectMessage,
     isReactionEnabled: props?.isReactionEnabled,
+    isMessageStatusEnabled: props?.isMessageStatusEnabled,
     isMessageGroupingEnabled: props?.isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled: props?.isMultipleFilesMessageEnabled,
     autoscrollMessageOverflowToTop: props?.autoscrollMessageOverflowToTop,
@@ -123,6 +125,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     channelUrl,
     children,
     isReactionEnabled: moduleReactionEnabled,
+    isMessageStatusEnabled = true,
     replyType: moduleReplyType,
     threadReplySelectType: moduleThreadReplySelectType,
     isMessageGroupingEnabled = true,
@@ -350,6 +353,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
   const configurations = useMemo(() => ({
     isReactionEnabled: resolvedIsReactionEnabled,
+    isMessageStatusEnabled,
     isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled,
     autoscrollMessageOverflowToTop: autoscrollMessageOverflowToTop ?? config.autoscrollMessageOverflowToTop ?? false,
@@ -360,6 +364,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     scrollBehavior,
   }), [
     resolvedIsReactionEnabled,
+    isMessageStatusEnabled,
     isMessageGroupingEnabled,
     isMultipleFilesMessageEnabled,
     autoscrollMessageOverflowToTop,

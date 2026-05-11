@@ -39,6 +39,7 @@ export interface GroupChannelListItemBasicProps {
 export interface GroupChannelListItemViewProps extends GroupChannelListItemBasicProps {
   channelName: string;
   isMessageStatusEnabled?: boolean;
+  isMemberCountEnabled?: boolean;
 }
 
 export const GroupChannelListItemView = ({
@@ -48,6 +49,7 @@ export const GroupChannelListItemView = ({
   isSelected,
   channelName,
   isMessageStatusEnabled = true,
+  isMemberCountEnabled = true,
   onClick = noop,
   onLeaveChannel = () => Promise.resolve(),
   renderChannelAction,
@@ -112,13 +114,15 @@ export const GroupChannelListItemView = ({
               >
                 {channelName}
               </Label>
-              <Label
-                className="sendbird-channel-preview__content__upper__header__total-members"
-                type={LabelTypography.CAPTION_2}
-                color={LabelColors.ONBACKGROUND_2}
-              >
-                {getTotalMembers(channel)}
-              </Label>
+              {isMemberCountEnabled && (
+                <Label
+                  className="sendbird-channel-preview__content__upper__header__total-members"
+                  type={LabelTypography.CAPTION_2}
+                  color={LabelColors.ONBACKGROUND_2}
+                >
+                  {getTotalMembers(channel)}
+                </Label>
+              )}
               {(channel.isFrozen) && (
                 <div
                   title="Frozen"

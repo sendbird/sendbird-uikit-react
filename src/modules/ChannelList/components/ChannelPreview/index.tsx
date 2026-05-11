@@ -31,7 +31,11 @@ const ChannelPreview = ({
   const { state } = useSendbird();
   const { config } = state;
   const { stringSet } = useLocalization();
-  const { isTypingIndicatorEnabled = false, isMessageReceiptStatusEnabled = false } = useChannelListContext();
+  const {
+    isTypingIndicatorEnabled = false,
+    isMessageReceiptStatusEnabled = false,
+    isMemberCountEnabled = true,
+  } = useChannelListContext();
 
   const userId = config.userId;
   const isMessageStatusEnabled = isMessageReceiptStatusEnabled
@@ -46,6 +50,7 @@ const ChannelPreview = ({
       isSelected={isSelected ?? isActive}
       channelName={getChannelTitle(channel, userId, stringSet)}
       isMessageStatusEnabled={isMessageStatusEnabled}
+      isMemberCountEnabled={isMemberCountEnabled}
       onClick={onClick}
       onLeaveChannel={onLeaveChannel}
       renderChannelAction={renderChannelAction}

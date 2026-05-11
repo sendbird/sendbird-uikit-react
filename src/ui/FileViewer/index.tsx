@@ -1,7 +1,7 @@
 import './index.scss';
 
 import { FileMessage, MultipleFilesMessage } from '@sendbird/chat/message';
-import React, { MouseEvent, ReactElement, useContext, useRef } from 'react';
+import React, { MouseEvent, ReactElement, useContext, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { LocalizationContext } from '../../lib/LocalizationContext';
 import { MODAL_ROOT } from '../../hooks/useModal';
@@ -17,6 +17,7 @@ import { Slider } from './Slider';
 import { useKeyDown } from '../../hooks/useKeyDown/useKeyDown';
 import { UploadedFileInfoWithUpload } from '../../types';
 import Modal from '../Modal';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 export const FileViewerComponent = (props: FileViewerComponentProps): ReactElement => {
   const {
@@ -29,7 +30,9 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
     onClickLeft,
     onClickRight,
   } = props as MultiFilesViewer;
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const deleteEventRef = useRef<MouseEvent | null>(null);
   const onKeyDown = useKeyDown(ref, {
     Escape: (e) => onClose?.(e),
     ArrowLeft: () => onClickLeft?.(),
@@ -37,112 +40,139 @@ export const FileViewerComponent = (props: FileViewerComponentProps): ReactEleme
   });
   const { name, type, url } = mapFileViewerComponentProps({ props });
   const { stringSet } = useContext(LocalizationContext);
+  const onDeleteClick = (e: MouseEvent) => {
+    e.persist?.();
+    e.stopPropagation();
+    deleteEventRef.current = e;
+    setShowDeleteConfirmation(true);
+  };
+  const onDeleteConfirm = () => {
+    setShowDeleteConfirmation(false);
+    if (props.viewerType !== ViewerTypes.MULTI) {
+      props.onDelete(deleteEventRef.current as MouseEvent);
+    }
+    deleteEventRef.current = null;
+  };
 
   return (
-    <Modal onClose={onClose}>
-      <div
-        className="sendbird-fileviewer"
-        data-testid="sendbird-fileviewer"
-        onKeyDown={onKeyDown}
-        // to focus
-        tabIndex={1}
-        ref={ref}
-      >
-        <div className="sendbird-fileviewer__header">
-          <div className="sendbird-fileviewer__header__left">
-            <div className="sendbird-fileviewer__header__left__avatar">
-              <Avatar height="32px" width="32px" src={profileUrl}/>
+    <>
+      <Modal onClose={onClose}>
+        <div
+          className="sendbird-fileviewer"
+          data-testid="sendbird-fileviewer"
+          onKeyDown={onKeyDown}
+          // to focus
+          tabIndex={1}
+          ref={ref}
+        >
+          <div className="sendbird-fileviewer__header">
+            <div className="sendbird-fileviewer__header__left">
+              <div className="sendbird-fileviewer__header__left__avatar">
+                <Avatar height="32px" width="32px" src={profileUrl}/>
+              </div>
+              <div className="sendbird-fileviewer__header__left__text-container">
+                <Label
+                  className="sendbird-fileviewer__header__left__filename"
+                  type={LabelTypography.H_2}
+                  color={LabelColors.ONBACKGROUND_1}
+                >
+                  {name}
+                </Label>
+                <Label
+                  className="sendbird-fileviewer__header__left__sender-name"
+                  type={LabelTypography.BODY_1}
+                  color={LabelColors.ONBACKGROUND_2}
+                >
+                  {nickname}
+                </Label>
+              </div>
             </div>
-            <div className="sendbird-fileviewer__header__left__text-container">
-              <Label
-                className="sendbird-fileviewer__header__left__filename"
-                type={LabelTypography.H_2}
-                color={LabelColors.ONBACKGROUND_1}
-              >
-                {name}
-              </Label>
-              <Label
-                className="sendbird-fileviewer__header__left__sender-name"
-                type={LabelTypography.BODY_1}
-                color={LabelColors.ONBACKGROUND_2}
-              >
-                {nickname}
-              </Label>
+            <div
+              className="sendbird-fileviewer__header__right"
+            >
+              {
+                isSupportedFileView(type) && (
+                  <div className="sendbird-fileviewer__header__right__actions">
+                    <a
+                      className="sendbird-fileviewer__header__right__actions__download"
+                      rel="noopener noreferrer"
+                      href={url}
+                      target="_blank"
+                      download={name}
+                      onClick={onDownloadClick}
+                    >
+                      <Icon
+                        type={IconTypes.DOWNLOAD}
+                        fillColor={IconColors.ON_BACKGROUND_1}
+                        height="24px"
+                        width="24px"
+                      />
+                    </a>
+                    {props.viewerType !== ViewerTypes.MULTI && (
+                      <DeleteButton
+                        {...props}
+                        onDelete={onDeleteClick}
+                      />
+                    )}
+                  </div>
+                )
+              }
+              <div className="sendbird-fileviewer__header__right__actions__close">
+                <Icon
+                  type={IconTypes.CLOSE}
+                  fillColor={IconColors.ON_BACKGROUND_1}
+                  height="24px"
+                  width="24px"
+                  onClick={(e) => onClose?.(e)}
+                />
+              </div>
             </div>
           </div>
-          <div
-            className="sendbird-fileviewer__header__right"
-          >
+          <div className="sendbird-fileviewer__content">
+            {isVideo(type) && (
+              <video
+                controls
+                playsInline
+                preload="metadata"
+                className="sendbird-fileviewer__content__video"
+              >
+                <source src={url} type={type} />
+              </video>
+            )}
             {
-              isSupportedFileView(type) && (
-                <div className="sendbird-fileviewer__header__right__actions">
-                  <a
-                    className="sendbird-fileviewer__header__right__actions__download"
-                    rel="noopener noreferrer"
-                    href={url}
-                    target="_blank"
-                    onClick={onDownloadClick}
-                  >
-                    <Icon
-                      type={IconTypes.DOWNLOAD}
-                      fillColor={IconColors.ON_BACKGROUND_1}
-                      height="24px"
-                      width="24px"
-                    />
-                  </a>
-                  <DeleteButton
-                    className='sendbird-fileviewer__header__right__actions__delete'
-                    {...props}
-                  />
+              isImage(type) && (
+                <img
+                  src={url}
+                  alt={name}
+                  className={
+                    props.viewerType === ViewerTypes.MULTI
+                      ? 'sendbird-fileviewer__content__img__multi'
+                      : 'sendbird-fileviewer__content__img'
+                  }
+                />
+              )
+            }
+            {
+              !isSupportedFileView(type) && (
+                <div className="sendbird-fileviewer__content__unsupported">
+                  <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>
+                    {stringSet?.UI__FILE_VIEWER__UNSUPPORT || 'Unsupported message'}
+                  </Label>
                 </div>
               )
             }
-            <div className="sendbird-fileviewer__header__right__actions__close">
-              <Icon
-                type={IconTypes.CLOSE}
-                fillColor={IconColors.ON_BACKGROUND_1}
-                height="24px"
-                width="24px"
-                onClick={(e) => onClose?.(e)}
-              />
-            </div>
+            <Slider {...props} />
           </div>
         </div>
-        <div className="sendbird-fileviewer__content">
-          {isVideo(type) && (
-            <video
-              controls
-              className="sendbird-fileviewer__content__video"
-            >
-              <source src={url} type={type} />
-            </video>
-          )}
-          {
-            isImage(type) && (
-              <img
-                src={url}
-                alt={name}
-                className={
-                  props.viewerType === ViewerTypes.MULTI
-                    ? 'sendbird-fileviewer__content__img__multi'
-                    : 'sendbird-fileviewer__content__img'
-                }
-              />
-            )
-          }
-          {
-            !isSupportedFileView(type) && (
-              <div className="sendbird-fileviewer__content__unsupported">
-                <Label type={LabelTypography.H_1} color={LabelColors.ONBACKGROUND_1}>
-                  {stringSet?.UI__FILE_VIEWER__UNSUPPORT || 'Unsupported message'}
-                </Label>
-              </div>
-            )
-          }
-          <Slider {...props} />
-        </div>
-      </div>
-    </Modal>
+      </Modal>
+      {showDeleteConfirmation && (
+        <DeleteConfirmationModal
+          disabled={props.viewerType !== ViewerTypes.MULTI ? props.disableDelete : false}
+          onCancel={() => setShowDeleteConfirmation(false)}
+          onSubmit={onDeleteConfirm}
+        />
+      )}
+    </>
   );
 };
 
