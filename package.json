@@ -97,9 +97,9 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.4",
     "@rollup/plugin-typescript": "^11.1.5",
-    "@storybook/addon-essentials": "^8.6.15",
-    "@storybook/manager-api": "^8.6.15",
-    "@storybook/react-vite": "^8.6.15",
+    "@storybook/addon-essentials": "^8.6.17",
+    "@storybook/manager-api": "^8.6.17",
+    "@storybook/react-vite": "^8.6.17",
     "@svgr/rollup": "^8.1.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^5.16.5",
@@ -135,7 +135,7 @@
     "postcss-rtlcss": "^5.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "rollup": "^4.9.2",
+    "rollup": "^4.59.0",
     "rollup-plugin-analyzer": "^4.0.0",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-polyfill-node": "^0.13.0",
@@ -144,7 +144,7 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "rollup-plugin-visualizer": "^5.9.2",
     "sass": "^1.55.0",
-    "storybook": "^8.6.15",
+    "storybook": "^8.6.17",
     "stylelint": "^13.0.0",
     "stylelint-config-sass-guidelines": "^7.0.0",
     "ts-pattern": "^4.2.2",
@@ -165,5 +165,10 @@
   },
   "workspaces": [
     "apps/*"
-  ]
+  ],
+  "resolutions": {
+    "svgo@^2.7.0": "^2.8.1",
+    "svgo@^3.0.2": "^3.3.3",
+    "rollup@^4.20.0": "^4.59.0"
+  }
 }
