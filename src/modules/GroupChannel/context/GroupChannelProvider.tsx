@@ -33,6 +33,16 @@ import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
 import { deleteNullish } from '../../../utils/utils';
 import { CollectionEventSource } from '@sendbird/chat';
+import { createRuntimeStore, dispatchToRuntime } from '../internal/runtime/integration';
+import {
+  mapChannelFailed,
+  mapChannelReady,
+  mapOnChannelDeleted,
+  mapOnChannelUpdated,
+  mapOnCurrentUserBanned,
+  mapOnMessagesReceived,
+  mapOnMessagesUpdated,
+} from '../internal/runtime/adapter';
 
 const initialState = () => ({
   currentChannel: null,
@@ -156,6 +166,14 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   const { sdkStore } = stores;
   const { userId, markAsReadScheduler, logger, pubSub } = config;
 
+  // Phase 2 runtime adapter — parallel-only. Wires coreTs callbacks into
+  // a typed event reducer so Phase 3 (ScrollController) and Phase 4
+  // (UnreadReducer) can consume a single dispatch boundary. Today it does
+  // not drive any legacy state — dispatch calls are additive at each
+  // existing callback site. The dev/test instrumentation hook
+  // (__GROUP_CHANNEL_RUNTIME_DISPATCH_HOOK__) lets RV specs inspect events.
+  const runtimeStoreRef = useRef(createRuntimeStore());
+
   // ScrollHandler initialization
   const {
     scrollRef,
@@ -223,6 +241,10 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       }
     },
     onMessagesReceived: (messages) => {
+      // Phase 2 dispatch — additive, runs alongside the legacy effect below.
+      // coreTs callback uses SendbirdMessage[] (broader than SendableMessageType);
+      // the adapter mapper accepts the broader shape via structural cast.
+      dispatchToRuntime(runtimeStoreRef.current, mapOnMessagesReceived(messages as never));
       if (isScrollBottomReached
         && isContextMenuClosed()
         // Note: this shouldn't happen ideally, but it happens on re-rendering GroupChannelManager
@@ -239,15 +261,28 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
         }
       }
     },
+    onMessagesUpdated: (messages) => {
+      // Phase 2 dispatch — additive new callback. coreTs accepts this as
+      // optional; no legacy code reads from it.
+      dispatchToRuntime(runtimeStoreRef.current, mapOnMessagesUpdated(messages as never));
+    },
+    // Phase 2 NOTE — `onCacheResult` / `onApiResult` exist in the local
+    // coreTs source but not yet in published `@sendbird/uikit-tools@0.1.0`,
+    // so we cannot wire them here without bumping the dependency. The
+    // COLLECTION_CACHE_RESULT / COLLECTION_API_RESULT runtime events remain
+    // reducer-only until a follow-up cycle ships those callbacks.
     onChannelDeleted: () => {
+      dispatchToRuntime(runtimeStoreRef.current, mapOnChannelDeleted());
       actions.setCurrentChannel(null);
       onBackClick?.();
     },
     onCurrentUserBanned: () => {
+      dispatchToRuntime(runtimeStoreRef.current, mapOnCurrentUserBanned());
       actions.setCurrentChannel(null);
       onBackClick?.();
     },
     onChannelUpdated: (channel, ctx) => {
+      dispatchToRuntime(runtimeStoreRef.current, mapOnChannelUpdated(channel));
       if (ctx.source === CollectionEventSource.EVENT_CHANNEL_UNREAD
         && ctx.userIds.includes(userId)
       ) {
@@ -268,8 +303,12 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     if (sdkStore.initialized && channelUrl) {
       try {
         const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
+        // Phase 2 dispatch — additive, before legacy actions.setCurrentChannel.
+        dispatchToRuntime(runtimeStoreRef.current, mapChannelReady(channel));
         actions.setCurrentChannel(channel);
       } catch (error) {
+        // Phase 2 dispatch — additive, before legacy actions.handleChannelError.
+        dispatchToRuntime(runtimeStoreRef.current, mapChannelFailed(error));
         actions.handleChannelError(error);
         logger?.error?.('GroupChannelProvider: error when fetching channel', error);
       }

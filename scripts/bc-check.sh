@@ -129,15 +129,23 @@ else
 fi
 
 # --- BC-5: internal source import (grep) ----------------------------------
-# Match imports from any path containing `/internal/` but exclude relative
-# imports issued from inside src/modules/GroupChannel/internal/ itself.
+# `internal/` is module-private. Code inside the SAME module (e.g.,
+# `src/modules/GroupChannel/context/` reaching into `.../internal/`) is
+# fine — that's the very wiring Phase 2 introduces. What BC-5 must catch
+# is a `internal/` import issued from OUTSIDE the owning module
+# (e.g., `src/lib/` or another `src/modules/*` reaching into
+# `src/modules/GroupChannel/internal/`).
+#
+# Strategy: list all matches, then drop matches whose source file lives
+# under the same module as the imported `internal/` path. Today only
+# `src/modules/GroupChannel/internal/` exists; Phase 3+ may add more.
 internal_import_matches="$(
   grep -rEn "from ['\"](\\.\\.?/)+(.*/)?internal/" src --include='*.ts' --include='*.tsx' \
-    | grep -vE 'src/modules/GroupChannel/internal/' \
+    | grep -vE 'src/modules/GroupChannel/' \
     || true
 )"
 if [ -z "$internal_import_matches" ]; then
-  emit_pass 5 "no external source imports from internal/"
+  emit_pass 5 "no external source imports from internal/ (module-private boundary intact)"
 else
   emit_fail 5 "external source imports from internal/ detected:"
   echo "$internal_import_matches" | head -20
