@@ -1,0 +1,91 @@
+{
+  "$schema": "https://example.com/p0-render-count-baseline-v1.json",
+  "$comment": "Phase 0 render-count baseline. Source of truth for Phase 1-4 RV tests. Delta-based: only deltasByAction is asserted against; initialRenders is informational. Phase 1's useStoreSelector consumers must NOT exceed these deltas.",
+  "meta": {
+    "react": "19.0.0",
+    "jest": "29.5.0",
+    "testingLibraryReact": "16.2.0",
+    "strictMode": false,
+    "baseSha": "2df7d140",
+    "capturedAt": "2026-05-22"
+  },
+  "scenarios": {
+    "scenario-4-scroll-position-render-boundary": {
+      "source": "src/__tests__/p0-characterization/scroll-position-render-boundary.spec.tsx",
+      "action": "store.setState toggling isScrollBottomReached false → true",
+      "initialRenders": {
+        "ScrollAffordance": 1,
+        "HeaderConsumer": 1,
+        "MessageListConsumer": 1
+      },
+      "deltasByAction": {
+        "ScrollAffordance": 1,
+        "HeaderConsumer": 1,
+        "MessageListConsumer": 1
+      },
+      "phase1RVTarget": {
+        "ScrollAffordance": 1,
+        "HeaderConsumer": 0,
+        "MessageListConsumer": 0
+      }
+    },
+    "scenario-3-10-receive-at-bottom": {
+      "source": "src/__tests__/p0-characterization/receive-at-bottom-render-and-behavior.spec.tsx",
+      "action": "store.setState appending message at bottom",
+      "deltasByAction": {
+        "MessageList": 1,
+        "Header": 1,
+        "Composer": 1
+      },
+      "phase1RVTarget": {
+        "MessageList": 1,
+        "Header": 0,
+        "Composer": 0
+      }
+    },
+    "scenario-5-reaction-update": {
+      "source": "src/__tests__/p0-characterization/reaction-update-render-boundary.spec.tsx",
+      "action": "store.setState updating reactions on one message",
+      "deltasByAction": {
+        "MessageItem1": 1,
+        "MessageItem2": 1,
+        "Composer": 1,
+        "Header": 1
+      },
+      "phase1RVTarget": {
+        "MessageItem1": 1,
+        "MessageItem2": 0,
+        "Composer": 0,
+        "Header": 0
+      }
+    },
+    "scenario-6-channel-list-typing": {
+      "source": "src/__tests__/p0-characterization/channel-list-typing-render-boundary.spec.tsx",
+      "action": "list-store.setState appending to typingChannelUrls",
+      "deltasByAction": {
+        "TypingIndicatorForCh1": 1,
+        "ChannelPreviewForCh2": 1,
+        "CreateChannelButton": 1
+      },
+      "phase1RVTarget": {
+        "TypingIndicatorForCh1": 1,
+        "ChannelPreviewForCh2": 0,
+        "CreateChannelButton": 0
+      }
+    },
+    "scenario-11-receive-away-from-bottom": {
+      "source": "src/__tests__/p0-characterization/receive-away-from-bottom-unread.spec.tsx",
+      "action": "store.setState appending message while isScrollBottomReached=false",
+      "deltasByAction": {
+        "MessageList": 1,
+        "UnreadAffordance": 1,
+        "Header": 1
+      },
+      "phase1RVTarget": {
+        "MessageList": 1,
+        "UnreadAffordance": 1,
+        "Header": 0
+      }
+    }
+  }
+}
