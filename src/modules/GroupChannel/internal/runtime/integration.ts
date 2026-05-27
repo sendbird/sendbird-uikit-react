@@ -47,8 +47,15 @@ export function createRuntimeStore(seed?: Partial<GroupChannelRuntimeState>): St
  * Apply a single event to the runtime store. Pure transition through
  * `groupChannelRuntimeReducer`, then `applyStorePatch` to write the new
  * state (equality short-circuit honored), then fire the instrumentation
- * hook if present. Always safe to call from inside legacy callbacks —
- * exceptions in the hook are caught and logged in dev only.
+ * hook if present.
+ *
+ * **Parallel-only invariant** (Plan §2.4): Phase 2 wires this alongside
+ * existing legacy actions. A bug in the reducer, mappers, or store layer
+ * MUST NOT prevent the legacy callback from continuing. Any exception
+ * raised on the reducer/patch path is therefore caught here and surfaced
+ * via the optional `onError` callback. Hook exceptions are likewise
+ * caught (existing behavior). Returns an empty effect array on failure
+ * so callers can route effects without null-checks.
  *
  * Returns the emitted `SideEffect[]` so the caller can route them to
  * Phase 3/4 controllers when those are wired up. Phase 2 simply collects
@@ -57,13 +64,27 @@ export function createRuntimeStore(seed?: Partial<GroupChannelRuntimeState>): St
 export function dispatchToRuntime(
   store: Store<GroupChannelRuntimeState>,
   event: GroupChannelRuntimeEvent,
+  onError?: (error: unknown, event: GroupChannelRuntimeEvent) => void,
 ): ReadonlyArray<SideEffect> {
-  const result = groupChannelRuntimeReducer(store.getState(), event);
-  // Patch the runtime store with the entire next state. The reducer
-  // already preserves structural sharing on no-op transitions, so
-  // applyStorePatch's equality check will short-circuit when nothing
-  // actually changed.
-  applyStorePatch(store, result.state as Partial<GroupChannelRuntimeState>, event.type);
+  let result: { state: GroupChannelRuntimeState; effects: ReadonlyArray<SideEffect> };
+  try {
+    result = groupChannelRuntimeReducer(store.getState(), event);
+    // Patch the runtime store with the entire next state. The reducer
+    // already preserves structural sharing on no-op transitions, so
+    // applyStorePatch's equality check will short-circuit when nothing
+    // actually changed.
+    applyStorePatch(store, result.state as Partial<GroupChannelRuntimeState>, event.type);
+  } catch (error) {
+    if (onError) {
+      try {
+        onError(error, event);
+      } catch {
+        // onError must never propagate — that would defeat the
+        // parallel-only invariant we just enforced above.
+      }
+    }
+    return [];
+  }
   if (process.env.NODE_ENV !== 'production') {
     const hook = (globalThis as unknown as { [RUNTIME_DISPATCH_HOOK_GLOBAL_KEY]?: RuntimeDispatchHook })[
       RUNTIME_DISPATCH_HOOK_GLOBAL_KEY

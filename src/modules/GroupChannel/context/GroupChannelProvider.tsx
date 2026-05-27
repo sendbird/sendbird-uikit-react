@@ -34,6 +34,7 @@ import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
 import { deleteNullish } from '../../../utils/utils';
 import { CollectionEventSource } from '@sendbird/chat';
 import { createRuntimeStore, dispatchToRuntime } from '../internal/runtime/integration';
+import type { GroupChannelRuntimeEvent } from '../internal/runtime/events';
 import {
   mapChannelFailed,
   mapChannelReady,
@@ -174,6 +175,27 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   // (__GROUP_CHANNEL_RUNTIME_DISPATCH_HOOK__) lets RV specs inspect events.
   const runtimeStoreRef = useRef(createRuntimeStore());
 
+  // Wraps every dispatch site so a bug in the reducer OR a mapper cannot
+  // prevent the legacy callback from continuing (Plan §2.4 parallel-only
+  // invariant). The thunk form (`() => mapXxx(args)`) defers mapper
+  // execution into the guard so a throw from the mapper is also
+  // contained. Errors are observable via `logger.warn` — visible in
+  // production logs but never re-thrown.
+  const runtimeDispatch = useCallback((makeEvent: () => GroupChannelRuntimeEvent) => {
+    try {
+      const event = makeEvent();
+      return dispatchToRuntime(runtimeStoreRef.current, event, (error, failedEvent) => {
+        logger?.warning?.('GroupChannelProvider: runtime dispatch failed (reducer)', {
+          eventType: failedEvent.type,
+          error,
+        });
+      });
+    } catch (error) {
+      logger?.warning?.('GroupChannelProvider: runtime dispatch failed (mapper)', error);
+      return [];
+    }
+  }, [logger]);
+
   // ScrollHandler initialization
   const {
     scrollRef,
@@ -244,7 +266,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       // Phase 2 dispatch — additive, runs alongside the legacy effect below.
       // coreTs callback uses SendbirdMessage[] (broader than SendableMessageType);
       // the adapter mapper accepts the broader shape via structural cast.
-      dispatchToRuntime(runtimeStoreRef.current, mapOnMessagesReceived(messages as never));
+      runtimeDispatch(() => mapOnMessagesReceived(messages as never));
       if (isScrollBottomReached
         && isContextMenuClosed()
         // Note: this shouldn't happen ideally, but it happens on re-rendering GroupChannelManager
@@ -264,7 +286,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     onMessagesUpdated: (messages) => {
       // Phase 2 dispatch — additive new callback. coreTs accepts this as
       // optional; no legacy code reads from it.
-      dispatchToRuntime(runtimeStoreRef.current, mapOnMessagesUpdated(messages as never));
+      runtimeDispatch(() => mapOnMessagesUpdated(messages as never));
     },
     // Phase 2 NOTE — `onCacheResult` / `onApiResult` exist in the local
     // coreTs source but not yet in published `@sendbird/uikit-tools@0.1.0`,
@@ -272,17 +294,17 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     // COLLECTION_CACHE_RESULT / COLLECTION_API_RESULT runtime events remain
     // reducer-only until a follow-up cycle ships those callbacks.
     onChannelDeleted: () => {
-      dispatchToRuntime(runtimeStoreRef.current, mapOnChannelDeleted());
+      runtimeDispatch(() => mapOnChannelDeleted());
       actions.setCurrentChannel(null);
       onBackClick?.();
     },
     onCurrentUserBanned: () => {
-      dispatchToRuntime(runtimeStoreRef.current, mapOnCurrentUserBanned());
+      runtimeDispatch(() => mapOnCurrentUserBanned());
       actions.setCurrentChannel(null);
       onBackClick?.();
     },
     onChannelUpdated: (channel, ctx) => {
-      dispatchToRuntime(runtimeStoreRef.current, mapOnChannelUpdated(channel));
+      runtimeDispatch(() => mapOnChannelUpdated(channel));
       if (ctx.source === CollectionEventSource.EVENT_CHANNEL_UNREAD
         && ctx.userIds.includes(userId)
       ) {
@@ -304,11 +326,11 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       try {
         const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
         // Phase 2 dispatch — additive, before legacy actions.setCurrentChannel.
-        dispatchToRuntime(runtimeStoreRef.current, mapChannelReady(channel));
+        runtimeDispatch(() => mapChannelReady(channel));
         actions.setCurrentChannel(channel);
       } catch (error) {
         // Phase 2 dispatch — additive, before legacy actions.handleChannelError.
-        dispatchToRuntime(runtimeStoreRef.current, mapChannelFailed(error));
+        runtimeDispatch(() => mapChannelFailed(error));
         actions.handleChannelError(error);
         logger?.error?.('GroupChannelProvider: error when fetching channel', error);
       }

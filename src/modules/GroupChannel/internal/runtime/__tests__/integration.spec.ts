@@ -90,4 +90,60 @@ describe('Phase 2 — runtime integration (RV-2.7 partial)', () => {
     dispatchToRuntime(store, mapChannelReady(fakeChannel()));
     expect(spy).toHaveBeenCalledTimes(1);
   });
+
+  // Parallel-only invariant (Plan §2.4): a fault in the reducer or store
+  // patch MUST NOT propagate to legacy callers. See review-checklist W1.
+  // A malformed CHANNEL_READY event with `channel: null` provokes a real
+  // throw at `event.channel.url` inside the reducer — the closest in-tree
+  // stand-in for a production mapper bug that emits a degenerate payload.
+  describe('parallel-only invariant (W1)', () => {
+    const malformedChannelReady = { type: 'CHANNEL_READY', channel: null } as never;
+
+    it('reducer exceptions are swallowed and onError is invoked with event context', () => {
+      const store = createRuntimeStore();
+      const onError = jest.fn();
+
+      let effects: ReturnType<typeof dispatchToRuntime> | undefined;
+      expect(() => {
+        effects = dispatchToRuntime(store, malformedChannelReady, onError);
+      }).not.toThrow();
+
+      expect(effects).toEqual([]);
+      expect(onError).toHaveBeenCalledTimes(1);
+      const [errArg, eventArg] = onError.mock.calls[0];
+      expect(errArg).toBeInstanceOf(TypeError);
+      expect(eventArg).toBe(malformedChannelReady);
+    });
+
+    it('onError throwing does not propagate either', () => {
+      const store = createRuntimeStore();
+      const onError = () => {
+        throw new Error('onError exploded');
+      };
+      expect(() => {
+        dispatchToRuntime(store, malformedChannelReady, onError);
+      }).not.toThrow();
+    });
+
+    it('runtime state is preserved when dispatch fails', () => {
+      const store = createRuntimeStore();
+      // Establish a known-good state first.
+      dispatchToRuntime(store, mapChannelReady(fakeChannel('ch-keep')));
+      const before = store.getState();
+
+      dispatchToRuntime(store, malformedChannelReady, () => undefined);
+
+      // Failed dispatch must not mutate the store.
+      expect(store.getState()).toBe(before);
+    });
+
+    it('dispatch with no onError still swallows the exception', () => {
+      // Production legacy callers may opt out of error observation —
+      // the swallow MUST hold regardless.
+      const store = createRuntimeStore();
+      expect(() => {
+        dispatchToRuntime(store, malformedChannelReady);
+      }).not.toThrow();
+    });
+  });
 });
