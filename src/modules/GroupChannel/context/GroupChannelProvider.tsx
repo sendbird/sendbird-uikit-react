@@ -44,6 +44,8 @@ import {
   mapOnMessagesReceived,
   mapOnMessagesUpdated,
 } from '../internal/runtime/adapter';
+import { createUnreadStore, dispatchToUnreadStore } from '../internal/unread/integration';
+import type { UnreadEvent } from '../internal/unread/reducer';
 
 const initialState = () => ({
   currentChannel: null,
@@ -196,6 +198,40 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     }
   }, [logger]);
 
+  // Phase 5.1.a — Unread reducer store. Dual-write strategy (spec §AC-4):
+  // dispatch fires alongside the legacy `setNewMessageIds` /
+  // `setFirstUnreadMessageId` calls. Phase 5.1.b/c switch consumer reads
+  // over to this store via `useUnreadSelector`; the legacy state slice is
+  // retained until Phase 5.2 has a verification window.
+  //
+  // MESSAGES_DELETED is intentionally NOT dispatched — `@sendbird/uikit-tools@0.1.0`
+  // does not expose `onMessagesDeleted` (Plan §1). Re-evaluate when the
+  // uikit-tools bump (separate follow-up) ships that callback.
+  const unreadStoreRef = useRef(createUnreadStore());
+
+  // Thunk-guarded dispatch — see runtimeDispatch (W1). A bug in the
+  // reducer or in a caller-supplied factory MUST NOT prevent the legacy
+  // callback from continuing.
+  const unreadDispatch = useCallback((makeEvent: () => UnreadEvent, isAtBottom?: boolean) => {
+    try {
+      const event = makeEvent();
+      return dispatchToUnreadStore(
+        unreadStoreRef.current,
+        event,
+        { isAtBottom: isAtBottom ?? true },
+        (error, failedEvent) => {
+          logger?.warning?.('GroupChannelProvider: unread dispatch failed (reducer)', {
+            eventType: failedEvent.type,
+            error,
+          });
+        },
+      );
+    } catch (error) {
+      logger?.warning?.('GroupChannelProvider: unread dispatch failed (mapper)', error);
+      return unreadStoreRef.current.getState();
+    }
+  }, [logger]);
+
   // ScrollHandler initialization
   const {
     scrollRef,
@@ -241,13 +277,21 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
           source: source || 'unknown',
         });
         markAsUnreadSourceRef.current = source || 'internal';
+        // Phase 5.1.a — record the user-chosen unread anchor in the
+        // reducer. Only fires after the SDK call succeeds so the local
+        // and server states agree.
+        unreadDispatch(() => ({
+          type: 'MARK_AS_UNREAD_SET',
+          messageId: message.messageId,
+          createdAt: message.createdAt,
+        }));
       } else {
         logger?.error?.('GroupChannelProvider: markAsUnread method not available in current SDK version');
       }
     } catch (error) {
       logger?.error?.('GroupChannelProvider: markAsUnread failed', error);
     }
-  }, [state.currentChannel, logger, config.groupChannel.enableMarkAsUnread]);
+  }, [state.currentChannel, logger, config.groupChannel.enableMarkAsUnread, unreadDispatch]);
 
   // Message Collection setup
   const messageDataSource = useGroupChannelMessages(sdkStore.sdk, state.currentChannel!, {
@@ -267,6 +311,17 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       // coreTs callback uses SendbirdMessage[] (broader than SendableMessageType);
       // the adapter mapper accepts the broader shape via structural cast.
       runtimeDispatch(() => mapOnMessagesReceived(messages as never));
+
+      // Phase 5.1.a — Unread dispatch. fromCurrentUser is true only when
+      // ALL messages in the burst are from the current user; conservative
+      // so a mixed burst still grows the unread counter.
+      const fromCurrentUser = messages.length > 0
+        && messages.every((m: any) => m.sender?.userId === userId);
+      unreadDispatch(() => ({
+        type: 'MESSAGES_RECEIVED',
+        messages: messages.map((m: any) => ({ messageId: m.messageId, createdAt: m.createdAt })),
+        fromCurrentUser,
+      }), isScrollBottomReached);
       if (isScrollBottomReached
         && isContextMenuClosed()
         // Note: this shouldn't happen ideally, but it happens on re-rendering GroupChannelManager
@@ -295,11 +350,14 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     // reducer-only until a follow-up cycle ships those callbacks.
     onChannelDeleted: () => {
       runtimeDispatch(() => mapOnChannelDeleted());
+      // Phase 5.1.a — channel cleared → reset unread tracking.
+      unreadDispatch(() => ({ type: 'CHANNEL_CHANGED', channelUrl: '' }));
       actions.setCurrentChannel(null);
       onBackClick?.();
     },
     onCurrentUserBanned: () => {
       runtimeDispatch(() => mapOnCurrentUserBanned());
+      unreadDispatch(() => ({ type: 'CHANNEL_CHANGED', channelUrl: '' }));
       actions.setCurrentChannel(null);
       onBackClick?.();
     },
@@ -314,11 +372,37 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
         && ctx.userIds.includes(userId)
       ) {
         actions.setReadStateChanged('read');
+        // Phase 5.1.a — remote read confirmation → clear local unread.
+        unreadDispatch(() => ({
+          type: 'READ_CONFIRMED',
+          channelUrl: channel.url,
+          at: Date.now(),
+        }));
+      }
+      // Phase 5.1.a — channel reference may switch (e.g. operator change);
+      // fire CHANNEL_CHANGED only when the url actually changes to avoid
+      // unnecessary state churn on no-op updates.
+      if (state.currentChannel?.url !== channel.url) {
+        unreadDispatch(() => ({ type: 'CHANNEL_CHANGED', channelUrl: channel.url }));
       }
       actions.setCurrentChannel(channel);
     },
     logger: logger as any,
   });
+
+  // Phase 5.1.a — scroll-edge → unread reducer wiring. Dispatches
+  // USER_REACHED_BOTTOM / USER_LEFT_BOTTOM whenever the legacy
+  // `state.isScrollBottomReached` flag flips. Runs on initial mount as
+  // well (isScrollBottomReached defaults to true → fires
+  // USER_REACHED_BOTTOM, which the reducer treats as a no-op when state
+  // is already `clean`).
+  useEffect(() => {
+    if (isScrollBottomReached) {
+      unreadDispatch(() => ({ type: 'USER_REACHED_BOTTOM', at: Date.now() }));
+    } else {
+      unreadDispatch(() => ({ type: 'USER_LEFT_BOTTOM', at: Date.now() }));
+    }
+  }, [isScrollBottomReached, unreadDispatch]);
 
   // Channel initialization
   useAsyncEffect(async () => {
@@ -327,6 +411,10 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
         const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
         // Phase 2 dispatch — additive, before legacy actions.setCurrentChannel.
         runtimeDispatch(() => mapChannelReady(channel));
+        // Phase 5.1.a — fresh channel mount → reset unread tracking under
+        // the new url. Dispatched synchronously so consumer reads on the
+        // next render observe a clean state (Plan §R-2).
+        unreadDispatch(() => ({ type: 'CHANNEL_CHANGED', channelUrl: channel.url }));
         actions.setCurrentChannel(channel);
       } catch (error) {
         // Phase 2 dispatch — additive, before legacy actions.handleChannelError.
