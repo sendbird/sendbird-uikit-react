@@ -46,6 +46,7 @@ import {
 } from '../internal/runtime/adapter';
 import { createUnreadStore, dispatchToUnreadStore } from '../internal/unread/integration';
 import type { UnreadEvent } from '../internal/unread/reducer';
+import { GroupChannelUnreadContext } from './GroupChannelUnreadContext';
 
 const initialState = () => ({
   currentChannel: null,
@@ -575,7 +576,15 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     messageDataSource.messages.map(it => it.serialize()),
   ]);
 
-  return children;
+  // Phase 5.1.b — expose the unread store to consumer subscriptions
+  // (useUnreadSelector). The context value is the same store ref for
+  // the lifetime of this manager mount; consumers re-render only when
+  // their selector output changes (useSyncExternalStore semantics).
+  return (
+    <GroupChannelUnreadContext.Provider value={unreadStoreRef.current}>
+      {children}
+    </GroupChannelUnreadContext.Provider>
+  );
 };
 
 const GroupChannelProvider: React.FC<GroupChannelProviderProps> = (props) => {

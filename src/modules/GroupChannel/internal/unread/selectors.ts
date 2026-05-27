@@ -48,6 +48,19 @@ export const selectFirstUnreadCreatedAt = (s: UnreadState): number | null => s.f
 export const selectLastReadAt = (s: UnreadState): number | null => s.lastReadAt;
 
 /**
+ * True when the given message contributes to the unread count — i.e. it
+ * is one of the messages received while the user was away from the
+ * bottom (or pinned via mark-as-unread). Replaces the legacy
+ * `newMessageIds?.includes(message.messageId)` check at MessageView and
+ * is identity-stable per `Object.is` (returns a primitive).
+ *
+ * Phase 5.1.b — consumed by `MessageView` via `useUnreadSelector`.
+ */
+export function selectIsMessageUnread(s: UnreadState, message: SelectorMessage): boolean {
+  return s.unreadMessageIds.has(message.messageId);
+}
+
+/**
  * The separator renders ABOVE the first unread message — so for a given
  * candidate message, return true iff its id matches the anchor.
  */
