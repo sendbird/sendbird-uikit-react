@@ -15,7 +15,12 @@ export interface GetMessagePartsInfoProps {
   currentChannel?: GroupChannel | null;
   replyType?: string;
   hasPrevious?: boolean;
-  firstUnreadMessageId?: number | string | undefined;
+  // Phase 5.1.c — narrowed from `number | string` per audit (R-5 in
+  // .agentic/p0-phase-5-1/plan.md): all internal writers pass `number`
+  // (or `undefined`); the `string` union was unreachable defensive over-
+  // typing. `null` added to align with reducer-side return types ahead
+  // of a future consumer migration cycle.
+  firstUnreadMessageId?: number | null | undefined;
   isUnreadMessageExistInChannel?: React.MutableRefObject<boolean>;
 }
 
