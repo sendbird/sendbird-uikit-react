@@ -10,6 +10,19 @@
  * results because the memo cache only re-runs the selector when the raw
  * snapshot reference changes (see `useStoreSelector` JSDoc).
  *
+ * @example Module-level selector (preferred)
+ * ```ts
+ * const count = useUnreadSelector(selectUnreadCount);
+ * ```
+ *
+ * @example Selector that closes over a prop — STABILIZE with useCallback
+ * so prop changes invalidate the memo cache:
+ * ```ts
+ * const isUnread = useUnreadSelector(
+ *   useCallback((s) => selectIsMessageUnread(s, { messageId }), [messageId]),
+ * );
+ * ```
+ *
  * Internal — NOT re-exported from `src/index.ts`.
  */
 import { useStoreSelector, type EqualityFn } from '../../../../hooks/useStore';

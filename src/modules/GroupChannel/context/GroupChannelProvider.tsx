@@ -210,9 +210,29 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   // uikit-tools bump (separate follow-up) ships that callback.
   const unreadStoreRef = useRef(createUnreadStore());
 
+  // Tracks the last channelUrl observed by the unread store so repeated
+  // CHANNEL_CHANGED dispatches (e.g. mount-time + a stale onChannelUpdated
+  // closure firing before the legacy setCurrentChannel has flushed) collapse
+  // to a single transition. Idempotent regardless, but avoids dev-hook
+  // double-fire and any future subscriber re-render.
+  const unreadChannelUrlRef = useRef<string | null>(null);
+
   // Thunk-guarded dispatch — see runtimeDispatch (W1). A bug in the
   // reducer or in a caller-supplied factory MUST NOT prevent the legacy
   // callback from continuing.
+  const dispatchChannelChanged = useCallback((channelUrl: string) => {
+    if (unreadChannelUrlRef.current === channelUrl) return;
+    unreadChannelUrlRef.current = channelUrl;
+    return dispatchToUnreadStore(
+      unreadStoreRef.current,
+      { type: 'CHANNEL_CHANGED', channelUrl },
+      undefined,
+      (error) => {
+        logger?.warning?.('GroupChannelProvider: unread CHANNEL_CHANGED failed', { error });
+      },
+    );
+  }, [logger]);
+
   const unreadDispatch = useCallback((makeEvent: () => UnreadEvent, isAtBottom?: boolean) => {
     try {
       const event = makeEvent();
@@ -313,16 +333,23 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       // the adapter mapper accepts the broader shape via structural cast.
       runtimeDispatch(() => mapOnMessagesReceived(messages as never));
 
-      // Phase 5.1.a — Unread dispatch. fromCurrentUser is true only when
-      // ALL messages in the burst are from the current user; conservative
-      // so a mixed burst still grows the unread counter.
-      const fromCurrentUser = messages.length > 0
-        && messages.every((m: any) => m.sender?.userId === userId);
-      unreadDispatch(() => ({
-        type: 'MESSAGES_RECEIVED',
-        messages: messages.map((m: any) => ({ messageId: m.messageId, createdAt: m.createdAt })),
-        fromCurrentUser,
-      }), isScrollBottomReached);
+      // Phase 5.1.a — Unread dispatch. Filter out current-user messages
+      // BEFORE dispatch so they never enter the unread set (review I-2).
+      // Prior `messages.every(...)` collapsed mixed bursts to
+      // `fromCurrentUser: false`, which would have grown the set with my
+      // own messageId — wrong the moment a consumer reads from the set.
+      // After filtering, the remaining burst is by definition non-self,
+      // so `fromCurrentUser: false` is correct.
+      const peerMessages = messages.filter(
+        (m) => (m as { sender?: { userId?: string } }).sender?.userId !== userId,
+      );
+      if (peerMessages.length > 0) {
+        unreadDispatch(() => ({
+          type: 'MESSAGES_RECEIVED',
+          messages: peerMessages.map((m) => ({ messageId: m.messageId, createdAt: m.createdAt })),
+          fromCurrentUser: false,
+        }), isScrollBottomReached);
+      }
       if (isScrollBottomReached
         && isContextMenuClosed()
         // Note: this shouldn't happen ideally, but it happens on re-rendering GroupChannelManager
@@ -351,14 +378,15 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     // reducer-only until a follow-up cycle ships those callbacks.
     onChannelDeleted: () => {
       runtimeDispatch(() => mapOnChannelDeleted());
-      // Phase 5.1.a — channel cleared → reset unread tracking.
-      unreadDispatch(() => ({ type: 'CHANNEL_CHANGED', channelUrl: '' }));
+      // Phase 5.1.a — channel cleared → reset unread tracking (idempotent
+      // via unreadChannelUrlRef).
+      dispatchChannelChanged('');
       actions.setCurrentChannel(null);
       onBackClick?.();
     },
     onCurrentUserBanned: () => {
       runtimeDispatch(() => mapOnCurrentUserBanned());
-      unreadDispatch(() => ({ type: 'CHANNEL_CHANGED', channelUrl: '' }));
+      dispatchChannelChanged('');
       actions.setCurrentChannel(null);
       onBackClick?.();
     },
@@ -380,12 +408,10 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
           at: Date.now(),
         }));
       }
-      // Phase 5.1.a — channel reference may switch (e.g. operator change);
-      // fire CHANNEL_CHANGED only when the url actually changes to avoid
-      // unnecessary state churn on no-op updates.
-      if (state.currentChannel?.url !== channel.url) {
-        unreadDispatch(() => ({ type: 'CHANNEL_CHANGED', channelUrl: channel.url }));
-      }
+      // Phase 5.1.a — fire CHANNEL_CHANGED only when the url actually
+      // changes. dispatchChannelChanged handles its own idempotency via
+      // unreadChannelUrlRef, so this is purely a perf early-out.
+      dispatchChannelChanged(channel.url);
       actions.setCurrentChannel(channel);
     },
     logger: logger as any,
@@ -413,9 +439,9 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
         // Phase 2 dispatch — additive, before legacy actions.setCurrentChannel.
         runtimeDispatch(() => mapChannelReady(channel));
         // Phase 5.1.a — fresh channel mount → reset unread tracking under
-        // the new url. Dispatched synchronously so consumer reads on the
-        // next render observe a clean state (Plan §R-2).
-        unreadDispatch(() => ({ type: 'CHANNEL_CHANGED', channelUrl: channel.url }));
+        // the new url. dispatchChannelChanged collapses repeat fires
+        // through unreadChannelUrlRef (Plan §R-2, review I-1).
+        dispatchChannelChanged(channel.url);
         actions.setCurrentChannel(channel);
       } catch (error) {
         // Phase 2 dispatch — additive, before legacy actions.handleChannelError.

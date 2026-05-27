@@ -53,7 +53,10 @@ export function createUnreadStore(seed?: Partial<UnreadState>): Store<UnreadStat
  *
  * Returns the resulting `UnreadState` so the caller can route effects
  * synchronously without an extra `store.getState()`. On failure returns
- * the unchanged previous state.
+ * the unchanged previous state — note this differs from
+ * `dispatchToRuntime` which returns an empty `SideEffect[]` on failure;
+ * each return type is the unit appropriate to its caller's contract
+ * (state read-back here, effect routing there).
  */
 export function dispatchToUnreadStore(
   store: Store<UnreadState>,
