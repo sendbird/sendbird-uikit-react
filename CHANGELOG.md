@@ -1,5 +1,20 @@
 # Changelog - v3
 
+## [v3.18.0] (MAY 27 2026)
+### Features
+- Redesigned the message composer's file attachment flow
+
+  Files can now be attached by drag-and-drop or clipboard paste, and are staged inside the composer so they can be reviewed before sending. The file picker, drag-and-drop, and paste all enforce the same type, size, and count constraints. Available in `GroupChannel` and `Thread`, with single-file support in `OpenChannel`.
+
+### Fixes
+- Fixed a bug where clicking a search result did not scroll to or highlight the target message
+- Fixed a bug where message scroll pagination did not recover after a network disconnection or a search query change
+- Fixed a bug where the `Thread` view was reset when another user was banned from or left the channel
+- Fixed a bug where the typing indicator was not cleared correctly when the input became empty or the channel changed
+- Fixed a bug where the voice message player did not reset its playback position when the channel changed
+- Fixed a bug where HTML in the message input was not sanitized when editing a message
+- Fixed an inaccurate warning message shown when the mention count limit is exceeded
+
 ## [v3.17.12] (MAR 26 2026)
 ### Fixes
 - Fixed a bug where invisible zero-width spaces inserted during paste in `MessageInput` could be included in sent or updated messages
@@ -50,7 +65,6 @@
 ### Fixes
 - Fix a bug where `autoscrollMessageOverflowToTop` set on `SendbirdProvider` was not being passed down to child components
 
-
 ## [v3.17.5] (DEC 03 2025)
 ### Features
 - Added `autoscrollMessageOverflowToTop` global option
@@ -67,13 +81,11 @@
 ### Fixes
 - Fixed a bug where scrollToMessage
 
-
 ## [v3.17.4] (NOV 26 2025)
 ### Fixes
 - Fixed a Bug where SDK initialization could fail or remain uninitialized in React 17
 - Fixed a bug where `mentionedMessageTemplate` is being set even when the message is not a mentioned message
 - Fixed a bug where URL links inside Markdown-type messages do not open in a new tab
-
 
 ## [v3.17.3] (OCT 2 2025)
 ### Fixes
@@ -242,7 +254,6 @@
 ### Fixes:
 - Fixed the width of the messages in open channel
 
-
 ## [v3.15.12] (Jan 9 2025)
 
 ### Features:
@@ -391,7 +402,6 @@
 
 ### Fixes
 - Fixed an issue where the channel UI's scroll did not work after sending a new message. This issue was specific to the NextJS environment.
-
 
 ## [v3.15.1] (Aug 29, 2024)
 
@@ -543,7 +553,6 @@
   - Exported the `ChannelSettingsMenuItem` component.
 - Added `interop: "compat"` setting for the CommonJS output in Rollup Config to enhance the compatibility between ESM and CJS.
 
-
 ## [v3.14.12] (July 3, 2024)
 
 ### Features
@@ -657,7 +666,6 @@
 ### Chore
 - Updated `@sendbird/chat` version to 4.13.0
   - Improved channel/message refreshing performance utilizing LocalCaching.
-
 
 ## [v3.14.11] (June 20, 2024)
 ### Features
@@ -802,7 +810,6 @@
 ### Features
 - Added a modal to the `FileViewer` components for utilizing the `onMounted` event handler.
 
-
 ## [v3.14.8] (May 30, 2024)
 ### Fixes
 - Resolved the issue of storybook user leaving the channel
@@ -818,7 +825,6 @@
 
 ### Features
 - Added support for rendering `.mov` file type only in Safari browser
-
 
 ## [v3.14.7] (May 23, 2024)
 ### Fixes
@@ -866,7 +872,6 @@
 * Added a new ui component `Header` (`import Header from '@sendbird/uikit-react/ui/Header'`) which replaced all existing header components
 ### Fixes
 * Fixed a bug where suggested replies are incorrectly displayed when `showSuggestedRepliesFor` is set to 'last_message_only'
-
 
 ## [v3.14.3] (Apr 19, 2024)
 ### Features
@@ -1124,7 +1129,6 @@ A message with valid `extendedMessagePayload.template` value will be displayed w
   ```
 
 - Added detailed comments for customizing-related props in the `GroupChannel` module
-
 
 ## [v3.12.0] (Feb 16, 2024)
 
@@ -1455,7 +1459,6 @@ Feedback message feature can be turned on through `enableFeedback` option. When 
 
 ### Improvement:
 * Channels list no longer displays unread message count badge for focused channel
-
 
 ## [v3.8.2] (Nov 10 2023)
 
@@ -1990,7 +1993,6 @@ import { ThreadProvider } from '@sendbird/uikit-react/Thread/context';
   This resolves the issue where spreading the message object in the reducer loses some methods like `isUserMessage` and `isFileMessage`
 * fix util functions logic of verifying message type. We updated logic in util functions to verify the message type. (#700)
 
-
 ### Chore:
 * Update Trunk-Based Development to Scaled Trunk-Based Development (#696)
   It describes the flow with short-lived feature branches, code review, and build automation before integrating into main.
@@ -2022,7 +2024,6 @@ const memoizedSdkInitParams = useRef({
 * Fix an issue where the server returns 32 messages even when requesting 31 messages in the Channel. Now, hasMorePrev will not be set to false when the result size is larger than the query. (#688)
 * Verify the fetched message list size with the requested size of the MessageListParams. Added a test case for verifying the fetched message list size. (#686)
 * Address the incorrect cjs path in package.json. The common js module path in the pacakge.json has been fixed. (#685)
-
 
 ## [v3.6.3] (July 6 2023)
 ### Feat:
@@ -2471,7 +2472,6 @@ Fixes:
   * Condition where some menus get clipped in left side:
     * Usually user profile in channel moderation
   * Context menu of last item in channel gets clipped in the bottom
-
 
 ## [v3.4.2] (Mar 17 2023)
 
