@@ -431,6 +431,56 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     }
   }, [isScrollBottomReached, unreadDispatch]);
 
+  // Phase 5.2.b — Hydrate UnreadReducer from SDK state once the message
+  // collection is initialized. The session-local reducer needs this
+  // one-shot seed to know about pre-existing server-side unread (e.g.
+  // user enters a channel where unreadMessageCount > 0). Without this,
+  // consumer cut-read of firstUnreadMessage would regress (see
+  // .agentic/p0-phase-5-2a/audit.md §4.1).
+  //
+  // Effect dependencies: re-runs on channel switch and when the message
+  // collection finishes its initial fetch. CHANNEL_CHANGED (5.1.a) fires
+  // earlier on switch, so the reducer is already at clean state when
+  // this hydrate runs — ordering is correct.
+  //
+  // Pagination caveat (R-1): if messageDataSource.messages does not
+  // include the anchor (myLastRead + 1) because older messages aren't
+  // loaded, firstUnreadMessageId falls back to null. The badge still
+  // shows server count, but no separator anchor renders until more
+  // history loads. Accepted limitation for v1.
+  useEffect(() => {
+    if (!messageDataSource.initialized || !state.currentChannel) return;
+    const channel = state.currentChannel;
+    const myLastRead = channel.myLastRead ?? 0;
+    const serverUnreadCount = channel.unreadMessageCount ?? 0;
+    if (serverUnreadCount === 0) {
+      unreadDispatch(() => ({
+        type: 'CHANNEL_HYDRATED',
+        channelUrl: channel.url,
+        unreadCount: 0,
+        firstUnreadMessageId: null,
+        firstUnreadCreatedAt: null,
+        unreadMessageIds: [],
+        lastReadAt: myLastRead,
+      }));
+      return;
+    }
+    const unreadMessages = messageDataSource.messages.filter(
+      (m: { createdAt: number; sender?: { userId?: string } }) =>
+        m.createdAt > myLastRead && m.sender?.userId !== userId,
+    );
+    const first = unreadMessages[0];
+    unreadDispatch(() => ({
+      type: 'CHANNEL_HYDRATED',
+      channelUrl: channel.url,
+      unreadCount: serverUnreadCount,
+      firstUnreadMessageId: first ? (first as { messageId: number }).messageId : null,
+      firstUnreadCreatedAt: first ? (first as { createdAt: number }).createdAt : null,
+      unreadMessageIds: unreadMessages.map((m) => (m as { messageId: number }).messageId),
+      lastReadAt: myLastRead,
+    }));
+  }, [messageDataSource.initialized, state.currentChannel?.url, userId, unreadDispatch]);
+
   // Channel initialization
   useAsyncEffect(async () => {
     if (sdkStore.initialized && channelUrl) {
