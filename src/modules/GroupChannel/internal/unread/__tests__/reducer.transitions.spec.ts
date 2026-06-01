@@ -247,9 +247,93 @@ describe('Phase 4 — unreadReducer transitions (RV-4.1 et al)', () => {
     expect(r.unreadCount).toBe(0);
   });
 
+  /* ─── CHANNEL_HYDRATED (5.2.b.a) ─────────────────────────────── */
+  it('CHANNEL_HYDRATED from clean with zero unread → clean state, lastReadAt recorded', () => {
+    const r = unreadReducer(createInitialUnreadState(), {
+      type: 'CHANNEL_HYDRATED',
+      channelUrl: 'ch1',
+      unreadCount: 0,
+      firstUnreadMessageId: null,
+      firstUnreadCreatedAt: null,
+      unreadMessageIds: [],
+      lastReadAt: 5000,
+    });
+    expect(r.mode).toBe('clean');
+    expect(r.firstUnreadMessageId).toBeNull();
+    expect(r.unreadCount).toBe(0);
+    expect(r.unreadMessageIds.size).toBe(0);
+    expect(r.lastReadAt).toBe(5000);
+    expect(r.separatorVisible).toBe(false);
+    expect(r.badgeVisible).toBe(false);
+  });
+
+  it('CHANNEL_HYDRATED from clean with N unread → tracking with seeded anchor + set', () => {
+    const r = unreadReducer(createInitialUnreadState(), {
+      type: 'CHANNEL_HYDRATED',
+      channelUrl: 'ch1',
+      unreadCount: 3,
+      firstUnreadMessageId: 42,
+      firstUnreadCreatedAt: 4200,
+      unreadMessageIds: [42, 43, 44],
+      lastReadAt: 4100,
+    });
+    expect(r.mode).toBe('tracking');
+    expect(r.firstUnreadMessageId).toBe(42);
+    expect(r.firstUnreadCreatedAt).toBe(4200);
+    expect(r.unreadCount).toBe(3);
+    expect(r.unreadMessageIds.size).toBe(3);
+    expect(r.unreadMessageIds.has(42)).toBe(true);
+    expect(r.unreadMessageIds.has(44)).toBe(true);
+    expect(r.separatorVisible).toBe(true);
+    expect(r.badgeVisible).toBe(true);
+    expect(r.lastReadAt).toBe(4100);
+  });
+
+  it('CHANNEL_HYDRATED into marked-unread mode does NOT clobber the user pin', () => {
+    const marked = unreadReducer(createInitialUnreadState(), {
+      type: 'MARK_AS_UNREAD_SET',
+      messageId: 99,
+      createdAt: 9900,
+    });
+    expect(marked.mode).toBe('marked-unread');
+    expect(marked.firstUnreadMessageId).toBe(99);
+
+    const r = unreadReducer(marked, {
+      type: 'CHANNEL_HYDRATED',
+      channelUrl: 'ch1',
+      unreadCount: 2,
+      firstUnreadMessageId: 50,
+      firstUnreadCreatedAt: 5000,
+      unreadMessageIds: [50, 51],
+      lastReadAt: 4500,
+    });
+    expect(r.mode).toBe('marked-unread');
+    expect(r.firstUnreadMessageId).toBe(99); // user pin wins
+    expect(r.lastReadAt).toBe(4500); // but lastReadAt does refresh
+  });
+
+  it('USER_REACHED_BOTTOM after CHANNEL_HYDRATED-tracking clears unread normally', () => {
+    let s = unreadReducer(createInitialUnreadState(), {
+      type: 'CHANNEL_HYDRATED',
+      channelUrl: 'ch1',
+      unreadCount: 2,
+      firstUnreadMessageId: 10,
+      firstUnreadCreatedAt: 1000,
+      unreadMessageIds: [10, 11],
+      lastReadAt: 999,
+    });
+    expect(s.mode).toBe('tracking');
+
+    s = unreadReducer(s, { type: 'USER_REACHED_BOTTOM', at: 2000 });
+    expect(s.mode).toBe('clean');
+    expect(s.unreadCount).toBe(0);
+    expect(s.shouldMarkAsRead).toBe(true);
+    expect(s.firstUnreadMessageId).toBeNull();
+  });
+
   /* ─── Exhaustiveness ──────────────────────────────────────────── */
-  it('ALL_UNREAD_EVENT_TYPES enumerates the 7 documented variants', () => {
-    expect(ALL_UNREAD_EVENT_TYPES.length).toBe(7);
+  it('ALL_UNREAD_EVENT_TYPES enumerates the 8 documented variants', () => {
+    expect(ALL_UNREAD_EVENT_TYPES.length).toBe(8);
     for (const t of ALL_UNREAD_EVENT_TYPES) {
       expect(t).toMatch(/^[A-Z_]+$/);
     }

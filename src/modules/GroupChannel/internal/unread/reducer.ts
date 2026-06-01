@@ -45,12 +45,24 @@ export type UnreadEvent =
   | { type: 'MESSAGES_DELETED'; messageIds: ReadonlyArray<number> }
   | { type: 'MARK_AS_UNREAD_SET'; messageId: number; createdAt: number }
   | { type: 'READ_CONFIRMED'; channelUrl: string; at: number }
-  | { type: 'CHANNEL_CHANGED'; channelUrl: string };
+  | { type: 'CHANNEL_CHANGED'; channelUrl: string }
+  | {
+      // Phase 5.2.b — one-shot seed at channel mount from SDK state.
+      // See .agentic/p0-phase-5-2b/spec.md §AC-1 + decision.md §4.1.
+      type: 'CHANNEL_HYDRATED';
+      channelUrl: string;
+      unreadCount: number;
+      firstUnreadMessageId: number | null;
+      firstUnreadCreatedAt: number | null;
+      unreadMessageIds: ReadonlyArray<number>;
+      lastReadAt: number;
+    };
 
 export type UnreadEventType = UnreadEvent['type'];
 
 export const ALL_UNREAD_EVENT_TYPES: ReadonlyArray<UnreadEventType> = [
   'CHANNEL_CHANGED',
+  'CHANNEL_HYDRATED',
   'MARK_AS_UNREAD_SET',
   'MESSAGES_DELETED',
   'MESSAGES_RECEIVED',
@@ -227,6 +239,51 @@ export function unreadReducer(
     case 'CHANNEL_CHANGED': {
       // Re-initialize for the new channel.
       return createInitialUnreadState();
+    }
+
+    case 'CHANNEL_HYDRATED': {
+      // Phase 5.2.b — bootstrap from SDK state at channel mount.
+      // Marked-unread mode is the user's explicit pin and takes
+      // precedence over any server-derived seed; do not clobber.
+      if (state.mode === 'marked-unread') {
+        return { ...state, lastReadAt: event.lastReadAt };
+      }
+      if (event.unreadCount === 0) {
+        // Server says no unread — transition to clean. Preserve any
+        // shouldMarkAsRead intent already raised (rare; usually false).
+        if (state.mode === 'clean' && state.unreadCount === 0 && state.lastReadAt === event.lastReadAt) {
+          return state;
+        }
+        return {
+          ...state,
+          mode: 'clean',
+          firstUnreadMessageId: null,
+          firstUnreadCreatedAt: null,
+          unreadMessageIds: UNREAD_STATE_SENTINELS.EMPTY_NUMBER_SET,
+          unreadCount: 0,
+          separatorVisible: false,
+          badgeVisible: false,
+          lastReadAt: event.lastReadAt,
+        };
+      }
+      // Server has unread — enter tracking with the supplied seed.
+      const idSet = event.unreadMessageIds.length > 0
+        ? new Set(event.unreadMessageIds)
+        : (event.firstUnreadMessageId !== null
+            ? new Set([event.firstUnreadMessageId])
+            : UNREAD_STATE_SENTINELS.EMPTY_NUMBER_SET as Set<number>);
+      return {
+        ...state,
+        mode: 'tracking',
+        firstUnreadMessageId: event.firstUnreadMessageId,
+        firstUnreadCreatedAt: event.firstUnreadCreatedAt,
+        unreadMessageIds: idSet,
+        unreadCount: event.unreadCount,
+        separatorVisible: event.firstUnreadMessageId !== null,
+        badgeVisible: event.unreadCount > 0,
+        shouldMarkAsRead: false,
+        lastReadAt: event.lastReadAt,
+      };
     }
 
     default: {
