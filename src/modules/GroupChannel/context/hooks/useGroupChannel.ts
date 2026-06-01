@@ -27,7 +27,6 @@ export interface GroupChannelActions extends MessageActions {
   markAsReadAll: (channel: GroupChannel) => void;
   markAsUnread: (message: SendableMessageType, source?: 'manual' | 'internal') => void;
   setReadStateChanged: (state: string) => void;
-  setFirstUnreadMessageId: (messageId: number | string | null) => void;
 
   // Message actions
   sendUserMessage: (params: UserMessageCreateParams) => Promise<UserMessage>;
@@ -220,9 +219,11 @@ export const useGroupChannel = () => {
     store.setState(state => ({ ...state, readState }));
   }, []);
 
-  const setFirstUnreadMessageId = useCallback((messageId: number | null) => {
-    store.setState(state => ({ ...state, firstUnreadMessageId: messageId }));
-  }, []);
+  // Phase 5.2.b.d — setFirstUnreadMessageId removed (dead code).
+  // The action was declared but never called anywhere in the source
+  // tree; `state.firstUnreadMessageId` was never part of initial state.
+  // The UnreadReducer's `selectFirstUnreadMessageId` is now the
+  // authoritative source via 5.1.b/5.2.b.c.
 
   const setNewMessageIds = useCallback((newMessageIds: number[]) => {
     store.setState(state => ({ ...state, newMessageIds }));
@@ -235,7 +236,6 @@ export const useGroupChannel = () => {
       markAsReadAll,
       markAsUnread: state.markAsUnread,
       setReadStateChanged,
-      setFirstUnreadMessageId,
       setNewMessageIds,
       setQuoteMessage,
       scrollToBottom,
@@ -251,7 +251,6 @@ export const useGroupChannel = () => {
     markAsReadAll,
     state.markAsUnread,
     setReadStateChanged,
-    setFirstUnreadMessageId,
     setQuoteMessage,
     scrollToBottom,
     scrollToMessage,

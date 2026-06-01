@@ -199,15 +199,17 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     }
   }, [logger]);
 
-  // Phase 5.1.a — Unread reducer store. Dual-write strategy (spec §AC-4):
-  // dispatch fires alongside the legacy `setNewMessageIds` /
-  // `setFirstUnreadMessageId` calls. Phase 5.1.b/c switch consumer reads
-  // over to this store via `useUnreadSelector`; the legacy state slice is
-  // retained until Phase 5.2 has a verification window.
+  // Unread reducer store. Reads consume this via `useUnreadSelector`.
+  // - 5.1.a wired dispatch sites alongside the legacy `setNewMessageIds`
+  //   call (which remains for its autoscroll signal — distinct concern).
+  // - 5.1.b exposed the read API via `GroupChannelUnreadContext`.
+  // - 5.2.b.b added the CHANNEL_HYDRATED seed at mount (below).
+  // - 5.2.b.c migrated MessageList.firstUnreadMessage to read from the
+  //   selector.
   //
-  // MESSAGES_DELETED is intentionally NOT dispatched — `@sendbird/uikit-tools@0.1.0`
-  // does not expose `onMessagesDeleted` (Plan §1). Re-evaluate when the
-  // uikit-tools bump (separate follow-up) ships that callback.
+  // MESSAGES_DELETED is intentionally NOT dispatched —
+  // `@sendbird/uikit-tools@0.1.0` does not expose `onMessagesDeleted`.
+  // Re-evaluate when the uikit-tools bump ships that callback.
   const unreadStoreRef = useRef(createUnreadStore());
 
   // Tracks the last channelUrl observed by the unread store so repeated

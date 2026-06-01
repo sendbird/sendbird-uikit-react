@@ -34,7 +34,6 @@
     "markAsReadAll": "function",
     "markAsUnread": "function",
     "setReadStateChanged": "function",
-    "setFirstUnreadMessageId": "function",
     "setNewMessageIds": "function",
     "setQuoteMessage": "function",
     "scrollToBottom": "function",
