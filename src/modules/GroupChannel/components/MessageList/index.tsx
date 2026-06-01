@@ -22,6 +22,8 @@ import { MessageProvider } from '../../../Message/context/MessageProvider';
 import { getComponentKeyFromMessage, isContextMenuClosed } from '../../context/utils';
 import { InfiniteList } from './InfiniteList';
 import { useGroupChannel } from '../../context/hooks/useGroupChannel';
+import { useUnreadSelector } from '../../context/hooks/useUnreadSelector';
+import { selectFirstUnreadMessageId } from '../../internal/unread/selectors';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import { useLocalization } from '../../../../lib/LocalizationContext';
 
@@ -115,30 +117,50 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   const separatorMessageRef = useRef<CoreMessageType | undefined>(undefined);
   const isUnreadMessageExistInChannel = useRef<boolean>(false);
 
-  // Find the first unread message
-  const firstUnreadMessage = useMemo(() => {
-    if (!enableMarkAsUnread || !isInitializedRef.current || messages.length === 0 || readState === 'read' || !currentChannel?.myLastRead) {
-      return undefined;
-    }
+  // Phase 5.2.b.c — first-unread anchor cut-read.
+  // Source of truth is now the UnreadReducer, seeded at mount via
+  // CHANNEL_HYDRATED (Provider) and updated by USER_LEFT_BOTTOM /
+  // MESSAGES_RECEIVED / MARK_AS_UNREAD_SET / READ_CONFIRMED. The
+  // selector returns the messageId; we look up the full message object
+  // from the current messages array for downstream consumers that need
+  // it (separatorMessageRef pins the object across renders).
+  //
+  // The legacy MAU-mode gates (enableMarkAsUnread, isInitializedRef,
+  // messages.length, readState) are preserved: when MAU is off, or the
+  // channel isn't initialized yet, or readState is 'read', the consumer
+  // should not see a separator. We apply these gates here, before
+  // returning the message object derived from the selector.
+  const firstUnreadMessageIdFromReducer = useUnreadSelector(selectFirstUnreadMessageId);
 
+  // readState='unread' side effect previously embedded in the useMemo —
+  // promote to an effect so the render is pure.
+  useEffect(() => {
     if (readState === 'unread') {
       separatorMessageRef.current = undefined;
       isUnreadMessageExistInChannel.current = true;
     }
+  }, [readState]);
 
+  const firstUnreadMessage = useMemo<CoreMessageType | undefined>(() => {
+    if (!enableMarkAsUnread || !isInitializedRef.current || messages.length === 0 || readState === 'read' || !currentChannel?.myLastRead) {
+      return undefined;
+    }
+    if (firstUnreadMessageIdFromReducer !== null) {
+      const matched = messages.find((m) => m.messageId === firstUnreadMessageIdFromReducer);
+      if (matched && !isAdminMessage(matched as any)) {
+        return matched as CoreMessageType;
+      }
+    }
+    // Fallback for pagination cases where the reducer has no seed yet
+    // (or the seed message isn't in the loaded window). Preserves the
+    // legacy myLastRead+1 derivation as a safety net during the
+    // hydrate-timing gap (Plan §R-2).
     const myLastRead = currentChannel.myLastRead;
     const willFindMessageCreatedAt = myLastRead + 1;
-
-    // 조건 1: 정확히 myLastRead + 1인 메시지 찾기
     const exactMatchMessage = messages.find((message) => message.createdAt === willFindMessageCreatedAt);
-
-    if (exactMatchMessage) {
-      return exactMatchMessage as CoreMessageType;
-    }
-
-    // 조건 2: myLastRead + 1보다 큰 첫 번째 메시지 찾기 (Admin 메시지 제외)
+    if (exactMatchMessage) return exactMatchMessage as CoreMessageType;
     return messages.find((message) => message.createdAt > willFindMessageCreatedAt && !isAdminMessage(message as any)) as CoreMessageType | undefined;
-  }, [messages, currentChannel?.myLastRead, readState]);
+  }, [firstUnreadMessageIdFromReducer, messages, currentChannel?.myLastRead, readState, enableMarkAsUnread]);
 
   useEffect(() => {
     if (currentChannel?.url && loading) {
