@@ -219,12 +219,23 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   // double-fire and any future subscriber re-render.
   const unreadChannelUrlRef = useRef<string | null>(null);
 
+  // 5.2.b G3 review I-1 — `useGroupChannelMessages` calls
+  // `updateInitialized(false)` then `(true)` inside `resetWithStartingPoint`
+  // (verified against the published source). Without this guard, jumping
+  // to an older message would re-fire the hydrate effect against the new
+  // message window and clobber any tracking state accumulated since the
+  // original mount. Hydrate once per channel; subsequent re-initializations
+  // are noops.
+  const hydratedChannelUrlRef = useRef<string | null>(null);
+
   // Thunk-guarded dispatch — see runtimeDispatch (W1). A bug in the
   // reducer or in a caller-supplied factory MUST NOT prevent the legacy
   // callback from continuing.
   const dispatchChannelChanged = useCallback((channelUrl: string) => {
     if (unreadChannelUrlRef.current === channelUrl) return;
     unreadChannelUrlRef.current = channelUrl;
+    // Reset the hydrate dedup ref so the new channel can be seeded once.
+    hydratedChannelUrlRef.current = null;
     return dispatchToUnreadStore(
       unreadStoreRef.current,
       { type: 'CHANNEL_CHANGED', channelUrl },
@@ -453,6 +464,13 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   useEffect(() => {
     if (!messageDataSource.initialized || !state.currentChannel) return;
     const channel = state.currentChannel;
+    // I-1 guard: hydrate at most once per channel mount. resetWithStartingPoint
+    // (jump-to-message) inside useGroupChannelMessages flips `initialized`
+    // false→true again with a different message window; without this guard
+    // the second pass would clobber tracking state.
+    if (hydratedChannelUrlRef.current === channel.url) return;
+    hydratedChannelUrlRef.current = channel.url;
+
     const myLastRead = channel.myLastRead ?? 0;
     const serverUnreadCount = channel.unreadMessageCount ?? 0;
     if (serverUnreadCount === 0) {
@@ -467,18 +485,18 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       }));
       return;
     }
-    const unreadMessages = messageDataSource.messages.filter(
-      (m: { createdAt: number; sender?: { userId?: string } }) =>
-        m.createdAt > myLastRead && m.sender?.userId !== userId,
+    const peerUnread = messageDataSource.messages.filter(
+      (m) => m.createdAt > myLastRead
+        && (m as { sender?: { userId?: string } }).sender?.userId !== userId,
     );
-    const first = unreadMessages[0];
+    const first = peerUnread[0];
     unreadDispatch(() => ({
       type: 'CHANNEL_HYDRATED',
       channelUrl: channel.url,
       unreadCount: serverUnreadCount,
-      firstUnreadMessageId: first ? (first as { messageId: number }).messageId : null,
-      firstUnreadCreatedAt: first ? (first as { createdAt: number }).createdAt : null,
-      unreadMessageIds: unreadMessages.map((m) => (m as { messageId: number }).messageId),
+      firstUnreadMessageId: first ? first.messageId : null,
+      firstUnreadCreatedAt: first ? first.createdAt : null,
+      unreadMessageIds: peerUnread.map((m) => m.messageId),
       lastReadAt: myLastRead,
     }));
   }, [messageDataSource.initialized, state.currentChannel?.url, userId, unreadDispatch]);
