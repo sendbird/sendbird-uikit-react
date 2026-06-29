@@ -54,9 +54,15 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
   }
 
   useEffect(() => {
+    let mounted = true;
     if (isVoiceMessageEnabled && !webAudioUtils) {
-      import('./WebAudioUtils').then((module) => setWebAudioUtils(module));
+      import('./WebAudioUtils').then((module) => {
+        if (mounted) setWebAudioUtils(module);
+      });
     }
+    return () => {
+      mounted = false;
+    };
   }, [isVoiceMessageEnabled, webAudioUtils]);
 
   const start = useCallback((eventHandler?: VoiceRecorderEventHandler): void => {
