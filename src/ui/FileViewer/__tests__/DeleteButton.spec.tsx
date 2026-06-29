@@ -6,13 +6,13 @@ import { DeleteButton } from '../DeleteButton';
 
 describe('DeleteButton', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should return empty component when viewerType is ViewerTypes.MULTI', () => {
-    const onClickLeft = jest.fn(() => null);
-    const onClickRight = jest.fn(() => null);
-    const onClose = jest.fn(() => null);
+    const onClickLeft = vi.fn(() => null);
+    const onClickRight = vi.fn(() => null);
+    const onClose = vi.fn(() => null);
 
     const props: FileViewerComponentProps = {
       nickname: 'hoon100',

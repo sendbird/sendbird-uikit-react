@@ -15,8 +15,8 @@ import UserPanel from '../components/UserPanel';
 import ModerationPanel from '../components/ModerationPanel';
 
 // Mock createPortal function to render content directly without portal
-jest.mock('react-dom', () => ({
-  ...jest.requireActual('react-dom'),
+vi.mock('react-dom', async () => ({
+  ...await vi.importActual('react-dom'),
   createPortal: (node) => node,
 }));
 
@@ -82,8 +82,8 @@ describe('ChannelSettings Unit Tests', () => {
         <SendbirdProvider appId="mockAppId" userId="mockUserId">
           <ChannelSettingsProvider {...defaultProps}>
             <EditDetailsModal
-              onSubmit={() => jest.fn()}
-              onCancel={() => jest.fn()}
+              onSubmit={() => vi.fn()}
+              onCancel={() => vi.fn()}
             />
           </ChannelSettingsProvider>,
         </SendbirdProvider>,
@@ -97,8 +97,8 @@ describe('ChannelSettings Unit Tests', () => {
         <SendbirdProvider appId="mockAppId" userId="mockUserId">
           <ChannelSettingsProvider {...defaultProps}>
             <LeaveChannel
-              onSubmit={() => jest.fn()}
-              onCancel={() => jest.fn()}
+              onSubmit={() => vi.fn()}
+              onCancel={() => vi.fn()}
             />
           </ChannelSettingsProvider>,
         </SendbirdProvider>,

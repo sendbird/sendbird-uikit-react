@@ -16,6 +16,7 @@ import {
 import PUBSUB_TOPICS from '../../../../../lib/pubSub/topics';
 import { MockMessageStateType, mockSentMessage } from '../../../../../utils/testMocks/message';
 import uuidv4 from '../../../../../utils/uuid';
+import type { Mock } from 'vitest';
 
 interface UseSendMFMParams extends UseSendMFMDynamicParams, UseSendMFMStaticParams {
   messageRequestHandler: MockMessageRequestHandlerType;
@@ -30,16 +31,16 @@ const mockFileList = [new File([], 'fileOne'), new File([], 'fileTwo')];
 describe.skip('useSendMultipleFilesMessage', () => {
   // URL.createObjectURL seems it doesn't work in the jest env.
   beforeAll(() => {
-    global.URL.createObjectURL = jest.fn();
+    global.URL.createObjectURL = vi.fn();
   });
   afterAll(() => {
-    (global.URL.createObjectURL as jest.Mock).mockReset();
+    (global.URL.createObjectURL as Mock).mockReset();
   });
 
   beforeEach(() => {
     globalContext.currentChannel = {
       url: uuidv4(),
-      sendMultipleFilesMessage: jest.fn(() => getMockMessageRequestHandler()),
+      sendMultipleFilesMessage: vi.fn(() => getMockMessageRequestHandler()),
     } as unknown as GroupChannel;
     globalContext.onBeforeSendMultipleFilesMessage = (files, quoteMessage) => {
       const params = {
@@ -56,8 +57,8 @@ describe.skip('useSendMultipleFilesMessage', () => {
       }
       return params;
     };
-    globalContext.logger = { info: jest.fn(), warning: jest.fn(), error: jest.fn() };
-    globalContext.pubSub = { publish: jest.fn() };
+    globalContext.logger = { info: vi.fn(), warning: vi.fn(), error: vi.fn() };
+    globalContext.pubSub = { publish: vi.fn() };
     globalContext.scrollRef = createRef<HTMLDivElement>();
   });
 
@@ -138,7 +139,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
         // this mock channel will fail sending MFM -> getMockMessageRequestHandler(false)
         currentChannel: {
           ...globalContext.currentChannel,
-          sendMultipleFilesMessage: jest.fn(() => getMockMessageRequestHandler(false)),
+          sendMultipleFilesMessage: vi.fn(() => getMockMessageRequestHandler(false)),
         } as unknown as GroupChannel,
         onBeforeSendMultipleFilesMessage: globalContext.onBeforeSendMultipleFilesMessage,
       }, {

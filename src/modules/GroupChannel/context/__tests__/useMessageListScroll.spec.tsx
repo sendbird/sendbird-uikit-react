@@ -1,23 +1,24 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useMessageListScroll } from '../hooks/useMessageListScroll';
 import { useGroupChannel } from '../hooks/useGroupChannel';
+import type { Mock } from 'vitest';
 
-jest.mock('../hooks/useGroupChannel', () => ({
-  useGroupChannel: jest.fn(),
+vi.mock('../hooks/useGroupChannel', () => ({
+  useGroupChannel: vi.fn(),
 }));
 
 describe('useMessageListScroll', () => {
-  const mockSetIsScrollBottomReached = jest.fn();
+  const mockSetIsScrollBottomReached = vi.fn();
 
   beforeEach(() => {
-    (useGroupChannel as jest.Mock).mockImplementation(() => ({
+    (useGroupChannel as Mock).mockImplementation(() => ({
       state: { isScrollBottomReached: true },
       actions: { setIsScrollBottomReached: mockSetIsScrollBottomReached },
     }));
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('Initialization and Basic Behavior', () => {
@@ -35,7 +36,7 @@ describe('useMessageListScroll', () => {
   describe('scrollToBottom', () => {
     it('should call resolve only if scrollRef is null', async () => {
       const { result } = renderHook(() => useMessageListScroll('auto'));
-      const resolveMock = jest.fn();
+      const resolveMock = vi.fn();
 
       await act(async () => {
         result.current.scrollPubSub.publish('scrollToBottom', { resolve: resolveMock });
@@ -52,7 +53,7 @@ describe('useMessageListScroll', () => {
           scrollHeight: 1000,
           clientHeight: 500,
           scrollTop: 0,
-          scroll: jest.fn(),
+          scroll: vi.fn(),
         },
       };
       // @ts-ignore
@@ -78,7 +79,7 @@ describe('useMessageListScroll', () => {
           configurable: true,
         },
         scroll: {
-          value: jest.fn(),
+          value: vi.fn(),
           configurable: true,
         },
       });
@@ -124,7 +125,7 @@ describe('useMessageListScroll', () => {
     it('should use smooth behavior if behavior parameter is smooth', async () => {
       const { result } = renderHook(() => useMessageListScroll('smooth'));
 
-      const mockScroll = jest.fn();
+      const mockScroll = vi.fn();
       const mockScrollElement = {
         scroll: mockScroll,
         scrollHeight: 1000,
@@ -148,7 +149,7 @@ describe('useMessageListScroll', () => {
   describe('scroll', () => {
     it('should call resolve() even if scrollRef is null', async () => {
       const { result } = renderHook(() => useMessageListScroll('auto'));
-      const resolveMock = jest.fn();
+      const resolveMock = vi.fn();
 
       await act(async () => {
         result.current.scrollPubSub.publish('scroll', { resolve: resolveMock });
@@ -182,7 +183,7 @@ describe('useMessageListScroll', () => {
     it('should not change the scroll position if top is not defined', async () => {
       const { result } = renderHook(() => useMessageListScroll('auto'));
 
-      const mockScroll = jest.fn();
+      const mockScroll = vi.fn();
       const mockScrollElement = {
         scroll: mockScroll,
         scrollHeight: 1000,
@@ -201,10 +202,10 @@ describe('useMessageListScroll', () => {
     });
 
     it('should execute immediately if lazy option is false', async () => {
-      jest.useFakeTimers();
+      vi.useFakeTimers();
       const { result } = renderHook(() => useMessageListScroll('auto'));
 
-      const mockScroll = jest.fn();
+      const mockScroll = vi.fn();
       const mockScrollElement = {
         scroll: mockScroll,
         scrollHeight: 1000,
@@ -223,7 +224,7 @@ describe('useMessageListScroll', () => {
         top: 300,
         behavior: 'auto',
       });
-      jest.useRealTimers();
+      vi.useRealTimers();
     });
   });
 
@@ -255,7 +256,7 @@ describe('useMessageListScroll', () => {
     it('should return smooth if animated is true', async () => {
       const { result } = renderHook(() => useMessageListScroll('auto'));
 
-      const mockScroll = jest.fn();
+      const mockScroll = vi.fn();
       const mockScrollElement = {
         scroll: mockScroll,
         scrollHeight: 1000,
@@ -278,7 +279,7 @@ describe('useMessageListScroll', () => {
     it('should return auto if animated is false', async () => {
       const { result } = renderHook(() => useMessageListScroll('smooth'));
 
-      const mockScroll = jest.fn();
+      const mockScroll = vi.fn();
       const mockScrollElement = {
         scroll: mockScroll,
         scrollHeight: 1000,

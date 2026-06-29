@@ -3,35 +3,35 @@ import { waitFor, act, renderHook } from '@testing-library/react';
 import { GroupChannelProvider, useGroupChannelContext } from '../GroupChannelProvider';
 import { useGroupChannel } from '../hooks/useGroupChannel';
 
-const mockLogger = { warning: jest.fn() };
+const mockLogger = { warning: vi.fn() };
 const mockChannel = {
   url: 'test-channel',
   members: [{ userId: '1', nickname: 'user1' }],
-  serialize: () => JSON.stringify(this),
+  serialize: () => JSON.stringify({}),
 };
 
-const mockGetChannel = jest.fn().mockResolvedValue(mockChannel);
+const mockGetChannel = vi.fn().mockResolvedValue(mockChannel);
 const mockMessageCollection = {
-  dispose: jest.fn(),
-  setMessageCollectionHandler: jest.fn(),
-  initialize: jest.fn().mockResolvedValue(null),
-  loadPrevious: jest.fn(),
-  loadNext: jest.fn(),
+  dispose: vi.fn(),
+  setMessageCollectionHandler: vi.fn(),
+  initialize: vi.fn().mockResolvedValue(null),
+  loadPrevious: vi.fn(),
+  loadNext: vi.fn(),
   messages: [],
 };
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
+  default: vi.fn(() => ({
     state: {
       stores: {
         sdkStore: {
           sdk: {
             groupChannel: {
               getChannel: mockGetChannel,
-              addGroupChannelHandler: jest.fn(),
-              removeGroupChannelHandler: jest.fn(),
+              addGroupChannelHandler: vi.fn(),
+              removeGroupChannelHandler: vi.fn(),
             },
-            createMessageCollection: jest.fn().mockReturnValue(mockMessageCollection),
+            createMessageCollection: vi.fn().mockReturnValue(mockMessageCollection),
           },
           initialized: true,
         },
@@ -39,7 +39,7 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
       config: {
         logger: mockLogger,
         markAsReadScheduler: {
-          push: jest.fn(),
+          push: vi.fn(),
         },
         groupChannel: {
           replyType: 'NONE',
@@ -50,7 +50,7 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
         },
         isOnline: true,
         pubSub: {
-          subscribe: () => ({ remove: jest.fn() }),
+          subscribe: () => ({ remove: vi.fn() }),
         },
       },
     },
@@ -90,26 +90,7 @@ describe('GroupChannelProvider', () => {
   });
 
   it('handles channel error correctly', async () => {
-    const mockError = new Error('Channel fetch failed');
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-
-    jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
-      default: () => ({
-        state: {
-          stores: {
-            sdkStore: {
-              sdk: {
-                groupChannel: {
-                  getChannel: jest.fn().mockRejectedValue(mockError),
-                },
-              },
-              initialized: true,
-            },
-          },
-          config: { logger: console },
-        },
-      }),
-    }));
+    vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const wrapper = ({ children }) => (
       <GroupChannelProvider channelUrl="error-channel">

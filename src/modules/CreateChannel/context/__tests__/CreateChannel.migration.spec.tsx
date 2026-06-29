@@ -34,22 +34,22 @@ const mockState = {
     },
     isOnline: true,
   },
-}; const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
+}; const mockActions = { connect: vi.fn(), disconnect: vi.fn() };
 
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState, actions: mockActions })),
-  useSendbird: jest.fn(() => ({ state: mockState, actions: mockActions })),
+  default: vi.fn(() => ({ state: mockState, actions: mockActions })),
+  useSendbird: vi.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
 const mockProps: CreateChannelProviderProps = {
   children: <div>test children</div>,
-  userListQuery: () => ({ hasNext: true, next: jest.fn(), isLoading: false }),
-  onCreateChannelClick: jest.fn(),
-  onChannelCreated: jest.fn(),
-  onBeforeCreateChannel: jest.fn(),
-  onCreateChannel: jest.fn(),
-  overrideInviteUser: jest.fn(),
+  userListQuery: () => ({ hasNext: true, next: vi.fn(), isLoading: false }),
+  onCreateChannelClick: vi.fn(),
+  onChannelCreated: vi.fn(),
+  onBeforeCreateChannel: vi.fn(),
+  onCreateChannel: vi.fn(),
+  overrideInviteUser: vi.fn(),
 };
 
 describe('CreateChannel Migration Compatibility Tests', () => {

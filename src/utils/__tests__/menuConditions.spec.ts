@@ -12,13 +12,14 @@ import {
   showMenuItemReply,
   showMenuItemThread,
 } from '../menuConditions';
+import type { Mock } from 'vitest';
 
 // Mock the utility functions
-jest.mock('..', () => ({
-  isUserMessage: jest.fn(),
-  isFailedMessage: jest.fn(),
-  isPendingMessage: jest.fn(),
-  isSentMessage: jest.fn(),
+vi.mock('..', () => ({
+  isUserMessage: vi.fn(),
+  isFailedMessage: vi.fn(),
+  isPendingMessage: vi.fn(),
+  isSentMessage: vi.fn(),
 }));
 
 interface Channel {
@@ -61,16 +62,16 @@ describe('Global-utils/MenuConditions', () => {
   });
 
   it('showMenuItemCopy returns true for user messages', () => {
-    (isUserMessage as any as jest.Mock).mockReturnValue(true);
+    (isUserMessage as any as Mock).mockReturnValue(true);
     expect(showMenuItemCopy(params)).toBe(true);
 
-    (isUserMessage as any as jest.Mock).mockReturnValue(false);
+    (isUserMessage as any as Mock).mockReturnValue(false);
     expect(showMenuItemCopy(params)).toBe(false);
   });
 
   it('showMenuItemEdit returns true for editable messages', () => {
-    (isUserMessage as any as jest.Mock).mockReturnValue(true);
-    (isSentMessage as any as jest.Mock).mockReturnValue(true);
+    (isUserMessage as any as Mock).mockReturnValue(true);
+    (isSentMessage as any as Mock).mockReturnValue(true);
     channel.isEphemeral = false;
     params.isByMe = true;
     expect(showMenuItemEdit(params)).toBe(true);
@@ -80,22 +81,22 @@ describe('Global-utils/MenuConditions', () => {
   });
 
   it('showMenuItemResend returns true for resendable messages', () => {
-    (isFailedMessage as jest.Mock).mockReturnValue(true);
+    (isFailedMessage as Mock).mockReturnValue(true);
     message.isResendable = true;
     params.isByMe = true;
     expect(showMenuItemResend(params)).toBe(true);
 
-    (isFailedMessage as jest.Mock).mockReturnValue(false);
+    (isFailedMessage as Mock).mockReturnValue(false);
     expect(showMenuItemResend(params)).toBe(false);
   });
 
   it('showMenuItemDelete returns true for deletable messages', () => {
-    (isPendingMessage as jest.Mock).mockReturnValue(false);
+    (isPendingMessage as Mock).mockReturnValue(false);
     channel.isEphemeral = false;
     params.isByMe = true;
     expect(showMenuItemDelete(params)).toBe(true);
 
-    (isPendingMessage as jest.Mock).mockReturnValue(true);
+    (isPendingMessage as Mock).mockReturnValue(true);
     expect(showMenuItemDelete(params)).toBe(false);
   });
 
@@ -109,8 +110,8 @@ describe('Global-utils/MenuConditions', () => {
 
   it('showMenuItemReply returns true for quote reply', () => {
     params.replyType = 'QUOTE_REPLY';
-    (isFailedMessage as jest.Mock).mockReturnValue(false);
-    (isPendingMessage as jest.Mock).mockReturnValue(false);
+    (isFailedMessage as Mock).mockReturnValue(false);
+    (isPendingMessage as Mock).mockReturnValue(false);
     expect(showMenuItemReply(params)).toBe(true);
 
     params.replyType = 'THREAD';
@@ -121,8 +122,8 @@ describe('Global-utils/MenuConditions', () => {
     params.replyType = 'THREAD';
     params.onReplyInThread = () => {};
     params.message.parentMessageId = null;
-    (isFailedMessage as jest.Mock).mockReturnValue(false);
-    (isPendingMessage as jest.Mock).mockReturnValue(false);
+    (isFailedMessage as Mock).mockReturnValue(false);
+    (isPendingMessage as Mock).mockReturnValue(false);
     expect(showMenuItemThread(params)).toBe(true);
 
     params.onReplyInThread = null;

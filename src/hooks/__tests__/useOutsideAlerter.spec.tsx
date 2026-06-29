@@ -5,11 +5,11 @@ import useOutsideAlerter from '../useOutsideAlerter';
 describe('useOutsideAlerter', () => {
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('handle click outside correctly', async () => {
-    const mockClickOutside = jest.fn();
+    const mockClickOutside = vi.fn();
 
     const targetComponent = <div id="target">inside</div>;
     render(targetComponent);

@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 
 import { usePendingFiles } from '../usePendingFiles';
 import type { StringSet } from '../../../Label/stringSet';
+import type { Mock } from 'vitest';
 
 const ONE_MIB = 1024 * 1024;
 
@@ -17,19 +18,19 @@ const baseStringSet = {
   BUTTON__OK: 'OK',
 } as unknown as StringSet;
 
-const expectModalTitle = (openModal: jest.Mock, title: string) => {
+const expectModalTitle = (openModal: Mock, title: string) => {
   expect(openModal).toHaveBeenCalledWith(expect.objectContaining({
     modalProps: expect.objectContaining({ titleText: title }),
   }));
 };
 
 const renderUsePendingFiles = (overrides: Partial<Parameters<typeof usePendingFiles>[0]> = {}) => {
-  const openModal = jest.fn();
+  const openModal = vi.fn();
   const logger = {
-    info: jest.fn(),
-    warning: jest.fn(),
-    error: jest.fn(),
-    debug: jest.fn(),
+    info: vi.fn(),
+    warning: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
   };
   const utils = renderHook(() => usePendingFiles({
     uikitUploadSizeLimit: 25 * ONE_MIB,
@@ -44,8 +45,8 @@ const renderUsePendingFiles = (overrides: Partial<Parameters<typeof usePendingFi
 
 describe('usePendingFiles', () => {
   beforeEach(() => {
-    (URL.createObjectURL as unknown) = jest.fn(() => 'blob:mock-url');
-    (URL.revokeObjectURL as unknown) = jest.fn();
+    (URL.createObjectURL as unknown) = vi.fn(() => 'blob:mock-url');
+    (URL.revokeObjectURL as unknown) = vi.fn();
   });
 
   it('starts with empty pendingFiles and hasPendingFiles=false', () => {

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/MessageItemMenu should do a snapshot test of the MessageItemMenu DOM 1`] = `
+exports[`ui/MessageItemMenu > should do a snapshot test of the MessageItemMenu DOM 1`] = `
 <DocumentFragment>
   <div
     class="classname-for-snapshot sendbird-message-item-menu"

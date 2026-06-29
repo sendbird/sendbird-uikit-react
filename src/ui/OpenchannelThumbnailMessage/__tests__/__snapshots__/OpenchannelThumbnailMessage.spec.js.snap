@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/OpenchannelThumbnailMessage should do a snapshot test of the OpenchannelThumbnailMessage DOM 1`] = `
+exports[`ui/OpenchannelThumbnailMessage > should do a snapshot test of the OpenchannelThumbnailMessage DOM 1`] = `
 <DocumentFragment>
   <div
     class=" sendbird-openchannel-thumbnail-message"

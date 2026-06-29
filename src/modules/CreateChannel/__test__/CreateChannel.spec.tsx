@@ -8,13 +8,13 @@ import InviteUsers from '../components/InviteUsers';
 import SelectChannelType from '../components/SelectChannelType';
 
 // Mock createPortal function to render content directly without portal
-jest.mock('react-dom', () => ({
-  ...jest.requireActual('react-dom'),
+vi.mock('react-dom', async () => ({
+  ...await vi.importActual('react-dom'),
   createPortal: (node) => node,
 }));
 
-jest.mock('../components/InviteUsers/utils', () => ({
-  ...jest.requireActual('../components/InviteUsers/utils'),
+vi.mock('../components/InviteUsers/utils', async () => ({
+  ...await vi.importActual('../components/InviteUsers/utils'),
   createDefaultUserListQuery: () => ({
     isLoading: false,
     next: async () => [],
@@ -23,7 +23,7 @@ jest.mock('../components/InviteUsers/utils', () => ({
 
 describe('CreateChannel Unit Tests', () => {
   const defaultProps = {
-    onChannelCreated: () => jest.fn(),
+    onChannelCreated: () => vi.fn(),
   };
 
   it('renders CreateChannelUI with default value', () => {

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/TextMessageItemBody should do a snapshot test of the TextMessageItemBody DOM 1`] = `
+exports[`ui/TextMessageItemBody > should do a snapshot test of the TextMessageItemBody DOM 1`] = `
 <DocumentFragment>
   <span
     class="sendbird-label sendbird-label--body-1 sendbird-label--color-oncontent-1"

@@ -2,26 +2,26 @@ import { renderHook, act } from '@testing-library/react';
 import useChannelSettings from '../context/useChannelSettings';
 import useSetChannel from '../context/hooks/useSetChannel';
 
-jest.mock('../context/useChannelSettings');
+vi.mock('../context/useChannelSettings');
 
 const mockLogger = {
-  warning: jest.fn(),
-  info: jest.fn(),
-  error: jest.fn(),
+  warning: vi.fn(),
+  info: vi.fn(),
+  error: vi.fn(),
 };
 
-const mockSetChannel = jest.fn();
-const mockSetInvalid = jest.fn();
-const mockSetLoading = jest.fn();
+const mockSetChannel = vi.fn();
+const mockSetInvalid = vi.fn();
+const mockSetLoading = vi.fn();
 
 const mockSdk = {
   groupChannel: {
-    getChannel: jest.fn().mockResolvedValue({ name: 'Test Channel' }),
+    getChannel: vi.fn().mockResolvedValue({ name: 'Test Channel' }),
   },
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   useChannelSettings.mockReturnValue({
     actions: {
       setChannel: mockSetChannel,

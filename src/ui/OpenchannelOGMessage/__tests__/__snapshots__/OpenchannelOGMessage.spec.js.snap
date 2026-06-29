@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/OpenchannelOGMessage should do a snapshot test of the OpenchannelOGMessage DOM 1`] = `
+exports[`ui/OpenchannelOGMessage > should do a snapshot test of the OpenchannelOGMessage DOM 1`] = `
 <DocumentFragment>
   <div
     class=" sendbird-openchannel-og-message"

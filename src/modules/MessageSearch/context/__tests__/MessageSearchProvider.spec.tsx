@@ -5,16 +5,17 @@ import { MessageSearchQuery } from '@sendbird/chat/message';
 import { MessageSearchProvider } from '../MessageSearchProvider';
 import useMessageSearch from '../hooks/useMessageSearch';
 import useScrollCallback from '../hooks/useScrollCallback';
+import type { Mock } from 'vitest';
 
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
+  default: vi.fn(() => ({
     state: {
       stores: {
         sdkStore: {
           sdk: {
-            createMessageSearchQuery: jest.fn(() => ({
-              next: jest.fn().mockResolvedValue([{ messageId: 1 }]),
+            createMessageSearchQuery: vi.fn(() => ({
+              next: vi.fn().mockResolvedValue([{ messageId: 1 }]),
             })),
           },
           initialized: true,
@@ -25,30 +26,30 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   })),
 }));
 
-jest.mock('../hooks/useSetChannel', () => ({
+vi.mock('../hooks/useSetChannel', () => ({
   __esModule: true,
-  default: jest.fn().mockImplementation(() => Promise.resolve()),
+  default: vi.fn().mockImplementation(() => Promise.resolve()),
 }));
 
-jest.mock('../hooks/useGetSearchedMessages', () => ({
+vi.mock('../hooks/useGetSearchedMessages', () => ({
   __esModule: true,
-  default: jest.fn(() => jest.fn()),
+  default: vi.fn(() => vi.fn()),
 }));
 
-jest.mock('../hooks/useScrollCallback', () => ({
+vi.mock('../hooks/useScrollCallback', () => ({
   __esModule: true,
-  default: jest.fn(() => jest.fn()),
+  default: vi.fn(() => vi.fn()),
 }));
 
-jest.mock('../hooks/useSearchStringEffect', () => ({
+vi.mock('../hooks/useSearchStringEffect', () => ({
   __esModule: true,
-  default: jest.fn(() => ''),
+  default: vi.fn(() => ''),
 }));
 
 describe('MessageSearchProvider', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useScrollCallback as jest.Mock).mockClear();
+    vi.clearAllMocks();
+    (useScrollCallback as Mock).mockClear();
   });
 
   const initialState = {
@@ -216,7 +217,7 @@ describe('MessageSearchProvider', () => {
   });
 
   it('calls onResultLoaded when search results are loaded', async () => {
-    const onResultLoaded = jest.fn();
+    const onResultLoaded = vi.fn();
     const wrapper = ({ children }) => (
       <MessageSearchProvider
         channelUrl="test-channel"
@@ -302,7 +303,7 @@ describe('MessageSearchProvider', () => {
   });
 
   it('handles onResultClick callback correctly', async () => {
-    const onResultClick = jest.fn();
+    const onResultClick = vi.fn();
     const wrapper = ({ children }) => (
       <MessageSearchProvider
         channelUrl="test-channel"
@@ -339,7 +340,7 @@ describe('MessageSearchProvider', () => {
   });
 
   it('executes onResultClick callback when clicking a search result', async () => {
-    const onResultClick = jest.fn();
+    const onResultClick = vi.fn();
     const mockMessage = { messageId: 1 };
 
     const wrapper = ({ children }) => (

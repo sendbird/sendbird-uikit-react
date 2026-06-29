@@ -5,11 +5,11 @@ import useMouseHover from '../useMouseHover';
 describe('useMouseHover', () => {
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('handle mouse over and out correctly', async () => {
-    const mockSetHover = jest.fn();
+    const mockSetHover = vi.fn();
 
     const targetComponent = <div id="target">hover</div>;
     render(targetComponent);

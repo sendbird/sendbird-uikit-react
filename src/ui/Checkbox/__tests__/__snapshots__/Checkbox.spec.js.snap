@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/Checkbox should do a snapshot test of the checked Checkbox DOM 1`] = `
+exports[`ui/Checkbox > should do a snapshot test of the checked Checkbox DOM 1`] = `
 <DocumentFragment>
   <label
     class="sendbird-checkbox "
@@ -16,7 +16,7 @@ exports[`ui/Checkbox should do a snapshot test of the checked Checkbox DOM 1`] =
 </DocumentFragment>
 `;
 
-exports[`ui/Checkbox should do a snapshot test of the default Checkbox DOM 1`] = `
+exports[`ui/Checkbox > should do a snapshot test of the default Checkbox DOM 1`] = `
 <DocumentFragment>
   <label
     class="sendbird-checkbox "

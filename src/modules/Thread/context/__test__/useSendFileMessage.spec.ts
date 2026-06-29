@@ -5,9 +5,9 @@ import useSendFileMessage from '../hooks/useSendFileMessage';
 import { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
 
-const mockSetEmojiContainer = jest.fn();
+const mockSetEmojiContainer = vi.fn();
 
-jest.mock('../useThread', () => ({
+vi.mock('../useThread', () => ({
   __esModule: true,
   default: () => ({
     actions: {
@@ -17,17 +17,17 @@ jest.mock('../useThread', () => ({
 }));
 
 const mockPubSub = {
-  publish: jest.fn(),
+  publish: vi.fn(),
 } as unknown as SBUGlobalPubSub;
 
 const mockLogger = {
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+  error: vi.fn(),
 };
 
-const mockSendMessageStart = jest.fn();
-const mockSendMessageFailure = jest.fn();
+const mockSendMessageStart = vi.fn();
+const mockSendMessageFailure = vi.fn();
 
 describe('useSendFileMessage', () => {
   const mockFile = new File(['test'], 'test.txt', { type: 'text/plain' });
@@ -36,9 +36,9 @@ describe('useSendFileMessage', () => {
   } as unknown as SendableMessageType;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     // URL.createObjectURL mock
-    global.URL.createObjectURL = jest.fn(() => 'mock-url');
+    global.URL.createObjectURL = vi.fn(() => 'mock-url');
   });
 
   it('doesnt send file message when currentChannel is null', async () => {
@@ -76,9 +76,9 @@ describe('useSendFileMessage', () => {
     // 체이닝 구조 개선
     const createMockPromise = () => {
       const chainMethods = {
-        onPending: jest.fn(),
-        onSucceeded: jest.fn(),
-        onFailed: jest.fn(),
+        onPending: vi.fn(),
+        onSucceeded: vi.fn(),
+        onFailed: vi.fn(),
       };
 
       chainMethods.onPending.mockImplementation((cb) => {
@@ -99,7 +99,7 @@ describe('useSendFileMessage', () => {
     };
 
     const mockChannel = {
-      sendFileMessage: jest.fn().mockReturnValue(createMockPromise()),
+      sendFileMessage: vi.fn().mockReturnValue(createMockPromise()),
     } as unknown as GroupChannel;
 
     const { result } = renderHook(() => useSendFileMessage(
@@ -137,9 +137,9 @@ describe('useSendFileMessage', () => {
     } as FileMessage;
 
     const mockSendFileMessagePromise = {
-      onPending: jest.fn(),
-      onSucceeded: jest.fn(),
-      onFailed: jest.fn(),
+      onPending: vi.fn(),
+      onSucceeded: vi.fn(),
+      onFailed: vi.fn(),
     };
 
     mockSendFileMessagePromise.onPending.mockImplementation((cb) => {
@@ -153,7 +153,7 @@ describe('useSendFileMessage', () => {
     });
 
     const mockChannel = {
-      sendFileMessage: jest.fn().mockReturnValue(mockSendFileMessagePromise),
+      sendFileMessage: vi.fn().mockReturnValue(mockSendFileMessagePromise),
     } as unknown as GroupChannel;
 
     const { result } = renderHook(() => useSendFileMessage(
@@ -181,16 +181,16 @@ describe('useSendFileMessage', () => {
       file: mockFile,
       customField: 'test',
     };
-    const mockOnBeforeSendFileMessage = jest.fn().mockReturnValue(mockCustomParams);
+    const mockOnBeforeSendFileMessage = vi.fn().mockReturnValue(mockCustomParams);
 
     const mockSendFileMessagePromise = {
-      onPending: jest.fn().mockReturnThis(),
-      onSucceeded: jest.fn().mockReturnThis(),
-      onFailed: jest.fn().mockReturnThis(),
+      onPending: vi.fn().mockReturnThis(),
+      onSucceeded: vi.fn().mockReturnThis(),
+      onFailed: vi.fn().mockReturnThis(),
     };
 
     const mockChannel = {
-      sendFileMessage: jest.fn().mockReturnValue(mockSendFileMessagePromise),
+      sendFileMessage: vi.fn().mockReturnValue(mockSendFileMessagePromise),
     } as unknown as GroupChannel;
 
     const { result } = renderHook(() => useSendFileMessage(

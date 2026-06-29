@@ -2,27 +2,27 @@ import { renderHook, act } from '@testing-library/react';
 import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
 import { useChannelHandler } from '../context/hooks/useChannelHandler';
 
-// jest.mock('../../../utils/uuid', () => ({
-//   v4: jest.fn(() => 'mock-uuid'),
+// vi.mock('../../../utils/uuid', () => ({
+//   v4: vi.fn(() => 'mock-uuid'),
 // }));
 
 const mockLogger = {
-  warning: jest.fn(),
-  info: jest.fn(),
-  error: jest.fn(),
+  warning: vi.fn(),
+  info: vi.fn(),
+  error: vi.fn(),
 };
 
 const mockSdk = {
   groupChannel: {
-    addGroupChannelHandler: jest.fn(),
-    removeGroupChannelHandler: jest.fn(),
+    addGroupChannelHandler: vi.fn(),
+    removeGroupChannelHandler: vi.fn(),
   },
 };
 
-const mockForceUpdateUI = jest.fn();
+const mockForceUpdateUI = vi.fn();
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe('useChannelHandler', () => {

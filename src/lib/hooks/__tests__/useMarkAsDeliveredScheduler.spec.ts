@@ -5,7 +5,7 @@ import { useMarkAsDeliveredScheduler } from '../useMarkAsDeliveredScheduler';
 import { LoggerFactory } from '../../Logger';
 import type { Logger } from '../../Sendbird/types';
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 const logger = LoggerFactory('all') as Logger;
 describe('useMarkAsDeliveredScheduler', () => {
@@ -26,8 +26,8 @@ describe('useMarkAsDeliveredScheduler', () => {
         },
       },
     );
-    const channel1 = { markAsDelivered: jest.fn(), url: '1' } as unknown as GroupChannel;
-    const channel2 = { markAsDelivered: jest.fn(), url: '2' } as unknown as GroupChannel;
+    const channel1 = { markAsDelivered: vi.fn(), url: '1' } as unknown as GroupChannel;
+    const channel2 = { markAsDelivered: vi.fn(), url: '2' } as unknown as GroupChannel;
     result.current.push(channel1);
     result.current.push(channel2);
     expect(result.current.getQueue().length).toBe(1);
@@ -46,12 +46,12 @@ describe('useMarkAsDeliveredScheduler', () => {
         },
       },
     );
-    const channel1 = { markAsDelivered: jest.fn(), url: '123' } as unknown as GroupChannel;
-    const channel2 = { markAsDelivered: jest.fn(), url: '124' } as unknown as GroupChannel;
+    const channel1 = { markAsDelivered: vi.fn(), url: '123' } as unknown as GroupChannel;
+    const channel2 = { markAsDelivered: vi.fn(), url: '124' } as unknown as GroupChannel;
     result.current.push(channel1);
     expect(channel1.markAsDelivered).toHaveBeenCalledTimes(1);
     result.current.push(channel2);
-    jest.advanceTimersByTime(10000);
+    vi.advanceTimersByTime(10000);
     expect(channel2.markAsDelivered).toHaveBeenCalledTimes(1);
     expect(result.current.getQueue().length).toBe(0);
   });

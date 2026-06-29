@@ -9,8 +9,8 @@ const mockState = {
   stores: {
     sdkStore: {
       sdk: {
-        createMessageSearchQuery: jest.fn(() => ({
-          next: jest.fn().mockResolvedValue([{ messageId: 1 }]),
+        createMessageSearchQuery: vi.fn(() => ({
+          next: vi.fn().mockResolvedValue([{ messageId: 1 }]),
         })),
       },
       initialized: true,
@@ -18,10 +18,10 @@ const mockState = {
   },
   config: { logger: console },
 };
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState })),
-  useSendbird: jest.fn(() => ({ state: mockState })),
+  default: vi.fn(() => ({ state: mockState })),
+  useSendbird: vi.fn(() => ({ state: mockState })),
 }));
 
 describe('useMessageSearch', () => {

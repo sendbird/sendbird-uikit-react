@@ -4,9 +4,9 @@ import { CreateChannelProvider } from '../CreateChannelProvider';
 import { CHANNEL_TYPE } from '../../types';
 import useCreateChannel from '../useCreateChannel';
 
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
+  default: vi.fn(() => ({
     state: {
       stores: {
         sdkStore: {
@@ -38,7 +38,7 @@ describe('CreateChannelProvider', () => {
 
   it('provide the correct initial state', () => {
     const wrapper = ({ children }) => (
-      <CreateChannelProvider onChannelCreated={jest.fn()}>
+      <CreateChannelProvider onChannelCreated={vi.fn()}>
         {children}
       </CreateChannelProvider>
     );
@@ -50,7 +50,7 @@ describe('CreateChannelProvider', () => {
 
   it('provides correct actions through useCreateChannel hook', () => {
     const wrapper = ({ children }) => (
-      <CreateChannelProvider onChannelCreated={jest.fn()}>
+      <CreateChannelProvider onChannelCreated={vi.fn()}>
         {children}
       </CreateChannelProvider>
     );
@@ -63,7 +63,7 @@ describe('CreateChannelProvider', () => {
 
   it('update state correctly when setPageStep is called', async () => {
     const wrapper = ({ children }) => (
-      <CreateChannelProvider onChannelCreated={jest.fn()}>
+      <CreateChannelProvider onChannelCreated={vi.fn()}>
         {children}
       </CreateChannelProvider>
     );
@@ -80,7 +80,7 @@ describe('CreateChannelProvider', () => {
 
   it('update state correctly when setType is called', async () => {
     const wrapper = ({ children }) => (
-      <CreateChannelProvider onChannelCreated={jest.fn()}>
+      <CreateChannelProvider onChannelCreated={vi.fn()}>
         {children}
       </CreateChannelProvider>
     );

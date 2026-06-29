@@ -18,8 +18,8 @@ import SuggestedMentionList from '../components/SuggestedMentionList';
 import SuggestedReplies from '../components/SuggestedReplies';
 
 // Mock createPortal function to render content directly without portal
-jest.mock('react-dom', () => ({
-  ...jest.requireActual('react-dom'),
+vi.mock('react-dom', async () => ({
+  ...await vi.importActual('react-dom'),
   createPortal: (node) => node,
 }));
 
@@ -58,7 +58,7 @@ describe('GroupChannel Unit Tests', () => {
         <SendbirdProvider appId="mockAppId" userId="mockUserId">
           <GroupChannelProvider {...defaultProps}>
             <FileViewer
-              onCancel={() => jest.fn()}
+              onCancel={() => vi.fn()}
               message={
                 {
                   sender: { role: 'none' },
@@ -125,7 +125,7 @@ describe('GroupChannel Unit Tests', () => {
         <SendbirdProvider appId="mockAppId" userId="mockUserId">
           <GroupChannelProvider {...defaultProps}>
             <RemoveMessageModal
-              onCancel={() => jest.fn()}
+              onCancel={() => vi.fn()}
               message={
                 {
                   sender: { role: 'none' },
@@ -158,7 +158,7 @@ describe('GroupChannel Unit Tests', () => {
       render(
         <SendbirdProvider appId="mockAppId" userId="mockUserId">
           <GroupChannelProvider {...defaultProps}>
-            <UnreadCount count={0} onClick={() => jest.fn()}/>
+            <UnreadCount count={0} onClick={() => vi.fn()}/>
           </GroupChannelProvider>,
         </SendbirdProvider>,
       );
@@ -190,7 +190,7 @@ describe('GroupChannel Unit Tests', () => {
           <GroupChannelProvider {...defaultProps}>
             <SuggestedReplies
               replyOptions={['testSupplyOption']}
-              onSendMessage={() => jest.fn()}
+              onSendMessage={() => vi.fn()}
             />
           </GroupChannelProvider>,
         </SendbirdProvider>,

@@ -1,9 +1,9 @@
 import { useLocalization } from "../../../../../lib/LocalizationContext";
 import { getMessagePartsInfo } from "../getMessagePartsInfo";
 
-jest.mock('../../../../../lib/LocalizationContext', () => ({
-  ...jest.requireActual('../../../../../lib/LocalizationContext'),
-  useLocalization: jest.fn(),
+vi.mock('../../../../../lib/LocalizationContext', async () => ({
+  ...await vi.importActual('../../../../../lib/LocalizationContext'),
+  useLocalization: vi.fn(),
 }));
 
 const mockChannel = {
@@ -47,7 +47,7 @@ const messageGroup3 = [1, 2, 3].map((n, i) => ({
 
 describe('getMessagePartsInfo', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     useLocalization.mockReturnValue({
       stringSet: {
         DATE_FORMAT__MESSAGE_CREATED_AT: 'p',

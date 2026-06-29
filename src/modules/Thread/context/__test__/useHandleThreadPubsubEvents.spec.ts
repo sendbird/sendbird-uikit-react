@@ -5,15 +5,15 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { SendableMessageType } from '../../../../utils';
 
 const mockThreadActions = {
-  sendMessageStart: jest.fn(),
-  sendMessageSuccess: jest.fn(),
-  sendMessageFailure: jest.fn(),
-  onFileInfoUpdated: jest.fn(),
-  onMessageUpdated: jest.fn(),
-  onMessageDeleted: jest.fn(),
+  sendMessageStart: vi.fn(),
+  sendMessageSuccess: vi.fn(),
+  sendMessageFailure: vi.fn(),
+  onFileInfoUpdated: vi.fn(),
+  onMessageUpdated: vi.fn(),
+  onMessageDeleted: vi.fn(),
 };
 
-jest.mock('../useThread', () => ({
+vi.mock('../useThread', () => ({
   __esModule: true,
   default: () => ({
     actions: mockThreadActions,
@@ -21,14 +21,14 @@ jest.mock('../useThread', () => ({
 }));
 
 const mockLogger = {
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+  error: vi.fn(),
 };
 
 const mockPubSub = {
-  subscribe: jest.fn(),
-  unsubscribe: jest.fn(),
+  subscribe: vi.fn(),
+  unsubscribe: vi.fn(),
 } as unknown as SBUGlobalPubSub;
 
 describe('useHandleThreadPubsubEvents', () => {
@@ -59,7 +59,7 @@ describe('useHandleThreadPubsubEvents', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should subscribe to pubsub events on mount', () => {

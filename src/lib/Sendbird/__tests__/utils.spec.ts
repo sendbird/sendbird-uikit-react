@@ -3,21 +3,24 @@ import SendbirdChat from '@sendbird/chat';
 import type { SendbirdState, SdkStore, UserStore, AppInfoStore, SendbirdStateConfig } from '../types';
 import { updateAppInfoStore, updateSdkStore, updateUserStore, initSDK, setupSDK } from '../utils';
 
-jest.mock('@sendbird/chat', () => ({
-  init: jest.fn(),
-  GroupChannelModule: jest.fn(),
-  OpenChannelModule: jest.fn(),
-  DeviceOsPlatform: {
-    MOBILE_WEB: 'mobile_web',
-    WEB: 'web',
-  },
-  SendbirdPlatform: {
-    JS: 'js',
-  },
-  SendbirdProduct: {
-    UIKIT_CHAT: 'uikit_chat',
-  },
-}));
+vi.mock('@sendbird/chat', () => {
+  const mock = {
+    init: vi.fn(),
+    GroupChannelModule: vi.fn(),
+    OpenChannelModule: vi.fn(),
+    DeviceOsPlatform: {
+      MOBILE_WEB: 'mobile_web',
+      WEB: 'web',
+    },
+    SendbirdPlatform: {
+      JS: 'js',
+    },
+    SendbirdProduct: {
+      UIKIT_CHAT: 'uikit_chat',
+    },
+  };
+  return { ...mock, default: mock };
+});
 
 describe('State Update Functions', () => {
   const initialState: SendbirdState = {
@@ -143,19 +146,19 @@ describe('initSDK', () => {
 });
 
 const mockSdk = {
-  addExtension: jest.fn(),
-  addSendbirdExtensions: jest.fn(),
-  setSessionHandler: jest.fn(),
+  addExtension: vi.fn(),
+  addSendbirdExtensions: vi.fn(),
+  setSessionHandler: vi.fn(),
 };
 const mockLogger = {
-  info: jest.fn(),
+  info: vi.fn(),
 };
 
 describe('setupSDK', () => {
   it('sets up SDK with extensions and session handler', () => {
     const params = {
       logger: mockLogger,
-      sessionHandler: { onSessionExpired: jest.fn() },
+      sessionHandler: { onSessionExpired: vi.fn() },
       isMobile: false,
       customExtensionParams: { customKey: 'customValue' },
     };

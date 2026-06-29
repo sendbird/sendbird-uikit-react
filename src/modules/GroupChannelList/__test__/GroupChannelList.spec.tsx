@@ -12,8 +12,8 @@ import GroupChannelPreviewAction from '../components/GroupChannelPreviewAction';
 
 describe('GroupChannelList Unit Tests', () => {
   const defaultProps = {
-    onChannelSelect: () => jest.fn(),
-    onChannelCreated: () => jest.fn(),
+    onChannelSelect: () => vi.fn(),
+    onChannelCreated: () => vi.fn(),
   };
 
   it('renders GroupChannelListUI with default value', () => {
@@ -66,7 +66,7 @@ describe('GroupChannelList Unit Tests', () => {
                   isBroadcast: false,
                 } as GroupChannel
               }
-              onClick={() => jest.fn()}
+              onClick={() => vi.fn()}
               renderChannelAction={() => null}
             />
           </GroupChannelListProvider>,

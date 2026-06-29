@@ -5,10 +5,10 @@ import Word from "../index";
 import useSendbird from "../../../lib/Sendbird/context/hooks/useSendbird";
 import { SendbirdContext } from "../../../lib/Sendbird/context/SendbirdContext";
 
-jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(),
-  useSendbird: jest.fn(),
+  default: vi.fn(),
+  useSendbird: vi.fn(),
 }));
 
 describe("ui/Word", () => {

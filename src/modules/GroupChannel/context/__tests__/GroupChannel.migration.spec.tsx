@@ -17,26 +17,26 @@ const mockState = {
     groupChannelSettings: {
       enableMessageSearch: false,
     },
-    onStartDirectMessage: jest.fn(),
+    onStartDirectMessage: vi.fn(),
   },
   stores: {
     sdkStore: {
       initialized: true,
       sdk: {
         groupChannel: {
-          getChannel: jest.fn().mockResolvedValue({}),
-          addGroupChannelHandler: jest.fn(),
-          removeGroupChannelHandler: jest.fn(),
+          getChannel: vi.fn().mockResolvedValue({}),
+          addGroupChannelHandler: vi.fn(),
+          removeGroupChannelHandler: vi.fn(),
         },
       },
     },
   },
 };
-const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+const mockActions = { connect: vi.fn(), disconnect: vi.fn() };
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState, actions: mockActions })),
-  useSendbird: jest.fn(() => ({ state: mockState, actions: mockActions })),
+  default: vi.fn(() => ({ state: mockState, actions: mockActions })),
+  useSendbird: vi.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
 const mockProps: GroupChannelProviderProps = {
@@ -44,7 +44,7 @@ const mockProps: GroupChannelProviderProps = {
   channelUrl: 'channel-1',
   children: <div>Child Component</div>,
 
-  renderUserProfile: jest.fn(),
+  renderUserProfile: vi.fn(),
   disableUserProfile: false,
   // Flags
   isReactionEnabled: true,
@@ -60,33 +60,33 @@ const mockProps: GroupChannelProviderProps = {
   startingPoint: undefined,
   // Message Focusing
   animatedMessageId: null,
-  onMessageAnimated: jest.fn(),
+  onMessageAnimated: vi.fn(),
 
   // Custom
   messageListQueryParams: {},
-  filterEmojiCategoryIds: jest.fn(),
+  filterEmojiCategoryIds: vi.fn(),
 
   // Handlers
-  onBeforeSendUserMessage: jest.fn(),
-  onBeforeSendFileMessage: jest.fn(),
-  onBeforeSendVoiceMessage: jest.fn(),
-  onBeforeSendMultipleFilesMessage: jest.fn(),
-  onBeforeUpdateUserMessage: jest.fn(),
-  onBeforeDownloadFileMessage: jest.fn(),
+  onBeforeSendUserMessage: vi.fn(),
+  onBeforeSendFileMessage: vi.fn(),
+  onBeforeSendVoiceMessage: vi.fn(),
+  onBeforeSendMultipleFilesMessage: vi.fn(),
+  onBeforeUpdateUserMessage: vi.fn(),
+  onBeforeDownloadFileMessage: vi.fn(),
 
   // Click
-  onBackClick: jest.fn(),
-  onChatHeaderActionClick: jest.fn(),
-  onReplyInThreadClick: jest.fn(),
-  onSearchClick: jest.fn(),
-  onQuoteMessageClick: jest.fn(),
+  onBackClick: vi.fn(),
+  onChatHeaderActionClick: vi.fn(),
+  onReplyInThreadClick: vi.fn(),
+  onSearchClick: vi.fn(),
+  onQuoteMessageClick: vi.fn(),
 
   // Render
-  renderUserMentionItem: jest.fn(),
+  renderUserMentionItem: vi.fn(),
 
   // from UserProfileProviderProps
-  onUserProfileMessage: jest.fn(),
-  onStartDirectMessage: jest.fn(),
+  onUserProfileMessage: vi.fn(),
+  onStartDirectMessage: vi.fn(),
 };
 
 describe('GroupChannel Migration Compatibility Tests', () => {

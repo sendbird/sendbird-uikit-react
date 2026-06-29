@@ -3,18 +3,19 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { GroupChannelUIView } from '../components/GroupChannelUI/GroupChannelUIView';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import type { Mock } from 'vitest';
 
-jest.mock('../../../lib/Sendbird/context/hooks/useSendbird');
+vi.mock('../../../lib/Sendbird/context/hooks/useSendbird');
 
-const mockUseSendbird = useSendbird as jest.Mock;
+const mockUseSendbird = useSendbird as Mock;
 
 describe('GroupChannelUIView Integration Tests', () => {
   const defaultProps = {
     channelUrl: 'test-channel',
     isInvalid: false,
-    renderChannelHeader: jest.fn(() => <div>Channel Header</div>),
-    renderMessageList: jest.fn(() => <div>Message List</div>),
-    renderMessageInput: jest.fn(() => <div>Message Input</div>),
+    renderChannelHeader: vi.fn(() => <div>Channel Header</div>),
+    renderMessageList: vi.fn(() => <div>Message List</div>),
+    renderMessageInput: vi.fn(() => <div>Message Input</div>),
   };
 
   beforeEach(() => {
@@ -24,7 +25,7 @@ describe('GroupChannelUIView Integration Tests', () => {
           sdkStore: { error: null },
         },
         config: {
-          logger: { info: jest.fn() },
+          logger: { info: vi.fn() },
           isOnline: true,
           groupChannel: {
             enableTypingIndicator: true,
@@ -66,7 +67,7 @@ describe('GroupChannelUIView Integration Tests', () => {
           sdkStore: { error: new Error('SDK Error') },
         },
         config: {
-          logger: { info: jest.fn() },
+          logger: { info: vi.fn() },
           isOnline: true,
         },
       },

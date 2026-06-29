@@ -6,30 +6,30 @@ import useSendbirdStateContext from './Sendbird/context/hooks/useSendbirdStateCo
 import { match } from 'ts-pattern';
 import { DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, DEFAULT_UPLOAD_SIZE_LIMIT } from '../utils/consts';
 
-jest.mock('@sendbird/chat', () => {
-  const mockConnect = jest.fn().mockResolvedValue({
+vi.mock('@sendbird/chat', () => {
+  const mockConnect = vi.fn().mockResolvedValue({
     userId: 'test-user-id',
     nickname: 'test-nickname',
     profileUrl: 'test-profile-url',
   });
-  const mockDisconnect = jest.fn().mockResolvedValue(null);
-  const mockUpdateCurrentUserInfo = jest.fn().mockResolvedValue(null);
-  const mockAddExtension = jest.fn().mockReturnThis();
-  const mockAddSendbirdExtensions = jest.fn().mockReturnThis();
-  const mockGetMessageTemplatesByToken = jest.fn().mockResolvedValue({
+  const mockDisconnect = vi.fn().mockResolvedValue(null);
+  const mockUpdateCurrentUserInfo = vi.fn().mockResolvedValue(null);
+  const mockAddExtension = vi.fn().mockReturnThis();
+  const mockAddSendbirdExtensions = vi.fn().mockReturnThis();
+  const mockGetMessageTemplatesByToken = vi.fn().mockResolvedValue({
     hasMore: false,
     token: null,
     templates: [],
   });
 
   const mockSdk = {
-    init: jest.fn().mockImplementation(() => mockSdk),
+    init: vi.fn().mockImplementation(() => mockSdk),
     connect: mockConnect,
     disconnect: mockDisconnect,
     updateCurrentUserInfo: mockUpdateCurrentUserInfo,
     addExtension: mockAddExtension,
     addSendbirdExtensions: mockAddSendbirdExtensions,
-    GroupChannel: { createMyGroupChannelListQuery: jest.fn() },
+    GroupChannel: { createMyGroupChannelListQuery: vi.fn() },
     message: {
       getMessageTemplatesByToken: mockGetMessageTemplatesByToken,
     },
@@ -81,9 +81,9 @@ const mockProps: SendbirdProviderProps = {
   sdkInitParams: { localCacheEnabled: true },
   customExtensionParams: { feature: 'custom' },
   isMultipleFilesMessageEnabled: true,
-  renderUserProfile: jest.fn(),
-  onStartDirectMessage: jest.fn(),
-  onUserProfileMessage: jest.fn(),
+  renderUserProfile: vi.fn(),
+  onStartDirectMessage: vi.fn(),
+  onUserProfileMessage: vi.fn(),
   eventHandlers: {},
   children: <div>Test Child</div>,
 };
@@ -94,9 +94,9 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
 
   beforeAll(() => {
     originalFetch = global.fetch;
-    global.fetch = jest.fn(() => Promise.resolve({ ok: true }));
+    global.fetch = vi.fn(() => Promise.resolve({ ok: true }));
 
-    console.error = jest.fn((...args) => {
+    console.error = vi.fn((...args) => {
       if (typeof args[0] === 'string'
           && (args[0].includes('Warning: An update to %s inside a test was not wrapped in act')
            || args[0].includes('WebSocket connection'))) {
@@ -112,24 +112,24 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     global.MediaRecorder = {
-      isTypeSupported: jest.fn((type) => {
+      isTypeSupported: vi.fn((type) => {
         const supportedMimeTypes = ['audio/webm', 'audio/wav'];
         return supportedMimeTypes.includes(type);
       }),
     } as any;
 
-    window.matchMedia = jest.fn().mockImplementation((query) => ({
+    window.matchMedia = vi.fn().mockImplementation((query) => ({
       matches: false,
       media: query,
       onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
     }));
   });
 

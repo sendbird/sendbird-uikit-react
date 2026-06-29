@@ -8,11 +8,30 @@ module.exports = {
     globalThis: true,
     Locale: true,
     SendBird: true,
+    // Vitest globals (vitest.config.ts uses `test.globals: true`).
+    // Used in the test suite:
+    vi: true,
+    describe: true,
+    it: true,
+    test: true,
+    expect: true,
+    beforeAll: true,
+    afterAll: true,
+    beforeEach: true,
+    afterEach: true,
+    // Also provided by `globals: true` (vitest 3.2), not currently used:
+    vitest: true,
+    suite: true,
+    chai: true,
+    expectTypeOf: true,
+    assertType: true,
+    assert: true,
+    onTestFailed: true,
+    onTestFinished: true,
   },
   env: {
     browser: true,
     es6: true,
-    jest: true,
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {

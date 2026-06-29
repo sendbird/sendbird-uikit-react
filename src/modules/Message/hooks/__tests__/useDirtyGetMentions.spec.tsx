@@ -3,9 +3,9 @@ import React, { useRef } from 'react';
 import { useDirtyGetMentions } from '../useDirtyGetMentions';
 
 const logger = {
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+  error: vi.fn(),
 };
 
 const TestComponent = ({

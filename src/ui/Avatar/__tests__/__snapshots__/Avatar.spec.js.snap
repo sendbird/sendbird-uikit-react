@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/Avatar should do a snapshot test of the Avatar DOM with four elements 1`] = `
+exports[`ui/Avatar > should do a snapshot test of the Avatar DOM with four elements 1`] = `
 <DocumentFragment>
   <div
     class=" sendbird-avatar"
@@ -76,7 +76,7 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with four element
 </DocumentFragment>
 `;
 
-exports[`ui/Avatar should do a snapshot test of the Avatar DOM with single element 1`] = `
+exports[`ui/Avatar > should do a snapshot test of the Avatar DOM with single element 1`] = `
 <DocumentFragment>
   <div
     class=" sendbird-avatar"
@@ -102,7 +102,7 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with single eleme
 </DocumentFragment>
 `;
 
-exports[`ui/Avatar should do a snapshot test of the Avatar DOM with three elements 1`] = `
+exports[`ui/Avatar > should do a snapshot test of the Avatar DOM with three elements 1`] = `
 <DocumentFragment>
   <div
     class=" sendbird-avatar"
@@ -164,7 +164,7 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with three elemen
 </DocumentFragment>
 `;
 
-exports[`ui/Avatar should do a snapshot test of the Avatar DOM with two elements 1`] = `
+exports[`ui/Avatar > should do a snapshot test of the Avatar DOM with two elements 1`] = `
 <DocumentFragment>
   <div
     class=" sendbird-avatar"
@@ -208,7 +208,7 @@ exports[`ui/Avatar should do a snapshot test of the Avatar DOM with two elements
 </DocumentFragment>
 `;
 
-exports[`ui/Avatar should render default image if src is empty 1`] = `
+exports[`ui/Avatar > should render default image if src is empty 1`] = `
 <DocumentFragment>
   <div
     class=" sendbird-avatar"

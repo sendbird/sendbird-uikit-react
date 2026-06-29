@@ -5,36 +5,36 @@ import { GroupChannelProvider, GroupChannelContext } from '../GroupChannelProvid
 import { useGroupChannel } from '../hooks/useGroupChannel';
 import { SendableMessageType } from '../../../../utils';
 
-const mockLogger = { warning: jest.fn() };
+const mockLogger = { warning: vi.fn() };
 const mockChannel = {
   url: 'test-channel',
   members: [{ userId: '1', nickname: 'user1' }],
-  serialize: () => JSON.stringify(this),
+  serialize: () => JSON.stringify({}),
 };
 
-const mockGetChannel = jest.fn().mockResolvedValue(mockChannel);
+const mockGetChannel = vi.fn().mockResolvedValue(mockChannel);
 const mockMessageCollection = {
-  dispose: jest.fn(),
-  setMessageCollectionHandler: jest.fn(),
-  initialize: jest.fn().mockResolvedValue(null),
-  loadPrevious: jest.fn(),
-  loadNext: jest.fn(),
+  dispose: vi.fn(),
+  setMessageCollectionHandler: vi.fn(),
+  initialize: vi.fn().mockResolvedValue(null),
+  loadPrevious: vi.fn(),
+  loadNext: vi.fn(),
   messages: [],
 };
-const mockMarkAsReadScheduler = { push: jest.fn() };
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+const mockMarkAsReadScheduler = { push: vi.fn() };
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
+  default: vi.fn(() => ({
     state: {
       stores: {
         sdkStore: {
           sdk: {
             groupChannel: {
               getChannel: mockGetChannel,
-              addGroupChannelHandler: jest.fn(),
-              removeGroupChannelHandler: jest.fn(),
+              addGroupChannelHandler: vi.fn(),
+              removeGroupChannelHandler: vi.fn(),
             },
-            createMessageCollection: jest.fn().mockReturnValue(mockMessageCollection),
+            createMessageCollection: vi.fn().mockReturnValue(mockMessageCollection),
           },
           initialized: true,
         },
@@ -51,14 +51,14 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
         },
         isOnline: true,
         pubSub: {
-          subscribe: () => ({ remove: jest.fn() }),
+          subscribe: () => ({ remove: vi.fn() }),
         },
       },
     },
   })),
 }));
-jest.mock('../utils', () => ({
-  getMessageTopOffset: jest.fn().mockReturnValue(100),
+vi.mock('../utils', () => ({
+  getMessageTopOffset: vi.fn().mockReturnValue(100),
 }));
 
 const createMockStore = (initialState = {}) => {
@@ -71,11 +71,11 @@ const createMockStore = (initialState = {}) => {
     messages: [],
     scrollRef: { current: null },
     hasNext: () => false,
-    resetWithStartingPoint: jest.fn(),
+    resetWithStartingPoint: vi.fn(),
     scrollPubSub: {
-      publish: jest.fn(),
+      publish: vi.fn(),
     },
-    resetNewMessages: jest.fn(),
+    resetNewMessages: vi.fn(),
     ...initialState,
   };
 
@@ -208,7 +208,7 @@ describe('useGroupChannel', () => {
       it('should not scroll if scrollRef is not set', async () => {
         const mockStore = createMockStore({
           scrollRef: { current: null },
-          scrollPubSub: { publish: jest.fn() },
+          scrollPubSub: { publish: vi.fn() },
         });
         const { result } = renderHook(() => useGroupChannel(), {
           wrapper: createWrapper(mockStore),
@@ -225,8 +225,8 @@ describe('useGroupChannel', () => {
           scrollRef: { current: {} },
           hasNext: () => false,
           currentChannel: mockChannel,
-          resetNewMessages: jest.fn(),
-          scrollPubSub: { publish: jest.fn() },
+          resetNewMessages: vi.fn(),
+          scrollPubSub: { publish: vi.fn() },
         });
         const { result } = renderHook(() => useGroupChannel(), {
           wrapper: createWrapper(mockStore),
@@ -241,11 +241,11 @@ describe('useGroupChannel', () => {
       });
       it('should scroll to bottom when online and has next message', async () => {
         const mockScrollRef = { current: {} };
-        const mockScrollPubSub = { publish: jest.fn() };
+        const mockScrollPubSub = { publish: vi.fn() };
         const mockStore = createMockStore({
           scrollRef: mockScrollRef,
           hasNext: () => true,
-          resetWithStartingPoint: jest.fn().mockResolvedValue(undefined),
+          resetWithStartingPoint: vi.fn().mockResolvedValue(undefined),
           scrollPubSub: mockScrollPubSub,
         });
         const { result } = renderHook(() => useGroupChannel(), {
@@ -265,7 +265,7 @@ describe('useGroupChannel', () => {
         const mockStore = createMockStore({
           messages: [],
           scrollRef: { current: document.createElement('div') },
-          scrollPubSub: { publish: jest.fn() },
+          scrollPubSub: { publish: vi.fn() },
         });
         const { result } = renderHook(() => useGroupChannel(), {
           wrapper: createWrapper(mockStore),
@@ -278,11 +278,11 @@ describe('useGroupChannel', () => {
         });
       });
       it('scroll to message when message exists', async () => {
-        const mockMessage = { messageId: 123, createdAt: 1000, serialize: () => JSON.stringify(this) };
+        const mockMessage = { messageId: 123, createdAt: 1000, serialize: () => JSON.stringify({}) };
         const mockStore = createMockStore({
           messages: [mockMessage],
           scrollRef: { current: document.createElement('div') },
-          scrollPubSub: { publish: jest.fn() },
+          scrollPubSub: { publish: vi.fn() },
         });
         const { result } = renderHook(() => useGroupChannel(), {
           wrapper: createWrapper(mockStore),
@@ -300,8 +300,8 @@ describe('useGroupChannel', () => {
         });
       });
       it('loads message and scrolls when message does not exist', async () => {
-        const mockScrollPubSub = { publish: jest.fn() };
-        const mockResetWithStartingPoint = jest.fn().mockImplementation(async (startingPoint: number) => {
+        const mockScrollPubSub = { publish: vi.fn() };
+        const mockResetWithStartingPoint = vi.fn().mockImplementation(async (startingPoint: number) => {
           mockStore.setState((prev) => ({
             ...prev,
             messages: [{ createdAt: startingPoint, messageId: 123 }],
@@ -323,8 +323,6 @@ describe('useGroupChannel', () => {
           await result.current.actions.scrollToMessage(1000, 123, true, true);
           await waitFor(() => {
             expect(mockResetWithStartingPoint).toHaveBeenCalledWith(1000);
-            // mocking setTimeout
-            jest.runAllTimers();
             expect(mockStore.getState().scrollPubSub.publish)
               .toHaveBeenCalledWith('scroll', {
                 top: 100,
@@ -339,8 +337,8 @@ describe('useGroupChannel', () => {
     it('processes reaction toggle', async () => {
       const mockChannelWithReactions = {
         ...mockChannel,
-        addReaction: jest.fn().mockResolvedValue({}),
-        deleteReaction: jest.fn().mockResolvedValue({}),
+        addReaction: vi.fn().mockResolvedValue({}),
+        deleteReaction: vi.fn().mockResolvedValue({}),
       };
 
       const { result } = renderHook(() => useGroupChannel(), { wrapper });
@@ -378,7 +376,7 @@ describe('useGroupChannel', () => {
 
     it('logs errors for reaction deletion failure', async () => {
       const mockError = new Error('Failed to delete reaction');
-      const deleteReaction = jest.fn().mockRejectedValue(mockError);
+      const deleteReaction = vi.fn().mockRejectedValue(mockError);
       const mockChannelWithReactions = {
         ...mockChannel,
         deleteReaction,
@@ -411,8 +409,8 @@ describe('useGroupChannel', () => {
     describe('toggleReaction', () => {
       it('should be able to add and delete reactions', async () => {
         const mockChannel = {
-          addReaction: jest.fn().mockResolvedValue(undefined),
-          deleteReaction: jest.fn().mockResolvedValue(undefined),
+          addReaction: vi.fn().mockResolvedValue(undefined),
+          deleteReaction: vi.fn().mockResolvedValue(undefined),
         };
         const mockStore = createMockStore({
           currentChannel: mockChannel,
@@ -442,8 +440,8 @@ describe('useGroupChannel', () => {
       it('processes successful reaction toggles without logging errors', async () => {
         const mockChannelWithReactions = {
           ...mockChannel,
-          addReaction: jest.fn().mockResolvedValue({}),
-          deleteReaction: jest.fn().mockResolvedValue({}),
+          addReaction: vi.fn().mockResolvedValue({}),
+          deleteReaction: vi.fn().mockResolvedValue({}),
         };
 
         const { result } = renderHook(() => useGroupChannel(), { wrapper });

@@ -23,13 +23,13 @@ function DummyComponent(props: FileViewerComponentProps): React.ReactElement {
 
 describe('useKeyDown', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should call onClickLeft on keydown ArrowLeft', async () => {
-    const onClickLeft = jest.fn(() => null);
-    const onClickRight = jest.fn(() => null);
-    const onClose = jest.fn(() => null);
+    const onClickLeft = vi.fn(() => null);
+    const onClickRight = vi.fn(() => null);
+    const onClose = vi.fn(() => null);
 
     const props: FileViewerComponentProps = {
       nickname: 'hoon100',
@@ -54,9 +54,9 @@ describe('useKeyDown', () => {
     expect(onClose).toHaveBeenCalledTimes(0);
   });
   it('should call onClickRight on keydown ArrowRight', async () => {
-    const onClickLeft = jest.fn(() => null);
-    const onClickRight = jest.fn(() => null);
-    const onClose = jest.fn(() => null);
+    const onClickLeft = vi.fn(() => null);
+    const onClickRight = vi.fn(() => null);
+    const onClose = vi.fn(() => null);
 
     const props: FileViewerComponentProps = {
       nickname: 'hoon100',
@@ -81,9 +81,9 @@ describe('useKeyDown', () => {
     expect(onClose).toHaveBeenCalledTimes(0);
   });
   it('should call onClose on keydown Escape', async () => {
-    const onClickLeft = jest.fn(() => null);
-    const onClickRight = jest.fn(() => null);
-    const onClose = jest.fn(() => null);
+    const onClickLeft = vi.fn(() => null);
+    const onClickRight = vi.fn(() => null);
+    const onClose = vi.fn(() => null);
 
     const props: FileViewerComponentProps = {
       nickname: 'hoon100',

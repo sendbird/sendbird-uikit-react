@@ -5,12 +5,12 @@ import { ThreadProvider } from '../ThreadProvider';
 import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
 import { PREV_THREADS_FETCH_SIZE } from '../../consts';
 
-const mockApplyReactionEvent = jest.fn();
+const mockApplyReactionEvent = vi.fn();
 
 const mockChannel = {
   url: 'test-channel',
   members: [{ userId: '1', nickname: 'user1' }],
-  updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+  updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
 };
 
 const mockNewMessage = {
@@ -27,13 +27,13 @@ const mockParentMessage = {
   applyReactionEvent: mockApplyReactionEvent,
 };
 
-const mockGetChannel = jest.fn().mockResolvedValue(mockChannel);
-const mockGetMessage = jest.fn().mockResolvedValue(mockParentMessage);
-const mockPubSub = { publish: jest.fn(), subscribe: jest.fn() };
+const mockGetChannel = vi.fn().mockResolvedValue(mockChannel);
+const mockGetMessage = vi.fn().mockResolvedValue(mockParentMessage);
+const mockPubSub = { publish: vi.fn(), subscribe: vi.fn() };
 
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
+  default: vi.fn(() => ({
     state: {
       stores: {
         sdkStore: {
@@ -63,7 +63,7 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
 
 describe('useThread', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('throws an error if used outside of ThreadProvider', () => {
@@ -175,12 +175,12 @@ describe('useThread', () => {
     const otherChannel = {
       url: 'test-channel2',
       members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
     };
     const channel = {
       url: 'test-channel',
       members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
     };
     const mockMessage = { messageId: 1, message: 'Test message', reqId: 2 };
 
@@ -214,12 +214,12 @@ describe('useThread', () => {
     const otherChannel = {
       url: 'test-channel2',
       members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
     };
     const channel = {
       url: 'test-channel',
       members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
     };
     const mockMessage = { messageId: 1, message: 'Test message', reqId: 2 };
 
@@ -442,12 +442,12 @@ describe('useThread', () => {
     const otherChannel = {
       url: 'test-channel2',
       members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
     };
     const channel = {
       url: 'test-channel',
       members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
     };
     const mockMessage = { messageId: 1, message: 'Test message', reqId: 2, parentMessage: mockParentMessage };
 

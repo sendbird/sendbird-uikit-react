@@ -20,18 +20,18 @@ const mockState = {
     },
   },
 };
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', async () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState })),
-  useSendbird: jest.fn(() => ({ state: mockState })),
+  default: vi.fn(() => ({ state: mockState })),
+  useSendbird: vi.fn(() => ({ state: mockState })),
 }));
 
-jest.mock('@sendbird/uikit-tools', () => ({
-  ...jest.requireActual('@sendbird/uikit-tools'),
-  useGroupChannelList: jest.fn(() => ({
+vi.mock('@sendbird/uikit-tools', async () => ({
+  ...await vi.importActual('@sendbird/uikit-tools'),
+  useGroupChannelList: vi.fn(() => ({
     refreshing: false,
     initialized: true,
-    groupChannels: [{ url: 'test-groupchannel-url-1', serialize: () => JSON.stringify(this) }],
+    groupChannels: [{ url: 'test-groupchannel-url-1', serialize: () => JSON.stringify({}) }],
     refresh: null,
     loadMore: null,
   })),
@@ -61,7 +61,7 @@ describe('GroupChannelListProvider', () => {
 
   it('provide the correct initial state', () => {
     const wrapper = ({ children }) => (
-      <GroupChannelListProvider onChannelSelect={jest.fn()} onChannelCreated={jest.fn()}>
+      <GroupChannelListProvider onChannelSelect={vi.fn()} onChannelCreated={vi.fn()}>
         {children}
       </GroupChannelListProvider>
     );
@@ -74,7 +74,7 @@ describe('GroupChannelListProvider', () => {
   it('update state correctly', async () => {
     const channelListQueryParams = {} as any;
     const wrapper = ({ children }) => (
-      <GroupChannelListProvider className="old-classname" onChannelSelect={jest.fn()} onChannelCreated={jest.fn()} channelListQueryParams={channelListQueryParams}>
+      <GroupChannelListProvider className="old-classname" onChannelSelect={vi.fn()} onChannelCreated={vi.fn()} channelListQueryParams={channelListQueryParams}>
         {children}
       </GroupChannelListProvider>
     );

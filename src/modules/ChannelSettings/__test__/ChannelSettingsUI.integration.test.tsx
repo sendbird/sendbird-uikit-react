@@ -7,12 +7,13 @@ import { LocalizationContext } from '../../../lib/LocalizationContext';
 import * as useChannelSettingsModule from '../context/useChannelSettings';
 import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import type { Mock } from 'vitest';
 
-jest.mock('../context/useChannelSettings');
+vi.mock('../context/useChannelSettings');
 
-jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(),
+  default: vi.fn(),
 }));
 
 const mockStringSet = {
@@ -37,13 +38,13 @@ const defaultMockState = {
 };
 
 const defaultMockActions = {
-  setChannel: jest.fn(),
-  setLoading: jest.fn(),
-  setInvalid: jest.fn(),
+  setChannel: vi.fn(),
+  setLoading: vi.fn(),
+  setInvalid: vi.fn(),
 };
 
 describe('ChannelSettings Integration Tests', () => {
-  const mockUseChannelSettings = useChannelSettingsModule.default as jest.Mock;
+  const mockUseChannelSettings = useChannelSettingsModule.default as Mock;
 
   const renderComponent = (mockState = {}, mockActions = {}) => {
     mockUseChannelSettings.mockReturnValue({
@@ -61,7 +62,7 @@ describe('ChannelSettings Integration Tests', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     const stateContextValue = {
       state: {
         config: {},
@@ -89,7 +90,7 @@ describe('ChannelSettings Integration Tests', () => {
     expect(screen.queryByText(mockStringSet.CHANNEL_SETTING__LEAVE_CHANNEL__TITLE)).not.toBeInTheDocument();
 
     // Clear the render for the next case
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     renderComponent({ invalidChannel: true });
 
     // Case 2: invalidChannel = true
@@ -99,7 +100,7 @@ describe('ChannelSettings Integration Tests', () => {
   });
 
   it('calls setChannel with the correct channel object', () => {
-    const setChannel = jest.fn();
+    const setChannel = vi.fn();
     renderComponent({}, { setChannel });
 
     const newChannel = { name: 'New Channel', members: [] };

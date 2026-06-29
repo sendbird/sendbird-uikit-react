@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/UnknownMessageItemBody should do a snapshot test of the UnknownMessageItemBody DOM 1`] = `
+exports[`ui/UnknownMessageItemBody > should do a snapshot test of the UnknownMessageItemBody DOM 1`] = `
 <DocumentFragment>
   <div
     class="class-name-for-snapshot sendbird-unknown-message-item-body outgoing mouse-hover "

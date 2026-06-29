@@ -6,6 +6,7 @@ import { SendableMessageType } from '../../../../utils';
 import useSendbird from '../../../../lib/Sendbird/context/hooks/useSendbird';
 import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
 import { EmojiContainer } from '@sendbird/chat';
+import type { Mock } from 'vitest';
 
 class MockMessageMethod {
   _onPending: (message: SendableMessageType) => void;
@@ -49,12 +50,12 @@ class MockMessageMethod {
   }
 }
 
-const mockSendUserMessage = jest.fn();
+const mockSendUserMessage = vi.fn();
 
 const mockChannel = {
   url: 'test-channel',
   members: [{ userId: '1', nickname: 'user1' }],
-  updateUserMessage: jest.fn().mockImplementation(async (message) => mockNewMessage(message)),
+  updateUserMessage: vi.fn().mockImplementation(async (message) => mockNewMessage(message)),
   sendUserMessage: mockSendUserMessage,
 };
 
@@ -63,7 +64,7 @@ const mockNewMessage = (message) => ({
   message: message ?? 'new message',
 });
 
-const mockGetChannel = jest.fn().mockResolvedValue(mockChannel);
+const mockGetChannel = vi.fn().mockResolvedValue(mockChannel);
 
 const mockState = {
   stores: {
@@ -80,7 +81,7 @@ const mockState = {
   config: {
     logger: console,
     pubSub: {
-      publish: jest.fn(),
+      publish: vi.fn(),
     },
     groupChannel: {
       enableMention: true,
@@ -88,9 +89,9 @@ const mockState = {
     },
   },
 };
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState })),
+  default: vi.fn(() => ({ state: mockState })),
 }));
 
 describe('ThreadProvider', () => {
@@ -128,9 +129,9 @@ describe('ThreadProvider', () => {
   } as SendableMessageType;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     const stateContextValue = { state: mockState };
-    (useSendbird as jest.Mock).mockReturnValue(stateContextValue);
+    (useSendbird as Mock).mockReturnValue(stateContextValue);
     renderHook(() => useSendbird());
   });
 

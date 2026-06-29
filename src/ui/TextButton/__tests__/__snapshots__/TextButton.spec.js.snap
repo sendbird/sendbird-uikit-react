@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/TextButton should do a snapshot test of the TextButton DOM 1`] = `
+exports[`ui/TextButton > should do a snapshot test of the TextButton DOM 1`] = `
 <DocumentFragment>
   <div
     class=" sendbird-color--onbackground-1 sendbird-textbutton "

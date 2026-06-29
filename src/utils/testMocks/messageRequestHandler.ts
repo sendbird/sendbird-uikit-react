@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { FileInfo } from '@sendbird/chat/message';
 import { MockErrorType, mockError } from './error';
 import { MockMessageType, mockFailedMessage, mockPendingMessage, mockSucceededMessage } from './message';
@@ -14,25 +15,25 @@ export type MockMessageRequestHandlerType = {
   onFileUploaded: (callback?: OnFileUploadedCallbackType) => MockMessageRequestHandlerType,
 };
 
-const getOnPending = (isForSucceeded = true) => jest.fn((callback) => {
+const getOnPending = (isForSucceeded = true) => vi.fn((callback) => {
   if (isForSucceeded) {
     callback(mockPendingMessage);
   }
   return getMockMessageRequestHandler(isForSucceeded);
 });
-const getOnFailed = (isForSucceeded = true) => jest.fn((callback) => {
+const getOnFailed = (isForSucceeded = true) => vi.fn((callback) => {
   if (!isForSucceeded) {
     callback(mockError, mockFailedMessage);
   }
   return getMockMessageRequestHandler(isForSucceeded);
 });
-const getOnSucceeded = (isForSucceeded = true) => jest.fn((callback) => {
+const getOnSucceeded = (isForSucceeded = true) => vi.fn((callback) => {
   if (isForSucceeded) {
     callback(mockSucceededMessage);
   }
   return getMockMessageRequestHandler(isForSucceeded);
 });
-const getOnFileUploaded = (isForSucceeded = true) => jest.fn((callback) => {
+const getOnFileUploaded = (isForSucceeded = true) => vi.fn((callback) => {
   if (isForSucceeded) {
     // TODO: Improve this logic
     // - we don't test this event handler now

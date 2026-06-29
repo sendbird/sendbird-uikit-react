@@ -42,13 +42,4 @@ jobs:
       - name: Run test
         if: ${{ success() }}
         timeout-minutes: 15
-        run: |
-          yarn test --forceExit --runInBand || {
-            if [ -f "./test-results/junit-report.xml" ]; then
-              echo "Tests failed. Retrying failed tests..."
-              node scripts/failed-test-retry.js
-            else
-              echo "Tests failed and no JUnit report found."
-              exit 1
-            fi
-          }
+        run: yarn test

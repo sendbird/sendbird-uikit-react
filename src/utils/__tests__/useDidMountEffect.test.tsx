@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 
 describe('useDidMountEffect', () => {
   beforeEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('ignore callback if didMount was false', () => {
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
 
     const TestComponent = () => {
       const [counter, setCounter] = useState(0);
@@ -22,7 +22,7 @@ describe('useDidMountEffect', () => {
   });
 
   it('call callback if didMount was true', async () => {
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
 
     const TestComponent = () => {
       const [counter, setCounter] = useState(0);

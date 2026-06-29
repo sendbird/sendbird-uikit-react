@@ -3,15 +3,15 @@ import { renderHook } from '@testing-library/react';
 import { useOnScrollPositionChangeDetector, UseOnScrollReachedEndDetectorParams } from '../index';
 import { SCROLL_BUFFER } from '../../../utils/consts';
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 const SAFE_DELAY = 550;
 
 const prepareMockParams = (): UseOnScrollReachedEndDetectorParams => {
   return {
-    onReachedTop: jest.fn(),
-    onReachedBottom: jest.fn(),
-    onInBetween: jest.fn(),
+    onReachedTop: vi.fn(),
+    onReachedBottom: vi.fn(),
+    onInBetween: vi.fn(),
   };
 };
 
@@ -41,7 +41,7 @@ describe('useOnScrollReachedEndDetector', () => {
       scrollHeight: 200,
     }));
 
-    jest.advanceTimersByTime(SAFE_DELAY);
+    vi.advanceTimersByTime(SAFE_DELAY);
 
     expect(params.onReachedTop).toHaveBeenCalledTimes(1);
     expect(params.onReachedBottom).not.toHaveBeenCalled();
@@ -58,7 +58,7 @@ describe('useOnScrollReachedEndDetector', () => {
       scrollHeight: 200,
     }));
 
-    jest.advanceTimersByTime(SAFE_DELAY);
+    vi.advanceTimersByTime(SAFE_DELAY);
 
     expect(params.onReachedTop).toHaveBeenCalledTimes(1);
     expect(params.onReachedBottom).not.toHaveBeenCalled();
@@ -75,7 +75,7 @@ describe('useOnScrollReachedEndDetector', () => {
       scrollHeight: 200,
     }));
 
-    jest.advanceTimersByTime(SAFE_DELAY);
+    vi.advanceTimersByTime(SAFE_DELAY);
 
     expect(params.onReachedTop).toHaveBeenCalledTimes(1);
     expect(params.onReachedBottom).not.toHaveBeenCalled();
@@ -92,7 +92,7 @@ describe('useOnScrollReachedEndDetector', () => {
       scrollHeight: 200,
     }));
 
-    jest.advanceTimersByTime(SAFE_DELAY);
+    vi.advanceTimersByTime(SAFE_DELAY);
 
     expect(params.onReachedTop).not.toHaveBeenCalled();
     expect(params.onReachedBottom).toHaveBeenCalledTimes(1);
@@ -109,7 +109,7 @@ describe('useOnScrollReachedEndDetector', () => {
       scrollHeight: 200,
     }));
 
-    jest.advanceTimersByTime(SAFE_DELAY);
+    vi.advanceTimersByTime(SAFE_DELAY);
 
     expect(params.onReachedTop).not.toHaveBeenCalled();
     expect(params.onReachedBottom).toHaveBeenCalledTimes(1);
@@ -126,7 +126,7 @@ describe('useOnScrollReachedEndDetector', () => {
       scrollHeight: 200,
     }));
 
-    jest.advanceTimersByTime(SAFE_DELAY);
+    vi.advanceTimersByTime(SAFE_DELAY);
 
     expect(params.onReachedTop).not.toHaveBeenCalled();
     expect(params.onReachedBottom).toHaveBeenCalledTimes(1);
@@ -143,7 +143,7 @@ describe('useOnScrollReachedEndDetector', () => {
       scrollHeight: 200,
     }));
 
-    jest.advanceTimersByTime(SAFE_DELAY);
+    vi.advanceTimersByTime(SAFE_DELAY);
 
     expect(params.onReachedTop).not.toHaveBeenCalled();
     expect(params.onReachedBottom).not.toHaveBeenCalled();

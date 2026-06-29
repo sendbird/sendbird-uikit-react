@@ -2,8 +2,8 @@ import { renderHook } from '@testing-library/react';
 import { useScrollBehavior } from '../useScrollBehavior';
 import { useChannelContext } from '../../../../context/ChannelProvider';
 
-jest.mock('../../../../context/ChannelProvider', () => ({
-  useChannelContext: jest.fn(),
+vi.mock('../../../../context/ChannelProvider', () => ({
+  useChannelContext: vi.fn(),
 }));
 
 describe('useScrollBehavior', () => {

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/PlaceHolder should do a snapshot test of the PlaceHolder DOM 1`] = `
+exports[`ui/PlaceHolder > should do a snapshot test of the PlaceHolder DOM 1`] = `
 <DocumentFragment>
   <div
     class="example-text sendbird-place-holder"

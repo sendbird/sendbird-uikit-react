@@ -5,10 +5,11 @@ import { act, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { LocalizationContext } from '../../../../../lib/LocalizationContext';
 import CreateChannelUI from '../index';
+import type { Mock } from 'vitest';
 
-jest.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
+  default: vi.fn(() => ({
     state: {
       stores: {
         userStore: {
@@ -40,7 +41,7 @@ jest.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
     },
   })),
 }));
-jest.mock('../../../context/useCreateChannel');
+vi.mock('../../../context/useCreateChannel');
 
 const mockStringSet = {
   MODAL__CREATE_CHANNEL__TITLE: 'CREATE_CHANNEL',
@@ -64,12 +65,12 @@ const defaultMockState = {
 };
 
 const defaultMockActions = {
-  setPageStep: jest.fn(),
-  setType: jest.fn(),
+  setPageStep: vi.fn(),
+  setType: vi.fn(),
 };
 
 describe('CreateChannelUI Integration Tests', () => {
-  const mockUseCreateChannel = useCreateChannelModule.default as jest.Mock;
+  const mockUseCreateChannel = useCreateChannelModule.default as Mock;
 
   const renderComponent = (mockState = {}, mockActions = {}) => {
     mockUseCreateChannel.mockReturnValue({
@@ -85,7 +86,7 @@ describe('CreateChannelUI Integration Tests', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     document.body.innerHTML = `
       <div id='sendbird-modal-root' />
     `;

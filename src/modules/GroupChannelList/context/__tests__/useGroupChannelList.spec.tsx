@@ -21,21 +21,21 @@ const mockState = {
     },
   },
 };
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState })),
-  useSendbird: jest.fn(() => ({ state: mockState })),
+  default: vi.fn(() => ({ state: mockState })),
+  useSendbird: vi.fn(() => ({ state: mockState })),
 }));
 
-jest.mock('@sendbird/uikit-tools', () => ({
-  useGroupChannelList: jest.fn(() => ({
+vi.mock('@sendbird/uikit-tools', () => ({
+  useGroupChannelList: vi.fn(() => ({
     refreshing: false,
     initialized: false,
     groupChannels: [],
     refresh: null,
     loadMore: null,
   })),
-  useGroupChannelHandler: jest.fn(() => {}),
+  useGroupChannelHandler: vi.fn(() => {}),
 }));
 
 const initialState = {
@@ -68,7 +68,7 @@ const wrapper = ({ children }) => (
 describe('GroupChannelListProvider', () => {
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('throws an error if used outside of GroupChannelListProvider', () => {

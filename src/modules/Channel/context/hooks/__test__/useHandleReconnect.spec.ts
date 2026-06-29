@@ -5,13 +5,13 @@ import useReconnectOnIdle from '../useReconnectOnIdle';
 describe('useReconnectOnIdle', () => {
   beforeAll(() => {
     // Mock dispatchEvent for the document object
-    document.dispatchEvent = jest.fn();
-    jest.spyOn(document, 'addEventListener');
-    jest.spyOn(document, 'removeEventListener');
+    document.dispatchEvent = vi.fn();
+    vi.spyOn(document, 'addEventListener');
+    vi.spyOn(document, 'removeEventListener');
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should update shouldReconnect on tab visibility change', () => {
@@ -37,11 +37,11 @@ describe('useReconnectOnIdle', () => {
 
   it('should not update shouldReconnect if reconnectOnIdle is false', async () => {
     const reconnectOnIdle = false;
+    const spy = vi.spyOn(document, 'addEventListener');
     renderHook(({ isOnline }) => useReconnectOnIdle(isOnline, { url: 'url' } as GroupChannel, reconnectOnIdle), {
       initialProps: { isOnline: false },
     });
 
-    const spy = jest.spyOn(document, 'addEventListener');
     document.dispatchEvent(new Event('visibilitychange'));
 
     const lastCall = spy.mock.calls[spy.mock.calls.length - 1];

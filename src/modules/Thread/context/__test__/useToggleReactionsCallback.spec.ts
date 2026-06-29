@@ -3,9 +3,9 @@ import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { BaseMessage } from '@sendbird/chat/message';
 import useToggleReactionCallback from '../hooks/useToggleReactionsCallback';
 
-const mockSetEmojiContainer = jest.fn();
+const mockSetEmojiContainer = vi.fn();
 
-jest.mock('../useThread', () => ({
+vi.mock('../useThread', () => ({
   __esModule: true,
   default: () => ({
     actions: {
@@ -15,9 +15,9 @@ jest.mock('../useThread', () => ({
 }));
 
 const mockLogger = {
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+  error: vi.fn(),
 };
 
 describe('useToggleReactionCallback', () => {
@@ -27,7 +27,7 @@ describe('useToggleReactionCallback', () => {
   const REACTION_KEY = 'thumbs_up';
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should not toggle reaction when currentChannel is null', () => {
@@ -45,7 +45,7 @@ describe('useToggleReactionCallback', () => {
   });
 
   it('should delete reaction when isReacted is true', async () => {
-    const mockDeleteReaction = jest.fn().mockResolvedValue({ success: true });
+    const mockDeleteReaction = vi.fn().mockResolvedValue({ success: true });
     const mockChannel = {
       deleteReaction: mockDeleteReaction,
     } as unknown as GroupChannel;
@@ -70,7 +70,7 @@ describe('useToggleReactionCallback', () => {
 
   it('should handle delete reaction failure', async () => {
     const mockError = new Error('Failed to delete reaction');
-    const mockDeleteReaction = jest.fn().mockRejectedValue(mockError);
+    const mockDeleteReaction = vi.fn().mockRejectedValue(mockError);
     const mockChannel = {
       deleteReaction: mockDeleteReaction,
     } as unknown as GroupChannel;
@@ -96,7 +96,7 @@ describe('useToggleReactionCallback', () => {
   });
 
   it('should add reaction when isReacted is false', async () => {
-    const mockAddReaction = jest.fn().mockResolvedValue({ success: true });
+    const mockAddReaction = vi.fn().mockResolvedValue({ success: true });
     const mockChannel = {
       addReaction: mockAddReaction,
     } as unknown as GroupChannel;
@@ -121,7 +121,7 @@ describe('useToggleReactionCallback', () => {
 
   it('should handle add reaction failure', async () => {
     const mockError = new Error('Failed to add reaction');
-    const mockAddReaction = jest.fn().mockRejectedValue(mockError);
+    const mockAddReaction = vi.fn().mockRejectedValue(mockError);
     const mockChannel = {
       addReaction: mockAddReaction,
     } as unknown as GroupChannel;

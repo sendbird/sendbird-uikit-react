@@ -3,7 +3,7 @@ import { BaseMessage } from '@sendbird/chat/message';
 import { ChannelType } from '@sendbird/chat';
 import useGetParentMessage from '../hooks/useGetParentMessage';
 
-jest.mock('../useThread', () => ({
+vi.mock('../useThread', () => ({
   __esModule: true,
   default: () => ({
     actions: {
@@ -14,24 +14,24 @@ jest.mock('../useThread', () => ({
   }),
 }));
 
-const mockGetParentMessageStart = jest.fn();
-const mockGetParentMessageSuccess = jest.fn();
-const mockGetParentMessageFailure = jest.fn();
+const mockGetParentMessageStart = vi.fn();
+const mockGetParentMessageSuccess = vi.fn();
+const mockGetParentMessageFailure = vi.fn();
 const mockLogger = {
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+  error: vi.fn(),
 };
 
 describe('useGetParentMessage', () => {
-  const mockGetMessage = jest.fn();
+  const mockGetMessage = vi.fn();
   const mockParentMessage = {
     messageId: 12345,
     ogMetaData: { title: 'Test OG' },
   } as unknown as BaseMessage;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('doesnt call getParentMessage when sdkInit is false', () => {

@@ -3,8 +3,9 @@ import { BaseMessage } from '@sendbird/chat/message';
 import { useThreadFetchers } from '../hooks/useThreadFetchers';
 import { ThreadListStateTypes } from '../../types';
 import { SendableMessageType } from '../../../../utils';
+import type { Mock } from 'vitest';
 
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
   default: () => ({
     state: {
@@ -18,15 +19,15 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
 }));
 
 const mockLogger = {
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+  error: vi.fn(),
 };
 
 describe('useThreadFetchers', () => {
   const mockParentMessage = {
     messageId: 12345,
-    getThreadedMessagesByTimestamp: jest.fn(),
+    getThreadedMessagesByTimestamp: vi.fn(),
   } as unknown as SendableMessageType;
 
   const mockAnchorMessage = {
@@ -40,15 +41,15 @@ describe('useThreadFetchers', () => {
   ] as BaseMessage[];
 
   const createMockCallbacks = () => ({
-    initializeThreadListStart: jest.fn(),
-    initializeThreadListSuccess: jest.fn(),
-    initializeThreadListFailure: jest.fn(),
-    getPrevMessagesStart: jest.fn(),
-    getPrevMessagesSuccess: jest.fn(),
-    getPrevMessagesFailure: jest.fn(),
-    getNextMessagesStart: jest.fn(),
-    getNextMessagesSuccess: jest.fn(),
-    getNextMessagesFailure: jest.fn(),
+    initializeThreadListStart: vi.fn(),
+    initializeThreadListSuccess: vi.fn(),
+    initializeThreadListFailure: vi.fn(),
+    getPrevMessagesStart: vi.fn(),
+    getPrevMessagesSuccess: vi.fn(),
+    getPrevMessagesFailure: vi.fn(),
+    getNextMessagesStart: vi.fn(),
+    getNextMessagesSuccess: vi.fn(),
+    getNextMessagesFailure: vi.fn(),
   });
 
   const renderThreadFetchersHook = ({
@@ -70,11 +71,11 @@ describe('useThreadFetchers', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should initialize thread list successfully', async () => {
-    (mockParentMessage.getThreadedMessagesByTimestamp as jest.Mock).mockResolvedValue({
+    (mockParentMessage.getThreadedMessagesByTimestamp as Mock).mockResolvedValue({
       threadedMessages: mockThreadedMessages,
       parentMessage: mockParentMessage,
     });
@@ -94,7 +95,7 @@ describe('useThreadFetchers', () => {
 
   it('should handle initialization failure', async () => {
     const mockError = new Error('Failed to initialize');
-    (mockParentMessage.getThreadedMessagesByTimestamp as jest.Mock).mockRejectedValue(mockError);
+    (mockParentMessage.getThreadedMessagesByTimestamp as Mock).mockRejectedValue(mockError);
 
     const callbacks = createMockCallbacks();
     const { result } = renderThreadFetchersHook({ callbacks });
@@ -106,7 +107,7 @@ describe('useThreadFetchers', () => {
   });
 
   it('should fetch previous messages successfully', async () => {
-    (mockParentMessage.getThreadedMessagesByTimestamp as jest.Mock).mockResolvedValue({
+    (mockParentMessage.getThreadedMessagesByTimestamp as Mock).mockResolvedValue({
       threadedMessages: mockThreadedMessages,
       parentMessage: mockParentMessage,
     });
@@ -125,7 +126,7 @@ describe('useThreadFetchers', () => {
   });
 
   it('should fetch next messages successfully', async () => {
-    (mockParentMessage.getThreadedMessagesByTimestamp as jest.Mock).mockResolvedValue({
+    (mockParentMessage.getThreadedMessagesByTimestamp as Mock).mockResolvedValue({
       threadedMessages: mockThreadedMessages,
       parentMessage: mockParentMessage,
     });

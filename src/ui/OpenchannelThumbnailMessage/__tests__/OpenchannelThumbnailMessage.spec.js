@@ -7,7 +7,7 @@ import OpenchannelThumbnailMessage from "../index";
 // mock date-fns to avoid problems from snapshot timestamping
 // between testing in different locations
 // ideally we want to mock date-fns globally - needs more research
-jest.mock('date-fns/format', () => () => ('mock-date'));
+vi.mock('date-fns/format', () => ({ default: () => ('mock-date') }));
 
 describe('ui/OpenchannelThumbnailMessage', () => {
   it('should render for image thumbnail message', function() {

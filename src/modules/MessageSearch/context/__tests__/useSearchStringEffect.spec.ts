@@ -1,20 +1,21 @@
 import { renderHook, act } from '@testing-library/react';
 import useSearchStringEffect from '../hooks/useSearchStringEffect';
 import useMessageSearch from '../hooks/useMessageSearch';
+import type { Mock } from 'vitest';
 
-jest.mock('../hooks/useMessageSearch', () => ({
+vi.mock('../hooks/useMessageSearch', () => ({
   __esModule: true,
-  default: jest.fn(),
+  default: vi.fn(),
 }));
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe('useSearchStringEffect', () => {
-  const mockResetSearchString = jest.fn();
+  const mockResetSearchString = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useMessageSearch as jest.Mock).mockReturnValue({
+    vi.clearAllMocks();
+    (useMessageSearch as Mock).mockReturnValue({
       actions: {
         resetSearchString: mockResetSearchString,
       },
@@ -30,7 +31,7 @@ describe('useSearchStringEffect', () => {
 
     // Fast-forward debounce timer
     act(() => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
 
     expect(result.current).toBe('test query');
@@ -42,7 +43,7 @@ describe('useSearchStringEffect', () => {
 
     // Fast-forward debounce timer
     act(() => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
 
     expect(result.current).toBe('');
@@ -55,7 +56,7 @@ describe('useSearchStringEffect', () => {
 
     // Fast-forward debounce timer
     act(() => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
 
     expect(result.current).toBe('');
@@ -70,7 +71,7 @@ describe('useSearchStringEffect', () => {
 
     // Start first timer
     act(() => {
-      jest.advanceTimersByTime(200); // Advance less than debounce time
+      vi.advanceTimersByTime(200); // Advance less than debounce time
     });
 
     // Change search string before first timer completes
@@ -78,7 +79,7 @@ describe('useSearchStringEffect', () => {
 
     // Advance timer to complete first debounce
     act(() => {
-      jest.advanceTimersByTime(300);
+      vi.advanceTimersByTime(300);
     });
 
     // Result should not be 'initial'
@@ -86,7 +87,7 @@ describe('useSearchStringEffect', () => {
 
     // Complete second debounce
     act(() => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     // Result should be 'updated'
@@ -94,7 +95,7 @@ describe('useSearchStringEffect', () => {
   });
 
   it('should clean up timer on unmount', () => {
-    const clearTimeoutSpy = jest.spyOn(global, 'clearTimeout');
+    const clearTimeoutSpy = vi.spyOn(global, 'clearTimeout');
 
     const { unmount } = renderHook(() => useSearchStringEffect({ searchString: 'test' }),
     );
@@ -112,7 +113,7 @@ describe('useSearchStringEffect', () => {
 
     // Complete first debounce
     act(() => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
 
     const firstResult = result.current;
@@ -122,7 +123,7 @@ describe('useSearchStringEffect', () => {
 
     // Complete second debounce
     act(() => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
 
     expect(result.current).toBe(firstResult);
@@ -141,7 +142,7 @@ describe('useSearchStringEffect', () => {
 
     // Advance timer to complete debounce
     act(() => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
 
     // Should only reflect the final value
@@ -156,7 +157,7 @@ describe('useSearchStringEffect', () => {
 
     // Complete first debounce
     act(() => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
 
     expect(result.current).toBe('');
@@ -167,7 +168,7 @@ describe('useSearchStringEffect', () => {
 
     // Complete second debounce
     act(() => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
 
     expect(result.current).toBe('');

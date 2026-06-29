@@ -6,9 +6,9 @@ import useSendUserMessageCallback from '../hooks/useSendUserMessageCallback';
 import { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
 
-const mockSetEmojiContainer = jest.fn();
+const mockSetEmojiContainer = vi.fn();
 
-jest.mock('../useThread', () => ({
+vi.mock('../useThread', () => ({
   __esModule: true,
   default: () => ({
     actions: {
@@ -18,17 +18,17 @@ jest.mock('../useThread', () => ({
 }));
 
 const mockPubSub = {
-  publish: jest.fn(),
+  publish: vi.fn(),
 } as unknown as SBUGlobalPubSub;
 
 const mockLogger = {
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+  error: vi.fn(),
 };
 
-const mockSendMessageStart = jest.fn();
-const mockSendMessageFailure = jest.fn();
+const mockSendMessageStart = vi.fn();
+const mockSendMessageFailure = vi.fn();
 
 describe('useSendUserMessageCallback', () => {
   const mockMessage = 'Hello, world!';
@@ -39,7 +39,7 @@ describe('useSendUserMessageCallback', () => {
   const mockMentionTemplate = '@{user1}';
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should not send message when currentChannel is null', async () => {
@@ -73,9 +73,9 @@ describe('useSendUserMessageCallback', () => {
 
     const createMockPromise = () => {
       const chainMethods = {
-        onPending: jest.fn(),
-        onSucceeded: jest.fn(),
-        onFailed: jest.fn(),
+        onPending: vi.fn(),
+        onSucceeded: vi.fn(),
+        onFailed: vi.fn(),
       };
 
       chainMethods.onPending.mockImplementation((cb) => {
@@ -96,7 +96,7 @@ describe('useSendUserMessageCallback', () => {
     };
 
     const mockChannel = {
-      sendUserMessage: jest.fn().mockReturnValue(createMockPromise()),
+      sendUserMessage: vi.fn().mockReturnValue(createMockPromise()),
     } as unknown as GroupChannel;
 
     const { result } = renderHook(() => useSendUserMessageCallback(
@@ -130,9 +130,9 @@ describe('useSendUserMessageCallback', () => {
 
     const createMockPromise = () => {
       const chainMethods = {
-        onPending: jest.fn(),
-        onSucceeded: jest.fn(),
-        onFailed: jest.fn(),
+        onPending: vi.fn(),
+        onSucceeded: vi.fn(),
+        onFailed: vi.fn(),
       };
 
       chainMethods.onPending.mockImplementation((cb) => {
@@ -149,7 +149,7 @@ describe('useSendUserMessageCallback', () => {
     };
 
     const mockChannel = {
-      sendUserMessage: jest.fn().mockReturnValue(createMockPromise()),
+      sendUserMessage: vi.fn().mockReturnValue(createMockPromise()),
     } as unknown as GroupChannel;
 
     const { result } = renderHook(() => useSendUserMessageCallback(
@@ -176,13 +176,13 @@ describe('useSendUserMessageCallback', () => {
 
   it('should handle mentions when mention is enabled', () => {
     const createMockPromise = () => ({
-      onPending: jest.fn().mockReturnThis(),
-      onSucceeded: jest.fn().mockReturnThis(),
-      onFailed: jest.fn().mockReturnThis(),
+      onPending: vi.fn().mockReturnThis(),
+      onSucceeded: vi.fn().mockReturnThis(),
+      onFailed: vi.fn().mockReturnThis(),
     });
 
     const mockChannel = {
-      sendUserMessage: jest.fn().mockReturnValue(createMockPromise()),
+      sendUserMessage: vi.fn().mockReturnValue(createMockPromise()),
     } as unknown as GroupChannel;
 
     const { result } = renderHook(() => useSendUserMessageCallback(
@@ -216,16 +216,16 @@ describe('useSendUserMessageCallback', () => {
       message: mockMessage,
       customField: 'test',
     };
-    const mockOnBeforeSendUserMessage = jest.fn().mockReturnValue(mockCustomParams);
+    const mockOnBeforeSendUserMessage = vi.fn().mockReturnValue(mockCustomParams);
 
     const createMockPromise = () => ({
-      onPending: jest.fn().mockReturnThis(),
-      onSucceeded: jest.fn().mockReturnThis(),
-      onFailed: jest.fn().mockReturnThis(),
+      onPending: vi.fn().mockReturnThis(),
+      onSucceeded: vi.fn().mockReturnThis(),
+      onFailed: vi.fn().mockReturnThis(),
     });
 
     const mockChannel = {
-      sendUserMessage: jest.fn().mockReturnValue(createMockPromise()),
+      sendUserMessage: vi.fn().mockReturnValue(createMockPromise()),
     } as unknown as GroupChannel;
 
     const { result } = renderHook(() => useSendUserMessageCallback(

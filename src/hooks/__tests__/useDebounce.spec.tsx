@@ -3,11 +3,11 @@ import { useDebounce } from '../useDebounce';
 
 describe('useAsyncRequest', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('handle useDebounce correctly', async () => {
-    const mockFunction = jest.fn();
+    const mockFunction = vi.fn();
     const { result } = renderHook(() => useDebounce(mockFunction, 1000));
 
     const debounceFunction = result.current;
