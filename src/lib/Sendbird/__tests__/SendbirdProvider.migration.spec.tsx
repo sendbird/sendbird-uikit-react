@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import React, { act } from 'react';
 import { render, renderHook, screen } from '@testing-library/react';
-import SendbirdProvider, { SendbirdProviderProps } from './Sendbird';
-import useSendbirdStateContext from './Sendbird/context/hooks/useSendbirdStateContext';
+import SendbirdProvider, { SendbirdProviderProps } from '../index';
+import useSendbirdStateContext from '../context/hooks/useSendbirdStateContext';
 import { match } from 'ts-pattern';
-import { DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, DEFAULT_UPLOAD_SIZE_LIMIT } from '../utils/consts';
+import { DEFAULT_MULTIPLE_FILES_MESSAGE_LIMIT, DEFAULT_UPLOAD_SIZE_LIMIT } from '../../../utils/consts';
 
 vi.mock('@sendbird/chat', () => {
   const mockConnect = vi.fn().mockResolvedValue({
