@@ -97,7 +97,7 @@ vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
 describe('ThreadProvider', () => {
   const initialState: ThreadState = {
     channelUrl: 'test-channel-url',
-    message: undefined,
+    message: null,
     onHeaderActionClick: undefined,
     onMoveToParentMessage: undefined,
     onBeforeSendUserMessage: undefined,
@@ -137,7 +137,7 @@ describe('ThreadProvider', () => {
 
   it('provides the correct initial state', async () => {
     const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel-url">{children}</ThreadProvider>
+      <ThreadProvider channelUrl="test-channel-url" message={null}>{children}</ThreadProvider>
     );
 
     const { result } = renderHook(() => useThread(), { wrapper });

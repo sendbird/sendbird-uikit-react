@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 import { SendbirdProvider, withSendBird } from '../index';
+import type { SendbirdProviderProps } from '../index';
 import type { MockInstance } from 'vitest';
 
 vi.mock('@sendbird/uikit-tools', () => ({
@@ -28,6 +29,8 @@ vi.mock('../../utils/uikitConfigStorage', () => ({ uikitConfigStorage: {} }));
 describe('SendbirdProvider/index', () => {
   it('renders UIKitConfigProvider with correct localConfigs', () => {
     const props = {
+      appId: 'test-app-id',
+      userId: 'test-user-id',
       replyType: 'threaded',
       isMentionEnabled: true,
       isReactionEnabled: true,
@@ -39,7 +42,7 @@ describe('SendbirdProvider/index', () => {
       uikitOptions: {},
     };
 
-    render(<SendbirdProvider {...props} />);
+    render(<SendbirdProvider {...(props as unknown as SendbirdProviderProps)} />);
 
     expect(screen.getByTestId('UIKitConfigProvider')).toBeInTheDocument();
     expect(screen.getByTestId('SendbirdContextProvider')).toBeInTheDocument();
@@ -61,7 +64,7 @@ describe('withSendbirdContext', () => {
     const MockComponent = vi.fn(() => <div data-testid="MockComponent" />);
     const invalidMapStoreToProps = 'invalidValue';
 
-    const WrappedComponent = withSendBird(MockComponent, invalidMapStoreToProps);
+    const WrappedComponent = withSendBird(MockComponent, invalidMapStoreToProps as unknown as (props: any) => any);
 
     render(<WrappedComponent />);
 

@@ -1,6 +1,10 @@
 import SendbirdChat from '@sendbird/chat';
 
-import type { SendbirdState, SdkStore, UserStore, AppInfoStore, SendbirdStateConfig } from '../types';
+import type { SendbirdState, SdkStore, UserStore, AppInfoStore, MessageTemplatesInfo, SendbirdStateConfig } from '../types';
+import type { SendbirdChatWith } from '@sendbird/chat';
+import type { GroupChannelModule } from '@sendbird/chat/groupChannel';
+import type { OpenChannelModule } from '@sendbird/chat/openChannel';
+import type { LoggerInterface } from '../../Logger';
 import { updateAppInfoStore, updateSdkStore, updateUserStore, initSDK, setupSDK } from '../utils';
 
 vi.mock('@sendbird/chat', () => {
@@ -50,8 +54,8 @@ describe('State Update Functions', () => {
   };
 
   test('updateAppInfoStore merges payload with existing appInfoStore', () => {
-    const payload: Partial<AppInfoStore> = { messageTemplatesInfo: { templateKey: 'templateValue' } };
-    const updatedState = updateAppInfoStore(initialState, payload);
+    const payload: Partial<AppInfoStore> = { messageTemplatesInfo: { templateKey: 'templateValue' } as unknown as MessageTemplatesInfo };
+    const updatedState = updateAppInfoStore(initialState, payload as unknown as AppInfoStore);
 
     expect(updatedState.stores.appInfoStore).toEqual({
       waitingTemplateKeysMap: {},
@@ -157,13 +161,13 @@ const mockLogger = {
 describe('setupSDK', () => {
   it('sets up SDK with extensions and session handler', () => {
     const params = {
-      logger: mockLogger,
+      logger: mockLogger as unknown as LoggerInterface,
       sessionHandler: { onSessionExpired: vi.fn() },
       isMobile: false,
       customExtensionParams: { customKey: 'customValue' },
     };
 
-    setupSDK(mockSdk, params);
+    setupSDK(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>, params);
 
     expect(mockLogger.info).toHaveBeenCalledWith(
       'SendbirdProvider | useConnect/setupConnection/setVersion',
@@ -179,9 +183,9 @@ describe('setupSDK', () => {
   });
 
   it('does not set session handler if not provided', () => {
-    const params = { logger: mockLogger };
+    const params = { logger: mockLogger as unknown as LoggerInterface };
 
-    setupSDK(mockSdk, params);
+    setupSDK(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>, params);
 
     expect(mockSdk.setSessionHandler).not.toHaveBeenCalled();
   });

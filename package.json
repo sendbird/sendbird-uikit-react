@@ -51,6 +51,7 @@
     "lint:fix": "yarn eslint --fix",
     "eslint": "eslint 'src/**/*.ts*'",
     "stylelint": "stylelint 'src/**'",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "generate-component": "plop",
     "inspect": "yarn test; yarn lint;",
     "storybook": "storybook dev -p 6006",

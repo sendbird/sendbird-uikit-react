@@ -38,7 +38,7 @@ describe('useAsyncRequest', () => {
     const mockCancel = vi.fn();
     const mockRequest = { cancel: mockCancel };
 
-    const { unmount } = renderHook(() => useAsyncRequest(mockRequest));
+    const { unmount } = renderHook(() => useAsyncRequest(mockRequest as unknown as Parameters<typeof useAsyncRequest>[0]));
 
     unmount();
 

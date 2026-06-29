@@ -79,7 +79,7 @@ describe('InviteUsers', () => {
 
     return render(
       <LocalizationContext.Provider value={mockLocalizationContext as any}>
-        <InviteUsers {...inviteUserProps}/>
+        <InviteUsers {...(inviteUserProps as unknown as import('../index').InviteUsersProps)}/>
       </LocalizationContext.Provider>,
     );
   };

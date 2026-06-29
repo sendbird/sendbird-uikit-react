@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import type { Mock } from 'vitest';
 import { SendbirdContextProvider } from '../context/SendbirdProvider';
 import useSendbird from '../context/hooks/useSendbird';
 
@@ -26,10 +27,10 @@ describe('SendbirdProvider', () => {
         const supportedMimeTypes = ['audio/webm', 'audio/wav'];
         return supportedMimeTypes.includes(type);
       }),
-    };
+    } as unknown as typeof MediaRecorder;
 
     // Mock useSendbird return value
-    useSendbird.mockReturnValue({
+    (useSendbird as unknown as Mock).mockReturnValue({
       state: mockState,
       actions: mockActions,
     });

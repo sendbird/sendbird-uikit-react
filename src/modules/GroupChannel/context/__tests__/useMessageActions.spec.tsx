@@ -1,7 +1,9 @@
 import { renderHook } from '@testing-library/react';
-import { UserMessageCreateParams, FileMessageCreateParams } from '@sendbird/chat/message';
+import { UserMessageCreateParams, FileMessageCreateParams, MultipleFilesMessageCreateParams } from '@sendbird/chat/message';
 
 import { useMessageActions } from '../hooks/useMessageActions';
+
+type MessageActionsParams = Parameters<typeof useMessageActions>[0];
 
 const mockEventHandlers = {
   message: {
@@ -90,7 +92,7 @@ describe('useMessageActions', () => {
 
   describe('sendUserMessage', () => {
     it('sends basic message without quote', async () => {
-      const { result } = renderHook(() => useMessageActions(defaultParams));
+      const { result } = renderHook(() => useMessageActions(defaultParams as unknown as MessageActionsParams));
       const messageParams = { message: 'test message' };
 
       mockSendUserMessage.mockResolvedValueOnce({ messageId: 1, message: 'test message' });
@@ -110,7 +112,7 @@ describe('useMessageActions', () => {
         replyType: 'QUOTE_REPLY',
       };
 
-      const { result } = renderHook(() => useMessageActions(paramsWithQuote));
+      const { result } = renderHook(() => useMessageActions(paramsWithQuote as unknown as MessageActionsParams));
       const messageParams = { message: 'test reply' };
 
       await result.current.sendUserMessage(messageParams);
@@ -136,7 +138,7 @@ describe('useMessageActions', () => {
         onBeforeSendUserMessage,
       };
 
-      const { result } = renderHook(() => useMessageActions(paramsWithHook));
+      const { result } = renderHook(() => useMessageActions(paramsWithHook as unknown as MessageActionsParams));
       const messageParams = { message: 'test message' };
 
       await result.current.sendUserMessage(messageParams);
@@ -153,7 +155,7 @@ describe('useMessageActions', () => {
 
   describe('sendFileMessage', () => {
     it('sends basic file message', async () => {
-      const { result } = renderHook(() => useMessageActions(defaultParams));
+      const { result } = renderHook(() => useMessageActions(defaultParams as unknown as MessageActionsParams));
       const file = new File(['test'], 'test.txt', { type: 'text/plain' });
       const messageParams = { file };
 
@@ -176,7 +178,7 @@ describe('useMessageActions', () => {
         onBeforeSendFileMessage,
       };
 
-      const { result } = renderHook(() => useMessageActions(paramsWithHook));
+      const { result } = renderHook(() => useMessageActions(paramsWithHook as unknown as MessageActionsParams));
       const messageParams = { file: new File(['test'], 'test.txt') };
 
       await result.current.sendFileMessage(messageParams);
@@ -191,14 +193,14 @@ describe('useMessageActions', () => {
 
   describe('sendMultipleFilesMessage', () => {
     it('sends multiple files message', async () => {
-      const { result } = renderHook(() => useMessageActions(defaultParams));
+      const { result } = renderHook(() => useMessageActions(defaultParams as unknown as MessageActionsParams));
       const files = [
         new File(['test1'], 'test1.txt'),
         new File(['test2'], 'test2.txt'),
       ];
       const messageParams = { files };
 
-      await result.current.sendMultipleFilesMessage(messageParams);
+      await result.current.sendMultipleFilesMessage(messageParams as unknown as MultipleFilesMessageCreateParams);
 
       expect(mockSendMultipleFilesMessage).toHaveBeenCalledWith(
         messageParams,
@@ -209,7 +211,7 @@ describe('useMessageActions', () => {
 
   describe('updateUserMessage', () => {
     it('updates user message', async () => {
-      const { result } = renderHook(() => useMessageActions(defaultParams));
+      const { result } = renderHook(() => useMessageActions(defaultParams as unknown as MessageActionsParams));
       const messageId = 1;
       const updateParams = { message: 'updated message' };
 
@@ -232,7 +234,7 @@ describe('useMessageActions', () => {
         onBeforeUpdateUserMessage,
       };
 
-      const { result } = renderHook(() => useMessageActions(paramsWithHook));
+      const { result } = renderHook(() => useMessageActions(paramsWithHook as unknown as MessageActionsParams));
       const messageId = 1;
       const updateParams = { message: 'update test' };
 
@@ -258,7 +260,7 @@ describe('useMessageActions', () => {
       replyType: 'NONE',
     };
     it('should handle successful user message', async () => {
-      const { result } = renderHook(() => useMessageActions(mockParams));
+      const { result } = renderHook(() => useMessageActions(mockParams as unknown as MessageActionsParams));
       const params: UserMessageCreateParams = { message: 'test' };
 
       await result.current.sendUserMessage(params);
@@ -274,7 +276,7 @@ describe('useMessageActions', () => {
       const { result } = renderHook(() => useMessageActions({
         ...mockParams,
         onBeforeSendFileMessage,
-      }),
+      } as unknown as MessageActionsParams),
       );
 
       const fileParams: FileMessageCreateParams = {
@@ -302,7 +304,7 @@ describe('useMessageActions', () => {
       const { result } = renderHook(() => useMessageActions({
         ...mockParams,
         onBeforeSendFileMessage,
-      }),
+      } as unknown as MessageActionsParams),
       );
 
       await expect(async () => {
@@ -335,7 +337,7 @@ describe('useMessageActions', () => {
       const { result } = renderHook(() => useMessageActions({
         ...mockParams,
         onBeforeUpdateUserMessage,
-      }),
+      } as unknown as MessageActionsParams),
       );
 
       await expect(async () => {
@@ -365,7 +367,7 @@ describe('useMessageActions', () => {
       const { result } = renderHook(() => useMessageActions({
         ...mockParams,
         onBeforeSendUserMessage,
-      }),
+      } as unknown as MessageActionsParams),
       );
 
       await result.current.sendUserMessage({ message: 'original' });

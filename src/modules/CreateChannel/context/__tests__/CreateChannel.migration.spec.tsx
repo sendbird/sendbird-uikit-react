@@ -76,7 +76,7 @@ describe('CreateChannel Migration Compatibility Tests', () => {
   // 2. Context Hook return value test
   describe('useCreateChannelContext Hook Return Values', () => {
     type ContextType = ReturnType<typeof useCreateChannelContext>;
-    const expectedProps: Array<keyof ContextType> = [
+    const expectedProps: Array<keyof ContextType | string> = [
       'sdk',
       'createChannel',
       'userListQuery',
@@ -98,10 +98,10 @@ describe('CreateChannel Migration Compatibility Tests', () => {
           {expectedProps.map(prop => (
             <div key={prop} data-testid={`prop-${prop}`}>
               {/* text can be function, object, string, or unknown */}
-              {match(context[prop])
+              {match((context as Record<string, unknown>)[prop])
                 .with('function', () => 'function')
-                .with('object', () => JSON.stringify(context[prop]))
-                .with('string', () => String(context[prop]))
+                .with('object', () => JSON.stringify((context as Record<string, unknown>)[prop]))
+                .with('string', () => String((context as Record<string, unknown>)[prop]))
                 .otherwise(() => 'unknown')}
             </div>
           ))}

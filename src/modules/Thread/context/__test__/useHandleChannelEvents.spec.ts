@@ -3,6 +3,7 @@ import { GroupChannel, GroupChannelHandler } from '@sendbird/chat/groupChannel';
 import { UserMessage } from '@sendbird/chat/message';
 import { User } from '@sendbird/chat';
 import useHandleChannelEvents from '../hooks/useHandleChannelEvents';
+import type { SdkStore } from '../../../../lib/Sendbird/types';
 
 const mockThreadActions = {
   onMessageReceived: vi.fn(),
@@ -48,7 +49,7 @@ describe('useHandleChannelEvents', () => {
       addGroupChannelHandler: addHandler,
       removeGroupChannelHandler: removeHandler,
     },
-  });
+  } as unknown as SdkStore['sdk']);
 
   const renderChannelEventsHook = ({
     sdk = createMockSdk(),

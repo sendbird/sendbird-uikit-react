@@ -1,5 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
 import useGetSearchedMessages from '../hooks/useGetSearchedMessages';
 import useMessageSearch from '../hooks/useMessageSearch';
 import type { Mock } from 'vitest';
@@ -210,7 +211,7 @@ describe('useGetSearchedMessages', () => {
           currentChannel: mockChannel as unknown as GroupChannel,
           channelUrl: 'channel-url',
           requestString: 'search-term',
-          messageSearchQuery: customSearchQuery,
+          messageSearchQuery: customSearchQuery as unknown as MessageSearchQueryParams,
           onResultLoaded: mockOnResultLoaded,
         },
         {

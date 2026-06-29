@@ -1,4 +1,5 @@
 import { GroupChannelListProvider } from '../GroupChannelListProvider';
+import type { GroupChannelListProviderProps } from '../GroupChannelListProvider';
 import { renderHook } from '@testing-library/react';
 import React from 'react';
 import { useGroupChannelList } from '../useGroupChannelList';
@@ -59,10 +60,12 @@ const initialState = {
   loadMore: null,
 };
 
+const LooseGroupChannelListProvider = GroupChannelListProvider as React.ComponentType<Partial<GroupChannelListProviderProps>>;
+
 const wrapper = ({ children }) => (
-  <GroupChannelListProvider>
+  <LooseGroupChannelListProvider>
     {children}
-  </GroupChannelListProvider>
+  </LooseGroupChannelListProvider>
 );
 
 describe('GroupChannelListProvider', () => {

@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import useGetChannel from '../hooks/useGetChannel';
+import type { SdkStore } from '../../../../lib/Sendbird/types';
 
 vi.mock('../useThread', () => ({
   __esModule: true,
@@ -35,7 +36,7 @@ describe('useGetChannel', () => {
       groupChannel: {
         getChannel: mockGetChannel,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetChannel(
       {
@@ -58,7 +59,7 @@ describe('useGetChannel', () => {
       groupChannel: {
         getChannel: mockGetChannel,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetChannel(
       {
@@ -77,7 +78,7 @@ describe('useGetChannel', () => {
   });
 
   it('doesnt call getChannel when sdk.groupChannel is undefined', () => {
-    const sdk = {};
+    const sdk = {} as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetChannel(
       {
@@ -101,7 +102,7 @@ describe('useGetChannel', () => {
       groupChannel: {
         getChannel: mockGetChannel,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetChannel(
       {
@@ -134,7 +135,7 @@ describe('useGetChannel', () => {
       groupChannel: {
         getChannel: mockGetChannel,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetChannel(
       {
@@ -166,7 +167,7 @@ describe('useGetChannel', () => {
       groupChannel: {
         getChannel: mockGetChannel,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     const { rerender } = renderHook(
       ({ message, sdkInit }) => useGetChannel(

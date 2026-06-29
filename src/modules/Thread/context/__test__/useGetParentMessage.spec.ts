@@ -2,6 +2,7 @@ import { renderHook } from '@testing-library/react';
 import { BaseMessage } from '@sendbird/chat/message';
 import { ChannelType } from '@sendbird/chat';
 import useGetParentMessage from '../hooks/useGetParentMessage';
+import type { SdkStore } from '../../../../lib/Sendbird/types';
 
 vi.mock('../useThread', () => ({
   __esModule: true,
@@ -39,7 +40,7 @@ describe('useGetParentMessage', () => {
       message: {
         getMessage: mockGetMessage,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetParentMessage(
       {
@@ -60,7 +61,7 @@ describe('useGetParentMessage', () => {
   it('doesnt call getParentMessage when sdk.message.getMessage is undefined', () => {
     const sdk = {
       message: {},
-    };
+    } as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetParentMessage(
       {
@@ -83,7 +84,7 @@ describe('useGetParentMessage', () => {
       message: {
         getMessage: mockGetMessage,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetParentMessage(
       {
@@ -109,7 +110,7 @@ describe('useGetParentMessage', () => {
       message: {
         getMessage: mockGetMessage,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetParentMessage(
       {
@@ -153,7 +154,7 @@ describe('useGetParentMessage', () => {
       message: {
         getMessage: mockGetMessage,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetParentMessage(
       {
@@ -186,7 +187,7 @@ describe('useGetParentMessage', () => {
       message: {
         getMessage: mockGetMessage,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     const { rerender } = renderHook(
       ({ sdkInit, parentMessage }) => useGetParentMessage(

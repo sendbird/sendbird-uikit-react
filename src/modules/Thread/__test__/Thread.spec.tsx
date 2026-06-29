@@ -53,7 +53,7 @@ describe('Thread Unit Tests', () => {
           <ThreadProvider {...defaultProps}>
             <ParentMessageInfoItem message={{
               messageId: 42,
-            }}/>
+            } as unknown as SendableMessageType}/>
           </ThreadProvider>,
         </SendbirdProvider>,
       );
@@ -79,7 +79,7 @@ describe('Thread Unit Tests', () => {
           <ThreadProvider {...defaultProps}>
             <ThreadListItem message={{
               messageId: 42,
-            }}/>
+            } as unknown as SendableMessageType}/>
           </ThreadProvider>,
         </SendbirdProvider>,
       );

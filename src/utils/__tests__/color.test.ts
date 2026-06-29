@@ -18,7 +18,7 @@ describe('color', () => {
     }
 
     const nonColor = 'not-existing-color-enum-value';
-    expect(changeColorToClassName(nonColor)).toBe('');
+    expect(changeColorToClassName(nonColor as unknown as Colors)).toBe('');
   });
 });
 

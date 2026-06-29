@@ -9,12 +9,12 @@
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types", "./types"]
   },
-  "include": ["src"],
+  "include": ["src", "vitest-setup.ts"],
   "exclude": [
-    "**/__tests__/**",
-    "**/__tests__/**",
-    "**/*.test.*",
-    "**/*.spec.*",
-    "**/*.stories.*"
+    "**/__visual_tests__/**",
+    "**/_externals/**",
+    "**/stories/**",
+    "**/*.stories.*",
+    "**/__snapshots__/**"
   ]
 }

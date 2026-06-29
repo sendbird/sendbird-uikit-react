@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { MessageSearchProvider, useMessageSearchContext } from '../MessageSearchProvider';
+import { MessageSearchProvider, MessageSearchProviderProps, useMessageSearchContext } from '../MessageSearchProvider';
 import { match } from 'ts-pattern';
 
 const mockState = {
@@ -22,7 +22,7 @@ const mockProps = {
   onResultLoaded: vi.fn(),
   onResultClick: vi.fn(),
   children: <div>Child Component</div>,
-};
+} as unknown as MessageSearchProviderProps;
 
 describe('MessageSearch Migration Compatibility Tests', () => {
   // 1. Provider Props Interface test

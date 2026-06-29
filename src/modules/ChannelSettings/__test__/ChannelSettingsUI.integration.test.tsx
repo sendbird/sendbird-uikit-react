@@ -69,7 +69,7 @@ describe('ChannelSettings Integration Tests', () => {
         stores: {},
       },
     };
-    useSendbird.mockReturnValue(stateContextValue);
+    (useSendbird as unknown as Mock).mockReturnValue(stateContextValue);
     renderHook(() => useSendbird());
   });
 

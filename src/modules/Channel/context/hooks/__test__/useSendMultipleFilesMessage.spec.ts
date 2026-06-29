@@ -67,7 +67,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
       useSendMultipleFilesMessage({
         currentChannel: globalContext.currentChannel as GroupChannel,
         onBeforeSendMultipleFilesMessage: globalContext.onBeforeSendMultipleFilesMessage,
-      }, {
+      } as unknown as UseSendMFMDynamicParams, {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,
@@ -142,7 +142,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
           sendMultipleFilesMessage: vi.fn(() => getMockMessageRequestHandler(false)),
         } as unknown as GroupChannel,
         onBeforeSendMultipleFilesMessage: globalContext.onBeforeSendMultipleFilesMessage,
-      }, {
+      } as unknown as UseSendMFMDynamicParams, {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,
@@ -191,7 +191,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
       useSendMultipleFilesMessage({
         currentChannel: globalContext.currentChannel as GroupChannel,
         onBeforeSendMultipleFilesMessage: globalContext.onBeforeSendMultipleFilesMessage,
-      }, {
+      } as unknown as UseSendMFMDynamicParams, {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,
@@ -213,7 +213,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
       useSendMultipleFilesMessage({
         currentChannel: globalContext.currentChannel as GroupChannel,
         onBeforeSendMultipleFilesMessage: globalContext.onBeforeSendMultipleFilesMessage,
-      }, {
+      } as unknown as UseSendMFMDynamicParams, {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,
@@ -235,7 +235,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
       useSendMultipleFilesMessage({
         currentChannel: globalContext.currentChannel as GroupChannel,
         onBeforeSendMultipleFilesMessage: globalContext.onBeforeSendMultipleFilesMessage,
-      }, {
+      } as unknown as UseSendMFMDynamicParams, {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,
@@ -308,7 +308,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
           ...globalContext?.onBeforeSendMultipleFilesMessage?.(files, quotedMessage),
           ...newParamsOptions,
         }),
-      }, {
+      } as unknown as UseSendMFMDynamicParams, {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,
@@ -364,7 +364,7 @@ describe.skip('useSendMultipleFilesMessage', () => {
           // upsert the properties for the quote message
           ...newParamsOptions,
         }),
-      }, {
+      } as unknown as UseSendMFMDynamicParams, {
         logger: globalContext.logger as Logger,
         pubSub: globalContext.pubSub,
         scrollRef: globalContext.scrollRef as RefObject<HTMLDivElement>,

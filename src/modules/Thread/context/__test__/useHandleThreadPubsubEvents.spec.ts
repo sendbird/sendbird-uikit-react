@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react';
+import type { Mock } from 'vitest';
 import useHandleThreadPubsubEvents from '../hooks/useHandleThreadPubsubEvents';
 import { PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
@@ -105,7 +106,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle SEND_MESSAGE_START event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_MESSAGE_START)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_MESSAGE_START)[1];
     handler({ channel: mockChannel, message: mockMessage, publishingModules: [] });
 
     expect(mockThreadActions.sendMessageStart).toHaveBeenCalledWith(mockMessage);
@@ -114,7 +115,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle ON_FILE_INFO_UPLOADED event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED)[1];
     handler({ response: { channelUrl: mockChannel.url }, publishingModules: [] });
 
     expect(mockThreadActions.onFileInfoUpdated).toHaveBeenCalled();
@@ -123,7 +124,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle SEND_USER_MESSAGE event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_USER_MESSAGE)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_USER_MESSAGE)[1];
     handler({ channel: mockChannel, message: mockMessage });
 
     expect(mockThreadActions.sendMessageSuccess).toHaveBeenCalledWith(mockMessage);
@@ -132,7 +133,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle SEND_MESSAGE_FAILED event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_MESSAGE_FAILED)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_MESSAGE_FAILED)[1];
     handler({ channel: mockChannel, message: mockMessage, publishingModules: [] });
 
     expect(mockThreadActions.sendMessageFailure).toHaveBeenCalledWith(mockMessage);
@@ -141,7 +142,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle SEND_FILE_MESSAGE event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_FILE_MESSAGE)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_FILE_MESSAGE)[1];
     handler({ channel: mockChannel, message: mockMessage, publishingModules: [] });
 
     expect(mockThreadActions.sendMessageSuccess).toHaveBeenCalledWith(mockMessage);
@@ -150,7 +151,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle UPDATE_USER_MESSAGE event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.UPDATE_USER_MESSAGE)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.UPDATE_USER_MESSAGE)[1];
     handler({ channel: mockChannel, message: mockMessage });
 
     expect(mockThreadActions.onMessageUpdated).toHaveBeenCalledWith(mockChannel, mockMessage);
@@ -159,7 +160,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle DELETE_MESSAGE event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.DELETE_MESSAGE)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.DELETE_MESSAGE)[1];
     handler({ channel: mockChannel, messageId: mockMessage.messageId });
 
     expect(mockThreadActions.onMessageDeleted).toHaveBeenCalledWith(mockChannel, mockMessage.messageId);

@@ -1,5 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import useGetAllEmoji from '../hooks/useGetAllEmoji';
+import type { SdkStore } from '../../../../lib/Sendbird/types';
 
 vi.mock('../useThread', () => ({
   __esModule: true,
@@ -34,7 +35,7 @@ describe('useGetAllEmoji', () => {
 
   it('doesnt call getAllEmoji when sdk.getAllEmoji is undefined', () => {
     renderHook(() => useGetAllEmoji(
-      { sdk: {} },
+      { sdk: {} as unknown as SdkStore['sdk'] },
       { logger: mockLogger },
     ));
 
@@ -52,7 +53,7 @@ describe('useGetAllEmoji', () => {
     };
 
     renderHook(() => useGetAllEmoji(
-      { sdk: mockSdk },
+      { sdk: mockSdk as unknown as SdkStore['sdk'] },
       { logger: mockLogger },
     ));
 

@@ -62,16 +62,16 @@ describe('Global-utils/MenuConditions', () => {
   });
 
   it('showMenuItemCopy returns true for user messages', () => {
-    (isUserMessage as any as Mock).mockReturnValue(true);
+    (isUserMessage as unknown as Mock).mockReturnValue(true);
     expect(showMenuItemCopy(params)).toBe(true);
 
-    (isUserMessage as any as Mock).mockReturnValue(false);
+    (isUserMessage as unknown as Mock).mockReturnValue(false);
     expect(showMenuItemCopy(params)).toBe(false);
   });
 
   it('showMenuItemEdit returns true for editable messages', () => {
-    (isUserMessage as any as Mock).mockReturnValue(true);
-    (isSentMessage as any as Mock).mockReturnValue(true);
+    (isUserMessage as unknown as Mock).mockReturnValue(true);
+    (isSentMessage as unknown as Mock).mockReturnValue(true);
     channel.isEphemeral = false;
     params.isByMe = true;
     expect(showMenuItemEdit(params)).toBe(true);

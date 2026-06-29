@@ -94,7 +94,7 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
 
   beforeAll(() => {
     originalFetch = global.fetch;
-    global.fetch = vi.fn(() => Promise.resolve({ ok: true }));
+    global.fetch = vi.fn(() => Promise.resolve({ ok: true })) as unknown as typeof fetch;
 
     console.error = vi.fn((...args) => {
       if (typeof args[0] === 'string'

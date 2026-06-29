@@ -3,6 +3,11 @@ import { renderHook, act } from '@testing-library/react';
 import useSendbird from '../context/hooks/useSendbird';
 import { SendbirdContext, createSendbirdContextStore } from '../context/SendbirdContext';
 import { initSDK, setupSDK } from '../utils';
+import type { User, SendbirdChatWith } from '@sendbird/chat';
+import type { GroupChannelModule } from '@sendbird/chat/groupChannel';
+import type { OpenChannelModule } from '@sendbird/chat/openChannel';
+import type { MessageTemplatesInfo } from '../types';
+import type { LoggerInterface } from '../../Logger';
 
 vi.mock('../utils', async () => {
   const actualUtils = await vi.importActual('../utils');
@@ -141,11 +146,11 @@ describe('useSendbird', () => {
       const updatedUser = { id: 'mockUserId', name: 'newName' };
 
       act(() => {
-        result.current.actions.initUser(initialUser);
+        result.current.actions.initUser(initialUser as unknown as User);
       });
 
       act(() => {
-        result.current.actions.updateUserInfo(updatedUser);
+        result.current.actions.updateUserInfo(updatedUser as unknown as User);
       });
 
       const userStore = mockStore.getState().stores.userStore;
@@ -157,7 +162,7 @@ describe('useSendbird', () => {
     it('should initialize message templates info with initMessageTemplateInfo', () => {
       const { result } = renderHook(() => useSendbird(), { wrapper });
 
-      const mockPayload = { templatesMap: { key1: 'template1', key2: 'template2' } };
+      const mockPayload = { templatesMap: { key1: 'template1', key2: 'template2' } } as unknown as MessageTemplatesInfo;
 
       act(() => {
         result.current.actions.initMessageTemplateInfo({ payload: mockPayload });
@@ -313,7 +318,7 @@ describe('useSendbird', () => {
       });
 
       await act(async () => {
-        await result.current.actions.disconnect({ logger: mockLogger });
+        await result.current.actions.disconnect({ logger: mockLogger as unknown as LoggerInterface });
       });
 
       const sdkStore = mockStore.getState().stores.sdkStore;
@@ -394,14 +399,14 @@ describe('useSendbird', () => {
       const { result } = renderHook(() => useSendbird(), { wrapper });
 
       const mockOnFailed = vi.fn();
-      const mockLogger = { error: vi.fn(), info: vi.fn() };
+      const mockLogger = { error: vi.fn(), info: vi.fn() } as unknown as LoggerInterface;
 
       const mockSdk = {
         connect: vi.fn(() => {
           throw new Error('Mock connection error');
         }),
       };
-      vi.mocked(initSDK).mockReturnValue(mockSdk);
+      vi.mocked(initSDK).mockReturnValue(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>);
 
       await act(async () => {
         await result.current.actions.connect({
