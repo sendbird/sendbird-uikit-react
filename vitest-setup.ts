@@ -12,11 +12,12 @@ afterEach(() => {
 
 // Vitest reports unhandled rejections by default; registering our own handler makes
 // it defer to us. @sendbird/chat keeps a WebSocket connection attempt alive past a
-// test's unmount, which rejects with a "... is not defined" ReferenceError once the
-// jsdom environment is torn down — a benign post-teardown leak that Jest hid via
-// --forceExit. Swallow exactly those; re-throw anything else so real bugs still surface.
+// test's unmount; once the jsdom environment is torn down `new WebSocket()` throws
+// "WebSocket is not defined" — a benign post-teardown leak that Jest hid via
+// --forceExit. Swallow only that specific leak; re-throw everything else so real
+// unhandled rejections still surface.
 process.on('unhandledRejection', (reason) => {
-  if (reason instanceof ReferenceError && /is not defined/.test(reason.message)) {
+  if (reason instanceof ReferenceError && reason.message.includes('WebSocket is not defined')) {
     return;
   }
   throw reason;
