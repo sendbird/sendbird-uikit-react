@@ -267,17 +267,21 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   // reconnects (isOnline flips false->true on onReconnectSucceeded); otherwise a getChannel() that
   // failed during a disconnect would leave currentChannel === null with no retry.
   const getChannelRequestIdRef = useRef(0);
+  const fetchedChannelSdkRef = useRef<unknown>(null);
   useAsyncEffect(async () => {
     if (!sdkStore.initialized || !channelUrl) return;
-    // Skip while we already hold this channel loaded cleanly: avoids a redundant refetch on
-    // reconnect and avoids nulling out a healthy channel when the connection drops.
-    if (state.currentChannel?.url === channelUrl && !state.fetchChannelError) return;
+    // Skip only when this channel is already loaded cleanly AND was fetched with the current SDK
+    // instance: avoids a redundant refetch on reconnect and avoids nulling out a healthy channel on
+    // disconnect, while still refetching when the SDK instance changes (e.g. a new appId/userId
+    // session) so we do not stay bound to the previous SDK's channel.
+    if (state.currentChannel?.url === channelUrl && !state.fetchChannelError && fetchedChannelSdkRef.current === sdkStore.sdk) return;
     // Ignore stale resolutions: with isOnline in the deps this effect can re-run while a previous
     // getChannel is still in flight; a late resolve/reject must not clobber a newer fetch.
     const requestId = ++getChannelRequestIdRef.current;
     try {
       const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
       if (getChannelRequestIdRef.current !== requestId) return;
+      fetchedChannelSdkRef.current = sdkStore.sdk;
       actions.setCurrentChannel(channel);
     } catch (error) {
       if (getChannelRequestIdRef.current !== requestId) return;

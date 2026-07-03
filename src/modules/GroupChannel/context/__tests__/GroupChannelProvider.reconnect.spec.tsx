@@ -31,17 +31,18 @@ const mockConfig = {
   isOnline: true,
   pubSub: { subscribe: () => ({ remove: jest.fn() }) },
 };
+const makeSdk = () => ({
+  groupChannel: {
+    getChannel: mockGetChannel,
+    addGroupChannelHandler: jest.fn(),
+    removeGroupChannelHandler: jest.fn(),
+  },
+  createMessageCollection: jest.fn().mockReturnValue(mockMessageCollection),
+});
 const mockState = {
   stores: {
     sdkStore: {
-      sdk: {
-        groupChannel: {
-          getChannel: mockGetChannel,
-          addGroupChannelHandler: jest.fn(),
-          removeGroupChannelHandler: jest.fn(),
-        },
-        createMessageCollection: jest.fn().mockReturnValue(mockMessageCollection),
-      },
+      sdk: makeSdk(),
       initialized: true,
     },
   },
@@ -60,6 +61,7 @@ describe('GroupChannelProvider reconnect retry', () => {
   beforeEach(() => {
     mockConfig.isOnline = true;
     mockGetChannel.mockReset();
+    mockState.stores.sdkStore.sdk = makeSdk();
   });
 
   it('retries getChannel and recovers currentChannel when the connection is restored after a failed fetch', async () => {
@@ -138,5 +140,23 @@ describe('GroupChannelProvider reconnect retry', () => {
 
     expect(result.current.state.currentChannel?.url).toBe('test-channel');
     expect(result.current.state.fetchChannelError).toBeNull();
+  });
+
+  it('refetches when the SDK instance changes even if the channelUrl is unchanged', async () => {
+    mockGetChannel.mockResolvedValue(mockChannel);
+
+    const { result, rerender } = renderHook(() => useGroupChannel(), { wrapper });
+    await waitFor(() => {
+      expect(result.current.state.currentChannel?.url).toBe('test-channel');
+    });
+    expect(mockGetChannel).toHaveBeenCalledTimes(1);
+
+    // SendbirdProvider replaces the SDK instance (e.g. a new appId/userId session) while the
+    // channelUrl is unchanged: the channel must be refetched so it is not bound to the old SDK.
+    mockState.stores.sdkStore.sdk = makeSdk();
+    rerender();
+
+    await waitFor(() => expect(mockGetChannel).toHaveBeenCalledTimes(2));
+    expect(result.current.state.currentChannel?.url).toBe('test-channel');
   });
 });
