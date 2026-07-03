@@ -263,18 +263,28 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     logger: logger as any,
   });
 
-  // Channel initialization
+  // Channel initialization. `config.isOnline` is a dependency so the fetch retries when the SDK
+  // reconnects (isOnline flips false->true on onReconnectSucceeded); otherwise a getChannel() that
+  // failed during a disconnect would leave currentChannel === null with no retry.
+  const getChannelRequestIdRef = useRef(0);
   useAsyncEffect(async () => {
-    if (sdkStore.initialized && channelUrl) {
-      try {
-        const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
-        actions.setCurrentChannel(channel);
-      } catch (error) {
-        actions.handleChannelError(error);
-        logger?.error?.('GroupChannelProvider: error when fetching channel', error);
-      }
+    if (!sdkStore.initialized || !channelUrl) return;
+    // Skip while we already hold this channel loaded cleanly: avoids a redundant refetch on
+    // reconnect and avoids nulling out a healthy channel when the connection drops.
+    if (state.currentChannel?.url === channelUrl && !state.fetchChannelError) return;
+    // Ignore stale resolutions: with isOnline in the deps this effect can re-run while a previous
+    // getChannel is still in flight; a late resolve/reject must not clobber a newer fetch.
+    const requestId = ++getChannelRequestIdRef.current;
+    try {
+      const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
+      if (getChannelRequestIdRef.current !== requestId) return;
+      actions.setCurrentChannel(channel);
+    } catch (error) {
+      if (getChannelRequestIdRef.current !== requestId) return;
+      actions.handleChannelError(error);
+      logger?.error?.('GroupChannelProvider: error when fetching channel', error);
     }
-  }, [sdkStore.initialized, sdkStore.sdk, channelUrl]);
+  }, [sdkStore.initialized, sdkStore.sdk, channelUrl, config.isOnline]);
 
   // Message sync effect
   useAsyncLayoutEffect(async () => {
