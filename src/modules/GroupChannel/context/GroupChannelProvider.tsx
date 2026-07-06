@@ -5,7 +5,6 @@ import {
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { MessageFilter } from '@sendbird/chat/groupChannel';
 import {
-  useAsyncEffect,
   useAsyncLayoutEffect,
   useIIFE,
   useGroupChannelMessages,
@@ -266,28 +265,33 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   // Channel initialization. `config.isOnline` is a dependency so the fetch retries when the SDK
   // reconnects (isOnline flips false->true on onReconnectSucceeded); otherwise a getChannel() that
   // failed during a disconnect would leave currentChannel === null with no retry.
-  const getChannelRequestIdRef = useRef(0);
   const fetchedChannelSdkRef = useRef<unknown>(null);
-  useAsyncEffect(async () => {
-    if (!sdkStore.initialized || !channelUrl) return;
+  useEffect(() => {
+    if (!sdkStore.initialized || !channelUrl) return undefined;
     // Skip only when this channel is already loaded cleanly AND was fetched with the current SDK
     // instance: avoids a redundant refetch on reconnect and avoids nulling out a healthy channel on
     // disconnect, while still refetching when the SDK instance changes (e.g. a new appId/userId
     // session) so we do not stay bound to the previous SDK's channel.
-    if (state.currentChannel?.url === channelUrl && !state.fetchChannelError && fetchedChannelSdkRef.current === sdkStore.sdk) return;
-    // Ignore stale resolutions: with isOnline in the deps this effect can re-run while a previous
-    // getChannel is still in flight; a late resolve/reject must not clobber a newer fetch.
-    const requestId = ++getChannelRequestIdRef.current;
-    try {
-      const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
-      if (getChannelRequestIdRef.current !== requestId) return;
-      fetchedChannelSdkRef.current = sdkStore.sdk;
-      actions.setCurrentChannel(channel);
-    } catch (error) {
-      if (getChannelRequestIdRef.current !== requestId) return;
-      actions.handleChannelError(error);
-      logger?.error?.('GroupChannelProvider: error when fetching channel', error);
+    if (state.currentChannel?.url === channelUrl && !state.fetchChannelError && fetchedChannelSdkRef.current === sdkStore.sdk) {
+      return undefined;
     }
+    // Plain useEffect (not useAsyncEffect) so the cleanup can cancel a superseded fetch: with
+    // isOnline in the deps this can re-run while a previous getChannel is still in flight, and a
+    // late resolve/reject must not clobber a newer fetch.
+    let cancelled = false;
+    (async () => {
+      try {
+        const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
+        if (cancelled) return;
+        fetchedChannelSdkRef.current = sdkStore.sdk;
+        actions.setCurrentChannel(channel);
+      } catch (error) {
+        if (cancelled) return;
+        actions.handleChannelError(error);
+        logger?.error?.('GroupChannelProvider: error when fetching channel', error);
+      }
+    })();
+    return () => { cancelled = true; };
   }, [sdkStore.initialized, sdkStore.sdk, channelUrl, config.isOnline]);
 
   // Message sync effect
