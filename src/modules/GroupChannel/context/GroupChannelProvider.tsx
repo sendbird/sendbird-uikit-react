@@ -286,7 +286,10 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
         fetchedChannelSdkRef.current = sdkStore.sdk;
         actions.setCurrentChannel(channel);
       } catch (error) {
-        if (cancelled) return;
+        if (cancelled) {
+          logger?.warning?.('GroupChannelProvider: superseded getChannel failed (ignored)', error);
+          return;
+        }
         actions.handleChannelError(error);
         logger?.error?.('GroupChannelProvider: error when fetching channel', error);
       }
