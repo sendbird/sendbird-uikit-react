@@ -1,2 +1,2 @@
 ### Fixes
-- Fixed super group channel detection to use the application's `premiumFeatureList` instead of the deprecated `allow_super_group_channel` attribute
+- Fixed a bug where a `GroupChannel` conversation could fail to recover after an SDK reconnect, staying stuck when the channel fetch was interrupted by the disconnect

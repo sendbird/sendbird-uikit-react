@@ -1,5 +1,9 @@
 # Changelog - v3
 
+## [v3.18.2] (JUL 07 2026)
+### Fixes
+- Fixed a bug where a `GroupChannel` conversation could fail to recover after an SDK reconnect, staying stuck when the channel fetch was interrupted by the disconnect
+
 ## [v3.18.1] (JUN 24 2026)
 ### Fixes
 - Fixed super group channel detection to use the application's `premiumFeatureList` instead of the deprecated `allow_super_group_channel` attribute
