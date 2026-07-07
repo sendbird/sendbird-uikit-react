@@ -5,7 +5,6 @@ import {
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import { MessageFilter } from '@sendbird/chat/groupChannel';
 import {
-  useAsyncEffect,
   useAsyncLayoutEffect,
   useIIFE,
   useGroupChannelMessages,
@@ -263,18 +262,33 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     logger: logger as any,
   });
 
-  // Channel initialization
-  useAsyncEffect(async () => {
-    if (sdkStore.initialized && channelUrl) {
+  // config.isOnline is a dep so getChannel retries on reconnect (a fetch that failed mid-disconnect would otherwise stay null).
+  const fetchedChannelSdkRef = useRef<unknown>(null);
+  useEffect(() => {
+    if (!sdkStore.initialized || !channelUrl) return;
+    // Skip if already loaded with the current SDK; refetch when the SDK instance changes (new session).
+    if (state.currentChannel?.url === channelUrl && !state.fetchChannelError && fetchedChannelSdkRef.current === sdkStore.sdk) {
+      return;
+    }
+    // Cleanup cancels a superseded in-flight fetch so a late resolve/reject can't clobber a newer one.
+    let cancelled = false;
+    (async () => {
       try {
         const channel = await sdkStore.sdk.groupChannel.getChannel(channelUrl);
+        if (cancelled) return;
+        fetchedChannelSdkRef.current = sdkStore.sdk;
         actions.setCurrentChannel(channel);
       } catch (error) {
+        if (cancelled) {
+          logger?.warning?.('GroupChannelProvider: superseded getChannel failed (ignored)', error);
+          return;
+        }
         actions.handleChannelError(error);
         logger?.error?.('GroupChannelProvider: error when fetching channel', error);
       }
-    }
-  }, [sdkStore.initialized, sdkStore.sdk, channelUrl]);
+    })();
+    return () => { cancelled = true; };
+  }, [sdkStore.initialized, sdkStore.sdk, channelUrl, config.isOnline]);
 
   // Message sync effect
   useAsyncLayoutEffect(async () => {
