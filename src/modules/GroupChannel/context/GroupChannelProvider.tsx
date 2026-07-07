@@ -267,13 +267,13 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
   // failed during a disconnect would leave currentChannel === null with no retry.
   const fetchedChannelSdkRef = useRef<unknown>(null);
   useEffect(() => {
-    if (!sdkStore.initialized || !channelUrl) return undefined;
+    if (!sdkStore.initialized || !channelUrl) return;
     // Skip only when this channel is already loaded cleanly AND was fetched with the current SDK
     // instance: avoids a redundant refetch on reconnect and avoids nulling out a healthy channel on
     // disconnect, while still refetching when the SDK instance changes (e.g. a new appId/userId
     // session) so we do not stay bound to the previous SDK's channel.
     if (state.currentChannel?.url === channelUrl && !state.fetchChannelError && fetchedChannelSdkRef.current === sdkStore.sdk) {
-      return undefined;
+      return;
     }
     // Plain useEffect (not useAsyncEffect) so the cleanup can cancel a superseded fetch: with
     // isOnline in the deps this can re-run while a previous getChannel is still in flight, and a
