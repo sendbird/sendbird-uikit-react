@@ -60,11 +60,13 @@ export const SuggestedMentionListView = (props: SuggestedMentionListViewProps) =
 
   useEffect(() => {
     clearTimeout(timer ?? undefined);
-    setTimer(
-      setTimeout(() => {
-        setSearchString(targetNickname);
-      }, DEBOUNCING_TIME),
-    );
+    const nextTimer = setTimeout(() => {
+      setSearchString(targetNickname);
+    }, DEBOUNCING_TIME);
+    setTimer(nextTimer);
+    return () => {
+      clearTimeout(nextTimer);
+    };
   }, [targetNickname]);
 
   useEffect(() => {

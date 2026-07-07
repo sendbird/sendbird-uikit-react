@@ -85,7 +85,7 @@ The CSS is in `./dist/dist/index.css`
 
 ### Tests
 
-We have implemented tests for dumb ui components only. Technologies used: Jest and testing-library
+We have implemented tests for dumb ui components only. Technologies used: Vitest and testing-library
 
 ```
 yarn test
