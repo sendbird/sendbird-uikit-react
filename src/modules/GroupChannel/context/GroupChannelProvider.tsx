@@ -262,22 +262,15 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     logger: logger as any,
   });
 
-  // Channel initialization. `config.isOnline` is a dependency so the fetch retries when the SDK
-  // reconnects (isOnline flips false->true on onReconnectSucceeded); otherwise a getChannel() that
-  // failed during a disconnect would leave currentChannel === null with no retry.
+  // config.isOnline is a dep so getChannel retries on reconnect (a fetch that failed mid-disconnect would otherwise stay null).
   const fetchedChannelSdkRef = useRef<unknown>(null);
   useEffect(() => {
     if (!sdkStore.initialized || !channelUrl) return;
-    // Skip only when this channel is already loaded cleanly AND was fetched with the current SDK
-    // instance: avoids a redundant refetch on reconnect and avoids nulling out a healthy channel on
-    // disconnect, while still refetching when the SDK instance changes (e.g. a new appId/userId
-    // session) so we do not stay bound to the previous SDK's channel.
+    // Skip if already loaded with the current SDK; refetch when the SDK instance changes (new session).
     if (state.currentChannel?.url === channelUrl && !state.fetchChannelError && fetchedChannelSdkRef.current === sdkStore.sdk) {
       return;
     }
-    // Plain useEffect (not useAsyncEffect) so the cleanup can cancel a superseded fetch: with
-    // isOnline in the deps this can re-run while a previous getChannel is still in flight, and a
-    // late resolve/reject must not clobber a newer fetch.
+    // Cleanup cancels a superseded in-flight fetch so a late resolve/reject can't clobber a newer one.
     let cancelled = false;
     (async () => {
       try {
