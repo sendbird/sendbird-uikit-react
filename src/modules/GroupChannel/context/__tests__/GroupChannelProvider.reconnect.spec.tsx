@@ -132,7 +132,7 @@ describe('GroupChannelProvider reconnect retry', () => {
     });
     expect(mockGetChannel).toHaveBeenCalledTimes(2);
 
-    // Now the stale first fetch rejects late: the request-id guard must ignore it (no clobber).
+    // Now the stale first fetch rejects late: the cleanup's cancelled flag must ignore it (no clobber).
     await act(async () => {
       rejectFirst(new Error('stale rejection'));
       await new Promise((r) => { setTimeout(r, 0); });
