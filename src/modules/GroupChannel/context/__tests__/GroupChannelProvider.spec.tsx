@@ -19,42 +19,30 @@ const mockMessageCollection = {
   loadNext: vi.fn(),
   messages: [],
 };
+// Stable references so `sdkStore.sdk` (an effect dependency) does not change identity on every
+// render — otherwise the channel-init effect would refetch in a loop.
+const mockSdk = {
+  groupChannel: {
+    getChannel: mockGetChannel,
+    addGroupChannelHandler: vi.fn(),
+    removeGroupChannelHandler: vi.fn(),
+  },
+  createMessageCollection: vi.fn().mockReturnValue(mockMessageCollection),
+};
+const mockState = {
+  stores: { sdkStore: { sdk: mockSdk, initialized: true } },
+  config: {
+    logger: mockLogger,
+    markAsReadScheduler: { push: vi.fn() },
+    groupChannel: { replyType: 'NONE', threadReplySelectType: 'PARENT' },
+    groupChannelSettings: { enableMessageSearch: true },
+    isOnline: true,
+    pubSub: { subscribe: () => ({ remove: vi.fn() }) },
+  },
+};
 vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: vi.fn(() => ({
-    state: {
-      stores: {
-        sdkStore: {
-          sdk: {
-            groupChannel: {
-              getChannel: mockGetChannel,
-              addGroupChannelHandler: vi.fn(),
-              removeGroupChannelHandler: vi.fn(),
-            },
-            createMessageCollection: vi.fn().mockReturnValue(mockMessageCollection),
-          },
-          initialized: true,
-        },
-      },
-      config: {
-        logger: mockLogger,
-        markAsReadScheduler: {
-          push: vi.fn(),
-        },
-        groupChannel: {
-          replyType: 'NONE',
-          threadReplySelectType: 'PARENT',
-        },
-        groupChannelSettings: {
-          enableMessageSearch: true,
-        },
-        isOnline: true,
-        pubSub: {
-          subscribe: () => ({ remove: vi.fn() }),
-        },
-      },
-    },
-  })),
+  default: vi.fn(() => ({ state: mockState })),
 }));
 
 describe('GroupChannelProvider', () => {
@@ -91,6 +79,8 @@ describe('GroupChannelProvider', () => {
 
   it('handles channel error correctly', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
+    const mockError = new Error('Channel fetch failed');
+    mockGetChannel.mockRejectedValueOnce(mockError);
 
     const wrapper = ({ children }) => (
       <GroupChannelProvider channelUrl="error-channel">
@@ -100,17 +90,9 @@ describe('GroupChannelProvider', () => {
 
     const { result } = renderHook(() => useGroupChannel(), { wrapper });
 
-    act(() => {
-      waitFor(() => {
-        expect(result.current.state.currentChannel).toBeTruthy();
-        expect(result.current.state.fetchChannelError).toBeNull();
-      });
-    });
-
-    act(() => {
-      waitFor(() => {
-        expect(result.current.state.currentChannel).toBeNull();
-      });
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).toBeNull();
+      expect(result.current.state.fetchChannelError).toBe(mockError);
     });
   });
 

@@ -49,8 +49,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest-setup.ts'],
     clearMocks: true,
-    // Replaces the bespoke scripts/failed-test-retry.js (rerun failed up to 3x).
-    retry: 3,
+    // Replaces the bespoke scripts/failed-test-retry.js (rerun failed up to 3x). CI-only so local
+    // runs (retry: 0) surface flaky tests to developers instead of silently masking them.
+    retry: process.env.CI ? 3 : 0,
     include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
     exclude: [
       'node_modules',
@@ -75,7 +76,7 @@ export default defineConfig({
         '**/__test__/**',
         '**/__mocks__/**',
       ],
-      reporter: ['text', 'json-summary'],
+      reporter: ['text', 'json-summary', 'lcov', 'html'],
     },
   },
 });

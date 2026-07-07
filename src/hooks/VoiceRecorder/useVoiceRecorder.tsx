@@ -40,6 +40,7 @@ export const useVoiceRecorder = ({
 
   const [recordedFile, setRecordedFile] = useState<File | null>(null);
   const [recordingStatus, setRecordingStatus] = useState<VoiceRecorderStatus>(VoiceRecorderStatus.PREPARING);
+  const isMountedRef = useRef(true);
   useEffect(() => {
     if (isRecordable && recordingStatus === VoiceRecorderStatus.PREPARING) {
       setRecordingStatus(VoiceRecorderStatus.READY_TO_RECORD);
@@ -49,11 +50,13 @@ export const useVoiceRecorder = ({
   const start = useCallback(() => {
     voiceRecorder?.start({
       onRecordingStarted: () => {
+        if (!isMountedRef.current) return;
         setRecordingStatus(VoiceRecorderStatus.RECORDING);
         onRecordingStarted();
         startTimer();
       },
       onRecordingEnded: (audioFile) => {
+        if (!isMountedRef.current) return;
         setRecordingStatus(VoiceRecorderStatus.COMPLETED);
         onRecordingEnded(audioFile);
         setRecordedFile(audioFile);
@@ -93,6 +96,14 @@ export const useVoiceRecorder = ({
       timer.current = null;
     }
   }
+  // Clear the interval on unmount so setRecordingTime does not fire afterwards, and mark unmounted.
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      stopTimer();
+    };
+  }, []);
   useEffect(() => {
     if (recordingTime > maxRecordingTime) {
       stop();
