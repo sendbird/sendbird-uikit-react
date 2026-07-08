@@ -1,23 +1,30 @@
 import SendbirdChat from '@sendbird/chat';
 
-import type { SendbirdState, SdkStore, UserStore, AppInfoStore, SendbirdStateConfig } from '../types';
+import type { SendbirdState, SdkStore, UserStore, AppInfoStore, MessageTemplatesInfo, SendbirdStateConfig } from '../types';
+import type { SendbirdChatWith } from '@sendbird/chat';
+import type { GroupChannelModule } from '@sendbird/chat/groupChannel';
+import type { OpenChannelModule } from '@sendbird/chat/openChannel';
+import type { LoggerInterface } from '../../Logger';
 import { updateAppInfoStore, updateSdkStore, updateUserStore, initSDK, setupSDK } from '../utils';
 
-jest.mock('@sendbird/chat', () => ({
-  init: jest.fn(),
-  GroupChannelModule: jest.fn(),
-  OpenChannelModule: jest.fn(),
-  DeviceOsPlatform: {
-    MOBILE_WEB: 'mobile_web',
-    WEB: 'web',
-  },
-  SendbirdPlatform: {
-    JS: 'js',
-  },
-  SendbirdProduct: {
-    UIKIT_CHAT: 'uikit_chat',
-  },
-}));
+vi.mock('@sendbird/chat', () => {
+  const mock = {
+    init: vi.fn(),
+    GroupChannelModule: vi.fn(),
+    OpenChannelModule: vi.fn(),
+    DeviceOsPlatform: {
+      MOBILE_WEB: 'mobile_web',
+      WEB: 'web',
+    },
+    SendbirdPlatform: {
+      JS: 'js',
+    },
+    SendbirdProduct: {
+      UIKIT_CHAT: 'uikit_chat',
+    },
+  };
+  return { ...mock, default: mock };
+});
 
 describe('State Update Functions', () => {
   const initialState: SendbirdState = {
@@ -47,8 +54,8 @@ describe('State Update Functions', () => {
   };
 
   test('updateAppInfoStore merges payload with existing appInfoStore', () => {
-    const payload: Partial<AppInfoStore> = { messageTemplatesInfo: { templateKey: 'templateValue' } };
-    const updatedState = updateAppInfoStore(initialState, payload);
+    const payload: Partial<AppInfoStore> = { messageTemplatesInfo: { templateKey: 'templateValue' } as unknown as MessageTemplatesInfo };
+    const updatedState = updateAppInfoStore(initialState, payload as unknown as AppInfoStore);
 
     expect(updatedState.stores.appInfoStore).toEqual({
       waitingTemplateKeysMap: {},
@@ -143,24 +150,24 @@ describe('initSDK', () => {
 });
 
 const mockSdk = {
-  addExtension: jest.fn(),
-  addSendbirdExtensions: jest.fn(),
-  setSessionHandler: jest.fn(),
+  addExtension: vi.fn(),
+  addSendbirdExtensions: vi.fn(),
+  setSessionHandler: vi.fn(),
 };
 const mockLogger = {
-  info: jest.fn(),
+  info: vi.fn(),
 };
 
 describe('setupSDK', () => {
   it('sets up SDK with extensions and session handler', () => {
     const params = {
-      logger: mockLogger,
-      sessionHandler: { onSessionExpired: jest.fn() },
+      logger: mockLogger as unknown as LoggerInterface,
+      sessionHandler: { onSessionExpired: vi.fn() },
       isMobile: false,
       customExtensionParams: { customKey: 'customValue' },
     };
 
-    setupSDK(mockSdk, params);
+    setupSDK(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>, params);
 
     expect(mockLogger.info).toHaveBeenCalledWith(
       'SendbirdProvider | useConnect/setupConnection/setVersion',
@@ -176,9 +183,9 @@ describe('setupSDK', () => {
   });
 
   it('does not set session handler if not provided', () => {
-    const params = { logger: mockLogger };
+    const params = { logger: mockLogger as unknown as LoggerInterface };
 
-    setupSDK(mockSdk, params);
+    setupSDK(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>, params);
 
     expect(mockSdk.setSessionHandler).not.toHaveBeenCalled();
   });

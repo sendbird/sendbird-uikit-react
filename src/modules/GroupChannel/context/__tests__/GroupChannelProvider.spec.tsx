@@ -3,58 +3,46 @@ import { waitFor, act, renderHook } from '@testing-library/react';
 import { GroupChannelProvider, useGroupChannelContext } from '../GroupChannelProvider';
 import { useGroupChannel } from '../hooks/useGroupChannel';
 
-const mockLogger = { warning: jest.fn() };
+const mockLogger = { warning: vi.fn() };
 const mockChannel = {
   url: 'test-channel',
   members: [{ userId: '1', nickname: 'user1' }],
-  serialize: () => JSON.stringify(this),
+  serialize: () => JSON.stringify({}),
 };
 
-const mockGetChannel = jest.fn().mockResolvedValue(mockChannel);
+const mockGetChannel = vi.fn().mockResolvedValue(mockChannel);
 const mockMessageCollection = {
-  dispose: jest.fn(),
-  setMessageCollectionHandler: jest.fn(),
-  initialize: jest.fn().mockResolvedValue(null),
-  loadPrevious: jest.fn(),
-  loadNext: jest.fn(),
+  dispose: vi.fn(),
+  setMessageCollectionHandler: vi.fn(),
+  initialize: vi.fn().mockResolvedValue(null),
+  loadPrevious: vi.fn(),
+  loadNext: vi.fn(),
   messages: [],
 };
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+// Stable references so `sdkStore.sdk` (an effect dependency) does not change identity on every
+// render — otherwise the channel-init effect would refetch in a loop.
+const mockSdk = {
+  groupChannel: {
+    getChannel: mockGetChannel,
+    addGroupChannelHandler: vi.fn(),
+    removeGroupChannelHandler: vi.fn(),
+  },
+  createMessageCollection: vi.fn().mockReturnValue(mockMessageCollection),
+};
+const mockState = {
+  stores: { sdkStore: { sdk: mockSdk, initialized: true } },
+  config: {
+    logger: mockLogger,
+    markAsReadScheduler: { push: vi.fn() },
+    groupChannel: { replyType: 'NONE', threadReplySelectType: 'PARENT' },
+    groupChannelSettings: { enableMessageSearch: true },
+    isOnline: true,
+    pubSub: { subscribe: () => ({ remove: vi.fn() }) },
+  },
+};
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
-    state: {
-      stores: {
-        sdkStore: {
-          sdk: {
-            groupChannel: {
-              getChannel: mockGetChannel,
-              addGroupChannelHandler: jest.fn(),
-              removeGroupChannelHandler: jest.fn(),
-            },
-            createMessageCollection: jest.fn().mockReturnValue(mockMessageCollection),
-          },
-          initialized: true,
-        },
-      },
-      config: {
-        logger: mockLogger,
-        markAsReadScheduler: {
-          push: jest.fn(),
-        },
-        groupChannel: {
-          replyType: 'NONE',
-          threadReplySelectType: 'PARENT',
-        },
-        groupChannelSettings: {
-          enableMessageSearch: true,
-        },
-        isOnline: true,
-        pubSub: {
-          subscribe: () => ({ remove: jest.fn() }),
-        },
-      },
-    },
-  })),
+  default: vi.fn(() => ({ state: mockState })),
 }));
 
 describe('GroupChannelProvider', () => {
@@ -90,26 +78,9 @@ describe('GroupChannelProvider', () => {
   });
 
   it('handles channel error correctly', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
     const mockError = new Error('Channel fetch failed');
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-
-    jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
-      default: () => ({
-        state: {
-          stores: {
-            sdkStore: {
-              sdk: {
-                groupChannel: {
-                  getChannel: jest.fn().mockRejectedValue(mockError),
-                },
-              },
-              initialized: true,
-            },
-          },
-          config: { logger: console },
-        },
-      }),
-    }));
+    mockGetChannel.mockRejectedValueOnce(mockError);
 
     const wrapper = ({ children }) => (
       <GroupChannelProvider channelUrl="error-channel">
@@ -119,17 +90,9 @@ describe('GroupChannelProvider', () => {
 
     const { result } = renderHook(() => useGroupChannel(), { wrapper });
 
-    act(() => {
-      waitFor(() => {
-        expect(result.current.state.currentChannel).toBeTruthy();
-        expect(result.current.state.fetchChannelError).toBeNull();
-      });
-    });
-
-    act(() => {
-      waitFor(() => {
-        expect(result.current.state.currentChannel).toBeNull();
-      });
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).toBeNull();
+      expect(result.current.state.fetchChannelError).toBe(mockError);
     });
   });
 

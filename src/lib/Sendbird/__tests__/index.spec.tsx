@@ -2,29 +2,35 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 import { SendbirdProvider, withSendBird } from '../index';
+import type { SendbirdProviderProps } from '../index';
+import type { MockInstance } from 'vitest';
 
-jest.mock('@sendbird/uikit-tools', () => ({
-  UIKitConfigProvider: jest.fn(({ children }) => <div data-testid="UIKitConfigProvider">{children}</div>),
+vi.mock('@sendbird/uikit-tools', () => ({
+  UIKitConfigProvider: vi.fn(({ children }) => <div data-testid="UIKitConfigProvider">{children}</div>),
 }));
-jest.mock('../context/SendbirdProvider', () => ({
-  SendbirdContextProvider: jest.fn(({ children }) => <div data-testid="SendbirdContextProvider">{children}</div>),
+vi.mock('../context/SendbirdProvider', () => ({
+  SendbirdContextProvider: vi.fn(({ children }) => <div data-testid="SendbirdContextProvider">{children}</div>),
 }));
-jest.mock('../context/hooks/useSendbird', () => jest.fn(() => ({
-  state: { someState: 'testState' },
-  actions: { someAction: jest.fn() },
-})));
-jest.mock('../../utils/uikitConfigMapper', () => ({
-  uikitConfigMapper: jest.fn(() => ({
+vi.mock('../context/hooks/useSendbird', () => ({
+  default: vi.fn(() => ({
+    state: { someState: 'testState' },
+    actions: { someAction: vi.fn() },
+  })),
+}));
+vi.mock('../../utils/uikitConfigMapper', () => ({
+  uikitConfigMapper: vi.fn(() => ({
     common: {},
     groupChannel: {},
     openChannel: {},
   })),
 }));
-jest.mock('../../utils/uikitConfigStorage', () => ({}));
+vi.mock('../../utils/uikitConfigStorage', () => ({ uikitConfigStorage: {} }));
 
 describe('SendbirdProvider/index', () => {
   it('renders UIKitConfigProvider with correct localConfigs', () => {
     const props = {
+      appId: 'test-app-id',
+      userId: 'test-user-id',
       replyType: 'threaded',
       isMentionEnabled: true,
       isReactionEnabled: true,
@@ -36,7 +42,7 @@ describe('SendbirdProvider/index', () => {
       uikitOptions: {},
     };
 
-    render(<SendbirdProvider {...props} />);
+    render(<SendbirdProvider {...(props as unknown as SendbirdProviderProps)} />);
 
     expect(screen.getByTestId('UIKitConfigProvider')).toBeInTheDocument();
     expect(screen.getByTestId('SendbirdContextProvider')).toBeInTheDocument();
@@ -44,10 +50,10 @@ describe('SendbirdProvider/index', () => {
 });
 
 describe('withSendbirdContext', () => {
-  let consoleWarnSpy: jest.SpyInstance;
+  let consoleWarnSpy: MockInstance;
 
   beforeEach(() => {
-    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -55,10 +61,10 @@ describe('withSendbirdContext', () => {
   });
 
   it('logs a warning if mapStoreToProps is not a function', () => {
-    const MockComponent = jest.fn(() => <div data-testid="MockComponent" />);
+    const MockComponent = vi.fn(() => <div data-testid="MockComponent" />);
     const invalidMapStoreToProps = 'invalidValue';
 
-    const WrappedComponent = withSendBird(MockComponent, invalidMapStoreToProps);
+    const WrappedComponent = withSendBird(MockComponent, invalidMapStoreToProps as unknown as (props: any) => any);
 
     render(<WrappedComponent />);
 
@@ -68,7 +74,7 @@ describe('withSendbirdContext', () => {
   });
 
   it('renders OriginalComponent with merged props', () => {
-    const MockComponent = jest.fn((props) => <div data-testid="MockComponent">{props.testProp}</div>);
+    const MockComponent = vi.fn((props) => <div data-testid="MockComponent">{props.testProp}</div>);
     const mapStoreToProps = (context: any) => ({
       mappedProp: context.someState,
     });

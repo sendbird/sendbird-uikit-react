@@ -13,32 +13,32 @@ const mockState = {
   },
   config: {
     logger: {
-      info: jest.fn(),
-      warning: jest.fn(),
-      error: jest.fn(),
+      info: vi.fn(),
+      warning: vi.fn(),
+      error: vi.fn(),
     },
   },
 };
-const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
-jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+const mockActions = { connect: vi.fn(), disconnect: vi.fn() };
+vi.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState, actions: mockActions })),
-  useSendbird: jest.fn(() => ({ state: mockState, actions: mockActions })),
+  default: vi.fn(() => ({ state: mockState, actions: mockActions })),
+  useSendbird: vi.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
 const mockProps: ChannelSettingsContextProps = {
   channelUrl: 'test-channel-url',
-  onCloseClick: jest.fn(),
-  onLeaveChannel: jest.fn(),
-  onChannelModified: jest.fn(),
-  onBeforeUpdateChannel: jest.fn(),
-  overrideInviteUser: jest.fn(),
+  onCloseClick: vi.fn(),
+  onLeaveChannel: vi.fn(),
+  onChannelModified: vi.fn(),
+  onBeforeUpdateChannel: vi.fn(),
+  overrideInviteUser: vi.fn(),
   queries: {
     applicationUserListQuery: { limit: 10 },
   },
   className: 'test-class',
-  renderUserListItem: jest.fn(),
-  renderUserProfile: jest.fn(),
+  renderUserListItem: vi.fn(),
+  renderUserProfile: vi.fn(),
   disableUserProfile: true,
   children: <div>Child Component</div>,
 };

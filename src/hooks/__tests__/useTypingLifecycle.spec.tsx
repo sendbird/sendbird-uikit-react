@@ -3,8 +3,8 @@ import { useTypingLifecycle } from '../useTypingLifecycle';
 
 const makeChannel = (url = 'channel-a') => ({
   url,
-  startTyping: jest.fn(),
-  endTyping: jest.fn(),
+  startTyping: vi.fn(),
+  endTyping: vi.fn(),
 });
 
 describe('useTypingLifecycle', () => {

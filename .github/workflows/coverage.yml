@@ -15,4 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: ArtiomTr/jest-coverage-report-action@v2
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'yarn'
+      - run: yarn install --immutable
+      - run: yarn test:coverage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/

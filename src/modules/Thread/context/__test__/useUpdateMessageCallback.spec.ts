@@ -6,9 +6,9 @@ import useUpdateMessageCallback from '../hooks/useUpdateMessageCallback';
 import { PublishingModuleType } from '../../../internalInterfaces';
 import { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 
-const mockSetEmojiContainer = jest.fn();
+const mockSetEmojiContainer = vi.fn();
 
-jest.mock('../useThread', () => ({
+vi.mock('../useThread', () => ({
   __esModule: true,
   default: () => ({
     actions: {
@@ -18,13 +18,13 @@ jest.mock('../useThread', () => ({
 }));
 
 const mockPubSub = {
-  publish: jest.fn(),
+  publish: vi.fn(),
 } as unknown as SBUGlobalPubSub;
 
 const mockLogger = {
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+  error: vi.fn(),
 };
 
 describe('useUpdateMessageCallback', () => {
@@ -33,11 +33,11 @@ describe('useUpdateMessageCallback', () => {
   const mockMentionedUsers = [{ userId: 'user1' }] as User[];
   const mockMentionTemplate = '@{user1}';
 
-  const createMockChannel = (updateUserMessage = jest.fn()) => ({
+  const createMockChannel = (updateUserMessage = vi.fn()) => ({
     updateUserMessage,
   }) as unknown as GroupChannel;
   const createMockCallbacks = () => ({
-    onMessageUpdated: jest.fn(),
+    onMessageUpdated: vi.fn(),
   });
 
   const renderUpdateMessageCallbackHook = ({
@@ -59,7 +59,7 @@ describe('useUpdateMessageCallback', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should update message successfully', async () => {
@@ -68,7 +68,7 @@ describe('useUpdateMessageCallback', () => {
       message: mockMessage,
     } as UserMessage;
 
-    const mockUpdateUserMessage = jest.fn().mockResolvedValue(updatedMessage);
+    const mockUpdateUserMessage = vi.fn().mockResolvedValue(updatedMessage);
     const mockChannel = createMockChannel(mockUpdateUserMessage);
     const callbacks = createMockCallbacks();
 
@@ -101,7 +101,7 @@ describe('useUpdateMessageCallback', () => {
   });
 
   it('should include mention data when mention is enabled', async () => {
-    const mockUpdateUserMessage = jest.fn().mockResolvedValue({} as UserMessage);
+    const mockUpdateUserMessage = vi.fn().mockResolvedValue({} as UserMessage);
     const mockChannel = createMockChannel(mockUpdateUserMessage);
 
     const { result } = renderUpdateMessageCallbackHook({
@@ -127,7 +127,7 @@ describe('useUpdateMessageCallback', () => {
   });
 
   it('should use message as mention template when template is not provided', async () => {
-    const mockUpdateUserMessage = jest.fn().mockResolvedValue({} as UserMessage);
+    const mockUpdateUserMessage = vi.fn().mockResolvedValue({} as UserMessage);
     const mockChannel = createMockChannel(mockUpdateUserMessage);
 
     const { result } = renderUpdateMessageCallbackHook({

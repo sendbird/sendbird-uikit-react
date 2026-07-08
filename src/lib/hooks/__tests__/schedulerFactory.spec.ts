@@ -4,8 +4,8 @@ import { schedulerFactory } from '../schedulerFactory';
 import { LoggerFactory } from '../../Logger';
 import type { Logger } from '../../Sendbird/types';
 
-jest.useFakeTimers();
-jest.spyOn(global, 'setInterval');
+vi.useFakeTimers();
+vi.spyOn(global, 'setInterval');
 
 const logger = LoggerFactory('info') as Logger;
 
@@ -27,20 +27,20 @@ describe('schedulerFactory', () => {
       cb: (channel: GroupChannel) => { channel.markAsRead(); },
     });
     // if queue is empty, push should call cb immediately
-    const channel = { markAsRead: jest.fn() } as unknown as GroupChannel;
+    const channel = { markAsRead: vi.fn() } as unknown as GroupChannel;
     scheduler.push(channel);
     expect(channel.markAsRead).toHaveBeenCalledTimes(1);
 
     // becuase there is a timeout, markAsRead should not be called immediately
-    const channel2 = { markAsRead: jest.fn() } as unknown as GroupChannel;
+    const channel2 = { markAsRead: vi.fn() } as unknown as GroupChannel;
     scheduler.push(channel2);
     expect(channel2.markAsRead).toHaveBeenCalledTimes(0);
-    jest.advanceTimersByTime(1000);
+    vi.advanceTimersByTime(1000);
     expect(channel2.markAsRead).toHaveBeenCalledTimes(1);
 
     // if queue is empty(& timeout is cleared), push should call cb immediately
-    jest.advanceTimersByTime(1000);
-    const channel3 = { markAsRead: jest.fn() } as unknown as GroupChannel;
+    vi.advanceTimersByTime(1000);
+    const channel3 = { markAsRead: vi.fn() } as unknown as GroupChannel;
     scheduler.push(channel3);
     expect(channel3.markAsRead).toHaveBeenCalledTimes(1);
   });
@@ -51,7 +51,7 @@ describe('schedulerFactory', () => {
       timeout: 200,
       cb: () => { /* noop */ },
     });
-    const channel = { markAsRead: jest.fn() } as unknown as GroupChannel;
+    const channel = { markAsRead: vi.fn() } as unknown as GroupChannel;
     scheduler.push(channel);
     scheduler.push(channel);
     scheduler.clear();
@@ -64,11 +64,11 @@ describe('schedulerFactory', () => {
       timeout: 200,
       cb: (c) => { c.markAsRead(); },
     });
-    const channel1 = { markAsRead: jest.fn(), url: '123' } as unknown as GroupChannel;
-    const channel2 = { markAsRead: jest.fn(), url: '124' } as unknown as GroupChannel;
+    const channel1 = { markAsRead: vi.fn(), url: '123' } as unknown as GroupChannel;
+    const channel2 = { markAsRead: vi.fn(), url: '124' } as unknown as GroupChannel;
     scheduler.push(channel1);
     scheduler.push(channel2);
-    jest.advanceTimersByTime(1000);
+    vi.advanceTimersByTime(1000);
     expect(channel1.markAsRead).toHaveBeenCalledTimes(1);
     expect(channel2.markAsRead).toHaveBeenCalledTimes(1);
     expect(scheduler.getQueue().length).toBe(0);
@@ -80,14 +80,14 @@ describe('schedulerFactory', () => {
       timeout: 200,
       cb: (c) => { c.markAsRead(); },
     });
-    const channel1 = { markAsRead: jest.fn(), url: '123' } as unknown as GroupChannel;
-    const channel2 = { markAsRead: jest.fn(), url: '123' } as unknown as GroupChannel;
+    const channel1 = { markAsRead: vi.fn(), url: '123' } as unknown as GroupChannel;
+    const channel2 = { markAsRead: vi.fn(), url: '123' } as unknown as GroupChannel;
     scheduler.push(channel1);
     scheduler.push(channel2);
     expect(scheduler.getQueue().length).toBe(1);
     expect(channel1.markAsRead).toHaveBeenCalledTimes(1);
     expect(channel2.markAsRead).toHaveBeenCalledTimes(0);
-    jest.advanceTimersByTime(1000);
+    vi.advanceTimersByTime(1000);
     expect(scheduler.getQueue().length).toBe(0);
   });
 });

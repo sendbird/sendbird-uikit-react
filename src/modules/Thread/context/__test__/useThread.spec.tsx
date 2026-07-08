@@ -4,13 +4,15 @@ import useThread from '../useThread';
 import { ThreadProvider } from '../ThreadProvider';
 import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
 import { PREV_THREADS_FETCH_SIZE } from '../../consts';
+import type { SendableMessageType, CoreMessageType } from '../../../../utils';
+import type { EmojiContainer } from '@sendbird/chat';
 
-const mockApplyReactionEvent = jest.fn();
+const mockApplyReactionEvent = vi.fn();
 
 const mockChannel = {
   url: 'test-channel',
   members: [{ userId: '1', nickname: 'user1' }],
-  updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+  updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
 };
 
 const mockNewMessage = {
@@ -25,15 +27,15 @@ const mockParentMessage = {
   message: 'parent message',
   reqId: 100,
   applyReactionEvent: mockApplyReactionEvent,
-};
+} as unknown as SendableMessageType;
 
-const mockGetChannel = jest.fn().mockResolvedValue(mockChannel);
-const mockGetMessage = jest.fn().mockResolvedValue(mockParentMessage);
-const mockPubSub = { publish: jest.fn(), subscribe: jest.fn() };
+const mockGetChannel = vi.fn().mockResolvedValue(mockChannel);
+const mockGetMessage = vi.fn().mockResolvedValue(mockParentMessage);
+const mockPubSub = { publish: vi.fn(), subscribe: vi.fn() };
 
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
+  default: vi.fn(() => ({
     state: {
       stores: {
         sdkStore: {
@@ -63,7 +65,7 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
 
 describe('useThread', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('throws an error if used outside of ThreadProvider', () => {
@@ -76,13 +78,13 @@ describe('useThread', () => {
 
   it('handles sendMessageStart action correctly', async () => {
     const wrapper = ({ children }) => (
-      <ThreadProvider>{children}</ThreadProvider>
+      <ThreadProvider channelUrl="test-channel" message={null}>{children}</ThreadProvider>
     );
 
     const { result } = renderHook(() => useThread(), { wrapper });
     const { sendMessageStart } = result.current.actions;
 
-    const mockMessage = { messageId: 2, message: 'Test message', reqId: 2 };
+    const mockMessage = { messageId: 2, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
 
     await act(() => {
       sendMessageStart(mockMessage);
@@ -95,14 +97,14 @@ describe('useThread', () => {
 
   it('handles sendMessageSuccess action correctly', async () => {
     const wrapper = ({ children }) => (
-      <ThreadProvider>{children}</ThreadProvider>
+      <ThreadProvider channelUrl="test-channel" message={null}>{children}</ThreadProvider>
     );
 
     const { result } = renderHook(() => useThread(), { wrapper });
     const { sendMessageStart, sendMessageSuccess } = result.current.actions;
 
-    const mockMessage = { messageId: 2, message: 'Test message', reqId: 2 };
-    const mockMessage2 = { messageId: 3, message: 'Test message', reqId: 3 };
+    const mockMessage = { messageId: 2, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
+    const mockMessage2 = { messageId: 3, message: 'Test message', reqId: 3 } as unknown as SendableMessageType;
 
     await act(() => {
       sendMessageStart(mockMessage);
@@ -119,13 +121,13 @@ describe('useThread', () => {
 
   it('handles sendMessageFailure action correctly', async () => {
     const wrapper = ({ children }) => (
-      <ThreadProvider>{children}</ThreadProvider>
+      <ThreadProvider channelUrl="test-channel" message={null}>{children}</ThreadProvider>
     );
 
     const { result } = renderHook(() => useThread(), { wrapper });
     const { sendMessageStart, sendMessageFailure } = result.current.actions;
 
-    const mockMessage = { messageId: 2, message: 'Test message', reqId: 2 };
+    const mockMessage = { messageId: 2, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
 
     await act(() => {
       sendMessageStart(mockMessage);
@@ -139,13 +141,13 @@ describe('useThread', () => {
 
   it('handles resendMessageStart action correctly', async () => {
     const wrapper = ({ children }) => (
-      <ThreadProvider>{children}</ThreadProvider>
+      <ThreadProvider channelUrl="test-channel" message={null}>{children}</ThreadProvider>
     );
 
     const { result } = renderHook(() => useThread(), { wrapper });
     const { sendMessageStart, resendMessageStart } = result.current.actions;
 
-    const mockMessage = { messageId: 2, message: 'Test message', reqId: 2 };
+    const mockMessage = { messageId: 2, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
 
     await act(() => {
       sendMessageStart(mockMessage);
@@ -159,7 +161,7 @@ describe('useThread', () => {
 
   it('handles onMessageUpdated action correctly', async () => {
     const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel">{children}</ThreadProvider>
+      <ThreadProvider channelUrl="test-channel" message={null}>{children}</ThreadProvider>
     );
 
     let result;
@@ -175,14 +177,14 @@ describe('useThread', () => {
     const otherChannel = {
       url: 'test-channel2',
       members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
     };
     const channel = {
       url: 'test-channel',
       members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
     };
-    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2 };
+    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
 
     await act(() => {
       sendMessageStart(mockMessage);
@@ -214,14 +216,14 @@ describe('useThread', () => {
     const otherChannel = {
       url: 'test-channel2',
       members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
     };
     const channel = {
       url: 'test-channel',
       members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
     };
-    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2 };
+    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
 
     await act(() => {
       sendMessageStart(mockMessage);
@@ -253,7 +255,7 @@ describe('useThread', () => {
     });
     const { sendMessageStart, onMessageDeletedByReqId } = result.current.actions;
 
-    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2 };
+    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
 
     await act(() => {
       sendMessageStart(mockMessage);
@@ -267,7 +269,7 @@ describe('useThread', () => {
 
   it('handles initializeThreadListStart action correctly', async () => {
     const wrapper = ({ children }) => (
-      <ThreadProvider>{children}</ThreadProvider>
+      <ThreadProvider channelUrl="test-channel" message={null}>{children}</ThreadProvider>
     );
 
     const { result } = renderHook(() => useThread(), { wrapper });
@@ -331,7 +333,7 @@ describe('useThread', () => {
       getPrevMessagesStart();
       getPrevMessagesSuccess(Array(PREV_THREADS_FETCH_SIZE).map((e, i) => {
         return { messageId: i + 10, message: `meesage Id: ${i + 10}`, reqId: i + 10 };
-      }));
+      }) as unknown as CoreMessageType[]);
     });
 
     await waitFor(() => {
@@ -370,7 +372,7 @@ describe('useThread', () => {
       getNextMessagesStart();
       getNextMessagesSuccess(Array(PREV_THREADS_FETCH_SIZE).map((e, i) => {
         return { messageId: i + 10, message: `meesage Id: ${i + 10}`, reqId: i + 10 };
-      }));
+      }) as unknown as CoreMessageType[]);
     });
 
     await waitFor(() => {
@@ -413,7 +415,7 @@ describe('useThread', () => {
         url: 'test-category-url',
         emojis: [],
       }],
-    };
+    } as unknown as EmojiContainer;
 
     await act(() => {
       setEmojiContainer(emojiContainer);
@@ -442,14 +444,14 @@ describe('useThread', () => {
     const otherChannel = {
       url: 'test-channel2',
       members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
     };
     const channel = {
       url: 'test-channel',
       members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: jest.fn().mockImplementation(async () => mockNewMessage),
+      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
     };
-    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2, parentMessage: mockParentMessage };
+    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2, parentMessage: mockParentMessage } as unknown as SendableMessageType;
 
     await act(() => {
       onMessageReceived(otherChannel, mockMessage);
@@ -477,7 +479,7 @@ describe('useThread', () => {
     });
     const { sendMessageStart, sendMessageSuccess, onReactionUpdated } = result.current.actions;
 
-    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2, parentMessage: mockParentMessage };
+    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2, parentMessage: mockParentMessage } as unknown as SendableMessageType;
 
     await act(() => {
       sendMessageStart(mockMessage);
@@ -825,7 +827,7 @@ describe('useThread', () => {
     const newFileInfo = { name: 'new-file-info' };
 
     await act(() => {
-      sendMessageStart(mockMessage);
+      sendMessageStart(mockMessage as unknown as SendableMessageType);
       onFileInfoUpdated({
         channelUrl: 'test-channel',
         requestId: mockMessage.reqId,

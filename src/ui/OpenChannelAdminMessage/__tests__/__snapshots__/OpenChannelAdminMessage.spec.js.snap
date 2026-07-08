@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`OpenChannelAdminMessage should do a snapshot test of the OpenChannelAdminMessage DOM 1`] = `
+exports[`OpenChannelAdminMessage > should do a snapshot test of the OpenChannelAdminMessage DOM 1`] = `
 <DocumentFragment>
   <div
     class=" sendbird-openchannel-admin-message"

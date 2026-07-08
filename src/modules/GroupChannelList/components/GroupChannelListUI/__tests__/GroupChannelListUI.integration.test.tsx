@@ -4,6 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 import { useGroupChannelList as useGroupChannelListModule } from '../../../context/useGroupChannelList';
 import { LocalizationContext } from '../../../../../lib/LocalizationContext';
+import type { Mock } from 'vitest';
 
 const mockState = {
   stores: {
@@ -30,12 +31,12 @@ const mockState = {
     isOnline: true,
   },
 };
-jest.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState })),
-  useSendbird: jest.fn(() => ({ state: mockState })),
+  default: vi.fn(() => ({ state: mockState })),
+  useSendbird: vi.fn(() => ({ state: mockState })),
 }));
-jest.mock('../../../context/useGroupChannelList');
+vi.mock('../../../context/useGroupChannelList');
 
 const mockStringSet = {
   PLACE_HOLDER__NO_CHANNEL: 'No channels',
@@ -69,7 +70,7 @@ const defaultMockState = {
 describe('GroupChannelListUI Integration Tests', () => {
 
   const renderComponent = (mockState = {}) => {
-    const mockUseGroupChannelList = useGroupChannelListModule as jest.Mock;
+    const mockUseGroupChannelList = useGroupChannelListModule as Mock;
 
     mockUseGroupChannelList.mockReturnValue({
       state: { ...defaultMockState, ...mockState },
@@ -83,7 +84,7 @@ describe('GroupChannelListUI Integration Tests', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('display loader if not initialized', () => {
@@ -171,7 +172,7 @@ describe('GroupChannelListUI Integration Tests', () => {
   });
 
   it('handle onChannelSelect', () => {
-    const onChannelSelect = jest.fn();
+    const onChannelSelect = vi.fn();
 
     renderComponent({
       groupChannels: [

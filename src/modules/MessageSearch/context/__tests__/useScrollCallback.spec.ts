@@ -1,30 +1,31 @@
 import { renderHook, act } from '@testing-library/react';
 import useScrollCallback from '../hooks/useScrollCallback';
 import useMessageSearch from '../hooks/useMessageSearch';
+import type { Mock } from 'vitest';
 
-jest.mock('../hooks/useMessageSearch', () => ({
+vi.mock('../hooks/useMessageSearch', () => ({
   __esModule: true,
-  default: jest.fn(),
+  default: vi.fn(),
 }));
 
 describe('useScrollCallback', () => {
   const mockLogger = {
-    warning: jest.fn(),
-    info: jest.fn(),
+    warning: vi.fn(),
+    info: vi.fn(),
   };
 
-  const mockOnResultLoaded = jest.fn();
-  const mockGetNextSearchedMessages = jest.fn();
+  const mockOnResultLoaded = vi.fn();
+  const mockGetNextSearchedMessages = vi.fn();
 
   const originalNavigator = { ...navigator };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     Object.defineProperty(global, 'navigator', {
       value: { ...originalNavigator, onLine: true },
       writable: true,
     });
-    (useMessageSearch as jest.Mock).mockReturnValue({
+    (useMessageSearch as Mock).mockReturnValue({
       state: {
         currentMessageSearchQuery: null,
       },
@@ -45,7 +46,7 @@ describe('useScrollCallback', () => {
       { logger: mockLogger as any },
     ));
 
-    const callback = jest.fn();
+    const callback = vi.fn();
     result.current(callback);
 
     expect(mockLogger.warning).toHaveBeenCalledWith(
@@ -54,12 +55,12 @@ describe('useScrollCallback', () => {
   });
 
   it('should log warning when query is already loading', () => {
-    (useMessageSearch as jest.Mock).mockReturnValue({
+    (useMessageSearch as Mock).mockReturnValue({
       state: {
         currentMessageSearchQuery: {
           hasNext: true,
           isLoading: true,
-          next: jest.fn(),
+          next: vi.fn(),
         },
       },
       actions: {
@@ -72,7 +73,7 @@ describe('useScrollCallback', () => {
       { logger: mockLogger as any },
     ));
 
-    const callback = jest.fn();
+    const callback = vi.fn();
     result.current(callback);
 
     expect(mockLogger.warning).toHaveBeenCalledWith(
@@ -86,7 +87,7 @@ describe('useScrollCallback', () => {
       { logger: mockLogger as any },
     ));
 
-    const callback = jest.fn();
+    const callback = vi.fn();
     result.current(callback);
 
     expect(mockLogger.warning).toHaveBeenCalledWith(
@@ -96,9 +97,9 @@ describe('useScrollCallback', () => {
 
   it('should handle successful message search', async () => {
     const mockMessages = [{ messageId: 1 }, { messageId: 2 }];
-    const mockNext = jest.fn().mockResolvedValue(mockMessages);
+    const mockNext = vi.fn().mockResolvedValue(mockMessages);
 
-    (useMessageSearch as jest.Mock).mockReturnValue({
+    (useMessageSearch as Mock).mockReturnValue({
       state: {
         currentMessageSearchQuery: {
           hasNext: true,
@@ -116,7 +117,7 @@ describe('useScrollCallback', () => {
       { logger: mockLogger as any },
     ));
 
-    const callback = jest.fn();
+    const callback = vi.fn();
     await act(async () => {
       await result.current(callback);
     });
@@ -133,9 +134,9 @@ describe('useScrollCallback', () => {
 
   it('should handle failed message search', async () => {
     const mockError = new Error('Search failed');
-    const mockNext = jest.fn().mockRejectedValue(mockError);
+    const mockNext = vi.fn().mockRejectedValue(mockError);
 
-    (useMessageSearch as jest.Mock).mockReturnValue({
+    (useMessageSearch as Mock).mockReturnValue({
       state: {
         currentMessageSearchQuery: {
           hasNext: true,
@@ -153,7 +154,7 @@ describe('useScrollCallback', () => {
       { logger: mockLogger as any },
     ));
 
-    const callback = jest.fn();
+    const callback = vi.fn();
 
     await act(async () => {
       try {
@@ -177,9 +178,9 @@ describe('useScrollCallback', () => {
 
   it('should not call onResultLoaded if not provided', async () => {
     const mockMessages = [{ messageId: 1 }];
-    const mockNext = jest.fn().mockResolvedValue(mockMessages);
+    const mockNext = vi.fn().mockResolvedValue(mockMessages);
 
-    (useMessageSearch as jest.Mock).mockReturnValue({
+    (useMessageSearch as Mock).mockReturnValue({
       state: {
         currentMessageSearchQuery: {
           hasNext: true,
@@ -197,7 +198,7 @@ describe('useScrollCallback', () => {
       { logger: mockLogger as any },
     ));
 
-    const callback = jest.fn();
+    const callback = vi.fn();
     await act(async () => {
       await result.current(callback);
     });
@@ -208,7 +209,7 @@ describe('useScrollCallback', () => {
   });
 
   it('should not proceed with search if query has no next', () => {
-    (useMessageSearch as jest.Mock).mockReturnValue({
+    (useMessageSearch as Mock).mockReturnValue({
       state: {
         currentMessageSearchQuery: {
           hasNext: false,
@@ -225,7 +226,7 @@ describe('useScrollCallback', () => {
       { logger: mockLogger as any },
     ));
 
-    const callback = jest.fn();
+    const callback = vi.fn();
     result.current(callback);
 
     expect(mockLogger.warning).toHaveBeenCalledWith(
@@ -234,11 +235,11 @@ describe('useScrollCallback', () => {
   });
 
   it('should use latest query via ref when callback is called', () => {
-    const mockNext1 = jest.fn();
-    const mockNext2 = jest.fn().mockResolvedValue([]);
+    const mockNext1 = vi.fn();
+    const mockNext2 = vi.fn().mockResolvedValue([]);
 
     // Initial render with query1
-    (useMessageSearch as jest.Mock).mockReturnValue({
+    (useMessageSearch as Mock).mockReturnValue({
       state: {
         currentMessageSearchQuery: {
           hasNext: true,
@@ -257,7 +258,7 @@ describe('useScrollCallback', () => {
     ));
 
     // Update to query2
-    (useMessageSearch as jest.Mock).mockReturnValue({
+    (useMessageSearch as Mock).mockReturnValue({
       state: {
         currentMessageSearchQuery: {
           hasNext: true,
@@ -273,7 +274,7 @@ describe('useScrollCallback', () => {
     rerender();
 
     // Callback should use query2 (latest), not query1
-    result.current(jest.fn());
+    result.current(vi.fn());
 
     expect(mockNext1).not.toHaveBeenCalled();
     expect(mockNext2).toHaveBeenCalled();

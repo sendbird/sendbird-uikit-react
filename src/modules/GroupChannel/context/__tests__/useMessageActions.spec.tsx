@@ -1,30 +1,32 @@
 import { renderHook } from '@testing-library/react';
-import { UserMessageCreateParams, FileMessageCreateParams } from '@sendbird/chat/message';
+import { UserMessageCreateParams, FileMessageCreateParams, MultipleFilesMessageCreateParams } from '@sendbird/chat/message';
 
 import { useMessageActions } from '../hooks/useMessageActions';
 
+type MessageActionsParams = Parameters<typeof useMessageActions>[0];
+
 const mockEventHandlers = {
   message: {
-    onSendMessageFailed: jest.fn(),
-    onUpdateMessageFailed: jest.fn(),
-    onFileUploadFailed: jest.fn(),
+    onSendMessageFailed: vi.fn(),
+    onUpdateMessageFailed: vi.fn(),
+    onFileUploadFailed: vi.fn(),
   },
 };
 const mockChannel = {
   url: 'test-channel',
   members: [{ userId: '1', nickname: 'user1' }],
 };
-const mockGetChannel = jest.fn().mockResolvedValue(mockChannel);
+const mockGetChannel = vi.fn().mockResolvedValue(mockChannel);
 const mockMessageCollection = {
-  dispose: jest.fn(),
-  setMessageCollectionHandler: jest.fn(),
-  initialize: jest.fn().mockResolvedValue(null),
-  loadPrevious: jest.fn(),
-  loadNext: jest.fn(),
+  dispose: vi.fn(),
+  setMessageCollectionHandler: vi.fn(),
+  initialize: vi.fn().mockResolvedValue(null),
+  loadPrevious: vi.fn(),
+  loadNext: vi.fn(),
 };
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
+  default: vi.fn(() => ({
     state: {
       eventHandlers: mockEventHandlers,
       stores: {
@@ -32,17 +34,17 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
           sdk: {
             groupChannel: {
               getChannel: mockGetChannel,
-              addGroupChannelHandler: jest.fn(),
-              removeGroupChannelHandler: jest.fn(),
+              addGroupChannelHandler: vi.fn(),
+              removeGroupChannelHandler: vi.fn(),
             },
-            createMessageCollection: jest.fn().mockReturnValue(mockMessageCollection),
+            createMessageCollection: vi.fn().mockReturnValue(mockMessageCollection),
           },
           initialized: true,
         },
       },
       config: {
         markAsReadScheduler: {
-          push: jest.fn(),
+          push: vi.fn(),
         },
         groupChannel: {
           replyType: 'NONE',
@@ -53,8 +55,8 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
         },
         isOnline: true,
         pubSub: {
-          subscribe: () => ({ remove: jest.fn() }),
-          publish: jest.fn(),
+          subscribe: () => ({ remove: vi.fn() }),
+          publish: vi.fn(),
         },
       },
     },
@@ -63,11 +65,11 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
 
 describe('useMessageActions', () => {
   // Setup common mocks
-  const mockSendUserMessage = jest.fn();
-  const mockSendFileMessage = jest.fn();
-  const mockSendMultipleFilesMessage = jest.fn();
-  const mockUpdateUserMessage = jest.fn(async () => {});
-  const mockScrollToBottom = jest.fn();
+  const mockSendUserMessage = vi.fn();
+  const mockSendFileMessage = vi.fn();
+  const mockSendMultipleFilesMessage = vi.fn();
+  const mockUpdateUserMessage = vi.fn(async () => {});
+  const mockScrollToBottom = vi.fn();
 
   // Default params for the hook
   const defaultParams = {
@@ -79,18 +81,18 @@ describe('useMessageActions', () => {
     quoteMessage: null,
     replyType: 'NONE',
     pubSub: {
-      publish: jest.fn(),
+      publish: vi.fn(),
     },
     channel: {},
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('sendUserMessage', () => {
     it('sends basic message without quote', async () => {
-      const { result } = renderHook(() => useMessageActions(defaultParams));
+      const { result } = renderHook(() => useMessageActions(defaultParams as unknown as MessageActionsParams));
       const messageParams = { message: 'test message' };
 
       mockSendUserMessage.mockResolvedValueOnce({ messageId: 1, message: 'test message' });
@@ -110,7 +112,7 @@ describe('useMessageActions', () => {
         replyType: 'QUOTE_REPLY',
       };
 
-      const { result } = renderHook(() => useMessageActions(paramsWithQuote));
+      const { result } = renderHook(() => useMessageActions(paramsWithQuote as unknown as MessageActionsParams));
       const messageParams = { message: 'test reply' };
 
       await result.current.sendUserMessage(messageParams);
@@ -126,7 +128,7 @@ describe('useMessageActions', () => {
     });
 
     it('applies onBeforeSendUserMessage hook', async () => {
-      const onBeforeSendUserMessage = jest.fn((params) => ({
+      const onBeforeSendUserMessage = vi.fn((params) => ({
         ...params,
         message: `Modified: ${params.message}`,
       }));
@@ -136,7 +138,7 @@ describe('useMessageActions', () => {
         onBeforeSendUserMessage,
       };
 
-      const { result } = renderHook(() => useMessageActions(paramsWithHook));
+      const { result } = renderHook(() => useMessageActions(paramsWithHook as unknown as MessageActionsParams));
       const messageParams = { message: 'test message' };
 
       await result.current.sendUserMessage(messageParams);
@@ -153,7 +155,7 @@ describe('useMessageActions', () => {
 
   describe('sendFileMessage', () => {
     it('sends basic file message', async () => {
-      const { result } = renderHook(() => useMessageActions(defaultParams));
+      const { result } = renderHook(() => useMessageActions(defaultParams as unknown as MessageActionsParams));
       const file = new File(['test'], 'test.txt', { type: 'text/plain' });
       const messageParams = { file };
 
@@ -166,7 +168,7 @@ describe('useMessageActions', () => {
     });
 
     it('applies onBeforeSendFileMessage hook', async () => {
-      const onBeforeSendFileMessage = jest.fn((params) => ({
+      const onBeforeSendFileMessage = vi.fn((params) => ({
         ...params,
         fileName: 'modified.txt',
       }));
@@ -176,7 +178,7 @@ describe('useMessageActions', () => {
         onBeforeSendFileMessage,
       };
 
-      const { result } = renderHook(() => useMessageActions(paramsWithHook));
+      const { result } = renderHook(() => useMessageActions(paramsWithHook as unknown as MessageActionsParams));
       const messageParams = { file: new File(['test'], 'test.txt') };
 
       await result.current.sendFileMessage(messageParams);
@@ -191,14 +193,14 @@ describe('useMessageActions', () => {
 
   describe('sendMultipleFilesMessage', () => {
     it('sends multiple files message', async () => {
-      const { result } = renderHook(() => useMessageActions(defaultParams));
+      const { result } = renderHook(() => useMessageActions(defaultParams as unknown as MessageActionsParams));
       const files = [
         new File(['test1'], 'test1.txt'),
         new File(['test2'], 'test2.txt'),
       ];
       const messageParams = { files };
 
-      await result.current.sendMultipleFilesMessage(messageParams);
+      await result.current.sendMultipleFilesMessage(messageParams as unknown as MultipleFilesMessageCreateParams);
 
       expect(mockSendMultipleFilesMessage).toHaveBeenCalledWith(
         messageParams,
@@ -209,7 +211,7 @@ describe('useMessageActions', () => {
 
   describe('updateUserMessage', () => {
     it('updates user message', async () => {
-      const { result } = renderHook(() => useMessageActions(defaultParams));
+      const { result } = renderHook(() => useMessageActions(defaultParams as unknown as MessageActionsParams));
       const messageId = 1;
       const updateParams = { message: 'updated message' };
 
@@ -222,7 +224,7 @@ describe('useMessageActions', () => {
     });
 
     it('applies onBeforeUpdateUserMessage hook', async () => {
-      const onBeforeUpdateUserMessage = jest.fn((params) => ({
+      const onBeforeUpdateUserMessage = vi.fn((params) => ({
         ...params,
         message: `Modified: ${params.message}`,
       }));
@@ -232,7 +234,7 @@ describe('useMessageActions', () => {
         onBeforeUpdateUserMessage,
       };
 
-      const { result } = renderHook(() => useMessageActions(paramsWithHook));
+      const { result } = renderHook(() => useMessageActions(paramsWithHook as unknown as MessageActionsParams));
       const messageId = 1;
       const updateParams = { message: 'update test' };
 
@@ -250,15 +252,15 @@ describe('useMessageActions', () => {
 
   describe('processParams', () => {
     const mockParams = {
-      sendUserMessage: jest.fn(),
-      sendFileMessage: jest.fn(),
-      sendMultipleFilesMessage: jest.fn(),
-      updateUserMessage: jest.fn(),
-      scrollToBottom: jest.fn(),
+      sendUserMessage: vi.fn(),
+      sendFileMessage: vi.fn(),
+      sendMultipleFilesMessage: vi.fn(),
+      updateUserMessage: vi.fn(),
+      scrollToBottom: vi.fn(),
       replyType: 'NONE',
     };
     it('should handle successful user message', async () => {
-      const { result } = renderHook(() => useMessageActions(mockParams));
+      const { result } = renderHook(() => useMessageActions(mockParams as unknown as MessageActionsParams));
       const params: UserMessageCreateParams = { message: 'test' };
 
       await result.current.sendUserMessage(params);
@@ -270,11 +272,11 @@ describe('useMessageActions', () => {
     });
 
     it('should handle void return from onBeforeSendFileMessage', async () => {
-      const onBeforeSendFileMessage = jest.fn();
+      const onBeforeSendFileMessage = vi.fn();
       const { result } = renderHook(() => useMessageActions({
         ...mockParams,
         onBeforeSendFileMessage,
-      }),
+      } as unknown as MessageActionsParams),
       );
 
       const fileParams: FileMessageCreateParams = {
@@ -293,7 +295,7 @@ describe('useMessageActions', () => {
     it('should handle file upload error', async () => {
       // Arrange
       const error = new Error('Upload failed');
-      const onBeforeSendFileMessage = jest.fn().mockRejectedValue(error);
+      const onBeforeSendFileMessage = vi.fn().mockRejectedValue(error);
       const fileParams: FileMessageCreateParams = {
         file: new File([], 'test.txt'),
         fileName: 'test.txt',
@@ -302,7 +304,7 @@ describe('useMessageActions', () => {
       const { result } = renderHook(() => useMessageActions({
         ...mockParams,
         onBeforeSendFileMessage,
-      }),
+      } as unknown as MessageActionsParams),
       );
 
       await expect(async () => {
@@ -326,7 +328,7 @@ describe('useMessageActions', () => {
     it('should handle message update error', async () => {
       // Arrange
       const error = new Error('Update failed');
-      const onBeforeUpdateUserMessage = jest.fn().mockRejectedValue(error);
+      const onBeforeUpdateUserMessage = vi.fn().mockRejectedValue(error);
       const messageParams = {
         messageId: 1,
         message: 'update message',
@@ -335,7 +337,7 @@ describe('useMessageActions', () => {
       const { result } = renderHook(() => useMessageActions({
         ...mockParams,
         onBeforeUpdateUserMessage,
-      }),
+      } as unknown as MessageActionsParams),
       );
 
       await expect(async () => {
@@ -357,7 +359,7 @@ describe('useMessageActions', () => {
     });
 
     it('should preserve modified params from onBefore handlers', async () => {
-      const onBeforeSendUserMessage = jest.fn().mockImplementation((params) => ({
+      const onBeforeSendUserMessage = vi.fn().mockImplementation((params) => ({
         ...params,
         message: 'modified',
       }));
@@ -365,7 +367,7 @@ describe('useMessageActions', () => {
       const { result } = renderHook(() => useMessageActions({
         ...mockParams,
         onBeforeSendUserMessage,
-      }),
+      } as unknown as MessageActionsParams),
       );
 
       await result.current.sendUserMessage({ message: 'original' });

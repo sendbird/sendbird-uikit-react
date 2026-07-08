@@ -6,6 +6,7 @@ import { ApplicationUserListQuery } from '@sendbird/chat';
 import { CHANNEL_TYPE } from '../../../types';
 import * as useCreateChannelModule from '../../../context/useCreateChannel';
 import { LocalizationContext } from '../../../../../lib/LocalizationContext';
+import type { Mock } from 'vitest';
 
 const mockState = {
   stores: {
@@ -20,16 +21,16 @@ const mockState = {
   },
   config: { logger: console },
 };
-jest.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', async () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState })),
-  useSendbird: jest.fn(() => ({ state: mockState })),
+  default: vi.fn(() => ({ state: mockState })),
+  useSendbird: vi.fn(() => ({ state: mockState })),
 }));
-jest.mock('../../../context/useCreateChannel');
+vi.mock('../../../context/useCreateChannel');
 
 // Mock createPortal function to render content directly without portal
-jest.mock('react-dom', () => ({
-  ...jest.requireActual('react-dom'),
+vi.mock('react-dom', async () => ({
+  ...await vi.importActual('react-dom'),
   createPortal: (node) => node,
 }));
 
@@ -57,8 +58,8 @@ const defaultMockState = {
 };
 
 const defaultMockActions = {
-  setStep: jest.fn(),
-  setType: jest.fn(),
+  setStep: vi.fn(),
+  setType: vi.fn(),
 };
 
 const defaultMockInvitUserState = {
@@ -66,7 +67,7 @@ const defaultMockInvitUserState = {
 };
 
 describe('InviteUsers', () => {
-  const mockUseCreateChannel = useCreateChannelModule.default as jest.Mock;
+  const mockUseCreateChannel = useCreateChannelModule.default as Mock;
 
   const renderComponent = (mockState = {}, mockActions = {}, mockInviteUsersState = {}) => {
     mockUseCreateChannel.mockReturnValue({
@@ -78,20 +79,20 @@ describe('InviteUsers', () => {
 
     return render(
       <LocalizationContext.Provider value={mockLocalizationContext as any}>
-        <InviteUsers {...inviteUserProps}/>
+        <InviteUsers {...(inviteUserProps as unknown as import('../index').InviteUsersProps)}/>
       </LocalizationContext.Provider>,
     );
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should enable the modal submit button when there is only the logged-in user is in the user list', async () => {
-    const userListQuery = jest.fn(
+    const userListQuery = vi.fn(
       () => ({
         hasNext: false,
-        next: jest.fn().mockResolvedValue([{ userId: 'user1' }]),
+        next: vi.fn().mockResolvedValue([{ userId: 'user1' }]),
       } as unknown as ApplicationUserListQuery),
     );
 

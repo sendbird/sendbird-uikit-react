@@ -4,8 +4,9 @@ import '@testing-library/jest-dom/extend-expect';
 import MessageSearchUI from '../components/MessageSearchUI';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import * as useMessageSearchModule from '../context/hooks/useMessageSearch';
+import type { Mock } from 'vitest';
 
-jest.mock('../context/hooks/useMessageSearch');
+vi.mock('../context/hooks/useMessageSearch');
 
 const mockStringSet = {
   SEARCH_IN: 'Search in',
@@ -28,19 +29,19 @@ const defaultMockState = {
   loading: false,
   scrollRef: { current: null },
   hasMoreResult: false,
-  onScroll: jest.fn(),
+  onScroll: vi.fn(),
   allMessages: [],
-  onResultClick: jest.fn(),
+  onResultClick: vi.fn(),
   selectedMessageId: null,
 };
 
 const defaultMockActions = {
-  setSelectedMessageId: jest.fn(),
-  handleRetryToConnect: jest.fn(),
+  setSelectedMessageId: vi.fn(),
+  handleRetryToConnect: vi.fn(),
 };
 
 describe('MessageSearchUI Integration Tests', () => {
-  const mockUseMessageSearch = useMessageSearchModule.default as jest.Mock;
+  const mockUseMessageSearch = useMessageSearchModule.default as Mock;
 
   const renderComponent = (mockState = {}, mockActions = {}) => {
     mockUseMessageSearch.mockReturnValue({
@@ -56,7 +57,7 @@ describe('MessageSearchUI Integration Tests', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('renders initial state correctly', () => {
@@ -87,7 +88,7 @@ describe('MessageSearchUI Integration Tests', () => {
   });
 
   it('handles error state and retry', async () => {
-    const handleRetryToConnect = jest.fn();
+    const handleRetryToConnect = vi.fn();
     renderComponent(
       { isInvalid: true, searchString: 'error query', requestString: 'error query' },
       { handleRetryToConnect },
@@ -101,8 +102,8 @@ describe('MessageSearchUI Integration Tests', () => {
   });
 
   it('triggers loading more messages when scrolled near bottom', async () => {
-    const onScroll = jest.fn();
-    const loadMoreMessages = jest.fn();
+    const onScroll = vi.fn();
+    const loadMoreMessages = vi.fn();
     const { container } = renderComponent({
       allMessages: [{ messageId: 1, message: 'Message 1' }],
       hasMoreResult: true,
@@ -131,8 +132,8 @@ describe('MessageSearchUI Integration Tests', () => {
   });
 
   it('handles message click', () => {
-    const setSelectedMessageId = jest.fn();
-    const onResultClick = jest.fn();
+    const setSelectedMessageId = vi.fn();
+    const onResultClick = vi.fn();
     renderComponent(
       {
         allMessages: [{ messageId: 1, message: 'Message 1', sender: { nickname: 'Sender 1' } }],

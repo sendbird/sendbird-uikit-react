@@ -349,6 +349,6 @@ describe('arrayEqual', () => {
     const arr1 = ['elem', 2, true];
     const arr2 = {};
 
-    expect(arrayEqual(arr1, arr2)).toBe(false);
+    expect(arrayEqual(arr1, arr2 as unknown as unknown[])).toBe(false);
   });
 });

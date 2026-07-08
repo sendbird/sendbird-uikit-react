@@ -71,7 +71,7 @@ function removeUnusedCSS() {
 }
 
 function buildTypeDefinitions() {
-  execSync('tsc --project tsconfig.json --emitDeclarationOnly --declarationDir dist/types --declaration', { stdio: 'inherit' });
+  execSync('tsc --project tsconfig.build.json --emitDeclarationOnly --declarationDir dist/types --declaration', { stdio: 'inherit' });
 }
 
 /** Copy content of package.json to dist, but remove unnecessary fields */

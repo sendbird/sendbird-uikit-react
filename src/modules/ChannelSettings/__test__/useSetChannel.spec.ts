@@ -1,28 +1,32 @@
 import { renderHook, act } from '@testing-library/react';
+import type { Mock } from 'vitest';
 import useChannelSettings from '../context/useChannelSettings';
 import useSetChannel from '../context/hooks/useSetChannel';
+import type { SendbirdChatWith } from '@sendbird/chat';
+import type { GroupChannelModule } from '@sendbird/chat/groupChannel';
+import type { OpenChannelModule } from '@sendbird/chat/openChannel';
 
-jest.mock('../context/useChannelSettings');
+vi.mock('../context/useChannelSettings');
 
 const mockLogger = {
-  warning: jest.fn(),
-  info: jest.fn(),
-  error: jest.fn(),
+  warning: vi.fn(),
+  info: vi.fn(),
+  error: vi.fn(),
 };
 
-const mockSetChannel = jest.fn();
-const mockSetInvalid = jest.fn();
-const mockSetLoading = jest.fn();
+const mockSetChannel = vi.fn();
+const mockSetInvalid = vi.fn();
+const mockSetLoading = vi.fn();
 
 const mockSdk = {
   groupChannel: {
-    getChannel: jest.fn().mockResolvedValue({ name: 'Test Channel' }),
+    getChannel: vi.fn().mockResolvedValue({ name: 'Test Channel' }),
   },
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  useChannelSettings.mockReturnValue({
+  vi.clearAllMocks();
+  (useChannelSettings as unknown as Mock).mockReturnValue({
     actions: {
       setChannel: mockSetChannel,
       setInvalid: mockSetInvalid,
@@ -33,7 +37,7 @@ beforeEach(() => {
 
 describe('useSetChannel', () => {
   it('logs a warning and stops loading if channelUrl is missing', () => {
-    const { unmount } = renderHook(() => useSetChannel({ channelUrl: '', sdk: mockSdk, logger: mockLogger, initialized: true }),
+    const { unmount } = renderHook(() => useSetChannel({ channelUrl: '', sdk: mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>, logger: mockLogger, initialized: true }),
     );
 
     expect(mockLogger.warning).toHaveBeenCalledWith('ChannelSettings: channel url is required');
@@ -53,7 +57,7 @@ describe('useSetChannel', () => {
   });
 
   it('fetches channel successfully and sets it', async () => {
-    const { unmount } = renderHook(() => useSetChannel({ channelUrl: 'test-channel', sdk: mockSdk, logger: mockLogger, initialized: true }),
+    const { unmount } = renderHook(() => useSetChannel({ channelUrl: 'test-channel', sdk: mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>, logger: mockLogger, initialized: true }),
     );
 
     await act(async () => {
@@ -73,7 +77,7 @@ describe('useSetChannel', () => {
   it('logs an error if fetching the channel fails', async () => {
     mockSdk.groupChannel.getChannel.mockRejectedValue(new Error('Failed to fetch channel'));
 
-    const { unmount } = renderHook(() => useSetChannel({ channelUrl: 'test-channel', sdk: mockSdk, logger: mockLogger, initialized: true }),
+    const { unmount } = renderHook(() => useSetChannel({ channelUrl: 'test-channel', sdk: mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>, logger: mockLogger, initialized: true }),
     );
 
     await act(async () => {});

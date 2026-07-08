@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/Button should do a snapshot test of the default Button DOM 1`] = `
+exports[`ui/Button > should do a snapshot test of the default Button DOM 1`] = `
 <DocumentFragment>
   <button
     class=" sendbird-button  sendbird-button--primary sendbird-button--big"
@@ -15,7 +15,7 @@ exports[`ui/Button should do a snapshot test of the default Button DOM 1`] = `
 </DocumentFragment>
 `;
 
-exports[`ui/Button should do a snapshot test of the small Button DOM 1`] = `
+exports[`ui/Button > should do a snapshot test of the small Button DOM 1`] = `
 <DocumentFragment>
   <button
     class=" sendbird-button  sendbird-button--primary sendbird-button--small"

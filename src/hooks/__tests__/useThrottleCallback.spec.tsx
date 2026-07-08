@@ -4,11 +4,11 @@ import { useThrottleCallback } from '../useThrottleCallback';
 describe('useThrottleCallback', () => {
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('handle throttle callback correctly when leading is true', async () => {
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
 
     const { result: { current: throttleCallback } } = renderHook(() => useThrottleCallback(mockCallback, 1000, { leading: true }));
 
@@ -31,7 +31,7 @@ describe('useThrottleCallback', () => {
   });
 
   it('handle throttle callback correctly when trailing is true', async () => {
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
 
     const { result: { current: throttleCallback } } = renderHook(() => useThrottleCallback(mockCallback, 1000, { trailing: true }));
 

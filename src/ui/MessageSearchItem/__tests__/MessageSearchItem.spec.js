@@ -5,8 +5,8 @@ import getCreatedAt from '../getCreatedAt';
 import MessageSearchItem from "../index";
 import { generateNormalMessage } from '../messageDummyDate.mock';
 
-jest.useFakeTimers();
-jest.setSystemTime(new Date('January 23, 2022 17:17:52'));
+vi.useFakeTimers();
+vi.setSystemTime(new Date('January 23, 2022 17:17:52'));
 
 const stringSet = {
   DATE_FORMAT__LAST_MESSAGE_CREATED_AT__TODAY: 'p',

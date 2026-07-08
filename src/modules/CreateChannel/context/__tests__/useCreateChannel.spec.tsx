@@ -5,9 +5,9 @@ import { CreateChannelProvider } from '../CreateChannelProvider';
 import { renderHook } from '@testing-library/react';
 import useCreateChannel from '../useCreateChannel';
 
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
+  default: vi.fn(() => ({
     state: {
       stores: {
         sdkStore: {
@@ -37,7 +37,7 @@ const initialState = {
 };
 
 const wrapper = ({ children }) => (
-  <CreateChannelProvider onChannelCreated={() => jest.fn()}>
+  <CreateChannelProvider onChannelCreated={() => vi.fn()}>
     {children}
   </CreateChannelProvider>
 );
@@ -45,7 +45,7 @@ const wrapper = ({ children }) => (
 describe('useCreateChannel', () => {
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('throws an error if used outside of GroupChannelListProvider', () => {

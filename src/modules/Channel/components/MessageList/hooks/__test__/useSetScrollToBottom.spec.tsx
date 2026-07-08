@@ -3,7 +3,7 @@ import { render, fireEvent, renderHook } from '@testing-library/react';
 
 import { useSetScrollToBottom } from '../useSetScrollToBottom';
 
-jest.mock('../../../../../../hooks/useThrottleCallback', () => ({
+vi.mock('../../../../../../hooks/useThrottleCallback', () => ({
   useThrottleCallback: (callback: () => void) => callback,
 }));
 

@@ -3,12 +3,12 @@ import { useAsyncRequest } from '../useAsyncRequest';
 
 describe('useAsyncRequest', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('handle request with no response correctly', async () => {
     const mockPromise = Promise.resolve();
-    const mockRequest = jest.fn().mockReturnValue(mockPromise);
+    const mockRequest = vi.fn().mockReturnValue(mockPromise);
 
     const { result } = renderHook(() => useAsyncRequest(mockRequest));
 
@@ -22,7 +22,7 @@ describe('useAsyncRequest', () => {
   it('handle request with response correctly', async () => {
     const mockResponse = { code: 'ok' };
     const mockPromise = Promise.resolve(mockResponse);
-    const mockRequest = jest.fn().mockReturnValue(mockPromise);
+    const mockRequest = vi.fn().mockReturnValue(mockPromise);
 
     const { result } = renderHook(() => useAsyncRequest(mockRequest));
 
@@ -35,10 +35,10 @@ describe('useAsyncRequest', () => {
   });
 
   it('cancel request correctly', async () => {
-    const mockCancel = jest.fn();
+    const mockCancel = vi.fn();
     const mockRequest = { cancel: mockCancel };
 
-    const { unmount } = renderHook(() => useAsyncRequest(mockRequest));
+    const { unmount } = renderHook(() => useAsyncRequest(mockRequest as unknown as Parameters<typeof useAsyncRequest>[0]));
 
     unmount();
 

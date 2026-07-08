@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/QuoteMessageInput should do a snapshot test of the QuoteMessageInput DOM 1`] = `
+exports[`ui/QuoteMessageInput > should do a snapshot test of the QuoteMessageInput DOM 1`] = `
 <DocumentFragment>
   <div
     class="sendbird-quote_message_input "

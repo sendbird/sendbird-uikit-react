@@ -1,28 +1,28 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { MessageSearchProvider, useMessageSearchContext } from '../MessageSearchProvider';
+import { MessageSearchProvider, MessageSearchProviderProps, useMessageSearchContext } from '../MessageSearchProvider';
 import { match } from 'ts-pattern';
 
 const mockState = {
   stores: { sdkStore: {} },
   config: { logger: console, groupChannel: {} },
 };
-const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
+const mockActions = { connect: vi.fn(), disconnect: vi.fn() };
 
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState, actions: mockActions })),
-  useSendbird: jest.fn(() => ({ state: mockState, actions: mockActions })),
+  default: vi.fn(() => ({ state: mockState, actions: mockActions })),
+  useSendbird: vi.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
 const mockProps = {
   channelUrl: 'channel-1',
   searchString: 'test',
   messageSearchQuery: {},
-  onResultLoaded: jest.fn(),
-  onResultClick: jest.fn(),
+  onResultLoaded: vi.fn(),
+  onResultClick: vi.fn(),
   children: <div>Child Component</div>,
-};
+} as unknown as MessageSearchProviderProps;
 
 describe('MessageSearch Migration Compatibility Tests', () => {
   // 1. Provider Props Interface test

@@ -1,32 +1,34 @@
 import { renderHook } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
 import useGetSearchedMessages from '../hooks/useGetSearchedMessages';
 import useMessageSearch from '../hooks/useMessageSearch';
+import type { Mock } from 'vitest';
 
-jest.mock('../hooks/useMessageSearch', () => ({
+vi.mock('../hooks/useMessageSearch', () => ({
   __esModule: true,
-  default: jest.fn(),
+  default: vi.fn(),
 }));
 
 describe('useGetSearchedMessages', () => {
   const mockLogger = {
-    warning: jest.fn(),
-    info: jest.fn(),
+    warning: vi.fn(),
+    info: vi.fn(),
   };
 
-  const mockStartMessageSearch = jest.fn();
-  const mockGetSearchedMessages = jest.fn();
-  const mockSetQueryInvalid = jest.fn();
-  const mockStartGettingSearchedMessages = jest.fn();
-  const mockOnResultLoaded = jest.fn();
+  const mockStartMessageSearch = vi.fn();
+  const mockGetSearchedMessages = vi.fn();
+  const mockSetQueryInvalid = vi.fn();
+  const mockStartGettingSearchedMessages = vi.fn();
+  const mockOnResultLoaded = vi.fn();
 
   const mockSdk = {
-    createMessageSearchQuery: jest.fn(),
+    createMessageSearchQuery: vi.fn(),
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useMessageSearch as jest.Mock).mockReturnValue({
+    vi.clearAllMocks();
+    (useMessageSearch as Mock).mockReturnValue({
       state: {
         retryCount: 0,
       },
@@ -64,14 +66,14 @@ describe('useGetSearchedMessages', () => {
   it('should handle successful message search', async () => {
     const mockMessages = [{ messageId: 1 }];
     const mockQuery = {
-      next: jest.fn().mockResolvedValue(mockMessages),
+      next: vi.fn().mockResolvedValue(mockMessages),
     };
 
     mockSdk.createMessageSearchQuery.mockReturnValue(mockQuery);
 
     const mockChannel = {
       url: 'channel-url',
-      refresh: jest.fn().mockResolvedValue({
+      refresh: vi.fn().mockResolvedValue({
         invitedAt: 1234567890,
       }),
     };
@@ -106,7 +108,7 @@ describe('useGetSearchedMessages', () => {
     const mockError = new Error('Channel refresh failed');
     const mockChannel = {
       url: 'channel-url',
-      refresh: jest.fn().mockRejectedValue(mockError),
+      refresh: vi.fn().mockRejectedValue(mockError),
     };
 
     renderHook(
@@ -140,14 +142,14 @@ describe('useGetSearchedMessages', () => {
   it('should handle message search failure', async () => {
     const mockError = new Error('Search failed');
     const mockQuery = {
-      next: jest.fn().mockRejectedValue(mockError),
+      next: vi.fn().mockRejectedValue(mockError),
     };
 
     mockSdk.createMessageSearchQuery.mockReturnValue(mockQuery);
 
     const mockChannel = {
       url: 'channel-url',
-      refresh: jest.fn().mockResolvedValue({
+      refresh: vi.fn().mockResolvedValue({
         invitedAt: 1234567890,
       }),
     };
@@ -185,14 +187,14 @@ describe('useGetSearchedMessages', () => {
   it('should use custom messageSearchQuery params when provided', async () => {
     const mockMessages = [{ messageId: 1 }];
     const mockQuery = {
-      next: jest.fn().mockResolvedValue(mockMessages),
+      next: vi.fn().mockResolvedValue(mockMessages),
     };
 
     mockSdk.createMessageSearchQuery.mockReturnValue(mockQuery);
 
     const mockChannel = {
       url: 'channel-url',
-      refresh: jest.fn().mockResolvedValue({
+      refresh: vi.fn().mockResolvedValue({
         invitedAt: 1234567890,
       }),
     };
@@ -209,7 +211,7 @@ describe('useGetSearchedMessages', () => {
           currentChannel: mockChannel as unknown as GroupChannel,
           channelUrl: 'channel-url',
           requestString: 'search-term',
-          messageSearchQuery: customSearchQuery,
+          messageSearchQuery: customSearchQuery as unknown as MessageSearchQueryParams,
           onResultLoaded: mockOnResultLoaded,
         },
         {
@@ -250,14 +252,14 @@ describe('useGetSearchedMessages', () => {
   it('should handle retry mechanism when retryCount changes', async () => {
     const mockMessages = [{ messageId: 1 }];
     const mockQuery = {
-      next: jest.fn().mockResolvedValue(mockMessages),
+      next: vi.fn().mockResolvedValue(mockMessages),
     };
 
     mockSdk.createMessageSearchQuery.mockReturnValue(mockQuery);
 
     const mockChannel = {
       url: 'channel-url',
-      refresh: jest.fn().mockResolvedValue({
+      refresh: vi.fn().mockResolvedValue({
         invitedAt: 1234567890,
       }),
     };
@@ -278,7 +280,7 @@ describe('useGetSearchedMessages', () => {
     );
 
     // Simulate retry by changing retryCount
-    (useMessageSearch as jest.Mock).mockReturnValue({
+    (useMessageSearch as Mock).mockReturnValue({
       state: {
         retryCount: 1,
       },

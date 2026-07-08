@@ -114,7 +114,17 @@ export default {
       tsconfigOverride: {
         compilerOptions:{
           declaration: false,
-        }
+        },
+        // tsconfig.json includes tests (for editor type-checking + `yarn typecheck`);
+        // keep the build limited to shippable source by excluding tests + Vitest setup.
+        exclude: [
+          'vitest-setup.ts',
+          '**/__tests__/**',
+          '**/__test__/**',
+          '**/*.test.*',
+          '**/*.spec.*',
+          '**/*.stories.*',
+        ],
       }
     }),
     svgr(),

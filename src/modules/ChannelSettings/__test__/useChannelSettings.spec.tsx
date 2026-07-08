@@ -6,9 +6,9 @@ import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
 describe('useChannelSettings', () => {
   const mockStore = {
-    getState: jest.fn(),
-    setState: jest.fn(),
-    subscribe: jest.fn(() => jest.fn()),
+    getState: vi.fn(),
+    setState: vi.fn(),
+    subscribe: vi.fn(() => vi.fn()),
   };
 
   const mockChannel: GroupChannel = {
@@ -23,7 +23,7 @@ describe('useChannelSettings', () => {
   );
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('throws an error if used outside of ChannelSettingsProvider', () => {

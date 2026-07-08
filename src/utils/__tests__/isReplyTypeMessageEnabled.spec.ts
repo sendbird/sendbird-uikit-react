@@ -1,6 +1,7 @@
 import { Role } from '../../lib/Sendbird/types';
 import { isFailedMessage, isPendingMessage } from '..';
 import { isReplyTypeMessageEnabled } from '../menuConditions';
+import type { Mock } from 'vitest';
 
 // Legacy conditions
 // const isReplyTypeMessageEnabled = ({ message, channel }) => (
@@ -14,9 +15,9 @@ import { isReplyTypeMessageEnabled } from '../menuConditions';
 //     ))
 // );
 
-jest.mock('..', () => ({
-  isFailedMessage: jest.fn(),
-  isPendingMessage: jest.fn(),
+vi.mock('..', () => ({
+  isFailedMessage: vi.fn(),
+  isPendingMessage: vi.fn(),
 }));
 
 interface Channel {
@@ -34,7 +35,7 @@ describe('isReplyTypeMessageEnabled', () => {
 
   beforeEach(() => {
     channel = {
-      isGroupChannel: jest.fn(),
+      isGroupChannel: vi.fn(),
       isEphemeral: false,
       isBroadcast: false,
       myRole: Role.NONE,
@@ -43,56 +44,56 @@ describe('isReplyTypeMessageEnabled', () => {
   });
 
   it('returns false if the message is a failed message', () => {
-    (isFailedMessage as jest.Mock).mockReturnValue(true);
-    (isPendingMessage as jest.Mock).mockReturnValue(false);
+    (isFailedMessage as Mock).mockReturnValue(true);
+    (isPendingMessage as Mock).mockReturnValue(false);
     expect(isReplyTypeMessageEnabled({ channel, message })).toBe(false);
   });
 
   it('returns false if the message is a pending message', () => {
-    (isFailedMessage as jest.Mock).mockReturnValue(false);
-    (isPendingMessage as jest.Mock).mockReturnValue(true);
+    (isFailedMessage as Mock).mockReturnValue(false);
+    (isPendingMessage as Mock).mockReturnValue(true);
     expect(isReplyTypeMessageEnabled({ channel, message })).toBe(false);
   });
 
   it('returns false if the channel is not a group channel', () => {
-    (channel.isGroupChannel as jest.Mock).mockReturnValue(false);
-    (isFailedMessage as jest.Mock).mockReturnValue(false);
-    (isPendingMessage as jest.Mock).mockReturnValue(false);
+    (channel.isGroupChannel as Mock).mockReturnValue(false);
+    (isFailedMessage as Mock).mockReturnValue(false);
+    (isPendingMessage as Mock).mockReturnValue(false);
     expect(isReplyTypeMessageEnabled({ channel, message })).toBe(false);
   });
 
   it('returns false if the channel is ephemeral', () => {
-    (channel.isGroupChannel as jest.Mock).mockReturnValue(true);
+    (channel.isGroupChannel as Mock).mockReturnValue(true);
     channel.isEphemeral = true;
-    (isFailedMessage as jest.Mock).mockReturnValue(false);
-    (isPendingMessage as jest.Mock).mockReturnValue(false);
+    (isFailedMessage as Mock).mockReturnValue(false);
+    (isPendingMessage as Mock).mockReturnValue(false);
     expect(isReplyTypeMessageEnabled({ channel, message })).toBe(false);
   });
 
   it('returns false if the channel is a broadcast and user is not an operator', () => {
-    (channel.isGroupChannel as jest.Mock).mockReturnValue(true);
+    (channel.isGroupChannel as Mock).mockReturnValue(true);
     channel.isBroadcast = true;
     channel.myRole = Role.NONE;
-    (isFailedMessage as jest.Mock).mockReturnValue(false);
-    (isPendingMessage as jest.Mock).mockReturnValue(false);
+    (isFailedMessage as Mock).mockReturnValue(false);
+    (isPendingMessage as Mock).mockReturnValue(false);
     expect(isReplyTypeMessageEnabled({ channel, message })).toBe(false);
   });
 
   it('returns true if the channel is a broadcast and user is an operator', () => {
-    (channel.isGroupChannel as jest.Mock).mockReturnValue(true);
+    (channel.isGroupChannel as Mock).mockReturnValue(true);
     channel.isBroadcast = true;
     channel.myRole = Role.OPERATOR;
-    (isFailedMessage as jest.Mock).mockReturnValue(false);
-    (isPendingMessage as jest.Mock).mockReturnValue(false);
+    (isFailedMessage as Mock).mockReturnValue(false);
+    (isPendingMessage as Mock).mockReturnValue(false);
     expect(isReplyTypeMessageEnabled({ channel, message })).toBe(true);
   });
 
   it('returns true if the channel is not a broadcast', () => {
-    (channel.isGroupChannel as jest.Mock).mockReturnValue(true);
+    (channel.isGroupChannel as Mock).mockReturnValue(true);
     channel.isBroadcast = false;
     channel.myRole = Role.NONE;
-    (isFailedMessage as jest.Mock).mockReturnValue(false);
-    (isPendingMessage as jest.Mock).mockReturnValue(false);
+    (isFailedMessage as Mock).mockReturnValue(false);
+    (isPendingMessage as Mock).mockReturnValue(false);
     expect(isReplyTypeMessageEnabled({ channel, message })).toBe(true);
   });
 });

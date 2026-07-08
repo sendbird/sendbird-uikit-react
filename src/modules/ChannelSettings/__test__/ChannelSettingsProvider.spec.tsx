@@ -2,21 +2,22 @@ import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import { ChannelSettingsProvider, useChannelSettingsContext } from '../context/ChannelSettingsProvider';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
+import type { Mock } from 'vitest';
 import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
 
-jest.mock('../../../lib/Sendbird/context/hooks/useSendbird');
-jest.mock('../context/hooks/useSetChannel');
+vi.mock('../../../lib/Sendbird/context/hooks/useSendbird');
+vi.mock('../context/hooks/useSetChannel');
 
 const mockLogger = {
-  warning: jest.fn(),
-  info: jest.fn(),
-  error: jest.fn(),
+  warning: vi.fn(),
+  info: vi.fn(),
+  error: vi.fn(),
 };
 
 const mockStore = {
-  getState: jest.fn(),
-  setState: jest.fn(),
-  subscribe: jest.fn(() => jest.fn()),
+  getState: vi.fn(),
+  setState: vi.fn(),
+  subscribe: vi.fn(() => vi.fn()),
 };
 
 const initialState = {
@@ -31,7 +32,7 @@ describe('ChannelSettingsProvider', () => {
 
   beforeEach(() => {
     mockStore.getState.mockReturnValue(initialState);
-    useSendbird.mockReturnValue({
+    (useSendbird as unknown as Mock).mockReturnValue({
       state: {
         stores: { sdkStore: { sdk: {}, initialized: true } },
         config: { logger: mockLogger },
@@ -46,7 +47,7 @@ describe('ChannelSettingsProvider', () => {
       </SendbirdContext.Provider>
     );
 
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('provides the correct initial state and actions', () => {
@@ -59,7 +60,7 @@ describe('ChannelSettingsProvider', () => {
   });
 
   it('logs a warning if SDK is not initialized', () => {
-    useSendbird.mockReturnValue({
+    (useSendbird as unknown as Mock).mockReturnValue({
       state: {
         stores: { sdkStore: { sdk: null, initialized: false } },
         config: { logger: mockLogger },

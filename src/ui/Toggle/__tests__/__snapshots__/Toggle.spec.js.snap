@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Toggle should do a snapshot test of the Toggle DOM 1`] = `
+exports[`Toggle > should do a snapshot test of the Toggle DOM 1`] = `
 <DocumentFragment>
   <div
     class="sendbird-ui-toggle undefined"
@@ -26,7 +26,7 @@ exports[`Toggle should do a snapshot test of the Toggle DOM 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Toggle should do a snapshot test of the Toggle DOM with props 1`] = `
+exports[`Toggle > should do a snapshot test of the Toggle DOM with props 1`] = `
 <DocumentFragment>
   <div
     class="sendbird-ui-toggle mock-class-name"

@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import { useLocalization } from '../../lib/LocalizationContext';
 import Modal from '../../ui/Modal';
@@ -53,10 +53,26 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
     logger.error('VoiceRecorder: Browser does not support mimeType', { mimmeTypes: BROWSER_SUPPORT_MIME_TYPE_LIST });
   }
 
+  // Async callbacks (getUserMedia / permissions.query / recorder events) can resolve after unmount;
+  // guard their setState with this ref.
+  const isMountedRef = useRef(true);
   useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
     if (isVoiceMessageEnabled && !webAudioUtils) {
-      import('./WebAudioUtils').then((module) => setWebAudioUtils(module));
+      import('./WebAudioUtils').then((module) => {
+        if (mounted) setWebAudioUtils(module);
+      });
     }
+    return () => {
+      mounted = false;
+    };
   }, [isVoiceMessageEnabled, webAudioUtils]);
 
   const start = useCallback((eventHandler?: VoiceRecorderEventHandler): void => {
@@ -74,7 +90,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
         navigator.permissions.query({ name: 'microphone' }).then((result) => {
           if (result.state === 'denied') {
             logger.warning('VoiceRecorder: Permission denied.');
-            setPermissionWarning(true);
+            if (isMountedRef.current) setPermissionWarning(true);
           }
         });
       } catch (error) {
@@ -91,6 +107,11 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
     navigator?.mediaDevices?.getUserMedia?.({ audio: true })
       .then((stream) => {
         logger.info('VoiceRecorder: Succeeded getting media stream.', stream);
+        if (!isMountedRef.current) {
+          // Unmounted while acquiring the mic: release it and abort instead of setting state.
+          stream.getAudioTracks().forEach((track) => track.stop());
+          return;
+        }
         setIsRecordable(true);
         const mediaRecorder = new MediaRecorder(stream, {
           mimeType: browserSupportMimeType,
@@ -115,7 +136,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
           });
           const tracks = stream.getAudioTracks();
           tracks.forEach((track) => track.stop());
-          setIsRecordable(false);
+          if (isMountedRef.current) setIsRecordable(false);
         };
         mediaRecorder.onstart = eventHandler?.onRecordingStarted ?? noop;
         mediaRecorder?.start();
@@ -123,7 +144,7 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
       })
       .catch((err) => {
         logger.error('VoiceRecorder: Failed getting media stream.', err);
-        setMediaRecorder(null);
+        if (isMountedRef.current) setMediaRecorder(null);
       });
   }, [mediaRecorder, webAudioUtils]);
 

@@ -24,8 +24,8 @@ describe('useMarkAsReadScheduler', () => {
         },
       },
     );
-    const channel1 = { markAsRead: jest.fn(), url: '1' } as unknown as GroupChannel;
-    const channel2 = { markAsRead: jest.fn(), url: '2' } as unknown as GroupChannel;
+    const channel1 = { markAsRead: vi.fn(), url: '1' } as unknown as GroupChannel;
+    const channel2 = { markAsRead: vi.fn(), url: '2' } as unknown as GroupChannel;
     result.current.push(channel1);
     result.current.push(channel2);
     expect(result.current.getQueue().length).toBe(1);

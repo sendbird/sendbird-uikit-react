@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import type { Mock } from 'vitest';
 import { SendbirdContextProvider } from '../context/SendbirdProvider';
 import useSendbird from '../context/hooks/useSendbird';
 
@@ -7,29 +8,29 @@ const mockState = {
   stores: { sdkStore: { initialized: false } },
   config: { logger: console, groupChannel: { enableVoiceMessage: false } },
 };
-const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
+const mockActions = { connect: vi.fn(), disconnect: vi.fn() };
 
-jest.mock('../context/hooks/useSendbird', () => ({
+vi.mock('../context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState, actions: mockActions })),
-  useSendbird: jest.fn(() => ({ state: mockState, actions: mockActions })),
+  default: vi.fn(() => ({ state: mockState, actions: mockActions })),
+  useSendbird: vi.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
 describe('SendbirdProvider', () => {
   beforeEach(() => {
     // Reset mock functions before each test
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     // Mock MediaRecorder.isTypeSupported
     global.MediaRecorder = {
-      isTypeSupported: jest.fn((type) => {
+      isTypeSupported: vi.fn((type) => {
         const supportedMimeTypes = ['audio/webm', 'audio/wav'];
         return supportedMimeTypes.includes(type);
       }),
-    };
+    } as unknown as typeof MediaRecorder;
 
     // Mock useSendbird return value
-    useSendbird.mockReturnValue({
+    (useSendbird as unknown as Mock).mockReturnValue({
       state: mockState,
       actions: mockActions,
     });

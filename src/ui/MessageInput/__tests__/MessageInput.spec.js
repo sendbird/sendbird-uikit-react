@@ -9,14 +9,14 @@ import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 const noop = () => {};
 
 // to mock useSendbirdStateContext
-jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../lib/Sendbird/context/hooks/useSendbird', async () => ({
   __esModule: true,
-  default: jest.fn(),
-  useSendbird: jest.fn(),
+  default: vi.fn(),
+  useSendbird: vi.fn(),
 }));
-jest.mock('../../../lib/LocalizationContext', () => ({
-  ...jest.requireActual('../../../lib/LocalizationContext'),
-  useLocalization: jest.fn(),
+vi.mock('../../../lib/LocalizationContext', async () => ({
+  ...await vi.importActual('../../../lib/LocalizationContext'),
+  useLocalization: vi.fn(),
 }));
 
 describe('ui/MessageInput', () => {
@@ -160,7 +160,7 @@ describe('ui/MessageInput', () => {
   });
 
   it('should call sendMessage with valid string', async () => {
-    const onSendMessage = jest.fn();
+    const onSendMessage = vi.fn();
     const textRef = { current: { innerText: null } };
     const mockText = 'Test Value';
 
@@ -176,7 +176,7 @@ describe('ui/MessageInput', () => {
   });
 
   it('should call sendMessage with valid string; new lines included', async () => {
-    const onSendMessage = jest.fn();
+    const onSendMessage = vi.fn();
     const textRef = { current: { innerText: null } };
     const mockText = '        \nTest Value     \n';
 
@@ -191,7 +191,7 @@ describe('ui/MessageInput', () => {
   });
 
   it('should not call sendMessage with invalid string; only white spaces', async() => {
-    const onSendMessage = jest.fn();
+    const onSendMessage = vi.fn();
     const textRef = { current: { innerText: null } };
     const mockText = '    ';
 
@@ -206,7 +206,7 @@ describe('ui/MessageInput', () => {
   });
 
   it('should not call sendMessage with only zero-width spaces', () => {
-    const onSendMessage = jest.fn();
+    const onSendMessage = vi.fn();
     render(<MessageInput onSendMessage={onSendMessage} />);
 
     const input = screen.getByRole('textbox');
@@ -219,7 +219,7 @@ describe('ui/MessageInput', () => {
   });
   
   it('should render send icon if text is present', async() => {
-    const onSendMessage = jest.fn();
+    const onSendMessage = vi.fn();
     const textRef = { current: { innerText: null } };
     const mockText = 'hello';
 
@@ -262,8 +262,8 @@ describe('ui/MessageInput', () => {
 
   describe('typing indicator callbacks', () => {
     it('should call onStartTyping when input has text', () => {
-      const onStartTyping = jest.fn();
-      const onStopTyping = jest.fn();
+      const onStartTyping = vi.fn();
+      const onStopTyping = vi.fn();
       render(<MessageInput onSendMessage={noop} onStartTyping={onStartTyping} onStopTyping={onStopTyping} />);
 
       const input = screen.getByRole('textbox');
@@ -275,8 +275,8 @@ describe('ui/MessageInput', () => {
     });
 
     it('should call onStopTyping when input becomes empty after typing', () => {
-      const onStartTyping = jest.fn();
-      const onStopTyping = jest.fn();
+      const onStartTyping = vi.fn();
+      const onStopTyping = vi.fn();
       render(<MessageInput onSendMessage={noop} onStartTyping={onStartTyping} onStopTyping={onStopTyping} />);
 
       const input = screen.getByRole('textbox');
@@ -290,8 +290,8 @@ describe('ui/MessageInput', () => {
     });
 
     it('should not call onStopTyping when input is empty without prior typing', () => {
-      const onStartTyping = jest.fn();
-      const onStopTyping = jest.fn();
+      const onStartTyping = vi.fn();
+      const onStopTyping = vi.fn();
       render(<MessageInput onSendMessage={noop} onStartTyping={onStartTyping} onStopTyping={onStopTyping} />);
 
       const input = screen.getByRole('textbox');
@@ -304,8 +304,8 @@ describe('ui/MessageInput', () => {
     });
 
     it('should call onStopTyping only once when backspacing repeatedly on empty input', () => {
-      const onStartTyping = jest.fn();
-      const onStopTyping = jest.fn();
+      const onStartTyping = vi.fn();
+      const onStopTyping = vi.fn();
       render(<MessageInput onSendMessage={noop} onStartTyping={onStartTyping} onStopTyping={onStopTyping} />);
 
       const input = screen.getByRole('textbox');
@@ -320,8 +320,8 @@ describe('ui/MessageInput', () => {
     });
 
     it('should call onStopTyping when input becomes whitespace-only after typing', () => {
-      const onStartTyping = jest.fn();
-      const onStopTyping = jest.fn();
+      const onStartTyping = vi.fn();
+      const onStopTyping = vi.fn();
       render(<MessageInput onSendMessage={noop} onStartTyping={onStartTyping} onStopTyping={onStopTyping} />);
 
       const input = screen.getByRole('textbox');
@@ -334,8 +334,8 @@ describe('ui/MessageInput', () => {
     });
 
     it('should not call onStartTyping when input contains only whitespace', () => {
-      const onStartTyping = jest.fn();
-      const onStopTyping = jest.fn();
+      const onStartTyping = vi.fn();
+      const onStopTyping = vi.fn();
       render(<MessageInput onSendMessage={noop} onStartTyping={onStartTyping} onStopTyping={onStopTyping} />);
 
       const input = screen.getByRole('textbox');
@@ -359,9 +359,9 @@ describe('MessageInput error handling', () => {
         },
         eventHandlers: {
           message: {
-            onSendMessageFailed: jest.fn(),
-            onUpdateMessageFailed: jest.fn(),
-            onFileUploadFailed: jest.fn(),
+            onSendMessageFailed: vi.fn(),
+            onUpdateMessageFailed: vi.fn(),
+            onFileUploadFailed: vi.fn(),
           },
         },
       }
@@ -379,7 +379,7 @@ describe('MessageInput error handling', () => {
 
   it('should call onSendMessageFailed when sendMessage throws an error by onKeyDown event', async () => {
     const mockErrorMessage = 'Send message failed';
-    const onSendMessage = jest.fn(() => {
+    const onSendMessage = vi.fn(() => {
       throw new Error(mockErrorMessage);
     });
     const { state: { eventHandlers } } = useSendbird();
@@ -399,7 +399,7 @@ describe('MessageInput error handling', () => {
 
   it('should call onSendMessageFailed when sendMessage throws an error by onClick event', async () => {
     const mockErrorMessage = 'Send message failed';
-    const onSendMessage = jest.fn(() => {
+    const onSendMessage = vi.fn(() => {
       throw new Error(mockErrorMessage);
     });
     const { state: { eventHandlers } } = useSendbird();
@@ -420,7 +420,7 @@ describe('MessageInput error handling', () => {
 
   it('should call onUpdateMessageFailed when editMessage throws an error', async () => {
     const mockErrorMessage = 'Update message failed';
-    const onUpdateMessage = jest.fn(() => {
+    const onUpdateMessage = vi.fn(() => {
       throw new Error(mockErrorMessage);
     });
     const { state: { eventHandlers } } = useSendbird();
@@ -450,7 +450,7 @@ describe('MessageInput error handling', () => {
 
   it('should call onFileUploadFailed when file upload throws an error', async () => {
     const mockErrorMessage = 'File upload failed';
-    const onFileUpload = jest.fn(() => {
+    const onFileUpload = vi.fn(() => {
       throw new Error(mockErrorMessage);
     });
     const { state: { eventHandlers } } = useSendbird();
@@ -493,7 +493,7 @@ describe('MessageInput sendMessage (CLNP-6501)', () => {
   // intentionally do NOT sanitize at send time. Display-side rendering escapes angle
   // brackets via React JSX. These tests pin the raw passthrough behavior.
   it('should keep message field raw on send (display layer escapes)', () => {
-    const onSendMessage = jest.fn();
+    const onSendMessage = vi.fn();
 
     render(<MessageInput onSendMessage={onSendMessage} />);
 
@@ -511,7 +511,7 @@ describe('MessageInput sendMessage (CLNP-6501)', () => {
   });
 
   it('should keep XSS-like payload raw in message field on send (display layer escapes)', () => {
-    const onSendMessage = jest.fn();
+    const onSendMessage = vi.fn();
 
     render(<MessageInput onSendMessage={onSendMessage} />);
 
@@ -555,7 +555,7 @@ describe('MessageInput editMessage sanitization (CLNP-6501)', () => {
   };
 
   it('should keep message raw and sanitize mentionTemplate when editing without mentions', () => {
-    const onUpdateMessage = jest.fn();
+    const onUpdateMessage = vi.fn();
     const messageId = 123;
 
     render(
@@ -585,7 +585,7 @@ describe('MessageInput editMessage sanitization (CLNP-6501)', () => {
   it('should sanitize XSS payload in mentionTemplate even when isMentionedMessage is false', () => {
     // Reviewer-reported scenario: original message had a mention, user removes
     // the mention leaving only a raw HTML payload.
-    const onUpdateMessage = jest.fn();
+    const onUpdateMessage = vi.fn();
     const messageId = 456;
 
     render(
@@ -615,7 +615,7 @@ describe('MessageInput editMessage sanitization (CLNP-6501)', () => {
   });
 
   it('should return an empty mentionedUserIds array when isMentionEnabled is false', () => {
-    const onUpdateMessage = jest.fn();
+    const onUpdateMessage = vi.fn();
     const messageId = 789;
 
     render(

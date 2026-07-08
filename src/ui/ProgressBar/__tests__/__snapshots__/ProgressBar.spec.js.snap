@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/ProgressBar should do a snapshot test of the PlaceHolder DOM 1`] = `
+exports[`ui/ProgressBar > should do a snapshot test of the PlaceHolder DOM 1`] = `
 <DocumentFragment>
   <div
     class="sendbird-progress-bar example-text progress-bar-color--primary"

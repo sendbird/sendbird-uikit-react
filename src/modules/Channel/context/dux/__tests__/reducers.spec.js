@@ -9,9 +9,9 @@ import initialState from '../initialState';
 import { uuidv4 } from '../../../../../utils/uuid';
 import { useLocalization } from '../../../../../lib/LocalizationContext';
 
-jest.mock('../../../../../lib/LocalizationContext', () => ({
-  ...jest.requireActual('../../../../../lib/LocalizationContext'),
-  useLocalization: jest.fn(),
+vi.mock('../../../../../lib/LocalizationContext', async () => ({
+  ...await vi.importActual('../../../../../lib/LocalizationContext'),
+  useLocalization: vi.fn(),
 }));
 
 const getLastMessageOf = (messageList) => messageList[messageList.length - 1];
@@ -23,7 +23,7 @@ describe('Messages-Reducers', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     useLocalization.mockReturnValue({
       stringSet: {
         DATE_FORMAT__UNREAD_SINCE: 'p MMM dd',

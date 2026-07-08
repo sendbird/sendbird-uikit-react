@@ -1,30 +1,31 @@
 import { renderHook } from '@testing-library/react';
 import useSetChannel from '../hooks/useSetChannel';
 import useMessageSearch from '../hooks/useMessageSearch';
+import type { Mock } from 'vitest';
 
-jest.mock('../hooks/useMessageSearch', () => ({
+vi.mock('../hooks/useMessageSearch', () => ({
   __esModule: true,
-  default: jest.fn(),
+  default: vi.fn(),
 }));
 
 describe('useSetChannel', () => {
   const mockLogger = {
-    info: jest.fn(),
-    warning: jest.fn(),
+    info: vi.fn(),
+    warning: vi.fn(),
   };
 
-  const mockSetCurrentChannel = jest.fn();
-  const mockSetChannelInvalid = jest.fn();
+  const mockSetCurrentChannel = vi.fn();
+  const mockSetChannelInvalid = vi.fn();
 
   const mockSdk = {
     groupChannel: {
-      getChannel: jest.fn(),
+      getChannel: vi.fn(),
     },
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useMessageSearch as jest.Mock).mockReturnValue({
+    vi.clearAllMocks();
+    (useMessageSearch as Mock).mockReturnValue({
       actions: {
         setCurrentChannel: mockSetCurrentChannel,
         setChannelInvalid: mockSetChannelInvalid,

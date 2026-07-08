@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/MessageStatus should do a snapshot test of the MessageStatus DOM 1`] = `
+exports[`ui/MessageStatus > should do a snapshot test of the MessageStatus DOM 1`] = `
 <DocumentFragment>
   <div
     class="example-text sendbird-message-status"
@@ -24,7 +24,7 @@ exports[`ui/MessageStatus should do a snapshot test of the MessageStatus DOM 1`]
 </DocumentFragment>
 `;
 
-exports[`ui/MessageStatus should do a snapshot test of the failed MessageStatus DOM when isResendable: false 1`] = `
+exports[`ui/MessageStatus > should do a snapshot test of the failed MessageStatus DOM when isResendable: false 1`] = `
 <DocumentFragment>
   <div
     class="example-text sendbird-message-status"
@@ -42,7 +42,7 @@ exports[`ui/MessageStatus should do a snapshot test of the failed MessageStatus 
 </DocumentFragment>
 `;
 
-exports[`ui/MessageStatus should do a snapshot test of the failed MessageStatus DOM when isResendable: true 1`] = `
+exports[`ui/MessageStatus > should do a snapshot test of the failed MessageStatus DOM when isResendable: true 1`] = `
 <DocumentFragment>
   <div
     class="example-text sendbird-message-status"

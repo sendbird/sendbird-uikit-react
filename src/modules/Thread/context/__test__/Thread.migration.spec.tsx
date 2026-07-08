@@ -30,37 +30,37 @@ const mockState = {
     isOnline: true,
   },
 };
-const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
+const mockActions = { connect: vi.fn(), disconnect: vi.fn() };
 
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState, actions: mockActions })),
-  useSendbird: jest.fn(() => ({ state: mockState, actions: mockActions })),
+  default: vi.fn(() => ({ state: mockState, actions: mockActions })),
+  useSendbird: vi.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
-jest.mock('../hooks/useThreadFetchers', () => ({
-  useThreadFetchers: jest.fn().mockReturnValue({
-    initializeThreadFetcher: jest.fn(),
-    fetchPrevThreads: jest.fn(),
-    fetchNextThreads: jest.fn(),
+vi.mock('../hooks/useThreadFetchers', () => ({
+  useThreadFetchers: vi.fn().mockReturnValue({
+    initializeThreadFetcher: vi.fn(),
+    fetchPrevThreads: vi.fn(),
+    fetchNextThreads: vi.fn(),
   }),
 }));
 
 const mockProps: ThreadProviderProps = {
   disableUserProfile: true,
-  renderUserProfile: jest.fn(),
+  renderUserProfile: vi.fn(),
   children: <div>test children</div>,
   channelUrl: 'test-channel-url',
   message: { messageId: 42, message: 'test message' } as SendableMessageType,
-  onHeaderActionClick: jest.fn(),
-  onMoveToParentMessage: jest.fn(),
-  onBeforeSendUserMessage: jest.fn(),
-  onBeforeSendFileMessage: jest.fn(),
-  onBeforeSendVoiceMessage: jest.fn(),
-  onBeforeSendMultipleFilesMessage: jest.fn(),
-  onBeforeDownloadFileMessage: jest.fn(),
+  onHeaderActionClick: vi.fn(),
+  onMoveToParentMessage: vi.fn(),
+  onBeforeSendUserMessage: vi.fn(),
+  onBeforeSendFileMessage: vi.fn(),
+  onBeforeSendVoiceMessage: vi.fn(),
+  onBeforeSendMultipleFilesMessage: vi.fn(),
+  onBeforeDownloadFileMessage: vi.fn(),
   isMultipleFilesMessageEnabled: true,
-  filterEmojiCategoryIds: jest.fn(),
+  filterEmojiCategoryIds: vi.fn(),
 };
 
 describe('CreateChannel Migration Compatibility Tests', () => {

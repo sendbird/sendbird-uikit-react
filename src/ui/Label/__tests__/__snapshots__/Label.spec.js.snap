@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/Label should create a snapshot of a default label component 1`] = `
+exports[`ui/Label > should create a snapshot of a default label component 1`] = `
 <DocumentFragment>
   <span
     class="sendbird-label sendbird-label--h-1 sendbird-label--color-onbackground-1"

@@ -5,9 +5,9 @@ import useResendMessageCallback from '../hooks/useResendMessageCallback';
 import { SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { SendableMessageType } from '../../../../utils';
 
-const mockSetEmojiContainer = jest.fn();
+const mockSetEmojiContainer = vi.fn();
 
-jest.mock('../useThread', () => ({
+vi.mock('../useThread', () => ({
   __esModule: true,
   default: () => ({
     actions: {
@@ -17,22 +17,22 @@ jest.mock('../useThread', () => ({
 }));
 
 const mockPubSub = {
-  publish: jest.fn(),
+  publish: vi.fn(),
 } as unknown as SBUGlobalPubSub;
 
 const mockLogger = {
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+  error: vi.fn(),
 };
 
-const mockResendMessageStart = jest.fn();
-const mockSendMessageSuccess = jest.fn();
-const mockSendMessageFailure = jest.fn();
+const mockResendMessageStart = vi.fn();
+const mockSendMessageSuccess = vi.fn();
+const mockSendMessageFailure = vi.fn();
 
 describe('useResendMessageCallback', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should not resend when message is not resendable', () => {
@@ -70,9 +70,9 @@ describe('useResendMessageCallback', () => {
 
     const createMockPromise = () => {
       const chainMethods = {
-        onPending: jest.fn(),
-        onSucceeded: jest.fn(),
-        onFailed: jest.fn(),
+        onPending: vi.fn(),
+        onSucceeded: vi.fn(),
+        onFailed: vi.fn(),
       };
 
       chainMethods.onPending.mockImplementation((cb) => {
@@ -93,7 +93,7 @@ describe('useResendMessageCallback', () => {
     };
 
     const mockChannel = {
-      resendMessage: jest.fn().mockReturnValue(createMockPromise()),
+      resendMessage: vi.fn().mockReturnValue(createMockPromise()),
     } as unknown as GroupChannel;
 
     const { result } = renderHook(() => useResendMessageCallback(
@@ -128,9 +128,9 @@ describe('useResendMessageCallback', () => {
 
     const createMockPromise = () => {
       const chainMethods = {
-        onPending: jest.fn(),
-        onSucceeded: jest.fn(),
-        onFailed: jest.fn(),
+        onPending: vi.fn(),
+        onSucceeded: vi.fn(),
+        onFailed: vi.fn(),
       };
 
       chainMethods.onPending.mockImplementation((cb) => {
@@ -147,7 +147,7 @@ describe('useResendMessageCallback', () => {
     };
 
     const mockChannel = {
-      resendMessage: jest.fn().mockReturnValue(createMockPromise()),
+      resendMessage: vi.fn().mockReturnValue(createMockPromise()),
     } as unknown as GroupChannel;
 
     const { result } = renderHook(() => useResendMessageCallback(
@@ -177,9 +177,9 @@ describe('useResendMessageCallback', () => {
 
     const createMockPromise = () => {
       const chainMethods = {
-        onPending: jest.fn(),
-        onSucceeded: jest.fn(),
-        onFailed: jest.fn(),
+        onPending: vi.fn(),
+        onSucceeded: vi.fn(),
+        onFailed: vi.fn(),
       };
 
       chainMethods.onPending.mockImplementation((cb) => {
@@ -196,7 +196,7 @@ describe('useResendMessageCallback', () => {
     };
 
     const mockChannel = {
-      resendMessage: jest.fn().mockReturnValue(createMockPromise()),
+      resendMessage: vi.fn().mockReturnValue(createMockPromise()),
     } as unknown as GroupChannel;
 
     const { result } = renderHook(() => useResendMessageCallback(
@@ -227,10 +227,10 @@ describe('useResendMessageCallback', () => {
 
     const createMockPromise = () => {
       const chainMethods = {
-        onPending: jest.fn(),
-        onSucceeded: jest.fn(),
-        onFailed: jest.fn(),
-        onFileUploaded: jest.fn(),
+        onPending: vi.fn(),
+        onSucceeded: vi.fn(),
+        onFailed: vi.fn(),
+        onFileUploaded: vi.fn(),
       };
 
       chainMethods.onPending.mockImplementation((cb) => {
@@ -252,7 +252,7 @@ describe('useResendMessageCallback', () => {
     };
 
     const mockChannel = {
-      resendMessage: jest.fn().mockReturnValue(createMockPromise()),
+      resendMessage: vi.fn().mockReturnValue(createMockPromise()),
     } as unknown as GroupChannel;
 
     const { result } = renderHook(() => useResendMessageCallback(

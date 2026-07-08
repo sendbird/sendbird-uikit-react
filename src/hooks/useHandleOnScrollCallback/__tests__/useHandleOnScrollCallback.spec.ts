@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { useHandleOnScrollCallback, calcScrollBottom } from '../index';
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 const SAFE_DELAY = 1000;
 
@@ -10,10 +10,10 @@ const prepareMockParams = ({
   scrollHeight = 0,
   clientHeight = 0,
 }) => {
-  const onScroll = jest.fn((cb) => {
+  const onScroll = vi.fn((cb) => {
     cb();
   });
-  const setShowScrollDownButton = jest.fn();
+  const setShowScrollDownButton = vi.fn();
   const hasMore = true;
   const scrollRef = {
     current: {
@@ -43,7 +43,7 @@ describe('useHandleOnScrollCallback', () => {
     const handleOnScroll = result.current;
     handleOnScroll();
 
-    jest.advanceTimersByTime(SAFE_DELAY);
+    vi.advanceTimersByTime(SAFE_DELAY);
 
     // assert
     expect(params.setShowScrollDownButton).toHaveBeenCalledWith(true);
@@ -58,7 +58,7 @@ describe('useHandleOnScrollCallback', () => {
     const handleOnScroll = result.current;
     handleOnScroll();
 
-    jest.advanceTimersByTime(SAFE_DELAY);
+    vi.advanceTimersByTime(SAFE_DELAY);
 
     // assert
     expect(params.setShowScrollDownButton).toHaveBeenCalledWith(false);
@@ -75,7 +75,7 @@ describe('useHandleOnScrollCallback', () => {
     const handleOnScroll = result.current;
     handleOnScroll();
 
-    jest.advanceTimersByTime(SAFE_DELAY);
+    vi.advanceTimersByTime(SAFE_DELAY);
 
     // assert
     expect(params.onScroll).not.toHaveBeenCalled();
@@ -113,7 +113,7 @@ describe('useHandleOnScrollCallback', () => {
     const handleOnScroll = result.current;
     handleOnScroll();
 
-    jest.advanceTimersByTime(SAFE_DELAY);
+    vi.advanceTimersByTime(SAFE_DELAY);
 
     // assert
     expect(params.onScroll).toHaveBeenCalled();

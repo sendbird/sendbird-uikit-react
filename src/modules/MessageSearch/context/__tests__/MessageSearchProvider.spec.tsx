@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { waitFor, act, renderHook } from '@testing-library/react';
 import { MessageSearchQuery } from '@sendbird/chat/message';
+import type { MessageSearchQueryParams } from '@sendbird/chat/lib/__definition';
+import type { BaseSyntheticEvent } from 'react';
 
 import { MessageSearchProvider } from '../MessageSearchProvider';
+import { ClientSentMessages } from '../../../../types';
 import useMessageSearch from '../hooks/useMessageSearch';
 import useScrollCallback from '../hooks/useScrollCallback';
+import type { Mock } from 'vitest';
 
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
+  default: vi.fn(() => ({
     state: {
       stores: {
         sdkStore: {
           sdk: {
-            createMessageSearchQuery: jest.fn(() => ({
-              next: jest.fn().mockResolvedValue([{ messageId: 1 }]),
+            createMessageSearchQuery: vi.fn(() => ({
+              next: vi.fn().mockResolvedValue([{ messageId: 1 }]),
             })),
           },
           initialized: true,
@@ -25,30 +29,30 @@ jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   })),
 }));
 
-jest.mock('../hooks/useSetChannel', () => ({
+vi.mock('../hooks/useSetChannel', () => ({
   __esModule: true,
-  default: jest.fn().mockImplementation(() => Promise.resolve()),
+  default: vi.fn().mockImplementation(() => Promise.resolve()),
 }));
 
-jest.mock('../hooks/useGetSearchedMessages', () => ({
+vi.mock('../hooks/useGetSearchedMessages', () => ({
   __esModule: true,
-  default: jest.fn(() => jest.fn()),
+  default: vi.fn(() => vi.fn()),
 }));
 
-jest.mock('../hooks/useScrollCallback', () => ({
+vi.mock('../hooks/useScrollCallback', () => ({
   __esModule: true,
-  default: jest.fn(() => jest.fn()),
+  default: vi.fn(() => vi.fn()),
 }));
 
-jest.mock('../hooks/useSearchStringEffect', () => ({
+vi.mock('../hooks/useSearchStringEffect', () => ({
   __esModule: true,
-  default: jest.fn(() => ''),
+  default: vi.fn(() => ''),
 }));
 
 describe('MessageSearchProvider', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useScrollCallback as jest.Mock).mockClear();
+    vi.clearAllMocks();
+    (useScrollCallback as Mock).mockClear();
   });
 
   const initialState = {
@@ -216,7 +220,7 @@ describe('MessageSearchProvider', () => {
   });
 
   it('calls onResultLoaded when search results are loaded', async () => {
-    const onResultLoaded = jest.fn();
+    const onResultLoaded = vi.fn();
     const wrapper = ({ children }) => (
       <MessageSearchProvider
         channelUrl="test-channel"
@@ -302,7 +306,7 @@ describe('MessageSearchProvider', () => {
   });
 
   it('handles onResultClick callback correctly', async () => {
-    const onResultClick = jest.fn();
+    const onResultClick = vi.fn();
     const wrapper = ({ children }) => (
       <MessageSearchProvider
         channelUrl="test-channel"
@@ -327,7 +331,7 @@ describe('MessageSearchProvider', () => {
     const wrapper = ({ children }) => (
       <MessageSearchProvider
         channelUrl="test-channel"
-        messageSearchQuery={customQuery}
+        messageSearchQuery={customQuery as unknown as MessageSearchQueryParams}
       >
         {children}
       </MessageSearchProvider>
@@ -339,7 +343,7 @@ describe('MessageSearchProvider', () => {
   });
 
   it('executes onResultClick callback when clicking a search result', async () => {
-    const onResultClick = jest.fn();
+    const onResultClick = vi.fn();
     const mockMessage = { messageId: 1 };
 
     const wrapper = ({ children }) => (
@@ -355,7 +359,7 @@ describe('MessageSearchProvider', () => {
 
     await act(async () => {
       expect(result.current.state.onResultClick).toBe(onResultClick);
-      result.current.state.onResultClick(mockMessage);
+      result.current.state.onResultClick(mockMessage as unknown as ClientSentMessages);
       await waitFor(() => {
         expect(onResultClick).toHaveBeenCalledWith(mockMessage);
       });
@@ -391,7 +395,7 @@ describe('MessageSearchProvider', () => {
       };
 
       const prevLoading = result.current.state.loading;
-      result.current.state.handleOnScroll(mockEvent);
+      result.current.state.handleOnScroll(mockEvent as unknown as BaseSyntheticEvent);
 
       await waitFor(() => {
         expect(result.current.state.loading).toBe(prevLoading);

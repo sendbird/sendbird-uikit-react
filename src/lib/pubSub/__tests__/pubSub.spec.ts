@@ -7,7 +7,7 @@ describe('PubSub', () => {
     expect(typeof pubsub.publish).toEqual('function');
   });
 
-  it('should be able to subscribe to a topic', (done) => {
+  it('should be able to subscribe to a topic', () => new Promise<void>((done) => {
     const pubsub = pubsubFactory();
     const topic = 'TOPIC';
     const event = { event: 'event' };
@@ -16,7 +16,7 @@ describe('PubSub', () => {
       done();
     });
     pubsub.publish(topic, event);
-  });
+  }));
 
   it('should be able to unsubscribe from a topic', () => {
     const pubsub = pubsubFactory();

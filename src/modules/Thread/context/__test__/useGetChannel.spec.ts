@@ -1,8 +1,9 @@
 import { renderHook } from '@testing-library/react';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import useGetChannel from '../hooks/useGetChannel';
+import type { SdkStore } from '../../../../lib/Sendbird/types';
 
-jest.mock('../useThread', () => ({
+vi.mock('../useThread', () => ({
   __esModule: true,
   default: () => ({
     actions: {
@@ -13,21 +14,21 @@ jest.mock('../useThread', () => ({
   }),
 }));
 
-const mockGetChannelStart = jest.fn();
-const mockGetChannelSuccess = jest.fn();
-const mockGetChannelFailure = jest.fn();
+const mockGetChannelStart = vi.fn();
+const mockGetChannelSuccess = vi.fn();
+const mockGetChannelFailure = vi.fn();
 const mockLogger = {
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+  error: vi.fn(),
 };
 
 describe('useGetChannel', () => {
   const mockGroupChannel = {} as GroupChannel;
-  const mockGetChannel = jest.fn();
+  const mockGetChannel = vi.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('doesnt call getChannel when sdkInit is false', () => {
@@ -35,7 +36,7 @@ describe('useGetChannel', () => {
       groupChannel: {
         getChannel: mockGetChannel,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetChannel(
       {
@@ -58,7 +59,7 @@ describe('useGetChannel', () => {
       groupChannel: {
         getChannel: mockGetChannel,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetChannel(
       {
@@ -77,7 +78,7 @@ describe('useGetChannel', () => {
   });
 
   it('doesnt call getChannel when sdk.groupChannel is undefined', () => {
-    const sdk = {};
+    const sdk = {} as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetChannel(
       {
@@ -101,7 +102,7 @@ describe('useGetChannel', () => {
       groupChannel: {
         getChannel: mockGetChannel,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetChannel(
       {
@@ -134,7 +135,7 @@ describe('useGetChannel', () => {
       groupChannel: {
         getChannel: mockGetChannel,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     renderHook(() => useGetChannel(
       {
@@ -166,7 +167,7 @@ describe('useGetChannel', () => {
       groupChannel: {
         getChannel: mockGetChannel,
       },
-    };
+    } as unknown as SdkStore['sdk'];
 
     const { rerender } = renderHook(
       ({ message, sdkInit }) => useGetChannel(

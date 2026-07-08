@@ -1,8 +1,8 @@
 import { compareMessagesForGrouping, isSameGroup } from '../../utils/messages';
 
-jest.mock('../../utils/messages', () => ({
-  ...jest.requireActual('../../utils/messages'),
-  isSameGroup: jest.fn(),
+vi.mock('../../utils/messages', async () => ({
+  ...await vi.importActual('../../utils/messages'),
+  isSameGroup: vi.fn(),
 }));
 
 describe('compareMessagesForGrouping', () => {
@@ -19,7 +19,7 @@ describe('compareMessagesForGrouping', () => {
     expect(result).toEqual([false, false]);
   });
 
-  // NOTE: Using jest.mock to mock methods of a specific module is not functioning as expected.
+  // NOTE: Using vi.mock to mock methods of a specific module is not functioning as expected.
   //  Nevertheless, even aside from that, since this test is not intended to validate something, it will be skipped.
   it.skip('should return [true, true] when on same group', () => {
     // @ts-ignore

@@ -1,28 +1,31 @@
 import { renderHook, act } from '@testing-library/react';
 import { GroupChannelHandler } from '@sendbird/chat/groupChannel';
+import type { SendbirdChatWith } from '@sendbird/chat';
+import type { GroupChannelModule } from '@sendbird/chat/groupChannel';
+import type { OpenChannelModule } from '@sendbird/chat/openChannel';
 import { useChannelHandler } from '../context/hooks/useChannelHandler';
 
-// jest.mock('../../../utils/uuid', () => ({
-//   v4: jest.fn(() => 'mock-uuid'),
+// vi.mock('../../../utils/uuid', () => ({
+//   v4: vi.fn(() => 'mock-uuid'),
 // }));
 
 const mockLogger = {
-  warning: jest.fn(),
-  info: jest.fn(),
-  error: jest.fn(),
+  warning: vi.fn(),
+  info: vi.fn(),
+  error: vi.fn(),
 };
 
 const mockSdk = {
   groupChannel: {
-    addGroupChannelHandler: jest.fn(),
-    removeGroupChannelHandler: jest.fn(),
+    addGroupChannelHandler: vi.fn(),
+    removeGroupChannelHandler: vi.fn(),
   },
 };
 
-const mockForceUpdateUI = jest.fn();
+const mockForceUpdateUI = vi.fn();
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe('useChannelHandler', () => {
@@ -35,7 +38,7 @@ describe('useChannelHandler', () => {
 
   it('adds and removes GroupChannelHandler correctly', () => {
     const { unmount } = renderHook(() => useChannelHandler({
-      sdk: mockSdk,
+      sdk: mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>,
       channelUrl: 'test-channel',
       logger: mockLogger,
       forceUpdateUI: mockForceUpdateUI,
@@ -59,7 +62,7 @@ describe('useChannelHandler', () => {
       handler.onUserLeft({ url: 'test-channel' }, { userId: 'user1' });
     });
 
-    renderHook(() => useChannelHandler({ sdk: mockSdk, channelUrl: 'test-channel', logger: mockLogger, forceUpdateUI: mockForceUpdateUI }),
+    renderHook(() => useChannelHandler({ sdk: mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>, channelUrl: 'test-channel', logger: mockLogger, forceUpdateUI: mockForceUpdateUI }),
     );
 
     expect(mockForceUpdateUI).toHaveBeenCalled();
@@ -70,7 +73,7 @@ describe('useChannelHandler', () => {
       handler.onUserBanned({ url: 'test-channel', isGroupChannel: () => true }, { userId: 'user1' });
     });
 
-    renderHook(() => useChannelHandler({ sdk: mockSdk, channelUrl: 'test-channel', logger: mockLogger, forceUpdateUI: mockForceUpdateUI }),
+    renderHook(() => useChannelHandler({ sdk: mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>, channelUrl: 'test-channel', logger: mockLogger, forceUpdateUI: mockForceUpdateUI }),
     );
 
     expect(mockForceUpdateUI).toHaveBeenCalled();

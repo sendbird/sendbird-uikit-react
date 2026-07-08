@@ -3,7 +3,9 @@ import * as actionTypes from '../actionTypes';
 import reducers from '../reducers';
 import initialState from '../initialState';
 import { isChannelJustCreated } from '../../../../utils';
+import * as channelListUtils from '../../../../utils';
 import { getNextChannel } from '../getNextChannel';
+import * as getNextChannelModule from '../getNextChannel';
 
 const [user1, user2, user3] = users;
 
@@ -914,8 +916,8 @@ describe('Channels-Reducers', () => {
     let getNextChannelSpy;
 
     beforeEach(() => {
-      isChannelJustCreatedSpy = jest.spyOn(require('../../../../utils'), 'isChannelJustCreated');
-      getNextChannelSpy = jest.spyOn(require('../getNextChannel'), 'getNextChannel');
+      isChannelJustCreatedSpy = vi.spyOn(channelListUtils, 'isChannelJustCreated');
+      getNextChannelSpy = vi.spyOn(getNextChannelModule, 'getNextChannel');
     });
 
     afterEach(() => {

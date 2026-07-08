@@ -6,15 +6,16 @@ import { LocalizationContext } from '../../../../../lib/LocalizationContext';
 import ThreadUI from '../index';
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
+import type { Mock } from 'vitest';
 
-const mockSendUserMessage = jest.fn();
+const mockSendUserMessage = vi.fn();
 
 const mockChannel = {
   url: 'test-channel',
   members: [{ userId: 'test-user-id', nickname: 'user1' }],
-  updateUserMessage: jest.fn().mockImplementation(async (message) => mockNewMessage(message)),
+  updateUserMessage: vi.fn().mockImplementation(async (message) => mockNewMessage(message)),
   sendUserMessage: mockSendUserMessage,
-  isGroupChannel: jest.fn().mockImplementation(() => true),
+  isGroupChannel: vi.fn().mockImplementation(() => true),
 };
 
 const mockNewMessage = (message) => ({
@@ -27,8 +28,8 @@ const mockMessage = {
   message: 'first message',
 };
 
-const mockGetMessage = jest.fn().mockResolvedValue(mockMessage);
-const mockGetChannel = jest.fn().mockResolvedValue(mockChannel);
+const mockGetMessage = vi.fn().mockResolvedValue(mockMessage);
+const mockGetChannel = vi.fn().mockResolvedValue(mockChannel);
 
 const mockState = {
   stores: {
@@ -47,7 +48,7 @@ const mockState = {
     logger: console,
     isOnline: true,
     pubSub: {
-      publish: jest.fn(),
+      publish: vi.fn(),
     },
     groupChannel: {
       enableMention: true,
@@ -57,13 +58,13 @@ const mockState = {
   },
 };
 
-jest.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState })),
-  useSendbird: jest.fn(() => ({ state: mockState })),
+  default: vi.fn(() => ({ state: mockState })),
+  useSendbird: vi.fn(() => ({ state: mockState })),
 }));
 
-jest.mock('../../../context/useThread');
+vi.mock('../../../context/useThread');
 
 const mockStringSet = {
   DATE_FORMAT__MESSAGE_CREATED_AT: 'p',
@@ -109,16 +110,16 @@ const defaultMockState = {
 };
 
 const defaultMockActions = {
-  fetchPrevThreads: jest.fn((callback) => {
+  fetchPrevThreads: vi.fn((callback) => {
     callback();
   }),
-  fetchNextThreads: jest.fn((callback) => {
+  fetchNextThreads: vi.fn((callback) => {
     callback();
   }),
 };
 
 describe('CreateChannelUI Integration Tests', () => {
-  const mockUseThread = useThreadModule.default as jest.Mock;
+  const mockUseThread = useThreadModule.default as Mock;
 
   const renderComponent = (mockState = {}, mockActions = {}) => {
     mockUseThread.mockReturnValue({
@@ -134,7 +135,7 @@ describe('CreateChannelUI Integration Tests', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('display initial state correctly', async () => {

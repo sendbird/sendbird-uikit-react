@@ -5,12 +5,12 @@ import useLongPress from '../useLongPress';
 describe('useLongPress', () => {
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('handle long press correctly', async () => {
-    const mockOnLongPress = jest.fn();
-    const mockOnClick = jest.fn();
+    const mockOnLongPress = vi.fn();
+    const mockOnClick = vi.fn();
 
     const { result } = renderHook(() => useLongPress({
       onLongPress: mockOnLongPress,
@@ -34,8 +34,8 @@ describe('useLongPress', () => {
   });
 
   it('cancel long press if touch is too short', async () => {
-    const mockOnLongPress = jest.fn();
-    const mockOnClick = jest.fn();
+    const mockOnLongPress = vi.fn();
+    const mockOnClick = vi.fn();
 
     const { result } = renderHook(() => useLongPress({
       onLongPress: mockOnLongPress,

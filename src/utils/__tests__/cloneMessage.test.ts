@@ -1,4 +1,5 @@
 import { cloneMessage } from '../cloneMessage';
+import type { SendableMessageType } from '../index';
 
 describe('cloneMessage', () => {
   it('Should return a clone message', () => {
@@ -17,7 +18,7 @@ describe('cloneMessage', () => {
       },
     };
 
-    const newMessage = cloneMessage(oldMessage);
+    const newMessage = cloneMessage(oldMessage as unknown as SendableMessageType);
 
     expect(newMessage).toEqual(oldMessage);
   });

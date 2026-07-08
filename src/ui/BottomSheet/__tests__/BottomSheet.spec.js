@@ -5,16 +5,16 @@ import BottomSheet from "../index";
 import { SendbirdContext } from '../../../lib/Sendbird/context/SendbirdContext';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
-jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(),
-  useSendbird: jest.fn(),
+  default: vi.fn(),
+  useSendbird: vi.fn(),
 }));
 
 
 describe('ui/BottomSheet', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     const stateContextValue = {
       state: {
         config: {},

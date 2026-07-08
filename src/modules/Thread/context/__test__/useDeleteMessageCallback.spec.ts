@@ -5,13 +5,13 @@ import useDeleteMessageCallback from '../hooks/useDeleteMessageCallback';
 import { SendableMessageType } from '../../../../utils';
 
 const mockLogger = {
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+  error: vi.fn(),
 };
-const mockOnMessageDeletedByReqId = jest.fn();
-const mockOnMessageDeleted = jest.fn();
-const mockDeleteMessage = jest.fn();
+const mockOnMessageDeletedByReqId = vi.fn();
+const mockOnMessageDeleted = vi.fn();
+const mockDeleteMessage = vi.fn();
 
 describe('useDeleteMessageCallback', () => {
   const mockChannel = {
@@ -19,7 +19,7 @@ describe('useDeleteMessageCallback', () => {
   } as unknown as GroupChannel;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('delete failed message from local', async () => {

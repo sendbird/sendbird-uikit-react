@@ -1,7 +1,8 @@
 import { renderHook } from '@testing-library/react';
 import useGetAllEmoji from '../hooks/useGetAllEmoji';
+import type { SdkStore } from '../../../../lib/Sendbird/types';
 
-jest.mock('../useThread', () => ({
+vi.mock('../useThread', () => ({
   __esModule: true,
   default: () => ({
     actions: {
@@ -10,16 +11,16 @@ jest.mock('../useThread', () => ({
   }),
 }));
 
-const mockSetEmojiContainer = jest.fn();
+const mockSetEmojiContainer = vi.fn();
 const mockLogger = {
-  info: jest.fn(),
-  error: jest.fn(),
-  warning: jest.fn(),
+  info: vi.fn(),
+  error: vi.fn(),
+  warning: vi.fn(),
 };
 
 describe('useGetAllEmoji', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('doesnt call getAllEmoji when sdk is null', () => {
@@ -34,7 +35,7 @@ describe('useGetAllEmoji', () => {
 
   it('doesnt call getAllEmoji when sdk.getAllEmoji is undefined', () => {
     renderHook(() => useGetAllEmoji(
-      { sdk: {} },
+      { sdk: {} as unknown as SdkStore['sdk'] },
       { logger: mockLogger },
     ));
 
@@ -46,13 +47,13 @@ describe('useGetAllEmoji', () => {
     const mockEmojiContainer = {
       emojis: ['😀', '🤣', '🥰'],
     };
-    const mockGetAllEmoji = jest.fn().mockResolvedValue(mockEmojiContainer);
+    const mockGetAllEmoji = vi.fn().mockResolvedValue(mockEmojiContainer);
     const mockSdk = {
       getAllEmoji: mockGetAllEmoji,
     };
 
     renderHook(() => useGetAllEmoji(
-      { sdk: mockSdk },
+      { sdk: mockSdk as unknown as SdkStore['sdk'] },
       { logger: mockLogger },
     ));
 

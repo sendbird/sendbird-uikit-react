@@ -23,18 +23,18 @@ describe('useFetchChannelList', () => {
   beforeEach(() => {
     globalContext.mockChannelSource = {
       hasNext: true,
-      next: jest.fn(() => Promise.resolve(mockChannelList)),
+      next: vi.fn(() => Promise.resolve(mockChannelList)),
     } as unknown as GroupChannelListQuery;
-    globalContext.channelListDispatcher = jest.fn() as React.Dispatch<ChannelListActionTypes>;
+    globalContext.channelListDispatcher = vi.fn() as React.Dispatch<ChannelListActionTypes>;
     globalContext.markAsDeliveredScheduler = {
-      push: jest.fn(),
-      clear: jest.fn(),
-      getQueue: jest.fn(),
+      push: vi.fn(),
+      clear: vi.fn(),
+      getQueue: vi.fn(),
     };
     globalContext.logger = {
-      info: jest.fn(),
-      warning: jest.fn(),
-      error: jest.fn(),
+      info: vi.fn(),
+      warning: vi.fn(),
+      error: vi.fn(),
     };
   });
   afterEach(() => {
@@ -90,7 +90,7 @@ describe('useFetchChannelList', () => {
       () => useFetchChannelList({
         channelSource: {
           ...mockChannelSource,
-          next: jest.fn(() => Promise.reject(mockError)),
+          next: vi.fn(() => Promise.reject(mockError)),
         } as unknown as GroupChannelListQuery,
         disableMarkAsDelivered: false,
       }, {

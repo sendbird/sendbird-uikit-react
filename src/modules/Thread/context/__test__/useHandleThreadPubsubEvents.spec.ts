@@ -1,19 +1,20 @@
 import { renderHook } from '@testing-library/react';
+import type { Mock } from 'vitest';
 import useHandleThreadPubsubEvents from '../hooks/useHandleThreadPubsubEvents';
 import { PUBSUB_TOPICS, SBUGlobalPubSub } from '../../../../lib/pubSub/topics';
 import { GroupChannel } from '@sendbird/chat/groupChannel';
 import { SendableMessageType } from '../../../../utils';
 
 const mockThreadActions = {
-  sendMessageStart: jest.fn(),
-  sendMessageSuccess: jest.fn(),
-  sendMessageFailure: jest.fn(),
-  onFileInfoUpdated: jest.fn(),
-  onMessageUpdated: jest.fn(),
-  onMessageDeleted: jest.fn(),
+  sendMessageStart: vi.fn(),
+  sendMessageSuccess: vi.fn(),
+  sendMessageFailure: vi.fn(),
+  onFileInfoUpdated: vi.fn(),
+  onMessageUpdated: vi.fn(),
+  onMessageDeleted: vi.fn(),
 };
 
-jest.mock('../useThread', () => ({
+vi.mock('../useThread', () => ({
   __esModule: true,
   default: () => ({
     actions: mockThreadActions,
@@ -21,14 +22,14 @@ jest.mock('../useThread', () => ({
 }));
 
 const mockLogger = {
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+  error: vi.fn(),
 };
 
 const mockPubSub = {
-  subscribe: jest.fn(),
-  unsubscribe: jest.fn(),
+  subscribe: vi.fn(),
+  unsubscribe: vi.fn(),
 } as unknown as SBUGlobalPubSub;
 
 describe('useHandleThreadPubsubEvents', () => {
@@ -59,7 +60,7 @@ describe('useHandleThreadPubsubEvents', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should subscribe to pubsub events on mount', () => {
@@ -105,7 +106,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle SEND_MESSAGE_START event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_MESSAGE_START)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_MESSAGE_START)[1];
     handler({ channel: mockChannel, message: mockMessage, publishingModules: [] });
 
     expect(mockThreadActions.sendMessageStart).toHaveBeenCalledWith(mockMessage);
@@ -114,7 +115,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle ON_FILE_INFO_UPLOADED event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.ON_FILE_INFO_UPLOADED)[1];
     handler({ response: { channelUrl: mockChannel.url }, publishingModules: [] });
 
     expect(mockThreadActions.onFileInfoUpdated).toHaveBeenCalled();
@@ -123,7 +124,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle SEND_USER_MESSAGE event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_USER_MESSAGE)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_USER_MESSAGE)[1];
     handler({ channel: mockChannel, message: mockMessage });
 
     expect(mockThreadActions.sendMessageSuccess).toHaveBeenCalledWith(mockMessage);
@@ -132,7 +133,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle SEND_MESSAGE_FAILED event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_MESSAGE_FAILED)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_MESSAGE_FAILED)[1];
     handler({ channel: mockChannel, message: mockMessage, publishingModules: [] });
 
     expect(mockThreadActions.sendMessageFailure).toHaveBeenCalledWith(mockMessage);
@@ -141,7 +142,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle SEND_FILE_MESSAGE event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_FILE_MESSAGE)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.SEND_FILE_MESSAGE)[1];
     handler({ channel: mockChannel, message: mockMessage, publishingModules: [] });
 
     expect(mockThreadActions.sendMessageSuccess).toHaveBeenCalledWith(mockMessage);
@@ -150,7 +151,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle UPDATE_USER_MESSAGE event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.UPDATE_USER_MESSAGE)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.UPDATE_USER_MESSAGE)[1];
     handler({ channel: mockChannel, message: mockMessage });
 
     expect(mockThreadActions.onMessageUpdated).toHaveBeenCalledWith(mockChannel, mockMessage);
@@ -159,7 +160,7 @@ describe('useHandleThreadPubsubEvents', () => {
   it('should handle DELETE_MESSAGE event', () => {
     renderPubsubEventsHook();
 
-    const handler = mockPubSub.subscribe.mock.calls.find(call => call[0] === PUBSUB_TOPICS.DELETE_MESSAGE)[1];
+    const handler = (mockPubSub.subscribe as unknown as Mock).mock.calls.find(call => call[0] === PUBSUB_TOPICS.DELETE_MESSAGE)[1];
     handler({ channel: mockChannel, messageId: mockMessage.messageId });
 
     expect(mockThreadActions.onMessageDeleted).toHaveBeenCalledWith(mockChannel, mockMessage.messageId);

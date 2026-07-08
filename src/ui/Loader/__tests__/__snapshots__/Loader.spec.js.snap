@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ui/Loader should do a snapshot test of the default Loader DOM 1`] = `
+exports[`ui/Loader > should do a snapshot test of the default Loader DOM 1`] = `
 <DocumentFragment>
   <div
     class=" sendbird-loader"

@@ -3,24 +3,25 @@ import { GroupChannel, GroupChannelHandler } from '@sendbird/chat/groupChannel';
 import { UserMessage } from '@sendbird/chat/message';
 import { User } from '@sendbird/chat';
 import useHandleChannelEvents from '../hooks/useHandleChannelEvents';
+import type { SdkStore } from '../../../../lib/Sendbird/types';
 
 const mockThreadActions = {
-  onMessageReceived: jest.fn(),
-  onMessageUpdated: jest.fn(),
-  onMessageDeleted: jest.fn(),
-  onReactionUpdated: jest.fn(),
-  onUserMuted: jest.fn(),
-  onUserUnmuted: jest.fn(),
-  onUserBanned: jest.fn(),
-  onUserUnbanned: jest.fn(),
-  onUserLeft: jest.fn(),
-  onChannelFrozen: jest.fn(),
-  onChannelUnfrozen: jest.fn(),
-  onOperatorUpdated: jest.fn(),
-  onTypingStatusUpdated: jest.fn(),
+  onMessageReceived: vi.fn(),
+  onMessageUpdated: vi.fn(),
+  onMessageDeleted: vi.fn(),
+  onReactionUpdated: vi.fn(),
+  onUserMuted: vi.fn(),
+  onUserUnmuted: vi.fn(),
+  onUserBanned: vi.fn(),
+  onUserUnbanned: vi.fn(),
+  onUserLeft: vi.fn(),
+  onChannelFrozen: vi.fn(),
+  onChannelUnfrozen: vi.fn(),
+  onOperatorUpdated: vi.fn(),
+  onTypingStatusUpdated: vi.fn(),
 };
 
-jest.mock('../useThread', () => ({
+vi.mock('../useThread', () => ({
   __esModule: true,
   default: () => ({
     actions: mockThreadActions,
@@ -28,9 +29,9 @@ jest.mock('../useThread', () => ({
 }));
 
 const mockLogger = {
-  info: jest.fn(),
-  warning: jest.fn(),
-  error: jest.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+  error: vi.fn(),
 };
 
 describe('useHandleChannelEvents', () => {
@@ -40,15 +41,15 @@ describe('useHandleChannelEvents', () => {
 
   const createMockChannel = () => ({
     url: 'channel-url',
-    getTypingUsers: jest.fn().mockReturnValue([mockUser]),
+    getTypingUsers: vi.fn().mockReturnValue([mockUser]),
   }) as unknown as GroupChannel;
 
-  const createMockSdk = (addHandler = jest.fn(), removeHandler = jest.fn()) => ({
+  const createMockSdk = (addHandler = vi.fn(), removeHandler = vi.fn()) => ({
     groupChannel: {
       addGroupChannelHandler: addHandler,
       removeGroupChannelHandler: removeHandler,
     },
-  });
+  } as unknown as SdkStore['sdk']);
 
   const renderChannelEventsHook = ({
     sdk = createMockSdk(),
@@ -66,11 +67,11 @@ describe('useHandleChannelEvents', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should add channel handler on mount', () => {
-    const mockAddHandler = jest.fn();
+    const mockAddHandler = vi.fn();
     const sdk = createMockSdk(mockAddHandler);
 
     renderChannelEventsHook({ sdk });
@@ -82,8 +83,8 @@ describe('useHandleChannelEvents', () => {
   });
 
   it('should remove channel handler on unmount', () => {
-    const mockRemoveHandler = jest.fn();
-    const sdk = createMockSdk(jest.fn(), mockRemoveHandler);
+    const mockRemoveHandler = vi.fn();
+    const sdk = createMockSdk(vi.fn(), mockRemoveHandler);
 
     const { unmount } = renderChannelEventsHook({ sdk });
     unmount();
@@ -92,7 +93,7 @@ describe('useHandleChannelEvents', () => {
   });
 
   it('should handle message received event', () => {
-    const mockAddHandler = jest.fn();
+    const mockAddHandler = vi.fn();
     const sdk = createMockSdk(mockAddHandler);
     const channel = createMockChannel();
 
@@ -108,7 +109,7 @@ describe('useHandleChannelEvents', () => {
   });
 
   it('should handle message updated event', () => {
-    const mockAddHandler = jest.fn();
+    const mockAddHandler = vi.fn();
     const sdk = createMockSdk(mockAddHandler);
     const channel = createMockChannel();
 
@@ -124,7 +125,7 @@ describe('useHandleChannelEvents', () => {
   });
 
   it('should handle reaction updated event', () => {
-    const mockAddHandler = jest.fn();
+    const mockAddHandler = vi.fn();
     const sdk = createMockSdk(mockAddHandler);
     const channel = createMockChannel();
 
@@ -139,7 +140,7 @@ describe('useHandleChannelEvents', () => {
   });
 
   it('should handle typing status updated event', () => {
-    const mockAddHandler = jest.fn();
+    const mockAddHandler = vi.fn();
     const sdk = createMockSdk(mockAddHandler);
     const channel = createMockChannel();
 
@@ -155,7 +156,7 @@ describe('useHandleChannelEvents', () => {
   });
 
   it('should pass channel and user to onUserBanned handler', () => {
-    const mockAddHandler = jest.fn();
+    const mockAddHandler = vi.fn();
     const sdk = createMockSdk(mockAddHandler);
     const channel = createMockChannel();
     const bannedUser = { userId: 'banned-user' } as User;
@@ -169,7 +170,7 @@ describe('useHandleChannelEvents', () => {
   });
 
   it('should pass channel and user to onUserLeft handler', () => {
-    const mockAddHandler = jest.fn();
+    const mockAddHandler = vi.fn();
     const sdk = createMockSdk(mockAddHandler);
     const channel = createMockChannel();
     const leavingUser = { userId: 'leaving-user' } as User;
@@ -183,7 +184,7 @@ describe('useHandleChannelEvents', () => {
   });
 
   it('should not add handler when sdk or currentChannel is missing', async () => {
-    const mockAddHandler = jest.fn();
+    const mockAddHandler = vi.fn();
     const sdk = createMockSdk(mockAddHandler);
 
     await act(async () => {

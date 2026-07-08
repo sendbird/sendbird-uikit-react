@@ -1,4 +1,5 @@
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { BaseMessage } from '@sendbird/chat/message';
 import { Role } from '@sendbird/chat';
 import {
   getComponentKeyFromMessage,
@@ -19,7 +20,7 @@ describe('GroupChannel utils', () => {
         messageId: 12345,
         sendingStatus: 'succeeded',
       };
-      expect(getComponentKeyFromMessage(message)).toBe('12345');
+      expect(getComponentKeyFromMessage(message as unknown as BaseMessage)).toBe('12345');
     });
 
     it('should return reqId if sendingStatus is pending', () => {
@@ -28,7 +29,7 @@ describe('GroupChannel utils', () => {
         reqId: 'temp-id-123',
         sendingStatus: 'pending',
       };
-      expect(getComponentKeyFromMessage(message)).toBe('temp-id-123');
+      expect(getComponentKeyFromMessage(message as unknown as BaseMessage)).toBe('temp-id-123');
     });
   });
 

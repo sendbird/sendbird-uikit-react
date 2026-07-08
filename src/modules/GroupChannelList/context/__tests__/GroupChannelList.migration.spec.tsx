@@ -35,27 +35,27 @@ const mockState = {
     isOnline: true,
   },
 };
-const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+const mockActions = { connect: vi.fn(), disconnect: vi.fn() };
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', async () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState, actions: mockActions })),
-  useSendbird: jest.fn(() => ({ state: mockState, actions: mockActions })),
+  default: vi.fn(() => ({ state: mockState, actions: mockActions })),
+  useSendbird: vi.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
-jest.mock('@sendbird/uikit-tools', () => ({
-  ...jest.requireActual('@sendbird/uikit-tools'),
-  useGroupChannelList: jest.fn(() => ({
+vi.mock('@sendbird/uikit-tools', async () => ({
+  ...await vi.importActual('@sendbird/uikit-tools'),
+  useGroupChannelList: vi.fn(() => ({
     refreshing: false,
     initialized: true,
-    groupChannels: [{ url: 'test-groupchannel-url-1', serialize: () => JSON.stringify(this) }],
-    refresh: jest.fn(),
-    loadMore: jest.fn(),
+    groupChannels: [{ url: 'test-groupchannel-url-1', serialize: () => JSON.stringify({}) }],
+    refresh: vi.fn(),
+    loadMore: vi.fn(),
   })),
 }));
 
 const mockProps: GroupChannelListProviderProps = {
-  onChannelSelect: jest.fn(),
-  onChannelCreated: jest.fn(),
+  onChannelSelect: vi.fn(),
+  onChannelCreated: vi.fn(),
 
   className: 'test-classname',
   selectedChannelUrl: 'test-selected-channel-url',
@@ -66,14 +66,14 @@ const mockProps: GroupChannelListProviderProps = {
   isMessageReceiptStatusEnabled: true,
 
   channelListQueryParams: { limit: 30 },
-  onThemeChange: jest.fn(),
-  onCreateChannelClick: jest.fn(),
-  onBeforeCreateChannel: jest.fn(),
-  onUserProfileUpdated: jest.fn(),
+  onThemeChange: vi.fn(),
+  onCreateChannelClick: vi.fn(),
+  onBeforeCreateChannel: vi.fn(),
+  onUserProfileUpdated: vi.fn(),
 
-  onUserProfileMessage: jest.fn(),
-  onStartDirectMessage: jest.fn(),
-  renderUserProfile: jest.fn(),
+  onUserProfileMessage: vi.fn(),
+  onStartDirectMessage: vi.fn(),
+  renderUserProfile: vi.fn(),
   disableUserProfile: true,
   children: <div>test children</div>,
 };

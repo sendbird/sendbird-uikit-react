@@ -2,22 +2,28 @@ import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import useSendbird from '../context/hooks/useSendbird';
 import { SendbirdContext, createSendbirdContextStore } from '../context/SendbirdContext';
+import { initSDK, setupSDK } from '../utils';
+import type { User, SendbirdChatWith } from '@sendbird/chat';
+import type { GroupChannelModule } from '@sendbird/chat/groupChannel';
+import type { OpenChannelModule } from '@sendbird/chat/openChannel';
+import type { MessageTemplatesInfo } from '../types';
+import type { LoggerInterface } from '../../Logger';
 
-jest.mock('../utils', () => {
-  const actualUtils = jest.requireActual('../utils');
+vi.mock('../utils', async () => {
+  const actualUtils = await vi.importActual('../utils');
   return {
     ...actualUtils,
-    initSDK: jest.fn(() => ({
-      connect: jest.fn().mockResolvedValue({ userId: 'mockUserId' }),
-      updateCurrentUserInfo: jest.fn().mockResolvedValue({}),
+    initSDK: vi.fn(() => ({
+      connect: vi.fn().mockResolvedValue({ userId: 'mockUserId' }),
+      updateCurrentUserInfo: vi.fn().mockResolvedValue({}),
     })),
-    setupSDK: jest.fn(),
+    setupSDK: vi.fn(),
   };
 });
 
 describe('useSendbird', () => {
   let mockStore;
-  const mockLogger = { error: jest.fn(), info: jest.fn() };
+  const mockLogger = { error: vi.fn(), info: vi.fn() };
 
   beforeEach(() => {
     mockStore = createSendbirdContextStore();
@@ -140,11 +146,11 @@ describe('useSendbird', () => {
       const updatedUser = { id: 'mockUserId', name: 'newName' };
 
       act(() => {
-        result.current.actions.initUser(initialUser);
+        result.current.actions.initUser(initialUser as unknown as User);
       });
 
       act(() => {
-        result.current.actions.updateUserInfo(updatedUser);
+        result.current.actions.updateUserInfo(updatedUser as unknown as User);
       });
 
       const userStore = mockStore.getState().stores.userStore;
@@ -156,7 +162,7 @@ describe('useSendbird', () => {
     it('should initialize message templates info with initMessageTemplateInfo', () => {
       const { result } = renderHook(() => useSendbird(), { wrapper });
 
-      const mockPayload = { templatesMap: { key1: 'template1', key2: 'template2' } };
+      const mockPayload = { templatesMap: { key1: 'template1', key2: 'template2' } } as unknown as MessageTemplatesInfo;
 
       act(() => {
         result.current.actions.initMessageTemplateInfo({ payload: mockPayload });
@@ -286,13 +292,13 @@ describe('useSendbird', () => {
           customExtensionParams: {},
           eventHandlers: {
             connection: {
-              onConnected: jest.fn(),
-              onFailed: jest.fn(),
+              onConnected: vi.fn(),
+              onFailed: vi.fn(),
             },
           },
-          initializeMessageTemplatesInfo: jest.fn(),
-          initDashboardConfigs: jest.fn(),
-          configureSession: jest.fn(),
+          initializeMessageTemplatesInfo: vi.fn(),
+          initDashboardConfigs: vi.fn(),
+          configureSession: vi.fn(),
         });
       });
 
@@ -312,7 +318,7 @@ describe('useSendbird', () => {
       });
 
       await act(async () => {
-        await result.current.actions.disconnect({ logger: mockLogger });
+        await result.current.actions.disconnect({ logger: mockLogger as unknown as LoggerInterface });
       });
 
       const sdkStore = mockStore.getState().stores.sdkStore;
@@ -323,7 +329,7 @@ describe('useSendbird', () => {
     });
 
     it('should trigger onConnected event handler after successful connection', async () => {
-      const mockOnConnected = jest.fn();
+      const mockOnConnected = vi.fn();
       const { result } = renderHook(() => useSendbird(), { wrapper });
 
       await act(async () => {
@@ -345,8 +351,8 @@ describe('useSendbird', () => {
 
     it('should call initSDK and setupSDK with correct parameters during connect', async () => {
       const { result } = renderHook(() => useSendbird(), { wrapper });
-      const mockInitSDK = jest.requireMock('../utils').initSDK;
-      const mockSetupSDK = jest.requireMock('../utils').setupSDK;
+      const mockInitSDK = vi.mocked(initSDK);
+      const mockSetupSDK = vi.mocked(setupSDK);
 
       await act(async () => {
         await result.current.actions.connect({
@@ -371,7 +377,7 @@ describe('useSendbird', () => {
 
     it('should pass isNewApp through to initSDK during connect', async () => {
       const { result } = renderHook(() => useSendbird(), { wrapper });
-      const mockInitSDK = jest.requireMock('../utils').initSDK;
+      const mockInitSDK = vi.mocked(initSDK);
 
       await act(async () => {
         await result.current.actions.connect({
@@ -392,15 +398,15 @@ describe('useSendbird', () => {
     it('should handle connection failure and trigger onFailed event handler', async () => {
       const { result } = renderHook(() => useSendbird(), { wrapper });
 
-      const mockOnFailed = jest.fn();
-      const mockLogger = { error: jest.fn(), info: jest.fn() };
+      const mockOnFailed = vi.fn();
+      const mockLogger = { error: vi.fn(), info: vi.fn() } as unknown as LoggerInterface;
 
       const mockSdk = {
-        connect: jest.fn(() => {
+        connect: vi.fn(() => {
           throw new Error('Mock connection error');
         }),
       };
-      jest.requireMock('../utils').initSDK.mockReturnValue(mockSdk);
+      vi.mocked(initSDK).mockReturnValue(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>);
 
       await act(async () => {
         await result.current.actions.connect({

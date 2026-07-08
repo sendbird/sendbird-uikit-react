@@ -7,50 +7,55 @@ import { useGroupChannel } from '../hooks/useGroupChannel';
 // must be retried (and recover currentChannel) once the SDK reconnects (config.isOnline flips
 // false -> true), while an already-loaded channel must not be refetched on reconnect.
 
-const mockChannel = {
-  url: 'test-channel',
-  members: [{ userId: '1', nickname: 'user1' }],
-  serialize: () => '{}',
-};
-const mockGetChannel = jest.fn();
-const mockMessageCollection = {
-  dispose: jest.fn(),
-  setMessageCollectionHandler: jest.fn(),
-  initialize: jest.fn().mockResolvedValue(null),
-  loadPrevious: jest.fn(),
-  loadNext: jest.fn(),
-  messages: [],
-};
-// Stable references so the ONLY effect dependency that changes across rerenders is config.isOnline.
-// (A fresh sdk/config object per render would change the `sdkStore.sdk` dep and cause spurious refetches.)
-const mockConfig = {
-  logger: { warning: jest.fn(), error: jest.fn(), info: jest.fn() },
-  markAsReadScheduler: { push: jest.fn() },
-  groupChannel: { replyType: 'NONE', threadReplySelectType: 'PARENT' },
-  groupChannelSettings: { enableMessageSearch: true },
-  isOnline: true,
-  pubSub: { subscribe: () => ({ remove: jest.fn() }) },
-};
-const makeSdk = () => ({
-  groupChannel: {
-    getChannel: mockGetChannel,
-    addGroupChannelHandler: jest.fn(),
-    removeGroupChannelHandler: jest.fn(),
-  },
-  createMessageCollection: jest.fn().mockReturnValue(mockMessageCollection),
-});
-const mockState = {
-  stores: {
-    sdkStore: {
-      sdk: makeSdk(),
-      initialized: true,
+// vi.mock is hoisted above module init and (unlike Jest) has no `mock*` naming exception, so the
+// data the factory references must live in vi.hoisted() to be initialized in time.
+const { mockChannel, mockGetChannel, mockConfig, makeSdk, mockState } = vi.hoisted(() => {
+  const mockChannel = {
+    url: 'test-channel',
+    members: [{ userId: '1', nickname: 'user1' }],
+    serialize: () => '{}',
+  };
+  const mockGetChannel = vi.fn();
+  const mockMessageCollection = {
+    dispose: vi.fn(),
+    setMessageCollectionHandler: vi.fn(),
+    initialize: vi.fn().mockResolvedValue(null),
+    loadPrevious: vi.fn(),
+    loadNext: vi.fn(),
+    messages: [],
+  };
+  // Stable references so the ONLY effect dependency that changes across rerenders is config.isOnline.
+  // (A fresh sdk/config object per render would change the `sdkStore.sdk` dep and cause spurious refetches.)
+  const mockConfig = {
+    logger: { warning: vi.fn(), error: vi.fn(), info: vi.fn() },
+    markAsReadScheduler: { push: vi.fn() },
+    groupChannel: { replyType: 'NONE', threadReplySelectType: 'PARENT' },
+    groupChannelSettings: { enableMessageSearch: true },
+    isOnline: true,
+    pubSub: { subscribe: () => ({ remove: vi.fn() }) },
+  };
+  const makeSdk = () => ({
+    groupChannel: {
+      getChannel: mockGetChannel,
+      addGroupChannelHandler: vi.fn(),
+      removeGroupChannelHandler: vi.fn(),
     },
-  },
-  config: mockConfig,
-};
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+    createMessageCollection: vi.fn().mockReturnValue(mockMessageCollection),
+  });
+  const mockState = {
+    stores: {
+      sdkStore: {
+        sdk: makeSdk(),
+        initialized: true,
+      },
+    },
+    config: mockConfig,
+  };
+  return { mockChannel, mockGetChannel, mockConfig, makeSdk, mockState };
+});
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState })),
+  default: vi.fn(() => ({ state: mockState })),
 }));
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (

@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "//": "Build-only config for the shipped declaration emit (scripts/post_build.js). tsconfig.json includes tests for `yarn typecheck`; this excludes them so specs/setup do not ship in dist/types and a test-file type error does not break the build.",
+  "include": ["src"],
+  "exclude": [
+    "**/__visual_tests__/**",
+    "**/_externals/**",
+    "**/stories/**",
+    "**/*.stories.*",
+    "**/__snapshots__/**",
+    "**/__tests__/**",
+    "**/__test__/**",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ]
+}

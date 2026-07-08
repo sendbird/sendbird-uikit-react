@@ -6,15 +6,15 @@ import { useMessageContext } from '../../../modules/Message/context/MessageProvi
 import { useLocalization } from '../../../lib/LocalizationContext';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 
-jest.mock('date-fns/format', () => () => ('mock-date'));
+vi.mock('date-fns/format', () => ({ default: () => ('mock-date') }));
 
 // to mock useSendbird
-jest.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(),
-  useSendbird: jest.fn(),
+  default: vi.fn(),
+  useSendbird: vi.fn(),
 }));
-jest.mock('../../../lib/LocalizationContext', () => {
+vi.mock('../../../lib/LocalizationContext', () => {
   const React = require('react');
   return {
     __esModule: true,
@@ -23,12 +23,12 @@ jest.mock('../../../lib/LocalizationContext', () => {
         DATE_FORMAT__MESSAGE_CREATED_AT: 'p',
       },
     }),
-    useLocalization: jest.fn(),
+    useLocalization: vi.fn(),
   };
 });
-jest.mock('../../../modules/Message/context/MessageProvider', () => ({
+vi.mock('../../../modules/Message/context/MessageProvider', () => ({
   __esModule: true,
-  useMessageContext: jest.fn(),
+  useMessageContext: vi.fn(),
 }));
 
 const createMockChannel = (process) => {

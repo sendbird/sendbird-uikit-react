@@ -34,22 +34,22 @@ const mockState = {
     },
     isOnline: true,
   },
-}; const mockActions = { connect: jest.fn(), disconnect: jest.fn() };
+}; const mockActions = { connect: vi.fn(), disconnect: vi.fn() };
 
-jest.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
+vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ state: mockState, actions: mockActions })),
-  useSendbird: jest.fn(() => ({ state: mockState, actions: mockActions })),
+  default: vi.fn(() => ({ state: mockState, actions: mockActions })),
+  useSendbird: vi.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
 const mockProps: CreateChannelProviderProps = {
   children: <div>test children</div>,
-  userListQuery: () => ({ hasNext: true, next: jest.fn(), isLoading: false }),
-  onCreateChannelClick: jest.fn(),
-  onChannelCreated: jest.fn(),
-  onBeforeCreateChannel: jest.fn(),
-  onCreateChannel: jest.fn(),
-  overrideInviteUser: jest.fn(),
+  userListQuery: () => ({ hasNext: true, next: vi.fn(), isLoading: false }),
+  onCreateChannelClick: vi.fn(),
+  onChannelCreated: vi.fn(),
+  onBeforeCreateChannel: vi.fn(),
+  onCreateChannel: vi.fn(),
+  overrideInviteUser: vi.fn(),
 };
 
 describe('CreateChannel Migration Compatibility Tests', () => {
@@ -76,7 +76,7 @@ describe('CreateChannel Migration Compatibility Tests', () => {
   // 2. Context Hook return value test
   describe('useCreateChannelContext Hook Return Values', () => {
     type ContextType = ReturnType<typeof useCreateChannelContext>;
-    const expectedProps: Array<keyof ContextType> = [
+    const expectedProps: Array<keyof ContextType | string> = [
       'sdk',
       'createChannel',
       'userListQuery',
@@ -98,10 +98,10 @@ describe('CreateChannel Migration Compatibility Tests', () => {
           {expectedProps.map(prop => (
             <div key={prop} data-testid={`prop-${prop}`}>
               {/* text can be function, object, string, or unknown */}
-              {match(context[prop])
+              {match((context as Record<string, unknown>)[prop])
                 .with('function', () => 'function')
-                .with('object', () => JSON.stringify(context[prop]))
-                .with('string', () => String(context[prop]))
+                .with('object', () => JSON.stringify((context as Record<string, unknown>)[prop]))
+                .with('string', () => String((context as Record<string, unknown>)[prop]))
                 .otherwise(() => 'unknown')}
             </div>
           ))}

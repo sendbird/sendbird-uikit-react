@@ -58,13 +58,13 @@ describe('mergeAndSortMessages', () => {
 
 
 describe('scrollToRenderedMessage', () => {
-  const mockSetIsScrolled = jest.fn();
-  const mockRefCurrent = { offsetHeight: 500, querySelectorAll: jest.fn() };
+  const mockSetIsScrolled = vi.fn();
+  const mockRefCurrent = { offsetHeight: 500, querySelectorAll: vi.fn() };
   const mockRef = { current: mockRefCurrent };
   const initialTimeStamp = 123456789;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should handle the case where the element is not found', () => {
@@ -94,8 +94,8 @@ describe('scrollToRenderedMessage', () => {
   it('should scroll to the top of the element', () => {
     // Mocking the element
     const mockElement = document.createElement('div');
-    jest.spyOn(mockElement, 'offsetHeight', 'get').mockReturnValue(100);
-    jest.spyOn(mockElement, 'offsetTop', 'get').mockReturnValue(200);
+    vi.spyOn(mockElement, 'offsetHeight', 'get').mockReturnValue(100);
+    vi.spyOn(mockElement, 'offsetTop', 'get').mockReturnValue(200);
     mockRefCurrent.querySelectorAll.mockReturnValue([mockElement]);
 
     scrollToRenderedMessage(mockRef, initialTimeStamp, mockSetIsScrolled);
