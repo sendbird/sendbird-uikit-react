@@ -53,8 +53,8 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
     logger.error('VoiceRecorder: Browser does not support mimeType', { mimmeTypes: BROWSER_SUPPORT_MIME_TYPE_LIST });
   }
 
-  // Async work (WebAudioUtils import / getUserMedia / permissions.query / recorder events) can
-  // resolve after unmount; guard their setState with this ref.
+  // Async callbacks (getUserMedia / permissions.query / recorder events) can resolve after unmount;
+  // guard their setState with this ref.
   const isMountedRef = useRef(true);
   useEffect(() => {
     isMountedRef.current = true;
@@ -64,11 +64,15 @@ export const VoiceRecorderProvider = (props: VoiceRecorderProps): React.ReactEle
   }, []);
 
   useEffect(() => {
+    let mounted = true;
     if (isVoiceMessageEnabled && !webAudioUtils) {
       import('./WebAudioUtils').then((module) => {
-        if (isMountedRef.current) setWebAudioUtils(module);
+        if (mounted) setWebAudioUtils(module);
       });
     }
+    return () => {
+      mounted = false;
+    };
   }, [isVoiceMessageEnabled, webAudioUtils]);
 
   const start = useCallback((eventHandler?: VoiceRecorderEventHandler): void => {
