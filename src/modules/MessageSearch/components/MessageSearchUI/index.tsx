@@ -125,7 +125,11 @@ export const MessageSearchUI: React.FC<MessageSearchUIProps> = ({
           ? (
             allMessages.map((message) => {
               if (renderSearchItem) {
-                return renderSearchItem({ message, onResultClick });
+                return (
+                  <React.Fragment key={message.messageId}>
+                    {renderSearchItem({ message, onResultClick })}
+                  </React.Fragment>
+                );
               }
               if (message.messageType === 'file') {
                 return (
