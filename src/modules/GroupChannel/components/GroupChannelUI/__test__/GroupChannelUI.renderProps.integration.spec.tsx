@@ -5,7 +5,7 @@ import { GroupChannelUIView } from '../GroupChannelUIView';
 import { useGroupChannelContext } from '../../../context/GroupChannelProvider';
 import { useGroupChannel } from '../../../context/hooks/useGroupChannel';
 
-// The view's INVOCATION of these render props is already covered (GroupChannelUIView.integration.test.tsx).
+// The view's INVOCATION of these render props is already covered (GroupChannelUIView.integration.spec.tsx).
 // This covers the other half: GroupChannelUI forwards a customer's render prop to the view, and injects
 // a default renderer when none is provided.
 vi.mock('../GroupChannelUIView', () => ({ GroupChannelUIView: vi.fn(() => null) }));
