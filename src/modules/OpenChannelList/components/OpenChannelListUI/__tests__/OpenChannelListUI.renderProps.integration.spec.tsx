@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import OpenChannelListUI from '../index';
 import { useOpenChannelListContext } from '../../../context/OpenChannelListProvider';
 import { OpenChannelListFetchingStatus } from '../../../context/OpenChannelListInterfaces';
@@ -73,8 +73,27 @@ describe('OpenChannelListUI — render-prop propagation (integration)', () => {
   it('invokes a custom renderHeader (replacing the default header)', () => {
     const renderHeader = vi.fn(() => <div data-testid="custom-header" />);
 
-    renderUI({}, { renderHeader });
+    const { getByTestId } = renderUI({}, { renderHeader });
 
     expect(renderHeader).toHaveBeenCalled();
+    // the custom header actually renders in place of the default
+    expect(getByTestId('custom-header')).toBeInTheDocument();
+  });
+
+  it('invokes onChannelSelected with the clicked channel', () => {
+    const channels = [{ url: 'open-1' }];
+    const onChannelSelected = vi.fn();
+    const renderChannelPreview = vi.fn(() => <div data-testid="preview" />);
+
+    const { container } = renderUI(
+      { allChannels: channels, onChannelSelected, fetchingStatus: OpenChannelListFetchingStatus.DONE },
+      { renderChannelPreview },
+    );
+
+    // The wrapper around a custom preview carries the onClick that fires onChannelSelected.
+    const item = container.querySelector('.sendbird-open-channel-list-ui__channel-list__item');
+    fireEvent.click(item as Element);
+
+    expect(onChannelSelected).toHaveBeenCalledWith(expect.objectContaining({ url: 'open-1' }), expect.anything());
   });
 });
