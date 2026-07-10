@@ -94,4 +94,23 @@ describe('SendbirdProvider — theme & stringSet propagation (integration)', () 
     // an un-overridden key still resolves to the English default (proves merge, not replace)
     expect(screen.getByTestId('default')).toHaveTextContent(en[DEFAULT_KEY]);
   });
+
+  it('propagates a custom dateLocale to the localization context', async () => {
+    const customDateLocale = { code: 'xx-custom' } as any;
+    let received: unknown;
+    const DateLocaleProbe = () => {
+      received = useLocalization().dateLocale;
+      return null;
+    };
+    await act(async () => {
+      render(
+        <SendbirdProvider appId="test-app-id" userId="test-user-id" dateLocale={customDateLocale}>
+          <DateLocaleProbe />
+        </SendbirdProvider>,
+      );
+    });
+
+    // the customer's date-fns locale must reach useLocalization().dateLocale unchanged
+    expect(received).toBe(customDateLocale);
+  });
 });
