@@ -27,6 +27,7 @@ const BASE_URL = process.env.E2E_BASE_URL || `http://localhost:${PORT}`;
 export default defineConfig({
   testDir: './e2e',
   testMatch: '**/*.spec.ts',
+  globalSetup: './e2e/global-setup.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
