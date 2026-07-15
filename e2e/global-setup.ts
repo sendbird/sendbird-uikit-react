@@ -1,5 +1,6 @@
 import SendbirdChat from '@sendbird/chat';
 import { GroupChannelModule } from '@sendbird/chat/groupChannel';
+import { OpenChannelModule } from '@sendbird/chat/openChannel';
 import { E2E, hasCreds } from './utils/env';
 
 /**
@@ -19,7 +20,7 @@ export default async function globalSetup() {
   }
 
   try {
-    const sdk = SendbirdChat.init({ appId: E2E.appId, modules: [new GroupChannelModule()], localCacheEnabled: false });
+    const sdk = SendbirdChat.init({ appId: E2E.appId, modules: [new GroupChannelModule(), new OpenChannelModule()], localCacheEnabled: false });
     await sdk.connect(E2E.userId, E2E.accessToken || undefined);
 
     // Find an existing channel (includeEmpty so we don't recreate on every run); create one if none.
@@ -36,6 +37,14 @@ export default async function globalSetup() {
       });
       // eslint-disable-next-line no-console
       console.log('[e2e globalSetup] seeded group channel with a message:', channel.url);
+    }
+
+    // Seed an open channel too (needs no invitees and shows in the list even when empty).
+    const openChannels = await sdk.openChannel.createOpenChannelListQuery({ limit: 1 }).next();
+    if (openChannels.length === 0) {
+      const openChannel = await sdk.openChannel.createChannel({ name: '[e2e] seed open channel' });
+      // eslint-disable-next-line no-console
+      console.log('[e2e globalSetup] seeded an open channel:', openChannel.url);
     }
 
     await sdk.disconnect();

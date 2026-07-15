@@ -1,0 +1,22 @@
+import { test, expect } from '@playwright/test';
+import { appPath, hasCreds } from './utils/env';
+
+/**
+ * Open channel — navigation (Tier 0, single user). Loads /open_channel, which renders the open
+ * channel list beside the conversation, then enters the first (seeded) channel.
+ */
+test.describe('open channel — navigation', () => {
+  test.beforeEach(() => {
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests (see e2e/README.md).');
+  });
+
+  test('lists open channels and enters one', async ({ page }) => {
+    await page.goto(appPath('/open_channel'));
+
+    // The list renders and shows at least the seeded channel; enter it.
+    await page.locator('.sendbird-open-channel-preview').first().click({ timeout: 30_000 });
+
+    // The conversation for the selected channel is shown.
+    await expect(page.locator('.sendbird-openchannel-conversation-header')).toBeVisible({ timeout: 15_000 });
+  });
+});
