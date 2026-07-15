@@ -1,0 +1,43 @@
+name: E2E (Playwright)
+
+# E2E against a real Sendbird backend. NOT a required PR gate — runs manually, nightly, or when a
+# PR is labeled "e2e". Requires repo secrets: E2E_APP_ID, E2E_USER_ID, and optionally
+# E2E_ACCESS_TOKEN / E2E_USER_ID_2. Without them the tests skip and the job stays green.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 18 * * *' # nightly (~03:00 KST)
+  pull_request:
+    types: [labeled]
+
+jobs:
+  e2e:
+    # For PRs, only run when the "e2e" label is applied.
+    if: github.event_name != 'pull_request' || github.event.label.name == 'e2e'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      E2E_APP_ID: ${{ secrets.E2E_APP_ID }}
+      E2E_USER_ID: ${{ secrets.E2E_USER_ID }}
+      E2E_ACCESS_TOKEN: ${{ secrets.E2E_ACCESS_TOKEN }}
+      E2E_USER_ID_2: ${{ secrets.E2E_USER_ID_2 }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Enable Corepack (Yarn 3)
+        run: corepack enable
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Install Playwright browser (chromium)
+        run: yarn playwright install --with-deps chromium
+      - name: Run E2E tests
+        run: yarn test:e2e
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
