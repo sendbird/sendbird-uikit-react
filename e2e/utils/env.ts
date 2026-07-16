@@ -11,8 +11,8 @@ export const E2E = {
   appId: process.env.E2E_APP_ID ?? '',
   userId: process.env.E2E_USER_ID ?? '',
   accessToken: process.env.E2E_ACCESS_TOKEN ?? '',
-  /** Optional second user, for send/receive scenarios (ticket 4). */
-  userId2: process.env.E2E_USER_ID_2 ?? '',
+  /** Second user (seeded in global-setup) for invite/create and send/receive scenarios. */
+  userId2: process.env.E2E_USER_ID_2 || 'e2e-user-2',
 };
 
 /** Minimum credentials to hit a real backend are present. */

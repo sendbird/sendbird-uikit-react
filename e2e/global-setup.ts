@@ -48,6 +48,14 @@ export default async function globalSetup() {
     }
 
     await sdk.disconnect();
+
+    // Ensure a second user exists so group-channel creation has someone to invite. Connecting as a
+    // user auto-creates them; the Chat SDK cannot create other users from the first user's session.
+    if (E2E.userId2 && E2E.userId2 !== E2E.userId) {
+      await sdk.connect(E2E.userId2);
+      await sdk.updateCurrentUserInfo({ nickname: E2E.userId2 });
+      await sdk.disconnect();
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.warn('[e2e globalSetup] seeding skipped:', error instanceof Error ? error.message : error);
