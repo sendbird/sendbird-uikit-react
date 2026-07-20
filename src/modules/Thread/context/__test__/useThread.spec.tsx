@@ -3,8 +3,7 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import useThread from '../useThread';
 import { ThreadProvider } from '../ThreadProvider';
 import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../../types';
-import { PREV_THREADS_FETCH_SIZE } from '../../consts';
-import type { SendableMessageType, CoreMessageType } from '../../../../utils';
+import type { SendableMessageType } from '../../../../utils';
 import type { EmojiContainer } from '@sendbird/chat';
 
 const mockApplyReactionEvent = vi.fn();
@@ -63,6 +62,31 @@ vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   })),
 }));
 
+vi.mock('@sendbird/uikit-tools', () => ({
+  useGroupChannelThreadMessages: vi.fn(() => ({
+    initialized: true,
+    loading: false,
+    refreshing: false,
+    messages: [],
+    newMessages: [],
+    resetNewMessages: vi.fn(),
+    refresh: vi.fn(),
+    loadPrevious: vi.fn().mockResolvedValue(undefined),
+    loadNext: vi.fn().mockResolvedValue(undefined),
+    hasPrevious: vi.fn(() => false),
+    hasNext: vi.fn(() => false),
+    sendUserMessage: vi.fn(),
+    sendFileMessage: vi.fn(),
+    sendFileMessages: vi.fn(),
+    sendMultipleFilesMessage: vi.fn(),
+    updateUserMessage: vi.fn(),
+    updateFileMessage: vi.fn(),
+    resendMessage: vi.fn(),
+    deleteMessage: vi.fn(),
+    resetWithStartingPoint: vi.fn().mockResolvedValue(undefined),
+  })),
+}));
+
 describe('useThread', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -74,329 +98,6 @@ describe('useThread', () => {
     } catch (error) {
       expect(error.message).toBe('useThread must be used within a ThreadProvider');
     }
-  });
-
-  it('handles sendMessageStart action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={null}>{children}</ThreadProvider>
-    );
-
-    const { result } = renderHook(() => useThread(), { wrapper });
-    const { sendMessageStart } = result.current.actions;
-
-    const mockMessage = { messageId: 2, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
-
-    await act(() => {
-      sendMessageStart(mockMessage);
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.localThreadMessages).toContain(mockMessage);
-    });
-  });
-
-  it('handles sendMessageSuccess action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={null}>{children}</ThreadProvider>
-    );
-
-    const { result } = renderHook(() => useThread(), { wrapper });
-    const { sendMessageStart, sendMessageSuccess } = result.current.actions;
-
-    const mockMessage = { messageId: 2, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
-    const mockMessage2 = { messageId: 3, message: 'Test message', reqId: 3 } as unknown as SendableMessageType;
-
-    await act(() => {
-      sendMessageStart(mockMessage);
-      sendMessageSuccess(mockMessage);
-      sendMessageStart(mockMessage2);
-      sendMessageSuccess(mockMessage2);
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.allThreadMessages).toContain(mockMessage);
-      expect(result.current.state.allThreadMessages).toContain(mockMessage2);
-    });
-  });
-
-  it('handles sendMessageFailure action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={null}>{children}</ThreadProvider>
-    );
-
-    const { result } = renderHook(() => useThread(), { wrapper });
-    const { sendMessageStart, sendMessageFailure } = result.current.actions;
-
-    const mockMessage = { messageId: 2, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
-
-    await act(() => {
-      sendMessageStart(mockMessage);
-      sendMessageFailure(mockMessage);
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.localThreadMessages).toContain(mockMessage);
-    });
-  });
-
-  it('handles resendMessageStart action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={null}>{children}</ThreadProvider>
-    );
-
-    const { result } = renderHook(() => useThread(), { wrapper });
-    const { sendMessageStart, resendMessageStart } = result.current.actions;
-
-    const mockMessage = { messageId: 2, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
-
-    await act(() => {
-      sendMessageStart(mockMessage);
-      resendMessageStart(mockMessage);
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.localThreadMessages).toContain(mockMessage);
-    });
-  });
-
-  it('handles onMessageUpdated action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={null}>{children}</ThreadProvider>
-    );
-
-    let result;
-    await act(async () => {
-      result = renderHook(() => useThread(), { wrapper }).result;
-
-      waitFor(() => {
-        expect(result.current.state.currentChannel).not.toBe(undefined);
-      });
-    });
-    const { sendMessageStart, sendMessageSuccess, onMessageUpdated } = result.current.actions;
-
-    const otherChannel = {
-      url: 'test-channel2',
-      members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
-    };
-    const channel = {
-      url: 'test-channel',
-      members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
-    };
-    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
-
-    await act(() => {
-      sendMessageStart(mockMessage);
-      sendMessageSuccess(mockMessage);
-      onMessageUpdated(otherChannel, mockMessage);
-      onMessageUpdated(channel, mockMessage);
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.allThreadMessages).toContain(mockMessage);
-    });
-  });
-
-  it('handles onMessageDeleted action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
-    );
-
-    let result;
-    await act(async () => {
-      result = renderHook(() => useThread(), { wrapper }).result;
-
-      waitFor(() => {
-        expect(result.current.state.currentChannel).not.toBe(undefined);
-      });
-    });
-    const { sendMessageStart, sendMessageSuccess, onMessageDeleted } = result.current.actions;
-
-    const otherChannel = {
-      url: 'test-channel2',
-      members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
-    };
-    const channel = {
-      url: 'test-channel',
-      members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
-    };
-    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
-
-    await act(() => {
-      sendMessageStart(mockMessage);
-      sendMessageSuccess(mockMessage);
-      onMessageDeleted(otherChannel, mockMessage.messageId);
-      onMessageDeleted(channel, mockMessage.messageId);
-      onMessageDeleted(channel, 100);
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.parentMessage).toBe(null);
-      expect(result.current.state.parentMessageState).toBe(ParentMessageStateTypes.NIL);
-      expect(result.current.state.allThreadMessages).toBeEmpty();
-    });
-  });
-
-  it('handles onMessageDeletedByReqId action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
-    );
-
-    let result;
-    await act(async () => {
-      result = renderHook(() => useThread(), { wrapper }).result;
-
-      waitFor(() => {
-        expect(result.current.state.currentChannel).not.toBe(undefined);
-      });
-    });
-    const { sendMessageStart, onMessageDeletedByReqId } = result.current.actions;
-
-    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2 } as unknown as SendableMessageType;
-
-    await act(() => {
-      sendMessageStart(mockMessage);
-      onMessageDeletedByReqId(mockMessage.reqId);
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.localThreadMessages).toBeEmpty();
-    });
-  });
-
-  it('handles initializeThreadListStart action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={null}>{children}</ThreadProvider>
-    );
-
-    const { result } = renderHook(() => useThread(), { wrapper });
-    const { initializeThreadListStart } = result.current.actions;
-
-    await act(() => {
-      initializeThreadListStart();
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.threadListState).toBe(ThreadListStateTypes.LOADING);
-    });
-  });
-
-  it('handles initializeThreadListSuccess action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
-    );
-
-    const { result } = renderHook(() => useThread(), { wrapper });
-    const { initializeThreadListStart, initializeThreadListSuccess } = result.current.actions;
-
-    await act(() => {
-      initializeThreadListStart();
-      initializeThreadListSuccess(mockParentMessage, mockParentMessage, []);
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.threadListState).toBe(ThreadListStateTypes.INITIALIZED);
-    });
-  });
-
-  it('handles initializeThreadListFailure action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
-    );
-
-    const { result } = renderHook(() => useThread(), { wrapper });
-    const { initializeThreadListStart, initializeThreadListFailure } = result.current.actions;
-
-    await act(() => {
-      initializeThreadListStart();
-      initializeThreadListFailure();
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.threadListState).toBe(ThreadListStateTypes.LOADING);
-      expect(result.current.state.allThreadMessages).toBeEmpty();
-    });
-  });
-
-  it('handles getPrevMessagesSuccess action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
-    );
-
-    const { result } = renderHook(() => useThread(), { wrapper });
-    const { getPrevMessagesStart, getPrevMessagesSuccess } = result.current.actions;
-
-    await act(() => {
-      getPrevMessagesStart();
-      getPrevMessagesSuccess(Array(PREV_THREADS_FETCH_SIZE).map((e, i) => {
-        return { messageId: i + 10, message: `meesage Id: ${i + 10}`, reqId: i + 10 };
-      }) as unknown as CoreMessageType[]);
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.hasMorePrev).toBe(true);
-      expect(result.current.state.allThreadMessages).toHaveLength(30);
-    });
-  });
-
-  it('handles getPrevMessagesFailure action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
-    );
-
-    const { result } = renderHook(() => useThread(), { wrapper });
-    const { getPrevMessagesStart, getPrevMessagesFailure } = result.current.actions;
-
-    await act(() => {
-      getPrevMessagesStart();
-      getPrevMessagesFailure();
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.hasMorePrev).toBe(false);
-    });
-  });
-
-  it('handles getNextMessagesSuccess action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
-    );
-
-    const { result } = renderHook(() => useThread(), { wrapper });
-    const { getNextMessagesStart, getNextMessagesSuccess } = result.current.actions;
-
-    await act(() => {
-      getNextMessagesStart();
-      getNextMessagesSuccess(Array(PREV_THREADS_FETCH_SIZE).map((e, i) => {
-        return { messageId: i + 10, message: `meesage Id: ${i + 10}`, reqId: i + 10 };
-      }) as unknown as CoreMessageType[]);
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.hasMoreNext).toBe(true);
-      expect(result.current.state.allThreadMessages).toHaveLength(30);
-    });
-  });
-
-  it('handles getNextMessagesFailure action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
-    );
-
-    const { result } = renderHook(() => useThread(), { wrapper });
-    const { getNextMessagesStart, getNextMessagesFailure } = result.current.actions;
-
-    await act(() => {
-      getNextMessagesStart();
-      getNextMessagesFailure();
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.hasMoreNext).toBe(false);
-    });
   });
 
   it('handles setEmojiContainer action correctly', async () => {
@@ -423,78 +124,6 @@ describe('useThread', () => {
 
     await waitFor(() => {
       expect(result.current.state.emojiContainer).toBe(emojiContainer);
-    });
-  });
-
-  it('handles onMessageReceived action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
-    );
-
-    let result;
-    await act(async () => {
-      result = renderHook(() => useThread(), { wrapper }).result;
-
-      waitFor(() => {
-        expect(result.current.state.currentChannel).not.toBe(undefined);
-      });
-    });
-    const { onMessageReceived } = result.current.actions;
-
-    const otherChannel = {
-      url: 'test-channel2',
-      members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
-    };
-    const channel = {
-      url: 'test-channel',
-      members: [{ userId: '1', nickname: 'user1' }],
-      updateUserMessage: vi.fn().mockImplementation(async () => mockNewMessage),
-    };
-    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2, parentMessage: mockParentMessage } as unknown as SendableMessageType;
-
-    await act(() => {
-      onMessageReceived(otherChannel, mockMessage);
-      onMessageReceived(channel, mockMessage);
-      onMessageReceived(channel, mockMessage);
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.allThreadMessages).toContain(mockMessage);
-    });
-  });
-
-  it('handles onReactionUpdated action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
-    );
-
-    let result;
-    await act(async () => {
-      result = renderHook(() => useThread(), { wrapper }).result;
-
-      waitFor(() => {
-        expect(result.current.state.currentChannel).not.toBe(undefined);
-      });
-    });
-    const { sendMessageStart, sendMessageSuccess, onReactionUpdated } = result.current.actions;
-
-    const mockMessage = { messageId: 1, message: 'Test message', reqId: 2, parentMessage: mockParentMessage } as unknown as SendableMessageType;
-
-    await act(() => {
-      sendMessageStart(mockMessage);
-      sendMessageSuccess(mockMessage);
-      onReactionUpdated({
-        messageId: mockParentMessage.messageId,
-        userId: 'test-user-id',
-        key: '1',
-        operation: 'ADD',
-        updatedAt: 0,
-      });
-    });
-
-    await waitFor(() => {
-      expect(mockApplyReactionEvent).toHaveBeenCalled();
     });
   });
 
@@ -724,7 +353,7 @@ describe('useThread', () => {
     });
   });
 
-  it('handles onChannelFrozen action correctly', async () => {
+  it('handles onChannelUnfrozen action correctly', async () => {
     const wrapper = ({ children }) => (
       <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
     );
@@ -798,46 +427,6 @@ describe('useThread', () => {
 
     await waitFor(() => {
       expect(result.current.state.typingMembers).toContain(mockMember);
-    });
-  });
-
-  it('handles onFileInfoUpdated action correctly', async () => {
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={mockParentMessage}>{children}</ThreadProvider>
-    );
-
-    let result;
-    await act(async () => {
-      result = renderHook(() => useThread(), { wrapper }).result;
-
-      waitFor(() => {
-        expect(result.current.state.currentChannel).not.toBe(undefined);
-      });
-    });
-    const { sendMessageStart, onFileInfoUpdated } = result.current.actions;
-    const mockMessage = {
-      messageId: 2,
-      message: 'Test message',
-      reqId: 2,
-      parentMessage: mockParentMessage,
-      messageParams: {
-        fileInfoList: [],
-      },
-    };
-    const newFileInfo = { name: 'new-file-info' };
-
-    await act(() => {
-      sendMessageStart(mockMessage as unknown as SendableMessageType);
-      onFileInfoUpdated({
-        channelUrl: 'test-channel',
-        requestId: mockMessage.reqId,
-        index: 0,
-        uploadableFileInfo: newFileInfo,
-      });
-    });
-
-    await waitFor(() => {
-      expect(result.current.state.localThreadMessages[0].messageParams.fileInfoList).toContain(newFileInfo);
     });
   });
 

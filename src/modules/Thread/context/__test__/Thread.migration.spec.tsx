@@ -38,14 +38,6 @@ vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   useSendbird: vi.fn(() => ({ state: mockState, actions: mockActions })),
 }));
 
-vi.mock('../hooks/useThreadFetchers', () => ({
-  useThreadFetchers: vi.fn().mockReturnValue({
-    initializeThreadFetcher: vi.fn(),
-    fetchPrevThreads: vi.fn(),
-    fetchNextThreads: vi.fn(),
-  }),
-}));
-
 const mockProps: ThreadProviderProps = {
   disableUserProfile: true,
   renderUserProfile: vi.fn(),

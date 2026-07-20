@@ -37,7 +37,8 @@ export function getMessageFirstFileName(message: CoreMessageType): string {
 export function getMessageFirstFileUrl(message: CoreMessageType): string {
   return match(message)
     .when(isFileMessage, () => {
-      return (message as FileMessage)?.url ?? '';
+      const fileMessage = message as FileMessage & { localUrl?: string };
+      return fileMessage?.url || fileMessage?.localUrl || '';
     })
     .when(isMultipleFilesMessage, () => {
       return getFirstFileInfo(message as MultipleFilesMessage)?.url ?? '';

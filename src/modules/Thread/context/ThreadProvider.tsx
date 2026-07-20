@@ -1,9 +1,12 @@
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useMemo, useRef, useContext, useEffect } from 'react';
 import { type EmojiCategory, EmojiContainer } from '@sendbird/chat';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import type {
+  FileMessage,
   FileMessageCreateParams,
+  MultipleFilesMessage,
   MultipleFilesMessageCreateParams,
+  UserMessage,
   UserMessageCreateParams,
 } from '@sendbird/chat/message';
 
@@ -14,8 +17,8 @@ import type { OnBeforeDownloadFileMessageType } from '../../GroupChannel/context
 import useGetChannel from './hooks/useGetChannel';
 import useGetAllEmoji from './hooks/useGetAllEmoji';
 import useGetParentMessage from './hooks/useGetParentMessage';
-import useHandleThreadPubsubEvents from './hooks/useHandleThreadPubsubEvents';
 import useHandleChannelEvents from './hooks/useHandleChannelEvents';
+import { useGroupChannelThreadMessages } from '@sendbird/uikit-tools';
 import { CoreMessageType, SendableMessageType } from '../../../utils';
 import { createStore } from '../../../utils/storeManager';
 import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../types';
@@ -41,6 +44,8 @@ export interface ThreadProviderProps extends
   filterEmojiCategoryIds?: (message: SendableMessageType) => EmojiCategory['id'][];
 }
 
+type ThreadMessageDataSource = ReturnType<typeof useGroupChannelThreadMessages>;
+
 export interface ThreadState extends ThreadProviderProps {
   currentChannel: GroupChannel;
   allThreadMessages: Array<CoreMessageType>;
@@ -57,6 +62,15 @@ export interface ThreadState extends ThreadProviderProps {
   currentUserId: string;
   typingMembers: Member[];
   nicknamesMap: Map<string, string>;
+  loadPrevious?: ThreadMessageDataSource['loadPrevious'];
+  loadNext?: ThreadMessageDataSource['loadNext'];
+  resetWithStartingPoint?: ThreadMessageDataSource['resetWithStartingPoint'];
+  dsSendUserMessage?: ThreadMessageDataSource['sendUserMessage'];
+  dsSendFileMessage?: ThreadMessageDataSource['sendFileMessage'];
+  dsSendMultipleFilesMessage?: ThreadMessageDataSource['sendMultipleFilesMessage'];
+  dsUpdateUserMessage?: ThreadMessageDataSource['updateUserMessage'];
+  dsResendMessage?: ThreadMessageDataSource['resendMessage'];
+  dsDeleteMessage?: ThreadMessageDataSource['deleteMessage'];
 }
 
 const initialState = () => ({
@@ -140,9 +154,7 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
     state: {
       currentChannel,
       parentMessage,
-    },
-    actions: {
-      initializeThreadFetcher,
+      parentMessageState,
     },
   } = useThread();
   const { updateState } = useThreadStore();
@@ -156,7 +168,8 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
   const { user } = userStore;
   const sdkInit = sdkStore?.initialized;
   // // config
-  const { logger, pubSub } = config;
+  const { logger } = config;
+  const isReactionEnabled = config.groupChannel.enableReactions;
 
   // Initialization
   useSetCurrentUserId({ user });
@@ -176,17 +189,103 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
     sdk,
     currentChannel,
   }, { logger });
-  useHandleThreadPubsubEvents({
-    sdkInit,
-    currentChannel,
-    parentMessage,
-  }, { logger, pubSub });
+
+  const startingPoint = (message && propsParentMessage && message.messageId !== propsParentMessage.messageId)
+    ? message.createdAt
+    : Number.MAX_SAFE_INTEGER;
+  const threadDataSource = useGroupChannelThreadMessages(
+    sdk as Parameters<typeof useGroupChannelThreadMessages>[0],
+    currentChannel as GroupChannel,
+    (parentMessage ?? propsParentMessage) as UserMessage | FileMessage,
+    {
+      startingPoint,
+      isReactionEnabled,
+      logger,
+      onParentMessageUpdated: (updatedParentMessage) => {
+        updateState({ parentMessage: updatedParentMessage as SendableMessageType });
+      },
+      onParentMessageDeleted: () => {
+        updateState({
+          parentMessage: null,
+          parentMessageState: ParentMessageStateTypes.NIL,
+          allThreadMessages: [],
+        });
+      },
+      onChannelDeleted: () => {
+        updateState({
+          currentChannel: null,
+          channelState: ChannelStateTypes.NIL,
+          threadListState: ThreadListStateTypes.NIL,
+          allThreadMessages: [],
+        });
+      },
+      onCurrentUserBanned: () => {
+        updateState({
+          currentChannel: null,
+          channelState: ChannelStateTypes.NIL,
+          threadListState: ThreadListStateTypes.NIL,
+          parentMessage: null,
+          parentMessageState: ParentMessageStateTypes.NIL,
+          allThreadMessages: [],
+          hasMorePrev: false,
+          hasMoreNext: false,
+        });
+      },
+      onChannelUpdated: (channel) => {
+        updateState({
+          currentChannel: channel,
+          isChannelFrozen: channel?.isFrozen || false,
+        });
+      },
+    },
+  );
+
+  const threadListState = threadDataSource.loading && config.isOnline && parentMessageState === ParentMessageStateTypes.INITIALIZED
+    ? ThreadListStateTypes.LOADING
+    : threadDataSource.initialized
+      ? ThreadListStateTypes.INITIALIZED
+      : ThreadListStateTypes.NIL;
+  const hasMorePrev = threadDataSource.hasPrevious();
+  const hasMoreNext = threadDataSource.hasNext();
+  const store = useContext(ThreadContext);
+  const messagesSyncKey = threadDataSource.messages
+    .map((message) => {
+      const uploadParams = (message as MultipleFilesMessage).messageParams as MultipleFilesMessageCreateParams | undefined;
+      const uploadState = uploadParams?.fileInfoList
+        ? uploadParams.fileInfoList.map((info) => info.fileUrl ?? '').join(',')
+        : '';
+      return `${JSON.stringify(message.serialize())}#${uploadState}`;
+    })
+    .join('~');
 
   useEffect(() => {
-    if (stores.sdkStore.initialized && config.isOnline) {
-      initializeThreadFetcher();
-    }
-  }, [stores.sdkStore.initialized, config.isOnline, initializeThreadFetcher]);
+    if (!parentMessage) return;
+    const parentId = parentMessage.messageId;
+    const scopedMessages = threadDataSource.messages.filter((m) => m.parentMessageId === parentId || !m.parentMessageId);
+    store?.setState((prev) => ({
+      ...prev,
+      allThreadMessages: scopedMessages as CoreMessageType[],
+      localThreadMessages: [],
+      hasMorePrev,
+      hasMoreNext,
+      threadListState,
+    }), true);
+  }, [store, messagesSyncKey, parentMessage?.messageId, hasMorePrev, hasMoreNext, threadListState]);
+
+  useEffect(() => {
+    store?.setState((prev) => ({
+      ...prev,
+      loadPrevious: threadDataSource.loadPrevious,
+      loadNext: threadDataSource.loadNext,
+      resetWithStartingPoint: threadDataSource.resetWithStartingPoint,
+      dsSendUserMessage: threadDataSource.sendUserMessage,
+      dsSendFileMessage: threadDataSource.sendFileMessage,
+      dsSendMultipleFilesMessage: threadDataSource.sendMultipleFilesMessage,
+      dsUpdateUserMessage: threadDataSource.updateUserMessage,
+      dsResendMessage: threadDataSource.resendMessage,
+      dsDeleteMessage: threadDataSource.deleteMessage,
+    }), true);
+  }, [store]);
 
   // memo
   const nicknamesMap: Map<string, string> = useMemo(() => (
@@ -233,7 +332,7 @@ export const ThreadProvider = (props: ThreadProviderProps) => {
 
   return (
     <InternalThreadProvider {...props}>
-      <ThreadManager {...props} />
+      <ThreadManager key={props.message?.messageId ?? 'thread'} {...props} />
         {/* UserProfileProvider */}
         <UserProfileProvider {...props}>
           {children}

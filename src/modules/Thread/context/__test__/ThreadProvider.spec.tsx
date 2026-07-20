@@ -1,5 +1,6 @@
 import React from 'react';
-import { waitFor, renderHook } from '@testing-library/react';
+import { waitFor, renderHook, act } from '@testing-library/react';
+import { useGroupChannelThreadMessages } from '@sendbird/uikit-tools';
 import { ThreadProvider, ThreadState } from '../ThreadProvider';
 import useThread from '../useThread';
 import { SendableMessageType } from '../../../../utils';
@@ -8,61 +9,25 @@ import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from
 import { EmojiContainer } from '@sendbird/chat';
 import type { Mock } from 'vitest';
 
-class MockMessageMethod {
-  _onPending: (message: SendableMessageType) => void;
-
-  _onFailed: (message: SendableMessageType) => void;
-
-  _onSucceeded: (message: SendableMessageType) => void;
-
-  constructor(message, willSucceed = true) {
-    this._onPending = undefined;
-    this._onFailed = undefined;
-    this._onSucceeded = undefined;
-
-    this.init(message, willSucceed);
-  }
-
-  init(message, willSucceed) {
-    setTimeout(() => this._onPending?.(message), 0);
-    setTimeout(() => {
-      if (willSucceed) {
-        this._onSucceeded?.(message);
-      } else {
-        this._onFailed?.(message);
-      }
-    }, 300);
-  }
-
-  onPending(func) {
-    this._onPending = func;
-    return this;
-  }
-
-  onFailed(func) {
-    this._onFailed = func;
-    return this;
-  }
-
-  onSucceeded(func) {
-    this._onSucceeded = func;
-    return this;
-  }
-}
-
-const mockSendUserMessage = vi.fn();
-
-const mockChannel = {
-  url: 'test-channel',
-  members: [{ userId: '1', nickname: 'user1' }],
-  updateUserMessage: vi.fn().mockImplementation(async (message) => mockNewMessage(message)),
-  sendUserMessage: mockSendUserMessage,
-};
+const { mockDs } = vi.hoisted(() => ({
+  mockDs: {
+    sendUserMessage: vi.fn(),
+    loadPrevious: vi.fn(),
+    loadNext: vi.fn(),
+    resetWithStartingPoint: vi.fn(),
+  },
+}));
 
 const mockNewMessage = (message) => ({
   messageId: 42,
   message: message ?? 'new message',
 });
+
+const mockChannel = {
+  url: 'test-channel',
+  members: [{ userId: '1', nickname: 'user1' }],
+  updateUserMessage: vi.fn().mockImplementation(async (message) => mockNewMessage(message)),
+};
 
 const mockGetChannel = vi.fn().mockResolvedValue(mockChannel);
 
@@ -92,6 +57,31 @@ const mockState = {
 vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,
   default: vi.fn(() => ({ state: mockState })),
+}));
+
+vi.mock('@sendbird/uikit-tools', () => ({
+  useGroupChannelThreadMessages: vi.fn(() => ({
+    initialized: false,
+    loading: false,
+    refreshing: false,
+    messages: [],
+    newMessages: [],
+    resetNewMessages: vi.fn(),
+    refresh: vi.fn(),
+    loadPrevious: mockDs.loadPrevious,
+    loadNext: mockDs.loadNext,
+    hasPrevious: vi.fn(() => false),
+    hasNext: vi.fn(() => false),
+    sendUserMessage: mockDs.sendUserMessage,
+    sendFileMessage: vi.fn(),
+    sendFileMessages: vi.fn(),
+    sendMultipleFilesMessage: vi.fn(),
+    updateUserMessage: vi.fn(),
+    updateFileMessage: vi.fn(),
+    resendMessage: vi.fn(),
+    deleteMessage: vi.fn(),
+    resetWithStartingPoint: mockDs.resetWithStartingPoint,
+  })),
 }));
 
 describe('ThreadProvider', () => {
@@ -172,11 +162,6 @@ describe('ThreadProvider', () => {
       expect(result.current.actions).toHaveProperty('getParentMessageSuccess');
       expect(result.current.actions).toHaveProperty('getParentMessageFailure');
       expect(result.current.actions).toHaveProperty('setEmojiContainer');
-      expect(result.current.actions).toHaveProperty('onMessageReceived');
-      expect(result.current.actions).toHaveProperty('onMessageUpdated');
-      expect(result.current.actions).toHaveProperty('onMessageDeleted');
-      expect(result.current.actions).toHaveProperty('onMessageDeletedByReqId');
-      expect(result.current.actions).toHaveProperty('onReactionUpdated');
       expect(result.current.actions).toHaveProperty('onUserMuted');
       expect(result.current.actions).toHaveProperty('onUserUnmuted');
       expect(result.current.actions).toHaveProperty('onUserBanned');
@@ -186,20 +171,6 @@ describe('ThreadProvider', () => {
       expect(result.current.actions).toHaveProperty('onChannelUnfrozen');
       expect(result.current.actions).toHaveProperty('onOperatorUpdated');
       expect(result.current.actions).toHaveProperty('onTypingStatusUpdated');
-      expect(result.current.actions).toHaveProperty('sendMessageStart');
-      expect(result.current.actions).toHaveProperty('sendMessageSuccess');
-      expect(result.current.actions).toHaveProperty('sendMessageFailure');
-      expect(result.current.actions).toHaveProperty('resendMessageStart');
-      expect(result.current.actions).toHaveProperty('onFileInfoUpdated');
-      expect(result.current.actions).toHaveProperty('initializeThreadListStart');
-      expect(result.current.actions).toHaveProperty('initializeThreadListSuccess');
-      expect(result.current.actions).toHaveProperty('initializeThreadListFailure');
-      expect(result.current.actions).toHaveProperty('getPrevMessagesStart');
-      expect(result.current.actions).toHaveProperty('getPrevMessagesSuccess');
-      expect(result.current.actions).toHaveProperty('getPrevMessagesFailure');
-      expect(result.current.actions).toHaveProperty('getNextMessagesStart');
-      expect(result.current.actions).toHaveProperty('getNextMessagesSuccess');
-      expect(result.current.actions).toHaveProperty('getNextMessagesFailure');
     });
   });
 
@@ -223,7 +194,8 @@ describe('ThreadProvider', () => {
     });
   });
 
-  it('update state correctly when sendMessage is called', async () => {
+  it('delegates sendMessage to the collection data source', async () => {
+    mockDs.sendUserMessage.mockResolvedValue({ messageId: 42, message: 'Test Message' });
     const wrapper = ({ children }) => (
       <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>
         {children}
@@ -236,11 +208,99 @@ describe('ThreadProvider', () => {
       expect(result.current.state.currentChannel).not.toBe(undefined);
     });
 
-    mockSendUserMessage.mockImplementation((propsMessage) => new MockMessageMethod(mockNewMessage(propsMessage), true));
-    result.current.actions.sendMessage({ message: 'Test Message' });
+    await act(async () => {
+      result.current.actions.sendMessage({ message: 'Test Message' });
+    });
 
     await waitFor(() => {
-      expect(result.current.state.localThreadMessages.at(-1)).toHaveProperty('messageId', 42);
+      expect(mockDs.sendUserMessage).toHaveBeenCalledWith(
+        expect.objectContaining({ message: 'Test Message' }),
+        expect.any(Function),
+      );
+    });
+  });
+
+  it('fetchPrevThreads delegates to the data source loadPrevious and fires the callback', async () => {
+    mockDs.loadPrevious.mockResolvedValue(undefined);
+    const callback = vi.fn();
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+
+    const { result } = renderHook(() => useThread(), { wrapper });
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+
+    await act(async () => {
+      result.current.actions.fetchPrevThreads(callback);
+    });
+
+    expect(mockDs.loadPrevious).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(callback).toHaveBeenCalled();
+    });
+  });
+
+  it('fetchNextThreads delegates to the data source loadNext and fires the callback', async () => {
+    mockDs.loadNext.mockResolvedValue(undefined);
+    const callback = vi.fn();
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+
+    const { result } = renderHook(() => useThread(), { wrapper });
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+
+    await act(async () => {
+      result.current.actions.fetchNextThreads(callback);
+    });
+
+    expect(mockDs.loadNext).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(callback).toHaveBeenCalled();
+    });
+  });
+
+  it('initializeThreadFetcher delegates to the data source resetWithStartingPoint', async () => {
+    mockDs.resetWithStartingPoint.mockResolvedValue(undefined);
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+
+    const { result } = renderHook(() => useThread(), { wrapper });
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+
+    await act(async () => {
+      result.current.actions.initializeThreadFetcher();
+    });
+
+    expect(mockDs.resetWithStartingPoint).toHaveBeenCalled();
+  });
+
+  it('onParentMessageUpdated option syncs the updated parent message into state', async () => {
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+
+    const { result } = renderHook(() => useThread(), { wrapper });
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    const updatedParent = { messageId: 100, message: 'updated parent' } as unknown as SendableMessageType;
+
+    await act(async () => {
+      options.onParentMessageUpdated(updatedParent);
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.parentMessage).toBe(updatedParent);
     });
   });
 

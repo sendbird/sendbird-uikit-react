@@ -35,7 +35,6 @@ export default function ThreadList({
     state: {
       currentChannel,
       allThreadMessages,
-      localThreadMessages,
     },
   } = useThread();
 
@@ -78,31 +77,6 @@ export default function ThreadList({
                 chainTop: chainTop,
                 chainBottom: chainBottom,
                 hasSeparator: hasSeparator,
-                renderCustomSeparator: renderCustomSeparator,
-                handleScroll: handleScroll,
-              })
-            }
-          </MessageProvider>
-        );
-      })}
-      {localThreadMessages.map((message) => {
-        const isByMe = (message as UserMessage)?.sender?.userId === userId;
-        const handleScroll = () => {
-          const current = scrollRef?.current;
-          if (current) {
-            const bottom = current.scrollHeight - current.scrollTop - current.offsetHeight;
-            if (scrollBottom < bottom) {
-              current.scrollTop += bottom - scrollBottom;
-            }
-          }
-        };
-
-        return (
-          <MessageProvider message={message} isByMe={isByMe} key={message?.messageId}>
-            {
-              renderMessage({
-                message: message as SendableMessageType,
-                hasSeparator: false,
                 renderCustomSeparator: renderCustomSeparator,
                 handleScroll: handleScroll,
               })

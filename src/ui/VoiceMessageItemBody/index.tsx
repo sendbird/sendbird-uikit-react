@@ -40,7 +40,7 @@ export const VoiceMessageItemBody = ({
   } = useVoicePlayer({
     channelUrl,
     key: `${message?.messageId}`,
-    audioFileUrl: message?.url,
+    audioFileUrl: message?.url || (message as FileMessage & { localUrl?: string })?.localUrl,
     audioFileMimeType: message?.type,
   });
 

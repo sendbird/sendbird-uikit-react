@@ -84,7 +84,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
     renderParentMessageInfoPlaceholder,
   });
   const MemorizedThreadList = useMemorizedThreadList({
-    threadListState,
+    threadListState: parentMessageState === ParentMessageStateTypes.INITIALIZED ? threadListState : ThreadListStateTypes.NIL,
     renderThreadListPlaceHolder,
   });
 
