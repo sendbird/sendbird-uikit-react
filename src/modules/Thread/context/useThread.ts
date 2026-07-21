@@ -1,14 +1,17 @@
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { useCallback, useContext, useMemo } from 'react';
 import { ThreadContext, ThreadState } from './ThreadProvider';
-import { ChannelStateTypes, ParentMessageStateTypes, ThreadListStateTypes } from '../types';
+import { ChannelStateTypes, FileUploadInfoParams, ParentMessageStateTypes, ThreadListStateTypes } from '../types';
 import { GroupChannel, Member } from '@sendbird/chat/groupChannel';
 import { CoreMessageType, SendableMessageType } from '../../../utils';
 import { EmojiContainer, User } from '@sendbird/chat';
+import { BaseMessage, ReactionEvent } from '@sendbird/chat/message';
 import { compareIds, getNicknamesMapFromMembers } from './utils';
 import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import { useThreadMessageActions } from './hooks/useThreadMessageActions';
+
+const noop = () => {};
 
 const useThread = () => {
   const store = useContext(ThreadContext);
@@ -219,6 +222,35 @@ const useThread = () => {
     }), [store]),
   };
 
+  /**
+   * These low-level dispatchers were removed when the @sendbird/uikit-tools collection
+   * took over thread state management. They are retained here as intentional no-ops for
+   * type/build backward compatibility, so existing customer code that references them still
+   * compiles; the collection now owns the state they used to mutate. Signatures are provided
+   * by casting `noop`, which keeps the parameters off the runtime function (no unused-var).
+   */
+  const backwardCompatActions = useMemo(() => ({
+    onMessageReceived: noop as (channel: GroupChannel, message: SendableMessageType) => void,
+    onReactionUpdated: noop as (reactionEvent: ReactionEvent) => void,
+    onFileInfoUpdated: noop as (params: FileUploadInfoParams) => void,
+    sendMessageStart: noop as (message: SendableMessageType) => void,
+    sendMessageSuccess: noop as (message: SendableMessageType) => void,
+    sendMessageFailure: noop as (message: SendableMessageType) => void,
+    resendMessageStart: noop as (message: SendableMessageType) => void,
+    onMessageUpdated: noop as (channel: GroupChannel, message: SendableMessageType) => void,
+    onMessageDeleted: noop as (channel: GroupChannel, messageId: number) => void,
+    onMessageDeletedByReqId: noop as (reqId: string | number) => void,
+    initializeThreadListStart: noop,
+    initializeThreadListSuccess: noop as (parentMessage: BaseMessage, anchorMessage: SendableMessageType, threadedMessages: BaseMessage[]) => void,
+    initializeThreadListFailure: noop,
+    getPrevMessagesStart: noop,
+    getPrevMessagesSuccess: noop as (threadedMessages: CoreMessageType[]) => void,
+    getPrevMessagesFailure: noop,
+    getNextMessagesStart: noop,
+    getNextMessagesSuccess: noop as (threadedMessages: CoreMessageType[]) => void,
+    getNextMessagesFailure: noop,
+  }), []);
+
   const actions = useMemo(() => ({
     ...simpleActions,
     toggleReaction,
@@ -226,6 +258,7 @@ const useThread = () => {
     fetchPrevThreads,
     fetchNextThreads,
     ...messageActions,
+    ...backwardCompatActions,
   }), [
     simpleActions,
     toggleReaction,
@@ -233,6 +266,7 @@ const useThread = () => {
     fetchPrevThreads,
     fetchNextThreads,
     messageActions,
+    backwardCompatActions,
   ]);
 
   return { state, actions };

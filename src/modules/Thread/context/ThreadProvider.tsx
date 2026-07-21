@@ -9,6 +9,7 @@ import type {
   UserMessage,
   UserMessageCreateParams,
 } from '@sendbird/chat/message';
+import { SendingStatus } from '@sendbird/chat/message';
 
 import { getNicknamesMapFromMembers, getParentMessageFrom } from './utils';
 import { UserProfileProvider, UserProfileProviderProps } from '../../../lib/UserProfileContext';
@@ -262,10 +263,17 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
     if (!parentMessage) return;
     const parentId = parentMessage.messageId;
     const scopedMessages = threadDataSource.messages.filter((m) => m.parentMessageId === parentId || !m.parentMessageId);
+    // Split back into the legacy public shape: allThreadMessages = succeeded (server) messages,
+    // localThreadMessages = pending/failed outbound messages. The collection keeps them in one list.
+    const localThreadMessages = scopedMessages.filter((m) => {
+      const sendingStatus = (m as SendableMessageType).sendingStatus;
+      return sendingStatus === SendingStatus.PENDING || sendingStatus === SendingStatus.FAILED;
+    });
+    const allThreadMessages = scopedMessages.filter((m) => !localThreadMessages.includes(m));
     store?.setState((prev) => ({
       ...prev,
-      allThreadMessages: scopedMessages as CoreMessageType[],
-      localThreadMessages: [],
+      allThreadMessages: allThreadMessages as CoreMessageType[],
+      localThreadMessages: localThreadMessages as CoreMessageType[],
       hasMorePrev,
       hasMoreNext,
       threadListState,
