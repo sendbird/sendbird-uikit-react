@@ -196,7 +196,7 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
   const threadDataSource = useGroupChannelThreadMessages(
     sdk as Parameters<typeof useGroupChannelThreadMessages>[0],
     currentChannel as GroupChannel,
-    (parentMessage ?? propsParentMessage) as UserMessage | FileMessage,
+    (propsParentMessage ?? parentMessage) as UserMessage | FileMessage,
     {
       startingPoint,
       isReactionEnabled,
