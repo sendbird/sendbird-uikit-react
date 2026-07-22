@@ -218,4 +218,35 @@ describe('useThreadMessageActions', () => {
 
     expect(statics.pubSub.publish).not.toHaveBeenCalled();
   });
+
+  it('resendMessage skips a non-resendable message (guard): no data-source call, no publish, warns', async () => {
+    const state = makeState();
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const notResendable = { messageId: 10, isResendable: false, isUserMessage: () => true } as unknown as SendableMessageType;
+
+    await act(async () => {
+      result.current.resendMessage(notResendable);
+    });
+
+    expect(state.dsResendMessage).not.toHaveBeenCalled();
+    expect(statics.pubSub.publish).not.toHaveBeenCalled();
+    expect(statics.logger.warning).toHaveBeenCalled();
+  });
+
+  it('sendMessage handles a send failure via its catch (no publish, no throw)', async () => {
+    const state = makeState({ dsSendUserMessage: vi.fn().mockRejectedValue(new Error('network')) });
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+
+    await act(async () => {
+      result.current.sendMessage({ message: 'will fail' });
+    });
+
+    await waitFor(() => {
+      expect(state.dsSendUserMessage).toHaveBeenCalled();
+    });
+    // The rejection is swallowed by the .catch: the success-path publish never fires.
+    expect(statics.pubSub.publish).not.toHaveBeenCalled();
+  });
 });

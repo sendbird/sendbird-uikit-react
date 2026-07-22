@@ -49,7 +49,11 @@ type ThreadMessageDataSource = ReturnType<typeof useGroupChannelThreadMessages>;
 
 export interface ThreadState extends ThreadProviderProps {
   currentChannel: GroupChannel;
+  /** All thread replies (succeeded + pending + failed) in one list. Prefer this. */
+  threadMessages: Array<CoreMessageType>;
+  /** @deprecated Use {@link ThreadState.threadMessages} instead. Holds succeeded (server) replies only. */
   allThreadMessages: Array<CoreMessageType>;
+  /** @deprecated Use {@link ThreadState.threadMessages} instead. Holds pending/failed outbound replies only. */
   localThreadMessages: Array<CoreMessageType>;
   parentMessage: SendableMessageType;
   channelState: ChannelStateTypes;
@@ -87,6 +91,7 @@ const initialState = () => ({
   isMultipleFilesMessageEnabled: undefined,
   filterEmojiCategoryIds: undefined,
   currentChannel: null,
+  threadMessages: [],
   allThreadMessages: [],
   localThreadMessages: [],
   parentMessage: null,
@@ -209,7 +214,9 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
         updateState({
           parentMessage: null,
           parentMessageState: ParentMessageStateTypes.NIL,
+          threadMessages: [],
           allThreadMessages: [],
+          localThreadMessages: [],
         });
       },
       onChannelDeleted: () => {
@@ -217,7 +224,9 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
           currentChannel: null,
           channelState: ChannelStateTypes.NIL,
           threadListState: ThreadListStateTypes.NIL,
+          threadMessages: [],
           allThreadMessages: [],
+          localThreadMessages: [],
         });
       },
       onCurrentUserBanned: () => {
@@ -227,7 +236,9 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
           threadListState: ThreadListStateTypes.NIL,
           parentMessage: null,
           parentMessageState: ParentMessageStateTypes.NIL,
+          threadMessages: [],
           allThreadMessages: [],
+          localThreadMessages: [],
           hasMorePrev: false,
           hasMoreNext: false,
         });
@@ -262,9 +273,11 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
   useEffect(() => {
     if (!parentMessage) return;
     const parentId = parentMessage.messageId;
+    // Scope to this thread's replies. The collection filters event/fetch results by parent, but its
+    // send/resend paths only gate on channelUrl, so a reply for another parent (e.g. via a custom
+    // onBeforeSend*) could otherwise leak in. Split into the legacy public shape: allThreadMessages =
+    // succeeded (server) messages, localThreadMessages = pending/failed; threadMessages = all of them.
     const scopedMessages = threadDataSource.messages.filter((m) => m.parentMessageId === parentId || !m.parentMessageId);
-    // Split back into the legacy public shape: allThreadMessages = succeeded (server) messages,
-    // localThreadMessages = pending/failed outbound messages. The collection keeps them in one list.
     const localThreadMessages = scopedMessages.filter((m) => {
       const sendingStatus = (m as SendableMessageType).sendingStatus;
       return sendingStatus === SendingStatus.PENDING || sendingStatus === SendingStatus.FAILED;
@@ -272,6 +285,7 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
     const allThreadMessages = scopedMessages.filter((m) => !localThreadMessages.includes(m));
     store?.setState((prev) => ({
       ...prev,
+      threadMessages: scopedMessages as CoreMessageType[],
       allThreadMessages: allThreadMessages as CoreMessageType[],
       localThreadMessages: localThreadMessages as CoreMessageType[],
       hasMorePrev,

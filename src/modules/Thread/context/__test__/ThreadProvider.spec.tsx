@@ -68,7 +68,7 @@ const mockState = {
     userStore: { user: { userId: 'test-user-id' } },
   },
   config: {
-    logger: console,
+    logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() },
     pubSub: {
       publish: vi.fn(),
     },
@@ -101,6 +101,7 @@ describe('ThreadProvider', () => {
     isMultipleFilesMessageEnabled: undefined,
     filterEmojiCategoryIds: undefined,
     currentChannel: null,
+    threadMessages: [],
     allThreadMessages: [],
     localThreadMessages: [],
     parentMessage: null,
@@ -361,6 +362,161 @@ describe('ThreadProvider', () => {
       expect(result.current.state.allThreadMessages).toEqual([succeededMessage]);
     });
     expect(result.current.state.localThreadMessages).toEqual([pendingMessage, failedMessage]);
+    expect(result.current.state.threadMessages).toEqual([succeededMessage, pendingMessage, failedMessage]);
+  });
+
+  it('reclassifies a reply from local to server when it transitions pending -> succeeded, without leaving a duplicate', async () => {
+    const parentMessageId = 600;
+    // Same messageId across the transition: the pending local echo becoming its succeeded server message.
+    // serialize() embeds sendingStatus so messagesSyncKey changes and the mirror effect re-fires even
+    // though the array length and messageId are unchanged (guards against the effect under-firing on an
+    // in-place status flip — the class of bug behind CLNP-8740's "shows then disappears/duplicates").
+    const pendingEcho = {
+      messageId: 601,
+      parentMessageId,
+      sendingStatus: SendingStatus.PENDING,
+      serialize: () => ({ messageId: 601, sendingStatus: SendingStatus.PENDING }),
+    } as unknown as SendableMessageType;
+    const succeededEcho = {
+      messageId: 601,
+      parentMessageId,
+      sendingStatus: SendingStatus.SUCCEEDED,
+      serialize: () => ({ messageId: 601, sendingStatus: SendingStatus.SUCCEEDED }),
+    } as unknown as SendableMessageType;
+
+    let dsMessages: SendableMessageType[] = [pendingEcho];
+    (useGroupChannelThreadMessages as Mock).mockImplementation(() => ({
+      ...makeDefaultDs(),
+      initialized: true,
+      messages: dsMessages,
+    }));
+
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+    const { result, rerender } = renderHook(() => useThread(), { wrapper });
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    const parent = { messageId: parentMessageId, message: 'parent' } as unknown as SendableMessageType;
+    await act(async () => {
+      options.onParentMessageUpdated(parent);
+    });
+
+    // While pending, the echo is a local (pending/failed) reply.
+    await waitFor(() => {
+      expect(result.current.state.localThreadMessages).toEqual([pendingEcho]);
+    });
+    expect(result.current.state.allThreadMessages).toEqual([]);
+    expect(result.current.state.threadMessages).toHaveLength(1);
+
+    // The echo succeeds. The collection replaces it in place; the mirror must move it to the server
+    // list and leave localThreadMessages empty with no duplicate in threadMessages.
+    dsMessages = [succeededEcho];
+    rerender();
+
+    await waitFor(() => {
+      expect(result.current.state.allThreadMessages).toEqual([succeededEcho]);
+    });
+    expect(result.current.state.localThreadMessages).toEqual([]);
+    expect(result.current.state.threadMessages).toHaveLength(1);
+    expect(result.current.state.threadMessages).toEqual([succeededEcho]);
+  });
+
+  it('clears threadMessages, allThreadMessages and localThreadMessages together when the current user is banned', async () => {
+    const parentMessageId = 700;
+    const succeededMessage = {
+      messageId: 701,
+      parentMessageId,
+      sendingStatus: SendingStatus.SUCCEEDED,
+      serialize: () => ({ messageId: 701 }),
+    } as unknown as SendableMessageType;
+    const pendingMessage = {
+      messageId: 702,
+      parentMessageId,
+      sendingStatus: SendingStatus.PENDING,
+      serialize: () => ({ messageId: 702 }),
+    } as unknown as SendableMessageType;
+
+    (useGroupChannelThreadMessages as Mock).mockReturnValue({
+      ...makeDefaultDs(),
+      initialized: true,
+      messages: [succeededMessage, pendingMessage],
+    });
+
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+    const { result } = renderHook(() => useThread(), { wrapper });
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    const parent = { messageId: parentMessageId, message: 'parent' } as unknown as SendableMessageType;
+    await act(async () => {
+      options.onParentMessageUpdated(parent);
+    });
+    await waitFor(() => {
+      expect(result.current.state.threadMessages.length).toBe(2);
+      expect(result.current.state.localThreadMessages.length).toBe(1);
+    });
+
+    // Banning the current user must clear all three arrays together (no stale legacy or new state).
+    await act(async () => {
+      result.current.actions.onUserBanned(mockChannel as never, { userId: 'test-user-id' } as never);
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.threadMessages).toEqual([]);
+      expect(result.current.state.allThreadMessages).toEqual([]);
+      expect(result.current.state.localThreadMessages).toEqual([]);
+    });
+  });
+
+  it('excludes replies that belong to a different parent from the reply arrays', async () => {
+    const parentMessageId = 800;
+    const ownReply = {
+      messageId: 801,
+      parentMessageId,
+      sendingStatus: SendingStatus.SUCCEEDED,
+      serialize: () => ({ messageId: 801 }),
+    } as unknown as SendableMessageType;
+    const otherParentReply = {
+      messageId: 802,
+      parentMessageId: 999,
+      sendingStatus: SendingStatus.SUCCEEDED,
+      serialize: () => ({ messageId: 802 }),
+    } as unknown as SendableMessageType;
+
+    (useGroupChannelThreadMessages as Mock).mockReturnValue({
+      ...makeDefaultDs(),
+      initialized: true,
+      messages: [ownReply, otherParentReply],
+    });
+
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+    const { result } = renderHook(() => useThread(), { wrapper });
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    const parent = { messageId: parentMessageId, message: 'parent' } as unknown as SendableMessageType;
+    await act(async () => {
+      options.onParentMessageUpdated(parent);
+    });
+
+    // The reply for another parent (messageId 999) must be filtered out of every reply array.
+    await waitFor(() => {
+      expect(result.current.state.threadMessages).toEqual([ownReply]);
+    });
+    expect(result.current.state.allThreadMessages).toEqual([ownReply]);
+    expect(result.current.state.threadMessages).not.toContain(otherParentReply);
   });
 
   it('exposes the removed low-level action creators as safe no-op shims (backward compat)', async () => {
@@ -403,7 +559,7 @@ describe('ThreadProvider', () => {
       expect(typeof actions[name]).toBe('function');
     });
 
-    // Calling them must be a safe no-op (must not throw).
+    // Calling them logs a deprecation warning and is otherwise a no-op (must not throw).
     expect(() => actions.sendMessageStart(msg)).not.toThrow();
     expect(() => actions.sendMessageSuccess(msg)).not.toThrow();
     expect(() => actions.sendMessageFailure(msg)).not.toThrow();
@@ -423,6 +579,9 @@ describe('ThreadProvider', () => {
     expect(() => actions.getNextMessagesStart()).not.toThrow();
     expect(() => actions.getNextMessagesSuccess([])).not.toThrow();
     expect(() => actions.getNextMessagesFailure()).not.toThrow();
+
+    // Each deprecated shim logs a warning (not a silent no-op).
+    expect(mockState.config.logger.warning).toHaveBeenCalled();
   });
 
   it('binds the reply collection to the parent derived from the current message prop on thread switch', async () => {

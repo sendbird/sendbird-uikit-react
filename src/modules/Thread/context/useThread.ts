@@ -11,8 +11,6 @@ import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import { useThreadMessageActions } from './hooks/useThreadMessageActions';
 
-const noop = () => {};
-
 const useThread = () => {
   const store = useContext(ThreadContext);
   if (!store) throw new Error('useThread must be used within a ThreadProvider');
@@ -139,7 +137,9 @@ const useThread = () => {
             parentMessageState: ParentMessageStateTypes.NIL,
             currentChannel: null,
             parentMessage: null,
+            threadMessages: [],
             allThreadMessages: [],
+            localThreadMessages: [],
             hasMorePrev: false,
             hasMoreNext: false,
           };
@@ -173,7 +173,9 @@ const useThread = () => {
             parentMessageState: ParentMessageStateTypes.NIL,
             currentChannel: null,
             parentMessage: null,
+            threadMessages: [],
             allThreadMessages: [],
+            localThreadMessages: [],
             hasMorePrev: false,
             hasMoreNext: false,
           };
@@ -223,33 +225,38 @@ const useThread = () => {
   };
 
   /**
-   * These low-level dispatchers were removed when the @sendbird/uikit-tools collection
-   * took over thread state management. They are retained here as intentional no-ops for
-   * type/build backward compatibility, so existing customer code that references them still
-   * compiles; the collection now owns the state they used to mutate. Signatures are provided
-   * by casting `noop`, which keeps the parameters off the runtime function (no unused-var).
+   * These low-level dispatchers were removed when the @sendbird/uikit-tools collection took over
+   * thread state management. They are retained for backward compatibility (existing customer code
+   * referencing them still compiles) but no longer mutate state — the collection owns it now. Each
+   * logs a deprecation warning when called so a direct caller is not left with a silent no-op.
+   * Signatures are supplied by casting, which keeps the parameters off the runtime function.
    */
-  const backwardCompatActions = useMemo(() => ({
-    onMessageReceived: noop as (channel: GroupChannel, message: SendableMessageType) => void,
-    onReactionUpdated: noop as (reactionEvent: ReactionEvent) => void,
-    onFileInfoUpdated: noop as (params: FileUploadInfoParams) => void,
-    sendMessageStart: noop as (message: SendableMessageType) => void,
-    sendMessageSuccess: noop as (message: SendableMessageType) => void,
-    sendMessageFailure: noop as (message: SendableMessageType) => void,
-    resendMessageStart: noop as (message: SendableMessageType) => void,
-    onMessageUpdated: noop as (channel: GroupChannel, message: SendableMessageType) => void,
-    onMessageDeleted: noop as (channel: GroupChannel, messageId: number) => void,
-    onMessageDeletedByReqId: noop as (reqId: string | number) => void,
-    initializeThreadListStart: noop,
-    initializeThreadListSuccess: noop as (parentMessage: BaseMessage, anchorMessage: SendableMessageType, threadedMessages: BaseMessage[]) => void,
-    initializeThreadListFailure: noop,
-    getPrevMessagesStart: noop,
-    getPrevMessagesSuccess: noop as (threadedMessages: CoreMessageType[]) => void,
-    getPrevMessagesFailure: noop,
-    getNextMessagesStart: noop,
-    getNextMessagesSuccess: noop as (threadedMessages: CoreMessageType[]) => void,
-    getNextMessagesFailure: noop,
-  }), []);
+  const backwardCompatActions = useMemo(() => {
+    const warn = (name: string) => () => {
+      logger?.warning?.(`[Thread] useThread().actions.${name} is deprecated and no longer has any effect; thread state is now managed by the @sendbird/uikit-tools collection.`);
+    };
+    return {
+      onMessageReceived: warn('onMessageReceived') as (channel: GroupChannel, message: SendableMessageType) => void,
+      onReactionUpdated: warn('onReactionUpdated') as (reactionEvent: ReactionEvent) => void,
+      onFileInfoUpdated: warn('onFileInfoUpdated') as (params: FileUploadInfoParams) => void,
+      sendMessageStart: warn('sendMessageStart') as (message: SendableMessageType) => void,
+      sendMessageSuccess: warn('sendMessageSuccess') as (message: SendableMessageType) => void,
+      sendMessageFailure: warn('sendMessageFailure') as (message: SendableMessageType) => void,
+      resendMessageStart: warn('resendMessageStart') as (message: SendableMessageType) => void,
+      onMessageUpdated: warn('onMessageUpdated') as (channel: GroupChannel, message: SendableMessageType) => void,
+      onMessageDeleted: warn('onMessageDeleted') as (channel: GroupChannel, messageId: number) => void,
+      onMessageDeletedByReqId: warn('onMessageDeletedByReqId') as (reqId: string | number) => void,
+      initializeThreadListStart: warn('initializeThreadListStart'),
+      initializeThreadListSuccess: warn('initializeThreadListSuccess') as (parentMessage: BaseMessage, anchorMessage: SendableMessageType, threadedMessages: BaseMessage[]) => void,
+      initializeThreadListFailure: warn('initializeThreadListFailure'),
+      getPrevMessagesStart: warn('getPrevMessagesStart'),
+      getPrevMessagesSuccess: warn('getPrevMessagesSuccess') as (threadedMessages: CoreMessageType[]) => void,
+      getPrevMessagesFailure: warn('getPrevMessagesFailure'),
+      getNextMessagesStart: warn('getNextMessagesStart'),
+      getNextMessagesSuccess: warn('getNextMessagesSuccess') as (threadedMessages: CoreMessageType[]) => void,
+      getNextMessagesFailure: warn('getNextMessagesFailure'),
+    };
+  }, [logger]);
 
   const actions = useMemo(() => ({
     ...simpleActions,
