@@ -27,9 +27,12 @@ const useThread = () => {
   const initializeThreadFetcher = useCallback((callback?: (messages: CoreMessageType[]) => void) => {
     const { resetWithStartingPoint, message: anchorMessage, parentMessage } = store.getState();
     if (!resetWithStartingPoint) return;
+    // Mirror ThreadProvider's initial startingPoint: anchor at the specific reply when entering from
+    // one, otherwise open at the latest edge (MAX). parentMessage.createdAt would anchor at the oldest
+    // edge (replies are created after the parent), hiding the latest replies behind hasMoreNext.
     const startingPoint = (anchorMessage && parentMessage && anchorMessage.messageId !== parentMessage.messageId)
       ? anchorMessage.createdAt
-      : parentMessage?.createdAt ?? 0;
+      : Number.MAX_SAFE_INTEGER;
     resetWithStartingPoint(startingPoint).then(() => {
       setTimeout(() => callback?.(store.getState().allThreadMessages));
     });

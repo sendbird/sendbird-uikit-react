@@ -272,10 +272,11 @@ describe('ThreadProvider', () => {
     });
   });
 
-  it('initializeThreadFetcher delegates to the data source resetWithStartingPoint', async () => {
+  it('initializeThreadFetcher resets a root thread (no anchor) at the latest edge (MAX_SAFE_INTEGER)', async () => {
     mockDs.resetWithStartingPoint.mockResolvedValue(undefined);
+    const rootMessage = { messageId: 1, createdAt: 1000, parentMessage: null, parentMessageId: 0 } as unknown as SendableMessageType;
     const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+      <ThreadProvider channelUrl="test-channel" message={rootMessage}>{children}</ThreadProvider>
     );
 
     const { result } = renderHook(() => useThread(), { wrapper });
@@ -283,11 +284,44 @@ describe('ThreadProvider', () => {
       expect(result.current.state.currentChannel).not.toBe(undefined);
     });
 
+    // Normal parent message: anchor (message) === parentMessage, so there is no separate anchor.
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    await act(async () => {
+      options.onParentMessageUpdated({ messageId: 1, createdAt: 1000 } as unknown as SendableMessageType);
+    });
+
     await act(async () => {
       result.current.actions.initializeThreadFetcher();
     });
 
-    expect(mockDs.resetWithStartingPoint).toHaveBeenCalled();
+    // Must match the provider's initial open (MAX), not parentMessage.createdAt (which would hide the
+    // latest replies behind hasMoreNext).
+    expect(mockDs.resetWithStartingPoint).toHaveBeenCalledWith(Number.MAX_SAFE_INTEGER);
+  });
+
+  it('initializeThreadFetcher resets an anchored reply at the anchor message createdAt', async () => {
+    mockDs.resetWithStartingPoint.mockResolvedValue(undefined);
+    // Entering from a specific reply: message (anchor) differs from the parent.
+    const anchorReply = { messageId: 2, createdAt: 5000, parentMessageId: 1 } as unknown as SendableMessageType;
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={anchorReply}>{children}</ThreadProvider>
+    );
+
+    const { result } = renderHook(() => useThread(), { wrapper });
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    await act(async () => {
+      options.onParentMessageUpdated({ messageId: 1, createdAt: 1000 } as unknown as SendableMessageType);
+    });
+
+    await act(async () => {
+      result.current.actions.initializeThreadFetcher();
+    });
+
+    expect(mockDs.resetWithStartingPoint).toHaveBeenCalledWith(5000);
   });
 
   it('onParentMessageUpdated option syncs the updated parent message into state', async () => {
