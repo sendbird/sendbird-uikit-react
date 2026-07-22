@@ -510,6 +510,55 @@ describe('ThreadProvider', () => {
     });
   });
 
+  it('clears the parent (and reply arrays) when the channel is deleted, so the composer disables', async () => {
+    const parentMessageId = 750;
+    const reply = {
+      messageId: 751,
+      parentMessageId,
+      sendingStatus: SendingStatus.SUCCEEDED,
+      serialize: () => ({ messageId: 751 }),
+    } as unknown as SendableMessageType;
+
+    (useGroupChannelThreadMessages as Mock).mockReturnValue({
+      ...makeDefaultDs(),
+      initialized: true,
+      messages: [reply],
+    });
+
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+    const { result } = renderHook(() => useThread(), { wrapper });
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    const parent = { messageId: parentMessageId, message: 'parent' } as unknown as SendableMessageType;
+    await act(async () => {
+      options.onParentMessageUpdated(parent);
+    });
+    await waitFor(() => {
+      expect(result.current.state.parentMessage).toBe(parent);
+      expect(result.current.state.threadMessages).toHaveLength(1);
+    });
+
+    // Channel deleted: parent must be cleared too (ThreadMessageInput disables on parentMessage === null),
+    // along with the channel and every reply array.
+    await act(async () => {
+      options.onChannelDeleted('test-channel');
+    });
+
+    await waitFor(() => {
+      expect(result.current.state.parentMessage).toBe(null);
+      expect(result.current.state.parentMessageState).toBe(ParentMessageStateTypes.NIL);
+      expect(result.current.state.currentChannel).toBe(null);
+    });
+    expect(result.current.state.threadMessages).toEqual([]);
+    expect(result.current.state.allThreadMessages).toEqual([]);
+    expect(result.current.state.localThreadMessages).toEqual([]);
+  });
+
   it('exposes the removed low-level action creators as safe no-op shims (backward compat)', async () => {
     const wrapper = ({ children }) => (
       <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>

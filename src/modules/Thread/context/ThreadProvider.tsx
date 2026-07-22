@@ -224,9 +224,16 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
           currentChannel: null,
           channelState: ChannelStateTypes.NIL,
           threadListState: ThreadListStateTypes.NIL,
+          // Clear the parent too: the channel is gone, so a stale parentMessage would keep the
+          // composer enabled (ThreadMessageInput only disables on parentMessage === null) while sends
+          // silently no-op. Mirrors the current-user-banned reset.
+          parentMessage: null,
+          parentMessageState: ParentMessageStateTypes.NIL,
           threadMessages: [],
           allThreadMessages: [],
           localThreadMessages: [],
+          hasMorePrev: false,
+          hasMoreNext: false,
         });
       },
       onCurrentUserBanned: () => {
