@@ -476,49 +476,6 @@ describe('ThreadProvider', () => {
     });
   });
 
-  it('excludes replies that belong to a different parent from the reply arrays', async () => {
-    const parentMessageId = 800;
-    const ownReply = {
-      messageId: 801,
-      parentMessageId,
-      sendingStatus: SendingStatus.SUCCEEDED,
-      serialize: () => ({ messageId: 801 }),
-    } as unknown as SendableMessageType;
-    const otherParentReply = {
-      messageId: 802,
-      parentMessageId: 999,
-      sendingStatus: SendingStatus.SUCCEEDED,
-      serialize: () => ({ messageId: 802 }),
-    } as unknown as SendableMessageType;
-
-    (useGroupChannelThreadMessages as Mock).mockReturnValue({
-      ...makeDefaultDs(),
-      initialized: true,
-      messages: [ownReply, otherParentReply],
-    });
-
-    const wrapper = ({ children }) => (
-      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
-    );
-    const { result } = renderHook(() => useThread(), { wrapper });
-    await waitFor(() => {
-      expect(result.current.state.currentChannel).not.toBe(undefined);
-    });
-
-    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
-    const parent = { messageId: parentMessageId, message: 'parent' } as unknown as SendableMessageType;
-    await act(async () => {
-      options.onParentMessageUpdated(parent);
-    });
-
-    // The reply for another parent (messageId 999) must be filtered out of every reply array.
-    await waitFor(() => {
-      expect(result.current.state.threadMessages).toEqual([ownReply]);
-    });
-    expect(result.current.state.allThreadMessages).toEqual([ownReply]);
-    expect(result.current.state.threadMessages).not.toContain(otherParentReply);
-  });
-
   it('exposes the removed low-level action creators as safe no-op shims (backward compat)', async () => {
     const wrapper = ({ children }) => (
       <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>

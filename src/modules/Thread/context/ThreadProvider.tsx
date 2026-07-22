@@ -272,12 +272,10 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
 
   useEffect(() => {
     if (!parentMessage) return;
-    const parentId = parentMessage.messageId;
-    // Scope to this thread's replies. The collection filters event/fetch results by parent, but its
-    // send/resend paths only gate on channelUrl, so a reply for another parent (e.g. via a custom
-    // onBeforeSend*) could otherwise leak in. Split into the legacy public shape: allThreadMessages =
+    // core-ts scopes the collection to this thread's replies (belongsToThread on the event/fetch and
+    // send/resend paths), so mirror them as-is. Split into the legacy public shape: allThreadMessages =
     // succeeded (server) messages, localThreadMessages = pending/failed; threadMessages = all of them.
-    const scopedMessages = threadDataSource.messages.filter((m) => m.parentMessageId === parentId || !m.parentMessageId);
+    const scopedMessages = threadDataSource.messages;
     const localThreadMessages = scopedMessages.filter((m) => {
       const sendingStatus = (m as SendableMessageType).sendingStatus;
       return sendingStatus === SendingStatus.PENDING || sendingStatus === SendingStatus.FAILED;
