@@ -4,7 +4,6 @@ import uuidv4 from '../../../../utils/uuid';
 import type { Logger, SdkStore } from '../../../../lib/Sendbird/types';
 import compareIds from '../../../../utils/compareIds';
 import useThread from '../useThread';
-import { SendableMessageType } from '../../../../utils';
 
 interface DynamicProps {
   sdk: SdkStore['sdk'];
@@ -22,10 +21,6 @@ export default function useHandleChannelEvents({
 }: StaticProps): void {
   const {
     actions: {
-      onMessageReceived,
-      onMessageUpdated,
-      onMessageDeleted,
-      onReactionUpdated,
       onUserMuted,
       onUserUnmuted,
       onUserBanned,
@@ -45,23 +40,6 @@ export default function useHandleChannelEvents({
       && currentChannel
     ) {
       const channelHandlerParams: GroupChannelHandler = {
-        // message status change
-        onMessageReceived(channel, message) {
-          logger.info('Thread | useHandleChannelEvents: onMessageReceived', { channel, message });
-          onMessageReceived(channel as GroupChannel, message as SendableMessageType);
-        },
-        onMessageUpdated(channel, message) {
-          logger.info('Thread | useHandleChannelEvents: onMessageUpdated', { channel, message });
-          onMessageUpdated(channel as GroupChannel, message as SendableMessageType);
-        },
-        onMessageDeleted(channel, messageId) {
-          logger.info('Thread | useHandleChannelEvents: onMessageDeleted', { channel, messageId });
-          onMessageDeleted(channel as GroupChannel, messageId);
-        },
-        onReactionUpdated(channel, reactionEvent) {
-          logger.info('Thread | useHandleChannelEvents: onReactionUpdated', { channel, reactionEvent });
-          onReactionUpdated(reactionEvent);
-        },
         // user status change
         onUserMuted(channel, user) {
           logger.info('Thread | useHandleChannelEvents: onUserMuted', { channel, user });

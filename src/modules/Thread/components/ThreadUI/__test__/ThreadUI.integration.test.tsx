@@ -68,6 +68,8 @@ vi.mock('../../../context/useThread');
 
 const mockStringSet = {
   DATE_FORMAT__MESSAGE_CREATED_AT: 'p',
+  THREAD__THREAD_REPLY: 'reply',
+  THREAD__THREAD_REPLIES: 'replies',
 };
 
 const mockLocalizationContext = {
@@ -158,6 +160,39 @@ describe('CreateChannelUI Integration Tests', () => {
 
     expect(screen.getByText('parent message')).toBeInTheDocument();
     expect(screen.getByText('threaded message 1')).toBeInTheDocument();
+  });
+
+  it('shows the reply count once the parent is initialized', async () => {
+    await act(async () => {
+      renderComponent({
+        parentMessage: {
+          messageId: 1,
+          message: 'parent message',
+          isUserMessage: () => true,
+          isTextMessage: true,
+          createdAt: 0,
+          sender: { userId: 'test-user-id' },
+        },
+        parentMessageState: ParentMessageStateTypes.INITIALIZED,
+      });
+    });
+
+    // defaultMockState has 1 threaded message → "1 reply".
+    expect(screen.getByText('1 reply')).toBeInTheDocument();
+  });
+
+  it('does not show a stale reply count while the parent is not yet initialized (thread switch)', async () => {
+    // On a thread switch the previous thread's replies linger in the store until the new collection
+    // mirrors; the parent is loading, so the count must be gated off (no stale "1 reply").
+    await act(async () => {
+      renderComponent({
+        parentMessage: null,
+        parentMessageState: ParentMessageStateTypes.LOADING,
+        // allThreadMessages still holds the previous thread's reply (from defaultMockState).
+      });
+    });
+
+    expect(screen.queryByText('1 reply')).not.toBeInTheDocument();
   });
 
   it('fetchPrevThread is correctly called when scroll is top', async () => {

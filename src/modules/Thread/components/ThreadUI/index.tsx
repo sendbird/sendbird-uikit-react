@@ -72,7 +72,13 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
       fetchNextThreads,
     },
   } = useThread();
-  const replyCount = allThreadMessages.length;
+  // Gate the count on the same initialized-parent state as the thread list below; otherwise, on a
+  // thread switch the previous thread's replies linger in the store (until the new collection mirrors)
+  // and would show a stale reply count above the hidden list.
+  // Gate the count on the same initialized-parent state as the thread list below; otherwise, on a
+  // thread switch the previous thread's replies linger in the store (until the new collection mirrors)
+  // and would show a stale reply count above the hidden list.
+  const replyCount = parentMessageState === ParentMessageStateTypes.INITIALIZED ? allThreadMessages.length : 0;
   const isByMe = currentUserId === parentMessage?.sender?.userId;
 
   // Memoized custom components
@@ -84,7 +90,7 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
     renderParentMessageInfoPlaceholder,
   });
   const MemorizedThreadList = useMemorizedThreadList({
-    threadListState,
+    threadListState: parentMessageState === ParentMessageStateTypes.INITIALIZED ? threadListState : ThreadListStateTypes.NIL,
     renderThreadListPlaceHolder,
   });
 

@@ -1,6 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { GroupChannel, GroupChannelHandler } from '@sendbird/chat/groupChannel';
-import { UserMessage } from '@sendbird/chat/message';
 import { User } from '@sendbird/chat';
 import useHandleChannelEvents from '../hooks/useHandleChannelEvents';
 import type { SdkStore } from '../../../../lib/Sendbird/types';
@@ -36,8 +35,6 @@ const mockLogger = {
 
 describe('useHandleChannelEvents', () => {
   const mockUser = { userId: 'user1' } as User;
-  const mockMessage = { messageId: 1 } as UserMessage;
-  const mockReactionEvent = { messageId: 1, key: 'like' };
 
   const createMockChannel = () => ({
     url: 'channel-url',
@@ -90,53 +87,6 @@ describe('useHandleChannelEvents', () => {
     unmount();
 
     expect(mockRemoveHandler).toHaveBeenCalledWith(expect.any(String));
-  });
-
-  it('should handle message received event', () => {
-    const mockAddHandler = vi.fn();
-    const sdk = createMockSdk(mockAddHandler);
-    const channel = createMockChannel();
-
-    renderChannelEventsHook({ sdk, currentChannel: channel });
-
-    const handler = mockAddHandler.mock.calls[0][1];
-    handler.onMessageReceived(channel, mockMessage);
-
-    expect(mockThreadActions.onMessageReceived).toHaveBeenCalledWith(
-      channel,
-      mockMessage,
-    );
-  });
-
-  it('should handle message updated event', () => {
-    const mockAddHandler = vi.fn();
-    const sdk = createMockSdk(mockAddHandler);
-    const channel = createMockChannel();
-
-    renderChannelEventsHook({ sdk, currentChannel: channel });
-
-    const handler = mockAddHandler.mock.calls[0][1];
-    handler.onMessageUpdated(channel, mockMessage);
-
-    expect(mockThreadActions.onMessageUpdated).toHaveBeenCalledWith(
-      channel,
-      mockMessage,
-    );
-  });
-
-  it('should handle reaction updated event', () => {
-    const mockAddHandler = vi.fn();
-    const sdk = createMockSdk(mockAddHandler);
-    const channel = createMockChannel();
-
-    renderChannelEventsHook({ sdk, currentChannel: channel });
-
-    const handler = mockAddHandler.mock.calls[0][1];
-    handler.onReactionUpdated(channel, mockReactionEvent);
-
-    expect(mockThreadActions.onReactionUpdated).toHaveBeenCalledWith(
-      mockReactionEvent,
-    );
   });
 
   it('should handle typing status updated event', () => {
