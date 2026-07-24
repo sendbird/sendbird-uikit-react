@@ -24,17 +24,17 @@ const LocalizationProbe = () => {
 };
 
 describe('SendbirdProvider — theme & stringSet propagation (integration)', () => {
-  const originalConsoleError = console.error;
+  const originalConsoleError = globalThis.console.error.bind(globalThis.console);
 
   beforeAll(() => {
-    console.error = vi.fn((...args) => {
+    vi.spyOn(console, 'error').mockImplementation((...args) => {
       if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) return;
       originalConsoleError(...args);
     });
   });
 
   afterAll(() => {
-    console.error = originalConsoleError;
+    vi.restoreAllMocks();
   });
 
   beforeEach(() => {

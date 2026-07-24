@@ -22,18 +22,18 @@ const mountProvider = async (props: Partial<SendbirdProviderProps>) => {
 };
 
 describe('SendbirdProvider — SDK init/connect consistency (integration)', () => {
-  const originalConsoleError = console.error;
+  const originalConsoleError = globalThis.console.error.bind(globalThis.console);
 
   beforeAll(() => {
     // The connect() effect resolves async after mount; silence the RTL act warning noise.
-    console.error = vi.fn((...args) => {
+    vi.spyOn(console, 'error').mockImplementation((...args) => {
       if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) return;
       originalConsoleError(...args);
     });
   });
 
   afterAll(() => {
-    console.error = originalConsoleError;
+    vi.restoreAllMocks();
   });
 
   beforeEach(() => {
