@@ -24,4 +24,15 @@ test.describe('connect', () => {
         .toContainText(E2E.userId, { timeout: 30_000 });
     });
   });
+
+  test('does not connect with an invalid app id', async ({ page }) => {
+    await page.goto(appPath('/group_channel', { appId: '00000000-0000-0000-0000-000000000000' }));
+    await expect(page.locator('.sendbird-channel-header__title__right__user-id')).toBeHidden({ timeout: 20_000 });
+  });
+
+  test('shows the nickname passed as a connection param in the header', async ({ page }) => {
+    const nickname = `E2E Nick ${Date.now()}`;
+    await page.goto(appPath('/group_channel', { nickname }));
+    await expect(page.locator('.sendbird-channel-header__title__right__name')).toHaveText(nickname, { timeout: 30_000 });
+  });
 });

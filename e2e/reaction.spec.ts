@@ -26,4 +26,23 @@ test.describe('group channel — reactions', () => {
     // A reaction badge appears on the message.
     await expect(msg.locator('.sendbird-emoji-reactions__reaction-badge')).toBeVisible({ timeout: 15_000 });
   });
+
+  test('removes an emoji reaction from a message', async ({ page }) => {
+    await openFirstGroupChannel(page, { groupChannel_enableReactions: 'true' });
+    const text = `[e2e-unreact] ${Date.now()}`;
+    await sendText(page, text);
+
+    const msg = messageByText(page, text);
+    const badge = msg.locator('.sendbird-emoji-reactions__reaction-badge');
+
+    await msg.hover();
+    await msg.locator('.sendbird-message-item-reaction-menu__trigger').click();
+    await page.locator('[data-testid^="ui_emoji_reactions_menu_"]').first().click();
+    await expect(badge).toBeVisible({ timeout: 15_000 });
+
+    await msg.hover();
+    await msg.locator('.sendbird-message-item-reaction-menu__trigger').click();
+    await page.locator('[data-testid^="ui_emoji_reactions_menu_"]').first().click();
+    await expect(badge).toBeHidden({ timeout: 15_000 });
+  });
 });
