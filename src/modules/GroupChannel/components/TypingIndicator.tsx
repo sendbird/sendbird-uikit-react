@@ -44,9 +44,10 @@ export const TypingIndicator = ({ channelUrl }: TypingIndicatorProps) => {
   const [typingMembers, setTypingMembers] = useState<Member[]>([]);
 
   useEffect(() => {
+    let newHandlerId: string | undefined;
     if (sb?.groupChannel?.addGroupChannelHandler) {
       sb.groupChannel.removeGroupChannelHandler(handlerId);
-      const newHandlerId = uuidv4();
+      newHandlerId = uuidv4();
       const handler = new GroupChannelHandler({
         onTypingStatusUpdated: (groupChannel) => {
           // there is a possible warning in here - setState called after unmount
@@ -64,7 +65,7 @@ export const TypingIndicator = ({ channelUrl }: TypingIndicatorProps) => {
     return () => {
       setTypingMembers([]);
       if (sb?.groupChannel?.removeGroupChannelHandler) {
-        sb.groupChannel.removeGroupChannelHandler(handlerId);
+        sb.groupChannel.removeGroupChannelHandler(newHandlerId ?? handlerId);
       }
     };
   }, [channelUrl]);
