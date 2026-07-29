@@ -101,6 +101,11 @@ describe('InviteUsers', () => {
     expect(await screen.findByText('CREATE')).toBeEnabled();
   });
 
+  it('does not crash when the SDK is not yet connected and no userListQuery is provided', () => {
+    expect(() => renderComponent({}, {}, {})).not.toThrow();
+    expect(screen.getByText('CREATE')).toBeInTheDocument();
+  });
+
   // TODO: add this case too
   // it('should disable the modal submit button when there are users on the list but none are checked', () => {
   // })
