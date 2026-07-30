@@ -28,10 +28,10 @@ export default defineConfig({
   testDir: './e2e',
   testMatch: '**/*.spec.ts',
   globalSetup: './e2e/global-setup.ts',
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: process.env.CI
     ? [['junit', { outputFile: 'test-results/e2e-results.xml' }], ['html', { open: 'never' }]]
     : [['list'], ['html', { open: 'never' }]],
