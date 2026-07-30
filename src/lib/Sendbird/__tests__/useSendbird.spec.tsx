@@ -436,12 +436,13 @@ describe('useSendbird', () => {
       expect(mockOnFailed).toHaveBeenCalledWith(expect.any(Error));
     });
 
-    it('writes the updateCurrentUserInfo result to the user store when connecting with a nickname', async () => {
+    it('applies the updateCurrentUserInfo result to both the user store and onConnected when connecting with a nickname', async () => {
       const mockSdk = {
         connect: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'oldName' }),
         updateCurrentUserInfo: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'newName' }),
       };
       vi.mocked(initSDK).mockReturnValue(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>);
+      const onConnected = vi.fn();
 
       const { result } = renderHook(() => useSendbird(), { wrapper });
 
@@ -452,10 +453,13 @@ describe('useSendbird', () => {
           appId: 'mockAppId',
           accessToken: 'mockAccessToken',
           nickname: 'newName',
+          eventHandlers: { connection: { onConnected } },
         });
       });
 
-      expect(mockStore.getState().stores.userStore.user).toEqual({ userId: 'mockUserId', nickname: 'newName' });
+      const updatedUser = { userId: 'mockUserId', nickname: 'newName' };
+      expect(mockStore.getState().stores.userStore.user).toEqual(updatedUser);
+      expect(onConnected).toHaveBeenCalledWith(updatedUser);
     });
   });
 });

@@ -214,15 +214,15 @@ export const useSendbird = () => {
     sdkActions.setSdkLoading(true);
 
     try {
-      const user = await sdk.connect(userId, accessToken);
-      userActions.initUser(user);
+      let connectedUser = await sdk.connect(userId, accessToken);
+      userActions.initUser(connectedUser);
 
       if (nickname || profileUrl) {
-        const updatedUser = await sdk.updateCurrentUserInfo({
-          nickname: nickname || user.nickname || '',
-          profileUrl: profileUrl || user.profileUrl,
+        connectedUser = await sdk.updateCurrentUserInfo({
+          nickname: nickname || connectedUser.nickname || '',
+          profileUrl: profileUrl || connectedUser.profileUrl,
         });
-        userActions.updateUserInfo(updatedUser);
+        userActions.updateUserInfo(connectedUser);
       }
 
       await initializeMessageTemplatesInfo?.(sdk);
@@ -230,7 +230,7 @@ export const useSendbird = () => {
 
       sdkActions.initSdk(sdk);
 
-      eventHandlers?.connection?.onConnected?.(user);
+      eventHandlers?.connection?.onConnected?.(connectedUser);
     } catch (error) {
       const sendbirdError = error as SendbirdError;
       sdkActions.resetSdk();
