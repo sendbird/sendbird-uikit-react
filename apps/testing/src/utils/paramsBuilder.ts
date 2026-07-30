@@ -27,11 +27,15 @@ export const useConfigParams = (initParams: InitialParams): ParamsAsProps => {
     searchParams.get('region'),
   );
 
+  const injectedAccessToken = typeof window !== 'undefined'
+    ? window.sessionStorage.getItem('sb:e2e:accessToken') ?? undefined
+    : undefined;
+
   const response = {
     appId: searchParams.get('appId') || initParams.appId,
     userId: searchParams.get('userId') || initParams.userId,
     nickname: searchParams.get('nickname') || initParams.nickname || initParams.userId,
-    accessToken: searchParams.get('accessToken') || initParams.accessToken,
+    accessToken: searchParams.get('accessToken') || injectedAccessToken || initParams.accessToken,
     customApiHost,
     customWebSocketHost,
     allowProfileEdit: parseValue(searchParams.get('enableProfileEdit')) ?? true,

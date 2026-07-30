@@ -29,7 +29,6 @@ export function appPath(route: AppRoute, params: Record<string, string | undefin
   const query = new URLSearchParams();
   if (E2E.appId) query.set('appId', E2E.appId);
   if (E2E.userId) query.set('userId', E2E.userId);
-  if (E2E.accessToken) query.set('accessToken', E2E.accessToken);
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined) query.set(key, value);
   }

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { hasCreds } from './utils/env';
 import { openFirstGroupChannel, sendText, messageByText } from './utils/actions';
 

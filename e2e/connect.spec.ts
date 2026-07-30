@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { appPath, hasCreds, E2E } from './utils/env';
 
 /**
