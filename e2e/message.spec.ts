@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { hasCreds } from './utils/env';
-import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from './utils/actions';
+import { openFirstGroupChannel, sendText, openMessageMenu } from './utils/actions';
 
 /**
  * Group channel — message actions (Tier 0, single user). Each test sends its own marked message
