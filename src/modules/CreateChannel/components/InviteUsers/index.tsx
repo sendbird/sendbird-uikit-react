@@ -41,7 +41,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
     },
   } = useCreateChannel();
 
-  const { state: { config: { userId }, stores: { sdkStore: { sdk } } } } = useSendbird();
+  const { state: { config: { userId }, stores: { sdkStore: { sdk, initialized } } } } = useSendbird();
   const idsToFilter = [userId];
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<Record<string, boolean>>({});
@@ -87,7 +87,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
       // Disable the create button if no users are selected,
       // but if there's only the logged-in user in the user list,
       // then the create button should be enabled
-      disabled={users.length > 1 && Object.keys(selectedUsers).length === 0}
+      disabled={!initialized || (users.length > 1 && Object.keys(selectedUsers).length === 0)}
       onCancel={onCancel}
       onSubmit={() => {
         const selectedUserList = Object.keys(selectedUsers).length > 0

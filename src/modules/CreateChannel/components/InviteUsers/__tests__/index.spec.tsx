@@ -5,6 +5,7 @@ import InviteUsers from '../index';
 import { ApplicationUserListQuery } from '@sendbird/chat';
 import { CHANNEL_TYPE } from '../../../types';
 import * as useCreateChannelModule from '../../../context/useCreateChannel';
+import * as useSendbirdModule from '../../../../../lib/Sendbird/context/hooks/useSendbird';
 import { LocalizationContext } from '../../../../../lib/LocalizationContext';
 import type { Mock } from 'vitest';
 
@@ -86,6 +87,7 @@ describe('InviteUsers', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    (useSendbirdModule.default as Mock).mockReturnValue({ state: mockState });
   });
 
   it('should enable the modal submit button when there is only the logged-in user is in the user list', async () => {
@@ -99,6 +101,16 @@ describe('InviteUsers', () => {
     renderComponent({}, {}, { userListQuery });
 
     expect(await screen.findByText('CREATE')).toBeEnabled();
+  });
+
+  it('disables the create button until the SDK is connected', async () => {
+    (useSendbirdModule.default as Mock).mockReturnValue({
+      state: { ...mockState, stores: { sdkStore: { ...mockState.stores.sdkStore, initialized: false } } },
+    });
+
+    renderComponent({}, {}, {});
+
+    expect(screen.getByRole('button', { name: 'CREATE' })).toBeDisabled();
   });
 
   it('does not crash when the SDK is not yet connected and no userListQuery is provided', () => {
