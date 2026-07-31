@@ -4,11 +4,11 @@ import { appPath, hasCreds, E2E } from './utils/env';
 /**
  * Connect: the app authenticates against the real backend AS the configured user and renders.
  * (Merges the former smoke render-check with the connected-identity check.)
- * Skips without credentials (see e2e/README.md).
+ * Skips without credentials.
  */
 test.describe('connect', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests (see e2e/README.md).');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
   });
 
   test('connects as the configured user and renders the app', async ({ page }) => {

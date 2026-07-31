@@ -7,7 +7,7 @@ import { defineConfig, devices } from '@playwright/test';
  * E2E Playwright config — separate from playwright.config.ts (which runs visual tests against
  * apps/visual-test). This drives the real apps/testing app in a real browser against a real
  * Sendbird backend. apps/testing is reused unmodified: connection + feature config is injected
- * via URL query params (see e2e/utils/env.ts). See e2e/README.md.
+ * via URL query params (see e2e/utils/env.ts).
  */
 
 // Load .env.e2e without a dotenv dependency. Already-set vars (CI secrets) take precedence.

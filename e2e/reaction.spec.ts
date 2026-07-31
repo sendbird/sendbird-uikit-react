@@ -8,7 +8,7 @@ import { openFirstGroupChannel, sendText, messageByText } from './utils/actions'
  */
 test.describe('group channel — reactions', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests (see e2e/README.md).');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
   });
 
   test('adds an emoji reaction to a message', async ({ page }) => {

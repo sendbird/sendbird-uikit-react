@@ -7,7 +7,7 @@ import { appPath, E2E, hasCreds } from './utils/env';
  */
 test.describe('group channel — create', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests (see e2e/README.md).');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
   });
 
   test('creates a group channel with an invited member', async ({ page }) => {

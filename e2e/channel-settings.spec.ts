@@ -8,7 +8,7 @@ import { openFirstGroupChannel } from './utils/actions';
  */
 test.describe('group channel — settings', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests (see e2e/README.md).');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
   });
 
   test('renames the channel from settings', async ({ page }) => {

@@ -7,7 +7,7 @@ import { appPath, hasCreds } from './utils/env';
  */
 test.describe('open channel — navigation', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests (see e2e/README.md).');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
   });
 
   test('lists open channels and enters one', async ({ page }) => {

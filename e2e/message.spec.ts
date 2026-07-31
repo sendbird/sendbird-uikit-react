@@ -8,7 +8,7 @@ import { openFirstGroupChannel, sendText, openMessageMenu } from './utils/action
  */
 test.describe('group channel — message actions', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests (see e2e/README.md).');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
   });
 
   test('edits an own message', async ({ page }) => {

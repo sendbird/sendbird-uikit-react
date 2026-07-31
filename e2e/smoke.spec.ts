@@ -4,11 +4,11 @@ import { appPath, hasCreds } from './utils/env';
 /**
  * Smoke — the essential chat journey: open a channel, send a text, and see it appear.
  * Requires the test user to be in at least one channel, and sends a real (marked) message to the
- * test App ID's backend. Skips without credentials (see e2e/README.md).
+ * test App ID's backend. Skips without credentials.
  */
 test.describe('smoke: send a message', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests (see e2e/README.md).');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
   });
 
   test('opens a channel and sends a text message', async ({ page }) => {

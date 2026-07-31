@@ -8,7 +8,7 @@ import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from 
  */
 test.describe('group channel — quote reply', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests (see e2e/README.md).');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
   });
 
   test('replies to a message with a quote', async ({ page }) => {
