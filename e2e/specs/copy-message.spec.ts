@@ -1,6 +1,6 @@
-import { test, expect } from './fixtures';
-import { hasCreds } from './utils/env';
-import { openFirstGroupChannel, sendText, openMessageMenu } from './utils/actions';
+import { test, expect } from '../fixtures';
+import { hasCreds } from '../utils/env';
+import { openFirstGroupChannel, sendText, openMessageMenu } from '../utils/actions';
 
 /**
  * Group channel — copy message (Tier 1, single user). Copies an own message via the action menu

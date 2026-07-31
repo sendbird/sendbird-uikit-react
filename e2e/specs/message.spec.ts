@@ -1,6 +1,6 @@
-import { test, expect } from './fixtures';
-import { hasCreds } from './utils/env';
-import { openFirstGroupChannel, sendText, openMessageMenu } from './utils/actions';
+import { test, expect } from '../fixtures';
+import { hasCreds } from '../utils/env';
+import { openFirstGroupChannel, sendText, openMessageMenu } from '../utils/actions';
 
 /**
  * Group channel — message actions (Tier 0, single user). Each test sends its own marked message

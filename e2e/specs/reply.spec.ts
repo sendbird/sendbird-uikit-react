@@ -1,6 +1,6 @@
-import { test, expect } from './fixtures';
-import { hasCreds } from './utils/env';
-import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from './utils/actions';
+import { test, expect } from '../fixtures';
+import { hasCreds } from '../utils/env';
+import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from '../utils/actions';
 
 /**
  * Group channel — quote reply (Tier 0, single user). Drives the app with replyType=QUOTE_REPLY so

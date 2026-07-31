@@ -1,5 +1,5 @@
-import { test, expect } from './fixtures';
-import { appPath, hasCreds, E2E } from './utils/env';
+import { test, expect } from '../fixtures';
+import { appPath, hasCreds, E2E } from '../utils/env';
 
 /**
  * Connect: the app authenticates against the real backend AS the configured user and renders.

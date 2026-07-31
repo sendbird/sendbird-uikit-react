@@ -1,5 +1,5 @@
-import { test, expect } from './fixtures';
-import { appPath, E2E, hasCreds } from './utils/env';
+import { test, expect } from '../fixtures';
+import { appPath, E2E, hasCreds } from '../utils/env';
 
 /**
  * Group channel — create (Tier 0). Creates a group channel and invites the seeded second user

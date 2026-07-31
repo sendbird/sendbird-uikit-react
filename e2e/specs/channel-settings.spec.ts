@@ -1,6 +1,6 @@
-import { test, expect } from './fixtures';
-import { hasCreds } from './utils/env';
-import { openFirstGroupChannel } from './utils/actions';
+import { test, expect } from '../fixtures';
+import { hasCreds } from '../utils/env';
+import { openFirstGroupChannel } from '../utils/actions';
 
 /**
  * Group channel — settings (Tier 0, single user). Opens the settings panel from the conversation

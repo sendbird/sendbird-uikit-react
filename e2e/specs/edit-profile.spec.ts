@@ -1,5 +1,5 @@
-import { test, expect } from './fixtures';
-import { appPath, hasCreds } from './utils/env';
+import { test, expect } from '../fixtures';
+import { appPath, hasCreds } from '../utils/env';
 
 /**
  * User profile — edit (Tier 0, single user). Opens "My profile" from the channel-list header and

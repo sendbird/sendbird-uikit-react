@@ -1,5 +1,5 @@
-import { test, expect } from './fixtures';
-import { appPath, hasCreds } from './utils/env';
+import { test, expect } from '../fixtures';
+import { appPath, hasCreds } from '../utils/env';
 
 /**
  * Open channel — navigation (Tier 0, single user). Loads /open_channel, which renders the open

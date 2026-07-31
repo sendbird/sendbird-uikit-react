@@ -1,5 +1,5 @@
-import { test, expect } from './fixtures';
-import { appPath, hasCreds } from './utils/env';
+import { test, expect } from '../fixtures';
+import { appPath, hasCreds } from '../utils/env';
 
 /**
  * Smoke — the essential chat journey: create an isolated channel, open it, send a text, and see it
