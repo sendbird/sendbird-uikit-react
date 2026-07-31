@@ -13,10 +13,27 @@ export const E2E = {
   accessToken: process.env.E2E_ACCESS_TOKEN ?? '',
   /** Second user (seeded in global-setup) for invite/create and send/receive scenarios. */
   userId2: process.env.E2E_USER_ID_2 || 'e2e-user-2',
+  /** App-level Platform API token. Enables per-test channel/user create + teardown. Optional. */
+  platformApiToken: process.env.E2E_PLATFORM_API_TOKEN ?? '',
+  /** Prefix for per-worker throwaway users (user_id max 80 chars, so keep it short). */
+  userPrefix: process.env.E2E_USER_PREFIX || 'e2e',
 };
 
 /** Minimum credentials to hit a real backend are present. */
 export const hasCreds = Boolean(E2E.appId && E2E.userId);
+
+/**
+ * A tag unique to this run and developer, shared across all workers so teardown removes only this
+ * run's resources. Set once by the first import in the main process (global-setup) and inherited by
+ * worker processes via the environment.
+ */
+function computeRunTag(): string {
+  const who = (process.env.USER || process.env.USERNAME || 'ci').replace(/[^a-zA-Z0-9]/g, '').slice(0, 12) || 'ci';
+  const suffix = Math.random().toString(36).slice(2, 8);
+  return `${who}-${Date.now().toString(36)}-${suffix}`;
+}
+if (!process.env.E2E_RUN_TAG) process.env.E2E_RUN_TAG = computeRunTag();
+export const runTag = process.env.E2E_RUN_TAG;
 
 type AppRoute = '/' | '/group_channel' | '/open_channel';
 
