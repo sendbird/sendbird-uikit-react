@@ -1,19 +1,20 @@
 name: E2E (Playwright)
 
-# E2E against a real Sendbird backend. NOT a required PR gate — runs manually, nightly, or when a
-# PR is labeled "e2e". Requires repo secrets: E2E_APP_ID, E2E_USER_ID, and optionally
-# E2E_ACCESS_TOKEN / E2E_USER_ID_2. Without them the tests skip and the job stays green.
+# E2E against a real Sendbird backend. NOT a required PR gate — runs on manual dispatch only for now;
+# the nightly schedule and "e2e"-label PR triggers are commented out below until the E2E suite is
+# complete. Requires repo secrets: E2E_APP_ID, E2E_USER_ID, and optionally E2E_ACCESS_TOKEN /
+# E2E_USER_ID_2. Without them the tests skip and the job stays green.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 18 * * *' # nightly (~03:00 KST)
-  pull_request:
-    types: [labeled]
+  # schedule:
+  #   - cron: '0 18 * * *' # nightly (~03:00 KST)
+  # pull_request:
+  #   types: [labeled]
 
 jobs:
   e2e:
     # For PRs, only run when the "e2e" label is applied.
-    if: github.event_name != 'pull_request' || github.event.label.name == 'e2e'
+    # if: github.event_name != 'pull_request' || github.event.label.name == 'e2e'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
