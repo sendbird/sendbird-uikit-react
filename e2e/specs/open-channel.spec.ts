@@ -7,11 +7,12 @@ import { appPath, hasCreds } from '../utils/env';
  */
 test.describe('open channel — navigation', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
   });
 
-  test('lists open channels and enters one', async ({ page }) => {
-    await page.goto(appPath('/open_channel'));
+  test('lists open channels and enters one', async ({ page, workerUser, createOpenChannel }) => {
+    await createOpenChannel();
+    await page.goto(appPath('/open_channel', { userId: workerUser.userId }));
 
     // The list renders and shows at least the seeded channel; enter it.
     await page.locator('.sendbird-open-channel-preview').first().click({ timeout: 30_000 });

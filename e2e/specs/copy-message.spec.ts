@@ -8,12 +8,13 @@ import { openFirstGroupChannel, sendText, openMessageMenu } from '../utils/actio
  */
 test.describe('group channel — copy message', () => {
   test.beforeEach(async ({ context }) => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   });
 
-  test('copies a message to the clipboard', async ({ page }) => {
-    await openFirstGroupChannel(page);
+  test('copies a message to the clipboard', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
     const text = `[e2e-copy] ${Date.now()}`;
     await sendText(page, text);
 

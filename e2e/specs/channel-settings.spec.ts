@@ -8,11 +8,12 @@ import { openFirstGroupChannel } from '../utils/actions';
  */
 test.describe('group channel — settings', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
   });
 
-  test('renames the channel from settings', async ({ page }) => {
-    await openFirstGroupChannel(page);
+  test('renames the channel from settings', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
 
     // Open the settings panel from the conversation header.
     await page.locator('.sendbird-chat-header__right__info').click();

@@ -8,11 +8,12 @@ import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from 
  */
 test.describe('group channel — quote reply', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
   });
 
-  test('replies to a message with a quote', async ({ page }) => {
-    await openFirstGroupChannel(page, { groupChannel_replyType: 'QUOTE_REPLY' });
+  test('replies to a message with a quote', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_replyType: 'QUOTE_REPLY' });
     const original = `[e2e-reply-src] ${Date.now()}`;
     await sendText(page, original);
 

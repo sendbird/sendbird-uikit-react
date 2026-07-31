@@ -7,11 +7,12 @@ import { appPath, hasCreds } from '../utils/env';
  */
 test.describe('user profile — edit', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
   });
 
-  test('edits the current user nickname', async ({ page }) => {
-    await page.goto(appPath('/group_channel'));
+  test('edits the current user nickname', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
     // Wait for a channel preview so the SDK is connected and the user store is populated.
     await expect(page.locator('.sendbird-channel-preview').first()).toBeVisible({ timeout: 30_000 });
 
@@ -27,8 +28,9 @@ test.describe('user profile — edit', () => {
     await expect(page.locator('.sendbird-channel-header__title__right__name')).toHaveText(nickname, { timeout: 15_000 });
   });
 
-  test('blocks saving an empty nickname and keeps the previous one', async ({ page }) => {
-    await page.goto(appPath('/group_channel'));
+  test('blocks saving an empty nickname and keeps the previous one', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
     await expect(page.locator('.sendbird-channel-preview').first()).toBeVisible({ timeout: 30_000 });
 
     const header = page.locator('.sendbird-channel-header__title__right__name');

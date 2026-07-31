@@ -2,6 +2,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { defineConfig, devices } from '@playwright/test';
+// Sets E2E_RUN_TAG in the main process before workers spawn, so every worker + teardown share one tag.
+import './e2e/utils/run-tag';
 
 /**
  * E2E Playwright config — separate from playwright.config.ts (which runs visual tests against
@@ -27,12 +29,11 @@ const BASE_URL = process.env.E2E_BASE_URL || `http://localhost:${PORT}`;
 export default defineConfig({
   testDir: './e2e',
   testMatch: '**/*.spec.ts',
-  globalSetup: './e2e/global-setup.ts',
   globalTeardown: './e2e/global-teardown.ts',
-  fullyParallel: false,
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: 1,
+  workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI
     ? [['junit', { outputFile: 'test-results/e2e-results.xml' }], ['html', { open: 'never' }]]
     : [['list'], ['html', { open: 'never' }]],

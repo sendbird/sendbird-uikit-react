@@ -8,11 +8,12 @@ import { openFirstGroupChannel, sendText, openMessageMenu } from '../utils/actio
  */
 test.describe('group channel — message actions', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
   });
 
-  test('edits an own message', async ({ page }) => {
-    await openFirstGroupChannel(page);
+  test('edits an own message', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
     const original = `[e2e-edit] ${Date.now()}`;
     const edited = `${original} EDITED`;
     await sendText(page, original);
@@ -28,8 +29,9 @@ test.describe('group channel — message actions', () => {
     await expect(page.locator('.sendbird-conversation__messages').getByText(edited)).toBeVisible({ timeout: 15_000 });
   });
 
-  test('deletes an own message', async ({ page }) => {
-    await openFirstGroupChannel(page);
+  test('deletes an own message', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
     const text = `[e2e-delete] ${Date.now()}`;
     await sendText(page, text);
 

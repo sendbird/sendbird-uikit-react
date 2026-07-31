@@ -8,11 +8,12 @@ import { openFirstGroupChannel, sendText, messageByText } from '../utils/actions
  */
 test.describe('group channel — reactions', () => {
   test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_USER_ID to run E2E tests.');
+    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
   });
 
-  test('adds an emoji reaction to a message', async ({ page }) => {
-    await openFirstGroupChannel(page, { groupChannel_enableReactions: 'true' });
+  test('adds an emoji reaction to a message', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_enableReactions: 'true' });
     const text = `[e2e-react] ${Date.now()}`;
     await sendText(page, text);
 
@@ -27,8 +28,9 @@ test.describe('group channel — reactions', () => {
     await expect(msg.locator('.sendbird-emoji-reactions__reaction-badge')).toBeVisible({ timeout: 15_000 });
   });
 
-  test('removes an emoji reaction from a message', async ({ page }) => {
-    await openFirstGroupChannel(page, { groupChannel_enableReactions: 'true' });
+  test('removes an emoji reaction from a message', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_enableReactions: 'true' });
     const text = `[e2e-unreact] ${Date.now()}`;
     await sendText(page, text);
 

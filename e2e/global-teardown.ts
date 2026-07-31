@@ -4,13 +4,13 @@
  * custom_type (orphans left by crashed tests). The per-test and per-worker fixtures already clean
  * their own channels/users; this only catches leftovers. No-op without a Platform API token.
  */
-import { hasPlatformToken, sweepRunChannels } from './utils/platform';
+import { hasPlatformToken, sweepRunChannels, sweepRunOpenChannels } from './utils/platform';
 import { runTag } from './utils/env';
 
 export default async function globalTeardown(): Promise<void> {
   if (!hasPlatformToken()) return;
   try {
-    const deleted = await sweepRunChannels();
+    const deleted = (await sweepRunChannels()) + (await sweepRunOpenChannels());
     if (deleted > 0) {
       // eslint-disable-next-line no-console
       console.log(`[e2e globalTeardown] swept ${deleted} leftover channel(s) for run ${runTag}`);
