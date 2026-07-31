@@ -3,7 +3,7 @@ import { appPath, hasCreds, runTag } from '../utils/env';
 
 /**
  * Open channel — navigation (Tier 0, single user). Loads /open_channel, which renders the open
- * channel list beside the conversation, then enters the first (seeded) channel.
+ * channel list beside the conversation, then enters this run's own channel (found by its unique name).
  */
 test.describe('open channel — navigation', () => {
   test.beforeEach(() => {

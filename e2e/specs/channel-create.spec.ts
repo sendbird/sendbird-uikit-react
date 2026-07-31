@@ -21,13 +21,10 @@ test.describe('group channel — create', () => {
     await page.locator('.sendbird-channel-list__header button:has(.sendbird-icon-create)').click();
     await page.locator('.sendbird-add-channel__rectangle').first().click();
 
-    // Select the second user. The invite list is paginated (loads more on scroll), so page down
-    // until our user appears, then check it.
+    // The application user-list query returns the most recently created users first, and secondUser
+    // is created fresh in this worker's setup, so it is on the first page (no scrolling needed).
     const invitee = page.locator('.sendbird-user-list-item').filter({ hasText: secondUser.userId });
-    for (let i = 0; i < 20 && !(await invitee.count()); i += 1) {
-      await page.locator('.sendbird-user-list-item').last().scrollIntoViewIfNeeded();
-      await page.waitForTimeout(200);
-    }
+    await expect(invitee).toBeVisible({ timeout: 15_000 });
     await invitee.locator('.sendbird-user-list-item__checkbox').click();
     await page.getByRole('button', { name: 'Create' }).click();
 

@@ -9,7 +9,6 @@ export interface WorkerUser {
 
 export interface CreateChannelOptions {
   name?: string;
-  invite?: string[];
   seedMessage?: string | null;
 }
 
@@ -47,7 +46,7 @@ export const test = base.extend<E2EFixtures, E2EWorkerFixtures>({
     const created: string[] = [];
     const factory = async (options: CreateChannelOptions = {}) => {
       const channel = await platform.createGroupChannel({
-        userIds: [workerUser.userId, ...(options.invite ?? [])],
+        userIds: [workerUser.userId],
         name: options.name,
       });
       created.push(channel.url);
