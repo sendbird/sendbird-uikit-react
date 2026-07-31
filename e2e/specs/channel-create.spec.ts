@@ -21,9 +21,14 @@ test.describe('group channel — create', () => {
     await page.locator('.sendbird-channel-list__header button:has(.sendbird-icon-create)').click();
     await page.locator('.sendbird-add-channel__rectangle').first().click();
 
-    // Select the second user, then create.
-    await page.locator('.sendbird-user-list-item').filter({ hasText: secondUser.userId })
-      .locator('.sendbird-user-list-item__checkbox').click();
+    // Select the second user. The invite list is paginated (loads more on scroll), so page down
+    // until our user appears, then check it.
+    const invitee = page.locator('.sendbird-user-list-item').filter({ hasText: secondUser.userId });
+    for (let i = 0; i < 20 && !(await invitee.count()); i += 1) {
+      await page.locator('.sendbird-user-list-item').last().scrollIntoViewIfNeeded();
+      await page.waitForTimeout(200);
+    }
+    await invitee.locator('.sendbird-user-list-item__checkbox').click();
     await page.getByRole('button', { name: 'Create' }).click();
 
     // The new channel opens and its header shows the invited member.

@@ -24,7 +24,7 @@ export const hasPlatformToken = (): boolean => Boolean(E2E.appId && E2E.platform
 async function call(method: string, path: string, body?: unknown): Promise<any> {
   const res = await doFetch(`${BASE}${path}`, {
     method,
-    headers: { 'Api-Token': E2E.platformApiToken, 'Content-Type': 'application/json; charset=utf8' },
+    headers: { 'Api-Token': E2E.platformApiToken, 'Content-Type': 'application/json; charset=utf-8' },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   if (!res.ok && res.status !== 404) {
@@ -63,6 +63,7 @@ export async function createGroupChannel(opts: {
     custom_type: opts.customType ?? runTag,
     is_distinct: false,
   });
+  if (!data?.channel_url) throw new Error(`Platform API group_channels returned no channel_url: ${JSON.stringify(data)}`);
   return { url: data.channel_url };
 }
 
@@ -113,6 +114,7 @@ export async function createOpenChannel(opts: { name?: string; customType?: stri
     name: opts.name ?? `[e2e] ${runTag}`,
     custom_type: opts.customType ?? runTag,
   });
+  if (!data?.channel_url) throw new Error(`Platform API open_channels returned no channel_url: ${JSON.stringify(data)}`);
   return { url: data.channel_url };
 }
 

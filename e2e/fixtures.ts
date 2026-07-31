@@ -26,9 +26,11 @@ export interface E2EWorkerFixtures {
 async function useThrowawayUser(suffix: string, workerIndex: number, use: (user: WorkerUser) => Promise<void>): Promise<void> {
   const userId = `${E2E.userPrefix}-${runTag}-w${workerIndex}${suffix}`;
   const user: WorkerUser = { userId, nickname: userId };
-  if (platform.hasPlatformToken()) await platform.ensureUser(userId, userId).catch(() => {});
+  if (platform.hasPlatformToken()) await platform.ensureUser(userId, userId);
   await use(user);
   if (platform.hasPlatformToken()) {
+    // Delete the user's channels first — including any made through the app UI, which carry no
+    // runTag and so are missed by the global sweep — then the user itself.
     await platform.deleteUserChannels(userId).catch(() => {});
     await platform.deleteUser(userId).catch(() => {});
   }
@@ -71,15 +73,6 @@ export const test = base.extend<E2EFixtures, E2EWorkerFixtures>({
     for (const url of created) {
       await platform.deleteOpenChannel(url).catch(() => {});
     }
-  },
-
-  page: async ({ page }, use) => {
-    if (E2E.accessToken) {
-      await page.addInitScript({
-        content: `try { sessionStorage.setItem('sb:e2e:accessToken', ${JSON.stringify(E2E.accessToken)}); } catch (e) {}`,
-      });
-    }
-    await use(page);
   },
 });
 

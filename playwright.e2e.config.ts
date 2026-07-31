@@ -39,7 +39,7 @@ export default defineConfig({
     : [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: BASE_URL,
-    trace: process.env.E2E_ACCESS_TOKEN ? 'off' : 'on-first-retry',
+    trace: 'on-first-retry',
     video: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },

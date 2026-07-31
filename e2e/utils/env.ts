@@ -9,9 +9,7 @@
 
 export const E2E = {
   appId: process.env.E2E_APP_ID ?? '',
-  userId: process.env.E2E_USER_ID ?? '',
-  accessToken: process.env.E2E_ACCESS_TOKEN ?? '',
-  /** App-level Platform API token. Enables per-test channel/user create + teardown. Optional. */
+  /** App-level Platform API token. Creates/deletes the per-test users + channels. */
   platformApiToken: process.env.E2E_PLATFORM_API_TOKEN ?? '',
   /** Prefix for per-worker throwaway users (user_id max 80 chars, so keep it short). */
   userPrefix: process.env.E2E_USER_PREFIX || 'e2e',
@@ -32,7 +30,6 @@ type AppRoute = '/' | '/group_channel' | '/open_channel';
 export function appPath(route: AppRoute, params: Record<string, string | undefined> = {}): string {
   const query = new URLSearchParams();
   if (E2E.appId) query.set('appId', E2E.appId);
-  if (E2E.userId) query.set('userId', E2E.userId);
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined) query.set(key, value);
   }
