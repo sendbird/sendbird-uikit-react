@@ -40,13 +40,12 @@ export const TypingIndicator = ({ channelUrl }: TypingIndicatorProps) => {
   const { state } = useSendbird();
   const sb = state?.stores?.sdkStore?.sdk;
   const logger = state?.config?.logger;
-  const [handlerId, setHandlerId] = useState(uuidv4());
   const [typingMembers, setTypingMembers] = useState<Member[]>([]);
 
   useEffect(() => {
+    let handlerId: string | undefined;
     if (sb?.groupChannel?.addGroupChannelHandler) {
-      sb.groupChannel.removeGroupChannelHandler(handlerId);
-      const newHandlerId = uuidv4();
+      handlerId = uuidv4();
       const handler = new GroupChannelHandler({
         onTypingStatusUpdated: (groupChannel) => {
           // there is a possible warning in here - setState called after unmount
@@ -57,13 +56,12 @@ export const TypingIndicator = ({ channelUrl }: TypingIndicatorProps) => {
           }
         },
       });
-      sb.groupChannel.addGroupChannelHandler(newHandlerId, handler);
-      setHandlerId(newHandlerId);
+      sb.groupChannel.addGroupChannelHandler(handlerId, handler);
     }
 
     return () => {
       setTypingMembers([]);
-      if (sb?.groupChannel?.removeGroupChannelHandler) {
+      if (handlerId && sb?.groupChannel?.removeGroupChannelHandler) {
         sb.groupChannel.removeGroupChannelHandler(handlerId);
       }
     };
