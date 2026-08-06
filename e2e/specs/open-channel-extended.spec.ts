@@ -66,6 +66,7 @@ test.describe('open channel — extended', () => {
       await expect(participantRow.locator('[class*="operator"]')).not.toBeVisible({ timeout: 10_000 });
     } else {
       test.skip();
+      return;
     }
   });
 
@@ -90,6 +91,7 @@ test.describe('open channel — extended', () => {
       await expect(row.locator('[class*="muted"]')).not.toBeVisible({ timeout: 10_000 });
     } else {
       test.skip();
+      return;
     }
   });
 
@@ -113,6 +115,7 @@ test.describe('open channel — extended', () => {
       await expect(row).not.toBeVisible({ timeout: 10_000 });
     } else {
       test.skip();
+      return;
     }
   });
 

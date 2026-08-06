@@ -104,6 +104,7 @@ test.describe('group channel — messages extended', () => {
       await expect(messageByText(page, btnText.trim())).toBeVisible({ timeout: 15_000 });
     } else {
       test.skip();
+      return;
     }
   });
 

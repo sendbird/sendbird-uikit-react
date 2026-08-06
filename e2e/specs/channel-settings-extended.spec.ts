@@ -47,6 +47,7 @@ test.describe('channel settings — extended', () => {
       ).toBeVisible({ timeout: 15_000 });
     } else {
       test.skip();
+      return;
     }
   });
 
@@ -69,6 +70,7 @@ test.describe('channel settings — extended', () => {
       ).toBeVisible({ timeout: 15_000 });
     } else {
       test.skip();
+      return;
     }
   });
 
@@ -175,6 +177,7 @@ test.describe('channel settings — extended', () => {
         .toBeVisible({ timeout: 10_000 });
     } else {
       test.skip();
+      return;
     }
   });
 

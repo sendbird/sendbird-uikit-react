@@ -66,12 +66,12 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
 
   useEffect(() => {
     if (!initialized) return;
-    genRef.current += 1;
-    const gen = genRef.current;
     const applicationUserListQuery = userListQueryRef.current
       ? userListQueryRef.current()
       : createDefaultUserListQuery({ sdk });
     if (!applicationUserListQuery) return;
+    genRef.current += 1;
+    const gen = genRef.current;
     setUsers([]); // Reset before async fetch so stale list is not shown during re-fetch.
     setUsersDataSource(applicationUserListQuery);
     applicationUserListQuery.next().then((it) => {
