@@ -16,6 +16,7 @@ test.describe('group channel — quote reply', () => {
     await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_replyType: 'QUOTE_REPLY' });
     const original = `[e2e-reply-src] ${Date.now()}`;
     await sendText(page, original);
+    await expect(messageByText(page, original)).toBeVisible({ timeout: 15_000 });
 
     await openMessageMenu(page, original);
     const replyItem = page.getByRole('menuitem', { name: /^reply$/i }).first();

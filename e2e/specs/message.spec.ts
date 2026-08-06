@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures';
 import { hasCreds } from '../utils/env';
-import { openFirstGroupChannel, sendText, openMessageMenu } from '../utils/actions';
+import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from '../utils/actions';
 
 /**
  * Group channel — message actions (Tier 0, single user). Each test sends its own marked message
@@ -17,6 +17,7 @@ test.describe('group channel — message actions', () => {
     const original = `[e2e-edit] ${Date.now()}`;
     const edited = `${original} EDITED`;
     await sendText(page, original);
+    await expect(messageByText(page, original)).toBeVisible({ timeout: 15_000 });
 
     await openMessageMenu(page, original);
     const editItem = page.getByRole('menuitem', { name: /edit/i }).first();
@@ -38,6 +39,7 @@ test.describe('group channel — message actions', () => {
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     const text = `[e2e-delete] ${Date.now()}`;
     await sendText(page, text);
+    await expect(messageByText(page, text)).toBeVisible({ timeout: 15_000 });
 
     await openMessageMenu(page, text);
     const deleteItem = page.getByRole('menuitem', { name: /delete/i }).first();
