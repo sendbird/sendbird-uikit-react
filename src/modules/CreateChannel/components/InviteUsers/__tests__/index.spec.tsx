@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import InviteUsers from '../index';
 import { ApplicationUserListQuery } from '@sendbird/chat';
@@ -116,6 +116,48 @@ describe('InviteUsers', () => {
   it('does not crash when the SDK is not yet connected and no userListQuery is provided', () => {
     expect(() => renderComponent({}, {}, {})).not.toThrow();
     expect(screen.getByText('CREATE')).toBeInTheDocument();
+  });
+
+  it('calls userListQuery and populates the user list when initialized becomes true', async () => {
+    const mockNext = vi.fn().mockResolvedValue([{ userId: 'user-a' }, { userId: 'user-b' }]);
+    const userListQuery = vi.fn(() => ({
+      hasNext: false,
+      isLoading: false,
+      next: mockNext,
+    } as unknown as ApplicationUserListQuery));
+
+    await act(async () => {
+      renderComponent({}, {}, { userListQuery });
+    });
+
+    expect(userListQuery).toHaveBeenCalled();
+    expect(mockNext).toHaveBeenCalled();
+  });
+
+  it('re-runs the user list query when userListQuery prop changes while SDK is initialized', async () => {
+    const firstNext = vi.fn().mockResolvedValue([{ userId: 'user-a' }]);
+    const firstQuery = vi.fn(() => ({
+      hasNext: false, isLoading: false, next: firstNext,
+    } as unknown as ApplicationUserListQuery));
+
+    const { rerender } = await act(async () => renderComponent({}, {}, { userListQuery: firstQuery }));
+
+    const secondNext = vi.fn().mockResolvedValue([{ userId: 'user-b' }]);
+    const secondQuery = vi.fn(() => ({
+      hasNext: false, isLoading: false, next: secondNext,
+    } as unknown as ApplicationUserListQuery));
+
+    await act(async () => {
+      rerender(
+        <LocalizationContext.Provider value={mockLocalizationContext as any}>
+          <InviteUsers userListQuery={secondQuery} />
+        </LocalizationContext.Provider>,
+      );
+    });
+
+    expect(firstQuery).toHaveBeenCalledTimes(1);
+    expect(secondQuery).toHaveBeenCalled();
+    expect(secondNext).toHaveBeenCalled();
   });
 
   // TODO: add this case too

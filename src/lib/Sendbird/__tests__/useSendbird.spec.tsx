@@ -436,6 +436,37 @@ describe('useSendbird', () => {
       expect(mockOnFailed).toHaveBeenCalledWith(expect.any(Error));
     });
 
+    it('calls onFailed but still calls onConnected when updateCurrentUserInfo throws', async () => {
+      const updateError = new Error('profile update failed');
+      const mockSdk = {
+        connect: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'oldName' }),
+        updateCurrentUserInfo: vi.fn().mockRejectedValue(updateError),
+      };
+      vi.mocked(initSDK).mockReturnValue(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>);
+      const onConnected = vi.fn();
+      const onFailed = vi.fn();
+
+      const { result } = renderHook(() => useSendbird(), { wrapper });
+
+      await act(async () => {
+        await result.current.actions.connect({
+          logger: mockLogger,
+          userId: 'mockUserId',
+          appId: 'mockAppId',
+          accessToken: 'mockAccessToken',
+          nickname: 'newName',
+          eventHandlers: { connection: { onConnected, onFailed } },
+        });
+      });
+
+      // The connection succeeds with the pre-update user
+      expect(onConnected).toHaveBeenCalledWith(expect.objectContaining({ userId: 'mockUserId', nickname: 'oldName' }));
+      // onFailed is notified of the profile update error
+      expect(onFailed).toHaveBeenCalledWith(updateError);
+      // SDK is still initialized (connection was not torn down)
+      expect(mockStore.getState().stores.sdkStore.sdk).not.toStrictEqual({});
+    });
+
     it('applies the updateCurrentUserInfo result to both the user store and onConnected when connecting with a nickname', async () => {
       const mockSdk = {
         connect: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'oldName' }),

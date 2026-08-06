@@ -60,12 +60,12 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
       return;
     }
     setUsersDataSource(applicationUserListQuery);
-    if (!applicationUserListQuery.isLoading) {
-      applicationUserListQuery.next().then((it) => {
-        setUsers(it);
-      });
-    }
-  }, [initialized]);
+    // Always call next() regardless of isLoading; the SDK handles concurrent calls.
+    // Skipping when isLoading=true would leave users=[] with no recovery path.
+    applicationUserListQuery.next().then((it) => {
+      setUsers(it);
+    });
+  }, [initialized, userListQuery]);
 
   // To fix navbar break in mobile we set dynamic height to the scrollable area
   useEffect(() => {

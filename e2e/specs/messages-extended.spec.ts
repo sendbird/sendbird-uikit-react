@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
 import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from '../utils/actions';
-import { appPath, runTag } from '../utils/env';
+import { runTag } from '../utils/env';
 import * as platform from '../utils/platform';
 
 test.describe('group channel — messages extended', () => {
@@ -131,9 +131,13 @@ test.describe('group channel — messages extended', () => {
     // Verify SENT state (not read yet)
     await expect(messageByText(page, msgText)).toBeVisible({ timeout: 15_000 });
 
-    // secondUser opens the channel, triggering a read receipt
-    await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId, channelUrl: channel.url }));
-    await expect(secondPage.locator('.sendbird-conversation')).toBeVisible({ timeout: 30_000 });
+    // secondUser opens the channel to trigger a read receipt.
+    // Navigate then explicitly enter the channel — appPath does not forward channelUrl
+    // to the testing app, so relying on auto-select is fragile when secondUser has
+    // multiple channels.
+    await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId }));
+    await secondPage.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
+    await expect(secondPage.locator('.sendbird-conversation')).toBeVisible({ timeout: 15_000 });
 
     // Status should flip to READ
     await expect(
