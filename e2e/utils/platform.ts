@@ -111,19 +111,24 @@ export async function seedMessages(
   return results;
 }
 
-/** Send a thread reply to a parent message in a group channel. */
+/**
+ * Send a reply to a parent message in a group channel.
+ * @param isReplyToChannel false = thread reply (hidden in main conversation);
+ *                         true  = quote reply (visible in main conversation with a quoted bubble)
+ */
 export async function replyToMessage(
   channelUrl: string,
   parentMessageId: number,
   userId: string,
   message: string,
+  isReplyToChannel = false,
 ): Promise<number> {
   const data = await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/messages`, {
     message_type: 'MESG',
     user_id: userId,
     message,
     parent_message_id: parentMessageId,
-    is_reply_to_channel: false,
+    is_reply_to_channel: isReplyToChannel,
   });
   if (!data?.message_id) throw new Error(`Platform API replyToMessage returned no message_id: ${JSON.stringify(data)}`);
   return data.message_id;

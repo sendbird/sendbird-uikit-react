@@ -15,9 +15,10 @@ test.describe('cross-cutting — config & responsive', () => {
   test('renders mobile layout on a 375px viewport', async ({ page, workerUser, createChannel }) => {
     await createChannel();
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
-    // On mobile the channel list and conversation panels should NOT both be visible simultaneously
-    await expect(page.locator('.sendbird-app__wrap')).toBeVisible({ timeout: 30_000 });
+    // breakpoint=true forces mobile layout (UA-based detection doesn't work in Playwright Chromium)
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId, breakpoint: 'true' }));
+    // Mobile layout uses sb_mobile class (not sendbird-app__wrap)
+    await expect(page.locator('.sb_mobile, .sendbird-app__wrap').first()).toBeVisible({ timeout: 30_000 });
     const listVisible = await page.locator('.sendbird-channel-list').isVisible();
     const convVisible = await page.locator('.sendbird-conversation').isVisible();
     // In mobile layout only one panel is visible at a time
@@ -28,8 +29,13 @@ test.describe('cross-cutting — config & responsive', () => {
   test('applies RTL layout when htmlTextDirection=rtl is passed', async ({ page, workerUser, createChannel }) => {
     await createChannel();
     await page.goto(appPath('/group_channel', { userId: workerUser.userId, htmlTextDirection: 'rtl' }));
-    await expect(page.locator('.sendbird-app__wrap')).toBeVisible({ timeout: 30_000 });
-    const dir = await page.locator('.sendbird-app__wrap').getAttribute('dir');
+    await expect(page.locator('.sendbird-app__wrap, .sb_mobile').first()).toBeVisible({ timeout: 30_000 });
+    // useHTMLTextDirection sets dir on the parentElement of the voice-player-root div
+    // (the App.tsx wrapper div, not #root itself)
+    const dir = await page.evaluate(() => {
+      const el = document.getElementById('sendbird-voice-player-provider-root');
+      return el?.parentElement?.getAttribute('dir') ?? null;
+    });
     expect(dir).toBe('rtl');
   });
 

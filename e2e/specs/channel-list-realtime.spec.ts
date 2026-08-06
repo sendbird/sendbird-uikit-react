@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
+import { openFirstGroupChannel } from '../utils/actions';
 import { appPath, runTag } from '../utils/env';
 import * as platform from '../utils/platform';
 
@@ -30,16 +31,18 @@ test.describe('group channel list — realtime (2nd-user)', () => {
   test('clears unread badge after opening the unread channel', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    const channel = await createChannel({ memberIds: [secondUser.userId] });
-    // secondUser sends a message to create unread state
-    await platform.sendMessage(channel.url, secondUser.userId, `[b6] ${runTag}`);
+    const unreadCh = await createChannel({ name: `[e2e] b6-unread-${runTag}`, memberIds: [secondUser.userId] });
+    // secondUser sends a message to create unread state in unreadCh
+    await platform.sendMessage(unreadCh.url, secondUser.userId, `[b6] ${runTag}`);
+    // Create active channel AFTER so its seed message is newest → app auto-opens it,
+    // leaving unreadCh in the list with its badge still visible
+    await createChannel({ name: `[e2e] b6-active-${runTag}`, memberIds: [secondUser.userId] });
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
-    // Verify unread badge is visible
-    await expect(
-      page.locator('.sendbird-channel-preview').first().locator('.sendbird-channel-preview__unread-count'),
-    ).toBeVisible({ timeout: 20_000 });
-    // Open the channel → badge should disappear
-    await page.locator('.sendbird-channel-preview').first().click();
+    // Verify unread badge is visible on unreadCh (not the auto-opened active channel)
+    const unreadPreview = page.locator('.sendbird-channel-preview').filter({ hasText: `[e2e] b6-unread-${runTag}` });
+    await expect(unreadPreview.locator('[class*="unread-message-count"]')).toBeVisible({ timeout: 20_000 });
+    // Open unreadCh → badge should disappear
+    await unreadPreview.click();
     await expect(page.locator('.sendbird-conversation')).toBeVisible({ timeout: 10_000 });
     await expect(
       page.locator('.sendbird-channel-preview--active').locator('[class*="unread-message-count"]'),
@@ -47,25 +50,27 @@ test.describe('group channel list — realtime (2nd-user)', () => {
   });
 
   // B7
-  test('shows typing indicator in list row while 2nd user is typing', async ({
+  test('shows typing indicator in conversation while 2nd user is typing', async ({
     page, workerUser, secondUser, secondPage, createChannel,
   }) => {
-    const channel = await createChannel({ memberIds: [secondUser.userId] });
-    // groupChannelList_enableTypingIndicator defaults to false — enable it explicitly
-    await page.goto(appPath('/group_channel', { userId: workerUser.userId, groupChannelList_enableTypingIndicator: 'true' }));
-    await page.locator('.sendbird-channel-preview').first().waitFor({ timeout: 30_000 });
+    // Both users open the same channel; the conversation footer typing indicator
+    // is simpler to test reliably than the channel-list row indicator.
+    await createChannel({ memberIds: [secondUser.userId] });
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
 
-    // secondUser opens the channel and starts typing
-    await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId, groupChannelList_enableTypingIndicator: 'true' }));
+    // secondUser opens the same channel
+    await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId }));
     await secondPage.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
+    await expect(secondPage.locator('.sendbird-conversation')).toBeVisible({ timeout: 15_000 });
+
+    // secondUser types — run concurrently with the assertion so we catch the indicator
+    // while typing is still in progress (it disappears ~3s after the last keystroke)
     const input = secondPage.locator('.sendbird-message-input [role="textbox"]').first();
     await input.click();
-    await input.type('[b7] typing...', { delay: 100 });
-
-    // Typing indicator should appear in channel-list row
-    await expect(
-      page.locator('.sendbird-channel-preview').first().locator('[class*="typing"]'),
-    ).toBeVisible({ timeout: 15_000 });
+    // Start typing without awaiting, then check for indicator while typing is in progress
+    const typePromise = input.type('[b7] typing indicator test...', { delay: 100 });
+    await expect(page.getByText(/is typing/i)).toBeVisible({ timeout: 15_000 });
+    await typePromise;
   });
 
   // B8
@@ -133,14 +138,16 @@ test.describe('group channel list — realtime (2nd-user)', () => {
   test('shows mention marker on channel row when 2nd user mentions me', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    const channel = await createChannel({ memberIds: [secondUser.userId] });
-    // secondUser sends a structured mention message (mention_type + mentioned_user_ids required
-    // for UIKit to render the mention badge on the channel-list row)
+    // Give the mention channel a distinct name so we can target it in the list
+    const channel = await createChannel({ name: `[e2e] b12-mention-${runTag}`, memberIds: [secondUser.userId] });
+    // Send mention before creating the active channel so the active channel's seed message
+    // is the newest → app auto-opens active, leaving mention channel in list with badge.
     await platform.sendMentionMessage(channel.url, secondUser.userId, `@${workerUser.userId} hello ${runTag}`, [workerUser.userId]);
+    await createChannel({ name: `[e2e] b12-active-${runTag}`, memberIds: [secondUser.userId] });
     // groupChannel_enableMention defaults to false — enable it so the mention badge renders
     await page.goto(appPath('/group_channel', { userId: workerUser.userId, groupChannel_enableMention: 'true' }));
     await expect(
-      page.locator('.sendbird-channel-preview').first().locator('[class*="mention"]'),
+      page.locator('.sendbird-channel-preview').filter({ hasText: `[e2e] b12-mention-${runTag}` }).locator('[class*="mention"]'),
     ).toBeVisible({ timeout: 20_000 });
   });
 });

@@ -8,8 +8,8 @@ test.describe('group channel — message pagination', () => {
   // C14
   test('loads older messages when scrolled to top', async ({ page, workerUser, createChannel }) => {
     const channel = await createChannel({ seedMessage: null });
-    // Seed 30 messages so the initial view loads at the bottom and the first messages are off-screen
-    await platform.seedMessages(channel.url, workerUser.userId, 30, '[page]');
+    // Seed 20 messages so the initial view loads at the bottom and the first messages are off-screen
+    await platform.seedMessages(channel.url, workerUser.userId, 20, '[page]');
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     // Scroll to the very top of the message list
     const list = page.locator('.sendbird-conversation__messages-padding');

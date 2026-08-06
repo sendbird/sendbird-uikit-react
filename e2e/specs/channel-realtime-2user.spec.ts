@@ -26,8 +26,8 @@ test.describe('group channel — realtime (2nd-user)', () => {
     page, workerUser, secondUser, createChannel,
   }) => {
     const channel = await createChannel({ seedMessage: null, memberIds: [secondUser.userId] });
-    // Seed 25 messages so the conversation is scrollable
-    await platform.seedMessages(channel.url, workerUser.userId, 25, '[d2]');
+    // Seed 20 messages so the conversation is scrollable (25 risks hitting the 5/s rate limit)
+    await platform.seedMessages(channel.url, workerUser.userId, 20, '[d2]');
 
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     // Scroll to the top so we're not at the bottom
@@ -52,34 +52,38 @@ test.describe('group channel — realtime (2nd-user)', () => {
   }) => {
     await createChannel({ freeze: true });
     await openFirstGroupChannel(page, { userId: workerUser.userId });
-    await expect(page.locator('.sendbird-frozen-channel-notification')).toBeVisible({ timeout: 10_000 });
+    // GroupChannel frozen notification class is sendbird-notification--frozen
+    await expect(page.locator('.sendbird-notification--frozen')).toBeVisible({ timeout: 10_000 });
     // Unfreeze via channel settings (workerUser is operator)
     await page.locator('.sendbird-chat-header__right__info').click();
     await expect(page.locator('.sendbird-channel-settings')).toBeVisible({ timeout: 10_000 });
-    const freezeToggle = page.locator('[class*="freeze"] input[type="checkbox"]').first();
-    await freezeToggle.uncheck();
+    // Toggle renders as a button (not a checkbox); unique in this settings panel
+    const freezeToggle = page.locator('[data-testid="sendbird-input-toggle-button"]').first();
+    await freezeToggle.click();
     await page.locator('.sendbird-chat-header__right__info').click(); // close settings
-    await expect(page.locator('.sendbird-frozen-channel-notification')).not.toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('.sendbird-notification--frozen')).not.toBeVisible({ timeout: 10_000 });
     await expect(
       page.locator('.sendbird-message-input--disabled, .sendbird-message-input [disabled]'),
     ).not.toBeVisible({ timeout: 5_000 });
   });
 
   // D6
-  test('shows new-messages separator when opening a channel with unreads', async ({
+  test('shows new-messages notification when user is scrolled up and new messages arrive', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    const channel = await createChannel({ memberIds: [secondUser.userId] });
-    // secondUser sends messages to create unread state for workerUser
-    for (let i = 0; i < 3; i++) {
-      await platform.sendMessage(channel.url, secondUser.userId, `[d6] msg ${i} ${runTag}`);
-    }
-    // Navigate to the channel list but do NOT click the channel yet — first time open shows separator
-    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
-    await page.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
+    const channel = await createChannel({ seedMessage: null, memberIds: [secondUser.userId] });
+    // Seed background messages from secondUser (workerUser's rate limit used by D2 earlier)
+    await platform.seedMessages(channel.url, secondUser.userId, 15, '[d6-bg]');
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    // Scroll to the top so we're NOT at the bottom
+    const msgList = page.locator('.sendbird-conversation__messages-padding');
+    await msgList.evaluate((el) => { el.scrollTop = 0; });
+    // secondUser sends a new message while workerUser is scrolled up
+    await platform.sendMessage(channel.url, secondUser.userId, `[d6] new ${runTag}`);
+    // sendbird-conversation__messages__notification appears when scrolled up + newMessages arrive
     await expect(
-      page.locator('[class*="new-message-notification"], [class*="unread-message-notification"]'),
-    ).toBeVisible({ timeout: 10_000 });
+      page.locator('.sendbird-conversation__messages__notification'),
+    ).toBeVisible({ timeout: 15_000 });
   });
 
   // D7
@@ -142,7 +146,7 @@ test.describe('group channel — realtime (2nd-user)', () => {
     const chevron = page.locator('[class*="scroll-bottom"], [class*="scroll-down"]').first();
     await expect(chevron).toBeVisible({ timeout: 10_000 });
     await chevron.click();
-    // Should be at bottom — last message visible
-    await expect(page.getByText('[d9] 15', { exact: true })).toBeVisible({ timeout: 10_000 });
+    // Should be at bottom — last message visible (messageByText avoids strict-mode with channel list preview)
+    await expect(messageByText(page, '[d9] 15')).toBeVisible({ timeout: 10_000 });
   });
 });

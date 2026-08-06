@@ -18,21 +18,37 @@ export function messageByText(page: Page, text: string): Locator {
     .filter({ hasText: text });
 }
 
-/** Type text into the conversation composer, send it, and wait until the server confirms it. */
+/** Type text into the conversation composer, send it, and wait until the server confirms it.
+ *  Works for both group channels (uses sendbird-message-view testid) and open channels (fallback). */
 export async function sendText(page: Page, text: string) {
   const input = page.locator('.sendbird-message-input [role="textbox"]').first();
   await input.click();
   await input.pressSequentially(text);
   await input.press('Enter');
-  await expect(messageByText(page, text)).toBeVisible({ timeout: 15_000 });
+  const gcMsg = messageByText(page, text);
+  if (await gcMsg.isVisible({ timeout: 2_000 }).catch(() => false)) {
+    await expect(gcMsg).toBeVisible({ timeout: 15_000 });
+  } else {
+    // Open channel messages lack data-testid="sendbird-message-view" — use text search
+    await expect(page.getByText(text).first()).toBeVisible({ timeout: 15_000 });
+  }
 }
 
-/** Hover a confirmed message and open its action menu (kebab). */
+/** Hover a confirmed message and open its action menu (kebab). Works for both GC and OC. */
 export async function openMessageMenu(page: Page, text: string) {
-  const msg = messageByText(page, text);
-  await expect(msg).toBeVisible({ timeout: 15_000 });
-  await msg.hover();
-  await msg.locator('.sendbird-message-menu').getByRole('button').first().click();
+  const gcMsg = messageByText(page, text);
+  const isGC = await gcMsg.isVisible({ timeout: 5_000 }).catch(() => false);
+  if (isGC) {
+    await expect(gcMsg).toBeVisible({ timeout: 15_000 });
+    await gcMsg.hover();
+    await gcMsg.locator('.sendbird-message-menu').getByRole('button').first().click();
+  } else {
+    // Open channel: container is sendbird-openchannel-user-message
+    const ocMsg = page.locator('.sendbird-openchannel-user-message').filter({ hasText: text }).first();
+    await expect(ocMsg).toBeVisible({ timeout: 15_000 });
+    await ocMsg.hover();
+    await ocMsg.locator('.sendbird-openchannel-user-message__context-menu button, .sendbird-message-menu button').first().click();
+  }
 }
 
 /** Open the message search panel (click the search icon in the chat header). */
