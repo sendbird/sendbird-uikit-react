@@ -44,8 +44,12 @@ test.describe('group channel list', () => {
     const preview = page.locator('.sendbird-channel-preview').first();
     await expect(preview).toBeVisible({ timeout: 30_000 });
     await preview.hover();
-    await preview.locator('[class*="leave"]').click();
-    await page.getByRole('button', { name: /leave/i }).last().click();
+    // Click the ⋮ MORE button in the channel preview action area
+    await preview.locator('.sendbird-channel-preview__action [role="button"], .sendbird-channel-preview__action button').first().click({ timeout: 5_000 });
+    // Click "Leave channel" from the dropdown
+    await page.getByRole('menuitem', { name: /leave channel/i }).click({ timeout: 5_000 });
+    // Confirm leave in the modal
+    await page.getByRole('button', { name: /^leave$/i }).last().click({ timeout: 5_000 });
     await expect(page.locator('.sendbird-channel-preview')).toHaveCount(0, { timeout: 10_000 });
   });
 });

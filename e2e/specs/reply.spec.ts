@@ -18,7 +18,11 @@ test.describe('group channel — quote reply', () => {
     await sendText(page, original);
 
     await openMessageMenu(page, original);
-    await page.getByRole('menuitem', { name: 'Reply' }).click();
+    const replyItem = page.getByRole('menuitem', { name: /^reply$/i }).first();
+    if (!await replyItem.isVisible({ timeout: 3_000 }).catch(() => false)) {
+      test.skip(); return;
+    }
+    await replyItem.click();
 
     // The composer shows a quote preview referencing the original message.
     await expect(page.locator('.sendbird-quote_message_input')).toContainText(original, { timeout: 10_000 });

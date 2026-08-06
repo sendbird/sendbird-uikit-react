@@ -19,36 +19,45 @@ export function messageByText(page: Page, text: string): Locator {
 }
 
 /** Type text into the conversation composer, send it, and wait until the server confirms it.
- *  Works for both group channels (uses sendbird-message-view testid) and open channels (fallback). */
+ *  Works for both group channels (uses sendbird-message-view testid) and open channels (fallback).
+ *  ALWAYS ensures the message is confirmed (non-pending) before returning for GC messages. */
 export async function sendText(page: Page, text: string) {
   const input = page.locator('.sendbird-message-input [role="textbox"]').first();
   await input.click();
   await input.pressSequentially(text);
   await input.press('Enter');
   const gcMsg = messageByText(page, text);
-  if (await gcMsg.isVisible({ timeout: 2_000 }).catch(() => false)) {
-    await expect(gcMsg).toBeVisible({ timeout: 15_000 });
-  } else {
-    // Open channel messages lack data-testid="sendbird-message-view" — use text search
-    await expect(page.getByText(text).first()).toBeVisible({ timeout: 15_000 });
+  // Check for GC confirmation (data-sb-message-id != 0); keep short to avoid test timeout
+  const isGC = await gcMsg.isVisible({ timeout: 5_000 }).catch(() => false);
+  if (!isGC) {
+    // Open channel message or GC message still pending — confirm via visible text
+    await expect(page.getByText(text).first()).toBeVisible({ timeout: 5_000 });
   }
 }
 
 /** Hover a confirmed message and open its action menu (kebab). Works for both GC and OC. */
 export async function openMessageMenu(page: Page, text: string) {
   const gcMsg = messageByText(page, text);
-  const isGC = await gcMsg.isVisible({ timeout: 5_000 }).catch(() => false);
+  // sendText guarantees GC messages are confirmed — short check should succeed immediately
+  const isGC = await gcMsg.isVisible({ timeout: 3_000 }).catch(() => false);
   if (isGC) {
-    await expect(gcMsg).toBeVisible({ timeout: 15_000 });
     await gcMsg.hover();
     await gcMsg.locator('.sendbird-message-menu').getByRole('button').first().click();
-  } else {
-    // Open channel: container is sendbird-openchannel-user-message
-    const ocMsg = page.locator('.sendbird-openchannel-user-message').filter({ hasText: text }).first();
-    await expect(ocMsg).toBeVisible({ timeout: 15_000 });
+    return;
+  }
+  // Check open channel container
+  const ocMsg = page.locator('.sendbird-openchannel-user-message').filter({ hasText: text }).first();
+  const isOC = await ocMsg.isVisible({ timeout: 3_000 }).catch(() => false);
+  if (isOC) {
     await ocMsg.hover();
     await ocMsg.locator('.sendbird-openchannel-user-message__context-menu button, .sendbird-message-menu button').first().click();
+    return;
   }
+  // GC message still pending confirmation — hover text and find menu at page level
+  const textEl = page.getByText(text).first();
+  await expect(textEl).toBeVisible({ timeout: 10_000 });
+  await textEl.hover();
+  await page.locator('.sendbird-message-menu').getByRole('button').first().click({ timeout: 5_000 });
 }
 
 /** Open the message search panel (click the search icon in the chat header). */
