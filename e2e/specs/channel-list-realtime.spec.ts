@@ -9,7 +9,7 @@ test.describe('group channel list — realtime (2nd-user)', () => {
     page, workerUser, secondUser, secondPage, createChannel,
   }) => {
     const ch1 = await createChannel({ name: '[e2e] b5-older', memberIds: [secondUser.userId] });
-    const ch2 = await createChannel({ name: '[e2e] b5-newer', memberIds: [secondUser.userId] });
+    await createChannel({ name: '[e2e] b5-newer', memberIds: [secondUser.userId] });
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
     await page.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
 
@@ -24,7 +24,6 @@ test.describe('group channel list — realtime (2nd-user)', () => {
     await expect(
       page.locator('.sendbird-channel-preview').first().locator('.sendbird-channel-preview__unread-count'),
     ).toBeVisible({ timeout: 10_000 });
-    void ch2;
   });
 
   // B6
@@ -66,14 +65,13 @@ test.describe('group channel list — realtime (2nd-user)', () => {
     await expect(
       page.locator('.sendbird-channel-preview').first().locator('[class*="typing"]'),
     ).toBeVisible({ timeout: 15_000 });
-    void channel;
   });
 
   // B8
   test('adds new channel row when user gets invited', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    const ch = await createChannel({ name: '[e2e] b8-existing' });
+    await createChannel({ name: '[e2e] b8-existing' });
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
     const initialCount = await page.locator('.sendbird-channel-preview').count();
     // secondUser creates a new channel and invites workerUser
@@ -83,7 +81,6 @@ test.describe('group channel list — realtime (2nd-user)', () => {
     // New channel row should appear
     await expect(page.locator('.sendbird-channel-preview')).toHaveCount(initialCount + 1, { timeout: 15_000 });
     await platform.deleteGroupChannel(newCh.url).catch(() => {});
-    void ch;
   });
 
   // B10

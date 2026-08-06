@@ -103,6 +103,7 @@ test.describe('group channel — realtime (2nd-user)', () => {
       await expect(pill).not.toBeVisible({ timeout: 5_000 });
     } else {
       test.skip();
+      return;
     }
   });
 
@@ -122,6 +123,7 @@ test.describe('group channel — realtime (2nd-user)', () => {
       await expect(page.locator('.sendbird-conversation')).not.toBeVisible();
     } else {
       test.skip();
+      return;
     }
   });
 

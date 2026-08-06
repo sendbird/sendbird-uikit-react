@@ -87,6 +87,7 @@ test.describe('channel settings — extended', () => {
       await expect(memberRow.locator('[class*="operator-badge"], [class*="operator"]')).toBeVisible({ timeout: 10_000 });
     } else {
       test.skip();
+      return;
     }
   });
 
@@ -114,6 +115,7 @@ test.describe('channel settings — extended', () => {
       ).not.toBeVisible({ timeout: 10_000 });
     } else {
       test.skip();
+      return;
     }
   });
 
@@ -140,6 +142,7 @@ test.describe('channel settings — extended', () => {
       ).not.toBeVisible({ timeout: 10_000 });
     } else {
       test.skip();
+      return;
     }
   });
 

@@ -225,9 +225,11 @@ export const useSendbird = () => {
           });
           userActions.updateUserInfo(connectedUser);
         } catch (updateError) {
-          // Profile update failure should not tear down a successful connection.
-          // Log and surface via onFailed so consumers can show a toast/error, but
-          // the SDK remains connected (onConnected fires with the pre-update user).
+          // Profile update failure does not tear down the connection.
+          // onFailed fires here (before onConnected) so consumers can surface the error
+          // (e.g. show a toast). onConnected still fires below with the pre-update user.
+          // NOTE: both callbacks fire in the same connect call — onFailed first, then
+          // onConnected. Consumers must not treat onFailed as a terminal signal here.
           logger.error?.('SendbirdProvider | useSendbird/connect: updateCurrentUserInfo failed', updateError);
           eventHandlers?.connection?.onFailed?.(updateError as SendbirdError);
         }

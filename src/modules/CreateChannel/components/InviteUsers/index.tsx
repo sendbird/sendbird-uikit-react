@@ -64,6 +64,8 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
     // Skipping when isLoading=true would leave users=[] with no recovery path.
     applicationUserListQuery.next().then((it) => {
       setUsers(it);
+    }).catch(() => {
+      // Fetch failed (network error, expired token, etc.) — users stays []
     });
   }, [initialized, userListQuery]);
 
@@ -147,6 +149,8 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
                   ...users,
                   ...usersBatch,
                 ]);
+              }).catch(() => {
+                // Scroll pagination failed — keep existing list
               });
             }
           }}

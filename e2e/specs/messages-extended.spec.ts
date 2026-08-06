@@ -9,19 +9,22 @@ test.describe('group channel — messages extended', () => {
   test('shows failed status offline and succeeds after resend', async ({ page, workerUser, createChannel }) => {
     await createChannel();
     await openFirstGroupChannel(page, { userId: workerUser.userId });
-    // Go offline before sending
-    await page.context().setOffline(true);
     const msgText = `[c5-offline] ${runTag}`;
-    const input = page.locator('.sendbird-message-input [role="textbox"]').first();
-    await input.click();
-    await input.pressSequentially(msgText);
-    await input.press('Enter');
-    // Message should appear in failed state
-    await expect(page.locator('[data-sb-message-id="0"]').filter({ hasText: msgText }))
-      .toBeVisible({ timeout: 10_000 });
-    // Go back online
-    await page.context().setOffline(false);
-    // Click resend button
+    try {
+      // Go offline before sending
+      await page.context().setOffline(true);
+      const input = page.locator('.sendbird-message-input [role="textbox"]').first();
+      await input.click();
+      await input.pressSequentially(msgText);
+      await input.press('Enter');
+      // Message should appear in failed state
+      await expect(page.locator('[data-sb-message-id="0"]').filter({ hasText: msgText }))
+        .toBeVisible({ timeout: 10_000 });
+    } finally {
+      // Always restore network — if assertion above times out, subsequent tests must not inherit offline state
+      await page.context().setOffline(false);
+    }
+    // Click resend button (network is now restored)
     await page.locator('[class*="failed"] [class*="resend"], [title*="Resend"]').first().click({ timeout: 10_000 });
     // Message should now be confirmed
     await expect(messageByText(page, msgText)).toBeVisible({ timeout: 15_000 });
@@ -132,11 +135,9 @@ test.describe('group channel — messages extended', () => {
     await expect(messageByText(page, msgText)).toBeVisible({ timeout: 15_000 });
 
     // secondUser opens the channel to trigger a read receipt.
-    // Navigate then explicitly enter the channel — appPath does not forward channelUrl
-    // to the testing app, so relying on auto-select is fragile when secondUser has
-    // multiple channels.
+    // Filter to a preview with actual text content to avoid clicking a loading skeleton.
     await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId }));
-    await secondPage.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
+    await secondPage.locator('.sendbird-channel-preview').filter({ hasText: /\S/ }).first().click({ timeout: 30_000 });
     await expect(secondPage.locator('.sendbird-conversation')).toBeVisible({ timeout: 15_000 });
 
     // Status should flip to READ
