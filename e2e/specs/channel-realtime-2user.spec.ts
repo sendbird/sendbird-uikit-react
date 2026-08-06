@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { openFirstGroupChannel, sendText } from '../utils/actions';
+import { messageByText, openFirstGroupChannel, sendText } from '../utils/actions';
 import { appPath, runTag } from '../utils/env';
 import * as platform from '../utils/platform';
 
@@ -16,8 +16,9 @@ test.describe('group channel — realtime (2nd-user)', () => {
     const incomingText = `[d1] incoming ${runTag}`;
     await platform.sendMessage(channel.url, secondUser.userId, incomingText);
 
-    // Message should appear in the conversation
-    await expect(page.getByText(incomingText)).toBeVisible({ timeout: 15_000 });
+    // Message should appear in the conversation (messageByText uses the specific message-view locator
+    // to avoid strict-mode violation from the channel list also showing the text as last message preview)
+    await expect(messageByText(page, incomingText)).toBeVisible({ timeout: 15_000 });
   });
 
   // D2
@@ -37,8 +38,8 @@ test.describe('group channel — realtime (2nd-user)', () => {
     const incomingText = `[d2] new ${runTag}`;
     await platform.sendMessage(channel.url, secondUser.userId, incomingText);
 
-    // New-message pill should appear
-    const pill = page.locator('[class*="new-message"], [class*="scroll-bottom-button"]');
+    // New-message pill should appear (.first() avoids strict-mode when scroll-bottom button is also visible)
+    const pill = page.locator('[class*="new-message"], [class*="scroll-bottom-button"]').first();
     await expect(pill).toBeVisible({ timeout: 15_000 });
     await pill.click();
     // Should scroll to bottom and show the incoming message
@@ -131,7 +132,8 @@ test.describe('group channel — realtime (2nd-user)', () => {
     page, workerUser, createChannel,
   }) => {
     const channel = await createChannel({ seedMessage: null });
-    await platform.seedMessages(channel.url, workerUser.userId, 30, '[d9]');
+    // 15 messages: enough to make the list scrollable without hitting the per-user rate limit (5/s)
+    await platform.seedMessages(channel.url, workerUser.userId, 15, '[d9]');
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     // Scroll up
     const msgList = page.locator('.sendbird-conversation__messages-padding');
@@ -141,6 +143,6 @@ test.describe('group channel — realtime (2nd-user)', () => {
     await expect(chevron).toBeVisible({ timeout: 10_000 });
     await chevron.click();
     // Should be at bottom — last message visible
-    await expect(page.getByText('[d9] 30')).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText('[d9] 15', { exact: true })).toBeVisible({ timeout: 10_000 });
   });
 });

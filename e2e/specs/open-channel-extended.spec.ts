@@ -127,7 +127,8 @@ test.describe('open channel — extended', () => {
     // Freeze via Platform API
     await platform.freezeOpenChannel(channel.url, true);
     await openNamedOpenChannel(page, `[e2e] g16-${runTag}`, { userId: workerUser.userId });
-    await expect(page.locator('[class*="frozen"], .sendbird-frozen-channel-notification')).toBeVisible({ timeout: 10_000 });
+    // Use specific class only — [class*="frozen"] is too broad and matches channel-name elements too
+    await expect(page.locator('.sendbird-frozen-channel-notification')).toBeVisible({ timeout: 10_000 });
     await expect(page.locator('.sendbird-message-input--disabled, .sendbird-message-input [disabled]')).toBeVisible();
   });
 });

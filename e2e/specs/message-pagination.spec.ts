@@ -14,7 +14,8 @@ test.describe('group channel — message pagination', () => {
     // Scroll to the very top of the message list
     const list = page.locator('.sendbird-conversation__messages-padding');
     await list.evaluate((el) => { el.scrollTop = 0; });
-    // Older messages should paginate in — wait for the first seeded message
-    await expect(page.getByText('[page] 1')).toBeVisible({ timeout: 20_000 });
+    // Older messages should paginate in — exact match avoids strict-mode violation from
+    // getByText('[page] 1') also matching '[page] 10', '[page] 11', etc. as substrings
+    await expect(page.getByText('[page] 1', { exact: true })).toBeVisible({ timeout: 20_000 });
   });
 });
