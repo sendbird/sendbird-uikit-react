@@ -34,3 +34,43 @@ export async function openMessageMenu(page: Page, text: string) {
   await msg.hover();
   await msg.locator('.sendbird-message-menu').getByRole('button').first().click();
 }
+
+/** Open the message search panel (click the search icon in the chat header). */
+export async function openSearch(page: Page) {
+  await page.locator('.sendbird-chat-header__right__search').click();
+  await expect(page.locator('.sendbird-message-search')).toBeVisible({ timeout: 10_000 });
+}
+
+/** Type a keyword into the search box and wait for results (or empty state). */
+export async function searchFor(page: Page, keyword: string, timeoutMs = 30_000) {
+  const input = page.locator('.sendbird-message-search-pannel__input__container input');
+  await input.fill(keyword);
+  await input.press('Enter');
+  // wait for either results or the no-result placeholder
+  await page.locator('.sendbird-message-search-pannel__list, .sendbird-message-search-pannel__placeholder')
+    .first()
+    .waitFor({ timeout: timeoutMs });
+}
+
+/** Open the thread panel from a confirmed message by clicking the Reply (thread) menu item. */
+export async function openThread(page: Page, messageText: string) {
+  await openMessageMenu(page, messageText);
+  await page.getByRole('menuitem', { name: /reply in thread/i }).click();
+  await expect(page.locator('.sendbird-thread-ui')).toBeVisible({ timeout: 10_000 });
+}
+
+/** Open the channel settings panel. */
+export async function openChannelSettings(page: Page) {
+  await page.locator('.sendbird-chat-header__right__info').click();
+  await expect(page.locator('.sendbird-channel-settings')).toBeVisible({ timeout: 10_000 });
+}
+
+/**
+ * Navigate to /open_channel and click the first preview matching `channelName`.
+ * Resolves once the open-channel conversation header is visible.
+ */
+export async function openNamedOpenChannel(page: Page, channelName: string, params: Record<string, string | undefined> = {}) {
+  await page.goto(appPath('/open_channel', params));
+  await page.getByText(channelName).first().click({ timeout: 30_000 });
+  await expect(page.locator('.sendbird-openchannel-conversation-header')).toBeVisible({ timeout: 15_000 });
+}

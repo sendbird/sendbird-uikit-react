@@ -67,12 +67,93 @@ export async function createGroupChannel(opts: {
   return { url: data.channel_url };
 }
 
-export async function sendMessage(channelUrl: string, userId: string, message: string): Promise<void> {
-  await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/messages`, {
+export async function sendMessage(channelUrl: string, userId: string, message: string): Promise<number> {
+  const data = await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/messages`, {
     message_type: 'MESG',
     user_id: userId,
     message,
   });
+  return data?.message_id ?? 0;
+}
+
+/** Seed multiple messages into a group channel; returns an array of { messageId, message }. */
+export async function seedMessages(
+  channelUrl: string,
+  userId: string,
+  count: number,
+  prefix = '[seed]',
+): Promise<Array<{ messageId: number; message: string }>> {
+  const results: Array<{ messageId: number; message: string }> = [];
+  for (let i = 1; i <= count; i++) {
+    const message = `${prefix} ${i}`;
+    const messageId = await sendMessage(channelUrl, userId, message);
+    results.push({ messageId, message });
+  }
+  return results;
+}
+
+/** Send a thread reply to a parent message in a group channel. */
+export async function replyToMessage(
+  channelUrl: string,
+  parentMessageId: number,
+  userId: string,
+  message: string,
+): Promise<number> {
+  const data = await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/messages`, {
+    message_type: 'MESG',
+    user_id: userId,
+    message,
+    parent_message_id: parentMessageId,
+    is_reply_to_channel: false,
+  });
+  return data?.message_id ?? 0;
+}
+
+/** Freeze or unfreeze a group channel. */
+export async function freezeGroupChannel(channelUrl: string, freeze: boolean): Promise<void> {
+  await call('PUT', `/group_channels/${encodeURIComponent(channelUrl)}/freeze`, { freeze });
+}
+
+/** Remove a user from a group channel (leave). */
+export async function leaveGroupChannel(channelUrl: string, userId: string): Promise<void> {
+  await call('PUT', `/group_channels/${encodeURIComponent(channelUrl)}/leave`, { user_ids: [userId] });
+}
+
+/** Invite additional users to a group channel. */
+export async function inviteUsers(channelUrl: string, userIds: string[]): Promise<void> {
+  await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/invite`, { user_ids: userIds });
+}
+
+/** Send a message to an open channel; returns message_id. */
+export async function sendOpenChannelMessage(channelUrl: string, userId: string, message: string): Promise<number> {
+  const data = await call('POST', `/open_channels/${encodeURIComponent(channelUrl)}/messages`, {
+    message_type: 'MESG',
+    user_id: userId,
+    message,
+  });
+  return data?.message_id ?? 0;
+}
+
+/** Seed multiple messages into an open channel. */
+export async function seedOpenChannelMessages(
+  channelUrl: string,
+  userId: string,
+  count: number,
+  prefix = '[seed]',
+): Promise<void> {
+  for (let i = 1; i <= count; i++) {
+    await sendOpenChannelMessage(channelUrl, userId, `${prefix} ${i}`);
+  }
+}
+
+/** Update an open channel's name. */
+export async function updateOpenChannelName(channelUrl: string, name: string): Promise<void> {
+  await call('PUT', `/open_channels/${encodeURIComponent(channelUrl)}`, { name });
+}
+
+/** Delete an open channel as an operator (same as deleteOpenChannel but via operator API). */
+export async function deleteOpenChannelAsOperator(channelUrl: string): Promise<void> {
+  await deleteOpenChannel(channelUrl);
 }
 
 export async function deleteGroupChannel(url: string): Promise<void> {

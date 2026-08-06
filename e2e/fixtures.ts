@@ -9,7 +9,12 @@ export interface WorkerUser {
 
 export interface CreateChannelOptions {
   name?: string;
+  /** Seed message sent after channel creation. Pass `null` to skip. Defaults to '[e2e] channel ready'. */
   seedMessage?: string | null;
+  /** Freeze the channel after creation. */
+  freeze?: boolean;
+  /** Additional member user IDs to invite (beyond workerUser). */
+  memberIds?: string[];
 }
 
 export interface E2EFixtures {
@@ -45,13 +50,15 @@ export const test = base.extend<E2EFixtures, E2EWorkerFixtures>({
   createChannel: async ({ workerUser }, use) => {
     const created: string[] = [];
     const factory = async (options: CreateChannelOptions = {}) => {
+      const allMembers = [workerUser.userId, ...(options.memberIds ?? [])];
       const channel = await platform.createGroupChannel({
-        userIds: [workerUser.userId],
+        userIds: allMembers,
         name: options.name,
       });
       created.push(channel.url);
       const seedMessage = options.seedMessage === undefined ? '[e2e] channel ready' : options.seedMessage;
       if (seedMessage) await platform.sendMessage(channel.url, workerUser.userId, seedMessage);
+      if (options.freeze) await platform.freezeGroupChannel(channel.url, true);
       return channel;
     };
     await use(factory);
