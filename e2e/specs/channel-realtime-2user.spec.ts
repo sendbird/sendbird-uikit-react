@@ -7,18 +7,17 @@ import * as platform from '../utils/platform';
 test.describe('group channel — realtime (2nd-user)', () => {
   // D1
   test('displays incoming message and auto-scrolls when user is at bottom', async ({
-    page, workerUser, secondUser, secondPage, createChannel,
+    page, workerUser, secondUser, createChannel,
   }) => {
     const channel = await createChannel({ memberIds: [secondUser.userId] });
     await openFirstGroupChannel(page, { userId: workerUser.userId });
 
-    // secondUser sends a message
+    // secondUser sends a message via Platform API
     const incomingText = `[d1] incoming ${runTag}`;
     await platform.sendMessage(channel.url, secondUser.userId, incomingText);
 
     // Message should appear in the conversation
     await expect(page.getByText(incomingText)).toBeVisible({ timeout: 15_000 });
-    void secondPage;
   });
 
   // D2

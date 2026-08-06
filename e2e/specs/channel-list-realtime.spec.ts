@@ -73,13 +73,14 @@ test.describe('group channel list — realtime (2nd-user)', () => {
   }) => {
     await createChannel({ name: '[e2e] b8-existing' });
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
-    const initialCount = await page.locator('.sendbird-channel-preview').count();
     // secondUser creates a new channel and invites workerUser
     const newCh = await platform.createGroupChannel({ userIds: [secondUser.userId], name: '[e2e] b8-invite' });
     await platform.inviteUsers(newCh.url, [workerUser.userId]);
     await platform.sendMessage(newCh.url, secondUser.userId, '[b8] invite trigger');
-    // New channel row should appear
-    await expect(page.locator('.sendbird-channel-preview')).toHaveCount(initialCount + 1, { timeout: 15_000 });
+    // The specifically-named invited channel should appear in the list
+    await expect(
+      page.locator('.sendbird-channel-preview').filter({ hasText: '[e2e] b8-invite' }),
+    ).toBeVisible({ timeout: 15_000 });
     await platform.deleteGroupChannel(newCh.url).catch(() => {});
   });
 
@@ -89,10 +90,15 @@ test.describe('group channel list — realtime (2nd-user)', () => {
   }) => {
     const ch = await createChannel({ name: '[e2e] b10-del' });
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
-    await expect(page.locator('.sendbird-channel-preview').first()).toBeVisible({ timeout: 30_000 });
+    await expect(
+      page.locator('.sendbird-channel-preview').filter({ hasText: '[e2e] b10-del' }),
+    ).toBeVisible({ timeout: 30_000 });
     // Delete via Platform API (simulates remote deletion)
     await platform.deleteGroupChannel(ch.url);
-    await expect(page.locator('.sendbird-channel-preview')).toHaveCount(0, { timeout: 15_000 });
+    // Assert that THIS channel disappears — avoids false failures from other workers' channels.
+    await expect(
+      page.locator('.sendbird-channel-preview').filter({ hasText: '[e2e] b10-del' }),
+    ).not.toBeVisible({ timeout: 15_000 });
   });
 
   // B11

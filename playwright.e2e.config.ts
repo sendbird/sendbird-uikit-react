@@ -18,7 +18,7 @@ if (fs.existsSync(envFile)) {
   for (const line of fs.readFileSync(envFile, 'utf8').split('\n')) {
     const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)\s*$/);
     if (match && process.env[match[1]] === undefined) {
-      process.env[match[1]] = match[2].replace(/^["']|["']$/g, '');
+      process.env[match[1]] = match[2].replace(/^["']|["']$/g, '').replace(/\s+#.*$/, '').trim();
     }
   }
 }

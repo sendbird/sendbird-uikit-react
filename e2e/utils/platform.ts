@@ -73,7 +73,8 @@ export async function sendMessage(channelUrl: string, userId: string, message: s
     user_id: userId,
     message,
   });
-  return data?.message_id ?? 0;
+  if (!data?.message_id) throw new Error(`Platform API sendMessage returned no message_id: ${JSON.stringify(data)}`);
+  return data.message_id;
 }
 
 /** Send a structured mention message so that UIKit renders mention badges. */
@@ -90,7 +91,8 @@ export async function sendMentionMessage(
     mention_type: 'USERS',
     mentioned_user_ids: mentionedUserIds,
   });
-  return data?.message_id ?? 0;
+  if (!data?.message_id) throw new Error(`Platform API sendMentionMessage returned no message_id: ${JSON.stringify(data)}`);
+  return data.message_id;
 }
 
 /** Seed multiple messages into a group channel; returns an array of { messageId, message }. */
@@ -123,7 +125,8 @@ export async function replyToMessage(
     parent_message_id: parentMessageId,
     is_reply_to_channel: false,
   });
-  return data?.message_id ?? 0;
+  if (!data?.message_id) throw new Error(`Platform API replyToMessage returned no message_id: ${JSON.stringify(data)}`);
+  return data.message_id;
 }
 
 /** Freeze or unfreeze a group channel. */
@@ -148,7 +151,8 @@ export async function sendOpenChannelMessage(channelUrl: string, userId: string,
     user_id: userId,
     message,
   });
-  return data?.message_id ?? 0;
+  if (!data?.message_id) throw new Error(`Platform API sendOpenChannelMessage returned no message_id: ${JSON.stringify(data)}`);
+  return data.message_id;
 }
 
 /** Seed multiple messages into an open channel. */
@@ -222,12 +226,14 @@ export async function deleteOpenChannel(url: string): Promise<void> {
   await call('DELETE', `/open_channels/${encodeURIComponent(url)}`);
 }
 
-/** Delete every open channel tagged with this run's custom_type (filtered client-side). */
+/** Delete every open channel tagged with this run's custom_type. */
 export async function sweepRunOpenChannels(): Promise<number> {
   let deleted = 0;
   let token = '';
   do {
-    const data = await call('GET', `/open_channels?limit=100${token ? `&token=${token}` : ''}`);
+    const query = `custom_type=${encodeURIComponent(runTag)}&limit=100${token ? `&token=${token}` : ''}`;
+    const data = await call('GET', `/open_channels?${query}`);
+    // Client-side filter as safety net in case the server ignores the custom_type param.
     const channels: Array<{ channel_url: string; custom_type?: string }> = (data?.channels ?? [])
       .filter((c: { custom_type?: string }) => c.custom_type === runTag);
     for (const channel of channels) {

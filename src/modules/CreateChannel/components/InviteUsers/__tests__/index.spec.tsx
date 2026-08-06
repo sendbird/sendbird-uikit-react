@@ -134,20 +134,32 @@ describe('InviteUsers', () => {
     expect(mockNext).toHaveBeenCalled();
   });
 
-  it('re-runs the user list query when userListQuery prop changes while SDK is initialized', async () => {
+  it('uses the latest userListQuery ref when initialized becomes true, even if the prop changed before init', async () => {
     const firstNext = vi.fn().mockResolvedValue([{ userId: 'user-a' }]);
     const firstQuery = vi.fn(() => ({
       hasNext: false, isLoading: false, next: firstNext,
     } as unknown as ApplicationUserListQuery));
-
-    const { rerender } = await act(async () => renderComponent({}, {}, { userListQuery: firstQuery }));
 
     const secondNext = vi.fn().mockResolvedValue([{ userId: 'user-b' }]);
     const secondQuery = vi.fn(() => ({
       hasNext: false, isLoading: false, next: secondNext,
     } as unknown as ApplicationUserListQuery));
 
+    // Start uninitialized with firstQuery
+    (useSendbirdModule.default as Mock).mockReturnValue({
+      state: { ...mockState, stores: { sdkStore: { ...mockState.stores.sdkStore, initialized: false } } },
+    });
+
+    const { rerender } = renderComponent({}, {}, { userListQuery: firstQuery });
+
+    // Neither query called yet — SDK not initialized
+    expect(firstQuery).not.toHaveBeenCalled();
+
+    // Swap to secondQuery and flip initialized to true in one update
     await act(async () => {
+      (useSendbirdModule.default as Mock).mockReturnValue({
+        state: { ...mockState, stores: { sdkStore: { ...mockState.stores.sdkStore, initialized: true } } },
+      });
       rerender(
         <LocalizationContext.Provider value={mockLocalizationContext as any}>
           <InviteUsers userListQuery={secondQuery} />
@@ -155,7 +167,8 @@ describe('InviteUsers', () => {
       );
     });
 
-    expect(firstQuery).toHaveBeenCalledTimes(1);
+    // Should use the latest query (secondQuery) captured via ref at connect-time
+    expect(firstQuery).not.toHaveBeenCalled();
     expect(secondQuery).toHaveBeenCalled();
     expect(secondNext).toHaveBeenCalled();
   });

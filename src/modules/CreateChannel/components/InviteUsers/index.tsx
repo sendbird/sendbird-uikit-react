@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { User } from '@sendbird/chat';
 import type { GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
 
@@ -53,21 +53,26 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const { isMobile } = useMediaQueryContext();
   const [scrollableAreaHeight, setScrollableAreaHeight] = useState<number>(window.innerHeight);
 
+  // Read via ref so the effect dep array only tracks `initialized`, not the query reference.
+  // Consumers often pass an inline arrow for userListQuery; including it in deps would cause
+  // a re-fetch on every parent render. The latest query is always picked up at connect-time.
+  const userListQueryRef = useRef(userListQuery);
+  userListQueryRef.current = userListQuery;
+
   useEffect(() => {
     if (!initialized) return;
-    const applicationUserListQuery = userListQuery ? userListQuery() : createDefaultUserListQuery({ sdk });
-    if (!applicationUserListQuery) {
-      return;
-    }
+    const applicationUserListQuery = userListQueryRef.current
+      ? userListQueryRef.current()
+      : createDefaultUserListQuery({ sdk });
+    if (!applicationUserListQuery) return;
+    setUsers([]); // Reset before async fetch so stale list is not shown during re-fetch.
     setUsersDataSource(applicationUserListQuery);
-    // Always call next() regardless of isLoading; the SDK handles concurrent calls.
-    // Skipping when isLoading=true would leave users=[] with no recovery path.
     applicationUserListQuery.next().then((it) => {
       setUsers(it);
     }).catch(() => {
       // Fetch failed (network error, expired token, etc.) — users stays []
     });
-  }, [initialized, userListQuery]);
+  }, [initialized]);
 
   // To fix navbar break in mobile we set dynamic height to the scrollable area
   useEffect(() => {
@@ -145,10 +150,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
 
             if (hasNext && fetchMore && !isLoading) {
               usersDataSource.next().then((usersBatch) => {
-                setUsers([
-                  ...users,
-                  ...usersBatch,
-                ]);
+                setUsers((prev) => [...prev, ...usersBatch]);
               }).catch(() => {
                 // Scroll pagination failed — keep existing list
               });

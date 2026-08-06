@@ -213,6 +213,10 @@ export const useSendbird = () => {
 
     sdkActions.setSdkLoading(true);
 
+    // Stores a profile-update error so onFailed fires once (just before onConnected) rather than
+    // immediately in the inner catch — prevents double-firing if initializeMessageTemplatesInfo
+    // also throws and the outer catch fires onFailed for that terminal error.
+    let profileUpdateError: SendbirdError | null = null;
     try {
       let connectedUser = await sdk.connect(userId, accessToken);
       userActions.initUser(connectedUser);
@@ -225,13 +229,11 @@ export const useSendbird = () => {
           });
           userActions.updateUserInfo(connectedUser);
         } catch (updateError) {
-          // Profile update failure does not tear down the connection.
-          // onFailed fires here (before onConnected) so consumers can surface the error
-          // (e.g. show a toast). onConnected still fires below with the pre-update user.
-          // NOTE: both callbacks fire in the same connect call — onFailed first, then
-          // onConnected. Consumers must not treat onFailed as a terminal signal here.
+          // Profile update failure does not tear down the connection; deferred to fire after
+          // initializeMessageTemplatesInfo/initDashboardConfigs so onFailed is not called twice
+          // if a later step also fails and the outer catch fires.
           logger.error?.('SendbirdProvider | useSendbird/connect: updateCurrentUserInfo failed', updateError);
-          eventHandlers?.connection?.onFailed?.(updateError as SendbirdError);
+          profileUpdateError = updateError as SendbirdError;
         }
       }
 
@@ -240,6 +242,11 @@ export const useSendbird = () => {
 
       sdkActions.initSdk(sdk);
 
+      // Fire non-terminal profile-update failure only when all init steps have succeeded,
+      // so consumers can treat onFailed as terminal unless onConnected follows immediately.
+      if (profileUpdateError) {
+        eventHandlers?.connection?.onFailed?.(profileUpdateError);
+      }
       eventHandlers?.connection?.onConnected?.(connectedUser);
     } catch (error) {
       const sendbirdError = error as SendbirdError;

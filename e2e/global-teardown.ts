@@ -9,14 +9,15 @@ import { runTag } from './utils/env';
 
 export default async function globalTeardown(): Promise<void> {
   if (!hasPlatformToken()) return;
-  try {
-    const deleted = (await sweepRunChannels()) + (await sweepRunOpenChannels());
-    if (deleted > 0) {
-      // eslint-disable-next-line no-console
-      console.log(`[e2e globalTeardown] swept ${deleted} leftover channel(s) for run ${runTag}`);
-    }
-  } catch (error) {
+  const warn = (label: string, err: unknown) => {
     // eslint-disable-next-line no-console
-    console.warn('[e2e globalTeardown] sweep skipped:', error instanceof Error ? error.message : error);
+    console.warn(`[e2e globalTeardown] ${label} sweep failed:`, err instanceof Error ? err.message : err);
+  };
+  const groupDeleted = await sweepRunChannels().catch((e) => { warn('group channel', e); return 0; });
+  const openDeleted = await sweepRunOpenChannels().catch((e) => { warn('open channel', e); return 0; });
+  const deleted = groupDeleted + openDeleted;
+  if (deleted > 0) {
+    // eslint-disable-next-line no-console
+    console.log(`[e2e globalTeardown] swept ${deleted} leftover channel(s) for run ${runTag}`);
   }
 }
