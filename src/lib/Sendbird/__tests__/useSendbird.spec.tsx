@@ -23,7 +23,7 @@ vi.mock('../utils', async () => {
 
 describe('useSendbird', () => {
   let mockStore;
-  const mockLogger = { error: vi.fn(), info: vi.fn() };
+  const mockLogger = { error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
   beforeEach(() => {
     mockStore = createSendbirdContextStore();
@@ -465,6 +465,8 @@ describe('useSendbird', () => {
       expect(onFailed).toHaveBeenCalledWith(updateError);
       // SDK is still initialized (connection was not torn down)
       expect(mockStore.getState().stores.sdkStore.sdk).not.toStrictEqual({});
+      // onFailed must fire before onConnected (non-terminal notification precedes success callback)
+      expect(onFailed.mock.invocationCallOrder[0]).toBeLessThan(onConnected.mock.invocationCallOrder[0]);
     });
 
     it('calls onFailed once (with init error) and NOT onConnected when both updateCurrentUserInfo and initializeMessageTemplatesInfo throw', async () => {
@@ -497,8 +499,14 @@ describe('useSendbird', () => {
       expect(onFailed).toHaveBeenCalledWith(initError);
       // onConnected must NOT fire — the connection was torn down
       expect(onConnected).not.toHaveBeenCalled();
-      // SDK is reset
+      // Both SDK and user stores are reset
       expect(mockStore.getState().stores.sdkStore.sdk).toStrictEqual({});
+      expect(mockStore.getState().stores.userStore.user).toStrictEqual({});
+      // profileUpdateError is logged as a warning (not swallowed silently)
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('profile update had also failed'),
+        updateError,
+      );
     });
 
     it('applies the updateCurrentUserInfo result to both the user store and onConnected when connecting with a nickname', async () => {

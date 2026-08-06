@@ -59,21 +59,25 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const userListQueryRef = useRef(userListQuery);
   userListQueryRef.current = userListQuery;
 
+  // Shared cancellation flag — ref so the scroll handler can also check it. Reset to false at
+  // the start of each effect run so scroll pagination from a stale run cannot mutate state.
+  const cancelledRef = useRef(false);
+
   useEffect(() => {
     if (!initialized) return;
-    let cancelled = false;
+    cancelledRef.current = false;
     const applicationUserListQuery = userListQueryRef.current
       ? userListQueryRef.current()
       : createDefaultUserListQuery({ sdk });
-    if (!applicationUserListQuery) return () => { cancelled = true; };
+    if (!applicationUserListQuery) return () => { cancelledRef.current = true; };
     setUsers([]); // Reset before async fetch so stale list is not shown during re-fetch.
     setUsersDataSource(applicationUserListQuery);
     applicationUserListQuery.next().then((it) => {
-      if (!cancelled) setUsers(it);
+      if (!cancelledRef.current) setUsers(it);
     }).catch(() => {
       // Fetch failed (network error, expired token, etc.) — users stays []
     });
-    return () => { cancelled = true; };
+    return () => { cancelledRef.current = true; };
   }, [initialized]);
 
   // To fix navbar break in mobile we set dynamic height to the scrollable area
@@ -152,7 +156,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
 
             if (hasNext && fetchMore && !isLoading) {
               usersDataSource.next().then((usersBatch) => {
-                setUsers((prev) => [...prev, ...usersBatch]);
+                if (!cancelledRef.current) setUsers((prev) => [...prev, ...usersBatch]);
               }).catch(() => {
                 // Scroll pagination failed — keep existing list
               });
