@@ -46,6 +46,25 @@ test.describe('group channel — realtime (2nd-user)', () => {
     await expect(page.getByText(incomingText)).toBeVisible({ timeout: 10_000 });
   });
 
+  // D4
+  test('removes frozen banner and enables input after unfreezing channel', async ({
+    page, workerUser, createChannel,
+  }) => {
+    await createChannel({ freeze: true });
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    await expect(page.locator('.sendbird-frozen-channel-notification')).toBeVisible({ timeout: 10_000 });
+    // Unfreeze via channel settings (workerUser is operator)
+    await page.locator('.sendbird-chat-header__right__info').click();
+    await expect(page.locator('.sendbird-channel-settings')).toBeVisible({ timeout: 10_000 });
+    const freezeToggle = page.locator('[class*="freeze"] input[type="checkbox"]').first();
+    await freezeToggle.uncheck();
+    await page.locator('.sendbird-chat-header__right__info').click(); // close settings
+    await expect(page.locator('.sendbird-frozen-channel-notification')).not.toBeVisible({ timeout: 10_000 });
+    await expect(
+      page.locator('.sendbird-message-input--disabled, .sendbird-message-input [disabled]'),
+    ).not.toBeVisible({ timeout: 5_000 });
+  });
+
   // D6
   test('shows new-messages separator when opening a channel with unreads', async ({
     page, workerUser, secondUser, createChannel,

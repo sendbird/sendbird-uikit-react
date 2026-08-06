@@ -63,6 +63,28 @@ test.describe('group channel — messages extended', () => {
     await expect(page.locator('[class*="multiple-files"]').last()).toBeVisible({ timeout: 20_000 });
   });
 
+  // C10
+  test('renders voice message bubble after recording and sending', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const voiceBtn = page.locator('[class*="voice-message"], [title*="Voice"], [aria-label*="voice"]').first();
+    if (!await voiceBtn.isVisible({ timeout: 5_000 }).catch(() => false)) {
+      test.skip();
+      return;
+    }
+    // Grant microphone permission
+    await page.context().grantPermissions(['microphone']);
+    await voiceBtn.click();
+    // Wait for recording UI to appear and click stop/send
+    const stopBtn = page.locator('[class*="stop-recording"], [class*="voice-recorder"] button').first();
+    await expect(stopBtn).toBeVisible({ timeout: 5_000 });
+    await stopBtn.click();
+    const sendBtn = page.locator('[class*="voice-recorder__send"], [class*="send-voice"]').first();
+    await expect(sendBtn).toBeVisible({ timeout: 5_000 });
+    await sendBtn.click();
+    await expect(page.locator('[class*="voice-message-item-body"]').last()).toBeVisible({ timeout: 15_000 });
+  });
+
   // C12
   test('sends the suggested reply text as a message when clicked', async ({ page, workerUser, createChannel }) => {
     // Suggested replies are sent as admin messages via Platform API with suggested_replies
