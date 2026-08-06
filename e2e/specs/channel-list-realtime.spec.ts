@@ -22,7 +22,7 @@ test.describe('group channel list — realtime (2nd-user)', () => {
       page.locator('.sendbird-channel-preview').first().filter({ hasText: '[e2e] b5-older' }),
     ).toBeVisible({ timeout: 15_000 });
     await expect(
-      page.locator('.sendbird-channel-preview').first().locator('.sendbird-channel-preview__unread-count'),
+      page.locator('.sendbird-channel-preview').first().locator('[class*="unread-message-count"]'),
     ).toBeVisible({ timeout: 10_000 });
   });
 
@@ -42,7 +42,7 @@ test.describe('group channel list — realtime (2nd-user)', () => {
     await page.locator('.sendbird-channel-preview').first().click();
     await expect(page.locator('.sendbird-conversation')).toBeVisible({ timeout: 10_000 });
     await expect(
-      page.locator('.sendbird-channel-preview--active .sendbird-channel-preview__unread-count'),
+      page.locator('.sendbird-channel-preview--active').locator('[class*="unread-message-count"]'),
     ).not.toBeVisible({ timeout: 10_000 });
   });
 
@@ -51,11 +51,12 @@ test.describe('group channel list — realtime (2nd-user)', () => {
     page, workerUser, secondUser, secondPage, createChannel,
   }) => {
     const channel = await createChannel({ memberIds: [secondUser.userId] });
-    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
+    // groupChannelList_enableTypingIndicator defaults to false — enable it explicitly
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId, groupChannelList_enableTypingIndicator: 'true' }));
     await page.locator('.sendbird-channel-preview').first().waitFor({ timeout: 30_000 });
 
     // secondUser opens the channel and starts typing
-    await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId }));
+    await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId, groupChannelList_enableTypingIndicator: 'true' }));
     await secondPage.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
     const input = secondPage.locator('.sendbird-message-input [role="textbox"]').first();
     await input.click();
@@ -136,9 +137,10 @@ test.describe('group channel list — realtime (2nd-user)', () => {
     // secondUser sends a structured mention message (mention_type + mentioned_user_ids required
     // for UIKit to render the mention badge on the channel-list row)
     await platform.sendMentionMessage(channel.url, secondUser.userId, `@${workerUser.userId} hello ${runTag}`, [workerUser.userId]);
-    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
+    // groupChannel_enableMention defaults to false — enable it so the mention badge renders
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId, groupChannel_enableMention: 'true' }));
     await expect(
-      page.locator('.sendbird-channel-preview').first().locator('[class*="mention"], [class*="at-mark"]'),
+      page.locator('.sendbird-channel-preview').first().locator('[class*="mention"]'),
     ).toBeVisible({ timeout: 20_000 });
   });
 });

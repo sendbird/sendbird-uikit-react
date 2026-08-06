@@ -43,7 +43,7 @@ test.describe('group channel — realtime (2nd-user)', () => {
     await expect(pill).toBeVisible({ timeout: 15_000 });
     await pill.click();
     // Should scroll to bottom and show the incoming message
-    await expect(page.getByText(incomingText)).toBeVisible({ timeout: 10_000 });
+    await expect(messageByText(page, incomingText)).toBeVisible({ timeout: 10_000 });
   });
 
   // D4
