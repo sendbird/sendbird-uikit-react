@@ -106,13 +106,13 @@ test.describe('group channel — messages extended', () => {
 
   // C13
   test('renders highlighted mention in the message bubble', async ({
-    page, workerUser, secondUser, secondPage, createChannel,
+    page, workerUser, secondUser, createChannel,
   }) => {
     const channel = await createChannel({ memberIds: [secondUser.userId] });
-    // secondUser sends a message mentioning workerUser
-    await secondPage.goto(`/`); // dummy load to warm the context
+    // secondUser sends a structured mention message (mention_type + mentioned_user_ids required
+    // for UIKit to render a .sendbird-mention-user-label badge)
     const mentionMsg = `@${workerUser.userId} hi ${runTag}`;
-    await platform.sendMessage(channel.url, secondUser.userId, mentionMsg);
+    await platform.sendMentionMessage(channel.url, secondUser.userId, mentionMsg, [workerUser.userId]);
 
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     await expect(

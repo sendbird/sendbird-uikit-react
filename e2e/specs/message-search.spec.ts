@@ -59,8 +59,9 @@ test.describe('message search', () => {
     const initialCount = await page.locator('.sendbird-message-search-item').count();
     // Scroll to the bottom of the results list to trigger pagination
     await list.evaluate((el) => { el.scrollTop = el.scrollHeight; });
-    await page.waitForTimeout(3_000);
+    // Wait deterministically for at least one more result to appear
+    await expect(page.locator('.sendbird-message-search-item').nth(initialCount)).toBeVisible({ timeout: 10_000 });
     const afterCount = await page.locator('.sendbird-message-search-item').count();
-    expect(afterCount).toBeGreaterThanOrEqual(initialCount);
+    expect(afterCount).toBeGreaterThan(initialCount);
   });
 });

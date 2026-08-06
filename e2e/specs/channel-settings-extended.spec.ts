@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
 import { openFirstGroupChannel, openChannelSettings } from '../utils/actions';
-import { runTag } from '../utils/env';
+import { appPath } from '../utils/env';
 import * as platform from '../utils/platform';
 
 test.describe('channel settings — extended', () => {
@@ -46,8 +46,6 @@ test.describe('channel settings — extended', () => {
         page.locator('.sendbird-channel-settings').getByText(secondUser.userId),
       ).toBeVisible({ timeout: 15_000 });
     } else {
-      // Fallback: invite via Platform API and verify
-      await platform.inviteUsers((await createChannel()).url, [secondUser.userId]);
       test.skip();
     }
   });
@@ -165,7 +163,7 @@ test.describe('channel settings — extended', () => {
   test('advances to invite step when Super or Broadcast channel type is selected', async ({
     page, workerUser,
   }) => {
-    await page.goto(`/group_channel?userId=${workerUser.userId}`);
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
     await page.locator('.sendbird-channel-list__header').getByRole('button').first().click({ timeout: 15_000 });
     const superOption = page.locator('[class*="channel-type"]').filter({ hasText: /super/i }).first();
     if (await superOption.isVisible({ timeout: 5_000 }).catch(() => false)) {
@@ -199,9 +197,6 @@ test.describe('channel settings — extended', () => {
       await expect(
         page.locator('.sendbird-user-list-item, [class*="empty-state"]').first(),
       ).toBeVisible({ timeout: 10_000 });
-    } else {
-      // At least one accordion was checked
-      void runTag;
     }
   });
 });

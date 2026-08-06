@@ -9,7 +9,7 @@ test.describe('open channel — extended', () => {
   test('renders file bubble after sending a file in open channel', async ({
     page, workerUser, createOpenChannel,
   }) => {
-    const channel = await createOpenChannel({ name: `[e2e] g5-${runTag}` });
+    await createOpenChannel({ name: `[e2e] g5-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g5-${runTag}`, { userId: workerUser.userId });
     const fileInput = page.locator('.sendbird-message-input [type="file"]');
     await fileInput.setInputFiles({
@@ -24,14 +24,13 @@ test.describe('open channel — extended', () => {
     await expect(
       page.locator('.sendbird-thumbnail-message-item-body, .sendbird-file-message-item-body').last(),
     ).toBeVisible({ timeout: 20_000 });
-    void channel;
   });
 
   // G7
   test('updates the message text after editing in open channel', async ({
     page, workerUser, createOpenChannel,
   }) => {
-    const channel = await createOpenChannel({ name: `[e2e] g7-${runTag}` });
+    await createOpenChannel({ name: `[e2e] g7-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g7-${runTag}`, { userId: workerUser.userId });
     const orig = `[e2e-g7-orig] ${runTag}`;
     await sendText(page, orig);
@@ -42,14 +41,13 @@ test.describe('open channel — extended', () => {
     await editInput.fill(edited);
     await page.locator('.sendbird-message-input--edit-action__save').click();
     await expect(messageByText(page, edited)).toBeVisible({ timeout: 15_000 });
-    void channel;
   });
 
   // G13
   test('registers and cancels operator in open channel participant list', async ({
     page, workerUser, secondUser, secondPage, createOpenChannel,
   }) => {
-    const channel = await createOpenChannel({ name: `[e2e] g13-${runTag}` });
+    await createOpenChannel({ name: `[e2e] g13-${runTag}` });
     // secondUser enters the open channel to appear as participant
     await secondPage.goto(appPath('/open_channel', { userId: secondUser.userId }));
     await secondPage.getByText(`[e2e] g13-${runTag}`).first().click({ timeout: 30_000 });
@@ -69,14 +67,13 @@ test.describe('open channel — extended', () => {
     } else {
       test.skip();
     }
-    void channel;
   });
 
   // G14
   test('mutes and unmutes a participant in open channel', async ({
     page, workerUser, secondUser, secondPage, createOpenChannel,
   }) => {
-    const channel = await createOpenChannel({ name: `[e2e] g14-${runTag}` });
+    await createOpenChannel({ name: `[e2e] g14-${runTag}` });
     await secondPage.goto(appPath('/open_channel', { userId: secondUser.userId }));
     await secondPage.getByText(`[e2e] g14-${runTag}`).first().click({ timeout: 30_000 });
     await openNamedOpenChannel(page, `[e2e] g14-${runTag}`, { userId: workerUser.userId });
@@ -94,14 +91,13 @@ test.describe('open channel — extended', () => {
     } else {
       test.skip();
     }
-    void channel;
   });
 
   // G15
   test('bans and unbans a participant in open channel', async ({
     page, workerUser, secondUser, secondPage, createOpenChannel,
   }) => {
-    const channel = await createOpenChannel({ name: `[e2e] g15-${runTag}` });
+    await createOpenChannel({ name: `[e2e] g15-${runTag}` });
     await secondPage.goto(appPath('/open_channel', { userId: secondUser.userId }));
     await secondPage.getByText(`[e2e] g15-${runTag}`).first().click({ timeout: 30_000 });
     await openNamedOpenChannel(page, `[e2e] g15-${runTag}`, { userId: workerUser.userId });
@@ -118,7 +114,6 @@ test.describe('open channel — extended', () => {
     } else {
       test.skip();
     }
-    void channel;
   });
 
   // G16

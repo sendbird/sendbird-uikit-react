@@ -76,6 +76,23 @@ export async function sendMessage(channelUrl: string, userId: string, message: s
   return data?.message_id ?? 0;
 }
 
+/** Send a structured mention message so that UIKit renders mention badges. */
+export async function sendMentionMessage(
+  channelUrl: string,
+  senderId: string,
+  message: string,
+  mentionedUserIds: string[],
+): Promise<number> {
+  const data = await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/messages`, {
+    message_type: 'MESG',
+    user_id: senderId,
+    message,
+    mention_type: 'USERS',
+    mentioned_user_ids: mentionedUserIds,
+  });
+  return data?.message_id ?? 0;
+}
+
 /** Seed multiple messages into a group channel; returns an array of { messageId, message }. */
 export async function seedMessages(
   channelUrl: string,
@@ -156,10 +173,6 @@ export async function freezeOpenChannel(channelUrl: string, freeze: boolean): Pr
   await call('PUT', `/open_channels/${encodeURIComponent(channelUrl)}/freeze`, { freeze });
 }
 
-/** Delete an open channel as an operator (same as deleteOpenChannel but via operator API). */
-export async function deleteOpenChannelAsOperator(channelUrl: string): Promise<void> {
-  await deleteOpenChannel(channelUrl);
-}
 
 export async function deleteGroupChannel(url: string): Promise<void> {
   await call('DELETE', `/group_channels/${encodeURIComponent(url)}`);

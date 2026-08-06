@@ -20,7 +20,11 @@ export interface CreateChannelOptions {
 export interface E2EFixtures {
   createChannel: (options?: CreateChannelOptions) => Promise<{ url: string }>;
   createOpenChannel: (options?: { name?: string }) => Promise<{ url: string }>;
-  /** A second Playwright Page connected as secondUser. Used for Tier-2 realtime/2-user scenarios. */
+  /**
+   * A second Playwright Page for Tier-2 realtime/2-user scenarios.
+   * The context is blank — callers MUST navigate it with `userId: secondUser.userId`
+   * (e.g. `secondPage.goto(appPath('/group_channel', { userId: secondUser.userId }))`).
+   */
   secondPage: import('@playwright/test').Page;
 }
 

@@ -102,23 +102,27 @@ test.describe('group channel list — realtime (2nd-user)', () => {
   test('loads more channels when list is scrolled to the bottom', async ({
     page, workerUser,
   }) => {
-    // Seed 20+ channels to trigger pagination (default page size is typically 20)
+    // Seed 22 channels to exceed the default page size (~20)
     const urls: string[] = [];
-    for (let i = 0; i < 22; i++) {
-      const ch = await platform.createGroupChannel({ userIds: [workerUser.userId], name: `[e2e] b11-${runTag}-${i}` });
-      await platform.sendMessage(ch.url, workerUser.userId, `seed ${i}`);
-      urls.push(ch.url);
+    try {
+      for (let i = 0; i < 22; i++) {
+        const ch = await platform.createGroupChannel({ userIds: [workerUser.userId], name: `[e2e] b11-${runTag}-${i}` });
+        await platform.sendMessage(ch.url, workerUser.userId, `seed ${i}`);
+        urls.push(ch.url);
+      }
+      await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
+      await page.locator('.sendbird-channel-preview').first().waitFor({ timeout: 30_000 });
+      const initial = await page.locator('.sendbird-channel-preview').count();
+      // Scroll to bottom to trigger pagination
+      const list = page.locator('.sendbird-channel-list__body');
+      await list.evaluate((el) => { el.scrollTop = el.scrollHeight; });
+      // Wait deterministically for at least one more preview to appear
+      await expect(page.locator('.sendbird-channel-preview').nth(initial)).toBeVisible({ timeout: 10_000 });
+      const after = await page.locator('.sendbird-channel-preview').count();
+      expect(after).toBeGreaterThan(initial);
+    } finally {
+      for (const url of urls) await platform.deleteGroupChannel(url).catch(() => {});
     }
-    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
-    await page.locator('.sendbird-channel-preview').first().waitFor({ timeout: 30_000 });
-    const initial = await page.locator('.sendbird-channel-preview').count();
-    // Scroll channel list to the bottom
-    const list = page.locator('.sendbird-channel-list__body');
-    await list.evaluate((el) => { el.scrollTop = el.scrollHeight; });
-    await page.waitForTimeout(2_000);
-    const after = await page.locator('.sendbird-channel-preview').count();
-    expect(after).toBeGreaterThanOrEqual(initial);
-    for (const url of urls) await platform.deleteGroupChannel(url).catch(() => {});
   });
 
   // B12
