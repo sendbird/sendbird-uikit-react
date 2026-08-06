@@ -53,8 +53,8 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const { isMobile } = useMediaQueryContext();
   const [scrollableAreaHeight, setScrollableAreaHeight] = useState<number>(window.innerHeight);
 
-  const isSdkReady = Boolean(sdk?.createApplicationUserListQuery);
   useEffect(() => {
+    if (!initialized) return;
     const applicationUserListQuery = userListQuery ? userListQuery() : createDefaultUserListQuery({ sdk });
     if (!applicationUserListQuery) {
       return;
@@ -65,7 +65,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
         setUsers(it);
       });
     }
-  }, [isSdkReady]);
+  }, [initialized]);
 
   // To fix navbar break in mobile we set dynamic height to the scrollable area
   useEffect(() => {

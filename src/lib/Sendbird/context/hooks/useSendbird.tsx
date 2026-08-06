@@ -218,11 +218,17 @@ export const useSendbird = () => {
       userActions.initUser(connectedUser);
 
       if (nickname || profileUrl) {
-        connectedUser = await sdk.updateCurrentUserInfo({
-          nickname: nickname || connectedUser.nickname || '',
-          profileUrl: profileUrl || connectedUser.profileUrl,
-        });
-        userActions.updateUserInfo(connectedUser);
+        try {
+          connectedUser = await sdk.updateCurrentUserInfo({
+            nickname: nickname || connectedUser.nickname || '',
+            profileUrl: profileUrl || connectedUser.profileUrl,
+          });
+          userActions.updateUserInfo(connectedUser);
+        } catch (updateError) {
+          // Profile update failure should not tear down a successful connection.
+          // Log the error but continue — the user is connected with their previous profile.
+          logger.error?.('SendbirdProvider | useSendbird/connect: updateCurrentUserInfo failed', updateError);
+        }
       }
 
       await initializeMessageTemplatesInfo?.(sdk);

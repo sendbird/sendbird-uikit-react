@@ -130,8 +130,9 @@ test.describe('group channel list — realtime (2nd-user)', () => {
     page, workerUser, secondUser, createChannel,
   }) => {
     const channel = await createChannel({ memberIds: [secondUser.userId] });
-    // secondUser mentions workerUser
-    await platform.sendMessage(channel.url, secondUser.userId, `@${workerUser.userId} hello ${runTag}`);
+    // secondUser sends a structured mention message (mention_type + mentioned_user_ids required
+    // for UIKit to render the mention badge on the channel-list row)
+    await platform.sendMentionMessage(channel.url, secondUser.userId, `@${workerUser.userId} hello ${runTag}`, [workerUser.userId]);
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
     await expect(
       page.locator('.sendbird-channel-preview').first().locator('[class*="mention"], [class*="at-mark"]'),

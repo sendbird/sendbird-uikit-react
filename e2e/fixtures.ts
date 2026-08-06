@@ -82,11 +82,13 @@ export const test = base.extend<E2EFixtures, E2EWorkerFixtures>({
     void secondUser; // referenced for type resolution
   },
 
-  // eslint-disable-next-line no-empty-pattern
-  createOpenChannel: async ({}, use) => {
+  createOpenChannel: async ({ workerUser }, use) => {
     const created: string[] = [];
     const factory = async (options: { name?: string } = {}) => {
-      const channel = await platform.createOpenChannel({ name: options.name });
+      const channel = await platform.createOpenChannel({
+        name: options.name,
+        operatorIds: [workerUser.userId],
+      });
       created.push(channel.url);
       return channel;
     };

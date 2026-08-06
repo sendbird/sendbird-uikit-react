@@ -208,10 +208,11 @@ export async function sweepRunChannels(): Promise<number> {
   return deleted;
 }
 
-export async function createOpenChannel(opts: { name?: string; customType?: string } = {}): Promise<CreatedChannel> {
+export async function createOpenChannel(opts: { name?: string; customType?: string; operatorIds?: string[] } = {}): Promise<CreatedChannel> {
   const data = await call('POST', '/open_channels', {
     name: opts.name ?? `[e2e] ${runTag}`,
     custom_type: opts.customType ?? runTag,
+    ...(opts.operatorIds && opts.operatorIds.length > 0 ? { operator_ids: opts.operatorIds } : {}),
   });
   if (!data?.channel_url) throw new Error(`Platform API open_channels returned no channel_url: ${JSON.stringify(data)}`);
   return { url: data.channel_url };
