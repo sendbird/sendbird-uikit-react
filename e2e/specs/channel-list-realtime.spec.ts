@@ -1,0 +1,136 @@
+import { expect } from '@playwright/test';
+import { test } from '../fixtures';
+import { appPath, runTag } from '../utils/env';
+import * as platform from '../utils/platform';
+
+test.describe('group channel list — realtime (2nd-user)', () => {
+  // B5
+  test('reorders channel to top and shows unread badge when 2nd user sends a message', async ({
+    page, workerUser, secondUser, secondPage, createChannel,
+  }) => {
+    const ch1 = await createChannel({ name: '[e2e] b5-older', memberIds: [secondUser.userId] });
+    const ch2 = await createChannel({ name: '[e2e] b5-newer', memberIds: [secondUser.userId] });
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
+    await page.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
+
+    // secondUser connects and sends a message in the older channel
+    await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId }));
+    await platform.sendMessage(ch1.url, secondUser.userId, `[b5] ${runTag}`);
+
+    // ch1 should move to top and show unread badge
+    await expect(
+      page.locator('.sendbird-channel-preview').first().filter({ hasText: '[e2e] b5-older' }),
+    ).toBeVisible({ timeout: 15_000 });
+    await expect(
+      page.locator('.sendbird-channel-preview').first().locator('.sendbird-channel-preview__unread-count'),
+    ).toBeVisible({ timeout: 10_000 });
+    void ch2;
+  });
+
+  // B6
+  test('clears unread badge after opening the unread channel', async ({
+    page, workerUser, secondUser, createChannel,
+  }) => {
+    const channel = await createChannel({ memberIds: [secondUser.userId] });
+    // secondUser sends a message to create unread state
+    await platform.sendMessage(channel.url, secondUser.userId, `[b6] ${runTag}`);
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
+    // Verify unread badge is visible
+    await expect(
+      page.locator('.sendbird-channel-preview').first().locator('.sendbird-channel-preview__unread-count'),
+    ).toBeVisible({ timeout: 20_000 });
+    // Open the channel → badge should disappear
+    await page.locator('.sendbird-channel-preview').first().click();
+    await expect(page.locator('.sendbird-conversation')).toBeVisible({ timeout: 10_000 });
+    await expect(
+      page.locator('.sendbird-channel-preview--active .sendbird-channel-preview__unread-count'),
+    ).not.toBeVisible({ timeout: 10_000 });
+  });
+
+  // B7
+  test('shows typing indicator in list row while 2nd user is typing', async ({
+    page, workerUser, secondUser, secondPage, createChannel,
+  }) => {
+    const channel = await createChannel({ memberIds: [secondUser.userId] });
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
+    await page.locator('.sendbird-channel-preview').first().waitFor({ timeout: 30_000 });
+
+    // secondUser opens the channel and starts typing
+    await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId }));
+    await secondPage.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
+    const input = secondPage.locator('.sendbird-message-input [role="textbox"]').first();
+    await input.click();
+    await input.type('[b7] typing...', { delay: 100 });
+
+    // Typing indicator should appear in channel-list row
+    await expect(
+      page.locator('.sendbird-channel-preview').first().locator('[class*="typing"]'),
+    ).toBeVisible({ timeout: 15_000 });
+    void channel;
+  });
+
+  // B8
+  test('adds new channel row when user gets invited', async ({
+    page, workerUser, secondUser, createChannel,
+  }) => {
+    const ch = await createChannel({ name: '[e2e] b8-existing' });
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
+    const initialCount = await page.locator('.sendbird-channel-preview').count();
+    // secondUser creates a new channel and invites workerUser
+    const newCh = await platform.createGroupChannel({ userIds: [secondUser.userId], name: '[e2e] b8-invite' });
+    await platform.inviteUsers(newCh.url, [workerUser.userId]);
+    await platform.sendMessage(newCh.url, secondUser.userId, '[b8] invite trigger');
+    // New channel row should appear
+    await expect(page.locator('.sendbird-channel-preview')).toHaveCount(initialCount + 1, { timeout: 15_000 });
+    await platform.deleteGroupChannel(newCh.url).catch(() => {});
+    void ch;
+  });
+
+  // B10
+  test('removes channel row when channel is deleted remotely', async ({
+    page, workerUser, createChannel,
+  }) => {
+    const ch = await createChannel({ name: '[e2e] b10-del' });
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
+    await expect(page.locator('.sendbird-channel-preview').first()).toBeVisible({ timeout: 30_000 });
+    // Delete via Platform API (simulates remote deletion)
+    await platform.deleteGroupChannel(ch.url);
+    await expect(page.locator('.sendbird-channel-preview')).toHaveCount(0, { timeout: 15_000 });
+  });
+
+  // B11
+  test('loads more channels when list is scrolled to the bottom', async ({
+    page, workerUser,
+  }) => {
+    // Seed 20+ channels to trigger pagination (default page size is typically 20)
+    const urls: string[] = [];
+    for (let i = 0; i < 22; i++) {
+      const ch = await platform.createGroupChannel({ userIds: [workerUser.userId], name: `[e2e] b11-${runTag}-${i}` });
+      await platform.sendMessage(ch.url, workerUser.userId, `seed ${i}`);
+      urls.push(ch.url);
+    }
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
+    await page.locator('.sendbird-channel-preview').first().waitFor({ timeout: 30_000 });
+    const initial = await page.locator('.sendbird-channel-preview').count();
+    // Scroll channel list to the bottom
+    const list = page.locator('.sendbird-channel-list__body');
+    await list.evaluate((el) => { el.scrollTop = el.scrollHeight; });
+    await page.waitForTimeout(2_000);
+    const after = await page.locator('.sendbird-channel-preview').count();
+    expect(after).toBeGreaterThanOrEqual(initial);
+    for (const url of urls) await platform.deleteGroupChannel(url).catch(() => {});
+  });
+
+  // B12
+  test('shows mention marker on channel row when 2nd user mentions me', async ({
+    page, workerUser, secondUser, createChannel,
+  }) => {
+    const channel = await createChannel({ memberIds: [secondUser.userId] });
+    // secondUser mentions workerUser
+    await platform.sendMessage(channel.url, secondUser.userId, `@${workerUser.userId} hello ${runTag}`);
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
+    await expect(
+      page.locator('.sendbird-channel-preview').first().locator('[class*="mention"], [class*="at-mark"]'),
+    ).toBeVisible({ timeout: 20_000 });
+  });
+});

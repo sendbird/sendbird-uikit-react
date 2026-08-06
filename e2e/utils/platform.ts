@@ -151,6 +151,11 @@ export async function updateOpenChannelName(channelUrl: string, name: string): P
   await call('PUT', `/open_channels/${encodeURIComponent(channelUrl)}`, { name });
 }
 
+/** Freeze or unfreeze an open channel. */
+export async function freezeOpenChannel(channelUrl: string, freeze: boolean): Promise<void> {
+  await call('PUT', `/open_channels/${encodeURIComponent(channelUrl)}/freeze`, { freeze });
+}
+
 /** Delete an open channel as an operator (same as deleteOpenChannel but via operator API). */
 export async function deleteOpenChannelAsOperator(channelUrl: string): Promise<void> {
   await deleteOpenChannel(channelUrl);

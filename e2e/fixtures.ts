@@ -20,6 +20,8 @@ export interface CreateChannelOptions {
 export interface E2EFixtures {
   createChannel: (options?: CreateChannelOptions) => Promise<{ url: string }>;
   createOpenChannel: (options?: { name?: string }) => Promise<{ url: string }>;
+  /** A second Playwright Page connected as secondUser. Used for Tier-2 realtime/2-user scenarios. */
+  secondPage: import('@playwright/test').Page;
 }
 
 export interface E2EWorkerFixtures {
@@ -65,6 +67,15 @@ export const test = base.extend<E2EFixtures, E2EWorkerFixtures>({
     for (const url of created) {
       await platform.deleteGroupChannel(url).catch(() => {});
     }
+  },
+
+  secondPage: async ({ browser, secondUser }, use) => {
+    const ctx = await browser.newContext();
+    const pg = await ctx.newPage();
+    await use(pg);
+    // Give the secondUser page a chance to navigate before closing
+    await ctx.close().catch(() => {});
+    void secondUser; // referenced for type resolution
   },
 
   // eslint-disable-next-line no-empty-pattern
