@@ -467,6 +467,40 @@ describe('useSendbird', () => {
       expect(mockStore.getState().stores.sdkStore.sdk).not.toStrictEqual({});
     });
 
+    it('calls onFailed once (with init error) and NOT onConnected when both updateCurrentUserInfo and initializeMessageTemplatesInfo throw', async () => {
+      const updateError = new Error('profile update failed');
+      const initError = new Error('template init failed');
+      const mockSdk = {
+        connect: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'oldName' }),
+        updateCurrentUserInfo: vi.fn().mockRejectedValue(updateError),
+      };
+      vi.mocked(initSDK).mockReturnValue(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>);
+      const onConnected = vi.fn();
+      const onFailed = vi.fn();
+
+      const { result } = renderHook(() => useSendbird(), { wrapper });
+
+      await act(async () => {
+        await result.current.actions.connect({
+          logger: mockLogger,
+          userId: 'mockUserId',
+          appId: 'mockAppId',
+          accessToken: 'mockAccessToken',
+          nickname: 'newName',
+          initializeMessageTemplatesInfo: vi.fn().mockRejectedValue(initError),
+          eventHandlers: { connection: { onConnected, onFailed } },
+        });
+      });
+
+      // Terminal init failure: onFailed fired exactly once with the init error
+      expect(onFailed).toHaveBeenCalledTimes(1);
+      expect(onFailed).toHaveBeenCalledWith(initError);
+      // onConnected must NOT fire — the connection was torn down
+      expect(onConnected).not.toHaveBeenCalled();
+      // SDK is reset
+      expect(mockStore.getState().stores.sdkStore.sdk).toStrictEqual({});
+    });
+
     it('applies the updateCurrentUserInfo result to both the user store and onConnected when connecting with a nickname', async () => {
       const mockSdk = {
         connect: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'oldName' }),

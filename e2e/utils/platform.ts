@@ -231,7 +231,8 @@ export async function sweepRunOpenChannels(): Promise<number> {
   let deleted = 0;
   let token = '';
   do {
-    const query = `custom_type=${encodeURIComponent(runTag)}&limit=100${token ? `&token=${token}` : ''}`;
+    // Send both singular and plural forms: open-channel API may use either depending on version.
+    const query = `custom_type=${encodeURIComponent(runTag)}&custom_types=${encodeURIComponent(runTag)}&limit=100${token ? `&token=${token}` : ''}`;
     const data = await call('GET', `/open_channels?${query}`);
     // Client-side filter as safety net in case the server ignores the custom_type param.
     const channels: Array<{ channel_url: string; custom_type?: string }> = (data?.channels ?? [])

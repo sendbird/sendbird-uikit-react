@@ -74,12 +74,12 @@ test.describe('group channel list — realtime (2nd-user)', () => {
     await createChannel({ name: '[e2e] b8-existing' });
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
     // secondUser creates a new channel and invites workerUser
-    const newCh = await platform.createGroupChannel({ userIds: [secondUser.userId], name: '[e2e] b8-invite' });
+    const newCh = await platform.createGroupChannel({ userIds: [secondUser.userId], name: `[e2e] b8-invite-${runTag}` });
     await platform.inviteUsers(newCh.url, [workerUser.userId]);
     await platform.sendMessage(newCh.url, secondUser.userId, '[b8] invite trigger');
     // The specifically-named invited channel should appear in the list
     await expect(
-      page.locator('.sendbird-channel-preview').filter({ hasText: '[e2e] b8-invite' }),
+      page.locator('.sendbird-channel-preview').filter({ hasText: `[e2e] b8-invite-${runTag}` }),
     ).toBeVisible({ timeout: 15_000 });
     await platform.deleteGroupChannel(newCh.url).catch(() => {});
   });
@@ -110,8 +110,8 @@ test.describe('group channel list — realtime (2nd-user)', () => {
     try {
       for (let i = 0; i < 22; i++) {
         const ch = await platform.createGroupChannel({ userIds: [workerUser.userId], name: `[e2e] b11-${runTag}-${i}` });
+        urls.push(ch.url); // push before sendMessage so the channel is cleaned up even if sendMessage throws
         await platform.sendMessage(ch.url, workerUser.userId, `seed ${i}`);
-        urls.push(ch.url);
       }
       await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
       await page.locator('.sendbird-channel-preview').first().waitFor({ timeout: 30_000 });

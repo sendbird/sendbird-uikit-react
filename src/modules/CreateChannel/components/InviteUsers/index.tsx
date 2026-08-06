@@ -61,17 +61,19 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
 
   useEffect(() => {
     if (!initialized) return;
+    let cancelled = false;
     const applicationUserListQuery = userListQueryRef.current
       ? userListQueryRef.current()
       : createDefaultUserListQuery({ sdk });
-    if (!applicationUserListQuery) return;
+    if (!applicationUserListQuery) return () => { cancelled = true; };
     setUsers([]); // Reset before async fetch so stale list is not shown during re-fetch.
     setUsersDataSource(applicationUserListQuery);
     applicationUserListQuery.next().then((it) => {
-      setUsers(it);
+      if (!cancelled) setUsers(it);
     }).catch(() => {
       // Fetch failed (network error, expired token, etc.) — users stays []
     });
+    return () => { cancelled = true; };
   }, [initialized]);
 
   // To fix navbar break in mobile we set dynamic height to the scrollable area

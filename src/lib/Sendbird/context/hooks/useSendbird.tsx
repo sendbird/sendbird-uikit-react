@@ -252,6 +252,9 @@ export const useSendbird = () => {
       const sendbirdError = error as SendbirdError;
       sdkActions.resetSdk();
       userActions.resetUser();
+      if (profileUpdateError) {
+        logger.warn?.('SendbirdProvider | useSendbird/connect: profile update had also failed', profileUpdateError);
+      }
       logger.error?.('SendbirdProvider | useSendbird/connect failed', sendbirdError);
       eventHandlers?.connection?.onFailed?.(sendbirdError);
     }
