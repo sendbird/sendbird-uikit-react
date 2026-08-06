@@ -59,25 +59,26 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const userListQueryRef = useRef(userListQuery);
   userListQueryRef.current = userListQuery;
 
-  // Shared cancellation flag — ref so the scroll handler can also check it. Reset to false at
-  // the start of each effect run so scroll pagination from a stale run cannot mutate state.
-  const cancelledRef = useRef(false);
+  // Generation counter: each effect run gets its own `gen` captured in the closure. The scroll
+  // handler captures `scrollGen` at event-fire time. Any newer effect run increments genRef,
+  // making stale Promises see a mismatch and skip setUsers — safe in StrictMode and on reconnect.
+  const genRef = useRef(0);
 
   useEffect(() => {
     if (!initialized) return;
-    cancelledRef.current = false;
+    genRef.current += 1;
+    const gen = genRef.current;
     const applicationUserListQuery = userListQueryRef.current
       ? userListQueryRef.current()
       : createDefaultUserListQuery({ sdk });
-    if (!applicationUserListQuery) return () => { cancelledRef.current = true; };
+    if (!applicationUserListQuery) return;
     setUsers([]); // Reset before async fetch so stale list is not shown during re-fetch.
     setUsersDataSource(applicationUserListQuery);
     applicationUserListQuery.next().then((it) => {
-      if (!cancelledRef.current) setUsers(it);
+      if (genRef.current === gen) setUsers(it);
     }).catch(() => {
       // Fetch failed (network error, expired token, etc.) — users stays []
     });
-    return () => { cancelledRef.current = true; };
   }, [initialized]);
 
   // To fix navbar break in mobile we set dynamic height to the scrollable area
@@ -155,8 +156,9 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
             );
 
             if (hasNext && fetchMore && !isLoading) {
+              const scrollGen = genRef.current; // capture generation at scroll-event time
               usersDataSource.next().then((usersBatch) => {
-                if (!cancelledRef.current) setUsers((prev) => [...prev, ...usersBatch]);
+                if (genRef.current === scrollGen) setUsers((prev) => [...prev, ...usersBatch]);
               }).catch(() => {
                 // Scroll pagination failed — keep existing list
               });

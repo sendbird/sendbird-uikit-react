@@ -27,6 +27,9 @@ describe('useSendbird', () => {
 
   beforeEach(() => {
     mockStore = createSendbirdContextStore();
+    mockLogger.error.mockClear();
+    mockLogger.info.mockClear();
+    mockLogger.warn.mockClear();
   });
 
   const wrapper = ({ children }) => (
