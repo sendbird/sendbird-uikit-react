@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 import { test } from '../fixtures';
 import { openFirstGroupChannel, openChannelSettings } from '../utils/actions';
 import { appPath } from '../utils/env';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('channel settings — core', () => {
   // E3
@@ -23,10 +24,12 @@ test.describe('channel settings — core', () => {
     await openChannelSettings(page);
     // Toggle freeze ON — Toggle renders as a button (not a checkbox); unique in this settings panel
     const freezeToggle = page.locator('[data-testid="sendbird-input-toggle-button"]').first();
+    await expect(freezeToggle).toBeVisible({ timeout: 10_000 });
     await freezeToggle.click();
     // GroupChannel frozen notification class is sendbird-notification--frozen
     await expect(page.locator('.sendbird-notification--frozen')).toBeVisible({ timeout: 10_000 });
     // Toggle freeze OFF
+    await expect(freezeToggle).toBeVisible({ timeout: 5_000 });
     await freezeToggle.click();
     await expect(page.locator('.sendbird-notification--frozen')).not.toBeVisible({ timeout: 10_000 });
   });
@@ -39,6 +42,6 @@ test.describe('channel settings — core', () => {
     // The header has user-profile button (first) and create-channel button (last)
     await page.locator('.sendbird-channel-list__header').getByRole('button').last().click({ timeout: 15_000 });
     await page.locator('.sendbird-add-channel__rectangle').first().click();
-    await expect(page.locator('.sendbird-user-list-item').first()).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('.sendbird-user-list-item').first()).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 });

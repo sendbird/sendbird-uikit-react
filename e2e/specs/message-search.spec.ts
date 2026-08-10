@@ -3,6 +3,7 @@ import { test } from '../fixtures';
 import { openFirstGroupChannel, openSearch, searchFor } from '../utils/actions';
 import { runTag } from '../utils/env';
 import * as platform from '../utils/platform';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('message search', () => {
   test.beforeEach(async ({ page }) => {
@@ -47,7 +48,7 @@ test.describe('message search', () => {
     await searchFor(page, keyword, 45_000);
     await page.locator('.sendbird-message-search-item').first().click();
     // The target message should be scrolled into view
-    await expect(page.getByText(`${keyword} target`)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(`${keyword} target`)).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 
   // F9

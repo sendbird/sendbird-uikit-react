@@ -45,9 +45,9 @@ export async function openMessageMenu(page: Page, text: string) {
     await gcMsg.locator('.sendbird-message-menu').getByRole('button').first().click();
     return;
   }
-  // Check open channel container
+  // Check open channel container (longer timeout for parallel execution)
   const ocMsg = page.locator('.sendbird-openchannel-user-message').filter({ hasText: text }).first();
-  const isOC = await ocMsg.isVisible({ timeout: 3_000 }).catch(() => false);
+  const isOC = await ocMsg.isVisible({ timeout: 8_000 }).catch(() => false);
   if (isOC) {
     await ocMsg.hover();
     await ocMsg.locator('.sendbird-openchannel-user-message__context-menu button, .sendbird-message-menu button').first().click();

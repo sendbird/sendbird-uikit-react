@@ -1,5 +1,6 @@
 import { test, expect } from '../fixtures';
 import { appPath, hasCreds } from '../utils/env';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 /**
  * Smoke — the essential chat journey: create an isolated channel, open it, send a text, and see it
@@ -17,7 +18,7 @@ test.describe('smoke: send a message', () => {
 
     // Open the first channel in the list.
     await page.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
-    await expect(page.locator('.sendbird-conversation')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('.sendbird-conversation')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
 
     // Type a unique message into the contenteditable input and send it with Enter.
     const text = `[e2e-smoke] ${Date.now()}`;
@@ -27,6 +28,6 @@ test.describe('smoke: send a message', () => {
     await input.press('Enter');
 
     // The sent message renders in the conversation.
-    await expect(page.locator('.sendbird-conversation__messages').getByText(text)).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('.sendbird-conversation__messages').getByText(text)).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 });

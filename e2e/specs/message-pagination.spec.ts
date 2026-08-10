@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { appPath } from '../utils/env';
 import { openFirstGroupChannel } from '../utils/actions';
 import * as platform from '../utils/platform';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('group channel — message pagination', () => {
   // C14
@@ -16,6 +16,6 @@ test.describe('group channel — message pagination', () => {
     await list.evaluate((el) => { el.scrollTop = 0; });
     // Older messages should paginate in — exact match avoids strict-mode violation from
     // getByText('[page] 1') also matching '[page] 10', '[page] 11', etc. as substrings
-    await expect(page.getByText('[page] 1', { exact: true })).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByText('[page] 1', { exact: true })).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 });

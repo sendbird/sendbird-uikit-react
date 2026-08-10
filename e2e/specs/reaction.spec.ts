@@ -1,6 +1,7 @@
 import { test, expect } from '../fixtures';
 import { hasCreds } from '../utils/env';
 import { openFirstGroupChannel, sendText, messageByText } from '../utils/actions';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 /**
  * Group channel — reactions (Tier 0, single user). Drives the app with enableReactions=true, then
@@ -25,7 +26,7 @@ test.describe('group channel — reactions', () => {
     await page.locator('[data-testid^="ui_emoji_reactions_menu_"]').first().click();
 
     // A reaction badge appears on the message.
-    await expect(msg.locator('.sendbird-emoji-reactions__reaction-badge')).toBeVisible({ timeout: 15_000 });
+    await expect(msg.locator('.sendbird-emoji-reactions__reaction-badge')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 
   test('removes an emoji reaction from a message', async ({ page, workerUser, createChannel }) => {
@@ -40,11 +41,11 @@ test.describe('group channel — reactions', () => {
     await msg.hover();
     await msg.locator('.sendbird-message-item-reaction-menu__trigger').click();
     await page.locator('[data-testid^="ui_emoji_reactions_menu_"]').first().click();
-    await expect(badge).toBeVisible({ timeout: 15_000 });
+    await expect(badge).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
 
     await msg.hover();
     await msg.locator('.sendbird-message-item-reaction-menu__trigger').click();
     await page.locator('[data-testid^="ui_emoji_reactions_menu_"]').first().click();
-    await expect(badge).toBeHidden({ timeout: 15_000 });
+    await expect(badge).toBeHidden({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 });

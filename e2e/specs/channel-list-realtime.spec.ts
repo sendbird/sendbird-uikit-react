@@ -68,8 +68,8 @@ test.describe('group channel list — realtime (2nd-user)', () => {
     const input = secondPage.locator('.sendbird-message-input [role="textbox"]').first();
     await input.click();
     // Start typing without awaiting, then check for indicator while typing is in progress
-    const typePromise = input.type('[b7] typing indicator test...', { delay: 100 });
-    await expect(page.getByText(/is typing/i)).toBeVisible({ timeout: 15_000 });
+    const typePromise = input.pressSequentially('[b7] typing indicator test...', { delay: 100 });
+    await expect(page.getByText(/is typing/i).first()).toBeVisible({ timeout: 15_000 });
     await typePromise;
   });
 

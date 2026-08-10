@@ -1,6 +1,7 @@
 import { test, expect } from '../fixtures';
 import { hasCreds } from '../utils/env';
 import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from '../utils/actions';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 /**
  * Group channel — quote reply (Tier 0, single user). Drives the app with replyType=QUOTE_REPLY so
@@ -16,12 +17,13 @@ test.describe('group channel — quote reply', () => {
     await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_replyType: 'QUOTE_REPLY' });
     const original = `[e2e-reply-src] ${Date.now()}`;
     await sendText(page, original);
-    await expect(messageByText(page, original)).toBeVisible({ timeout: 15_000 });
+    await expect(messageByText(page, original)).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
 
     await openMessageMenu(page, original);
     const replyItem = page.getByRole('menuitem', { name: /^reply$/i }).first();
     if (!await replyItem.isVisible({ timeout: 3_000 }).catch(() => false)) {
-      test.skip(); return;
+      test.skip();
+      return;
     }
     await replyItem.click();
 
@@ -32,6 +34,6 @@ test.describe('group channel — quote reply', () => {
     await sendText(page, reply);
 
     // The sent reply renders a quoted parent carrying the original text.
-    await expect(messageByText(page, reply).locator('.sendbird-quote-message')).toContainText(original, { timeout: 15_000 });
+    await expect(messageByText(page, reply).locator('.sendbird-quote-message')).toContainText(original, { timeout: SERVER_RESPONSE_TIMEOUT });
   });
 });

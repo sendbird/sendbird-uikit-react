@@ -44,7 +44,7 @@ test.describe('cross-cutting — config & responsive', () => {
     await createChannel();
     await page.goto(appPath('/group_channel', {
       userId: workerUser.userId,
-      'groupChannel_enableReactions': 'false',
+      groupChannel_enableReactions: 'false',
     }));
     await page.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
     await page.locator('.sendbird-conversation').waitFor({ timeout: 15_000 });

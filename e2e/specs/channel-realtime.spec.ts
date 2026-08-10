@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { messageByText, openFirstGroupChannel } from '../utils/actions';
-import { appPath } from '../utils/env';
+import { openFirstGroupChannel, openMessageMenu, sendText, messageByText } from '../utils/actions';
 import * as platform from '../utils/platform';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('group channel — realtime features', () => {
   // D3
@@ -17,21 +17,35 @@ test.describe('group channel — realtime features', () => {
   // D5
   test('scrolls to and highlights the parent when a quoted message is clicked', async ({ page, workerUser, createChannel }) => {
     const channel = await createChannel({ seedMessage: null });
-    const parentId = await platform.sendMessage(channel.url, workerUser.userId, '[D5] parent message');
+    await platform.sendMessage(channel.url, workerUser.userId, '[D5] parent message');
     await platform.seedMessages(channel.url, workerUser.userId, 12, '[D5] gap');
-    await platform.replyToMessage(channel.url, parentId, workerUser.userId, '[D5] quote reply', true);
 
     await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_replyType: 'QUOTE_REPLY' });
     const msgList = page.locator('.sendbird-conversation__messages-padding');
-    await msgList.evaluate((el) => { el.scrollTop = el.scrollHeight; });
 
-    // Check if quote bubble rendered (Platform API quote reply requires QUOTE_REPLY mode)
-    const quoteMsg = page.locator('.sendbird-quote-message').first();
-    if (!await quoteMsg.isVisible({ timeout: 8_000 }).catch(() => false)) {
+    // Scroll to top so the parent message is visible
+    await msgList.evaluate((el) => { el.scrollTop = 0; });
+    await expect(messageByText(page, '[D5] parent message').first()).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+
+    // Open message menu on the parent → click Reply
+    await openMessageMenu(page, '[D5] parent message');
+    const replyItem = page.getByRole('menuitem', { name: /reply/i });
+    if (!await replyItem.isVisible({ timeout: 5_000 }).catch(() => false)) {
       test.skip();
       return;
     }
+    await replyItem.click();
+
+    // Send the quote reply via the UI input
+    await sendText(page, '[D5] quote reply');
+
+    // Scroll to bottom to see the newly sent quote reply
+    await msgList.evaluate((el) => { el.scrollTop = el.scrollHeight; });
+
+    // Click the quote bubble — should scroll back up and highlight the parent
+    const quoteMsg = page.locator('.sendbird-quote-message').last();
+    await expect(quoteMsg).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await quoteMsg.click();
-    await expect(page.getByText('[D5] parent message')).toBeVisible({ timeout: 10_000 });
+    await expect(messageByText(page, '[D5] parent message').first()).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 });

@@ -44,7 +44,17 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        // Fake media stream lets MediaRecorder produce real audio data in headless mode,
+        // enabling voice message recording tests without a physical microphone.
+        launchOptions: {
+          args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'],
+        },
+      },
+    },
     // Add webkit / mobile viewports as coverage grows.
   ],
   // Start apps/testing locally; skip when E2E_BASE_URL points at a deployed preview.

@@ -1,5 +1,6 @@
 import { test, expect } from '../fixtures';
 import { appPath, hasCreds, runTag } from '../utils/env';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 /**
  * Open channel — navigation (Tier 0, single user). Loads /open_channel, which renders the open
@@ -19,6 +20,6 @@ test.describe('open channel — navigation', () => {
     await page.locator('.sendbird-open-channel-preview').filter({ hasText: name }).first().click({ timeout: 30_000 });
 
     // The conversation for the selected channel is shown.
-    await expect(page.locator('.sendbird-openchannel-conversation-header')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('.sendbird-openchannel-conversation-header')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 });

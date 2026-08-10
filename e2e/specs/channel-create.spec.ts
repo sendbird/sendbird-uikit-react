@@ -1,5 +1,6 @@
 import { test, expect } from '../fixtures';
 import { appPath, hasCreds } from '../utils/env';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 /**
  * Group channel — create (Tier 0). Creates a group channel and invites a per-run throwaway user
@@ -24,12 +25,12 @@ test.describe('group channel — create', () => {
     // The application user-list query returns the most recently created users first, and secondUser
     // is created fresh in this worker's setup, so it is on the first page (no scrolling needed).
     const invitee = page.locator('.sendbird-user-list-item').filter({ hasText: secondUser.userId });
-    await expect(invitee).toBeVisible({ timeout: 15_000 });
+    await expect(invitee).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await invitee.locator('.sendbird-user-list-item__checkbox').click();
     await page.getByRole('button', { name: 'Create' }).click();
 
     // The new channel opens and its header shows the invited member.
-    await expect(page.locator('.sendbird-conversation')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('.sendbird-conversation')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await expect(page.locator('.sendbird-chat-header')).toContainText(secondUser.userId, { timeout: 10_000 });
   });
 });

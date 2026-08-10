@@ -1,7 +1,8 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { openFirstGroupChannel, openThread, sendText, messageByText } from '../utils/actions';
+import { openFirstGroupChannel, openThread, messageByText } from '../utils/actions';
 import * as platform from '../utils/platform';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('group channel — thread', () => {
   // F1
@@ -12,7 +13,7 @@ test.describe('group channel — thread', () => {
 
     await openFirstGroupChannel(page, { userId: workerUser.userId, replyType: 'THREAD' });
     // Pre-confirm message is loaded before openThread (reduces 5s GC timeout pressure)
-    await expect(messageByText(page, '[F1] parent')).toBeVisible({ timeout: 20_000 });
+    await expect(messageByText(page, '[F1] parent')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await openThread(page, '[F1] parent');
     await expect(page.locator('.sendbird-thread-ui')).toBeVisible({ timeout: 10_000 });
     await expect(page.getByText('[F1] parent').first()).toBeVisible();
@@ -27,11 +28,11 @@ test.describe('group channel — thread', () => {
     await platform.replyToMessage(channel.url, parentId, workerUser.userId, '[F2] reply 2');
 
     await openFirstGroupChannel(page, { userId: workerUser.userId, replyType: 'THREAD' });
-    await expect(messageByText(page, '[F2] parent')).toBeVisible({ timeout: 20_000 });
+    await expect(messageByText(page, '[F2] parent')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await openThread(page, '[F2] parent');
     // Thread panel shows 2 replies
     const replyItems = page.locator('.sendbird-thread-list-item');
-    await expect(replyItems).toHaveCount(2, { timeout: 15_000 });
+    await expect(replyItems).toHaveCount(2, { timeout: SERVER_RESPONSE_TIMEOUT });
     // The reply-count label on the parent in the channel should read "2 replies"
     await page.locator('.sendbird-thread-ui__header button').first().click(); // close thread
     const replyCountLabel = messageByText(page, '[F2] parent').locator('[class*="reply-count"]');
@@ -45,14 +46,14 @@ test.describe('group channel — thread', () => {
     await platform.replyToMessage(channel.url, parentId, workerUser.userId, '[F3] seed reply');
 
     await openFirstGroupChannel(page, { userId: workerUser.userId, replyType: 'THREAD' });
-    await expect(messageByText(page, '[F3] parent')).toBeVisible({ timeout: 20_000 });
+    await expect(messageByText(page, '[F3] parent')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await openThread(page, '[F3] parent');
     // Use the THREAD panel input directly (not the channel input on the left)
     const threadInput = page.locator('.sendbird-thread-ui .sendbird-message-input [role="textbox"]').first();
     await threadInput.click();
     await threadInput.pressSequentially('[F3] new reply');
     await threadInput.press('Enter');
-    await expect(page.getByText('[F3] new reply').first()).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText('[F3] new reply').first()).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     // Reply count should now be 2
     const replyItems = page.locator('.sendbird-thread-list-item');
     await expect(replyItems).toHaveCount(2, { timeout: 10_000 });
@@ -65,7 +66,7 @@ test.describe('group channel — thread', () => {
     await platform.replyToMessage(channel.url, parentId, workerUser.userId, '[F4] reply');
 
     await openFirstGroupChannel(page, { userId: workerUser.userId, replyType: 'THREAD' });
-    await expect(messageByText(page, '[F4] parent')).toBeVisible({ timeout: 20_000 });
+    await expect(messageByText(page, '[F4] parent')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await openThread(page, '[F4] parent');
     // Click the × close button in the thread header
     await page.locator('.sendbird-thread-ui__header').locator('button').last().click({ timeout: 10_000 });

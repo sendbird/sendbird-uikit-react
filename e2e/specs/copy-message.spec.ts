@@ -1,6 +1,7 @@
 import { test, expect } from '../fixtures';
 import { hasCreds } from '../utils/env';
 import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from '../utils/actions';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 /**
  * Group channel — copy message (Tier 1, single user). Copies an own message via the action menu
@@ -18,7 +19,7 @@ test.describe('group channel — copy message', () => {
     const text = `[e2e-copy] ${Date.now()}`;
     await sendText(page, text);
     // Wait for server confirmation before opening menu to ensure GC path in openMessageMenu
-    await expect(messageByText(page, text)).toBeVisible({ timeout: 15_000 });
+    await expect(messageByText(page, text)).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
 
     await openMessageMenu(page, text);
     await page.getByRole('menuitem', { name: 'Copy' }).click();

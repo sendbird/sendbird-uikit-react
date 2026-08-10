@@ -1,7 +1,8 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { openFirstGroupChannel, openThread } from '../utils/actions';
+import { openFirstGroupChannel } from '../utils/actions';
 import * as platform from '../utils/platform';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('thread — extended', () => {
   // F5
@@ -21,7 +22,7 @@ test.describe('thread — extended', () => {
     // Scroll to top
     await threadList.evaluate((el) => { el.scrollTop = 0; });
     // Older replies should load — exact:true avoids matching [F5] reply 10-19
-    await expect(page.getByText('[F5] reply 1', { exact: true })).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByText('[F5] reply 1', { exact: true })).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 
   // F10

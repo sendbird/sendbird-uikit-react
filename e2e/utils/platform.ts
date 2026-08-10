@@ -21,7 +21,11 @@ const doFetch = (globalThis as unknown as {
 
 export const hasPlatformToken = (): boolean => Boolean(E2E.appId && E2E.platformApiToken);
 
+/** Minimum delay between Platform API calls to avoid rate-limiting (default: 5 req/s per user). */
+const PLATFORM_API_DELAY_MS = 200;
+
 async function call(method: string, path: string, body?: unknown): Promise<any> {
+  await new Promise<void>(resolve => { setTimeout(() => resolve(), PLATFORM_API_DELAY_MS); });
   const res = await doFetch(`${BASE}${path}`, {
     method,
     headers: { 'Api-Token': E2E.platformApiToken, 'Content-Type': 'application/json; charset=utf-8' },
@@ -181,7 +185,6 @@ export async function updateOpenChannelName(channelUrl: string, name: string): P
 export async function freezeOpenChannel(channelUrl: string, freeze: boolean): Promise<void> {
   await call('PUT', `/open_channels/${encodeURIComponent(channelUrl)}/freeze`, { freeze });
 }
-
 
 export async function deleteGroupChannel(url: string): Promise<void> {
   await call('DELETE', `/group_channels/${encodeURIComponent(url)}`);

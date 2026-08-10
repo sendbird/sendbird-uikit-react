@@ -30,7 +30,8 @@ test.describe('connection & user profile — extended', () => {
         const start = Date.now();
         const check = async () => {
           const val = await page.evaluate(() => {
-            const el = document.querySelector('.sendbird-channel-list__header .sendbird-avatar-img');
+            // backgroundImage is set on the ImageRenderer child, not the avatar wrapper
+            const el = document.querySelector('.sendbird-channel-list__header .sendbird-avatar-img .sendbird-image-renderer__image');
             return el ? window.getComputedStyle(el).backgroundImage : '';
           });
           if (/sendbird\.com|blob:/.test(val)) { resolve(val); return; }
@@ -42,7 +43,6 @@ test.describe('connection & user profile — extended', () => {
     ]);
     if (!/sendbird\.com|blob:/.test(bgImage)) {
       test.skip(); // File upload not supported in this test environment
-      return;
     }
   });
 
@@ -65,13 +65,12 @@ test.describe('connection & user profile — extended', () => {
     await createChannel();
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
     await page.locator('.sendbird-channel-preview').first().waitFor({ timeout: 30_000 });
-    // The UIKit does not currently programmatically add sendbird__offline to the body.
-    // The class exists in SCSS for styling but is applied by the app, not the UIKit.
-    // Test that going offline doesn't crash the app (connection error handling).
+    // Block new connections first, then disconnect existing WS for a reliable offline state
     await page.context().setOffline(true);
+    await page.evaluate(() => (window as Record<string, any>).__SendbirdChat?.instance?.disconnectWebSocket());
     // Wait a moment for the offline state to propagate
     await page.waitForTimeout(2000);
-    // App should still be functional (channel list visible)
+    // App should still be functional (channel list visible — cached data)
     await expect(page.locator('.sendbird-channel-list')).toBeVisible({ timeout: 5_000 });
     await page.context().setOffline(false);
   });
