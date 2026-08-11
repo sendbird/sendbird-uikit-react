@@ -111,6 +111,12 @@ export default {
     }),
     ts2({
       tsconfig: 'tsconfig.json',
+      // rollup-plugin-typescript2 defaults `include` to ["*.ts+(|x)", "**/*.ts+(|x)", ...].
+      // `+(|x)` is an extglob with an empty alternative, and picomatch stopped matching it
+      // in 2.3.2 (GHSA-3v7f-55p6-f55p / GHSA-c2c7-rcm5-vvqj). Under picomatch >= 2.3.2 that
+      // pattern matches nothing, so no .ts file reaches the transformer and rollup ends up
+      // parsing raw TypeScript. Spell the extensions out so the filter is version-stable.
+      include: ['*.ts', '**/*.ts', '*.tsx', '**/*.tsx', '**/*.cts', '**/*.mts'],
       tsconfigOverride: {
         compilerOptions:{
           declaration: false,
