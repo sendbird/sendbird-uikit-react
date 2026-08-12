@@ -12,7 +12,11 @@ const mockChannel = {
   getUndeliveredMemberCount: () => 0,
 };
 
-const currentTime = Date.now();
+// NOTE: Fixed base time on purpose. `hasSeparator` is a day-boundary check
+// (see getMessagePartsInfo.ts), so a live `Date.now()` made these fixtures span
+// two calendar days whenever the suite ran within 3 minutes of midnight,
+// failing the "same day" expectations below.
+const currentTime = new Date('January 23, 2022 17:17:52').valueOf();
 const timeList = [1, 2, 3].map((gap) => {
   const time = new Date(currentTime);
   time.setMinutes(time.getMinutes() + gap);
