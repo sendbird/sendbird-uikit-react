@@ -8,6 +8,18 @@ import { MessageTemplatesInfo, SdkStore, SendbirdState, WaitingTemplateKeyData }
 import { initSDK, setupSDK, updateAppInfoStore, updateSdkStore, updateUserStore } from '../../utils';
 
 const NO_CONTEXT_ERROR = 'No sendbird state value available. Make sure you are rendering `<SendbirdProvider>` at the top of your app.';
+
+/**
+ * Teardown in flight for a SendbirdChat instance, keyed by that instance.
+ *
+ * On route navigation the outgoing provider's unmount starts `disconnectWebSocket()`. React
+ * cannot await an unmount cleanup, and the incoming provider reuses the same cached instance
+ * while holding a different store, so neither provider can see that a teardown is running.
+ * Left unserialized, `connect()` races it, and a teardown landing mid-connect cancels the
+ * connection. This lives outside the stores because it belongs to the instance, not to any
+ * one provider.
+ */
+const pendingTeardowns = new WeakMap<object, Promise<unknown>>();
 export const useSendbird = () => {
   const store = useContext(SendbirdContext);
   if (!store) throw new Error(NO_CONTEXT_ERROR);
@@ -160,7 +172,13 @@ export const useSendbird = () => {
     const sdk = state.stores.sdkStore.sdk;
 
     if (sdk?.disconnectWebSocket) {
-      await sdk.disconnectWebSocket();
+      const teardown = sdk.disconnectWebSocket();
+      pendingTeardowns.set(sdk, teardown);
+      try {
+        await teardown;
+      } finally {
+        if (pendingTeardowns.get(sdk) === teardown) pendingTeardowns.delete(sdk);
+      }
     }
 
     sdkActions.resetSdk();
@@ -207,6 +225,11 @@ export const useSendbird = () => {
         customWebSocketHost,
         sdkInitParams,
       });
+
+      // A provider unmounting elsewhere may still be tearing this instance down. Wait for
+      // that before touching it; a failed teardown must not stop us from connecting.
+      const teardown = pendingTeardowns.get(sdk);
+      if (teardown) await teardown.catch(() => undefined);
 
       setupSDK(sdk, {
         logger,
