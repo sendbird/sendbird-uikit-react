@@ -178,7 +178,6 @@ export const useSendbird = () => {
       logger,
       userId,
       appId,
-      isNewApp = false,
       accessToken,
       nickname,
       profileUrl,
@@ -196,24 +195,26 @@ export const useSendbird = () => {
     // clean up previous ws connection
     await disconnect({ logger });
 
-    const sdk = initSDK({
-      appId,
-      isNewApp,
-      customApiHost,
-      customWebSocketHost,
-      sdkInitParams,
-    });
-
-    setupSDK(sdk, {
-      logger,
-      isMobile,
-      customExtensionParams,
-      sessionHandler: configureSession ? configureSession(sdk) : undefined,
-    });
-
     sdkActions.setSdkLoading(true);
 
+    // initSDK and setupSDK stay inside the try: SendbirdChat.init() rejects an empty or
+    // malformed appId, which apps routinely pass while their config is still loading.
+    // Outside the try that would surface as an unhandled rejection instead of onFailed.
     try {
+      const sdk = initSDK({
+        appId,
+        customApiHost,
+        customWebSocketHost,
+        sdkInitParams,
+      });
+
+      setupSDK(sdk, {
+        logger,
+        isMobile,
+        customExtensionParams,
+        sessionHandler: configureSession ? configureSession(sdk) : undefined,
+      });
+
       const user = await sdk.connect(userId, accessToken);
       userActions.initUser(user);
 

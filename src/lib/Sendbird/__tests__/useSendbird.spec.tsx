@@ -368,31 +368,36 @@ describe('useSendbird', () => {
         appId: 'mockAppId',
         customApiHost: undefined,
         customWebSocketHost: undefined,
-        isNewApp: false,
         sdkInitParams: {},
       });
 
       expect(mockSetupSDK).toHaveBeenCalled();
     });
 
-    it('should pass isNewApp through to initSDK during connect', async () => {
+    it('should report an SDK init failure through onFailed instead of rejecting', async () => {
       const { result } = renderHook(() => useSendbird(), { wrapper });
-      const mockInitSDK = vi.mocked(initSDK);
 
-      await act(async () => {
-        await result.current.actions.connect({
-          logger: mockLogger,
-          userId: 'mockUserId',
-          appId: 'mockAppId',
-          accessToken: 'mockAccessToken',
-          isNewApp: true,
-        });
+      const mockOnFailed = vi.fn();
+      const mockLogger = { error: vi.fn(), info: vi.fn() } as unknown as LoggerInterface;
+
+      // SendbirdChat.init() rejects an empty or malformed appId, which apps pass while
+      // their config is still loading. That must not escape connect() unhandled.
+      const initError = new Error('Invalid parameters.');
+      vi.mocked(initSDK).mockImplementationOnce(() => {
+        throw initError;
       });
 
-      expect(mockInitSDK).toHaveBeenCalledWith(expect.objectContaining({
-        appId: 'mockAppId',
-        isNewApp: true,
-      }));
+      await act(async () => {
+        await expect(result.current.actions.connect({
+          logger: mockLogger,
+          userId: 'mockUserId',
+          appId: '',
+          eventHandlers: { connection: { onFailed: mockOnFailed } },
+        })).resolves.toBeUndefined();
+      });
+
+      expect(mockOnFailed).toHaveBeenCalledWith(initError);
+      expect(mockStore.getState().stores.sdkStore.sdk).toStrictEqual({});
     });
 
     it('should handle connection failure and trigger onFailed event handler', async () => {
