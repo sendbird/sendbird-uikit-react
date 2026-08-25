@@ -117,16 +117,12 @@ describe('initSDK', () => {
     );
   });
 
-  it('uses isNewApp to set the newInstance init option', () => {
-    initSDK({
-      appId: 'testAppId',
-      isNewApp: true,
-    });
+  it('never sets newInstance on its own', () => {
+    initSDK({ appId: 'testAppId' });
 
     expect(SendbirdChat.init).toHaveBeenCalledWith(
-      expect.objectContaining({
-        appId: 'testAppId',
-        newInstance: true,
+      expect.not.objectContaining({
+        newInstance: expect.anything(),
       }),
     );
   });
@@ -134,7 +130,6 @@ describe('initSDK', () => {
   it('preserves an explicit sdkInitParams.newInstance override', () => {
     initSDK({
       appId: 'testAppId',
-      isNewApp: false,
       sdkInitParams: {
         newInstance: true,
       },

@@ -47,22 +47,23 @@ export const updateUserStore: UpdateUserStoreType = (state, payload) => {
 
 export function initSDK({
   appId,
-  isNewApp = false,
   customApiHost,
   customWebSocketHost,
   sdkInitParams = {},
 }: {
   appId: string;
-  isNewApp?: boolean;
   customApiHost?: string;
   customWebSocketHost?: string;
   sdkInitParams?: SendbirdChatInitParams;
 }) {
   const params = {
+    // `newInstance` is deliberately not derived here. It is the caller's decision, so it is
+    // only ever set when the app passes it through sdkInitParams; deriving it made every
+    // provider mount open its own SendbirdChat instance and WebSocket. When appId changes,
+    // SendbirdChat.init() releases the instance bound to the previous appId on its own.
     ...sdkInitParams,
     appId,
     modules: [new GroupChannelModule(), new OpenChannelModule()],
-    newInstance: typeof sdkInitParams.newInstance !== 'undefined' ? sdkInitParams.newInstance : isNewApp,
     localCacheEnabled: typeof sdkInitParams.localCacheEnabled !== 'undefined' ? sdkInitParams.localCacheEnabled : true,
   };
 

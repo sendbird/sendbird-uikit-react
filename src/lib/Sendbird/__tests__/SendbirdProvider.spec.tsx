@@ -56,24 +56,17 @@ describe('SendbirdProvider', () => {
     expect(mockActions.connect).toHaveBeenCalledWith(
       expect.objectContaining({
         appId: 'mockAppId',
-        isNewApp: true,
         userId: 'mockUserId',
       }),
     );
   });
 
-  it('should preserve the legacy isNewApp behavior across app and user changes', () => {
+  it('should never ask connect for a new SDK instance', () => {
     const { rerender } = render(
       <SendbirdContextProvider appId="mockAppId" userId="mockUserId">
         <div data-testid="child">Child Component</div>
       </SendbirdContextProvider>,
     );
-
-    expect(mockActions.connect).toHaveBeenNthCalledWith(1, expect.objectContaining({
-      appId: 'mockAppId',
-      isNewApp: true,
-      userId: 'mockUserId',
-    }));
 
     rerender(
       <SendbirdContextProvider appId="mockAppId" userId="nextUserId">
@@ -81,21 +74,20 @@ describe('SendbirdProvider', () => {
       </SendbirdContextProvider>,
     );
 
-    expect(mockActions.connect).toHaveBeenNthCalledWith(2, expect.objectContaining({
-      appId: 'mockAppId',
-      isNewApp: false,
-      userId: 'nextUserId',
-    }));
-
     rerender(
       <SendbirdContextProvider appId="nextAppId" userId="nextUserId">
         <div data-testid="child">Child Component</div>
       </SendbirdContextProvider>,
     );
 
+    expect(mockActions.connect).toHaveBeenCalledTimes(3);
+    // Whether a new SendbirdChat instance is needed is decided in connect() from the
+    // cached instance's appId, never inferred from the provider's own mount history.
+    mockActions.connect.mock.calls.forEach(([params]) => {
+      expect(params).not.toHaveProperty('isNewApp');
+    });
     expect(mockActions.connect).toHaveBeenNthCalledWith(3, expect.objectContaining({
       appId: 'nextAppId',
-      isNewApp: true,
       userId: 'nextUserId',
     }));
   });
@@ -112,7 +104,6 @@ describe('SendbirdProvider', () => {
     expect(mockActions.connect).toHaveBeenCalledTimes(2);
     expect(mockActions.connect).toHaveBeenNthCalledWith(1, expect.objectContaining({
       appId: 'mockAppId',
-      isNewApp: true,
       userId: 'mockUserId',
     }));
     expect(mockActions.connect).toHaveBeenNthCalledWith(2, expect.objectContaining({

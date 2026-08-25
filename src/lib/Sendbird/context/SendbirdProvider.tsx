@@ -100,17 +100,12 @@ const SendbirdContextManager = ({
     appInfoStore,
     actions,
   });
-  const previousAppIdRef = useRef('');
 
   // Reconnect when necessary
   useEffect(() => {
-    const isNewApp = previousAppIdRef.current !== appId;
-    previousAppIdRef.current = appId;
-
     actions.connect({
       appId,
       userId,
-      isNewApp,
       accessToken,
       isUserIdUsedForNickname,
       isMobile,
