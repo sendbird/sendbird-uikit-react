@@ -191,6 +191,14 @@ export type UIKitOptions = PartialDeep<{
   openChannel: SBUConfig['openChannel']['channel'];
 }>;
 
+/**
+ * Mount this once per application, at the app root.
+ *
+ * The provider uses the cached `SendbirdChat` singleton, so mounting several of them on one
+ * `appId` shares a single instance and WebSocket, and using more than one `appId` on a page
+ * replaces the singleton. Pass `sdkInitParams={{ newInstance: true }}` on any provider that
+ * needs an instance of its own.
+ */
 export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.PropsWithChildren<unknown> {
   appId: string;
   userId: string;
