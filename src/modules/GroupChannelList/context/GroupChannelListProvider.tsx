@@ -18,6 +18,7 @@ import { deleteNullish, noop } from '../../../utils/utils';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import useGroupChannelList from './useGroupChannelList';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
+import useDidMountEffect from '../../../utils/useDidMountEffect';
 
 type OnCreateChannelClickParams = { users: Array<string>; onClose: () => void; channelType: CHANNEL_TYPE };
 type ChannelListDataSource = ReturnType<typeof useGroupChannelListDataSource>;
@@ -144,14 +145,18 @@ export const GroupChannelListManager: React.FC<GroupChannelListProviderProps> = 
     }
   }, [disableAutoSelect, stores.sdkStore.initialized, initialized, selectedChannelUrl]);
 
-  // Recreates the GroupChannelCollection when `channelListQueryParams` change
-  useEffect(() => {
+  const serializedChannelListQueryParams = Object.keys(channelListQueryParams ?? {}).sort()
+    .map((key: string) => `${key}=${encodeURIComponent(JSON.stringify(channelListQueryParams[key]))}`)
+    .join('&');
+
+  // Recreates the GroupChannelCollection when `channelListQueryParams` change.
+  // NOTE: This must not run on mount. useGroupChannelList already creates the initial
+  // collection with these params, so refreshing here would only discard it mid-flight.
+  // The superseded collection then resolves and commits the new, still-empty collection's
+  // channels, briefly rendering the empty-list placeholder. (CLNP-8827)
+  useDidMountEffect(() => {
     refresh?.();
-  }, [
-    Object.keys(channelListQueryParams ?? {}).sort()
-      .map((key: string) => `${key}=${encodeURIComponent(JSON.stringify(channelListQueryParams[key]))}`)
-      .join('&'),
-  ]);
+  }, [serializedChannelListQueryParams]);
 
   const { typingChannelUrls } = state;
 
