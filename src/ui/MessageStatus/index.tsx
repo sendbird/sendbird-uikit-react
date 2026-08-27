@@ -75,16 +75,19 @@ export default function MessageStatus({
             height="16px"
           />
         </Loader>
-      ) : (
+      ) : iconType[status] ? (
+        // Only render once the status maps to an icon. `Icon` falls through to the
+        // literal string 'icon' for an undefined type, and falling back to ERROR here
+        // reported an unmapped status as a send failure.
         <Icon
-          className={classnames('sendbird-message-status__icon', hideMessageStatusIcon && 'hide-icon', status !== OutgoingMessageStates.FAILED && 'sendbird-message-status--sent')}
+          className={classnames('sendbird-message-status__icon', hideMessageStatusIcon && 'hide-icon', isSentStatus(status) && 'sendbird-message-status--sent')}
           testID="sendbird-message-status-icon"
-          type={iconType[status] || IconTypes.ERROR}
+          type={iconType[status]}
           fillColor={iconColor[status]}
           width="16px"
           height="16px"
         />
-      )}
+      ) : null}
       {isSentStatus(status) && (
         <Label
           className="sendbird-message-status__text"

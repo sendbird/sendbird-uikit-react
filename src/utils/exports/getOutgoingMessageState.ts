@@ -24,6 +24,13 @@ export const getOutgoingMessageState = (
   if (message.sendingStatus === 'failed') {
     return OutgoingMessageStates.FAILED;
   }
+  // Read/delivery receipts only mean something once the message reached the server.
+  // The counters below report 0 for super, broadcast and exclusive channels, and for
+  // channels with no other joined member, so running them first made a message that
+  // never left the device report as READ.
+  if (message.sendingStatus !== 'succeeded') {
+    return OutgoingMessageStates.NONE;
+  }
   if (channel?.isGroupChannel?.()) {
     /* GroupChannel only */
     if ((channel as GroupChannel).getUnreadMemberCount?.(message) === 0) {
@@ -32,8 +39,5 @@ export const getOutgoingMessageState = (
       return OutgoingMessageStates.DELIVERED;
     }
   }
-  if (message.sendingStatus === 'succeeded') {
-    return OutgoingMessageStates.SENT;
-  }
-  return OutgoingMessageStates.NONE;
+  return OutgoingMessageStates.SENT;
 };

@@ -30,7 +30,14 @@ export const compareMessagesForGrouping = (
     return [false, false];
   }
   const sendingStatus = (currMessage as UserMessage)?.sendingStatus || '';
-  const isAcceptable = sendingStatus !== 'pending' && sendingStatus !== 'failed';
+  // A message that has not been delivered to the recipients must not be chained. `canceled`
+  // and `scheduled` join `pending`/`failed` here because getOutgoingMessageState now maps
+  // them all to NONE: without this, two same-minute canceled messages that used to differ by
+  // read receipt would start chaining. Grouping follows delivery, not receipt bookkeeping.
+  const isAcceptable = sendingStatus !== 'pending'
+    && sendingStatus !== 'failed'
+    && sendingStatus !== 'canceled'
+    && sendingStatus !== 'scheduled';
   return [
     isSameGroup(prevMessage, currMessage, stringSet, currentChannel) && isAcceptable,
     isSameGroup(currMessage, nextMessage, stringSet, currentChannel) && isAcceptable,

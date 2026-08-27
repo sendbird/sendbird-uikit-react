@@ -16,9 +16,10 @@ import {
   CoreMessageType,
   getClassName,
   isAdminMessage,
+  isFailedMessage,
   isFormMessage,
   isMultipleFilesMessage,
-  isOGMessage, isSendableMessage,
+  isOGMessage, isPendingMessage, isSendableMessage,
   isTemplateMessage,
   isThumbnailMessage,
   isValidTemplateMessageType,
@@ -167,6 +168,11 @@ export function MessageContent(props: MessageContentProps): ReactElement {
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
     || ((message as SendableMessageType)?.sendingStatus === 'failed');
   const isByMeClassName = isByMe ? 'outgoing' : 'incoming';
+  // A message that has not settled must always show its status. chainTop/chainBottom are
+  // public props, so a custom MessageList can chain one and silently remove the only
+  // indication that the message never went out.
+  const isUnsettled = isSendableMessage(message)
+    && (isPendingMessage(message) || isFailedMessage(message));
   const chainTopClassName = chainTop ? 'chain-top' : '';
   const isReactionEnabledInChannel = isReactionEnabled && !channel?.isEphemeral;
   const isReactionEnabledClassName = isReactionEnabledInChannel ? 'use-reactions' : '';
@@ -383,7 +389,7 @@ export function MessageContent(props: MessageContentProps): ReactElement {
           )}
         >
           {/* message status component when sent by me */}
-          {(isByMe && !chainBottom) && (
+          {(isByMe && (!chainBottom || isUnsettled)) && (
             <div
               className={classnames(
                 'sendbird-message-content__middle__body-container__created-at',
