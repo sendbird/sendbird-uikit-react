@@ -1,5 +1,8 @@
 ### Fixes
-- Fixed a bug where the `Thread` reply list could duplicate the oldest reply when scrolling to the top
-- Fixed a bug where `Thread` replies could appear in the wrong thread, show a stale reply count, or not update correctly after switching threads
-- Fixed a bug where a locally sent, resent, or deleted `Thread` reply was not always reflected in the reply list
-- Fixed a bug where the `Thread` composer was not disabled after the parent channel was deleted
+- Fixed a bug where every `SendbirdProvider` mount created a new `SendbirdChat` instance and WebSocket connection instead of reusing the cached one
+
+  To use a separate instance, pass `newInstance: true` explicitly through `sdkInitParams`.
+- Fixed a bug where a failure to initialize the Chat SDK, such as an empty `appId`, was not reported through the `onFailed` connection event handler
+- Fixed a bug where `GroupChannelList` briefly rendered the empty-list placeholder before the channels loaded when the local cache was disabled
+- Fixed a bug where an outgoing message that failed to send could render without any status indicator when a custom message list grouped it
+- Fixed a bug where `TypingIndicator` did not remove its group channel handler on unmount
