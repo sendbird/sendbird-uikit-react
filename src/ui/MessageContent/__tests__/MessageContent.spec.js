@@ -357,4 +357,57 @@ describe('ui/MessageContent', () => {
       container.querySelector('.sendbird-text-message-item-body')
     ).toBeTruthy();
   });
+
+  // CLNP-8803 / C1
+  //
+  // chainTop/chainBottom are public props, so an app with a custom MessageList computes
+  // them itself and bypasses compareMessagesForGrouping's guard. This component trusted
+  // the incoming value and dropped the status block entirely, which is how an undelivered
+  // message ended up with no timestamp, no spinner and no error icon at all.
+  describe('undelivered status survives grouping', () => {
+    const renderWithChain = (sendingStatus, chainBottom) => render(
+      <MessageContent
+        userId="user-id-001"
+        message={createMockMessage((m) => ({ ...m, sendingStatus }))}
+        channel={createMockChannel()}
+        chainBottom={chainBottom}
+      />
+    );
+
+    it('renders the status of a pending message even when chained', () => {
+      const { container } = renderWithChain('pending', true);
+      expect(container.querySelector('.sendbird-message-status')).toBeTruthy();
+    });
+
+    it('renders the status of a failed message even when chained', () => {
+      const { container } = renderWithChain('failed', true);
+      expect(container.querySelector('.sendbird-message-status')).toBeTruthy();
+    });
+
+    it('still hides the status of a chained succeeded message', () => {
+      const { container } = renderWithChain('succeeded', true);
+      expect(container.querySelector('.sendbird-message-status')).toBe(null);
+    });
+
+    it('still shows the status of an unchained succeeded message', () => {
+      const { container } = renderWithChain('succeeded', false);
+      expect(container.querySelector('.sendbird-message-status')).toBeTruthy();
+    });
+
+    it('leaves the incoming-message chain behaviour alone', () => {
+      // A message from someone else can never be pending or failed, so the chained
+      // created-at block must keep following chainBottom exactly as before.
+      const { container } = render(
+        <MessageContent
+          userId="another-user"
+          message={createMockMessage()}
+          channel={createMockChannel()}
+          chainBottom
+        />
+      );
+      expect(
+        container.querySelector('.sendbird-message-content__middle__body-container__created-at')
+      ).toBe(null);
+    });
+  });
 });

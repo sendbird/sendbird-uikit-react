@@ -11,8 +11,11 @@ import { MessageEmojiMenu } from '../../../../ui/MessageItemReactionMenu';
 import Label, { LabelTypography, LabelColors } from '../../../../ui/Label';
 import {
   getClassName,
+  isFailedMessage,
   isMultipleFilesMessage,
   isOGMessage,
+  isPendingMessage,
+  isSendableMessage,
   isThumbnailMessage,
   SendableMessageType,
 } from '../../../../utils';
@@ -122,6 +125,11 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
   const isByMe = (userId === (message as SendableMessageType)?.sender?.userId)
     || ((message as SendableMessageType)?.sendingStatus === 'pending')
     || ((message as SendableMessageType)?.sendingStatus === 'failed');
+  // A message that has not settled must always show its status. chainTop/chainBottom are
+  // public props, so a custom list can chain one and silently remove the only indication
+  // that the message never went out.
+  const isUnsettled = isSendableMessage(message)
+    && (isPendingMessage(message) || isFailedMessage(message));
   const useReplying = !!((replyType === 'QUOTE_REPLY' || replyType === 'THREAD')
     && message?.parentMessageId && message?.parentMessage
     && !disableQuoteMessage
@@ -210,7 +218,7 @@ export default function ThreadListItemContent(props: ThreadListItemContentProps)
         }
         <div className={getClassName(['sendbird-thread-list-item-content__middle__body-container'])} >
           {/* message status component */}
-          {(isByMe && !chainBottom) && (
+          {(isByMe && (!chainBottom || isUnsettled)) && (
             <div className={getClassName(['sendbird-thread-list-item-content__middle__body-container__created-at', 'left', supposedHoverClassName])}>
               <div className="sendbird-thread-list-item-content__middle__body-container__created-at__component-container">
                 <MessageStatus
