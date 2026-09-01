@@ -120,7 +120,7 @@ const defaultMockActions = {
   }),
 };
 
-describe('CreateChannelUI Integration Tests', () => {
+describe('ThreadUI Integration Tests', () => {
   const mockUseThread = useThreadModule.default as Mock;
 
   const renderComponent = (mockState = {}, mockActions = {}) => {
