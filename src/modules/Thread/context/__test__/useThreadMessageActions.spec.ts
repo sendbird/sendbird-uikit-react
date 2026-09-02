@@ -142,16 +142,56 @@ describe('useThreadMessageActions', () => {
       new File(['b'], 'b.png', { type: 'image/png' }),
     ];
 
+    let sentMessage;
     await act(async () => {
-      await result.current.sendMultipleFilesMessage(files);
+      sentMessage = await result.current.sendMultipleFilesMessage(files);
     });
 
     const [params] = (state.dsSendMultipleFilesMessage as Mock).mock.calls[0];
     expect(params.fileInfoList).toHaveLength(2);
     expect(params.fileInfoList[0]).toMatchObject({ fileName: 'a.png', mimeType: 'image/png' });
+    expect(sentMessage).toEqual({ messageId: 3 });
     await waitFor(() => {
       expect(statics.pubSub.publish).toHaveBeenCalledWith(topics.SEND_FILE_MESSAGE, expect.anything());
     });
+  });
+
+  it('sendMultipleFilesMessage rejects an empty file list without sending', async () => {
+    const state = makeState();
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+
+    await expect(result.current.sendMultipleFilesMessage([])).rejects.toThrow('at least two files');
+
+    expect(state.dsSendMultipleFilesMessage).not.toHaveBeenCalled();
+    expect(statics.logger.warning).toHaveBeenCalled();
+  });
+
+  it('sendMultipleFilesMessage rejects a single file without sending', async () => {
+    const state = makeState();
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const file = new File(['a'], 'a.png', { type: 'image/png' });
+
+    await expect(result.current.sendMultipleFilesMessage([file])).rejects.toThrow('at least two files');
+
+    expect(state.dsSendMultipleFilesMessage).not.toHaveBeenCalled();
+    expect(statics.logger.warning).toHaveBeenCalled();
+  });
+
+  it('sendMultipleFilesMessage rejects when the current channel is missing without sending', async () => {
+    const state = makeState({ currentChannel: undefined });
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const files = [
+      new File(['a'], 'a.png', { type: 'image/png' }),
+      new File(['b'], 'b.png', { type: 'image/png' }),
+    ];
+
+    await expect(result.current.sendMultipleFilesMessage(files)).rejects.toThrow('current channel or data source is unavailable');
+
+    expect(state.dsSendMultipleFilesMessage).not.toHaveBeenCalled();
+    expect(statics.logger.warning).toHaveBeenCalled();
   });
 
   it('updateMessage builds update params and publishes UPDATE_USER_MESSAGE', async () => {

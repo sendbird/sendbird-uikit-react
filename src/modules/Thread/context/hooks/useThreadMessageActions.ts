@@ -185,6 +185,20 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
   }, [dsSendFileMessage, onBeforeSendVoiceMessage, currentChannel]);
 
   const sendMultipleFilesMessage = useCallback((files: Array<File>, quoteMessage?: SendableMessageType): Promise<MultipleFilesMessage> => {
+    if (files.length <= 1) {
+      const error = new Error('Thread | useThreadMessageActions: Sending multiple files message requires at least two files.');
+      logger.warning('Thread | useThreadMessageActions: Sending multiple files message failed, because there are no multiple files.', { files, error });
+      return Promise.reject(error);
+    }
+    if (!dsSendMultipleFilesMessage || !currentChannel) {
+      const error = new Error('Thread | useThreadMessageActions: Sending multiple files message cannot be sent because current channel or data source is unavailable.');
+      logger.warning('Thread | useThreadMessageActions: Sending multiple files message failed, because current channel or data source is unavailable.', {
+        currentChannel,
+        dsSendMultipleFilesMessage,
+        error,
+      });
+      return Promise.reject(error);
+    }
     const createParamsDefault = (): MultipleFilesMessageCreateParams => {
       const params: MultipleFilesMessageCreateParams = {
         fileInfoList: files.map((file: File): UploadableFileInfo => ({
@@ -201,7 +215,6 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
       return params;
     };
     const params = onBeforeSendMultipleFilesMessage?.(files, quoteMessage) ?? createParamsDefault();
-    if (!dsSendMultipleFilesMessage || !currentChannel) return Promise.resolve(null as unknown as MultipleFilesMessage);
     logger.info('Thread | useThreadMessageActions: Sending multiple files message start.', params);
     return dsSendMultipleFilesMessage(params, () => scrollToLastAfterSend())
       .then((sentMessage) => {
