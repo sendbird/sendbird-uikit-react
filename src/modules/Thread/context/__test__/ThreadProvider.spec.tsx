@@ -117,6 +117,7 @@ describe('ThreadProvider', () => {
     typingMembers: [],
     nicknamesMap: expect.any(Map),
     localFilePreviews: expect.any(Map),
+    threadFetcherQueue: { current: expect.any(Promise) },
   };
 
   const initialMockMessage = {
@@ -142,6 +143,12 @@ describe('ThreadProvider', () => {
     const stateContextValue = { state: mockState };
     (useSendbird as Mock).mockReturnValue(stateContextValue);
     renderHook(() => useSendbird());
+  });
+
+  afterEach(() => {
+    mockDs.loadPrevious.mockReset();
+    mockDs.loadNext.mockReset();
+    mockDs.resetWithStartingPoint.mockReset();
   });
 
   it('provides the correct initial state', async () => {
@@ -373,6 +380,110 @@ describe('ThreadProvider', () => {
     expect(mockDs.loadNext).toHaveBeenCalled();
     expect(callback).toHaveBeenCalledWith([addedMessage]);
     expect(order).toEqual(['callback', 'resolved']);
+  });
+
+  it('serializes overlapping page fetches so their callbacks receive only their own page', async () => {
+    const parentMessageId = 813;
+    const existingMessage = { messageId: 814, parentMessageId, sendingStatus: SendingStatus.SUCCEEDED, serialize: () => ({ messageId: 814 }) } as unknown as SendableMessageType;
+    const previousMessage = { messageId: 815, parentMessageId, sendingStatus: SendingStatus.SUCCEEDED, serialize: () => ({ messageId: 815 }) } as unknown as SendableMessageType;
+    const nextMessage = { messageId: 816, parentMessageId, sendingStatus: SendingStatus.SUCCEEDED, serialize: () => ({ messageId: 816 }) } as unknown as SendableMessageType;
+    let dsMessages = [existingMessage];
+    let rerenderProvider = () => {};
+    let resolvePrevious: () => void;
+    let resolveNext: () => void;
+    const previousLoad = new Promise<void>((resolve) => { resolvePrevious = resolve; });
+    const nextLoad = new Promise<void>((resolve) => { resolveNext = resolve; });
+    mockDs.loadPrevious.mockImplementation(async () => {
+      await previousLoad;
+      dsMessages = [previousMessage, ...dsMessages];
+      rerenderProvider();
+    });
+    mockDs.loadNext.mockImplementation(async () => {
+      await nextLoad;
+      dsMessages = [...dsMessages, nextMessage];
+      rerenderProvider();
+    });
+    (useGroupChannelThreadMessages as Mock).mockImplementation(() => ({
+      ...makeDefaultDs(),
+      initialized: true,
+      messages: dsMessages,
+    }));
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+    const { result, rerender } = renderHook(() => useThread(), { wrapper });
+    rerenderProvider = rerender;
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    await act(async () => {
+      options.onParentMessageUpdated({ messageId: parentMessageId } as unknown as SendableMessageType);
+    });
+    await waitFor(() => {
+      expect(result.current.state.allThreadMessages).toEqual([existingMessage]);
+    });
+
+    const previousCallback = vi.fn();
+    const nextCallback = vi.fn();
+    const previousFetch = result.current.actions.fetchPrevThreads(previousCallback);
+    const nextFetch = result.current.actions.fetchNextThreads(nextCallback);
+
+    await waitFor(() => {
+      expect(mockDs.loadPrevious).toHaveBeenCalledTimes(1);
+    });
+    expect(mockDs.loadNext).not.toHaveBeenCalled();
+
+    resolvePrevious();
+    await previousFetch;
+    expect(previousCallback).toHaveBeenCalledWith([previousMessage]);
+
+    await waitFor(() => {
+      expect(mockDs.loadNext).toHaveBeenCalledTimes(1);
+    });
+    resolveNext();
+    await nextFetch;
+    expect(nextCallback).toHaveBeenCalledWith([nextMessage]);
+  });
+
+  it('continues queued page fetches after a preceding fetch rejects', async () => {
+    const parentMessageId = 817;
+    const existingMessage = { messageId: 818, parentMessageId, sendingStatus: SendingStatus.SUCCEEDED, serialize: () => ({ messageId: 818 }) } as unknown as SendableMessageType;
+    const nextMessage = { messageId: 819, parentMessageId, sendingStatus: SendingStatus.SUCCEEDED, serialize: () => ({ messageId: 819 }) } as unknown as SendableMessageType;
+    let dsMessages = [existingMessage];
+    let rerenderProvider = () => {};
+    mockDs.loadPrevious.mockRejectedValueOnce(new Error('load previous failed'));
+    mockDs.loadNext.mockImplementation(async () => {
+      dsMessages = [...dsMessages, nextMessage];
+      rerenderProvider();
+    });
+    (useGroupChannelThreadMessages as Mock).mockImplementation(() => ({
+      ...makeDefaultDs(),
+      initialized: true,
+      messages: dsMessages,
+    }));
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+    const { result, rerender } = renderHook(() => useThread(), { wrapper });
+    rerenderProvider = rerender;
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    await act(async () => {
+      options.onParentMessageUpdated({ messageId: parentMessageId } as unknown as SendableMessageType);
+    });
+    await waitFor(() => {
+      expect(result.current.state.allThreadMessages).toEqual([existingMessage]);
+    });
+
+    await expect(result.current.actions.fetchPrevThreads()).rejects.toThrow('load previous failed');
+
+    const nextCallback = vi.fn();
+    await expect(result.current.actions.fetchNextThreads(nextCallback)).resolves.toBeUndefined();
+    expect(mockDs.loadNext).toHaveBeenCalledTimes(1);
+    expect(nextCallback).toHaveBeenCalledWith([nextMessage]);
   });
 
   it('skips a fetch callback when its thread switches before the load completes', async () => {

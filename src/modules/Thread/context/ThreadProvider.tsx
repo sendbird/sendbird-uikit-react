@@ -73,6 +73,7 @@ export interface ThreadState extends ThreadProviderProps {
   typingMembers: Member[];
   nicknamesMap: Map<string, string>;
   localFilePreviews: Map<string, LocalFilePreview>;
+  threadFetcherQueue: { current: Promise<void> };
   loadPrevious?: ThreadMessageDataSource['loadPrevious'];
   loadNext?: ThreadMessageDataSource['loadNext'];
   resetWithStartingPoint?: ThreadMessageDataSource['resetWithStartingPoint'];
@@ -113,6 +114,7 @@ const initialState = () => ({
   typingMembers: [],
   nicknamesMap: null,
   localFilePreviews: new Map(),
+  threadFetcherQueue: { current: Promise.resolve() },
 } as ThreadState);
 
 export const ThreadContext = React.createContext<ReturnType<typeof createStore<ThreadState>> | null>(null);

@@ -20,6 +20,15 @@ const getNewlyAddedThreadMessages = (
   return currentMessages.filter(({ messageId }) => !previousMessageIds.has(messageId));
 };
 
+const enqueueThreadFetcher = (
+  queue: ThreadState['threadFetcherQueue'],
+  task: () => Promise<void>,
+) => {
+  const invocation = queue.current.then(task);
+  queue.current = invocation.then(() => undefined, () => undefined);
+  return invocation;
+};
+
 const useThread = () => {
   const store = useContext(ThreadContext);
   if (!store) throw new Error('useThread must be used within a ThreadProvider');
@@ -33,9 +42,9 @@ const useThread = () => {
 
   const toggleReaction = useToggleReactionCallback({ currentChannel }, { logger });
 
-  const initializeThreadFetcher = useCallback(async (
+  const initializeThreadFetcher = useCallback((
     callback?: (messages: CoreMessageType[]) => void,
-  ): Promise<void> => {
+  ): Promise<void> => enqueueThreadFetcher(store.getState().threadFetcherQueue, async () => {
     const {
       resetWithStartingPoint,
       message: anchorMessage,
@@ -56,11 +65,11 @@ const useThread = () => {
     const currentState = store.getState();
     if (currentState.parentMessage?.messageId !== parentMessage?.messageId || currentState.channelUrl !== channelUrl) return;
     callback?.(currentState.allThreadMessages);
-  }, [store]);
+  }), [store]);
 
-  const fetchPrevThreads = useCallback(async (
+  const fetchPrevThreads = useCallback((
     callback?: (messages: CoreMessageType[]) => void,
-  ): Promise<void> => {
+  ): Promise<void> => enqueueThreadFetcher(store.getState().threadFetcherQueue, async () => {
     const {
       loadPrevious,
       allThreadMessages: previousMessages,
@@ -75,11 +84,11 @@ const useThread = () => {
     const currentState = store.getState();
     if (currentState.parentMessage?.messageId !== parentMessage?.messageId || currentState.channelUrl !== channelUrl) return;
     callback?.(getNewlyAddedThreadMessages(previousMessages, currentState.allThreadMessages));
-  }, [store]);
+  }), [store]);
 
-  const fetchNextThreads = useCallback(async (
+  const fetchNextThreads = useCallback((
     callback?: (messages: CoreMessageType[]) => void,
-  ): Promise<void> => {
+  ): Promise<void> => enqueueThreadFetcher(store.getState().threadFetcherQueue, async () => {
     const {
       loadNext,
       allThreadMessages: previousMessages,
@@ -94,7 +103,7 @@ const useThread = () => {
     const currentState = store.getState();
     if (currentState.parentMessage?.messageId !== parentMessage?.messageId || currentState.channelUrl !== channelUrl) return;
     callback?.(getNewlyAddedThreadMessages(previousMessages, currentState.allThreadMessages));
-  }, [store]);
+  }), [store]);
 
   const messageActions = useThreadMessageActions(state, { logger, pubSub, isMentionEnabled });
 
