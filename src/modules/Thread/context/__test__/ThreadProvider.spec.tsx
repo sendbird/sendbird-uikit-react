@@ -123,6 +123,7 @@ describe('ThreadProvider', () => {
   } as SendableMessageType;
 
   beforeEach(() => {
+    vi.useRealTimers();
     vi.clearAllMocks();
     // clearAllMocks only clears call history, not implementations, so restore the default
     // collection mock here — otherwise a test that overrides it (e.g. mockReturnValue) leaks
@@ -228,9 +229,13 @@ describe('ThreadProvider', () => {
     });
   });
 
-  it('fetchPrevThreads delegates to the data source loadPrevious and fires the callback', async () => {
-    mockDs.loadPrevious.mockResolvedValue(undefined);
-    const callback = vi.fn();
+  it('returns promises from thread fetch actions when the data source functions are unavailable', async () => {
+    (useGroupChannelThreadMessages as Mock).mockReturnValue({
+      ...makeDefaultDs(),
+      loadPrevious: undefined,
+      loadNext: undefined,
+      resetWithStartingPoint: undefined,
+    });
     const wrapper = ({ children }) => (
       <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
     );
@@ -240,36 +245,178 @@ describe('ThreadProvider', () => {
       expect(result.current.state.currentChannel).not.toBe(undefined);
     });
 
-    await act(async () => {
-      result.current.actions.fetchPrevThreads(callback);
-    });
+    const returned = [
+      result.current.actions.initializeThreadFetcher(),
+      result.current.actions.fetchPrevThreads(),
+      result.current.actions.fetchNextThreads(),
+    ];
 
-    expect(mockDs.loadPrevious).toHaveBeenCalled();
-    await waitFor(() => {
-      expect(callback).toHaveBeenCalled();
+    returned.forEach((promise) => expect(promise).toBeInstanceOf(Promise));
+    await act(async () => {
+      await Promise.all(returned as unknown as Promise<void>[]);
     });
   });
 
-  it('fetchNextThreads delegates to the data source loadNext and fires the callback', async () => {
-    mockDs.loadNext.mockResolvedValue(undefined);
-    const callback = vi.fn();
+  it('fetchPrevThreads returns a promise and passes only newly mirrored messages to the callback', async () => {
+    const parentMessageId = 800;
+    const existingMessage = {
+      messageId: 801,
+      parentMessageId,
+      sendingStatus: SendingStatus.SUCCEEDED,
+      serialize: () => ({ messageId: 801 }),
+    } as unknown as SendableMessageType;
+    const addedMessage = {
+      messageId: 802,
+      parentMessageId,
+      sendingStatus: SendingStatus.SUCCEEDED,
+      serialize: () => ({ messageId: 802 }),
+    } as unknown as SendableMessageType;
+    let dsMessages = [existingMessage];
+    let rerenderProvider = () => {};
+    mockDs.loadPrevious.mockImplementation(async () => {
+      dsMessages = [addedMessage, ...dsMessages];
+      rerenderProvider();
+    });
+    (useGroupChannelThreadMessages as Mock).mockImplementation(() => ({
+      ...makeDefaultDs(),
+      initialized: true,
+      messages: dsMessages,
+    }));
     const wrapper = ({ children }) => (
       <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
     );
 
-    const { result } = renderHook(() => useThread(), { wrapper });
+    const { result, rerender } = renderHook(() => useThread(), { wrapper });
+    rerenderProvider = rerender;
     await waitFor(() => {
       expect(result.current.state.currentChannel).not.toBe(undefined);
     });
-
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
     await act(async () => {
-      result.current.actions.fetchNextThreads(callback);
+      options.onParentMessageUpdated({ messageId: parentMessageId } as unknown as SendableMessageType);
     });
+    await waitFor(() => {
+      expect(result.current.state.allThreadMessages).toEqual([existingMessage]);
+    });
+
+    const order: string[] = [];
+    const callback = vi.fn(() => order.push('callback'));
+    const returned = result.current.actions.fetchPrevThreads(callback);
+    expect(returned).toBeInstanceOf(Promise);
+    await returned;
+    order.push('resolved');
+
+    expect(mockDs.loadPrevious).toHaveBeenCalled();
+    expect(callback).toHaveBeenCalledWith([addedMessage]);
+    expect(order).toEqual(['callback', 'resolved']);
+  });
+
+  it('fetchNextThreads returns a promise and passes only newly mirrored messages to the callback', async () => {
+    const parentMessageId = 810;
+    const existingMessage = {
+      messageId: 811,
+      parentMessageId,
+      sendingStatus: SendingStatus.SUCCEEDED,
+      serialize: () => ({ messageId: 811 }),
+    } as unknown as SendableMessageType;
+    const addedMessage = {
+      messageId: 812,
+      parentMessageId,
+      sendingStatus: SendingStatus.SUCCEEDED,
+      serialize: () => ({ messageId: 812 }),
+    } as unknown as SendableMessageType;
+    let dsMessages = [existingMessage];
+    let rerenderProvider = () => {};
+    mockDs.loadNext.mockImplementation(async () => {
+      dsMessages = [...dsMessages, addedMessage];
+      rerenderProvider();
+    });
+    (useGroupChannelThreadMessages as Mock).mockImplementation(() => ({
+      ...makeDefaultDs(),
+      initialized: true,
+      messages: dsMessages,
+    }));
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+
+    const { result, rerender } = renderHook(() => useThread(), { wrapper });
+    rerenderProvider = rerender;
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    await act(async () => {
+      options.onParentMessageUpdated({ messageId: parentMessageId } as unknown as SendableMessageType);
+    });
+    await waitFor(() => {
+      expect(result.current.state.allThreadMessages).toEqual([existingMessage]);
+    });
+
+    const order: string[] = [];
+    const callback = vi.fn(() => order.push('callback'));
+    const returned = result.current.actions.fetchNextThreads(callback);
+    expect(returned).toBeInstanceOf(Promise);
+    await returned;
+    order.push('resolved');
 
     expect(mockDs.loadNext).toHaveBeenCalled();
-    await waitFor(() => {
-      expect(callback).toHaveBeenCalled();
+    expect(callback).toHaveBeenCalledWith([addedMessage]);
+    expect(order).toEqual(['callback', 'resolved']);
+  });
+
+  it('initializeThreadFetcher resolves after passing the post-reset list to the callback', async () => {
+    const parentMessageId = initialMockMessage.messageId;
+    const existingMessage = {
+      messageId: 821,
+      parentMessageId,
+      sendingStatus: SendingStatus.SUCCEEDED,
+      serialize: () => ({ messageId: 821 }),
+    } as unknown as SendableMessageType;
+    const resetMessage = {
+      messageId: 822,
+      parentMessageId,
+      sendingStatus: SendingStatus.SUCCEEDED,
+      serialize: () => ({ messageId: 822 }),
+    } as unknown as SendableMessageType;
+    let dsMessages = [existingMessage];
+    let rerenderProvider = () => {};
+    mockDs.resetWithStartingPoint.mockImplementation(async () => {
+      dsMessages = [resetMessage];
+      rerenderProvider();
     });
+    (useGroupChannelThreadMessages as Mock).mockImplementation(() => ({
+      ...makeDefaultDs(),
+      initialized: true,
+      messages: dsMessages,
+    }));
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+
+    const { result, rerender } = renderHook(() => useThread(), { wrapper });
+    rerenderProvider = rerender;
+    await waitFor(() => {
+      expect(result.current.state.currentChannel).not.toBe(undefined);
+    });
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    await act(async () => {
+      options.onParentMessageUpdated({ messageId: parentMessageId } as unknown as SendableMessageType);
+    });
+    await waitFor(() => {
+      expect(result.current.state.allThreadMessages).toEqual([existingMessage]);
+    });
+
+    const order: string[] = [];
+    const callback = vi.fn(() => order.push('callback'));
+    const returned = result.current.actions.initializeThreadFetcher(callback);
+    expect(returned).toBeInstanceOf(Promise);
+    await returned;
+    order.push('resolved');
+
+    expect(mockDs.resetWithStartingPoint).toHaveBeenCalledWith(Number.MAX_SAFE_INTEGER);
+    expect(callback).toHaveBeenCalledWith([resetMessage]);
+    expect(order).toEqual(['callback', 'resolved']);
   });
 
   it('initializeThreadFetcher resets a root thread (no anchor) at the latest edge (MAX_SAFE_INTEGER)', async () => {

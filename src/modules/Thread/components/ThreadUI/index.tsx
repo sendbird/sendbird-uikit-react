@@ -116,6 +116,8 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
             //
           }
         }
+      }).catch(() => {
+        // Fetch failures are non-fatal for the scroll handler; the list simply does not extend.
       });
     }
 
@@ -132,6 +134,8 @@ const ThreadUI: React.FC<ThreadUIProps> = ({
             //
           }
         }
+      }).catch(() => {
+        // Fetch failures are non-fatal for the scroll handler; the list simply does not extend.
       });
     }
 

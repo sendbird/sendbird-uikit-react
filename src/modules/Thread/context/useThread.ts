@@ -11,6 +11,15 @@ import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import { useThreadMessageActions } from './hooks/useThreadMessageActions';
 
+const getNewlyAddedThreadMessages = (
+  previousMessages: CoreMessageType[],
+  currentMessages: CoreMessageType[],
+) => {
+  const previousMessageIds = new Set(previousMessages.map(({ messageId }) => messageId));
+  // Realtime replies and pending messages that succeed during the load window are intentionally included.
+  return currentMessages.filter(({ messageId }) => !previousMessageIds.has(messageId));
+};
+
 const useThread = () => {
   const store = useContext(ThreadContext);
   if (!store) throw new Error('useThread must be used within a ThreadProvider');
@@ -24,7 +33,9 @@ const useThread = () => {
 
   const toggleReaction = useToggleReactionCallback({ currentChannel }, { logger });
 
-  const initializeThreadFetcher = useCallback((callback?: (messages: CoreMessageType[]) => void) => {
+  const initializeThreadFetcher = useCallback(async (
+    callback?: (messages: CoreMessageType[]) => void,
+  ): Promise<void> => {
     const { resetWithStartingPoint, message: anchorMessage, parentMessage } = store.getState();
     if (!resetWithStartingPoint) return;
     // Mirror ThreadProvider's initial startingPoint: anchor at the specific reply when entering from
@@ -33,25 +44,35 @@ const useThread = () => {
     const startingPoint = (anchorMessage && parentMessage && anchorMessage.messageId !== parentMessage.messageId)
       ? anchorMessage.createdAt
       : Number.MAX_SAFE_INTEGER;
-    resetWithStartingPoint(startingPoint).then(() => {
-      setTimeout(() => callback?.(store.getState().allThreadMessages));
+    await resetWithStartingPoint(startingPoint);
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve);
     });
+    callback?.(store.getState().allThreadMessages);
   }, [store]);
 
-  const fetchPrevThreads = useCallback((callback?: (messages: CoreMessageType[]) => void) => {
-    const { loadPrevious } = store.getState();
+  const fetchPrevThreads = useCallback(async (
+    callback?: (messages: CoreMessageType[]) => void,
+  ): Promise<void> => {
+    const { loadPrevious, allThreadMessages: previousMessages } = store.getState();
     if (!loadPrevious) return;
-    loadPrevious().then(() => {
-      setTimeout(() => callback?.(store.getState().allThreadMessages));
+    await loadPrevious();
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve);
     });
+    callback?.(getNewlyAddedThreadMessages(previousMessages, store.getState().allThreadMessages));
   }, [store]);
 
-  const fetchNextThreads = useCallback((callback?: (messages: CoreMessageType[]) => void) => {
-    const { loadNext } = store.getState();
+  const fetchNextThreads = useCallback(async (
+    callback?: (messages: CoreMessageType[]) => void,
+  ): Promise<void> => {
+    const { loadNext, allThreadMessages: previousMessages } = store.getState();
     if (!loadNext) return;
-    loadNext().then(() => {
-      setTimeout(() => callback?.(store.getState().allThreadMessages));
+    await loadNext();
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve);
     });
+    callback?.(getNewlyAddedThreadMessages(previousMessages, store.getState().allThreadMessages));
   }, [store]);
 
   const messageActions = useThreadMessageActions(state, { logger, pubSub, isMentionEnabled });
