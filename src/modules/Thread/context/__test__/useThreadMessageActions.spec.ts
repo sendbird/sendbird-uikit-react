@@ -1,6 +1,7 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import type { Mock } from 'vitest';
 import { User } from '@sendbird/chat';
+import { SendingStatus } from '@sendbird/chat/message';
 import type { FileMessage } from '@sendbird/chat/message';
 
 import { useThreadMessageActions } from '../hooks/useThreadMessageActions';
@@ -279,18 +280,38 @@ describe('useThreadMessageActions', () => {
     expect(state.localFilePreviews.has(reqId)).toBe(false);
   });
 
-  it('keeps a local file preview when deleting its failed message fails', async () => {
+  it('releases a local file preview when deleting its failed message fails', async () => {
     const reqId = 'failed-file-request';
     const localUrl = 'blob:thread-local-preview-delete-failed';
+    const error = new Error('delete failed');
     const state = makeState({
-      dsDeleteMessage: vi.fn().mockRejectedValue(new Error('delete failed')),
+      dsDeleteMessage: vi.fn().mockRejectedValue(error),
       localFilePreviews: new Map([[reqId, { localUrl, file: new File(['file'], 'failed.txt') }]]),
     });
     const statics = makeStatics();
     const { result } = renderHook(() => useThreadMessageActions(state, statics));
-    const message = { messageId: 8, reqId } as unknown as SendableMessageType;
+    const message = { messageId: 8, reqId, sendingStatus: SendingStatus.FAILED } as unknown as SendableMessageType;
 
-    await expect(result.current.deleteMessage(message)).rejects.toThrow('delete failed');
+    await expect(result.current.deleteMessage(message)).rejects.toBe(error);
+
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith(localUrl);
+    expect(state.localFilePreviews.has(reqId)).toBe(false);
+  });
+
+  it('keeps a local file preview when deleting its failed message fails without a current channel', async () => {
+    const reqId = 'failed-file-request';
+    const localUrl = 'blob:thread-local-preview-delete-failed';
+    const error = new Error('delete failed');
+    const state = makeState({
+      currentChannel: undefined,
+      dsDeleteMessage: vi.fn().mockRejectedValue(error),
+      localFilePreviews: new Map([[reqId, { localUrl, file: new File(['file'], 'failed.txt') }]]),
+    });
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const message = { messageId: 8, reqId, sendingStatus: SendingStatus.FAILED } as unknown as SendableMessageType;
+
+    await expect(result.current.deleteMessage(message)).rejects.toBe(error);
 
     expect(URL.revokeObjectURL).not.toHaveBeenCalled();
     expect(state.localFilePreviews.has(reqId)).toBe(true);

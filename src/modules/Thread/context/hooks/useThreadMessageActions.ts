@@ -3,6 +3,7 @@ import { User } from '@sendbird/chat';
 import {
   FileMessage,
   FileMessageCreateParams,
+  SendingStatus,
   MessageMetaArray,
   MultipleFilesMessage,
   MultipleFilesMessageCreateParams,
@@ -297,8 +298,18 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
           URL.revokeObjectURL(preview.localUrl);
           localFilePreviews.delete(message.reqId);
         }
+      })
+      .catch((error) => {
+        if (message.sendingStatus !== SendingStatus.SUCCEEDED && currentChannel) {
+          const preview = message.reqId && localFilePreviews.get(message.reqId);
+          if (preview) {
+            URL.revokeObjectURL(preview.localUrl);
+            localFilePreviews.delete(message.reqId);
+          }
+        }
+        throw error;
       });
-  }, [dsDeleteMessage, localFilePreviews]);
+  }, [dsDeleteMessage, localFilePreviews, currentChannel]);
 
   const resendMessage = useCallback((failedMessage: SendableMessageType) => {
     if (!(failedMessage as SendableMessageType)?.isResendable || !dsResendMessage || !currentChannel) {
