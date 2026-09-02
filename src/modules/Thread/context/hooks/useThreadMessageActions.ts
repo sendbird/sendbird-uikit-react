@@ -130,7 +130,10 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
       return params;
     };
     const params = onBeforeSendFileMessage?.(file, quoteMessage) ?? createParamsDefault();
-    if (!dsSendFileMessage || !currentChannel) return Promise.resolve(null as unknown as FileMessage);
+    if (!dsSendFileMessage || !currentChannel) {
+      logger.warning('Thread | useThreadMessageActions: currentChannel is null. Skipping file message send.');
+      return Promise.resolve(null as unknown as FileMessage);
+    }
     logger.info('Thread | useThreadMessageActions: Sending file message start.', params);
     let localPreviewUrl: string | undefined;
     return dsSendFileMessage(params, (pendingMessage) => {
