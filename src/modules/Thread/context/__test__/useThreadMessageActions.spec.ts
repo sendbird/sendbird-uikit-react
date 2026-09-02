@@ -36,9 +36,11 @@ const makeStatics = () => ({
 });
 
 describe('useThreadMessageActions', () => {
-  beforeAll(() => {
+  let localPreviewCounter = 0;
+
+  beforeEach(() => {
     Object.defineProperty(URL, 'createObjectURL', {
-      value: vi.fn(() => 'blob:thread-local-preview'),
+      value: vi.fn(() => `blob:thread-local-preview-${++localPreviewCounter}`),
       configurable: true,
     });
     Object.defineProperty(URL, 'revokeObjectURL', {
@@ -96,7 +98,7 @@ describe('useThreadMessageActions', () => {
   });
 
   it('sendFileMessage attaches a local preview (localUrl + file) to the pending message', async () => {
-    const pendingMessage = { messageId: 0 } as unknown as FileMessage;
+    const pendingMessage = { messageId: 0, reqId: 'file-message-request' } as unknown as FileMessage;
     const state = makeState({
       dsSendFileMessage: vi.fn().mockImplementation((_params, onPending) => {
         onPending?.(pendingMessage);
@@ -112,8 +114,10 @@ describe('useThreadMessageActions', () => {
     });
 
     const local = pendingMessage as FileMessage & { localUrl?: string; file?: File };
-    expect(local.localUrl).toBe('blob:thread-local-preview');
+    expect(local.localUrl).toMatch(/^blob:thread-local-preview-\d+$/);
     expect(local.file).toBe(file);
+    expect(state.localFilePreviews.has('file-message-request')).toBe(false);
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith(local.localUrl);
   });
 
   it('sendFileMessage rejects when the current channel is missing without invoking the hook or sending', async () => {

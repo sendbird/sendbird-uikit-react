@@ -122,12 +122,13 @@ describe('ThreadProvider', () => {
   const initialMockMessage = {
     messageId: 1,
   } as SendableMessageType;
+  let localPreviewCounter = 0;
 
   beforeEach(() => {
     vi.useRealTimers();
     vi.clearAllMocks();
     Object.defineProperty(URL, 'createObjectURL', {
-      value: vi.fn(() => 'blob:thread-local-preview'),
+      value: vi.fn(() => `blob:thread-local-preview-${++localPreviewCounter}`),
       configurable: true,
     });
     Object.defineProperty(URL, 'revokeObjectURL', {
@@ -374,6 +375,42 @@ describe('ThreadProvider', () => {
     expect(order).toEqual(['callback', 'resolved']);
   });
 
+  it('skips a fetch callback when its thread switches before the load completes', async () => {
+    const parentA = { messageId: 815, parentMessage: null, parentMessageId: 0 } as unknown as SendableMessageType;
+    const parentB = { messageId: 816, parentMessage: null, parentMessageId: 0 } as unknown as SendableMessageType;
+    let currentMessage = parentA;
+    let currentChannelUrl = 'test-channel-a';
+    let rerenderProvider = () => {};
+    let options: { onParentMessageUpdated: (message: SendableMessageType) => void };
+    mockDs.loadPrevious.mockImplementation(async () => {
+      options.onParentMessageUpdated(parentB);
+      currentMessage = parentB;
+      currentChannelUrl = 'test-channel-b';
+      rerenderProvider();
+    });
+    (useGroupChannelThreadMessages as Mock).mockImplementation(() => ({
+      ...makeDefaultDs(),
+      initialized: true,
+      loadPrevious: mockDs.loadPrevious,
+      messages: [],
+    }));
+
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl={currentChannelUrl} message={currentMessage}>{children}</ThreadProvider>
+    );
+    const { result, rerender } = renderHook(() => useThread(), { wrapper });
+    rerenderProvider = rerender;
+    options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    await act(async () => {
+      options.onParentMessageUpdated(parentA);
+    });
+
+    const callback = vi.fn();
+    await expect(result.current.actions.fetchPrevThreads(callback)).resolves.toBeUndefined();
+
+    expect(callback).not.toHaveBeenCalled();
+  });
+
   it('initializeThreadFetcher resolves after passing the post-reset list to the callback', async () => {
     const parentMessageId = initialMockMessage.messageId;
     const existingMessage = {
@@ -609,13 +646,13 @@ describe('ThreadProvider', () => {
       file?: File;
     };
     expect(mirroredFailedMessage).toBe(failedMessage);
-    expect(mirroredFailedMessage.localUrl).toBe('blob:thread-local-preview');
+    expect(mirroredFailedMessage.localUrl).toMatch(/^blob:thread-local-preview-\d+$/);
     expect(mirroredFailedMessage.file).toBe(file);
   });
 
-  it('revokes a failed message preview when the message leaves the mirrored collection', async () => {
+  it('keeps a failed message preview through a transient collection clear', async () => {
     const parentMessageId = 575;
-    const requestId = 'removed-file-request';
+    const requestId = 'transient-clear-file-request';
     const pendingMessage = { messageId: 0, reqId: requestId, parentMessageId } as unknown as SendableMessageType;
     const failedMessage = {
       messageId: 0,
@@ -649,17 +686,138 @@ describe('ThreadProvider', () => {
       options.onParentMessageUpdated({ messageId: parentMessageId } as SendableMessageType);
     });
     await act(async () => {
-      await expect(result.current.actions.sendFileMessage(new File(['x'], 'removed.png'))).rejects.toThrow('upload failed');
+      await expect(result.current.actions.sendFileMessage(new File(['x'], 'transient.png'))).rejects.toThrow('upload failed');
     });
     await waitFor(() => expect(result.current.state.localThreadMessages).toHaveLength(1));
+    const previewUrl = result.current.state.localFilePreviews.get(requestId)?.localUrl;
+    expect(previewUrl).toBeDefined();
 
     dsMessages = [];
     rerender();
+    await waitFor(() => expect(result.current.state.threadMessages).toEqual([]));
+    expect(URL.revokeObjectURL).not.toHaveBeenCalled();
+    expect(result.current.state.localFilePreviews.has(requestId)).toBe(true);
+
+    dsMessages = [failedMessage];
+    rerender();
+    await waitFor(() => {
+      expect(result.current.state.localThreadMessages).toEqual([failedMessage]);
+    });
+    const mirroredFailedMessage = result.current.state.localThreadMessages[0] as SendableMessageType & {
+      localUrl?: string;
+      file?: File;
+    };
+    expect(mirroredFailedMessage.localUrl).toBe(previewUrl);
+    expect(mirroredFailedMessage.file).toBeInstanceOf(File);
+    expect(URL.revokeObjectURL).not.toHaveBeenCalled();
+  });
+
+  it('revokes live file previews when the thread provider unmounts', async () => {
+    const parentMessageId = 576;
+    const requestId = 'unmount-file-request';
+    const pendingMessage = { messageId: 0, reqId: requestId, parentMessageId } as unknown as SendableMessageType;
+    const failedMessage = {
+      messageId: 0,
+      reqId: requestId,
+      parentMessageId,
+      sendingStatus: SendingStatus.FAILED,
+      serialize: () => ({ reqId: requestId, sendingStatus: SendingStatus.FAILED }),
+    } as unknown as SendableMessageType;
+    let dsMessages: SendableMessageType[] = [];
+    let rerenderProvider = () => {};
+    const sendFileMessage = vi.fn().mockImplementation((_params, onPending) => {
+      onPending(pendingMessage);
+      dsMessages = [failedMessage];
+      rerenderProvider();
+      return Promise.reject(new Error('upload failed'));
+    });
+    (useGroupChannelThreadMessages as Mock).mockImplementation(() => ({
+      ...makeDefaultDs(),
+      initialized: true,
+      messages: dsMessages,
+      sendFileMessage,
+    }));
+
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+    const { result, rerender, unmount } = renderHook(() => useThread(), { wrapper });
+    rerenderProvider = rerender;
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    await act(async () => {
+      options.onParentMessageUpdated({ messageId: parentMessageId } as SendableMessageType);
+    });
+    await act(async () => {
+      await expect(result.current.actions.sendFileMessage(new File(['x'], 'unmount.png'))).rejects.toThrow('upload failed');
+    });
+    await waitFor(() => expect(result.current.state.localFilePreviews.has(requestId)).toBe(true));
+    const previewUrl = result.current.state.localFilePreviews.get(requestId)?.localUrl;
+    expect(previewUrl).toBeDefined();
+
+    unmount();
+
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith(previewUrl);
+  });
+
+  it('releases a failed file preview when a resend succeeds with the same request ID', async () => {
+    const parentMessageId = 577;
+    const requestId = 'resend-success-file-request';
+    const pendingMessage = { messageId: 0, reqId: requestId, parentMessageId } as unknown as SendableMessageType;
+    const failedMessage = {
+      messageId: 0,
+      reqId: requestId,
+      parentMessageId,
+      sendingStatus: SendingStatus.FAILED,
+      serialize: () => ({ reqId: requestId, sendingStatus: SendingStatus.FAILED }),
+    } as unknown as SendableMessageType;
+    const succeededMessage = {
+      messageId: 5770,
+      reqId: requestId,
+      parentMessageId,
+      sendingStatus: SendingStatus.SUCCEEDED,
+      serialize: () => ({ reqId: requestId, sendingStatus: SendingStatus.SUCCEEDED }),
+    } as unknown as SendableMessageType & { localUrl?: string; file?: File };
+    let dsMessages: SendableMessageType[] = [];
+    let rerenderProvider = () => {};
+    const sendFileMessage = vi.fn().mockImplementation((_params, onPending) => {
+      onPending(pendingMessage);
+      dsMessages = [failedMessage];
+      rerenderProvider();
+      return Promise.reject(new Error('upload failed'));
+    });
+    (useGroupChannelThreadMessages as Mock).mockImplementation(() => ({
+      ...makeDefaultDs(),
+      initialized: true,
+      messages: dsMessages,
+      sendFileMessage,
+    }));
+
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={initialMockMessage}>{children}</ThreadProvider>
+    );
+    const { result, rerender } = renderHook(() => useThread(), { wrapper });
+    rerenderProvider = rerender;
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3];
+    await act(async () => {
+      options.onParentMessageUpdated({ messageId: parentMessageId } as SendableMessageType);
+    });
+    await act(async () => {
+      await expect(result.current.actions.sendFileMessage(new File(['x'], 'resend.png'))).rejects.toThrow('upload failed');
+    });
+    await waitFor(() => expect(result.current.state.localFilePreviews.has(requestId)).toBe(true));
+    const previewUrl = result.current.state.localFilePreviews.get(requestId)?.localUrl;
+    expect(previewUrl).toBeDefined();
+
+    dsMessages = [succeededMessage];
+    rerender();
 
     await waitFor(() => {
-      expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:thread-local-preview');
+      expect(result.current.state.allThreadMessages).toEqual([succeededMessage]);
     });
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith(previewUrl);
     expect(result.current.state.localFilePreviews.has(requestId)).toBe(false);
+    expect(succeededMessage.localUrl).toBeUndefined();
+    expect(succeededMessage.file).toBeUndefined();
   });
 
   it('reclassifies a reply from local to server when it transitions pending -> succeeded, without leaving a duplicate', async () => {

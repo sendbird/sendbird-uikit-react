@@ -275,6 +275,13 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
   const hasMorePrev = threadDataSource.hasPrevious();
   const hasMoreNext = threadDataSource.hasNext();
   const store = useContext(ThreadContext);
+
+  useEffect(() => () => {
+    const previews = store?.getState().localFilePreviews;
+    previews?.forEach((preview) => URL.revokeObjectURL(preview.localUrl));
+    previews?.clear();
+  }, [store]);
+
   const messagesSyncKey = threadDataSource.messages
     .map((message) => {
       const uploadParams = (message as MultipleFilesMessage).messageParams as MultipleFilesMessageCreateParams | undefined;
@@ -293,24 +300,23 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
     }
 
     const scopedMessages = threadDataSource.messages;
-    const scopedMessageReqIds = new Set(scopedMessages.map((message) => (message as SendableMessageType).reqId));
-    localFilePreviews.forEach((preview, reqId) => {
-      if (!scopedMessageReqIds.has(reqId)) {
-        URL.revokeObjectURL(preview.localUrl);
-        localFilePreviews.delete(reqId);
-      }
-    });
-
-    // core-ts scopes the collection to this thread's replies (belongsToThread on the event/fetch and
-    // send/resend paths), so mirror them as-is. Split into the legacy public shape: allThreadMessages =
-    // succeeded (server) messages, localThreadMessages = pending/failed; threadMessages = all of them.
     scopedMessages.forEach((message) => {
-      const preview = localFilePreviews.get((message as SendableMessageType).reqId);
+      const sendableMessage = message as SendableMessageType;
+      const preview = localFilePreviews.get(sendableMessage.reqId);
       if (!preview) return;
+      if (sendableMessage.sendingStatus === SendingStatus.SUCCEEDED) {
+        URL.revokeObjectURL(preview.localUrl);
+        localFilePreviews.delete(sendableMessage.reqId);
+        return;
+      }
+
       const localFileMessage = message as FileMessage & { localUrl?: string; file?: File };
       localFileMessage.localUrl ??= preview.localUrl;
       localFileMessage.file ??= preview.file;
     });
+    // core-ts scopes the collection to this thread's replies (belongsToThread on the event/fetch and
+    // send/resend paths), so mirror them as-is. Split into the legacy public shape: allThreadMessages =
+    // succeeded (server) messages, localThreadMessages = pending/failed; threadMessages = all of them.
     const localThreadMessages = scopedMessages.filter((m) => {
       const sendingStatus = (m as SendableMessageType).sendingStatus;
       return sendingStatus === SendingStatus.PENDING || sendingStatus === SendingStatus.FAILED;

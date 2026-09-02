@@ -36,7 +36,12 @@ const useThread = () => {
   const initializeThreadFetcher = useCallback(async (
     callback?: (messages: CoreMessageType[]) => void,
   ): Promise<void> => {
-    const { resetWithStartingPoint, message: anchorMessage, parentMessage } = store.getState();
+    const {
+      resetWithStartingPoint,
+      message: anchorMessage,
+      parentMessage,
+      channelUrl,
+    } = store.getState();
     if (!resetWithStartingPoint) return;
     // Mirror ThreadProvider's initial startingPoint: anchor at the specific reply when entering from
     // one, otherwise open at the latest edge (MAX). parentMessage.createdAt would anchor at the oldest
@@ -48,31 +53,47 @@ const useThread = () => {
     await new Promise<void>((resolve) => {
       setTimeout(resolve);
     });
-    callback?.(store.getState().allThreadMessages);
+    const currentState = store.getState();
+    if (currentState.parentMessage?.messageId !== parentMessage?.messageId || currentState.channelUrl !== channelUrl) return;
+    callback?.(currentState.allThreadMessages);
   }, [store]);
 
   const fetchPrevThreads = useCallback(async (
     callback?: (messages: CoreMessageType[]) => void,
   ): Promise<void> => {
-    const { loadPrevious, allThreadMessages: previousMessages } = store.getState();
+    const {
+      loadPrevious,
+      allThreadMessages: previousMessages,
+      parentMessage,
+      channelUrl,
+    } = store.getState();
     if (!loadPrevious) return;
     await loadPrevious();
     await new Promise<void>((resolve) => {
       setTimeout(resolve);
     });
-    callback?.(getNewlyAddedThreadMessages(previousMessages, store.getState().allThreadMessages));
+    const currentState = store.getState();
+    if (currentState.parentMessage?.messageId !== parentMessage?.messageId || currentState.channelUrl !== channelUrl) return;
+    callback?.(getNewlyAddedThreadMessages(previousMessages, currentState.allThreadMessages));
   }, [store]);
 
   const fetchNextThreads = useCallback(async (
     callback?: (messages: CoreMessageType[]) => void,
   ): Promise<void> => {
-    const { loadNext, allThreadMessages: previousMessages } = store.getState();
+    const {
+      loadNext,
+      allThreadMessages: previousMessages,
+      parentMessage,
+      channelUrl,
+    } = store.getState();
     if (!loadNext) return;
     await loadNext();
     await new Promise<void>((resolve) => {
       setTimeout(resolve);
     });
-    callback?.(getNewlyAddedThreadMessages(previousMessages, store.getState().allThreadMessages));
+    const currentState = store.getState();
+    if (currentState.parentMessage?.messageId !== parentMessage?.messageId || currentState.channelUrl !== channelUrl) return;
+    callback?.(getNewlyAddedThreadMessages(previousMessages, currentState.allThreadMessages));
   }, [store]);
 
   const messageActions = useThreadMessageActions(state, { logger, pubSub, isMentionEnabled });
