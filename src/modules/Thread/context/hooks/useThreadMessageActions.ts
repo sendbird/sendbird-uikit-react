@@ -25,7 +25,7 @@ import {
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
-import type { ThreadState } from '../ThreadProvider';
+import type { LocalFilePreview, ThreadState } from '../ThreadProvider';
 
 export type SendMessageParams = {
   message: string;
@@ -62,11 +62,16 @@ const scrollToLastAfterSend = () => {
   setTimeout(() => scrollIntoLast(), SCROLL_BOTTOM_DELAY_FOR_SEND);
 };
 
-const attachLocalFilePreview = (pendingMessage: FileMessage, file: File): string => {
+const attachLocalFilePreview = (
+  pendingMessage: FileMessage,
+  file: File,
+  localFilePreviews: Map<string, LocalFilePreview>,
+): string => {
   const localUrl = URL.createObjectURL(file);
   const localFileMessage = pendingMessage as FileMessage & { localUrl?: string; file?: File };
   localFileMessage.localUrl = localUrl;
   localFileMessage.file = file;
+  if (pendingMessage.reqId) localFilePreviews.set(pendingMessage.reqId, { localUrl, file });
   return localUrl;
 };
 
@@ -83,6 +88,7 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
     dsUpdateUserMessage,
     dsResendMessage,
     dsDeleteMessage,
+    localFilePreviews,
   } = state;
 
   const sendMessage = useCallback((props: SendMessageParams) => {
@@ -141,12 +147,20 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
     const params = onBeforeSendFileMessage?.(file, quoteMessage) ?? createParamsDefault();
     logger.info('Thread | useThreadMessageActions: Sending file message start.', params);
     let localPreviewUrl: string | undefined;
+    let pendingReqId: string | undefined;
     return dsSendFileMessage(params, (pendingMessage) => {
-      localPreviewUrl = attachLocalFilePreview(pendingMessage, file);
+      pendingReqId = pendingMessage.reqId;
+      localPreviewUrl = attachLocalFilePreview(pendingMessage, file, localFilePreviews);
       scrollToLastAfterSend();
     })
       .then((sentMessage) => {
-        if (localPreviewUrl) URL.revokeObjectURL(localPreviewUrl);
+        const preview = pendingReqId && localFilePreviews.get(pendingReqId);
+        if (preview) {
+          URL.revokeObjectURL(preview.localUrl);
+          localFilePreviews.delete(pendingReqId);
+        } else if (localPreviewUrl) {
+          URL.revokeObjectURL(localPreviewUrl);
+        }
         pubSub.publish(topics.SEND_FILE_MESSAGE, {
           channel: currentChannel,
           message: sentMessage,
@@ -154,7 +168,7 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
         });
         return sentMessage;
       });
-  }, [dsSendFileMessage, onBeforeSendFileMessage, currentChannel]);
+  }, [dsSendFileMessage, onBeforeSendFileMessage, currentChannel, localFilePreviews]);
 
   const sendVoiceMessage = useCallback((file: File, duration: number, quoteMessage?: SendableMessageType) => {
     const params: FileMessageCreateParams = (onBeforeSendVoiceMessage && typeof onBeforeSendVoiceMessage === 'function')
@@ -175,12 +189,20 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
     if (!dsSendFileMessage || !currentChannel) return;
     logger.info('Thread | useThreadMessageActions: Sending voice message start.', params);
     let localPreviewUrl: string | undefined;
+    let pendingReqId: string | undefined;
     dsSendFileMessage(params, (pendingMessage) => {
-      localPreviewUrl = attachLocalFilePreview(pendingMessage, file);
+      pendingReqId = pendingMessage.reqId;
+      localPreviewUrl = attachLocalFilePreview(pendingMessage, file, localFilePreviews);
       scrollToLastAfterSend();
     })
       .then((sentMessage) => {
-        if (localPreviewUrl) URL.revokeObjectURL(localPreviewUrl);
+        const preview = pendingReqId && localFilePreviews.get(pendingReqId);
+        if (preview) {
+          URL.revokeObjectURL(preview.localUrl);
+          localFilePreviews.delete(pendingReqId);
+        } else if (localPreviewUrl) {
+          URL.revokeObjectURL(localPreviewUrl);
+        }
         pubSub.publish(topics.SEND_FILE_MESSAGE, {
           channel: currentChannel,
           message: sentMessage,
@@ -190,7 +212,7 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
       .catch((error) => {
         logger.info('Thread | useThreadMessageActions: Sending voice message failed.', error);
       });
-  }, [dsSendFileMessage, onBeforeSendVoiceMessage, currentChannel]);
+  }, [dsSendFileMessage, onBeforeSendVoiceMessage, currentChannel, localFilePreviews]);
 
   const sendMultipleFilesMessage = useCallback((files: Array<File>, quoteMessage?: SendableMessageType): Promise<MultipleFilesMessage> => {
     if (files.length <= 1) {

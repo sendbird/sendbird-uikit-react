@@ -25,6 +25,7 @@ const makeState = (overrides: Partial<ThreadState> = {}): ThreadState => ({
   dsUpdateUserMessage: vi.fn().mockResolvedValue({ messageId: 4 }),
   dsResendMessage: vi.fn().mockImplementation(async (message) => message),
   dsDeleteMessage: vi.fn().mockResolvedValue(undefined),
+  localFilePreviews: new Map(),
   ...overrides,
 } as unknown as ThreadState);
 
