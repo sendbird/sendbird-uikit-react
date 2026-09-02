@@ -115,6 +115,33 @@ describe('useThreadMessageActions', () => {
     expect(local.file).toBe(file);
   });
 
+  it('sendFileMessage rejects when the current channel is missing without invoking the hook or sending', async () => {
+    const onBeforeSendFileMessage = vi.fn();
+    const state = makeState({ currentChannel: undefined, onBeforeSendFileMessage });
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const file = new File(['x'], 'a.png', { type: 'image/png' });
+
+    await expect(result.current.sendFileMessage(file)).rejects.toThrow('current channel or data source is unavailable');
+
+    expect(onBeforeSendFileMessage).not.toHaveBeenCalled();
+    expect(state.dsSendFileMessage).not.toHaveBeenCalled();
+    expect(statics.logger.warning).toHaveBeenCalled();
+  });
+
+  it('sendFileMessage rejects when the data source is unavailable without invoking the hook or sending', async () => {
+    const onBeforeSendFileMessage = vi.fn();
+    const state = makeState({ dsSendFileMessage: undefined, onBeforeSendFileMessage });
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const file = new File(['x'], 'a.png', { type: 'image/png' });
+
+    await expect(result.current.sendFileMessage(file)).rejects.toThrow('current channel or data source is unavailable');
+
+    expect(onBeforeSendFileMessage).not.toHaveBeenCalled();
+    expect(statics.logger.warning).toHaveBeenCalled();
+  });
+
   it('sendVoiceMessage builds voice metaArrays and publishes SEND_FILE_MESSAGE', async () => {
     const state = makeState();
     const statics = makeStatics();

@@ -120,6 +120,15 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
   }, [dsSendUserMessage, onBeforeSendUserMessage, currentChannel, isMentionEnabled]);
 
   const sendFileMessage = useCallback((file: File, quoteMessage?: SendableMessageType): Promise<FileMessage> => {
+    if (!dsSendFileMessage || !currentChannel) {
+      const error = new Error('Thread | useThreadMessageActions: Sending file message cannot be sent because current channel or data source is unavailable.');
+      logger.warning('Thread | useThreadMessageActions: Sending file message failed, because current channel or data source is unavailable.', {
+        currentChannel,
+        dsSendFileMessage,
+        error,
+      });
+      return Promise.reject(error);
+    }
     const createParamsDefault = () => {
       const params = {} as FileMessageCreateParams;
       params.file = file;
@@ -130,10 +139,6 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
       return params;
     };
     const params = onBeforeSendFileMessage?.(file, quoteMessage) ?? createParamsDefault();
-    if (!dsSendFileMessage || !currentChannel) {
-      logger.warning('Thread | useThreadMessageActions: currentChannel is null. Skipping file message send.');
-      return Promise.resolve(null as unknown as FileMessage);
-    }
     logger.info('Thread | useThreadMessageActions: Sending file message start.', params);
     let localPreviewUrl: string | undefined;
     return dsSendFileMessage(params, (pendingMessage) => {
