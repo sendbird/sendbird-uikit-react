@@ -278,10 +278,16 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
   const hasMoreNext = threadDataSource.hasNext();
   const store = useContext(ThreadContext);
 
-  useEffect(() => () => {
-    const previews = store?.getState().localFilePreviews;
-    previews?.forEach((preview) => URL.revokeObjectURL(preview.localUrl));
-    previews?.clear();
+  useEffect(() => {
+    if (store) {
+      store.getState().threadFetcherQueue.current = Promise.resolve();
+    }
+
+    return () => {
+      const previews = store?.getState().localFilePreviews;
+      previews?.forEach((preview) => URL.revokeObjectURL(preview.localUrl));
+      previews?.clear();
+    };
   }, [store]);
 
   const messagesSyncKey = threadDataSource.messages

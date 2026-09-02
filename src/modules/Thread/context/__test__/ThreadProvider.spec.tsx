@@ -572,6 +572,43 @@ describe('ThreadProvider', () => {
     expect(callback).not.toHaveBeenCalled();
   });
 
+  it('does not block a new thread fetch behind a pending fetch from the previous thread', async () => {
+    const parentA = { messageId: 819, parentMessage: null, parentMessageId: 0 } as unknown as SendableMessageType;
+    const parentB = { messageId: 820, parentMessage: null, parentMessageId: 0 } as unknown as SendableMessageType;
+    let currentMessage = parentA;
+    const neverSettles = new Promise<void>(() => {});
+    mockDs.loadPrevious.mockReturnValue(neverSettles);
+    mockDs.loadNext.mockResolvedValue(undefined);
+    (useGroupChannelThreadMessages as Mock).mockImplementation(() => ({
+      ...makeDefaultDs(),
+      initialized: true,
+      messages: [],
+    }));
+
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl="test-channel" message={currentMessage}>{children}</ThreadProvider>
+    );
+    const { result, rerender } = renderHook(() => useThread(), { wrapper });
+
+    result.current.actions.fetchPrevThreads();
+    await waitFor(() => {
+      expect(mockDs.loadPrevious).toHaveBeenCalledTimes(1);
+    });
+
+    currentMessage = parentB;
+    rerender();
+    await waitFor(() => {
+      const parentArg = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[2];
+      expect(parentArg?.messageId).toBe(parentB.messageId);
+    });
+
+    const callback = vi.fn();
+    await expect(result.current.actions.fetchNextThreads(callback)).resolves.toBeUndefined();
+
+    expect(mockDs.loadNext).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith([]);
+  });
+
   it('initializeThreadFetcher resolves after passing the post-reset list to the callback', async () => {
     const parentMessageId = initialMockMessage.messageId;
     const existingMessage = {
