@@ -114,9 +114,11 @@ const defaultMockState = {
 const defaultMockActions = {
   fetchPrevThreads: vi.fn((callback) => {
     callback();
+    return Promise.resolve();
   }),
   fetchNextThreads: vi.fn((callback) => {
     callback();
+    return Promise.resolve();
   }),
 };
 
@@ -232,6 +234,38 @@ describe('CreateChannelUI Integration Tests', () => {
     await waitFor(() => {
       expect(defaultMockActions.fetchPrevThreads).toBeCalledTimes(1);
     });
+  });
+
+  it('does not crash when fetchPrevThreads rejects during scroll to top', async () => {
+    let container;
+    const fetchPrevThreads = vi.fn(() => Promise.reject(new Error('fetch failed')));
+    const parentMessage = {
+      messageId: 1,
+      message: 'parent message',
+      isUserMessage: () => true,
+      isTextMessage: true,
+      createdAt: 0,
+      sender: {
+        userId: 'test-user-id',
+      },
+    };
+
+    await act(async () => {
+      const result = renderComponent(
+        { parentMessage, hasMorePrev: true },
+        { fetchPrevThreads },
+      );
+
+      container = result.container;
+    });
+
+    const scrollContainer = container.getElementsByClassName('sendbird-thread-ui--scroll')[0];
+    fireEvent.scroll(scrollContainer, { target: { scrollY: -1 } });
+
+    await waitFor(() => {
+      expect(fetchPrevThreads).toBeCalledTimes(1);
+    });
+    expect(screen.getByText('threaded message 1')).toBeInTheDocument();
   });
 
   it('fetchNextThreads is correctly called when scroll is bottom', async () => {

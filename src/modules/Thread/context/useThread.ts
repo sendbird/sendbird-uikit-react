@@ -11,6 +11,24 @@ import useToggleReactionCallback from './hooks/useToggleReactionsCallback';
 import useSendbird from '../../../lib/Sendbird/context/hooks/useSendbird';
 import { useThreadMessageActions } from './hooks/useThreadMessageActions';
 
+const getNewlyAddedThreadMessages = (
+  previousMessages: CoreMessageType[],
+  currentMessages: CoreMessageType[],
+) => {
+  const previousMessageIds = new Set(previousMessages.map(({ messageId }) => messageId));
+  // Realtime replies and pending messages that succeed during the load window are intentionally included.
+  return currentMessages.filter(({ messageId }) => !previousMessageIds.has(messageId));
+};
+
+const enqueueThreadFetcher = (
+  queue: ThreadState['threadFetcherQueue'],
+  task: () => Promise<void>,
+) => {
+  const invocation = queue.current.then(task);
+  queue.current = invocation.then(() => undefined, () => undefined);
+  return invocation;
+};
+
 const useThread = () => {
   const store = useContext(ThreadContext);
   if (!store) throw new Error('useThread must be used within a ThreadProvider');
@@ -24,33 +42,82 @@ const useThread = () => {
 
   const toggleReaction = useToggleReactionCallback({ currentChannel }, { logger });
 
-  const initializeThreadFetcher = useCallback((callback?: (messages: CoreMessageType[]) => void) => {
-    const { resetWithStartingPoint, message: anchorMessage, parentMessage } = store.getState();
-    if (!resetWithStartingPoint) return;
-    // Mirror ThreadProvider's initial startingPoint: anchor at the specific reply when entering from
-    // one, otherwise open at the latest edge (MAX). parentMessage.createdAt would anchor at the oldest
-    // edge (replies are created after the parent), hiding the latest replies behind hasMoreNext.
-    const startingPoint = (anchorMessage && parentMessage && anchorMessage.messageId !== parentMessage.messageId)
-      ? anchorMessage.createdAt
-      : Number.MAX_SAFE_INTEGER;
-    resetWithStartingPoint(startingPoint).then(() => {
-      setTimeout(() => callback?.(store.getState().allThreadMessages));
+  const initializeThreadFetcher = useCallback((
+    callback?: (messages: CoreMessageType[]) => void,
+  ): Promise<void> => {
+    const { parentMessage, channelUrl, threadFetcherQueue } = store.getState();
+    const originParentMessageId = parentMessage?.messageId;
+    const originChannelUrl = channelUrl;
+    return enqueueThreadFetcher(threadFetcherQueue, async () => {
+      const initialState = store.getState();
+      if (initialState.parentMessage?.messageId !== originParentMessageId || initialState.channelUrl !== originChannelUrl) return;
+      const {
+        resetWithStartingPoint,
+        message: anchorMessage,
+        parentMessage,
+      } = initialState;
+      if (!resetWithStartingPoint) return;
+      // Mirror ThreadProvider's initial startingPoint: anchor at the specific reply when entering from
+      // one, otherwise open at the latest edge (MAX). parentMessage.createdAt would anchor at the oldest
+      // edge (replies are created after the parent), hiding the latest replies behind hasMoreNext.
+      const startingPoint = (anchorMessage && parentMessage && anchorMessage.messageId !== parentMessage.messageId)
+        ? anchorMessage.createdAt
+        : Number.MAX_SAFE_INTEGER;
+      await resetWithStartingPoint(startingPoint);
+      await new Promise<void>((resolve) => {
+        setTimeout(resolve);
+      });
+      const currentState = store.getState();
+      if (currentState.parentMessage?.messageId !== originParentMessageId || currentState.channelUrl !== originChannelUrl) return;
+      callback?.(currentState.allThreadMessages);
     });
   }, [store]);
 
-  const fetchPrevThreads = useCallback((callback?: (messages: CoreMessageType[]) => void) => {
-    const { loadPrevious } = store.getState();
-    if (!loadPrevious) return;
-    loadPrevious().then(() => {
-      setTimeout(() => callback?.(store.getState().allThreadMessages));
+  const fetchPrevThreads = useCallback((
+    callback?: (messages: CoreMessageType[]) => void,
+  ): Promise<void> => {
+    const { parentMessage, channelUrl, threadFetcherQueue } = store.getState();
+    const originParentMessageId = parentMessage?.messageId;
+    const originChannelUrl = channelUrl;
+    return enqueueThreadFetcher(threadFetcherQueue, async () => {
+      const initialState = store.getState();
+      if (initialState.parentMessage?.messageId !== originParentMessageId || initialState.channelUrl !== originChannelUrl) return;
+      const {
+        loadPrevious,
+        allThreadMessages: previousMessages,
+      } = initialState;
+      if (!loadPrevious) return;
+      await loadPrevious();
+      await new Promise<void>((resolve) => {
+        setTimeout(resolve);
+      });
+      const currentState = store.getState();
+      if (currentState.parentMessage?.messageId !== originParentMessageId || currentState.channelUrl !== originChannelUrl) return;
+      callback?.(getNewlyAddedThreadMessages(previousMessages, currentState.allThreadMessages));
     });
   }, [store]);
 
-  const fetchNextThreads = useCallback((callback?: (messages: CoreMessageType[]) => void) => {
-    const { loadNext } = store.getState();
-    if (!loadNext) return;
-    loadNext().then(() => {
-      setTimeout(() => callback?.(store.getState().allThreadMessages));
+  const fetchNextThreads = useCallback((
+    callback?: (messages: CoreMessageType[]) => void,
+  ): Promise<void> => {
+    const { parentMessage, channelUrl, threadFetcherQueue } = store.getState();
+    const originParentMessageId = parentMessage?.messageId;
+    const originChannelUrl = channelUrl;
+    return enqueueThreadFetcher(threadFetcherQueue, async () => {
+      const initialState = store.getState();
+      if (initialState.parentMessage?.messageId !== originParentMessageId || initialState.channelUrl !== originChannelUrl) return;
+      const {
+        loadNext,
+        allThreadMessages: previousMessages,
+      } = initialState;
+      if (!loadNext) return;
+      await loadNext();
+      await new Promise<void>((resolve) => {
+        setTimeout(resolve);
+      });
+      const currentState = store.getState();
+      if (currentState.parentMessage?.messageId !== originParentMessageId || currentState.channelUrl !== originChannelUrl) return;
+      callback?.(getNewlyAddedThreadMessages(previousMessages, currentState.allThreadMessages));
     });
   }, [store]);
 

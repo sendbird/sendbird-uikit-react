@@ -3,6 +3,7 @@ import { User } from '@sendbird/chat';
 import {
   FileMessage,
   FileMessageCreateParams,
+  SendingStatus,
   MessageMetaArray,
   MultipleFilesMessage,
   MultipleFilesMessageCreateParams,
@@ -25,7 +26,7 @@ import {
   VOICE_MESSAGE_FILE_NAME,
   VOICE_MESSAGE_MIME_TYPE,
 } from '../../../../utils/consts';
-import type { ThreadState } from '../ThreadProvider';
+import type { LocalFilePreview, ThreadState } from '../ThreadProvider';
 
 export type SendMessageParams = {
   message: string;
@@ -62,11 +63,16 @@ const scrollToLastAfterSend = () => {
   setTimeout(() => scrollIntoLast(), SCROLL_BOTTOM_DELAY_FOR_SEND);
 };
 
-const attachLocalFilePreview = (pendingMessage: FileMessage, file: File): string => {
+const attachLocalFilePreview = (
+  pendingMessage: FileMessage,
+  file: File,
+  localFilePreviews: Map<string, LocalFilePreview>,
+): string => {
   const localUrl = URL.createObjectURL(file);
   const localFileMessage = pendingMessage as FileMessage & { localUrl?: string; file?: File };
   localFileMessage.localUrl = localUrl;
   localFileMessage.file = file;
+  if (pendingMessage.reqId) localFilePreviews.set(pendingMessage.reqId, { localUrl, file });
   return localUrl;
 };
 
@@ -83,6 +89,7 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
     dsUpdateUserMessage,
     dsResendMessage,
     dsDeleteMessage,
+    localFilePreviews,
   } = state;
 
   const sendMessage = useCallback((props: SendMessageParams) => {
@@ -120,6 +127,15 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
   }, [dsSendUserMessage, onBeforeSendUserMessage, currentChannel, isMentionEnabled]);
 
   const sendFileMessage = useCallback((file: File, quoteMessage?: SendableMessageType): Promise<FileMessage> => {
+    if (!dsSendFileMessage || !currentChannel) {
+      const error = new Error('Thread | useThreadMessageActions: Sending file message cannot be sent because current channel or data source is unavailable.');
+      logger.warning('Thread | useThreadMessageActions: Sending file message failed, because current channel or data source is unavailable.', {
+        currentChannel,
+        dsSendFileMessage,
+        error,
+      });
+      return Promise.reject(error);
+    }
     const createParamsDefault = () => {
       const params = {} as FileMessageCreateParams;
       params.file = file;
@@ -130,15 +146,22 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
       return params;
     };
     const params = onBeforeSendFileMessage?.(file, quoteMessage) ?? createParamsDefault();
-    if (!dsSendFileMessage || !currentChannel) return Promise.resolve(null as unknown as FileMessage);
     logger.info('Thread | useThreadMessageActions: Sending file message start.', params);
     let localPreviewUrl: string | undefined;
+    let pendingReqId: string | undefined;
     return dsSendFileMessage(params, (pendingMessage) => {
-      localPreviewUrl = attachLocalFilePreview(pendingMessage, file);
+      pendingReqId = pendingMessage.reqId;
+      localPreviewUrl = attachLocalFilePreview(pendingMessage, file, localFilePreviews);
       scrollToLastAfterSend();
     })
       .then((sentMessage) => {
-        if (localPreviewUrl) URL.revokeObjectURL(localPreviewUrl);
+        const preview = pendingReqId && localFilePreviews.get(pendingReqId);
+        if (preview) {
+          URL.revokeObjectURL(preview.localUrl);
+          localFilePreviews.delete(pendingReqId);
+        } else if (localPreviewUrl) {
+          URL.revokeObjectURL(localPreviewUrl);
+        }
         pubSub.publish(topics.SEND_FILE_MESSAGE, {
           channel: currentChannel,
           message: sentMessage,
@@ -146,7 +169,7 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
         });
         return sentMessage;
       });
-  }, [dsSendFileMessage, onBeforeSendFileMessage, currentChannel]);
+  }, [dsSendFileMessage, onBeforeSendFileMessage, currentChannel, localFilePreviews]);
 
   const sendVoiceMessage = useCallback((file: File, duration: number, quoteMessage?: SendableMessageType) => {
     const params: FileMessageCreateParams = (onBeforeSendVoiceMessage && typeof onBeforeSendVoiceMessage === 'function')
@@ -167,12 +190,20 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
     if (!dsSendFileMessage || !currentChannel) return;
     logger.info('Thread | useThreadMessageActions: Sending voice message start.', params);
     let localPreviewUrl: string | undefined;
+    let pendingReqId: string | undefined;
     dsSendFileMessage(params, (pendingMessage) => {
-      localPreviewUrl = attachLocalFilePreview(pendingMessage, file);
+      pendingReqId = pendingMessage.reqId;
+      localPreviewUrl = attachLocalFilePreview(pendingMessage, file, localFilePreviews);
       scrollToLastAfterSend();
     })
       .then((sentMessage) => {
-        if (localPreviewUrl) URL.revokeObjectURL(localPreviewUrl);
+        const preview = pendingReqId && localFilePreviews.get(pendingReqId);
+        if (preview) {
+          URL.revokeObjectURL(preview.localUrl);
+          localFilePreviews.delete(pendingReqId);
+        } else if (localPreviewUrl) {
+          URL.revokeObjectURL(localPreviewUrl);
+        }
         pubSub.publish(topics.SEND_FILE_MESSAGE, {
           channel: currentChannel,
           message: sentMessage,
@@ -182,9 +213,23 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
       .catch((error) => {
         logger.info('Thread | useThreadMessageActions: Sending voice message failed.', error);
       });
-  }, [dsSendFileMessage, onBeforeSendVoiceMessage, currentChannel]);
+  }, [dsSendFileMessage, onBeforeSendVoiceMessage, currentChannel, localFilePreviews]);
 
   const sendMultipleFilesMessage = useCallback((files: Array<File>, quoteMessage?: SendableMessageType): Promise<MultipleFilesMessage> => {
+    if (files.length <= 1) {
+      const error = new Error('Thread | useThreadMessageActions: Sending multiple files message requires at least two files.');
+      logger.warning('Thread | useThreadMessageActions: Sending multiple files message failed, because there are no multiple files.', { files, error });
+      return Promise.reject(error);
+    }
+    if (!dsSendMultipleFilesMessage || !currentChannel) {
+      const error = new Error('Thread | useThreadMessageActions: Sending multiple files message cannot be sent because current channel or data source is unavailable.');
+      logger.warning('Thread | useThreadMessageActions: Sending multiple files message failed, because current channel or data source is unavailable.', {
+        currentChannel,
+        dsSendMultipleFilesMessage,
+        error,
+      });
+      return Promise.reject(error);
+    }
     const createParamsDefault = (): MultipleFilesMessageCreateParams => {
       const params: MultipleFilesMessageCreateParams = {
         fileInfoList: files.map((file: File): UploadableFileInfo => ({
@@ -201,7 +246,6 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
       return params;
     };
     const params = onBeforeSendMultipleFilesMessage?.(files, quoteMessage) ?? createParamsDefault();
-    if (!dsSendMultipleFilesMessage || !currentChannel) return Promise.resolve(null as unknown as MultipleFilesMessage);
     logger.info('Thread | useThreadMessageActions: Sending multiple files message start.', params);
     return dsSendMultipleFilesMessage(params, () => scrollToLastAfterSend())
       .then((sentMessage) => {
@@ -247,8 +291,25 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
   const deleteMessage = useCallback((message: SendableMessageType): Promise<void> => {
     if (!dsDeleteMessage) return Promise.resolve();
     logger.info('Thread | useThreadMessageActions: Deleting message.', message);
-    return dsDeleteMessage(message as UserMessage | FileMessage | MultipleFilesMessage);
-  }, [dsDeleteMessage]);
+    return dsDeleteMessage(message as UserMessage | FileMessage | MultipleFilesMessage)
+      .then(() => {
+        const preview = message.reqId && localFilePreviews.get(message.reqId);
+        if (preview) {
+          URL.revokeObjectURL(preview.localUrl);
+          localFilePreviews.delete(message.reqId);
+        }
+      })
+      .catch((error) => {
+        if (message.sendingStatus !== SendingStatus.SUCCEEDED && currentChannel) {
+          const preview = message.reqId && localFilePreviews.get(message.reqId);
+          if (preview) {
+            URL.revokeObjectURL(preview.localUrl);
+            localFilePreviews.delete(message.reqId);
+          }
+        }
+        throw error;
+      });
+  }, [dsDeleteMessage, localFilePreviews, currentChannel]);
 
   const resendMessage = useCallback((failedMessage: SendableMessageType) => {
     if (!(failedMessage as SendableMessageType)?.isResendable || !dsResendMessage || !currentChannel) {
