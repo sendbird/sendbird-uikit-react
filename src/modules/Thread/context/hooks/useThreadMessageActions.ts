@@ -290,8 +290,15 @@ export function useThreadMessageActions(state: ThreadState, { logger, pubSub, is
   const deleteMessage = useCallback((message: SendableMessageType): Promise<void> => {
     if (!dsDeleteMessage) return Promise.resolve();
     logger.info('Thread | useThreadMessageActions: Deleting message.', message);
-    return dsDeleteMessage(message as UserMessage | FileMessage | MultipleFilesMessage);
-  }, [dsDeleteMessage]);
+    return dsDeleteMessage(message as UserMessage | FileMessage | MultipleFilesMessage)
+      .then(() => {
+        const preview = message.reqId && localFilePreviews.get(message.reqId);
+        if (preview) {
+          URL.revokeObjectURL(preview.localUrl);
+          localFilePreviews.delete(message.reqId);
+        }
+      });
+  }, [dsDeleteMessage, localFilePreviews]);
 
   const resendMessage = useCallback((failedMessage: SendableMessageType) => {
     if (!(failedMessage as SendableMessageType)?.isResendable || !dsResendMessage || !currentChannel) {

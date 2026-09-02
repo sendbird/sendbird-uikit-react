@@ -261,6 +261,41 @@ describe('useThreadMessageActions', () => {
     expect(state.dsDeleteMessage).toHaveBeenCalledWith(message);
   });
 
+  it('releases a local file preview after deleting its failed message', async () => {
+    const reqId = 'failed-file-request';
+    const localUrl = 'blob:thread-local-preview-deleted';
+    const state = makeState({
+      localFilePreviews: new Map([[reqId, { localUrl, file: new File(['file'], 'failed.txt') }]]),
+    });
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const message = { messageId: 8, reqId } as unknown as SendableMessageType;
+
+    await act(async () => {
+      await result.current.deleteMessage(message);
+    });
+
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith(localUrl);
+    expect(state.localFilePreviews.has(reqId)).toBe(false);
+  });
+
+  it('keeps a local file preview when deleting its failed message fails', async () => {
+    const reqId = 'failed-file-request';
+    const localUrl = 'blob:thread-local-preview-delete-failed';
+    const state = makeState({
+      dsDeleteMessage: vi.fn().mockRejectedValue(new Error('delete failed')),
+      localFilePreviews: new Map([[reqId, { localUrl, file: new File(['file'], 'failed.txt') }]]),
+    });
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const message = { messageId: 8, reqId } as unknown as SendableMessageType;
+
+    await expect(result.current.deleteMessage(message)).rejects.toThrow('delete failed');
+
+    expect(URL.revokeObjectURL).not.toHaveBeenCalled();
+    expect(state.localFilePreviews.has(reqId)).toBe(true);
+  });
+
   it('resendMessage delegates to the data source and publishes by message type', async () => {
     const state = makeState();
     const statics = makeStatics();
