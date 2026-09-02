@@ -522,6 +522,56 @@ describe('ThreadProvider', () => {
     expect(callback).not.toHaveBeenCalled();
   });
 
+  it('skips a queued fetch when its thread switches before the fetch starts', async () => {
+    const parentA = { messageId: 817, parentMessage: null, parentMessageId: 0 } as unknown as SendableMessageType;
+    const parentB = { messageId: 818, parentMessage: null, parentMessageId: 0 } as unknown as SendableMessageType;
+    let currentMessage = parentA;
+    let currentChannelUrl = 'test-channel-a';
+    let rerenderProvider = () => {};
+    let resolvePrevious: () => void;
+    const previousLoad = new Promise<void>((resolve) => { resolvePrevious = resolve; });
+    mockDs.loadPrevious.mockImplementation(async () => {
+      await previousLoad;
+    });
+    (useGroupChannelThreadMessages as Mock).mockImplementation(() => ({
+      ...makeDefaultDs(),
+      initialized: true,
+      messages: [],
+    }));
+
+    const wrapper = ({ children }) => (
+      <ThreadProvider channelUrl={currentChannelUrl} message={currentMessage}>{children}</ThreadProvider>
+    );
+    const { result, rerender } = renderHook(() => useThread(), { wrapper });
+    rerenderProvider = rerender;
+    const options = (useGroupChannelThreadMessages as Mock).mock.calls.at(-1)?.[3] as {
+      onParentMessageUpdated: (message: SendableMessageType) => void;
+    };
+    await act(async () => {
+      options.onParentMessageUpdated(parentA);
+    });
+
+    const firstFetch = result.current.actions.fetchPrevThreads();
+    const callback = vi.fn();
+    const queuedFetch = result.current.actions.fetchNextThreads(callback);
+    await waitFor(() => {
+      expect(mockDs.loadPrevious).toHaveBeenCalledTimes(1);
+    });
+
+    await act(async () => {
+      options.onParentMessageUpdated(parentB);
+      currentMessage = parentB;
+      currentChannelUrl = 'test-channel-b';
+      rerenderProvider();
+    });
+    resolvePrevious();
+
+    await firstFetch;
+    await expect(queuedFetch).resolves.toBeUndefined();
+    expect(mockDs.loadNext).not.toHaveBeenCalled();
+    expect(callback).not.toHaveBeenCalled();
+  });
+
   it('initializeThreadFetcher resolves after passing the post-reset list to the callback', async () => {
     const parentMessageId = initialMockMessage.messageId;
     const existingMessage = {
