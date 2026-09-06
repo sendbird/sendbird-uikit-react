@@ -79,9 +79,9 @@ export default function MentionLabel(props: MentionLabelProps): JSX.Element {
         </a>
       )}
       menuItems={(closeDropdown: () => void): ReactElement => (
-        renderUserProfile ? (
+        renderUserProfile && user ? (
           renderUserProfile({
-            user: user as User,
+            user,
             close: closeDropdown,
             currentUserId: userId,
             avatarRef: mentionRef,

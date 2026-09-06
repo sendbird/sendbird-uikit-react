@@ -6,10 +6,9 @@ import MentionLabel from '../index';
 import { LocalizationContext } from '../../../lib/LocalizationContext';
 import { UserProfileContext } from '../../../lib/UserProfileContext';
 
-// No `createApplicationUserListQuery` => clicking the mention opens the popup immediately.
 const mockState = {
   config: { userId: 'me', logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() } },
-  stores: { sdkStore: { sdk: {} } },
+  stores: { sdkStore: { sdk: {} as any } },
 };
 
 vi.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
@@ -17,7 +16,6 @@ vi.mock('../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   default: vi.fn(() => ({ state: mockState })),
 }));
 
-// Render dropdown/menu content inline instead of through a portal.
 vi.mock('react-dom', async () => ({
   ...(await vi.importActual<typeof import('react-dom')>('react-dom')),
   createPortal: (node: React.ReactNode) => node,
@@ -28,6 +26,10 @@ const stringSet = {
   USER_PROFILE__USER_ID: 'User ID',
   NO_NAME: '(No name)',
 };
+
+const sdkReturningUsers = (members: unknown[]) => ({
+  createApplicationUserListQuery: () => ({ next: () => Promise.resolve(members) }),
+});
 
 const renderMention = (contextValue: Record<string, unknown> = {}) => render(
   <LocalizationContext.Provider value={{ stringSet } as any}>
@@ -47,7 +49,7 @@ const renderMention = (contextValue: Record<string, unknown> = {}) => render(
 describe('MentionLabel - renderUserProfile', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // MenuItems renders its dropdown into this portal root; without it, it renders nothing.
+    mockState.stores.sdkStore.sdk = {};
     const portalRoot = document.createElement('div');
     portalRoot.id = 'sendbird-dropdown-portal';
     document.body.appendChild(portalRoot);
@@ -57,26 +59,39 @@ describe('MentionLabel - renderUserProfile', () => {
     document.getElementById('sendbird-dropdown-portal')?.remove();
   });
 
-  it('renders renderUserProfile output when a custom renderer is provided', () => {
+  it('renders renderUserProfile with the fetched user when a custom renderer is provided', async () => {
+    mockState.stores.sdkStore.sdk = sdkReturningUsers([{ userId: 'other-user', nickname: 'Other' }]);
     const renderUserProfile = vi.fn(() => <div data-testid="custom-profile">CUSTOM PROFILE</div>);
 
     renderMention({ renderUserProfile });
-
-    // Open the popup by clicking the mention.
     fireEvent.click(screen.getByText('@Other'));
 
-    expect(screen.getByTestId('custom-profile')).toBeInTheDocument();
+    expect(await screen.findByTestId('custom-profile')).toBeInTheDocument();
     expect(renderUserProfile).toHaveBeenCalledWith(
-      expect.objectContaining({ currentUserId: 'me', close: expect.any(Function) }),
+      expect.objectContaining({
+        user: expect.objectContaining({ userId: 'other-user' }),
+        currentUserId: 'me',
+        close: expect.any(Function),
+      }),
     );
+  });
+
+  it('falls back to the default popup when the mentioned user cannot be resolved', async () => {
+    mockState.stores.sdkStore.sdk = sdkReturningUsers([]);
+    const renderUserProfile = vi.fn(() => <div data-testid="custom-profile">CUSTOM PROFILE</div>);
+
+    renderMention({ renderUserProfile });
+    fireEvent.click(screen.getByText('@Other'));
+
+    expect(await screen.findByText('Message')).toBeInTheDocument();
+    expect(screen.queryByTestId('custom-profile')).not.toBeInTheDocument();
+    expect(renderUserProfile).not.toHaveBeenCalled();
   });
 
   it('renders the default UserProfile popup when no custom renderer is provided (backward compatibility)', () => {
     renderMention({});
-
     fireEvent.click(screen.getByText('@Other'));
 
-    // The default popup (with its Message button) is shown, not a custom node.
     expect(screen.queryByTestId('custom-profile')).not.toBeInTheDocument();
     expect(screen.getByText('Message')).toBeInTheDocument();
   });
