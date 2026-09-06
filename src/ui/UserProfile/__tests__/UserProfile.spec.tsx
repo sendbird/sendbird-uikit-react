@@ -31,7 +31,7 @@ const stringSet = {
   NO_NAME: '(No name)',
 };
 
-const renderUserProfile = (contextValue: Record<string, unknown>) => render(
+const renderUserProfile = (contextValue: Record<string, unknown>, onSuccess: () => void = vi.fn()) => render(
   <LocalizationContext.Provider value={{ stringSet } as any}>
     <UserProfileContext.Provider
       value={{
@@ -43,7 +43,7 @@ const renderUserProfile = (contextValue: Record<string, unknown>) => render(
       <UserProfile
         user={{ userId: 'other-user', nickname: 'Other' } as any}
         currentUserId="me"
-        onSuccess={vi.fn()}
+        onSuccess={onSuccess}
       />
     </UserProfileContext.Provider>
   </LocalizationContext.Provider>,
@@ -143,5 +143,16 @@ describe('UserProfile - onBeforeCreateChannel', () => {
     await waitFor(() => expect(mockState.config.logger.error).toHaveBeenCalled());
     expect(mockCreateChannel).not.toHaveBeenCalled();
     expect(onStartDirectMessage).not.toHaveBeenCalled();
+  });
+
+  it('closes the popup immediately (synchronously) even when onBeforeCreateChannel is set', () => {
+    const onBeforeCreateChannel = vi.fn((params: GroupChannelCreateParams) => params);
+    const onSuccess = vi.fn();
+
+    renderUserProfile({ onBeforeCreateChannel }, onSuccess);
+
+    fireEvent.click(screen.getByText('Message'));
+
+    expect(onSuccess).toHaveBeenCalledTimes(1);
   });
 });
