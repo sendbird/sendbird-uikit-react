@@ -118,4 +118,30 @@ describe('UserProfile - onBeforeCreateChannel', () => {
 
     await waitFor(() => expect(onStartDirectMessage).toHaveBeenCalled());
   });
+
+  it('logs and creates no channel when a synchronous onBeforeCreateChannel throws', async () => {
+    const onBeforeCreateChannel = vi.fn(() => { throw new Error('boom'); });
+    const onStartDirectMessage = vi.fn();
+
+    renderUserProfile({ onBeforeCreateChannel, onStartDirectMessage });
+
+    fireEvent.click(screen.getByText('Message'));
+
+    await waitFor(() => expect(mockState.config.logger.error).toHaveBeenCalled());
+    expect(mockCreateChannel).not.toHaveBeenCalled();
+    expect(onStartDirectMessage).not.toHaveBeenCalled();
+  });
+
+  it('logs and creates no channel when an async onBeforeCreateChannel rejects', async () => {
+    const onBeforeCreateChannel = vi.fn(async () => { throw new Error('boom'); });
+    const onStartDirectMessage = vi.fn();
+
+    renderUserProfile({ onBeforeCreateChannel, onStartDirectMessage });
+
+    fireEvent.click(screen.getByText('Message'));
+
+    await waitFor(() => expect(mockState.config.logger.error).toHaveBeenCalled());
+    expect(mockCreateChannel).not.toHaveBeenCalled();
+    expect(onStartDirectMessage).not.toHaveBeenCalled();
+  });
 });

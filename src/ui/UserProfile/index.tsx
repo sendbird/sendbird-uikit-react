@@ -67,13 +67,15 @@ function UserProfile({
                 };
                 onSuccess?.();
                 const startDirectMessage = (groupChannel: GroupChannel) => {
-                  logger.info('UserProfile, channel create', groupChannel);
+                  logger.info('UserProfile: channel create', groupChannel);
                   onStartDirectMessage?.(groupChannel);
                 };
                 if (onBeforeCreateChannel) {
-                  Promise.resolve(onBeforeCreateChannel(params, user ? [user] : []))
+                  Promise.resolve()
+                    .then(() => onBeforeCreateChannel(params, user ? [user] : []))
                     .then((processedParams) => createChannel(processedParams))
-                    .then(startDirectMessage);
+                    .then(startDirectMessage)
+                    .catch((error) => logger.error('UserProfile: channel create failed', error));
                 } else {
                   createChannel(params).then(startDirectMessage);
                 }
