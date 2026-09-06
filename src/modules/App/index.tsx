@@ -35,6 +35,7 @@ export interface AppProps {
   allowProfileEdit?: SendbirdProviderProps['allowProfileEdit'];
   disableMarkAsDelivered?: SendbirdProviderProps['disableMarkAsDelivered'];
   renderUserProfile?: SendbirdProviderProps['renderUserProfile'];
+  onBeforeCreateChannel?: SendbirdProviderProps['onBeforeCreateChannel'];
   imageCompression?: SendbirdProviderProps['imageCompression'];
   uikitOptions?: SendbirdProviderProps['uikitOptions'];
   isUserIdUsedForNickname?: SendbirdProviderProps['isUserIdUsedForNickname'];
@@ -93,6 +94,7 @@ export default function App(props: AppProps) {
     allowProfileEdit = false,
     disableMarkAsDelivered = false,
     renderUserProfile,
+    onBeforeCreateChannel,
     onProfileEditSuccess,
     imageCompression = {},
     disableAutoSelect = false,
@@ -138,6 +140,7 @@ export default function App(props: AppProps) {
       colorSet={colorSet}
       disableMarkAsDelivered={disableMarkAsDelivered}
       renderUserProfile={renderUserProfile}
+      onBeforeCreateChannel={onBeforeCreateChannel}
       imageCompression={imageCompression}
       isMultipleFilesMessageEnabled={isMultipleFilesMessageEnabled}
       autoscrollMessageOverflowToTop={autoscrollMessageOverflowToTop}

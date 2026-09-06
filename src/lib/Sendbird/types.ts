@@ -234,6 +234,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
    * @deprecated Please use `onStartDirectMessage` instead. It's renamed.
    */
   onUserProfileMessage?: (channel: GroupChannel) => void;
+  onBeforeCreateChannel?: (channelParams: GroupChannelCreateParams, users: User[]) => GroupChannelCreateParams | Promise<GroupChannelCreateParams>;
 
   // Customer provided callbacks
   eventHandlers?: SBUEventHandlers;
@@ -242,6 +243,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
 export interface SendbirdStateConfig {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   onStartDirectMessage?: (props: GroupChannel) => void;
+  onBeforeCreateChannel?: (channelParams: GroupChannelCreateParams, users: User[]) => GroupChannelCreateParams | Promise<GroupChannelCreateParams>;
   allowProfileEdit: boolean;
   isOnline: boolean;
   userId: string;

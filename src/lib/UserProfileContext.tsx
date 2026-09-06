@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { User } from '@sendbird/chat';
+import type { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
 import type { RenderUserProfileProps } from '../types';
 import useSendbird from './Sendbird/context/hooks/useSendbird';
 
@@ -8,6 +9,7 @@ interface UserProfileContextInterface {
   disableUserProfile: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
   onStartDirectMessage?: (channel: GroupChannel) => void;
+  onBeforeCreateChannel?: (channelParams: GroupChannelCreateParams, users: User[]) => GroupChannelCreateParams | Promise<GroupChannelCreateParams>;
 
   /**
    * @deprecated This prop has been renamed to `onStartDirectMessage`.
@@ -25,7 +27,7 @@ export const UserProfileContext = React.createContext<UserProfileContextInterfac
 });
 
 export type UserProfileProviderProps = React.PropsWithChildren<
-  Partial<UserProfileContextInterface>
+  Omit<Partial<UserProfileContextInterface>, 'onBeforeCreateChannel'>
   & {
     /** This prop is optional. It is no longer necessary to provide it because the value can be accessed through SendbirdStateContext. */
     disableUserProfile?: boolean;
@@ -55,6 +57,7 @@ export const UserProfileProvider = ({
         disableUserProfile: _disableUserProfile ?? !config.common.enableUsingDefaultUserProfile,
         renderUserProfile: _renderUserProfile ?? config.renderUserProfile,
         onStartDirectMessage,
+        onBeforeCreateChannel: config.onBeforeCreateChannel,
         /** legacy of onStartDirectMessage */
         onUserProfileMessage: onStartDirectMessage,
       }}
