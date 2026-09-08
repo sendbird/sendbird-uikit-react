@@ -67,8 +67,8 @@ const SendbirdContextManager = ({
   disableMarkAsDelivered = false,
   renderUserProfile,
   onUserProfileMessage: _onUserProfileMessage,
+  onBeforeStartDirectMessage,
   onStartDirectMessage: _onStartDirectMessage,
-  onBeforeCreateChannel,
   isUserIdUsedForNickname = true,
   sdkInitParams,
   customExtensionParams,
@@ -280,9 +280,9 @@ const SendbirdContextManager = ({
     config: {
       disableMarkAsDelivered,
       renderUserProfile,
+      onBeforeStartDirectMessage,
       onStartDirectMessage,
       onUserProfileMessage: onStartDirectMessage, // legacy of onStartDirectMessage
-      onBeforeCreateChannel,
       allowProfileEdit,
       isOnline,
       userId,
@@ -312,8 +312,8 @@ const SendbirdContextManager = ({
   }), [
     disableMarkAsDelivered,
     renderUserProfile,
+    onBeforeStartDirectMessage,
     onStartDirectMessage,
-    onBeforeCreateChannel,
     allowProfileEdit,
     isOnline,
     userId,
@@ -376,8 +376,8 @@ const InternalSendbirdProvider = (props: SendbirdProviderProps & { logger: Logge
   const defaultProps: TwoDepthPartial<SendbirdState> = deleteNullish({
     config: {
       renderUserProfile: props?.renderUserProfile,
+      onBeforeStartDirectMessage: props?.onBeforeStartDirectMessage,
       onStartDirectMessage: props?.onStartDirectMessage,
-      onBeforeCreateChannel: props?.onBeforeCreateChannel,
       allowProfileEdit: props?.allowProfileEdit,
       appId: props?.appId,
       userId: props?.userId,

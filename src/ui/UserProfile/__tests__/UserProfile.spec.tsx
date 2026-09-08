@@ -49,28 +49,28 @@ const renderUserProfile = (contextValue: Record<string, unknown>, onSuccess: () 
   </LocalizationContext.Provider>,
 );
 
-describe('UserProfile - onBeforeCreateChannel', () => {
+describe('UserProfile - onBeforeStartDirectMessage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockCreateChannel.mockResolvedValue({ url: 'created-channel' } as GroupChannel);
   });
 
-  it('applies onBeforeCreateChannel to modify params before the channel is created', async () => {
-    const onBeforeCreateChannel = vi.fn((params: GroupChannelCreateParams) => ({
+  it('applies onBeforeStartDirectMessage to modify params before the channel is created', async () => {
+    const onBeforeStartDirectMessage = vi.fn((params: GroupChannelCreateParams) => ({
       ...params,
       isDistinct: true,
       data: 'custom-metadata',
     }));
     const onStartDirectMessage = vi.fn();
 
-    renderUserProfile({ onBeforeCreateChannel, onStartDirectMessage });
+    renderUserProfile({ onBeforeStartDirectMessage, onStartDirectMessage });
 
     fireEvent.click(screen.getByText('Message'));
 
     await waitFor(() => expect(mockCreateChannel).toHaveBeenCalledTimes(1));
 
     // The callback receives the default params and the target user(s).
-    expect(onBeforeCreateChannel).toHaveBeenCalledWith(
+    expect(onBeforeStartDirectMessage).toHaveBeenCalledWith(
       expect.objectContaining({
         isDistinct: false,
         invitedUserIds: ['other-user'],
@@ -88,19 +88,7 @@ describe('UserProfile - onBeforeCreateChannel', () => {
     ));
   });
 
-  it('supports an async onBeforeCreateChannel', async () => {
-    const onBeforeCreateChannel = vi.fn(async (params: GroupChannelCreateParams) => ({ ...params, isDistinct: true }));
-
-    renderUserProfile({ onBeforeCreateChannel });
-
-    fireEvent.click(screen.getByText('Message'));
-
-    await waitFor(() => expect(mockCreateChannel).toHaveBeenCalledWith(
-      expect.objectContaining({ isDistinct: true }),
-    ));
-  });
-
-  it('falls back to default params (isDistinct:false) when onBeforeCreateChannel is not provided (backward compatibility)', async () => {
+  it('falls back to default params (isDistinct:false) when onBeforeStartDirectMessage is not provided (backward compatibility)', async () => {
     const onStartDirectMessage = vi.fn();
 
     renderUserProfile({ onStartDirectMessage });
@@ -119,37 +107,41 @@ describe('UserProfile - onBeforeCreateChannel', () => {
     await waitFor(() => expect(onStartDirectMessage).toHaveBeenCalled());
   });
 
-  it('logs and creates no channel when a synchronous onBeforeCreateChannel throws', async () => {
-    const onBeforeCreateChannel = vi.fn(() => { throw new Error('boom'); });
+  it('logs onBeforeStartDirectMessage failure distinctly and creates no channel (sync throw)', async () => {
+    const onBeforeStartDirectMessage = vi.fn(() => { throw new Error('boom'); });
     const onStartDirectMessage = vi.fn();
 
-    renderUserProfile({ onBeforeCreateChannel, onStartDirectMessage });
+    renderUserProfile({ onBeforeStartDirectMessage, onStartDirectMessage });
 
     fireEvent.click(screen.getByText('Message'));
 
-    await waitFor(() => expect(mockState.config.logger.error).toHaveBeenCalled());
+    await waitFor(() => expect(mockState.config.logger.error).toHaveBeenCalledWith(
+      'UserProfile: onBeforeStartDirectMessage failed', expect.any(Error),
+    ));
     expect(mockCreateChannel).not.toHaveBeenCalled();
     expect(onStartDirectMessage).not.toHaveBeenCalled();
   });
 
-  it('logs and creates no channel when an async onBeforeCreateChannel rejects', async () => {
-    const onBeforeCreateChannel = vi.fn(async () => { throw new Error('boom'); });
+  it('logs channel-create failure distinctly when createChannel rejects', async () => {
+    mockCreateChannel.mockRejectedValueOnce(new Error('network'));
+    const onBeforeStartDirectMessage = vi.fn((params: GroupChannelCreateParams) => params);
     const onStartDirectMessage = vi.fn();
 
-    renderUserProfile({ onBeforeCreateChannel, onStartDirectMessage });
+    renderUserProfile({ onBeforeStartDirectMessage, onStartDirectMessage });
 
     fireEvent.click(screen.getByText('Message'));
 
-    await waitFor(() => expect(mockState.config.logger.error).toHaveBeenCalled());
-    expect(mockCreateChannel).not.toHaveBeenCalled();
+    await waitFor(() => expect(mockState.config.logger.error).toHaveBeenCalledWith(
+      'UserProfile: channel create failed', expect.any(Error),
+    ));
     expect(onStartDirectMessage).not.toHaveBeenCalled();
   });
 
-  it('closes the popup immediately (synchronously) even when onBeforeCreateChannel is set', () => {
-    const onBeforeCreateChannel = vi.fn((params: GroupChannelCreateParams) => params);
+  it('closes the popup immediately (synchronously) even when onBeforeStartDirectMessage is set', () => {
+    const onBeforeStartDirectMessage = vi.fn((params: GroupChannelCreateParams) => params);
     const onSuccess = vi.fn();
 
-    renderUserProfile({ onBeforeCreateChannel }, onSuccess);
+    renderUserProfile({ onBeforeStartDirectMessage }, onSuccess);
 
     fireEvent.click(screen.getByText('Message'));
 

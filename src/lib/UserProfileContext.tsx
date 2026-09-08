@@ -8,8 +8,8 @@ interface UserProfileContextInterface {
   isOpenChannel: boolean;
   disableUserProfile: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  onBeforeStartDirectMessage?: (channelParams: GroupChannelCreateParams, users: User[]) => GroupChannelCreateParams;
   onStartDirectMessage?: (channel: GroupChannel) => void;
-  onBeforeCreateChannel?: (channelParams: GroupChannelCreateParams, users: User[]) => GroupChannelCreateParams | Promise<GroupChannelCreateParams>;
 
   /**
    * @deprecated This prop has been renamed to `onStartDirectMessage`.
@@ -27,7 +27,7 @@ export const UserProfileContext = React.createContext<UserProfileContextInterfac
 });
 
 export type UserProfileProviderProps = React.PropsWithChildren<
-  Omit<Partial<UserProfileContextInterface>, 'onBeforeCreateChannel'>
+  Partial<UserProfileContextInterface>
   & {
     /** This prop is optional. It is no longer necessary to provide it because the value can be accessed through SendbirdStateContext. */
     disableUserProfile?: boolean;
@@ -43,6 +43,7 @@ export const UserProfileProvider = ({
   disableUserProfile: _disableUserProfile = false,
   renderUserProfile: _renderUserProfile,
   onUserProfileMessage: _onUserProfileMessage,
+  onBeforeStartDirectMessage: _onBeforeStartDirectMessage,
   onStartDirectMessage: _onStartDirectMessage,
   children,
 }: UserProfileProviderProps) => {
@@ -56,8 +57,8 @@ export const UserProfileProvider = ({
         isOpenChannel,
         disableUserProfile: _disableUserProfile ?? !config.common.enableUsingDefaultUserProfile,
         renderUserProfile: _renderUserProfile ?? config.renderUserProfile,
+        onBeforeStartDirectMessage: _onBeforeStartDirectMessage ?? config.onBeforeStartDirectMessage,
         onStartDirectMessage,
-        onBeforeCreateChannel: config.onBeforeCreateChannel,
         /** legacy of onStartDirectMessage */
         onUserProfileMessage: onStartDirectMessage,
       }}

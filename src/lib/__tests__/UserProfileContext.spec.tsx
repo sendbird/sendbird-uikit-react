@@ -1,16 +1,16 @@
 import React, { useContext } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
 import { UserProfileProvider, UserProfileContext } from '../UserProfileContext';
 
-const { configOnBeforeCreateChannel } = vi.hoisted(() => ({ configOnBeforeCreateChannel: vi.fn() }));
+const { configCallback } = vi.hoisted(() => ({ configCallback: vi.fn() }));
 
 const mockConfig = {
   common: { enableUsingDefaultUserProfile: true },
   renderUserProfile: undefined,
   onStartDirectMessage: undefined,
-  onBeforeCreateChannel: configOnBeforeCreateChannel,
+  onBeforeStartDirectMessage: configCallback,
 };
 
 vi.mock('../Sendbird/context/hooks/useSendbird', () => ({
@@ -18,35 +18,44 @@ vi.mock('../Sendbird/context/hooks/useSendbird', () => ({
   default: vi.fn(() => ({ state: { config: mockConfig } })),
 }));
 
+let captured: unknown;
 const Consumer = () => {
-  const ctx = useContext(UserProfileContext);
-  return (
-    <div data-testid="result">
-      {ctx.onBeforeCreateChannel === configOnBeforeCreateChannel ? 'from-config' : 'other'}
-    </div>
-  );
+  captured = useContext(UserProfileContext).onBeforeStartDirectMessage;
+  return null;
 };
 
-describe('UserProfileProvider - onBeforeCreateChannel wiring', () => {
-  it('exposes config.onBeforeCreateChannel through the context value', () => {
+describe('UserProfileProvider - onBeforeStartDirectMessage wiring', () => {
+  beforeEach(() => {
+    captured = undefined;
+  });
+
+  it('exposes config.onBeforeStartDirectMessage through the context value', () => {
     render(
       <UserProfileProvider>
         <Consumer />
       </UserProfileProvider>,
     );
-    expect(screen.getByTestId('result')).toHaveTextContent('from-config');
+    expect(captured).toBe(configCallback);
   });
 
-  it('ignores a spread onBeforeCreateChannel prop and always reads from config (create-list flow must not leak in)', () => {
+  it('lets a provider prop override the config value', () => {
+    const propCallback = vi.fn();
+    render(
+      <UserProfileProvider onBeforeStartDirectMessage={propCallback}>
+        <Consumer />
+      </UserProfileProvider>,
+    );
+    expect(captured).toBe(propCallback);
+  });
+
+  it('is unaffected by the unrelated create-list onBeforeCreateChannel prop', () => {
     const listFlowCallback = vi.fn();
     const spreadProps = { onBeforeCreateChannel: listFlowCallback } as any;
-
     render(
       <UserProfileProvider {...spreadProps}>
         <Consumer />
       </UserProfileProvider>,
     );
-
-    expect(screen.getByTestId('result')).toHaveTextContent('from-config');
+    expect(captured).toBe(configCallback);
   });
 });
