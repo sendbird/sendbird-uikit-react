@@ -47,6 +47,11 @@ export interface ThreadProviderProps extends
 
 type ThreadMessageDataSource = ReturnType<typeof useGroupChannelThreadMessages>;
 
+export interface LocalFilePreview {
+  localUrl: string;
+  file: File;
+}
+
 export interface ThreadState extends ThreadProviderProps {
   currentChannel: GroupChannel;
   /** All thread replies (succeeded + pending + failed) in one list. Prefer this. */
@@ -67,6 +72,7 @@ export interface ThreadState extends ThreadProviderProps {
   currentUserId: string;
   typingMembers: Member[];
   nicknamesMap: Map<string, string>;
+  localFilePreviews: Map<string, LocalFilePreview>;
   loadPrevious?: ThreadMessageDataSource['loadPrevious'];
   loadNext?: ThreadMessageDataSource['loadNext'];
   resetWithStartingPoint?: ThreadMessageDataSource['resetWithStartingPoint'];
@@ -106,6 +112,7 @@ const initialState = () => ({
   currentUserId: '',
   typingMembers: [],
   nicknamesMap: null,
+  localFilePreviews: new Map(),
 } as ThreadState);
 
 export const ThreadContext = React.createContext<ReturnType<typeof createStore<ThreadState>> | null>(null);
@@ -161,6 +168,7 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
       currentChannel,
       parentMessage,
       parentMessageState,
+      localFilePreviews,
     },
   } = useThread();
   const { updateState } = useThreadStore();
@@ -267,6 +275,15 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
   const hasMorePrev = threadDataSource.hasPrevious();
   const hasMoreNext = threadDataSource.hasNext();
   const store = useContext(ThreadContext);
+
+  useEffect(() => {
+    return () => {
+      const previews = store?.getState().localFilePreviews;
+      previews?.forEach((preview) => URL.revokeObjectURL(preview.localUrl));
+      previews?.clear();
+    };
+  }, [store]);
+
   const messagesSyncKey = threadDataSource.messages
     .map((message) => {
       const uploadParams = (message as MultipleFilesMessage).messageParams as MultipleFilesMessageCreateParams | undefined;
@@ -278,11 +295,30 @@ export const ThreadManager: React.FC<React.PropsWithChildren<ThreadProviderProps
     .join('~');
 
   useEffect(() => {
-    if (!parentMessage) return;
+    if (!parentMessage) {
+      localFilePreviews.forEach((preview) => URL.revokeObjectURL(preview.localUrl));
+      localFilePreviews.clear();
+      return;
+    }
+
+    const scopedMessages = threadDataSource.messages;
+    scopedMessages.forEach((message) => {
+      const sendableMessage = message as SendableMessageType;
+      const preview = localFilePreviews.get(sendableMessage.reqId);
+      if (!preview) return;
+      if (sendableMessage.sendingStatus === SendingStatus.SUCCEEDED) {
+        URL.revokeObjectURL(preview.localUrl);
+        localFilePreviews.delete(sendableMessage.reqId);
+        return;
+      }
+
+      const localFileMessage = message as FileMessage & { localUrl?: string; file?: File };
+      localFileMessage.localUrl ??= preview.localUrl;
+      localFileMessage.file ??= preview.file;
+    });
     // core-ts scopes the collection to this thread's replies (belongsToThread on the event/fetch and
     // send/resend paths), so mirror them as-is. Split into the legacy public shape: allThreadMessages =
     // succeeded (server) messages, localThreadMessages = pending/failed; threadMessages = all of them.
-    const scopedMessages = threadDataSource.messages;
     const localThreadMessages = scopedMessages.filter((m) => {
       const sendingStatus = (m as SendableMessageType).sendingStatus;
       return sendingStatus === SendingStatus.PENDING || sendingStatus === SendingStatus.FAILED;

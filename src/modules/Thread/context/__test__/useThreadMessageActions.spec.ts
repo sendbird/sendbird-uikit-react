@@ -1,6 +1,7 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import type { Mock } from 'vitest';
 import { User } from '@sendbird/chat';
+import { SendingStatus } from '@sendbird/chat/message';
 import type { FileMessage } from '@sendbird/chat/message';
 
 import { useThreadMessageActions } from '../hooks/useThreadMessageActions';
@@ -25,6 +26,7 @@ const makeState = (overrides: Partial<ThreadState> = {}): ThreadState => ({
   dsUpdateUserMessage: vi.fn().mockResolvedValue({ messageId: 4 }),
   dsResendMessage: vi.fn().mockImplementation(async (message) => message),
   dsDeleteMessage: vi.fn().mockResolvedValue(undefined),
+  localFilePreviews: new Map(),
   ...overrides,
 } as unknown as ThreadState);
 
@@ -35,9 +37,11 @@ const makeStatics = () => ({
 });
 
 describe('useThreadMessageActions', () => {
-  beforeAll(() => {
+  let localPreviewCounter = 0;
+
+  beforeEach(() => {
     Object.defineProperty(URL, 'createObjectURL', {
-      value: vi.fn(() => 'blob:thread-local-preview'),
+      value: vi.fn(() => `blob:thread-local-preview-${++localPreviewCounter}`),
       configurable: true,
     });
     Object.defineProperty(URL, 'revokeObjectURL', {
@@ -95,7 +99,7 @@ describe('useThreadMessageActions', () => {
   });
 
   it('sendFileMessage attaches a local preview (localUrl + file) to the pending message', async () => {
-    const pendingMessage = { messageId: 0 } as unknown as FileMessage;
+    const pendingMessage = { messageId: 0, reqId: 'file-message-request' } as unknown as FileMessage;
     const state = makeState({
       dsSendFileMessage: vi.fn().mockImplementation((_params, onPending) => {
         onPending?.(pendingMessage);
@@ -111,8 +115,37 @@ describe('useThreadMessageActions', () => {
     });
 
     const local = pendingMessage as FileMessage & { localUrl?: string; file?: File };
-    expect(local.localUrl).toBe('blob:thread-local-preview');
+    expect(local.localUrl).toMatch(/^blob:thread-local-preview-\d+$/);
     expect(local.file).toBe(file);
+    expect(state.localFilePreviews.has('file-message-request')).toBe(false);
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith(local.localUrl);
+  });
+
+  it('sendFileMessage rejects when the current channel is missing without invoking the hook or sending', async () => {
+    const onBeforeSendFileMessage = vi.fn();
+    const state = makeState({ currentChannel: undefined, onBeforeSendFileMessage });
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const file = new File(['x'], 'a.png', { type: 'image/png' });
+
+    await expect(result.current.sendFileMessage(file)).rejects.toThrow('current channel or data source is unavailable');
+
+    expect(onBeforeSendFileMessage).not.toHaveBeenCalled();
+    expect(state.dsSendFileMessage).not.toHaveBeenCalled();
+    expect(statics.logger.warning).toHaveBeenCalled();
+  });
+
+  it('sendFileMessage rejects when the data source is unavailable without invoking the hook or sending', async () => {
+    const onBeforeSendFileMessage = vi.fn();
+    const state = makeState({ dsSendFileMessage: undefined, onBeforeSendFileMessage });
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const file = new File(['x'], 'a.png', { type: 'image/png' });
+
+    await expect(result.current.sendFileMessage(file)).rejects.toThrow('current channel or data source is unavailable');
+
+    expect(onBeforeSendFileMessage).not.toHaveBeenCalled();
+    expect(statics.logger.warning).toHaveBeenCalled();
   });
 
   it('sendVoiceMessage builds voice metaArrays and publishes SEND_FILE_MESSAGE', async () => {
@@ -142,16 +175,56 @@ describe('useThreadMessageActions', () => {
       new File(['b'], 'b.png', { type: 'image/png' }),
     ];
 
+    let sentMessage;
     await act(async () => {
-      await result.current.sendMultipleFilesMessage(files);
+      sentMessage = await result.current.sendMultipleFilesMessage(files);
     });
 
     const [params] = (state.dsSendMultipleFilesMessage as Mock).mock.calls[0];
     expect(params.fileInfoList).toHaveLength(2);
     expect(params.fileInfoList[0]).toMatchObject({ fileName: 'a.png', mimeType: 'image/png' });
+    expect(sentMessage).toEqual({ messageId: 3 });
     await waitFor(() => {
       expect(statics.pubSub.publish).toHaveBeenCalledWith(topics.SEND_FILE_MESSAGE, expect.anything());
     });
+  });
+
+  it('sendMultipleFilesMessage rejects an empty file list without sending', async () => {
+    const state = makeState();
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+
+    await expect(result.current.sendMultipleFilesMessage([])).rejects.toThrow('at least two files');
+
+    expect(state.dsSendMultipleFilesMessage).not.toHaveBeenCalled();
+    expect(statics.logger.warning).toHaveBeenCalled();
+  });
+
+  it('sendMultipleFilesMessage rejects a single file without sending', async () => {
+    const state = makeState();
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const file = new File(['a'], 'a.png', { type: 'image/png' });
+
+    await expect(result.current.sendMultipleFilesMessage([file])).rejects.toThrow('at least two files');
+
+    expect(state.dsSendMultipleFilesMessage).not.toHaveBeenCalled();
+    expect(statics.logger.warning).toHaveBeenCalled();
+  });
+
+  it('sendMultipleFilesMessage rejects when the current channel is missing without sending', async () => {
+    const state = makeState({ currentChannel: undefined });
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const files = [
+      new File(['a'], 'a.png', { type: 'image/png' }),
+      new File(['b'], 'b.png', { type: 'image/png' }),
+    ];
+
+    await expect(result.current.sendMultipleFilesMessage(files)).rejects.toThrow('current channel or data source is unavailable');
+
+    expect(state.dsSendMultipleFilesMessage).not.toHaveBeenCalled();
+    expect(statics.logger.warning).toHaveBeenCalled();
   });
 
   it('updateMessage builds update params and publishes UPDATE_USER_MESSAGE', async () => {
@@ -187,6 +260,61 @@ describe('useThreadMessageActions', () => {
     });
 
     expect(state.dsDeleteMessage).toHaveBeenCalledWith(message);
+  });
+
+  it('releases a local file preview after deleting its failed message', async () => {
+    const reqId = 'failed-file-request';
+    const localUrl = 'blob:thread-local-preview-deleted';
+    const state = makeState({
+      localFilePreviews: new Map([[reqId, { localUrl, file: new File(['file'], 'failed.txt') }]]),
+    });
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const message = { messageId: 8, reqId } as unknown as SendableMessageType;
+
+    await act(async () => {
+      await result.current.deleteMessage(message);
+    });
+
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith(localUrl);
+    expect(state.localFilePreviews.has(reqId)).toBe(false);
+  });
+
+  it('releases a local file preview when deleting its failed message fails', async () => {
+    const reqId = 'failed-file-request';
+    const localUrl = 'blob:thread-local-preview-delete-failed';
+    const error = new Error('delete failed');
+    const state = makeState({
+      dsDeleteMessage: vi.fn().mockRejectedValue(error),
+      localFilePreviews: new Map([[reqId, { localUrl, file: new File(['file'], 'failed.txt') }]]),
+    });
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const message = { messageId: 8, reqId, sendingStatus: SendingStatus.FAILED } as unknown as SendableMessageType;
+
+    await expect(result.current.deleteMessage(message)).rejects.toBe(error);
+
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith(localUrl);
+    expect(state.localFilePreviews.has(reqId)).toBe(false);
+  });
+
+  it('keeps a local file preview when deleting its failed message fails without a current channel', async () => {
+    const reqId = 'failed-file-request';
+    const localUrl = 'blob:thread-local-preview-delete-failed';
+    const error = new Error('delete failed');
+    const state = makeState({
+      currentChannel: undefined,
+      dsDeleteMessage: vi.fn().mockRejectedValue(error),
+      localFilePreviews: new Map([[reqId, { localUrl, file: new File(['file'], 'failed.txt') }]]),
+    });
+    const statics = makeStatics();
+    const { result } = renderHook(() => useThreadMessageActions(state, statics));
+    const message = { messageId: 8, reqId, sendingStatus: SendingStatus.FAILED } as unknown as SendableMessageType;
+
+    await expect(result.current.deleteMessage(message)).rejects.toBe(error);
+
+    expect(URL.revokeObjectURL).not.toHaveBeenCalled();
+    expect(state.localFilePreviews.has(reqId)).toBe(true);
   });
 
   it('resendMessage delegates to the data source and publishes by message type', async () => {
