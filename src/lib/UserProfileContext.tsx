@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { User } from '@sendbird/chat';
+import type { GroupChannel, GroupChannelCreateParams } from '@sendbird/chat/groupChannel';
 import type { RenderUserProfileProps } from '../types';
 import useSendbird from './Sendbird/context/hooks/useSendbird';
 
@@ -7,6 +8,7 @@ interface UserProfileContextInterface {
   isOpenChannel: boolean;
   disableUserProfile: boolean;
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  onBeforeStartDirectMessage?: (channelParams: GroupChannelCreateParams, users: User[]) => GroupChannelCreateParams;
   onStartDirectMessage?: (channel: GroupChannel) => void;
 
   /**
@@ -41,6 +43,7 @@ export const UserProfileProvider = ({
   disableUserProfile: _disableUserProfile = false,
   renderUserProfile: _renderUserProfile,
   onUserProfileMessage: _onUserProfileMessage,
+  onBeforeStartDirectMessage: _onBeforeStartDirectMessage,
   onStartDirectMessage: _onStartDirectMessage,
   children,
 }: UserProfileProviderProps) => {
@@ -54,6 +57,7 @@ export const UserProfileProvider = ({
         isOpenChannel,
         disableUserProfile: _disableUserProfile ?? !config.common.enableUsingDefaultUserProfile,
         renderUserProfile: _renderUserProfile ?? config.renderUserProfile,
+        onBeforeStartDirectMessage: _onBeforeStartDirectMessage ?? config.onBeforeStartDirectMessage,
         onStartDirectMessage,
         /** legacy of onStartDirectMessage */
         onUserProfileMessage: onStartDirectMessage,
