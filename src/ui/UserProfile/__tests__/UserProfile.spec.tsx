@@ -137,6 +137,20 @@ describe('UserProfile - onBeforeStartDirectMessage', () => {
     expect(onStartDirectMessage).not.toHaveBeenCalled();
   });
 
+  it('logs channel-create failure on the default path too (no onBeforeStartDirectMessage)', async () => {
+    mockCreateChannel.mockRejectedValueOnce(new Error('network'));
+    const onStartDirectMessage = vi.fn();
+
+    renderUserProfile({ onStartDirectMessage });
+
+    fireEvent.click(screen.getByText('Message'));
+
+    await waitFor(() => expect(mockState.config.logger.error).toHaveBeenCalledWith(
+      'UserProfile: channel create failed', expect.any(Error),
+    ));
+    expect(onStartDirectMessage).not.toHaveBeenCalled();
+  });
+
   it('closes the popup immediately (synchronously) even when onBeforeStartDirectMessage is set', () => {
     const onBeforeStartDirectMessage = vi.fn((params: GroupChannelCreateParams) => params);
     const onSuccess = vi.fn();
