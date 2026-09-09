@@ -67,7 +67,7 @@ function UserProfile({
                 };
                 onSuccess?.();
                 const startDirectMessage = (groupChannel: GroupChannel) => {
-                  logger.info('UserProfile: channel create', groupChannel);
+                  logger?.info('UserProfile: channel create', groupChannel);
                   onStartDirectMessage?.(groupChannel);
                 };
                 let processedParams = params;
@@ -75,13 +75,13 @@ function UserProfile({
                   try {
                     processedParams = onBeforeStartDirectMessage(params, user ? [user] : []);
                   } catch (error) {
-                    logger.error('UserProfile: onBeforeStartDirectMessage failed', error);
+                    logger?.error('UserProfile: onBeforeStartDirectMessage failed', error);
                     return;
                   }
                 }
                 createChannel(processedParams)
                   .then(startDirectMessage)
-                  .catch((error) => logger.error('UserProfile: channel create failed', error));
+                  .catch((error) => logger?.error('UserProfile: channel create failed', error));
               }}
             >
               {stringSet.USER_PROFILE__MESSAGE}
