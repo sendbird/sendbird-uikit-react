@@ -229,6 +229,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
   autoscrollMessageOverflowToTop?: boolean;
   // UserProfile
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  onBeforeStartDirectMessage?: (channelParams: GroupChannelCreateParams, users: User[]) => GroupChannelCreateParams;
   onStartDirectMessage?: (channel: GroupChannel) => void;
   /**
    * @deprecated Please use `onStartDirectMessage` instead. It's renamed.
@@ -241,6 +242,7 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
 
 export interface SendbirdStateConfig {
   renderUserProfile?: (props: RenderUserProfileProps) => React.ReactElement;
+  onBeforeStartDirectMessage?: (channelParams: GroupChannelCreateParams, users: User[]) => GroupChannelCreateParams;
   onStartDirectMessage?: (props: GroupChannel) => void;
   allowProfileEdit: boolean;
   isOnline: boolean;

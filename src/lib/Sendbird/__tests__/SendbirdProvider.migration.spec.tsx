@@ -84,6 +84,7 @@ const mockProps: SendbirdProviderProps = {
   renderUserProfile: vi.fn(),
   onStartDirectMessage: vi.fn(),
   onUserProfileMessage: vi.fn(),
+  onBeforeStartDirectMessage: vi.fn(),
   eventHandlers: {},
   children: <div>Test Child</div>,
 };
@@ -233,6 +234,7 @@ describe('SendbirdProvider Props & Context Interface Validation', () => {
     expect(config.htmlTextDirection).toBe(mockProps.htmlTextDirection);
     expect(config.forceLeftToRightMessageLayout).toBe(mockProps.forceLeftToRightMessageLayout);
     expect(config.isMultipleFilesMessageEnabled).toBe(mockProps.isMultipleFilesMessageEnabled);
+    expect(config.onBeforeStartDirectMessage).toBe(mockProps.onBeforeStartDirectMessage);
 
     // Default values validation
     expect(config.uikitUploadSizeLimit).toBe(DEFAULT_UPLOAD_SIZE_LIMIT);

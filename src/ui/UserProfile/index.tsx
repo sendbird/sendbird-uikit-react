@@ -35,7 +35,7 @@ function UserProfile({
   const logger = state?.config?.logger;
   const { stringSet } = useContext(LocalizationContext);
   const currentUserId_ = currentUserId || state?.config?.userId;
-  const { onStartDirectMessage } = useUserProfileContext();
+  const { onBeforeStartDirectMessage, onStartDirectMessage } = useUserProfileContext();
   return (
     <div className="sendbird__user-profile">
       <section className="sendbird__user-profile-avatar">
@@ -66,11 +66,22 @@ function UserProfile({
                   operatorUserIds: [currentUserId_],
                 };
                 onSuccess?.();
-                createChannel(params)
-                  .then((groupChannel) => {
-                    logger.info('UserProfile, channel create', groupChannel);
-                    onStartDirectMessage?.(groupChannel);
-                  });
+                const startDirectMessage = (groupChannel: GroupChannel) => {
+                  logger?.info('UserProfile: channel create', groupChannel);
+                  onStartDirectMessage?.(groupChannel);
+                };
+                let processedParams = params;
+                if (onBeforeStartDirectMessage) {
+                  try {
+                    processedParams = onBeforeStartDirectMessage(params, user ? [user] : []);
+                  } catch (error) {
+                    logger?.error('UserProfile: onBeforeStartDirectMessage failed', error);
+                    return;
+                  }
+                }
+                createChannel(processedParams)
+                  .then(startDirectMessage)
+                  .catch((error) => logger?.error('UserProfile: channel create failed', error));
               }}
             >
               {stringSet.USER_PROFILE__MESSAGE}
