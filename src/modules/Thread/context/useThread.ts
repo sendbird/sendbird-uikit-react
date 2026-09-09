@@ -24,8 +24,14 @@ const useThread = () => {
 
   const toggleReaction = useToggleReactionCallback({ currentChannel }, { logger });
 
-  const initializeThreadFetcher = useCallback((callback?: (messages: CoreMessageType[]) => void) => {
-    const { resetWithStartingPoint, message: anchorMessage, parentMessage } = store.getState();
+  const initializeThreadFetcher = useCallback(async (
+    callback?: (messages: CoreMessageType[]) => void,
+  ): Promise<void> => {
+    const {
+      resetWithStartingPoint,
+      message: anchorMessage,
+      parentMessage,
+    } = store.getState();
     if (!resetWithStartingPoint) return;
     // Mirror ThreadProvider's initial startingPoint: anchor at the specific reply when entering from
     // one, otherwise open at the latest edge (MAX). parentMessage.createdAt would anchor at the oldest
@@ -33,25 +39,67 @@ const useThread = () => {
     const startingPoint = (anchorMessage && parentMessage && anchorMessage.messageId !== parentMessage.messageId)
       ? anchorMessage.createdAt
       : Number.MAX_SAFE_INTEGER;
-    resetWithStartingPoint(startingPoint).then(() => {
-      setTimeout(() => callback?.(store.getState().allThreadMessages));
+    let page: CoreMessageType[] | undefined;
+    try {
+      await resetWithStartingPoint(startingPoint, (messages) => {
+        page = messages as CoreMessageType[];
+      });
+    } catch (error) {
+      logger.warning('Thread resetWithStartingPoint failed', error);
+      return;
+    }
+    // onFetched fires only when the fetch succeeded (an empty page arrives as []), so `undefined`
+    // means the load failed or was guarded upstream — settle without the callback (pre-v3.18.3 behavior).
+    if (page === undefined) return;
+    // Deliberate one-tick deferral, do not remove: onFetched fires before the collection state is
+    // mirrored into this store and before React commits the new replies, and ThreadUI's scroll
+    // restoration in this callback expects to run after that render.
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve);
     });
-  }, [store]);
+    callback?.(page);
+  }, [store, logger]);
 
-  const fetchPrevThreads = useCallback((callback?: (messages: CoreMessageType[]) => void) => {
+  const fetchPrevThreads = useCallback(async (
+    callback?: (messages: CoreMessageType[]) => void,
+  ): Promise<void> => {
     const { loadPrevious } = store.getState();
     if (!loadPrevious) return;
-    loadPrevious().then(() => {
-      setTimeout(() => callback?.(store.getState().allThreadMessages));
+    let page: CoreMessageType[] | undefined;
+    await loadPrevious((messages) => {
+      page = messages as CoreMessageType[];
     });
+    // onFetched fires only when the fetch succeeded (an empty page arrives as []), so `undefined`
+    // means the load failed or was guarded upstream — settle without the callback (pre-v3.18.3 behavior).
+    if (page === undefined) return;
+    // Deliberate one-tick deferral, do not remove: onFetched fires before the collection state is
+    // mirrored into this store and before React commits the new replies, and ThreadUI's scroll
+    // restoration in this callback expects to run after that render.
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve);
+    });
+    callback?.(page);
   }, [store]);
 
-  const fetchNextThreads = useCallback((callback?: (messages: CoreMessageType[]) => void) => {
+  const fetchNextThreads = useCallback(async (
+    callback?: (messages: CoreMessageType[]) => void,
+  ): Promise<void> => {
     const { loadNext } = store.getState();
     if (!loadNext) return;
-    loadNext().then(() => {
-      setTimeout(() => callback?.(store.getState().allThreadMessages));
+    let page: CoreMessageType[] | undefined;
+    await loadNext((messages) => {
+      page = messages as CoreMessageType[];
     });
+    // onFetched fires only when the fetch succeeded (an empty page arrives as []), so `undefined`
+    // means the load failed or was guarded upstream — settle without the callback (pre-v3.18.3 behavior).
+    if (page === undefined) return;
+    // Deliberate one-tick deferral, do not remove: onFetched fires before the collection state is
+    // mirrored into this store and before React commits the new replies, and ThreadUI's scroll
+    // restoration in this callback expects to run after that render.
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve);
+    });
+    callback?.(page);
   }, [store]);
 
   const messageActions = useThreadMessageActions(state, { logger, pubSub, isMentionEnabled });
