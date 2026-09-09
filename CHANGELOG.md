@@ -4,7 +4,7 @@
 ### Features
 - `renderUserProfile` now also applies to the profile popup opened by clicking an `@mention`
 
-  Previously the `@mention` popup always showed the default UI and ignored `renderUserProfile` (unlike avatar clicks). It now honors `renderUserProfile` and `disableUserProfile`, consistent with the other profile popups. This only affects apps that already provide `renderUserProfile`.
+  Previously the `@mention` popup always showed the default UI and ignored `renderUserProfile` (unlike avatar clicks). It now honors `renderUserProfile`, so a custom renderer applies to the mention popup too. This only affects apps that already provide `renderUserProfile`.
 - Added `onBeforeStartDirectMessage` to customize the 1:1 channel created from the profile popup's **Message** button
 
   This optional prop on `SendbirdProvider` (and `App`) runs right before the **default** profile popup creates the channel, so you can adjust the creation parameters — for example set `isDistinct: true` or attach `data` / `customType`. The callback also receives the target `users`.
