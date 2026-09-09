@@ -48,7 +48,12 @@ const useThread = () => {
       logger.warning('Thread resetWithStartingPoint failed', error);
       return;
     }
+    // onFetched fires only when the fetch succeeded (an empty page arrives as []), so `undefined`
+    // means the load failed or was guarded upstream — settle without the callback (pre-v3.18.3 behavior).
     if (page === undefined) return;
+    // Deliberate one-tick deferral, do not remove: onFetched fires before the collection state is
+    // mirrored into this store and before React commits the new replies, and ThreadUI's scroll
+    // restoration in this callback expects to run after that render.
     await new Promise<void>((resolve) => {
       setTimeout(resolve);
     });
@@ -64,7 +69,12 @@ const useThread = () => {
     await loadPrevious((messages) => {
       page = messages as CoreMessageType[];
     });
+    // onFetched fires only when the fetch succeeded (an empty page arrives as []), so `undefined`
+    // means the load failed or was guarded upstream — settle without the callback (pre-v3.18.3 behavior).
     if (page === undefined) return;
+    // Deliberate one-tick deferral, do not remove: onFetched fires before the collection state is
+    // mirrored into this store and before React commits the new replies, and ThreadUI's scroll
+    // restoration in this callback expects to run after that render.
     await new Promise<void>((resolve) => {
       setTimeout(resolve);
     });
@@ -80,7 +90,12 @@ const useThread = () => {
     await loadNext((messages) => {
       page = messages as CoreMessageType[];
     });
+    // onFetched fires only when the fetch succeeded (an empty page arrives as []), so `undefined`
+    // means the load failed or was guarded upstream — settle without the callback (pre-v3.18.3 behavior).
     if (page === undefined) return;
+    // Deliberate one-tick deferral, do not remove: onFetched fires before the collection state is
+    // mirrored into this store and before React commits the new replies, and ThreadUI's scroll
+    // restoration in this callback expects to run after that render.
     await new Promise<void>((resolve) => {
       setTimeout(resolve);
     });
