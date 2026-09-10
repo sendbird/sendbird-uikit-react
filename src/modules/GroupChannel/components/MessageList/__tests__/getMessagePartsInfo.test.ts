@@ -103,6 +103,13 @@ describe('getMessagePartsInfo - date separator across sending status', () => {
     });
     expect(hasSeparator).toBe(false);
   });
+
+  // The forward-only rule is limited to local messages. The deprecated Channel module can append a delayed
+  // succeeded message out of order (passUnsuccessfullMessages), and non-local messages keep the original
+  // immediate-previous comparison, so that message still renders its separator as before.
+  it('keeps the original comparison for a non-local message appended out of chronological order', () => {
+    expect(separatorFor(userMessage(SEP_10, 'succeeded'), userMessage(SEP_09, 'succeeded'))).toBe(true);
+  });
 });
 
 describe('getMessagePartsInfo - unread "New Messages" separator stays gated by sending status', () => {

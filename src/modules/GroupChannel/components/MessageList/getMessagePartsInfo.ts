@@ -45,29 +45,33 @@ export const getMessagePartsInfo = ({
   const [chainTop, chainBottom] = isMessageGroupingEnabled
     ? compareMessagesForGrouping(previousMessage, currentMessage, nextMessage, stringSet, currentChannel, (replyType as ReplyType))
     : [false, false];
+  const previousMessageCreatedAt = previousMessage?.createdAt;
   const currentCreatedAt = currentMessage.createdAt;
 
   // NOTE: for pending/failed messages
   const isLocalMessage = 'sendingStatus' in currentMessage && (currentMessage.sendingStatus !== 'succeeded');
 
-  // Compute the separator regardless of sending status (a pending message opening a new day must show it
-  // immediately, else it appears only on send-success and its height clips the message). Compare against the
-  // latest day already shown above (max createdAt so far), not just the immediately-previous message, so a
-  // separator marks only a genuinely later day — never a backward-dated or duplicate one. @sendbird/uikit-tools
-  // sorts unsent messages to the bottom (createdAt + LARGE_OFFSET); only those can be out of order, so only they
-  // need the scan. Non-local messages are already chronological — their previous message is that maximum.
-  let maxPrecedingCreatedAt = previousMessage?.createdAt;
+  // Show the date separator regardless of sending status so a pending message opening a new day shows it
+  // immediately, else it appears only on send-success and its height clips the message. @sendbird/uikit-tools
+  // sorts unsent messages to the bottom (createdAt + LARGE_OFFSET), so a pending/failed message can render below
+  // newer ones; compare it against the latest day already shown above (max createdAt so far) and only mark a
+  // genuinely later day — never a backward-dated or duplicate separator. Non-local messages keep the original
+  // immediate-previous comparison, so their behavior (including the deprecated Channel module) is unchanged.
+  let hasSeparator: boolean;
   if (isLocalMessage) {
+    let maxPrecedingCreatedAt: number | undefined;
     for (let index = 0; index < currentIndex; index += 1) {
       const precedingCreatedAt = allMessages[index]?.createdAt;
       if (precedingCreatedAt !== undefined && (maxPrecedingCreatedAt === undefined || precedingCreatedAt > maxPrecedingCreatedAt)) {
         maxPrecedingCreatedAt = precedingCreatedAt;
       }
     }
+    hasSeparator = maxPrecedingCreatedAt === undefined
+      || (currentCreatedAt > maxPrecedingCreatedAt && !isSameDay(currentCreatedAt, maxPrecedingCreatedAt));
+  } else {
+    // https://stackoverflow.com/a/41855608
+    hasSeparator = !(previousMessageCreatedAt && (isSameDay(currentCreatedAt, previousMessageCreatedAt)));
   }
-  // https://stackoverflow.com/a/41855608
-  const hasSeparator = maxPrecedingCreatedAt === undefined
-    || (currentCreatedAt > maxPrecedingCreatedAt && !isSameDay(currentCreatedAt, maxPrecedingCreatedAt));
 
   const hasNewMessageSeparator = (isLocalMessage || !isUnreadMessageExistInChannel?.current) ? false : (!isAdminMessage(currentMessage) && firstUnreadMessageId === currentMessage.messageId);
 
