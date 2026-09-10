@@ -45,14 +45,29 @@ export const getMessagePartsInfo = ({
   const [chainTop, chainBottom] = isMessageGroupingEnabled
     ? compareMessagesForGrouping(previousMessage, currentMessage, nextMessage, stringSet, currentChannel, (replyType as ReplyType))
     : [false, false];
-  const previousMessageCreatedAt = previousMessage?.createdAt;
   const currentCreatedAt = currentMessage.createdAt;
 
   // NOTE: for pending/failed messages
   const isLocalMessage = 'sendingStatus' in currentMessage && (currentMessage.sendingStatus !== 'succeeded');
 
+  // Compute the separator regardless of sending status (a pending message opening a new day must show it
+  // immediately, else it appears only on send-success and its height clips the message). Compare against the
+  // latest day already shown above (max createdAt so far), not just the immediately-previous message, so a
+  // separator marks only a genuinely later day — never a backward-dated or duplicate one. @sendbird/uikit-tools
+  // sorts unsent messages to the bottom (createdAt + LARGE_OFFSET); only those can be out of order, so only they
+  // need the scan. Non-local messages are already chronological — their previous message is that maximum.
+  let maxPrecedingCreatedAt = previousMessage?.createdAt;
+  if (isLocalMessage) {
+    for (let index = 0; index < currentIndex; index += 1) {
+      const precedingCreatedAt = allMessages[index]?.createdAt;
+      if (precedingCreatedAt !== undefined && (maxPrecedingCreatedAt === undefined || precedingCreatedAt > maxPrecedingCreatedAt)) {
+        maxPrecedingCreatedAt = precedingCreatedAt;
+      }
+    }
+  }
   // https://stackoverflow.com/a/41855608
-  const hasSeparator = isLocalMessage ? false : !(previousMessageCreatedAt && (isSameDay(currentCreatedAt, previousMessageCreatedAt)));
+  const hasSeparator = maxPrecedingCreatedAt === undefined
+    || (currentCreatedAt > maxPrecedingCreatedAt && !isSameDay(currentCreatedAt, maxPrecedingCreatedAt));
 
   const hasNewMessageSeparator = (isLocalMessage || !isUnreadMessageExistInChannel?.current) ? false : (!isAdminMessage(currentMessage) && firstUnreadMessageId === currentMessage.messageId);
 
