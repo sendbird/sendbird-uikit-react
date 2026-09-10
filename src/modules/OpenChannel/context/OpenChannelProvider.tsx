@@ -211,8 +211,8 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     }
     subscriber.set(topics.SEND_USER_MESSAGE, pubSub.subscribe(topics.SEND_USER_MESSAGE, (msg) => {
       const { channel, message } = msg;
-      scrollIntoLast(0, conversationScrollRef);
       if (channel && (channelUrl === channel?.url)) {
+        scrollIntoLast(0, conversationScrollRef);
         messagesDispatcher({
           type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
           payload: message,
@@ -230,8 +230,8 @@ const OpenChannelProvider: React.FC<OpenChannelProviderProps> = (props: OpenChan
     }));
     subscriber.set(topics.SEND_FILE_MESSAGE, pubSub.subscribe(topics.SEND_FILE_MESSAGE, (msg) => {
       const { channel, message } = msg;
-      scrollIntoLast(0, conversationScrollRef);
       if (channel && (channelUrl === channel?.url)) {
+        scrollIntoLast(0, conversationScrollRef);
         messagesDispatcher({
           type: messageActionTypes.SENDING_MESSAGE_SUCCEEDED,
           payload: { message, channel },
