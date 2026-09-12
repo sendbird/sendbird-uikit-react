@@ -41,7 +41,17 @@ export const useVoicePlayer = ({
   const { isRecordable } = useVoiceRecorderContext();
   const currentAudioUnit = voicePlayerStore?.audioStorage?.[groupKey] || AudioUnitDefaultValue();
   const currentAudioUnitRef = useRef(currentAudioUnit);
-  currentAudioUnitRef.current = currentAudioUnit;
+  const cleanupTargetRef = useRef({ groupKey, reset, currentGroupKey: voicePlayerStore?.currentGroupKey });
+  const hadAudioRef = useRef(false);
+  const ownedGroupKeysRef = useRef(new Set<string>());
+  // The keys the cleanup acts on are recorded on commit, never during render: a render React throws
+  // away must not be able to name a unit this hook never held
+  useEffect(() => {
+    currentAudioUnitRef.current = currentAudioUnit;
+    cleanupTargetRef.current = { groupKey, reset, currentGroupKey: voicePlayerStore?.currentGroupKey };
+    if (audioFile || audioFileUrl) hadAudioRef.current = true;
+    ownedGroupKeysRef.current.add(groupKey);
+  });
 
   const playVoicePlayer = () => {
     if (!isRecordable) {
@@ -64,15 +74,25 @@ export const useVoicePlayer = ({
 
   useEffect(() => {
     return () => {
-      if (audioFile || audioFileUrl) {
-        // Pause via DOM because reset() captured in this closure has stale currentPlayer
+      if (!hadAudioRef.current) return;
+      const {
+        groupKey: latestGroupKey,
+        reset: latestReset,
+        currentGroupKey: latestCurrentGroupKey,
+      } = cleanupTargetRef.current;
+      const groupKeysToReset = new Set<string>();
+      // The audio element is shared across every unit, so pause it only while this hook owns the
+      // unit that holds it — including a key it was bound to before the props changed
+      if (latestCurrentGroupKey && ownedGroupKeysRef.current.has(latestCurrentGroupKey)) {
         const voiceAudioPlayerElement = document.getElementById(VOICE_PLAYER_AUDIO_ID);
         (voiceAudioPlayerElement as HTMLAudioElement)?.pause?.();
-        const status = currentAudioUnitRef.current?.playingStatus;
-        if (status && status !== VOICE_PLAYER_STATUS.IDLE) {
-          reset?.(groupKey);
-        }
+        groupKeysToReset.add(latestCurrentGroupKey);
       }
+      const status = currentAudioUnitRef.current?.playingStatus;
+      if (status && status !== VOICE_PLAYER_STATUS.IDLE) {
+        groupKeysToReset.add(latestGroupKey);
+      }
+      groupKeysToReset.forEach((groupKeyToReset) => latestReset?.(groupKeyToReset));
     };
   }, []);
 
