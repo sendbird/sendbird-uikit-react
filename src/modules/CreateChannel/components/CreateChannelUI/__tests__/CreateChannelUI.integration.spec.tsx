@@ -31,7 +31,7 @@ vi.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
         },
       },
       config: {
-        logger: console,
+        logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() },
         userId: 'test-user-id',
         groupChannel: {
           enableMention: true,

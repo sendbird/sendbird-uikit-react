@@ -13,7 +13,7 @@ const mockState = {
     userStore: { user: { userId: 'test-user-id' } },
     sdkStore: { sdk: { currentUser: { userId: 'test-user-id' }, isCacheEnabled: false }, initialized: true },
   },
-  config: { logger: console, userId: 'test-user-id', isOnline: true },
+  config: { logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() }, userId: 'test-user-id', isOnline: true },
 };
 vi.mock('../../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,

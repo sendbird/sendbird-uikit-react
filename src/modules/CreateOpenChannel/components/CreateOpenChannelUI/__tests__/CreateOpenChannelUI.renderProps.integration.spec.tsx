@@ -34,7 +34,7 @@ const renderUI = (uiProps: Record<string, unknown> = {}) => render(
 describe('CreateOpenChannelUI — render-prop / callback propagation (integration)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(useCreateOpenChannelContext).mockReturnValue({ logger: console, createNewOpenChannel: vi.fn() } as any);
+    vi.mocked(useCreateOpenChannelContext).mockReturnValue({ logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() }, createNewOpenChannel: vi.fn() } as any);
   });
 
   it('invokes a custom renderProfileInput (over the default form)', () => {

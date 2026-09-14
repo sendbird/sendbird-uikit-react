@@ -6,7 +6,7 @@ import useSendbird from '../context/hooks/useSendbird';
 
 const mockState = {
   stores: { sdkStore: { initialized: false } },
-  config: { logger: console, groupChannel: { enableVoiceMessage: false } },
+  config: { logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() }, groupChannel: { enableVoiceMessage: false } },
 };
 const mockActions = { connect: vi.fn(), disconnect: vi.fn() };
 

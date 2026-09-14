@@ -25,7 +25,7 @@ const setup = (isOperator: boolean) => {
     isChannelInitialized: true,
   } as any);
   vi.mocked(useSendbird).mockReturnValue({
-    state: { config: { logger: console, theme: 'light' }, stores: { userStore: { user } } },
+    state: { config: { logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() }, theme: 'light' }, stores: { userStore: { user } } },
   } as any);
 };
 

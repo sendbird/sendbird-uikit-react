@@ -45,7 +45,7 @@ const mockState = {
     userStore: { user: { userId: 'test-user-id' } },
   },
   config: {
-    logger: console,
+    logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() },
     isOnline: true,
     pubSub: {
       publish: vi.fn(),

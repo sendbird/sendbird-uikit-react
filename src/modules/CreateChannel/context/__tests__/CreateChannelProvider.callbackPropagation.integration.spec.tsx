@@ -10,7 +10,7 @@ vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   default: vi.fn(() => ({
     state: {
       stores: { sdkStore: { sdk: { currentUser: { userId: 'test-user-id' } }, initialized: true } },
-      config: { logger: console },
+      config: { logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() } },
     },
   })),
 }));

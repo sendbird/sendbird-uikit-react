@@ -18,7 +18,7 @@ vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
           initialized: true,
         },
       },
-      config: { logger: console },
+      config: { logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() } },
     },
   })),
 }));

@@ -16,7 +16,7 @@ const mockState = {
       initialized: true,
     },
   },
-  config: { logger: console },
+  config: { logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() } },
 };
 vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
   __esModule: true,

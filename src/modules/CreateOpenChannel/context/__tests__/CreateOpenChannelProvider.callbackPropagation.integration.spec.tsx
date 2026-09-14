@@ -18,7 +18,7 @@ const mountCreateFlow = async ({ initialized = true, ...props }: Record<string, 
   vi.mocked(useSendbird).mockReturnValue({
     state: {
       stores: { sdkStore: { sdk: { openChannel: { createChannel }, currentUser: { userId: 'me' } }, initialized } },
-      config: { logger: console },
+      config: { logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() } },
     },
   } as any);
 
@@ -40,7 +40,7 @@ describe('CreateOpenChannelProvider — callback propagation (integration)', () 
     vi.mocked(useSendbird).mockReturnValue({
       state: {
         stores: { sdkStore: { sdk: { openChannel: { createChannel }, currentUser: { userId: 'me' } }, initialized: true } },
-        config: { logger: console },
+        config: { logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() } },
       },
     } as any);
 
