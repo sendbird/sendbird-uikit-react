@@ -5077,6 +5077,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"baseline-browser-mapping@npm:^2.10.44":
+  version: 2.11.23
+  resolution: "baseline-browser-mapping@npm:2.11.23"
+  bin:
+    baseline-browser-mapping: dist/cli.cjs
+  checksum: 0c8a20c580f0fcd061262e6dfef2c51b65b422b3767f460ac3e217e88f2c613e0fea9d2be0569c41b96c9b93b2677e5acb6e71a24cb49db763c12ec872ea60df
+  languageName: node
+  linkType: hard
+
 "better-opn@npm:^3.0.2":
   version: 3.0.2
   resolution: "better-opn@npm:3.0.2"
@@ -5156,16 +5165,17 @@ __metadata:
   linkType: hard
 
 "browserslist@npm:^4.0.0, browserslist@npm:^4.12.0, browserslist@npm:^4.14.5, browserslist@npm:^4.21.4, browserslist@npm:^4.23.3, browserslist@npm:^4.24.0":
-  version: 4.24.0
-  resolution: "browserslist@npm:4.24.0"
+  version: 4.28.7
+  resolution: "browserslist@npm:4.28.7"
   dependencies:
-    caniuse-lite: ^1.0.30001663
-    electron-to-chromium: ^1.5.28
-    node-releases: ^2.0.18
-    update-browserslist-db: ^1.1.0
+    baseline-browser-mapping: ^2.10.44
+    caniuse-lite: ^1.0.30001806
+    electron-to-chromium: ^1.5.393
+    node-releases: ^2.0.51
+    update-browserslist-db: ^1.2.3
   bin:
     browserslist: cli.js
-  checksum: de200d3eb8d6ed819dad99719099a28fb6ebeb88016a5ac42fbdc11607e910c236a84ca1b0bbf232477d4b88ab64e8ab6aa67557cdd40a73ca9c2834f92ccce0
+  checksum: 81093d27f0b0c9207e42af04655607ea870d6eb9c04b38106ffcf36e05f436747caf250604abd5471eab55b16eb2be305d8e5a7c61a5636df34a7b9397737756
   languageName: node
   linkType: hard
 
@@ -5290,10 +5300,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001109, caniuse-lite@npm:^1.0.30001148, caniuse-lite@npm:^1.0.30001663":
+"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001109, caniuse-lite@npm:^1.0.30001148":
   version: 1.0.30001667
   resolution: "caniuse-lite@npm:1.0.30001667"
   checksum: f3c6a40c3e4115c6e5fb46c47884d903191285d29ec8a8b092546efbc9cdedcbd7183cce72dd3cab7dfc16c4d5b2745892876b3d6dda75d4cba49f9389239aa9
+  languageName: node
+  linkType: hard
+
+"caniuse-lite@npm:^1.0.30001806":
+  version: 1.0.30001810
+  resolution: "caniuse-lite@npm:1.0.30001810"
+  checksum: 4ff2dae8df59eb5f5ae71c4803666cf581459a9432c7cf016afd85f4f110774fb9c6469a62ff69a73ed7be5a7eae27988656c3acf56bceed7b0f24358426a5a8
   languageName: node
   linkType: hard
 
@@ -5559,9 +5576,9 @@ __metadata:
   linkType: hard
 
 "colord@npm:^2.9.1":
-  version: 2.9.3
-  resolution: "colord@npm:2.9.3"
-  checksum: 95d909bfbcfd8d5605cbb5af56f2d1ce2b323990258fd7c0d2eb0e6d3bb177254d7fb8213758db56bb4ede708964f78c6b992b326615f81a18a6aaf11d64c650
+  version: 2.9.4
+  resolution: "colord@npm:2.9.4"
+  checksum: e0c1174f18a11e9a953262ba35c9c9327208dc7c409988f6466da5879ac9ce212a3ab726387e4ee38ef7d7a2ca93c7aa76dbe173ab5b8390d861a11c3ddcf421
   languageName: node
   linkType: hard
 
@@ -6400,10 +6417,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:^1.5.28":
-  version: 1.5.32
-  resolution: "electron-to-chromium@npm:1.5.32"
-  checksum: ff75702fe4e62a23b80cd74db0fb29db60d1424716b1755fb79ffe01d214a2d3dc74bb27355b8e41994e3b6e24f3b57b46a060ea510afa3d1b6711fbf4b76219
+"electron-to-chromium@npm:^1.5.393":
+  version: 1.5.427
+  resolution: "electron-to-chromium@npm:1.5.427"
+  checksum: 912961ece211156906578a2db27aec61cb88cb0688fd8cd9d4161f07d7b3a8b66d0e8ab31d360623536b9c0a65289bdb8030f1d56d4d4eea7da6202f6f7023d1
   languageName: node
   linkType: hard
 
@@ -7402,9 +7419,9 @@ __metadata:
   linkType: hard
 
 "fast-uri@npm:^3.0.1":
-  version: 3.1.5
-  resolution: "fast-uri@npm:3.1.5"
-  checksum: 8a95af13e0730ac5c3abeb7f3939dee9fa95f2652e0ebac7a072b5597f836200084340c9bc2030f392318cdb49ec04e3fd6f558fa24c58d6d373557b9c01d7fb
+  version: 3.1.6
+  resolution: "fast-uri@npm:3.1.6"
+  checksum: 5c895df5b50d91d8e8e8a8b6cfa4e8ca3f3d76ec17c8fcff34f5d68a3fb5494c35166599e4a35506934ff290167286469b2b4c7ececd17ae8d70927199477f1c
   languageName: node
   linkType: hard
 
@@ -9291,13 +9308,13 @@ __metadata:
   linkType: hard
 
 "js-yaml@npm:^4.1.0":
-  version: 4.3.1
-  resolution: "js-yaml@npm:4.3.1"
+  version: 4.3.2
+  resolution: "js-yaml@npm:4.3.2"
   dependencies:
     argparse: ^2.0.1
   bin:
     js-yaml: bin/js-yaml.js
-  checksum: 482740e69a1769b355d7182234c0fa197237f02e6a5c8c0b70a763af6a712c9741de350d784a5659e00cf03cedd6ebfa506d59ca45967e3ee50dd4f4df18f2e7
+  checksum: 3c9294448ed83fec340f017f2be056dab05bcba3fc742468a80275d264e982dfd94350a93640eb810e0fdf283bef7c1c810690cc69b7b04a187f781e079d2555
   languageName: node
   linkType: hard
 
@@ -10369,10 +10386,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-releases@npm:^2.0.18":
-  version: 2.0.18
-  resolution: "node-releases@npm:2.0.18"
-  checksum: ef55a3d853e1269a6d6279b7692cd6ff3e40bc74947945101138745bfdc9a5edabfe72cb19a31a8e45752e1910c4c65c77d931866af6357f242b172b7283f5b3
+"node-releases@npm:^2.0.51":
+  version: 2.0.55
+  resolution: "node-releases@npm:2.0.55"
+  checksum: e0d62298ad82c15517c77f8c47ca0a1ac6041285ba72688a7a1bd9c6824b15e635bc9e18169c01ae368e1dc77828efddd443db96f9eadecac7044c7f17fa6ca9
   languageName: node
   linkType: hard
 
@@ -10940,7 +10957,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"picocolors@npm:^1.0.0, picocolors@npm:^1.1.0":
+"picocolors@npm:^1.0.0":
   version: 1.1.0
   resolution: "picocolors@npm:1.1.0"
   checksum: a64d653d3a188119ff45781dfcdaeedd7625583f45280aea33fcb032c7a0d3959f2368f9b192ad5e8aade75b74dbd954ffe3106c158509a45e4c18ab379a2acd
@@ -11486,12 +11503,12 @@ __metadata:
   linkType: hard
 
 "postcss-selector-parser@npm:^6.0.2, postcss-selector-parser@npm:^6.0.4, postcss-selector-parser@npm:^6.0.5, postcss-selector-parser@npm:^6.0.9":
-  version: 6.1.2
-  resolution: "postcss-selector-parser@npm:6.1.2"
+  version: 6.1.3
+  resolution: "postcss-selector-parser@npm:6.1.3"
   dependencies:
     cssesc: ^3.0.0
     util-deprecate: ^1.0.2
-  checksum: ce9440fc42a5419d103f4c7c1847cb75488f3ac9cbe81093b408ee9701193a509f664b4d10a2b4d82c694ee7495e022f8f482d254f92b7ffd9ed9dea696c6f84
+  checksum: 5473348f5582942aacc2bc5a6e1f497d8112fec8952ff5606ef34c9322e86fb0edd0182be2e22f0a42d9c067366ecae9b9c404331c1cd2618f7f00284f3a40d1
   languageName: node
   linkType: hard
 
@@ -13400,8 +13417,8 @@ __metadata:
   linkType: hard
 
 "svgo@npm:^2.8.1":
-  version: 2.8.3
-  resolution: "svgo@npm:2.8.3"
+  version: 2.8.4
+  resolution: "svgo@npm:2.8.4"
   dependencies:
     commander: ^7.2.0
     css-select: ^4.1.3
@@ -13412,7 +13429,7 @@ __metadata:
     stable: ^0.1.8
   bin:
     svgo: ./bin/svgo
-  checksum: e3636760dfb7fb898919fd8eade7ad4a69a10b8650e9b3062b3beff6045f39063da18d537b454ed5bca638a9db45bb0bfa8d9b920efac2157964ec20ff35d829
+  checksum: 1775cd386e9f4fddeaac4f88ba9e3f046eb0cf521561362cfcb844b9c07c44ad775b7e62908fa7a2062529f391f0d5a6549af7ac5c18b2096830cb4513465dfc
   languageName: node
   linkType: hard
 
@@ -14071,17 +14088,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"update-browserslist-db@npm:^1.1.0":
-  version: 1.1.1
-  resolution: "update-browserslist-db@npm:1.1.1"
+"update-browserslist-db@npm:^1.2.3":
+  version: 1.3.3
+  resolution: "update-browserslist-db@npm:1.3.3"
   dependencies:
     escalade: ^3.2.0
-    picocolors: ^1.1.0
+    picocolors: ^1.1.1
   peerDependencies:
     browserslist: ">= 4.21.0"
   bin:
     update-browserslist-db: cli.js
-  checksum: 2ea11bd2562122162c3e438d83a1f9125238c0844b6d16d366e3276d0c0acac6036822dc7df65fc5a89c699cdf9f174acf439c39bedf3f9a2f3983976e4b4c3e
+  checksum: 848a37e8402d454f1942e7c43a0811880ba7c40b74e3603e173c85315924d5fdb7ee057d4d75c2363dcb272a32bbe41428ebc78393711f59e0ebe567e397e0c0
   languageName: node
   linkType: hard
 
