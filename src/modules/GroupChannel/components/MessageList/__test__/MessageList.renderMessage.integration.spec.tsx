@@ -23,12 +23,22 @@ vi.mock('../../../../../lib/LocalizationContext', async () => ({
   useLocalization: vi.fn(),
 }));
 
+// Spaced so every grouping output takes both values: 1 and 2 share a clock minute (they chain),
+// 3 lands on another calendar day (it breaks the chain and gets a date separator).
 const t0 = 1700000000000;
-const t1 = 1700000060000;
-const messages = [
-  { messageId: 1, sendingStatus: 'succeeded', createdAt: t0, messageType: 'user', sender: { userId: 'user-1' }, isUserMessage: () => true, isFileMessage: () => false, isAdminMessage: () => false },
-  { messageId: 2, sendingStatus: 'succeeded', createdAt: t1, messageType: 'user', sender: { userId: 'user-1' }, isUserMessage: () => true, isFileMessage: () => false, isAdminMessage: () => false },
-];
+const sameMinuteAsT0 = t0 + 30 * 1000;
+const nextDay = t0 + 26 * 60 * 60 * 1000;
+const makeMessage = (messageId: number, createdAt: number) => ({
+  messageId,
+  createdAt,
+  sendingStatus: 'succeeded',
+  messageType: 'user',
+  sender: { userId: 'user-1' },
+  isUserMessage: () => true,
+  isFileMessage: () => false,
+  isAdminMessage: () => false,
+});
+const messages = [makeMessage(1, t0), makeMessage(2, sameMinuteAsT0), makeMessage(3, nextDay)];
 const currentChannel = {
   url: 'channel-1',
   myLastRead: 0,
@@ -77,6 +87,12 @@ const sendbirdState = {
   stores: { sdkStore: { sdk: {} } },
 };
 
+const groupingFor = (message: unknown) => {
+  const call = vi.mocked(Message).mock.calls.find((c) => (c[0] as any).message === message);
+  const { chainTop, chainBottom, hasSeparator, hasNewMessageSeparator } = call![0] as any;
+  return { chainTop, chainBottom, hasSeparator, hasNewMessageSeparator };
+};
+
 describe('MessageList — renderMessage propagation (integration)', () => {
   beforeEach(() => {
     vi.mocked(useGroupChannel).mockReturnValue({ state: groupChannelState, actions: groupChannelActions } as any);
@@ -84,22 +100,21 @@ describe('MessageList — renderMessage propagation (integration)', () => {
     vi.mocked(useLocalization).mockReturnValue({ stringSet: { DATE_FORMAT__MESSAGE_CREATED_AT: 'p' } } as any);
   });
 
-  it('renders the default Message for each message with computed grouping props', () => {
+  it('renders the default Message for each message with the computed grouping values', () => {
     render(<MessageList />);
 
-    const calls = vi.mocked(Message).mock.calls;
-    const renderedMessages = calls.map((c) => (c[0] as any).message);
-    expect(renderedMessages).toContain(messages[0]);
-    expect(renderedMessages).toContain(messages[1]);
+    const renderedMessages = vi.mocked(Message).mock.calls.map((c) => (c[0] as any).message);
+    expect(renderedMessages).toEqual(messages);
 
-    const firstCall = calls.find((c) => (c[0] as any).message === messages[0]);
-    expect(firstCall?.[0]).toEqual(expect.objectContaining({
-      message: messages[0],
-      chainTop: expect.any(Boolean),
-      chainBottom: expect.any(Boolean),
-      hasSeparator: expect.any(Boolean),
-      hasNewMessageSeparator: expect.any(Boolean),
-    }));
+    expect(groupingFor(messages[0])).toEqual({
+      chainTop: false, chainBottom: true, hasSeparator: true, hasNewMessageSeparator: false,
+    });
+    expect(groupingFor(messages[1])).toEqual({
+      chainTop: true, chainBottom: false, hasSeparator: false, hasNewMessageSeparator: false,
+    });
+    expect(groupingFor(messages[2])).toEqual({
+      chainTop: false, chainBottom: false, hasSeparator: true, hasNewMessageSeparator: false,
+    });
   });
 
   it('invokes a custom renderMessage prop with the full parameter bag', () => {
@@ -110,19 +125,19 @@ describe('MessageList — renderMessage propagation (integration)', () => {
     const call = renderMessage.mock.calls.find((c) => (c[0] as any).message === messages[0]);
     expect(call).toBeTruthy();
     expect((call![0] as any).message).toBe(messages[0]);
-    expect(Object.keys(call![0] as any)).toEqual(expect.arrayContaining([
-      'handleScroll',
-      'message',
-      'hasSeparator',
-      'hasNewMessageSeparator',
-      'chainTop',
+    expect(Object.keys(call![0] as any).sort()).toEqual([
       'chainBottom',
+      'chainTop',
+      'handleScroll',
+      'hasNewMessageSeparator',
+      'hasSeparator',
+      'message',
+      'onNewMessageSeparatorVisibilityChange',
+      'renderCustomSeparator',
       'renderMessageContent',
       'renderSuggestedReplies',
-      'renderCustomSeparator',
-      'onNewMessageSeparatorVisibilityChange',
       'scrollMessageOverflowToTop',
-    ]));
+    ]);
 
     // custom renderMessage replaces the default leaf entirely
     expect(vi.mocked(Message)).not.toHaveBeenCalled();
