@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import App from '../index';
 import Sendbird from '../../../lib/Sendbird';
 
-// App is a thin wrapper that forwards the customer's connection/init props to <Sendbird>
+// App is a thin wrapper that forwards the customer's connection/init and customization props to <Sendbird>
 // (SendbirdProvider) and renders <AppLayout> as children. This proves the App -> SendbirdProvider
 // half of the chain (App does not drop/mutate a customer connection prop). The provider -> SDK
 // init/connect half is covered by SendbirdProvider.sdkInit.integration.spec.tsx.
@@ -18,7 +18,7 @@ const lastSendbirdProps = () => {
   return calls[calls.length - 1][0] as any;
 };
 
-describe('App — connection prop passthrough to SendbirdProvider (integration)', () => {
+describe('App — prop passthrough to SendbirdProvider (integration)', () => {
   it('forwards the customer connection/init props to SendbirdProvider unchanged', () => {
     const eventHandlers = { connection: { onConnected: vi.fn() } };
     const sdkInitParams = { localCacheEnabled: false };
@@ -50,6 +50,25 @@ describe('App — connection prop passthrough to SendbirdProvider (integration)'
       sdkInitParams,
       customExtensionParams,
       eventHandlers,
+    }));
+  });
+
+  it('forwards the user-profile customization props to SendbirdProvider unchanged', () => {
+    const renderUserProfile = vi.fn(() => <div />);
+    const onBeforeStartDirectMessage = vi.fn((params) => params);
+
+    render(
+      <App
+        appId="test-app-id"
+        userId="user-42"
+        renderUserProfile={renderUserProfile}
+        onBeforeStartDirectMessage={onBeforeStartDirectMessage}
+      />,
+    );
+
+    expect(lastSendbirdProps()).toEqual(expect.objectContaining({
+      renderUserProfile,
+      onBeforeStartDirectMessage,
     }));
   });
 
