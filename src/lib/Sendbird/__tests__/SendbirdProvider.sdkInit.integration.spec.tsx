@@ -1,14 +1,17 @@
 import React, { act } from 'react';
 import { waitFor } from '@testing-library/react';
 import SendbirdChat from '@sendbird/chat';
+import { GroupChannelModule } from '@sendbird/chat/groupChannel';
+import { OpenChannelModule } from '@sendbird/chat/openChannel';
 import type { SendbirdProviderProps } from '../index';
 import type { SessionHandler } from '@sendbird/chat';
 import { renderWithSendbird } from '../../../utils/testMocks/renderWithSendbird';
 
 // Mount the REAL SendbirdProvider and mock ONLY the '@sendbird/chat' boundary, so the whole
 // prop -> SendbirdContextManager -> useSendbird.connect -> initSDK/setupSDK chain runs. This
-// proves no layer drops/mutates a customer-provided value on its way to the SDK — the seam the
-// existing segment tests (utils.spec.ts / useSendbird.spec.tsx / SendbirdProvider.spec.tsx) skip.
+// proves no layer drops/mutates/injects a customer-provided value on its way to the SDK — the
+// seam the existing segment tests (utils.spec.ts / useSendbird.spec.tsx / SendbirdProvider.spec.tsx)
+// skip. Every argument is asserted in full: a subset match would not catch an injected param.
 vi.mock('@sendbird/chat', async () => (
   await import('../../../utils/testMocks/sendbirdChat')
 ).createSendbirdChatMock());
@@ -20,6 +23,13 @@ const mountProvider = async (props: Partial<SendbirdProviderProps>) => {
     renderWithSendbird(<div />, props);
   });
 };
+
+const initParams = (overrides: Record<string, unknown> = {}) => ({
+  appId: 'test-app-id',
+  localCacheEnabled: true,
+  modules: [expect.any(GroupChannelModule), expect.any(OpenChannelModule)],
+  ...overrides,
+});
 
 describe('SendbirdProvider — SDK init/connect consistency (integration)', () => {
   const originalConsoleError = globalThis.console.error.bind(globalThis.console);
@@ -49,7 +59,7 @@ describe('SendbirdProvider — SDK init/connect consistency (integration)', () =
     }));
   });
 
-  it('initializes SendbirdChat with the customer-provided connection params + sdkInitParams', async () => {
+  it('initializes SendbirdChat with exactly the customer-provided connection params + sdkInitParams', async () => {
     await mountProvider({
       appId: 'test-app-id',
       userId: 'test-user-id',
@@ -59,15 +69,23 @@ describe('SendbirdProvider — SDK init/connect consistency (integration)', () =
       sdkInitParams: { localCacheEnabled: false },
     });
 
-    await waitFor(() => expect(sdk.init).toHaveBeenCalledWith(
-      expect.objectContaining({
-        appId: 'test-app-id',
-        customApiHost: 'https://api.custom',
-        customWebSocketHost: 'wss://ws.custom',
-        localCacheEnabled: false, // sdkInitParams override survives the whole chain
-        modules: expect.any(Array),
-      }),
-    ));
+    await waitFor(() => expect(sdk.init).toHaveBeenCalledWith(initParams({
+      customApiHost: 'https://api.custom',
+      customWebSocketHost: 'wss://ws.custom',
+      localCacheEnabled: false,
+    })));
+  });
+
+  it('leaves customApiHost/customWebSocketHost out of the init params when the app omits them', async () => {
+    await mountProvider({ appId: 'test-app-id', userId: 'user-42' });
+
+    await waitFor(() => expect(sdk.init).toHaveBeenCalledWith(initParams()));
+  });
+
+  it.each([true, false])('forwards sdkInitParams.newInstance=%s instead of deriving one', async (newInstance) => {
+    await mountProvider({ appId: 'test-app-id', userId: 'user-42', sdkInitParams: { newInstance } });
+
+    await waitFor(() => expect(sdk.init).toHaveBeenCalledWith(initParams({ newInstance })));
   });
 
   it('connects with exactly (userId, accessToken)', async () => {
@@ -76,7 +94,7 @@ describe('SendbirdProvider — SDK init/connect consistency (integration)', () =
     await waitFor(() => expect(sdk.connect).toHaveBeenCalledWith('user-42', 'token-abc'));
   });
 
-  it('updates current user info with the provided nickname/profileUrl', async () => {
+  it('updates current user info with exactly the provided nickname/profileUrl', async () => {
     await mountProvider({
       appId: 'test-app-id',
       userId: 'user-42',
@@ -84,22 +102,31 @@ describe('SendbirdProvider — SDK init/connect consistency (integration)', () =
       profileUrl: 'https://img/alice.png',
     });
 
-    await waitFor(() => expect(sdk.updateCurrentUserInfo).toHaveBeenCalledWith(
-      expect.objectContaining({ nickname: 'Alice', profileUrl: 'https://img/alice.png' }),
-    ));
+    await waitFor(() => expect(sdk.updateCurrentUserInfo).toHaveBeenCalledWith({
+      nickname: 'Alice',
+      profileUrl: 'https://img/alice.png',
+    }));
+  });
+
+  it('fills the omitted field from the connected user rather than blanking it', async () => {
+    await mountProvider({ appId: 'test-app-id', userId: 'user-42', nickname: 'Alice' });
+
+    await waitFor(() => expect(sdk.updateCurrentUserInfo).toHaveBeenCalledWith({
+      nickname: 'Alice',
+      profileUrl: 'test-profile-url',
+    }));
   });
 
   it('does NOT update current user info when neither nickname nor profileUrl is provided', async () => {
-    await mountProvider({ appId: 'test-app-id', userId: 'user-42' });
-
-    await waitFor(() => expect(sdk.connect).toHaveBeenCalled());
-    // let the post-connect continuation (the nickname/profileUrl decision) run
-    await act(async () => {
-      await Promise.resolve();
-      await Promise.resolve();
-      await Promise.resolve();
+    const onConnected = vi.fn();
+    await mountProvider({
+      appId: 'test-app-id',
+      userId: 'user-42',
+      eventHandlers: { connection: { onConnected } },
     });
 
+    // onConnected is the last step of connect(), so it fires after the nickname/profileUrl decision.
+    await waitFor(() => expect(onConnected).toHaveBeenCalled());
     expect(sdk.updateCurrentUserInfo).not.toHaveBeenCalled();
   });
 
@@ -117,27 +144,23 @@ describe('SendbirdProvider — SDK init/connect consistency (integration)', () =
     await waitFor(() => expect(sdk.addSendbirdExtensions).toHaveBeenCalled());
     expect(sdk.addExtension).toHaveBeenCalledWith('sb_uikit', expect.any(String));
     expect(sdk.addSendbirdExtensions).toHaveBeenCalledWith(
-      expect.any(Array),
-      expect.objectContaining({ platform: 'WEB' }),
+      [{ product: 'UIKIT_CHAT', version: expect.any(String), platform: 'JS' }],
+      { platform: 'WEB' },
       { feature: 'custom' },
     );
     expect(configureSession).toHaveBeenCalledWith(sdk);
     expect(sdk.setSessionHandler).toHaveBeenCalledWith(sessionHandler);
   });
 
-  it('initializes as a new instance on first mount', async () => {
-    await mountProvider({ appId: 'test-app-id', userId: 'user-42' });
-
-    await waitFor(() => expect(sdk.init).toHaveBeenCalledWith(
-      expect.objectContaining({ newInstance: true }),
-    ));
-  });
-
   it('calls eventHandlers.connection.onConnected with the connected user', async () => {
     const onConnected = vi.fn();
     await mountProvider({ appId: 'test-app-id', userId: 'user-42', eventHandlers: { connection: { onConnected } } });
 
-    await waitFor(() => expect(onConnected).toHaveBeenCalledWith(expect.objectContaining({ userId: 'test-user-id' })));
+    await waitFor(() => expect(onConnected).toHaveBeenCalledWith({
+      userId: 'test-user-id',
+      nickname: 'test-nickname',
+      profileUrl: 'test-profile-url',
+    }));
   });
 
   it('calls eventHandlers.connection.onFailed on connect failure and skips updateCurrentUserInfo', async () => {
