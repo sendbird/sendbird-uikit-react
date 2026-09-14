@@ -84,4 +84,16 @@ describe('CreateOpenChannelProvider — callback propagation (integration)', () 
     expect(onBeforeCreateChannel).not.toHaveBeenCalled();
     expect(onCreateChannel).not.toHaveBeenCalled();
   });
+
+  it('hands the SDK what onBeforeCreateChannel returned, not the params it was given', async () => {
+    // A distinct object, so a build that calls the callback and then drops its return value fails
+    // here. Every other case in this file passes an identity callback and cannot tell the two apart.
+    const transformed = { operatorUserIds: ['me'], name: 'renamed by the app', isDistinct: true };
+    const onBeforeCreateChannel = vi.fn(() => transformed as any);
+
+    const { createChannel } = await mountCreateFlow({ onBeforeCreateChannel });
+
+    expect(onBeforeCreateChannel).toHaveBeenCalledWith(defaultParams);
+    expect(createChannel).toHaveBeenCalledWith(transformed);
+  });
 });

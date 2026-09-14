@@ -127,4 +127,61 @@ describe('OpenChannelListUI — render-prop propagation (integration)', () => {
     fireEvent.click(item!);
     expect(onChannelSelected).toHaveBeenCalledWith(channel, expect.anything());
   });
+
+  const rerenderWith = (view: ReturnType<typeof renderUI>, state: Record<string, unknown>, uiProps: Record<string, unknown>) => {
+    vi.mocked(useOpenChannelListContext).mockReturnValue({ ...baseState, ...state } as any);
+    view.rerender(
+      <LocalizationContext.Provider value={{ stringSet } as any}>
+        <OpenChannelListUI {...uiProps} />
+      </LocalizationContext.Provider>,
+    );
+  };
+
+  it('uses an updated onChannelSelected even when the channel list and render prop are unchanged', () => {
+    const channels = [{ url: 'open-1' }];
+    const renderChannelPreview = () => <div data-testid="custom-preview" />;
+    const first = vi.fn();
+    const second = vi.fn();
+
+    const view = renderUI(
+      { allChannels: channels, fetchingStatus: OpenChannelListFetchingStatus.DONE, onChannelSelected: first },
+      { renderChannelPreview },
+    );
+    // Same allChannels reference, same render prop — only the callback changes. Regression guard for
+    // a MemoizedAllChannels useMemo that omitted onChannelSelected from its deps.
+    rerenderWith(
+      view,
+      { allChannels: channels, fetchingStatus: OpenChannelListFetchingStatus.DONE, onChannelSelected: second },
+      { renderChannelPreview },
+    );
+
+    fireEvent.click(view.container.querySelector('.sendbird-open-channel-list-ui__channel-list__item')!);
+
+    expect(second).toHaveBeenCalledWith(channels[0], expect.anything());
+    expect(first).not.toHaveBeenCalled();
+  });
+
+  it('drops the channel items when fetchingStatus leaves DONE with the same channel list', () => {
+    const channels = [{ url: 'open-1' }];
+    const renderChannelPreview = () => <div data-testid="custom-preview" />;
+    const item = () => view.container.querySelector('.sendbird-open-channel-list-ui__channel-list__item');
+
+    const view = renderUI(
+      { allChannels: channels, fetchingStatus: OpenChannelListFetchingStatus.DONE },
+      { renderChannelPreview },
+    );
+    expect(item()).toBeTruthy();
+
+    // Same allChannels reference; only the status moves. This covers the behavior, not the hand-written
+    // dep: React Compiler re-infers fetchingStatus for this memo, so dropping it from the deps array
+    // does not regress. renderChannelPreview and onChannelSelected are not re-inferred and are guarded
+    // by the two tests above.
+    rerenderWith(
+      view,
+      { allChannels: channels, fetchingStatus: OpenChannelListFetchingStatus.FETCHING },
+      { renderChannelPreview },
+    );
+
+    expect(item()).toBeNull();
+  });
 });
