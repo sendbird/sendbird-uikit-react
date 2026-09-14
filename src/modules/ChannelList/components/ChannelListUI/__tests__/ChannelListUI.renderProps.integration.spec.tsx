@@ -69,4 +69,21 @@ describe('ChannelListUI (legacy) — render-prop propagation (integration)', () 
     // the custom header actually renders in place of the default
     expect(getByTestId('custom-header')).toBeInTheDocument();
   });
+
+  it('does not select a channel when clicked while offline without cache', () => {
+    const channelListDispatcher = vi.fn();
+    const channel = { url: 'url-1', name: 'ch-1' };
+    mockState.config.isOnline = false;
+
+    try {
+      const { container } = renderComponent(
+        { allChannels: [channel], initialized: true, channelListDispatcher },
+        { renderChannelPreview: () => <div data-testid="custom-preview" /> },
+      );
+      container.querySelector('[data-testid="custom-preview"]')!.parentElement!.click();
+      expect(channelListDispatcher).not.toHaveBeenCalled();
+    } finally {
+      mockState.config.isOnline = true;
+    }
+  });
 });

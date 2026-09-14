@@ -52,4 +52,16 @@ describe('GroupChannelUI — render-prop injection/forwarding (integration)', ()
     // the injected default is a real renderer (produces an element)
     expect(props.renderChannelHeader({})).toBeTruthy();
   });
+
+  it.each([
+    ['a failed channel fetch', new Error('fetch failed'), true],
+    ['no fetch error', null, false],
+  ])('derives the view invalid flag from %s', (_label, fetchChannelError, isInvalid) => {
+    vi.mocked(useGroupChannel).mockReturnValue({ state: { channelUrl: 'ch-1', fetchChannelError } } as any);
+
+    render(<GroupChannelUI />);
+
+    // The view owns the placeholder branches; this proves the failure actually reaches it.
+    expect(viewProps().isInvalid).toBe(isInvalid);
+  });
 });

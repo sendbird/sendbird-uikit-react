@@ -53,4 +53,58 @@ describe('ChannelSettingsUI — render-prop propagation (integration)', () => {
     expect(renderModerationPanel).toHaveBeenCalledWith(expect.objectContaining({ menuItems: [{ id: 'menu-x' }] }));
     expect(renderLeaveChannel).toHaveBeenCalled();
   });
+
+  it('renders only the loading placeholder while the settings are loading', () => {
+    vi.mocked(useChannelSettings).mockReturnValue({
+      state: { channel, invalidChannel: false, onCloseClick: vi.fn(), loading: true },
+    } as any);
+    const renderPlaceholderLoading = vi.fn(() => <div data-testid="loading" />);
+    const renderChannelProfile = vi.fn(() => <div />);
+
+    const { getByTestId } = render(
+      <ChannelSettingsUI
+        renderPlaceholderLoading={renderPlaceholderLoading as any}
+        renderChannelProfile={renderChannelProfile as any}
+      />,
+    );
+
+    expect(getByTestId('loading')).toBeTruthy();
+    expect(renderChannelProfile).not.toHaveBeenCalled();
+  });
+
+  it('keeps the header but drops the panel when the channel is invalid', () => {
+    vi.mocked(useChannelSettings).mockReturnValue({
+      state: { channel: null, invalidChannel: true, onCloseClick: vi.fn(), loading: false },
+    } as any);
+    const renderHeader = vi.fn(() => <div data-testid="header" />);
+    const renderPlaceholderError = vi.fn(() => <div data-testid="error" />);
+    const renderChannelProfile = vi.fn(() => <div />);
+
+    const { getByTestId } = render(
+      <ChannelSettingsUI
+        renderHeader={renderHeader as any}
+        renderPlaceholderError={renderPlaceholderError as any}
+        renderChannelProfile={renderChannelProfile as any}
+      />,
+    );
+
+    expect(getByTestId('header')).toBeTruthy();
+    expect(getByTestId('error')).toBeTruthy();
+    expect(renderChannelProfile).not.toHaveBeenCalled();
+  });
+
+  it('disables the default leave-channel item while offline', () => {
+    vi.mocked(useSendbird).mockReturnValue({ state: { config: { isOnline: false } } } as any);
+
+    const { container } = render(
+      <ChannelSettingsUI
+        renderHeader={(() => <div />) as any}
+        renderModerationPanel={(() => <div />) as any}
+      />,
+    );
+
+    const leave = container.querySelector('.sendbird-channel-settings__panel-item__leave-channel');
+    expect(leave).toBeTruthy();
+    expect(leave!.className).toContain('sendbird-channel-settings__panel-item__disabled');
+  });
 });

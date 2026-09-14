@@ -54,4 +54,22 @@ describe('OpenChannelUI — render-prop injection/forwarding (integration)', () 
     expect(vi.mocked(OpenChannelInput)).toHaveBeenCalled();
     expect(lastListProps().renderMessage).toBeUndefined();
   });
+
+  it.each([
+    ['no current channel', { currentOpenChannel: null }, 'renderPlaceHolderError'],
+    ['a banned viewer', { amIBanned: true }, 'renderPlaceHolderError'],
+    ['a loading channel', { loading: true }, 'renderPlaceHolderLoading'],
+    ['an invalid channel', { isInvalid: true }, 'renderPlaceHolderError'],
+  ])('renders %s through its placeholder prop and no header/list/input', (_label, context, placeholderProp) => {
+    const placeholder = vi.fn(() => <div data-testid="placeholder" />);
+    vi.mocked(useOpenChannelContext).mockReturnValue({ ...baseContext, ...(context as object) } as any);
+
+    const { getByTestId } = render(<OpenChannelUI {...{ [placeholderProp as string]: placeholder }} />);
+
+    expect(placeholder).toHaveBeenCalled();
+    expect(getByTestId('placeholder')).toBeTruthy();
+    expect(vi.mocked(OpenChannelMessageList)).not.toHaveBeenCalled();
+    expect(vi.mocked(OpenChannelHeader)).not.toHaveBeenCalled();
+    expect(vi.mocked(OpenChannelInput)).not.toHaveBeenCalled();
+  });
 });

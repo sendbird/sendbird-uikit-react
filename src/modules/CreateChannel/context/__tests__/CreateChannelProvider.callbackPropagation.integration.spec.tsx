@@ -39,4 +39,20 @@ describe('CreateChannelProvider — callback propagation (integration)', () => {
       expect(result.current.state.onCreateChannelClick).toBe(onCreateChannelClick);
     });
   });
+
+  it('leaves the callbacks undefined on the state when the app supplies none', async () => {
+    const wrapper = ({ children }) => (
+      <CreateChannelProvider onChannelCreated={vi.fn()}>{children}</CreateChannelProvider>
+    );
+
+    const { result } = renderHook(() => useCreateChannel(), { wrapper });
+
+    // InviteUsers branches on these being absent (`if (onBeforeCreateChannel)` /
+    // `typeof onCreateChannelClick === 'function'`), so an injected default would take the
+    // default-params branch out of reach.
+    await waitFor(() => {
+      expect(result.current.state.onBeforeCreateChannel).toBeUndefined();
+      expect(result.current.state.onCreateChannelClick).toBeUndefined();
+    });
+  });
 });

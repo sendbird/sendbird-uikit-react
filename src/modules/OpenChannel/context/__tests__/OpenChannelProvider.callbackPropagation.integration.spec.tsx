@@ -52,12 +52,12 @@ const callbacks = {
   onBackClick: vi.fn(),
 };
 
-const renderContext = async () => {
+const renderContext = async (props: Record<string, unknown> = callbacks) => {
   vi.mocked(useSendbird).mockReturnValue(sendbirdState as any);
   // Empty channelUrl short-circuits useSetChannel (no channel load) — the callbacks come straight
   // from props to the context value, so no channel is needed to verify their propagation.
   const wrapper = ({ children }) => (
-    <OpenChannelProvider channelUrl="" {...callbacks}>
+    <OpenChannelProvider channelUrl="" {...props}>
       {children}
     </OpenChannelProvider>
   );
@@ -77,5 +77,16 @@ describe('OpenChannelProvider — callback propagation (integration)', () => {
     expect(result.current.onBeforeSendFileMessage).toBe(callbacks.onBeforeSendFileMessage);
     expect(result.current.onChatHeaderActionClick).toBe(callbacks.onChatHeaderActionClick);
     expect(result.current.onBackClick).toBe(callbacks.onBackClick);
+  });
+
+  it('leaves every callback undefined on the context when the app supplies none', async () => {
+    const result = await renderContext({});
+
+    // The send path branches on these being absent (`onBeforeSendUserMessage ? ... : createParamsDefault(...)`),
+    // so a UIKit-injected passthrough would silently retire the default-params branch.
+    expect(result.current.onBeforeSendUserMessage).toBeUndefined();
+    expect(result.current.onBeforeSendFileMessage).toBeUndefined();
+    expect(result.current.onChatHeaderActionClick).toBeUndefined();
+    expect(result.current.onBackClick).toBeUndefined();
   });
 });

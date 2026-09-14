@@ -69,4 +69,22 @@ describe('MessageSearchUI — render-prop propagation (integration)', () => {
 
     expect(renderPlaceHolderEmptyList).toHaveBeenCalled();
   });
+
+  it.each([
+    ['an invalid search', { isInvalid: true }, 'renderPlaceHolderError'],
+    ['a search in flight', { loading: true }, 'renderPlaceHolderLoading'],
+    ['an empty search string', { searchString: '' }, 'renderPlaceHolderNoString'],
+  ])('renders %s through its placeholder prop and no search item', (_label, state, placeholderProp) => {
+    const renderSearchItem = vi.fn(() => <div />);
+    const placeholder = vi.fn(() => <div data-testid="placeholder" />);
+
+    const { getByTestId } = renderUI(
+      { ...(state as object), allMessages: [{ messageId: 1, messageType: 'user' }] },
+      { renderSearchItem, [placeholderProp as string]: placeholder },
+    );
+
+    expect(placeholder).toHaveBeenCalled();
+    expect(getByTestId('placeholder')).toBeTruthy();
+    expect(renderSearchItem).not.toHaveBeenCalled();
+  });
 });

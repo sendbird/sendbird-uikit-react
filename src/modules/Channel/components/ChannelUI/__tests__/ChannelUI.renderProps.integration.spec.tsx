@@ -44,4 +44,12 @@ describe('ChannelUI (legacy) — render-prop injection/forwarding (integration)'
     expect(props.renderMessageList({})).toBeTruthy();
     expect(props.renderMessageInput()).toBeTruthy();
   });
+
+  it('forwards the context invalid state to the view', () => {
+    vi.mocked(useChannelContext).mockReturnValue({ channelUrl: 'ch-1', isInvalid: true } as any);
+
+    render(<ChannelUI />);
+
+    expect(viewProps().isInvalid).toBe(true);
+  });
 });
