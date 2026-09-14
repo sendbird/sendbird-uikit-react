@@ -82,6 +82,17 @@ describe('SendbirdProvider — SDK init/connect consistency (integration)', () =
     await waitFor(() => expect(sdk.init).toHaveBeenCalledWith(initParams()));
   });
 
+  it('treats empty-string hosts as absent rather than passing them to init', async () => {
+    await mountProvider({
+      appId: 'test-app-id',
+      userId: 'user-42',
+      customApiHost: '',
+      customWebSocketHost: '',
+    });
+
+    await waitFor(() => expect(sdk.init).toHaveBeenCalledWith(initParams()));
+  });
+
   it.each([true, false])('forwards sdkInitParams.newInstance=%s instead of deriving one', async (newInstance) => {
     await mountProvider({ appId: 'test-app-id', userId: 'user-42', sdkInitParams: { newInstance } });
 
@@ -128,6 +139,37 @@ describe('SendbirdProvider — SDK init/connect consistency (integration)', () =
     // onConnected is the last step of connect(), so it fires after the nickname/profileUrl decision.
     await waitFor(() => expect(onConnected).toHaveBeenCalled());
     expect(sdk.updateCurrentUserInfo).not.toHaveBeenCalled();
+  });
+
+  it('does NOT update current user info when nickname and profileUrl are empty strings', async () => {
+    const onConnected = vi.fn();
+    await mountProvider({
+      appId: 'test-app-id',
+      userId: 'user-42',
+      nickname: '',
+      profileUrl: '',
+      eventHandlers: { connection: { onConnected } },
+    });
+
+    await waitFor(() => expect(onConnected).toHaveBeenCalled());
+    expect(sdk.updateCurrentUserInfo).not.toHaveBeenCalled();
+  });
+
+  it('reports an init failure through onFailed instead of rejecting', async () => {
+    const error = new Error('appId is required');
+    sdk.init.mockImplementationOnce(() => { throw error; });
+    const onFailed = vi.fn();
+    const onConnected = vi.fn();
+
+    await mountProvider({
+      appId: '',
+      userId: 'user-42',
+      eventHandlers: { connection: { onFailed, onConnected } },
+    });
+
+    await waitFor(() => expect(onFailed).toHaveBeenCalledWith(error));
+    expect(sdk.connect).not.toHaveBeenCalled();
+    expect(onConnected).not.toHaveBeenCalled();
   });
 
   it('passes setupSDK extensions, platform, customExtensionParams and session handler through', async () => {

@@ -13,7 +13,7 @@ const mockState = {
     sdkStore: { sdk: { currentUser: { userId: 'test-user-id' } }, initialized: true },
   },
   config: {
-    logger: console,
+    logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() },
     userId: 'test-user-id',
     groupChannel: { enableMention: true },
     isOnline: true,
@@ -76,5 +76,41 @@ describe('GroupChannelListUI — render-prop propagation (integration)', () => {
     expect(renderHeader).toHaveBeenCalled();
     // the custom header actually renders in place of the default
     expect(getByTestId('custom-header')).toBeInTheDocument();
+  });
+
+  it('hands renderChannelPreview exactly the group channel item props', () => {
+    const channel = { name: 'ch-1', url: 'url-1' };
+    let payload: Record<string, unknown> = {};
+    const renderChannelPreview = vi.fn((props: Record<string, unknown>) => {
+      payload = props;
+      return <div />;
+    });
+
+    renderComponent({ groupChannels: [channel], initialized: true }, { renderChannelPreview });
+
+    expect(Object.keys(payload).sort()).toEqual([
+      'channel', 'isSelected', 'isTyping', 'onClick', 'onLeaveChannel', 'renderChannelAction', 'tabIndex',
+    ]);
+    expect(payload.channel).toBe(channel);
+    expect(payload.tabIndex).toBe(0);
+    expect(payload.isSelected).toBe(false);
+    expect(payload.isTyping).toBe(false);
+  });
+
+  it('does not select a channel when clicked while offline without cache', () => {
+    const onChannelSelect = vi.fn();
+    const channel = { name: 'ch-1', url: 'url-1' };
+    mockState.config.isOnline = false;
+
+    try {
+      const { container } = renderComponent(
+        { groupChannels: [channel], initialized: true, onChannelSelect },
+        { renderChannelPreview: () => <div data-testid="custom-preview" /> },
+      );
+      container.querySelector('[data-testid="custom-preview"]')!.parentElement!.click();
+      expect(onChannelSelect).not.toHaveBeenCalled();
+    } finally {
+      mockState.config.isOnline = true;
+    }
   });
 });

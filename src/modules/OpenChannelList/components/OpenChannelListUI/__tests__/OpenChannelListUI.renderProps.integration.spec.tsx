@@ -96,4 +96,35 @@ describe('OpenChannelListUI — render-prop propagation (integration)', () => {
 
     expect(onChannelSelected).toHaveBeenCalledWith(expect.objectContaining({ url: 'open-1' }), expect.anything());
   });
+
+  it.each([
+    [OpenChannelListFetchingStatus.EMPTY, 'renderPlaceHolderEmpty'],
+    [OpenChannelListFetchingStatus.FETCHING, 'renderPlaceHolderLoading'],
+    [OpenChannelListFetchingStatus.ERROR, 'renderPlaceHolderError'],
+  ])('shows %s through its placeholder render prop and renders no channel item', (fetchingStatus, placeholderProp) => {
+    const renderChannelPreview = vi.fn(() => <div />);
+    const placeholder = vi.fn(() => <div data-testid="placeholder" />);
+    const { getByTestId } = renderUI(
+      { fetchingStatus, allChannels: [{ url: 'open-1' }] },
+      { renderChannelPreview, [placeholderProp as string]: placeholder },
+    );
+
+    expect(placeholder).toHaveBeenCalled();
+    expect(getByTestId('placeholder')).toBeTruthy();
+    expect(renderChannelPreview).not.toHaveBeenCalled();
+  });
+
+  it('keeps the channel clickable when a custom renderChannelPreview renders nothing', () => {
+    const onChannelSelected = vi.fn();
+    const channel = { url: 'open-1' };
+    const { container } = renderUI(
+      { allChannels: [channel], onChannelSelected },
+      { renderChannelPreview: () => null },
+    );
+
+    const item = container.querySelector('.sendbird-open-channel-list-ui__channel-list__item');
+    expect(item).toBeTruthy();
+    fireEvent.click(item!);
+    expect(onChannelSelected).toHaveBeenCalledWith(channel, expect.anything());
+  });
 });

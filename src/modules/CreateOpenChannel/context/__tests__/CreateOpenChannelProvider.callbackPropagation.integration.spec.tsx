@@ -11,6 +11,29 @@ vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({ __esModul
 
 const mockCreatedChannel = { url: 'created-open-channel' };
 
+const defaultParams = { operatorUserIds: ['me'], name: 'My Open Channel', coverUrlOrImage: undefined };
+
+const mountCreateFlow = async ({ initialized = true, ...props }: Record<string, any> = {}) => {
+  const createChannel = vi.fn().mockResolvedValue(mockCreatedChannel);
+  vi.mocked(useSendbird).mockReturnValue({
+    state: {
+      stores: { sdkStore: { sdk: { openChannel: { createChannel }, currentUser: { userId: 'me' } }, initialized } },
+      config: { logger: console },
+    },
+  } as any);
+
+  const wrapper = ({ children }) => (
+    <CreateOpenChannelProvider {...props}>{children}</CreateOpenChannelProvider>
+  );
+  const { result } = renderHook(() => useCreateOpenChannelContext(), { wrapper });
+
+  await act(async () => {
+    result.current.createNewOpenChannel({ name: 'My Open Channel' });
+    await Promise.resolve();
+  });
+  return { createChannel };
+};
+
 describe('CreateOpenChannelProvider — callback propagation (integration)', () => {
   it('invokes onBeforeCreateChannel and onCreateChannel through the create flow', async () => {
     const createChannel = vi.fn().mockResolvedValue(mockCreatedChannel);
@@ -38,9 +61,27 @@ describe('CreateOpenChannelProvider — callback propagation (integration)', () 
     });
 
     // onBeforeCreateChannel receives (and can transform) the params handed to the SDK
-    expect(onBeforeCreateChannel).toHaveBeenCalledWith(expect.objectContaining({ name: 'My Open Channel' }));
-    expect(createChannel).toHaveBeenCalledWith(expect.objectContaining({ name: 'My Open Channel' }));
+    expect(onBeforeCreateChannel).toHaveBeenCalledWith(defaultParams);
+    expect(createChannel).toHaveBeenCalledWith(defaultParams);
     // onCreateChannel receives the created channel after the SDK resolves
     await waitFor(() => expect(onCreateChannel).toHaveBeenCalledWith(mockCreatedChannel));
+  });
+
+  it.each([undefined, null])('falls back to the default params when onBeforeCreateChannel returns %s', async (returned) => {
+    const onBeforeCreateChannel = vi.fn(() => returned as any);
+    const { createChannel } = await mountCreateFlow({ onBeforeCreateChannel });
+
+    expect(onBeforeCreateChannel).toHaveBeenCalledWith(defaultParams);
+    expect(createChannel).toHaveBeenCalledWith(defaultParams);
+  });
+
+  it('creates no channel and invokes no callback while the SDK is not initialized', async () => {
+    const onBeforeCreateChannel = vi.fn();
+    const onCreateChannel = vi.fn();
+    const { createChannel } = await mountCreateFlow({ initialized: false, onBeforeCreateChannel, onCreateChannel });
+
+    expect(createChannel).not.toHaveBeenCalled();
+    expect(onBeforeCreateChannel).not.toHaveBeenCalled();
+    expect(onCreateChannel).not.toHaveBeenCalled();
   });
 });

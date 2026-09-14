@@ -21,10 +21,10 @@ const callbacks = {
   onBeforeUpdateUserMessage: vi.fn((p) => p),
 };
 
-const renderContext = async () => {
+const renderContext = async (props: Record<string, unknown> = callbacks) => {
   vi.mocked(useSendbird).mockReturnValue(sendbirdState as any);
   const wrapper = ({ children }: { children?: React.ReactNode }) => (
-    <GroupChannelProvider channelUrl="test-channel" {...callbacks}>
+    <GroupChannelProvider channelUrl="test-channel" {...props}>
       {children}
     </GroupChannelProvider>
   );
@@ -45,5 +45,17 @@ describe('GroupChannelProvider — message callback propagation (integration)', 
     expect(result.current.onBeforeSendVoiceMessage).toBe(callbacks.onBeforeSendVoiceMessage);
     expect(result.current.onBeforeSendMultipleFilesMessage).toBe(callbacks.onBeforeSendMultipleFilesMessage);
     expect(result.current.onBeforeUpdateUserMessage).toBe(callbacks.onBeforeUpdateUserMessage);
+  });
+
+  it('leaves every onBefore* callback undefined when the app supplies none', async () => {
+    const result = await renderContext({});
+
+    // The send path branches on these being absent (`onBeforeSendUserMessage ? ... : createParamsDefault()`),
+    // so a UIKit-injected passthrough default would silently kill the default-params branch.
+    expect(result.current.onBeforeSendUserMessage).toBeUndefined();
+    expect(result.current.onBeforeSendFileMessage).toBeUndefined();
+    expect(result.current.onBeforeSendVoiceMessage).toBeUndefined();
+    expect(result.current.onBeforeSendMultipleFilesMessage).toBeUndefined();
+    expect(result.current.onBeforeUpdateUserMessage).toBeUndefined();
   });
 });
