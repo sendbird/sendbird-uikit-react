@@ -63,7 +63,7 @@ function newestMtime(dir) {
   return newest;
 }
 
-function main() {
+export function main() {
   if (!existsSync(TYPES)) {
     console.error(`${relative(ROOT, TYPES)} not found. Run \`yarn build\` first.`);
     process.exit(1);
@@ -83,4 +83,3 @@ function main() {
   console.log(`${relative(ROOT, OUT)}: ${declarations.length} declarations, ${snapshot.split('\n').length} lines`);
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
