@@ -51,7 +51,9 @@ describe('buildExports', () => {
     });
 
     const targets = [
-      ...Object.values(exports).flatMap((e) => (typeof e === 'object' && e.types ? [e.types] : [])),
+      ...(Object.values(exports) as Array<string | { types?: string }>)
+        .map((e) => (typeof e === 'string' ? undefined : e.types))
+        .filter((t): t is string => t !== undefined),
       ...Object.values(typesVersions['*']).flat(),
     ];
 
