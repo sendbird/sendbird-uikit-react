@@ -57,10 +57,17 @@ function buildTypeDefinitions() {
   execSync('tsc --project tsconfig.build.json --emitDeclarationOnly --declarationDir dist/types --declaration', { stdio: 'inherit' });
 }
 
-/** Copy content of package.json to dist, but remove unnecessary fields */
-movePackageJSON();
-/** Copy content of package.json to dist/cjs, to support cjs module separately */
-copyCJSPackageJSON();
+async function main() {
+  /** Copy content of package.json to dist, but remove unnecessary fields */
+  await movePackageJSON();
+  /** Copy content of package.json to dist/cjs, to support cjs module separately */
+  copyCJSPackageJSON();
 
-removeUnusedCSS();
-buildTypeDefinitions();
+  removeUnusedCSS();
+  buildTypeDefinitions();
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
