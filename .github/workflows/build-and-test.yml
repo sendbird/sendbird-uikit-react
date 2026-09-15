@@ -44,6 +44,17 @@ jobs:
         run: |
           yarn build
 
+      - name: Check public API surface
+        if: ${{ success() }}
+        run: |
+          git ls-files --error-unmatch api/surface.d.ts > /dev/null
+          yarn api:snapshot
+          if ! git diff --quiet api/surface.d.ts; then
+            echo "::error::Public API surface changed. Run 'yarn build && yarn api:snapshot' and commit api/surface.d.ts."
+            git diff api/surface.d.ts
+            exit 1
+          fi
+
       - name: Run test
         if: ${{ success() }}
         timeout-minutes: 15
