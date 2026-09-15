@@ -58,6 +58,11 @@ jobs:
             exit 1
           fi
 
+      - name: Check published package shape
+        if: ${{ success() }}
+        run: |
+          yarn package:check
+
       - name: Run test
         if: ${{ success() }}
         timeout-minutes: 15
