@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'fs';
 import { dirname, join, relative, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -6,15 +6,16 @@ import moduleExports from '../rollup.module-exports.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const TYPES = join(ROOT, 'dist', 'types');
+const SRC = join(ROOT, 'src');
 const OUT = join(ROOT, 'api', 'surface.d.ts');
 
 const SPECIFIER = /(?:from\s*['"]([^'"]+)['"])|(?:import\(\s*['"]([^'"]+)['"]\s*\))/g;
 
-function entryDeclaration(sourcePath) {
-  return join(TYPES, sourcePath.replace(/^src\//, '').replace(/\.tsx?$/, '.d.ts'));
+export function entryDeclaration(typesDir, sourcePath) {
+  return join(typesDir, sourcePath.replace(/^src\//, '').replace(/\.tsx?$/, '.d.ts'));
 }
 
-function resolveSpecifier(fromFile, specifier) {
+export function resolveSpecifier(fromFile, specifier) {
   if (!specifier.startsWith('.')) return null;
   const base = resolve(dirname(fromFile), specifier);
   for (const candidate of [`${base}.d.ts`, join(base, 'index.d.ts')]) {
@@ -23,12 +24,12 @@ function resolveSpecifier(fromFile, specifier) {
   return null;
 }
 
-function reachableDeclarations() {
+export function collectDeclarations(typesDir, sourcePaths) {
   const seen = new Set();
   const pending = [];
 
-  for (const sourcePath of Object.values(moduleExports)) {
-    const declaration = entryDeclaration(sourcePath);
+  for (const sourcePath of sourcePaths) {
+    const declaration = entryDeclaration(typesDir, sourcePath);
     if (existsSync(declaration)) pending.push(declaration);
   }
 
@@ -37,8 +38,7 @@ function reachableDeclarations() {
     if (seen.has(file)) continue;
     seen.add(file);
 
-    const text = readFileSync(file, 'utf-8');
-    for (const match of text.matchAll(SPECIFIER)) {
+    for (const match of readFileSync(file, 'utf-8').matchAll(SPECIFIER)) {
       const next = resolveSpecifier(file, match[1] ?? match[2]);
       if (next && !seen.has(next)) pending.push(next);
     }
@@ -47,17 +47,40 @@ function reachableDeclarations() {
   return [...seen].sort();
 }
 
-if (!existsSync(TYPES)) {
-  console.error(`${relative(ROOT, TYPES)} not found. Run \`yarn build\` first.`);
-  process.exit(1);
+export function renderSnapshot(typesDir, declarations) {
+  return declarations
+    .map((file) => `// ===== ${relative(typesDir, file)} =====\n${readFileSync(file, 'utf-8')}`)
+    .join('');
 }
 
-const declarations = reachableDeclarations();
-const snapshot = declarations
-  .map((file) => `// ===== ${relative(TYPES, file)} =====\n${readFileSync(file, 'utf-8')}`)
-  .join('');
+function newestMtime(dir) {
+  let newest = 0;
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+    const mtime = entry.isDirectory() ? newestMtime(path) : statSync(path).mtimeMs;
+    if (mtime > newest) newest = mtime;
+  }
+  return newest;
+}
 
-mkdirSync(dirname(OUT), { recursive: true });
-writeFileSync(OUT, snapshot);
+function main() {
+  if (!existsSync(TYPES)) {
+    console.error(`${relative(ROOT, TYPES)} not found. Run \`yarn build\` first.`);
+    process.exit(1);
+  }
 
-console.log(`${relative(ROOT, OUT)}: ${declarations.length} declarations, ${snapshot.split('\n').length} lines`);
+  // A stale tree still snapshots cleanly, so the mismatch would only surface in CI.
+  if (existsSync(SRC) && newestMtime(SRC) > newestMtime(TYPES)) {
+    console.warn(`warning: src/ is newer than ${relative(ROOT, TYPES)}. Run \`yarn build\` first.`);
+  }
+
+  const declarations = collectDeclarations(TYPES, Object.values(moduleExports));
+  const snapshot = renderSnapshot(TYPES, declarations);
+
+  mkdirSync(dirname(OUT), { recursive: true });
+  writeFileSync(OUT, snapshot);
+
+  console.log(`${relative(ROOT, OUT)}: ${declarations.length} declarations, ${snapshot.split('\n').length} lines`);
+}
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
