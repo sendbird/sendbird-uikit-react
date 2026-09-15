@@ -2,7 +2,12 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join, relative } from 'path';
 
-import { collectDeclarations, entryDeclaration, renderSnapshot, resolveSpecifier } from '../api_surface.mjs';
+import {
+  collectDeclarations,
+  entryDeclaration,
+  renderSnapshot,
+  resolveSpecifier,
+} from '../api_surface.mjs';
 
 let typesDir: string;
 
@@ -108,6 +113,49 @@ describe('collectDeclarations', () => {
   });
 });
 
+describe('entry point map', () => {
+  const entries = {
+    'Channel/components/MessageInput': 'src/modules/Channel/components/MessageInputWrapper/index.tsx',
+    'Channel/components/MessageInputWrapper': 'src/modules/Channel/components/MessageInputWrapper/index.tsx',
+    App: 'src/modules/App/index.tsx',
+  };
+
+  const snapshotOf = (map: Record<string, string>) => {
+    write('modules/App/index.d.ts', 'export declare const App: unknown;\n');
+    write('modules/Channel/components/MessageInputWrapper/index.d.ts', 'export declare const W: unknown;\n');
+    return renderSnapshot(typesDir, collectDeclarations(typesDir, Object.values(map)), map);
+  };
+
+  it('sorts by public path so the diff does not move with declaration order', () => {
+    const paths = snapshotOf(entries)
+      .split('\n')
+      .filter((l) => l.includes('  <-  '))
+      .map((l) => l.slice(3).split('  <-  ')[0].trim());
+
+    expect(paths).toEqual(['App', 'Channel/components/MessageInput', 'Channel/components/MessageInputWrapper']);
+  });
+
+  it('shows a removed path even though another path keeps its declaration reachable', () => {
+    const rest = { ...entries };
+    delete rest['Channel/components/MessageInput'];
+
+    expect(snapshotOf(rest)).not.toBe(snapshotOf(entries));
+  });
+
+  it('shows a renamed path', () => {
+    const renamed = { ...entries, 'Channel/components/MessageInputRenamed': entries['Channel/components/MessageInput'] };
+    delete renamed['Channel/components/MessageInput'];
+
+    expect(snapshotOf(renamed)).not.toBe(snapshotOf(entries));
+  });
+
+  it('shows a path repointed at a source another entry already reaches', () => {
+    const repointed = { ...entries, 'Channel/components/MessageInput': 'src/modules/App/index.tsx' };
+
+    expect(snapshotOf(repointed)).not.toBe(snapshotOf(entries));
+  });
+});
+
 describe('renderSnapshot', () => {
   it('labels every declaration with its path so a diff names the file', () => {
     write('entry.d.ts', "export * from './shared';\n");
@@ -118,6 +166,21 @@ describe('renderSnapshot', () => {
         "export * from './shared';\n" +
         '// ===== shared.d.ts =====\n' +
         'export interface Shared {}\n',
+    );
+  });
+
+  it('puts the entry points ahead of the declarations', () => {
+    write('entry.d.ts', 'export declare const a: number;\n');
+
+    const out = renderSnapshot(typesDir, collectDeclarations(typesDir, ['src/entry.ts']), {
+      Entry: 'src/entry.ts',
+    });
+
+    expect(out).toBe(
+      '// ===== public entry points =====\n' +
+        '// Entry  <-  src/entry.ts\n' +
+        '// ===== entry.d.ts =====\n' +
+        'export declare const a: number;\n',
     );
   });
 

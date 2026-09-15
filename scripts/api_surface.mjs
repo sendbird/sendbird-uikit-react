@@ -47,10 +47,24 @@ export function collectDeclarations(typesDir, sourcePaths) {
   return [...seen].sort();
 }
 
-export function renderSnapshot(typesDir, declarations) {
-  return declarations
-    .map((file) => `// ===== ${relative(typesDir, file)} =====\n${readFileSync(file, 'utf-8')}`)
+export function renderEntryPoints(entries) {
+  const width = Math.max(...Object.keys(entries).map((name) => name.length));
+  return Object.keys(entries)
+    .sort()
+    .map((name) => `// ${name.padEnd(width)}  <-  ${entries[name]}\n`)
     .join('');
+}
+
+export function renderSnapshot(typesDir, declarations, entries) {
+  const header = entries
+    ? `// ===== public entry points =====\n${renderEntryPoints(entries)}`
+    : '';
+  return (
+    header +
+    declarations
+      .map((file) => `// ===== ${relative(typesDir, file)} =====\n${readFileSync(file, 'utf-8')}`)
+      .join('')
+  );
 }
 
 function newestMtime(dir) {
@@ -75,7 +89,7 @@ export function main() {
   }
 
   const declarations = collectDeclarations(TYPES, Object.values(moduleExports));
-  const snapshot = renderSnapshot(TYPES, declarations);
+  const snapshot = renderSnapshot(TYPES, declarations, moduleExports);
 
   mkdirSync(dirname(OUT), { recursive: true });
   writeFileSync(OUT, snapshot);
