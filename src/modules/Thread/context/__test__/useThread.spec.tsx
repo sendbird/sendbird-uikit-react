@@ -51,7 +51,7 @@ vi.mock('../../../../lib/Sendbird/context/hooks/useSendbird', () => ({
         userStore: { user: { userId: 'test-user-id' } },
       },
       config: {
-        logger: console,
+        logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() },
         pubSub: mockPubSub,
         groupChannel: {
           enableMention: true,

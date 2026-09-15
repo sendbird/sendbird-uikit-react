@@ -123,6 +123,7 @@ function OpenChannelListUI({
             <div
               className="sendbird-open-channel-list-ui__channel-list__item"
               onClick={handleClick}
+              key={channel?.url}
             >
               {renderChannelPreview({ channel, isSelected, onChannelSelected })}
             </div>
@@ -139,7 +140,16 @@ function OpenChannelListUI({
       });
     }
     return null;
-  }, [allChannels, allChannels.length, currentChannel]);
+  }, [
+    allChannels,
+    allChannels.length,
+    currentChannel,
+    fetchingStatus,
+    renderChannelPreview,
+    onChannelSelected,
+    logger,
+    openChannelListDispatcher,
+  ]);
 
   return (
     <div className="sendbird-open-channel-list-ui">

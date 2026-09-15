@@ -15,7 +15,7 @@ const mockState = {
     },
   },
   config: {
-    logger: console,
+    logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() },
     groupChannelList: {
     },
   },

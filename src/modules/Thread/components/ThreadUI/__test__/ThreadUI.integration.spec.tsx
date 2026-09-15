@@ -45,7 +45,7 @@ const mockState = {
     userStore: { user: { userId: 'test-user-id' } },
   },
   config: {
-    logger: console,
+    logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() },
     isOnline: true,
     pubSub: {
       publish: vi.fn(),
@@ -122,7 +122,7 @@ const defaultMockActions = {
   }),
 };
 
-describe('CreateChannelUI Integration Tests', () => {
+describe('ThreadUI Integration Tests', () => {
   const mockUseThread = useThreadModule.default as Mock;
 
   const renderComponent = (mockState = {}, mockActions = {}) => {
