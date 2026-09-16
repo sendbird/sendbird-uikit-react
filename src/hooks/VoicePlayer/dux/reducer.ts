@@ -81,6 +81,10 @@ export default function voicePlayerReducer(
     case ON_VOICE_PLAYER_PAUSE: {
       const { groupKey, duration, currentTime } = action.payload as OnVoicePlayerPausePayload;
       const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue()) as AudioStorageUnit;
+      // a unit that was reset must not be revived by the events the paused player already queued
+      if (audioUnit.playingStatus === VOICE_PLAYER_STATUS.IDLE) {
+        return state;
+      }
       audioUnit.playingStatus = VOICE_PLAYER_STATUS.PAUSED;
       if (duration === currentTime) {
         audioUnit.playbackTime = 0;
@@ -95,8 +99,11 @@ export default function voicePlayerReducer(
     }
     case ON_CURRENT_TIME_UPDATE: {
       const { groupKey } = action.payload as OnCurrentTimeUpdatePayload;
-      const { currentTime, duration } = state.currentPlayer as HTMLAudioElement;
       const audioUnit = (state.audioStorage?.[groupKey] ? state.audioStorage[groupKey] : AudioUnitDefaultValue()) as AudioStorageUnit;
+      if (audioUnit.playingStatus === VOICE_PLAYER_STATUS.IDLE) {
+        return state;
+      }
+      const { currentTime, duration } = state.currentPlayer as HTMLAudioElement;
       // sometimes the final time update is fired AFTER the pause event when audio is finished
       if (audioUnit.playbackTime === audioUnit.duration && audioUnit.playingStatus === VOICE_PLAYER_STATUS.PAUSED) {
         audioUnit.playbackTime = 0;
