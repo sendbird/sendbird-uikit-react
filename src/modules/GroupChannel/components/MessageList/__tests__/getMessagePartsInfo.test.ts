@@ -136,3 +136,65 @@ describe('getMessagePartsInfo - unread "New Messages" separator stays gated by s
     expect(partsFor(userMessage(SEP_10, 'succeeded')).hasNewMessageSeparator).toBe(true);
   });
 });
+
+describe('getMessagePartsInfo - date separator alongside the unread separator (enableMarkAsUnread)', () => {
+  const partsForList = (allMessages: CoreMessageType[], firstUnreadMessageId: number) => {
+    return allMessages.map((currentMessage, currentIndex) => {
+      const { hasSeparator, hasNewMessageSeparator } = getMessagePartsInfo({
+        stringSet,
+        isMessageGroupingEnabled: false,
+        currentChannel: null,
+        allMessages,
+        currentIndex,
+        currentMessage,
+        isUnreadMessageExistInChannel: { current: true },
+        firstUnreadMessageId,
+      });
+      return { hasSeparator, hasNewMessageSeparator };
+    });
+  };
+
+  it('keeps the unread separator on its own message when a pending message below it opens a new day', () => {
+    const read09 = userMessage(SEP_09, 'succeeded');
+    const unread09 = userMessage(SEP_09 + 1000, 'succeeded');
+    const pending10 = userMessage(SEP_10, 'pending');
+
+    expect(partsForList([read09, unread09, pending10], unread09.messageId)).toEqual([
+      { hasSeparator: true, hasNewMessageSeparator: false },
+      { hasSeparator: false, hasNewMessageSeparator: true },
+      { hasSeparator: true, hasNewMessageSeparator: false },
+    ]);
+  });
+
+  it('renders both separators on the unread boundary message when it also starts a new day', () => {
+    const read09 = userMessage(SEP_09, 'succeeded');
+    const unread10 = userMessage(SEP_10, 'succeeded');
+
+    expect(partsForList([read09, unread10], unread10.messageId)).toEqual([
+      { hasSeparator: true, hasNewMessageSeparator: false },
+      { hasSeparator: true, hasNewMessageSeparator: true },
+    ]);
+  });
+
+  it('does not move the unread separator onto a displaced failed message sorted below it', () => {
+    const read09 = userMessage(SEP_09, 'succeeded');
+    const unread10 = userMessage(SEP_10, 'succeeded');
+    const displacedFailed09 = userMessage(SEP_09 + 2000, 'failed');
+
+    expect(partsForList([read09, unread10, displacedFailed09], unread10.messageId)).toEqual([
+      { hasSeparator: true, hasNewMessageSeparator: false },
+      { hasSeparator: true, hasNewMessageSeparator: true },
+      { hasSeparator: false, hasNewMessageSeparator: false },
+    ]);
+  });
+
+  it('never marks a pending message as the unread boundary even when it is the only unread candidate', () => {
+    const read09 = userMessage(SEP_09, 'succeeded');
+    const pending10 = userMessage(SEP_10, 'pending');
+
+    expect(partsForList([read09, pending10], pending10.messageId)).toEqual([
+      { hasSeparator: true, hasNewMessageSeparator: false },
+      { hasSeparator: true, hasNewMessageSeparator: false },
+    ]);
+  });
+});
