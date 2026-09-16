@@ -4,6 +4,7 @@ import { act, render, renderHook } from '@testing-library/react';
 import { VOICE_PLAYER_AUDIO_ID } from '../../../utils/consts';
 import { VOICE_PLAYER_STATUS } from '../dux/initialState';
 import { useVoicePlayer } from '../useVoicePlayer';
+import { createMountRegistry, MountRegistry, MountRegistryProvider } from '../mountRegistry';
 
 const mocks = vi.hoisted(() => ({
   play: vi.fn(),
@@ -75,22 +76,22 @@ const unmountAfterDiscardedTransition = () => {
   unmount();
 };
 
+beforeEach(() => {
+  vi.clearAllMocks();
+  Object.keys(mocks.audioStorage).forEach((key) => delete mocks.audioStorage[key]);
+  mocks.currentGroupKey = '';
+  sharedAudio = document.createElement('audio');
+  sharedAudio.id = VOICE_PLAYER_AUDIO_ID;
+  sharedAudioPause = vi.fn();
+  sharedAudio.pause = sharedAudioPause;
+  document.body.appendChild(sharedAudio);
+});
+
+afterEach(() => {
+  sharedAudio.remove();
+});
+
 describe('useVoicePlayer unmount cleanup', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    Object.keys(mocks.audioStorage).forEach((key) => delete mocks.audioStorage[key]);
-    mocks.currentGroupKey = '';
-    sharedAudio = document.createElement('audio');
-    sharedAudio.id = VOICE_PLAYER_AUDIO_ID;
-    sharedAudioPause = vi.fn();
-    sharedAudio.pause = sharedAudioPause;
-    document.body.appendChild(sharedAudio);
-  });
-
-  afterEach(() => {
-    sharedAudio.remove();
-  });
-
   it('resets the played unit when the audio was already present on the first render', () => {
     markPlaying(GROUP_KEY);
 
@@ -278,5 +279,116 @@ describe('useVoicePlayer unmount cleanup', () => {
 
     expect(mocks.reset).toHaveBeenCalledWith(OTHER_GROUP_KEY);
     expect(mocks.reset).not.toHaveBeenCalledWith(GROUP_KEY);
+  });
+});
+
+describe('useVoicePlayer cleanup when one message is on screen more than once', () => {
+  let registry: MountRegistry;
+
+  beforeEach(() => {
+    registry = createMountRegistry();
+  });
+
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <MountRegistryProvider value={registry}>{children}</MountRegistryProvider>
+  );
+
+  const mountView = () => renderHook(() => useVoicePlayer({
+    channelUrl: CHANNEL_URL,
+    key: PLAYER_KEY,
+    audioFileUrl: AUDIO_FILE_URL,
+  }), { wrapper });
+
+  it('leaves the playing audio alone while another view of the same message stays mounted', () => {
+    mocks.currentGroupKey = GROUP_KEY;
+    markPlaying(GROUP_KEY);
+    const channelView = mountView();
+    const threadView = mountView();
+
+    threadView.unmount();
+
+    expect(sharedAudioPause).not.toHaveBeenCalled();
+    expect(mocks.reset).not.toHaveBeenCalled();
+    expect(channelView.result.current.playingStatus).toBe(VOICE_PLAYER_STATUS.PLAYING);
+  });
+
+  it('stops the audio once the last view of the message unmounts', () => {
+    mocks.currentGroupKey = GROUP_KEY;
+    markPlaying(GROUP_KEY);
+    const channelView = mountView();
+    const threadView = mountView();
+
+    threadView.unmount();
+    channelView.unmount();
+
+    expect(sharedAudioPause).toHaveBeenCalled();
+    expect(mocks.reset).toHaveBeenCalledWith(GROUP_KEY);
+  });
+
+  it('leaves a paused unit alone while another view of the same message stays mounted', () => {
+    markPaused(GROUP_KEY);
+    const channelView = mountView();
+    const threadView = mountView();
+
+    threadView.unmount();
+
+    expect(mocks.reset).not.toHaveBeenCalled();
+    expect(channelView.result.current.playingStatus).toBe(VOICE_PLAYER_STATUS.PAUSED);
+  });
+
+  const VoiceMessageView = () => {
+    useVoicePlayer({ channelUrl: CHANNEL_URL, key: PLAYER_KEY, audioFileUrl: AUDIO_FILE_URL });
+    return null;
+  };
+
+  const Screen = ({ threadOpen }: { threadOpen: boolean }) => (
+    <>
+      <VoiceMessageView />
+      {threadOpen && <VoiceMessageView />}
+    </>
+  );
+
+  const openAndCloseThreadWhilePlaying = (strict: boolean) => {
+    const treeWrapper = ({ children }: { children: React.ReactNode }) => {
+      const tree = <MountRegistryProvider value={registry}>{children}</MountRegistryProvider>;
+      return strict ? <React.StrictMode>{tree}</React.StrictMode> : tree;
+    };
+
+    const { rerender, unmount } = render(<Screen threadOpen={false} />, { wrapper: treeWrapper });
+
+    mocks.currentGroupKey = GROUP_KEY;
+    markPlaying(GROUP_KEY);
+    rerender(<Screen threadOpen={false} />);
+    vi.clearAllMocks();
+
+    rerender(<Screen threadOpen />);
+    const onThreadOpened = { paused: sharedAudioPause.mock.calls.length, reset: mocks.reset.mock.calls.length };
+
+    rerender(<Screen threadOpen={false} />);
+    const onThreadClosed = { paused: sharedAudioPause.mock.calls.length, reset: mocks.reset.mock.calls.length };
+
+    unmount();
+    const onLeavingTheChannel = {
+      paused: sharedAudioPause.mock.calls.length > 0,
+      reset: mocks.reset.mock.calls.map(([groupKey]) => groupKey),
+    };
+
+    return { onThreadOpened, onThreadClosed, onLeavingTheChannel };
+  };
+
+  it('keeps playing through a thread opening and closing on the same message', () => {
+    expect(openAndCloseThreadWhilePlaying(false)).toEqual({
+      onThreadOpened: { paused: 0, reset: 0 },
+      onThreadClosed: { paused: 0, reset: 0 },
+      onLeavingTheChannel: { paused: true, reset: [GROUP_KEY] },
+    });
+  });
+
+  it('keeps playing through the same sequence under StrictMode', () => {
+    expect(openAndCloseThreadWhilePlaying(true)).toEqual({
+      onThreadOpened: { paused: 0, reset: 0 },
+      onThreadClosed: { paused: 0, reset: 0 },
+      onLeavingTheChannel: { paused: true, reset: [GROUP_KEY] },
+    });
   });
 });
