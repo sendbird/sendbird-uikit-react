@@ -12,7 +12,6 @@ const mocks = vi.hoisted(() => ({
   stop: vi.fn(),
   reset: vi.fn(),
   audioStorage: {} as Record<string, { playingStatus: string }>,
-  currentGroupKey: '',
 }));
 
 vi.mock('../index', () => ({
@@ -21,7 +20,7 @@ vi.mock('../index', () => ({
     pause: mocks.pause,
     stop: mocks.stop,
     reset: mocks.reset,
-    voicePlayerStore: { audioStorage: mocks.audioStorage, currentGroupKey: mocks.currentGroupKey },
+    voicePlayerStore: { audioStorage: mocks.audioStorage },
   }),
 }));
 
@@ -42,6 +41,11 @@ const markPlaying = (groupKey: string) => {
 
 const markPaused = (groupKey: string) => {
   mocks.audioStorage[groupKey] = { playingStatus: VOICE_PLAYER_STATUS.PAUSED };
+};
+
+// play() stamps the unit onto the element it creates, so this is how the element says who holds it
+const markElementHeldBy = (groupKey: string) => {
+  sharedAudio.dataset.sbGroupId = groupKey;
 };
 
 let sharedAudio: HTMLAudioElement;
@@ -79,7 +83,6 @@ const unmountAfterDiscardedTransition = () => {
 beforeEach(() => {
   vi.clearAllMocks();
   Object.keys(mocks.audioStorage).forEach((key) => delete mocks.audioStorage[key]);
-  mocks.currentGroupKey = '';
   sharedAudio = document.createElement('audio');
   sharedAudio.id = VOICE_PLAYER_AUDIO_ID;
   sharedAudioPause = vi.fn();
@@ -158,7 +161,7 @@ describe('useVoicePlayer unmount cleanup', () => {
   });
 
   it('pauses the shared audio element when this unit owns the playback', () => {
-    mocks.currentGroupKey = GROUP_KEY;
+    markElementHeldBy(GROUP_KEY);
     markPlaying(GROUP_KEY);
 
     const { unmount } = renderHook(() => useVoicePlayer({
@@ -173,7 +176,7 @@ describe('useVoicePlayer unmount cleanup', () => {
   });
 
   it('leaves the shared audio element alone when another unit owns the playback', () => {
-    mocks.currentGroupKey = OTHER_GROUP_KEY;
+    markElementHeldBy(OTHER_GROUP_KEY);
     markPaused(GROUP_KEY);
 
     const { unmount } = renderHook(() => useVoicePlayer({
@@ -189,7 +192,7 @@ describe('useVoicePlayer unmount cleanup', () => {
   });
 
   it('pauses the audio it started even after the group key changed', () => {
-    mocks.currentGroupKey = GROUP_KEY;
+    markElementHeldBy(GROUP_KEY);
     markPlaying(GROUP_KEY);
 
     const { rerender, unmount } = renderHook(
@@ -209,7 +212,7 @@ describe('useVoicePlayer unmount cleanup', () => {
   });
 
   it('resets the unit it started even after the group key changed', () => {
-    mocks.currentGroupKey = GROUP_KEY;
+    markElementHeldBy(GROUP_KEY);
     markPlaying(GROUP_KEY);
 
     const { rerender, unmount } = renderHook(
@@ -231,7 +234,7 @@ describe('useVoicePlayer unmount cleanup', () => {
   it('ignores a render React discarded when deciding what to clean up', () => {
     markPaused(GROUP_KEY);
     markPlaying(OTHER_GROUP_KEY);
-    mocks.currentGroupKey = OTHER_GROUP_KEY;
+    markElementHeldBy(OTHER_GROUP_KEY);
 
     unmountAfterDiscardedTransition();
 
@@ -241,7 +244,7 @@ describe('useVoicePlayer unmount cleanup', () => {
 
   it('resets a paused unit that a discarded render would have reported as idle', () => {
     markPaused(GROUP_KEY);
-    mocks.currentGroupKey = OTHER_GROUP_KEY;
+    markElementHeldBy(OTHER_GROUP_KEY);
 
     unmountAfterDiscardedTransition();
 
@@ -249,7 +252,7 @@ describe('useVoicePlayer unmount cleanup', () => {
   });
 
   it('resets the unit that holds the element even when it reads idle', () => {
-    mocks.currentGroupKey = GROUP_KEY;
+    markElementHeldBy(GROUP_KEY);
 
     const { unmount } = renderHook(() => useVoicePlayer({
       channelUrl: CHANNEL_URL,
@@ -300,7 +303,7 @@ describe('useVoicePlayer cleanup when one message is on screen more than once', 
   }), { wrapper });
 
   it('leaves the playing audio alone while another view of the same message stays mounted', () => {
-    mocks.currentGroupKey = GROUP_KEY;
+    markElementHeldBy(GROUP_KEY);
     markPlaying(GROUP_KEY);
     const channelView = mountView();
     const threadView = mountView();
@@ -313,7 +316,7 @@ describe('useVoicePlayer cleanup when one message is on screen more than once', 
   });
 
   it('stops the audio once the last view of the message unmounts', () => {
-    mocks.currentGroupKey = GROUP_KEY;
+    markElementHeldBy(GROUP_KEY);
     markPlaying(GROUP_KEY);
     const channelView = mountView();
     const threadView = mountView();
@@ -356,7 +359,7 @@ describe('useVoicePlayer cleanup when one message is on screen more than once', 
 
     const { rerender, unmount } = render(<Screen threadOpen={false} />, { wrapper: treeWrapper });
 
-    mocks.currentGroupKey = GROUP_KEY;
+    markElementHeldBy(GROUP_KEY);
     markPlaying(GROUP_KEY);
     rerender(<Screen threadOpen={false} />);
     vi.clearAllMocks();

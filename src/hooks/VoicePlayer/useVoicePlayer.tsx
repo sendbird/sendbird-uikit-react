@@ -43,7 +43,7 @@ export const useVoicePlayer = ({
   const mountRegistry = useMountRegistry();
   const currentAudioUnit = voicePlayerStore?.audioStorage?.[groupKey] || AudioUnitDefaultValue();
   const currentAudioUnitRef = useRef(currentAudioUnit);
-  const cleanupTargetRef = useRef({ groupKey, reset, currentGroupKey: voicePlayerStore?.currentGroupKey, mountRegistry });
+  const cleanupTargetRef = useRef({ groupKey, reset, mountRegistry });
   const hadAudioRef = useRef(false);
   const ownedGroupKeysRef = useRef(new Set<string>());
   const holderRef = useRef<GroupKeyHolder>({});
@@ -51,7 +51,7 @@ export const useVoicePlayer = ({
   // away must not be able to name a unit this hook never held
   useEffect(() => {
     currentAudioUnitRef.current = currentAudioUnit;
-    cleanupTargetRef.current = { groupKey, reset, currentGroupKey: voicePlayerStore?.currentGroupKey, mountRegistry };
+    cleanupTargetRef.current = { groupKey, reset, mountRegistry };
     if (audioFile || audioFileUrl) hadAudioRef.current = true;
     ownedGroupKeysRef.current.add(groupKey);
   });
@@ -91,21 +91,21 @@ export const useVoicePlayer = ({
       const {
         groupKey: latestGroupKey,
         reset: latestReset,
-        currentGroupKey: latestCurrentGroupKey,
         mountRegistry: latestMountRegistry,
       } = cleanupTargetRef.current;
       const holder = holderRef.current;
       const groupKeysToReset = new Set<string>();
-      // The audio element is shared across every unit, so pause it only while this hook owns the
-      // unit that holds it — including a key it was bound to before the props changed
+      // The element records its own unit the moment it is created, while the store learns of it a
+      // render later, so ask the element rather than a group key that may not have been committed
+      const voiceAudioPlayerElement = document.getElementById(VOICE_PLAYER_AUDIO_ID) as HTMLAudioElement | null;
+      const playingGroupKey = voiceAudioPlayerElement?.dataset?.sbGroupId;
       if (
-        latestCurrentGroupKey
-        && ownedGroupKeysRef.current.has(latestCurrentGroupKey)
-        && !latestMountRegistry.isRetainedByOthers(latestCurrentGroupKey, holder)
+        playingGroupKey
+        && ownedGroupKeysRef.current.has(playingGroupKey)
+        && !latestMountRegistry.isRetainedByOthers(playingGroupKey, holder)
       ) {
-        const voiceAudioPlayerElement = document.getElementById(VOICE_PLAYER_AUDIO_ID);
-        (voiceAudioPlayerElement as HTMLAudioElement)?.pause?.();
-        groupKeysToReset.add(latestCurrentGroupKey);
+        voiceAudioPlayerElement?.pause?.();
+        groupKeysToReset.add(playingGroupKey);
       }
       const status = currentAudioUnitRef.current?.playingStatus;
       if (
