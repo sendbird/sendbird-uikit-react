@@ -21,7 +21,7 @@ import {
 } from '../../utils/consts';
 import { getParsedVoiceAudioFileInfo } from './utils';
 import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
-import { createMountRegistry, MountRegistryProvider } from './mountRegistry';
+import { createMountRegistry, MountRegistry, MountRegistryProvider } from './mountRegistry';
 
 // VoicePlayerProvider interface
 export interface VoicePlayerProps {
@@ -62,7 +62,9 @@ export const VoicePlayerProvider = ({
   children,
 }: VoicePlayerProps): React.ReactElement => {
   const [voicePlayerStore, voicePlayerDispatcher] = useReducer(voicePlayerReducer, voicePlayerInitialState);
-  const mountRegistry = useRef(createMountRegistry()).current;
+  const mountRegistryRef = useRef<MountRegistry | null>(null);
+  if (!mountRegistryRef.current) mountRegistryRef.current = createMountRegistry();
+  const mountRegistry = mountRegistryRef.current;
   const {
     currentGroupKey,
     currentPlayer,

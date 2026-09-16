@@ -93,7 +93,7 @@ describe('voicePlayerReducer: a unit that is still playing', () => {
     expect(unitOf(state).duration).toBe(DURATION);
   });
 
-  it('ignores a time update for a unit the storage never held', () => {
+  it('does not create a unit for a group key the storage never held', () => {
     const state = playingState();
 
     const next = voicePlayerReducer(state, { type: ON_CURRENT_TIME_UPDATE, payload: { groupKey: 'unknown-group-key' } });
