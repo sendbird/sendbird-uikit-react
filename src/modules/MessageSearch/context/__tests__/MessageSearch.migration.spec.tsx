@@ -5,7 +5,7 @@ import { match } from 'ts-pattern';
 
 const mockState = {
   stores: { sdkStore: {} },
-  config: { logger: console, groupChannel: {} },
+  config: { logger: { info: vi.fn(), warning: vi.fn(), error: vi.fn() }, groupChannel: {} },
 };
 const mockActions = { connect: vi.fn(), disconnect: vi.fn() };
 
