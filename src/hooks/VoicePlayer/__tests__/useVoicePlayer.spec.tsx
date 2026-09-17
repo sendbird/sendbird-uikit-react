@@ -11,7 +11,7 @@ const mocks = vi.hoisted(() => ({
   pause: vi.fn(),
   stop: vi.fn(),
   reset: vi.fn(),
-  audioStorage: {} as Record<string, { playingStatus: string }>,
+  audioStorage: {} as Record<string, { playingStatus: string, playbackTime?: number, duration?: number }>,
 }));
 
 vi.mock('../index', () => ({
@@ -92,6 +92,25 @@ beforeEach(() => {
 
 afterEach(() => {
   sharedAudio.remove();
+});
+
+describe('useVoicePlayer return values', () => {
+  it('reports the playback position and duration in milliseconds', () => {
+    mocks.audioStorage[GROUP_KEY] = {
+      playingStatus: VOICE_PLAYER_STATUS.PAUSED,
+      playbackTime: 0.5,
+      duration: 1,
+    };
+
+    const { result } = renderHook(() => useVoicePlayer({
+      channelUrl: CHANNEL_URL,
+      key: PLAYER_KEY,
+      audioFileUrl: AUDIO_FILE_URL,
+    }));
+
+    // the storage keeps seconds, copied straight off the audio element
+    expect(result.current).toMatchObject({ playbackTime: 500, duration: 1000 });
+  });
 });
 
 describe('useVoicePlayer unmount cleanup', () => {
