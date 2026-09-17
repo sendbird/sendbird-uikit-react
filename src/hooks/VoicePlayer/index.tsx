@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, useRef } from 'react';
 import voicePlayerReducer from './dux/reducer';
 import {
   AudioStorageUnit,
@@ -21,6 +21,7 @@ import {
 } from '../../utils/consts';
 import { getParsedVoiceAudioFileInfo } from './utils';
 import useSendbird from '../../lib/Sendbird/context/hooks/useSendbird';
+import { createMountRegistry, MountRegistry, MountRegistryProvider } from './mountRegistry';
 
 // VoicePlayerProvider interface
 export interface VoicePlayerProps {
@@ -61,6 +62,9 @@ export const VoicePlayerProvider = ({
   children,
 }: VoicePlayerProps): React.ReactElement => {
   const [voicePlayerStore, voicePlayerDispatcher] = useReducer(voicePlayerReducer, voicePlayerInitialState);
+  const mountRegistryRef = useRef<MountRegistry | null>(null);
+  if (!mountRegistryRef.current) mountRegistryRef.current = createMountRegistry();
+  const mountRegistry = mountRegistryRef.current;
   const {
     currentGroupKey,
     currentPlayer,
@@ -225,14 +229,16 @@ export const VoicePlayerProvider = ({
       reset,
       voicePlayerStore,
     }}>
-      {/**
-       * This empty div is also used for finding the root div element
-       * within SendbirdProvider to set the 'dir' attribute ('rtl' | 'ltr').
-       * See hooks/useHTMLTextDirection.tsx for more details.
-       */}
-      <div id={VOICE_PLAYER_ROOT_ID} style={{ display: 'none' }} />
+      <MountRegistryProvider value={mountRegistry}>
+        {/**
+         * This empty div is also used for finding the root div element
+         * within SendbirdProvider to set the 'dir' attribute ('rtl' | 'ltr').
+         * See hooks/useHTMLTextDirection.tsx for more details.
+         */}
+        <div id={VOICE_PLAYER_ROOT_ID} style={{ display: 'none' }} />
 
-      {children}
+        {children}
+      </MountRegistryProvider>
     </Context.Provider>
   );
 };
