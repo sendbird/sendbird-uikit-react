@@ -228,10 +228,10 @@ const MessageView = (props: MessageViewProps) => {
     handleScroll?.();
   }, [showEdit, message?.reactions?.length]);
 
-  // Side effect: scroll position update when message updated
+  // Side effect: scroll position update when message updated or the unread separator appears
   useDidMountEffect(() => {
     handleScroll?.(true);
-  }, [message?.updatedAt, (message as UserMessage)?.message]);
+  }, [message?.updatedAt, (message as UserMessage)?.message, hasNewMessageSeparator]);
 
   // Side effect: scroll position update when suggested replies are rendered or hidden
   const prevShouldRenderSuggestedReplies = useRef(shouldRenderSuggestedReplies);
