@@ -210,25 +210,27 @@ jobs:
       - name: Publish to npm
         run: |
           cd ./dist
-          # Recovery can start at any point after the automated run stopped, so
-          # the version may already be up. Republishing it is refused by the
-          # registry, which would take the tag and the release down with it.
-          #
-          # A lookup that fails reads as "not published", and the publish that
-          # follows fails loudly if it was there after all. That direction is
-          # safe; the reverse would skip a publish that never happened.
           PACKAGE_NAME=$(node -p "require('./package.json').name")
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          if npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version > /dev/null 2>&1; then
-            echo "$PACKAGE_NAME@$PACKAGE_VERSION is already on npm; leaving it as published"
-          elif [ -z "$NPM_TAG" ]; then
-            npm publish --access=public --provenance
-          else
-            npm publish --tag "$NPM_TAG" --access=public --provenance
-          fi
           if [ -n "$NPM_TAG" ]; then
+            # A prerelease ends at the publish, so there is nothing for it to
+            # resume and no reason to accept a version that is already up. The
+            # dispatch asked for a dist-tag; passing over an existing version
+            # would report success without moving it. Let the registry refuse.
+            npm publish --tag "$NPM_TAG" --access=public --provenance
             echo "npm_tag is provided; Skipping the rest of the steps."
             echo "SKIP_REST=true" >> $GITHUB_ENV
+          elif npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version > /dev/null 2>&1; then
+            # Recovery can start at any point after the automated run stopped,
+            # so the version may already be up. Republishing it is refused by
+            # the registry, which would take the tag and the release with it.
+            #
+            # A lookup that fails reads as "not published", and the publish
+            # below fails loudly if it was there after all. That direction is
+            # safe; the reverse would skip a publish that never happened.
+            echo "$PACKAGE_NAME@$PACKAGE_VERSION is already on npm; leaving it as published"
+          else
+            npm publish --access=public --provenance
           fi
           cd -
       - name: Tag new target and push to origin
