@@ -52,7 +52,7 @@ export default defineConfig({
     // Replaces the bespoke scripts/failed-test-retry.js (rerun failed up to 3x). CI-only so local
     // runs (retry: 0) surface flaky tests to developers instead of silently masking them.
     retry: process.env.CI ? 3 : 0,
-    include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
+    include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}', 'scripts/**/*.{test,spec}.{js,mjs,ts}'],
     exclude: [
       'node_modules',
       'dist',
