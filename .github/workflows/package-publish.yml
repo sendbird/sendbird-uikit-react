@@ -5,21 +5,28 @@
 #                left alone and no tag, release or notification is produced.
 #
 #   Recovery     Leave npm_tag empty, which publishes to `latest`. Use this when
-#                the automated release merged to main but could not publish --
-#                in practice an npm outage. This workflow then leaves the same
-#                records a clean automated run leaves: the git tag on the merge
-#                commit, the GitHub release and the post in the release channel.
+#                the automated release merged to main but did not finish: the
+#                package never reached npm, or it did and the tag or the GitHub
+#                release is missing. Every step looks for its own result before
+#                acting, so start this wherever the release stopped and only the
+#                gaps are filled. What it leaves matches a clean automated run --
+#                the git tag on the merge commit, the GitHub release and the post
+#                in the release channel.
 #
 #                It is not the answer to a release that failed its checks. The
 #                default branch requires build-and-test with no bypass, so the
 #                merge stays blocked no matter what is published; fix the check
 #                and let the automated release run again.
 #
+# Dispatch it with "Use workflow from" set to the release/vX.Y.Z branch.
+#
 # IMPORTANT: npm OIDC trusted publishing allows only one publisher configuration
-# per package, and the default is set to release-workflow.yml. Before dispatching:
+# per package, and the default is set to release-workflow.yml. That only matters
+# when the version still has to be published -- one already on npm is left as it
+# is, and no publisher is checked. When it does have to publish:
 #   1. Open the package on npmjs.com → Settings → "Trusted publisher"
 #   2. Change the workflow filename to "package-publish.yml"
-#   3. Run this workflow with "Use workflow from" set to release/vX.Y.Z
+#   3. Run this workflow
 #   4. Restore the workflow filename to "release-workflow.yml"
 #
 # Then move the release ticket to RELEASED yourself, with the transition that goes
@@ -203,10 +210,23 @@ jobs:
       - name: Publish to npm
         run: |
           cd ./dist
-          if [ -z "$NPM_TAG" ]; then
+          # Recovery can start at any point after the automated run stopped, so
+          # the version may already be up. Republishing it is refused by the
+          # registry, which would take the tag and the release down with it.
+          #
+          # A lookup that fails reads as "not published", and the publish that
+          # follows fails loudly if it was there after all. That direction is
+          # safe; the reverse would skip a publish that never happened.
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          if npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version > /dev/null 2>&1; then
+            echo "$PACKAGE_NAME@$PACKAGE_VERSION is already on npm; leaving it as published"
+          elif [ -z "$NPM_TAG" ]; then
             npm publish --access=public --provenance
           else
             npm publish --tag "$NPM_TAG" --access=public --provenance
+          fi
+          if [ -n "$NPM_TAG" ]; then
             echo "npm_tag is provided; Skipping the rest of the steps."
             echo "SKIP_REST=true" >> $GITHUB_ENV
           fi
@@ -214,8 +234,27 @@ jobs:
       - name: Tag new target and push to origin
         if: env.SKIP_REST != 'true'
         run: |
-          git tag "v$VERSION" "$TAG_TARGET"
-          git push origin "v$VERSION"
+          # A failed remote read is not the same answer as "no such tag";
+          # reading one as the other would push over whatever is there.
+          if ! REMOTE_TAGS=$(git ls-remote --tags origin 2>&1); then
+            echo "could not read tags from origin"
+            printf '%s\n' "$REMOTE_TAGS"
+            exit 1
+          fi
+          # An annotated tag lists its own object under refs/tags/X and the
+          # commit under refs/tags/X^{}; comparing the former to a commit
+          # always disagrees.
+          ON=$(printf '%s\n' "$REMOTE_TAGS" | awk -v t="refs/tags/v$VERSION^{}" '$2==t{print $1}')
+          [ -z "$ON" ] && ON=$(printf '%s\n' "$REMOTE_TAGS" | awk -v t="refs/tags/v$VERSION" '$2==t{print $1}')
+          if [ -z "$ON" ]; then
+            git tag "v$VERSION" "$TAG_TARGET"
+            git push origin "v$VERSION"
+          elif [ "$ON" = "$TAG_TARGET" ]; then
+            echo "v$VERSION already tags $TAG_TARGET"
+          else
+            echo "v$VERSION points at $ON, expected $TAG_TARGET -- resolve by hand"
+            exit 1
+          fi
 
       - name: Create GitHub Release
         if: env.SKIP_REST != 'true'
@@ -228,6 +267,11 @@ jobs:
           # hand after merging (see RELEASE_GUIDE).
           if [ "$ON_MAIN" != "true" ]; then
             echo "release is not on main yet; create the GitHub release after merging"
+            exit 0
+          fi
+          if gh release view "v$VERSION" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            # Already announced when it was first created, so no notification.
+            echo "release v$VERSION already exists"
             exit 0
           fi
           gh release create "v$VERSION" \
