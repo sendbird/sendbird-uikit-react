@@ -70,7 +70,6 @@ jobs:
       BRANCH_NAME: ${{ github.ref_name }}
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       SLACK_RELEASE_CHANNEL_ID: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
-      RELEASE_CREATED: '' # Set to 'true' once the GitHub release exists
       ON_MAIN: '' # Set to 'true' when the release is already merged to main
       TAG_TARGET: '' # Commit to publish and tag, set by "Resolve the commit to publish"
     steps:
@@ -272,7 +271,6 @@ jobs:
             exit 0
           fi
           if gh release view "v$VERSION" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
-            # Already announced when it was first created, so no notification.
             echo "release v$VERSION already exists"
             exit 0
           fi
@@ -280,11 +278,14 @@ jobs:
             --title "v$VERSION" \
             --target main \
             --notes-file CHANGELOG_DRAFT.md
-          echo "RELEASE_CREATED=true" >> $GITHUB_ENV
 
       - name: Slack notification
-        # Only once the release exists, since the message links to it.
-        if: env.RELEASE_CREATED == 'true'
+        # Announced whenever the release is on main, not only when this run
+        # created it. The notification is continue-on-error, so a run that
+        # created the release and failed to post leaves a gap that only a later
+        # run can fill -- and it would find the release already there. A second
+        # post costs a duplicate message; withholding it costs the announcement.
+        if: env.ON_MAIN == 'true'
         continue-on-error: true
         uses: slackapi/slack-github-action@v1.24.0
         env:
