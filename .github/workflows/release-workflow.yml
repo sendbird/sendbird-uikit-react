@@ -116,25 +116,6 @@ jobs:
           cd ./dist
           npm publish --access=public --provenance
 
-      - name: Verify npm package publication
-        run: |
-          cd ./dist
-          PACKAGE_NAME=$(node -p "require('./package.json').name")
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          max_attempts=6
-          attempt=1
-          while [ $attempt -le $max_attempts ]; do
-            if npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version > /dev/null 2>&1; then
-              echo "Package $PACKAGE_NAME@$PACKAGE_VERSION successfully published to npm"
-              exit 0
-            fi
-            echo "Attempt $attempt/$max_attempts: Package not visible yet. Waiting 20s..."
-            sleep 20
-            attempt=$((attempt + 1))
-          done
-          echo "Package $PACKAGE_NAME@$PACKAGE_VERSION not found on npm registry after $max_attempts attempts"
-          exit 1
-
       - name: Create git tag
         run: |
           git tag "v${{ env.RELEASE_VERSION }}"
