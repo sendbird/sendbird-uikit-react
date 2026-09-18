@@ -97,14 +97,30 @@ jobs:
           gh pr checks "$BRANCH_NAME" --watch --required
 
       - name: Merge release branch to main
+        env:
+          GH_TOKEN: ${{ env.BOT_GH_TOKEN }}
         run: |
           python3 ~/sdk-deployment/scripts/v1.2/github_pr_merge.py \
             --github_api_token "$BOT_GH_TOKEN" \
             --repo_name "$REPO_NAME" \
             --branch_name "$BRANCH_NAME"
+          # Build and tag the commit this release produced, not whatever main
+          # holds a moment later. A pull request landing between the merge and
+          # the fetch would otherwise be built, published and tagged as this
+          # version -- and a manual publish, which resolves the same merge
+          # commit, would then tag something other than what reached npm.
+          if ! MERGE=$(gh pr list -R "$GITHUB_REPOSITORY" --head "$BRANCH_NAME" \
+            --state merged --limit 1 --json mergeCommit --jq '.[0].mergeCommit.oid'); then
+            echo "could not query $GITHUB_REPOSITORY for the release pull request"
+            exit 1
+          fi
+          if [ -z "$MERGE" ] || [ "$MERGE" = "null" ]; then
+            echo "no merged pull request found for $BRANCH_NAME"
+            exit 1
+          fi
+          # Fetched after the lookup, so what arrives contains the commit it named.
           git fetch origin main
-          git switch main
-          git pull origin main
+          git checkout --detach "$MERGE"
 
       - name: Rebuild after merge
         run: |
