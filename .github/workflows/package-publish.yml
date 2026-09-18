@@ -1,13 +1,37 @@
-# Manual publish workflow (typically for beta/RC releases).
+# Publishes the package by hand. Two situations call for it.
 #
-# IMPORTANT: npm OIDC trusted publishing allows only one publisher
-# configuration per package. The default is set to release-workflow.yml.
-# Before dispatching this workflow:
+#   Prerelease   Give npm_tag (beta, rc, ...). The version is republished as
+#                X.Y.Z-<npm_tag>-<tag_suffix> under that dist-tag. `latest` is
+#                left alone and no tag, release or notification is produced.
+#
+#   Recovery     Leave npm_tag empty, which publishes to `latest`. Use this when
+#                the automated release merged to main but could not publish --
+#                in practice an npm outage. This workflow then leaves the same
+#                records a clean automated run leaves: the git tag on the merge
+#                commit, the GitHub release and the post in the release channel.
+#
+#                It is not the answer to a release that failed its checks. The
+#                default branch requires build-and-test with no bypass, so the
+#                merge stays blocked no matter what is published; fix the check
+#                and let the automated release run again.
+#
+# IMPORTANT: npm OIDC trusted publishing allows only one publisher configuration
+# per package, and the default is set to release-workflow.yml. Before dispatching:
 #   1. Open the package on npmjs.com → Settings → "Trusted publisher"
 #   2. Change the workflow filename to "package-publish.yml"
-#   3. Run this workflow
+#   3. Run this workflow with "Use workflow from" set to release/vX.Y.Z
 #   4. Restore the workflow filename to "release-workflow.yml"
-name: Package build and publish
+#
+# Then move the release ticket to RELEASED yourself, with the transition that goes
+# straight there. Not the one that re-enters RELEASING -- that is the retry, and
+# it re-dispatches the automated release onto a branch that is already merged.
+# This is the one step left manual: a hand-run workflow is not given the ticket
+# key, and where the ticket sits depends on how the original run failed.
+#
+# Should this ever run against a release that is not on main, the tag lands on
+# the branch and no release or notification is produced, since there would be
+# nothing for them to point at.
+name: Publish package by hand (prerelease or release recovery)
 
 on:
   workflow_dispatch:
