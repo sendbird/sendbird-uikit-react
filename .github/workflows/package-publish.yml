@@ -37,6 +37,9 @@ jobs:
       NPM_TAG: ${{ github.event.inputs.npm_tag }}
       TAG_SUFFIX: ${{ github.event.inputs.tag_suffix }}
       BRANCH_NAME: ${{ github.ref_name }}
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      SLACK_RELEASE_CHANNEL_ID: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
+      RELEASE_CREATED: '' # Set to 'true' once the GitHub release exists
       ON_MAIN: '' # Set to 'true' when the release is already merged to main
       TAG_TARGET: '' # Commit to publish and tag, set by "Resolve the commit to publish"
     steps:
@@ -207,3 +210,26 @@ jobs:
             --title "v$VERSION" \
             --target main \
             --notes-file CHANGELOG_DRAFT.md
+          echo "RELEASE_CREATED=true" >> $GITHUB_ENV
+
+      - name: Slack notification
+        # Only once the release exists, since the message links to it.
+        if: env.RELEASE_CREATED == 'true'
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v1.24.0
+        env:
+          SLACK_BOT_TOKEN: ${{ env.SLACK_BOT_TOKEN }}
+        with:
+          channel-id: ${{ env.SLACK_RELEASE_CHANNEL_ID }}
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":tada: <https://github.com/${{ github.repository }}/releases/tag/v${{ env.VERSION }}|@sendbird/uikit-react ${{ env.VERSION }}> has been released!"
+                  }
+                }
+              ]
+            }
