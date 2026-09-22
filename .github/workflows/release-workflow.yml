@@ -142,8 +142,12 @@ jobs:
       # Ten minutes against a normal write that lands before the publish step
       # even returns, and a read that follows within ~20s. The one slow write on
       # record took 310s. A timeout past that is not a slow read to wait out --
-      # at that point the package may really not be there, so it fails the job
-      # and `package-publish.yml` picks the release up from here.
+      # at that point the package may really not be there, so it fails the job.
+      #
+      # `package-publish.yml` then fills in the tag, the release and the
+      # notification. It does not move the Jira ticket, which the rollback
+      # below has already sent back to CONDITIONAL_RELEASE_APPROVED -- that
+      # transition is still done by hand.
       - name: Verify npm package publication
         run: |
           cd ./dist
