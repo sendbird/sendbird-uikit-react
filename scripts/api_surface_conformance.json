@@ -1,0 +1,448 @@
+{
+  "cached-namespace-reference": {
+    "changed": {
+      "entry.ts": "export { Foo as First } from './two';\nexport { Foo as Second } from './one';\n"
+    },
+    "consumer": "import type { First } from './dist/entry';\nconst p: First = { value: 'abc' };\n",
+    "files": {
+      "entry.ts": "export { Foo as First } from './one';\nexport { Foo as Second } from './two';\n",
+      "one.ts": "import * as Model from './ta';\nexport interface Foo { value: Model.Value }\n",
+      "ta.ts": "export type Value = string;\n",
+      "tb.ts": "export type Value = number;\n",
+      "two.ts": "import * as Model from './tb';\nexport interface Foo { value: Model.Value }\n"
+    }
+  },
+  "cached-type-only-reference": {
+    "changed": {
+      "entry.ts": "export { Foo as First } from './two';\nexport { Foo as Second } from './one';\n"
+    },
+    "consumer": "import type { First } from './dist/entry';\nconst p: First = { value: 'abc' };\n",
+    "files": {
+      "entry.ts": "export { Foo as First } from './one';\nexport { Foo as Second } from './two';\n",
+      "one.ts": "import { Value } from './va';\nexport interface Foo { value: Value }\n",
+      "ta.ts": "export type Value = string;\n",
+      "tb.ts": "export type Value = number;\n",
+      "two.ts": "import { Value } from './vb';\nexport interface Foo { value: Value }\n",
+      "va.ts": "export { type Value } from './ta';\n",
+      "vb.ts": "export { type Value } from './tb';\n"
+    }
+  },
+  "cycle-cache-reorder": {
+    "changed": {
+      "entry.ts": "export { Foo } from './z';\nexport { Bar } from './two';\n"
+    },
+    "consumer": "import type { Foo, Bar } from './dist/entry';\nconst p: Foo = { value: 'abc' };\nconst q: Bar = { value: 123 };\n",
+    "files": {
+      "a.ts": "export type Value = string;\nexport * as Next from './b';\n",
+      "b.ts": "export type Value = number;\nexport * as Next from './c';\n",
+      "c.ts": "export type Value = boolean;\nexport * as Next from './a';\n",
+      "entry.ts": "export { Foo } from './one';\nexport { Bar } from './two';\n",
+      "one.ts": "import * as Model from './a';\nexport interface Foo { value: Model.Value }\n",
+      "two.ts": "import * as Model from './b';\nexport interface Bar { value: Model.Value }\n",
+      "z.ts": "import * as Model from './a';\nexport interface Foo { value: Model.Value }\n"
+    }
+  },
+  "cycle-destination-is-lost": {
+    "changed": {
+      "b.ts": "export type Value = number;\nexport * as Back from './b';\n"
+    },
+    "consumer": "import type { Next } from './dist/entry';\nconst p: Next.Back.Value = 'abc';\n",
+    "files": {
+      "a.ts": "export type Value = string;\nexport * as Next from './b';\n",
+      "b.ts": "export type Value = number;\nexport * as Back from './a';\n",
+      "entry.ts": "export * from './a';\n"
+    }
+  },
+  "cycle-through-reexports": {
+    "changed": {
+      "b.ts": "export { Value } from './tb';\nexport * as Back from './b';\n"
+    },
+    "consumer": "import type { Next } from './dist/entry';\nconst p: Next.Back.Value = 'abc';\n",
+    "files": {
+      "a.ts": "export { Value } from './ta';\nexport * as Next from './b';\n",
+      "b.ts": "export { Value } from './tb';\nexport * as Back from './a';\n",
+      "entry.ts": "export * from './a';\n",
+      "ta.ts": "export type Value = string;\n",
+      "tb.ts": "export type Value = number;\n"
+    }
+  },
+  "default-import-local-binding-hidden-by-barrel": {
+    "changed": {
+      "bridge.ts": "export { B as default } from './types';\n"
+    },
+    "consumer": "import type { Selected } from './dist/entry';\nconst p: Selected = 'abc';\n",
+    "files": {
+      "entry.ts": "export { Selected } from './barrel';\n",
+      "barrel.ts": "import Selected from './bridge';\nexport { Selected };\n",
+      "bridge.ts": "export { A as default } from './types';\n",
+      "types.ts": "export type A = string;\nexport type B = number;\n"
+    }
+  },
+  "default-type-import": {
+    "changed": {
+      "entry.ts": "import type { Widget } from './holder';\nexport default Widget;\n"
+    },
+    "consumer": "import Widget from './dist/entry';\nconst p = new Widget();\n",
+    "files": {
+      "entry.ts": "import { Widget } from './holder';\nexport default Widget;\n",
+      "holder.ts": "export class Widget { value = \"abc\"; }\n"
+    }
+  },
+  "explicit-reexport-shadowed-by-star": {
+    "changed": {
+      "barrel.ts": "export { type Widget } from './model';\nexport * from './model';\n"
+    },
+    "consumer": "import { Widget } from './dist/entry';\nconst p = new Widget();\n",
+    "files": {
+      "barrel.ts": "export { Widget } from './model';\nexport * from './model';\n",
+      "entry.ts": "export * from './barrel';\n",
+      "model.ts": "export class Widget { id = \"abc\"; }\n"
+    }
+  },
+  "external-reexport-target": {
+    "changed": {
+      "barrel.ts": "export { Value } from 'pkg-b';\n"
+    },
+    "consumer": "import type { Value } from './dist/entry';\nconst p: Value = 'abc';\n",
+    "files": {
+      "barrel.ts": "export { Value } from 'pkg-a';\n",
+      "entry.ts": "export { Value } from './barrel';\n"
+    },
+    "support": {
+      "node_modules/pkg-a/index.d.ts": "export type Value = string;\n",
+      "node_modules/pkg-b/index.d.ts": "export type Value = number;\n"
+    }
+  },
+  "external-star-target": {
+    "changed": {
+      "barrel.ts": "export * from 'pkg-b';\n"
+    },
+    "consumer": "import type { Value } from './dist/entry';\nconst p: Value = 'abc';\n",
+    "files": {
+      "barrel.ts": "export * from 'pkg-a';\n",
+      "entry.ts": "export * from './barrel';\n"
+    },
+    "support": {
+      "node_modules/pkg-a/index.d.ts": "export type Value = string;\n",
+      "node_modules/pkg-b/index.d.ts": "export type Value = number;\n"
+    }
+  },
+  "import-then-local-export": {
+    "changed": {
+      "barrel.ts": "import { B as Selected } from './types';\nexport { Selected };\n"
+    },
+    "consumer": "import type { Selected } from './dist/entry';\nconst p: Selected = 'abc';\n",
+    "files": {
+      "barrel.ts": "import { A as Selected } from './types';\nexport { Selected };\n",
+      "entry.ts": "export { Selected } from './barrel';\n",
+      "types.ts": "export type A = string;\nexport type B = number;\n"
+    }
+  },
+  "internal-type-reexport": {
+    "changed": {
+      "barrel.ts": "export { type Widget } from './holder';\n"
+    },
+    "consumer": "import { Widget } from './dist/entry';\nconst p = new Widget();\n",
+    "files": {
+      "barrel.ts": "export { Widget } from './holder';\n",
+      "entry.ts": "export * from './barrel';\n",
+      "holder.ts": "export class Widget { value = \"abc\"; }\n"
+    }
+  },
+  "local-binding": {
+    "changed": {
+      "entry.ts": "export { Foo as First } from './two';\nexport { Foo as Second } from './one';\n"
+    },
+    "consumer": "import type { First } from './dist/entry';\nconst p: First = {value:'abc'};\n",
+    "files": {
+      "entry.ts": "export { Foo as First } from './one';\nexport { Foo as Second } from './two';\n",
+      "one.ts": "type Value = string;\nexport interface Foo { value: Value }\n",
+      "two.ts": "type Value = number;\nexport interface Foo { value: Value }\n"
+    }
+  },
+  "local-export-alias": {
+    "changed": {
+      "barrel.ts": "import { B as Local } from './types';\nexport { Local as Selected };\n"
+    },
+    "consumer": "import type { Selected } from './dist/entry';\nconst p: Selected = 'abc';\n",
+    "files": {
+      "entry.ts": "export { Selected } from './barrel';\n",
+      "barrel.ts": "import { A as Local } from './types';\nexport { Local as Selected };\n",
+      "types.ts": "export type A = string;\nexport type B = number;\n"
+    }
+  },
+  "local-export-namespace": {
+    "changed": {
+      "barrel.ts": "import * as Models from './two';\nimport * as Other from './one';\nexport { Models, Other };\n"
+    },
+    "consumer": "import type { Models } from './dist/entry';\nconst p: Models.Value = 'abc';\n",
+    "files": {
+      "entry.ts": "export { Models, Other } from './barrel';\n",
+      "barrel.ts": "import * as Models from './one';\nimport * as Other from './two';\nexport { Models, Other };\n",
+      "one.ts": "export type Value = string;\n",
+      "two.ts": "export type Value = number;\n"
+    }
+  },
+  "local-export-shadowed-by-star": {
+    "changed": {
+      "barrel.ts": "import type { Widget } from './model';\nexport { Widget };\nexport * from './model';\n"
+    },
+    "consumer": "import { Widget } from './dist/entry';\nconst p = new Widget();\n",
+    "files": {
+      "barrel.ts": "import { Widget } from './model';\nexport { Widget };\nexport * from './model';\n",
+      "entry.ts": "export * from './barrel';\n",
+      "model.ts": "export class Widget { id = \"abc\"; }\n"
+    }
+  },
+  "local-name-reinterpreted-as-public-alias": {
+    "changed": {
+      "barrel.ts": "import { B as Local, C as Other } from './types';\nexport { Local as Value, Other as Local };\n"
+    },
+    "consumer": "import type { Value } from './dist/entry';\nconst p: Value = 'abc';\n",
+    "files": {
+      "entry.ts": "export * from './barrel';\n",
+      "barrel.ts": "import { A as Local, C as Other } from './types';\nexport { Local as Value, Other as Local };\n",
+      "types.ts": "export type A = string;\nexport type B = number;\nexport type C = boolean;\n"
+    }
+  },
+  "multiple-external-stars-through-barrel": {
+    "changed": {
+      "barrel.ts": "export * from 'pkg-b';\nexport * from 'pkg-z';\n"
+    },
+    "consumer": "import type { Value } from './dist/entry';\nconst p: Value = 'abc';\n",
+    "files": {
+      "barrel.ts": "export * from 'pkg-a';\nexport * from 'pkg-z';\n",
+      "bridge.ts": "export * from './barrel';\n",
+      "entry.ts": "export * from './bridge';\n"
+    },
+    "support": {
+      "node_modules/pkg-a/index.d.ts": "export type Value = string;\n",
+      "node_modules/pkg-b/index.d.ts": "export type Value = number;\n",
+      "node_modules/pkg-z/index.d.ts": "export type Spare = boolean;\n"
+    }
+  },
+  "named-entry-star-before-explicit": {
+    "changed": {
+      "barrel.ts": "export * from './model';\nexport { type Widget } from './model';\n"
+    },
+    "consumer": "import { Widget } from './dist/entry';\nconst p = new Widget();\n",
+    "files": {
+      "barrel.ts": "export * from './model';\nexport { Widget } from './model';\n",
+      "entry.ts": "export { Widget } from './barrel';\n",
+      "model.ts": "export class Widget { id = \"abc\"; }\n"
+    }
+  },
+  "named-namespace-cycle": {
+    "changed": {},
+    "consumer": "import type { A } from './dist/entry';\nconst p: A.Value = 'abc';\n",
+    "files": {
+      "a.ts": "export { Self as A } from './b';\nexport type Value = string;\n",
+      "b.ts": "export * as Self from './a';\n",
+      "entry.ts": "export { A } from './a';\n"
+    }
+  },
+  "named-namespace-target": {
+    "changed": {
+      "barrel.ts": "export * as Models from './two';\nexport * as Other from './one';\n"
+    },
+    "consumer": "import type { Models } from './dist/entry';\nconst p: Models.Value = 'abc';\n",
+    "files": {
+      "barrel.ts": "export * as Models from './one';\nexport * as Other from './two';\n",
+      "entry.ts": "export { Models, Other } from './barrel';\n",
+      "one.ts": "export type Value = string;\n",
+      "two.ts": "export type Value = number;\n"
+    }
+  },
+  "named-through-type-only": {
+    "changed": {
+      "barrel.ts": "export { type Widget } from './holder';\n"
+    },
+    "consumer": "import { Widget } from './dist/entry';\nconst p = new Widget();\n",
+    "files": {
+      "barrel.ts": "export { Widget } from './holder';\n",
+      "entry.ts": "export { Widget } from './barrel';\n",
+      "holder.ts": "export class Widget { value = \"abc\"; }\n"
+    }
+  },
+  "namespace-cycle": {
+    "changed": {},
+    "consumer": "import type { A } from './dist/entry';\nconst p: A.Value = 'abc';\n",
+    "files": {
+      "a.ts": "export * as B from './b';\nexport type Value = string;\n",
+      "b.ts": "export * as A from './a';\n",
+      "entry.ts": "export * as A from './a';\n"
+    }
+  },
+  "namespace-dependency-cache-hit": {
+    "changed": {
+      "entry.ts": "export { Foo as First } from './two';\nexport { Foo as Second } from './one';\n"
+    },
+    "consumer": "import type { First } from './dist/entry';\nconst p: First = { value: 'abc' };\n",
+    "files": {
+      "entry.ts": "export { Foo as First } from './one';\nexport { Foo as Second } from './two';\n",
+      "one.ts": "import * as Model from './ta';\nexport type Prelude = Model.Value;\nexport interface Foo { value: Model.Value }\n",
+      "ta.ts": "export type Value = string;\n",
+      "tb.ts": "export type Value = number;\n",
+      "two.ts": "import * as Model from './tb';\nexport type Prelude = Model.Value;\nexport interface Foo { value: Model.Value }\n"
+    }
+  },
+  "namespace-export-rename": {
+    "changed": {
+      "barrel.ts": "export * as Entities from './types';\n"
+    },
+    "consumer": "import type { Models } from './dist/entry';\nconst p: Models.Value = 'abc';\n",
+    "files": {
+      "barrel.ts": "export * as Models from './types';\n",
+      "entry.ts": "export * from './barrel';\n",
+      "types.ts": "export type Value = string;\n"
+    }
+  },
+  "nine-level-local-alias-chain": {
+    "changed": {
+      "entry.ts": "export { Value0 as First } from './two';\nexport { Value0 as Second } from './one';\n"
+    },
+    "consumer": "import type { First } from './dist/entry';\nconst p: First = 'abc';\n",
+    "files": {
+      "entry.ts": "export { Value0 as First } from './one';\nexport { Value0 as Second } from './two';\n",
+      "one.ts": "export type Value0 = Value1;\ntype Value1 = Value2;\ntype Value2 = Value3;\ntype Value3 = Value4;\ntype Value4 = Value5;\ntype Value5 = Value6;\ntype Value6 = Value7;\ntype Value7 = Value8;\ntype Value8 = string;\n",
+      "two.ts": "export type Value0 = Value1;\ntype Value1 = Value2;\ntype Value2 = Value3;\ntype Value3 = Value4;\ntype Value4 = Value5;\ntype Value5 = Value6;\ntype Value6 = Value7;\ntype Value7 = Value8;\ntype Value8 = number;\n"
+    }
+  },
+  "original-alias-reexport": {
+    "changed": {
+      "barrel.ts": "export { B as Selected } from './types';\n"
+    },
+    "consumer": "import type { Selected } from './dist/entry';\nconst p: Selected = 'abc';\n",
+    "files": {
+      "barrel.ts": "export { A as Selected } from './types';\n",
+      "entry.ts": "export { Selected } from './barrel';\nexport { A, B } from './types';\n",
+      "types.ts": "export type A = string;\nexport type B = number;\n"
+    }
+  },
+  "original-import-binding": {
+    "changed": {
+      "entry.ts": "export { Foo as First } from './two';\nexport { Foo as Second } from './one';\n"
+    },
+    "consumer": "import type { First } from './dist/entry';\nconst p: First = {value:'abc'};\n",
+    "files": {
+      "entry.ts": "export { Foo as First } from './one';\nexport { Foo as Second } from './two';\n",
+      "number.ts": "export type Value = number;\n",
+      "one.ts": "import { Value } from './string';\nexport interface Foo { value: Value }\n",
+      "string.ts": "export type Value = string;\n",
+      "two.ts": "import { Value } from './number';\nexport interface Foo { value: Value }\n"
+    }
+  },
+  "original-star-member-loss": {
+    "changed": {
+      "barrel.ts": "export { A } from './types';\n"
+    },
+    "consumer": "import type { B } from './dist/entry';\nconst p: B = 1;\n",
+    "files": {
+      "barrel.ts": "export { A, B } from './types';\n",
+      "entry.ts": "export * from './barrel';\nexport { B as OtherB } from './types';\n",
+      "types.ts": "export type A = string;\nexport type B = number;\n"
+    }
+  },
+  "original-type-import-list": {
+    "changed": {
+      "entry.ts": "import type { Widget } from './holder';\nexport { Widget };\n"
+    },
+    "consumer": "import { Widget } from './dist/entry';\nconst p = new Widget();\n",
+    "files": {
+      "entry.ts": "import { Widget } from './holder';\nexport { Widget };\n",
+      "holder.ts": "export class Widget { value = \"abc\"; }\n"
+    }
+  },
+  "same-module-different-export-is-not-a-cycle": {
+    "changed": {
+      "a.ts": "export { Foo as Selected } from './b';\nexport { B as Base } from './types';\n"
+    },
+    "consumer": "import type { Selected } from './dist/entry';\nconst p: Selected = 'abc';\n",
+    "files": {
+      "entry.ts": "export { Selected } from './a';\n",
+      "a.ts": "export { Foo as Selected } from './b';\nexport { A as Base } from './types';\n",
+      "b.ts": "import { Base } from './a';\nexport { Base as Foo };\n",
+      "types.ts": "export type A = string;\nexport type B = number;\n"
+    }
+  },
+  "same-module-second-local-binding": {
+    "changed": {
+      "a.ts": "import { P } from './b';\nimport { B as Q } from './types';\nexport { P as One, Q as Two };\n"
+    },
+    "consumer": "import type { One } from './dist/entry';\nconst p: One = 'abc';\n",
+    "files": {
+      "entry.ts": "export { One } from './a';\n",
+      "a.ts": "import { P } from './b';\nimport { A as Q } from './types';\nexport { P as One, Q as Two };\n",
+      "b.ts": "import { Two } from './a';\nexport { Two as P };\n",
+      "types.ts": "export type A = string;\nexport type B = number;\n"
+    }
+  },
+  "same-name-declarations-merge": {
+    "changed": {
+      "model.ts": "export const Level = { Low: 'lo', High: 'high' } as const;\nexport type Level = typeof Level[keyof typeof Level];\n"
+    },
+    "consumer": "import type { Level } from './dist/entry';\nconst p: Level = 'low';\n",
+    "files": {
+      "entry.ts": "export { Level } from './model';\n",
+      "model.ts": "export const Level = { Low: 'low', High: 'high' } as const;\nexport type Level = typeof Level[keyof typeof Level];\n"
+    }
+  },
+  "sibling-module-misclassified-as-cycle": {
+    "changed": {
+      "barrel.ts": "export * as Models from './one';\nexport * as Other from './barrel';\n"
+    },
+    "consumer": "import type { Other } from './dist/entry';\nconst p: Other.Value = 'abc';\n",
+    "files": {
+      "barrel.ts": "export * as Models from './one';\nexport * as Other from './one';\n",
+      "entry.ts": "export * from './barrel';\n",
+      "one.ts": "export type Value = string;\n"
+    }
+  },
+  "star-binding": {
+    "changed": {
+      "entry.ts": "export * as First from './two';\nexport * as Second from './one';\n"
+    },
+    "consumer": "import type { First } from './dist/entry';\nconst p: First.Value = 'abc';\n",
+    "files": {
+      "entry.ts": "export * as First from './one';\nexport * as Second from './two';\n",
+      "one.ts": "export type Value = string;\n",
+      "two.ts": "export type Value = number;\n"
+    }
+  },
+  "star-cycle-cache-reorder": {
+    "changed": {
+      "entry.ts": "export { Foo } from './z';\nexport { Bar } from './two';\n"
+    },
+    "consumer": "import type { Foo, Bar } from './dist/entry';\nconst p: Foo = { value: 'abc' };\nconst q: Bar = { value: 'abc' };\n",
+    "files": {
+      "a.ts": "export type Value = string;\nexport * from './b';\n",
+      "b.ts": "export type Other = number;\nexport * from './a';\n",
+      "entry.ts": "export { Foo } from './one';\nexport { Bar } from './two';\n",
+      "one.ts": "import * as Model from './a';\nexport interface Foo { value: Model.Value }\n",
+      "two.ts": "import * as Model from './b';\nexport interface Bar { value: Model.Value }\n",
+      "z.ts": "import * as Model from './a';\nexport interface Foo { value: Model.Value }\n"
+    }
+  },
+  "star-forwards-default": {
+    "changed": {
+      "barrel.ts": "export * from './model';\n"
+    },
+    "consumer": "import { API } from './dist/entry';\nconst p = new API.default();\n",
+    "files": {
+      "entry.ts": "export * as API from './barrel';\n",
+      "barrel.ts": "export { Widget as default } from './model';\nexport * from './model';\n",
+      "model.ts": "export class Widget { id = \"abc\"; }\nexport { Widget as default };\nexport type Value = string;\n"
+    }
+  },
+  "twenty-level-local-alias-chain": {
+    "changed": {
+      "entry.ts": "export { Value0 as First } from './two';\nexport { Value0 as Second } from './one';\n"
+    },
+    "consumer": "import type { First } from './dist/entry';\nconst p: First = 'abc';\n",
+    "files": {
+      "entry.ts": "export { Value0 as First } from './one';\nexport { Value0 as Second } from './two';\n",
+      "one.ts": "export type Value0 = Value1;\ntype Value1 = Value2;\ntype Value2 = Value3;\ntype Value3 = Value4;\ntype Value4 = Value5;\ntype Value5 = Value6;\ntype Value6 = Value7;\ntype Value7 = Value8;\ntype Value8 = Value9;\ntype Value9 = Value10;\ntype Value10 = Value11;\ntype Value11 = Value12;\ntype Value12 = Value13;\ntype Value13 = Value14;\ntype Value14 = Value15;\ntype Value15 = Value16;\ntype Value16 = Value17;\ntype Value17 = Value18;\ntype Value18 = Value19;\ntype Value19 = string;\n",
+      "two.ts": "export type Value0 = Value1;\ntype Value1 = Value2;\ntype Value2 = Value3;\ntype Value3 = Value4;\ntype Value4 = Value5;\ntype Value5 = Value6;\ntype Value6 = Value7;\ntype Value7 = Value8;\ntype Value8 = Value9;\ntype Value9 = Value10;\ntype Value10 = Value11;\ntype Value11 = Value12;\ntype Value12 = Value13;\ntype Value13 = Value14;\ntype Value14 = Value15;\ntype Value15 = Value16;\ntype Value16 = Value17;\ntype Value17 = Value18;\ntype Value18 = Value19;\ntype Value19 = number;\n"
+    }
+  }
+}

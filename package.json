@@ -44,6 +44,7 @@
     "build": "yarn clean-release; rollup -c && yarn build:post",
     "build:post": "node ./scripts/post_build.js;",
     "api:snapshot": "node ./scripts/api_surface_cli.mjs",
+    "api:conformance": "node ./scripts/api_surface_conformance.mjs",
     "package:check": "publint run dist --pack false --level error && attw --pack dist --exclude-entrypoints ./dist/index.css ./lame.all --ignore-rules false-esm internal-resolution-error",
     "start": "rollup -c -w",
     "reset": "yarn cache clean; yarn install",
