@@ -1,13 +1,44 @@
-# Manual publish workflow (typically for beta/RC releases).
+# Publishes the package by hand. Two situations call for it.
 #
-# IMPORTANT: npm OIDC trusted publishing allows only one publisher
-# configuration per package. The default is set to release-workflow.yml.
-# Before dispatching this workflow:
+#   Prerelease   Give npm_tag (beta, rc, ...). The version is republished as
+#                X.Y.Z-<npm_tag>-<tag_suffix> under that dist-tag. `latest` is
+#                left alone and no tag, release or notification is produced.
+#
+#   Recovery     Leave npm_tag empty, which publishes to `latest`. Use this when
+#                the automated release merged to main but did not finish: the
+#                package never reached npm, or it did and the tag or the GitHub
+#                release is missing. Every step looks for its own result before
+#                acting, so start this wherever the release stopped and only the
+#                gaps are filled. What it leaves matches a clean automated run --
+#                the git tag on the merge commit, the GitHub release and the post
+#                in the release channel.
+#
+#                It is not the answer to a release that failed its checks. The
+#                default branch requires build-and-test with no bypass, so the
+#                merge stays blocked no matter what is published; fix the check
+#                and let the automated release run again.
+#
+# Dispatch it with "Use workflow from" set to the release/vX.Y.Z branch.
+#
+# IMPORTANT: npm OIDC trusted publishing allows only one publisher configuration
+# per package, and the default is set to release-workflow.yml. That only matters
+# when the version still has to be published -- one already on npm is left as it
+# is, and no publisher is checked. When it does have to publish:
 #   1. Open the package on npmjs.com → Settings → "Trusted publisher"
 #   2. Change the workflow filename to "package-publish.yml"
 #   3. Run this workflow
 #   4. Restore the workflow filename to "release-workflow.yml"
-name: Package build and publish
+#
+# Then move the release ticket to RELEASED yourself, with the transition that goes
+# straight there. Not the one that re-enters RELEASING -- that is the retry, and
+# it re-dispatches the automated release onto a branch that is already merged.
+# This is the one step left manual: a hand-run workflow is not given the ticket
+# key, and where the ticket sits depends on how the original run failed.
+#
+# Should this ever run against a release that is not on main, the tag lands on
+# the branch and no release or notification is produced, since there would be
+# nothing for them to point at.
+name: Publish package by hand (prerelease or release recovery)
 
 on:
   workflow_dispatch:
@@ -37,6 +68,10 @@ jobs:
       NPM_TAG: ${{ github.event.inputs.npm_tag }}
       TAG_SUFFIX: ${{ github.event.inputs.tag_suffix }}
       BRANCH_NAME: ${{ github.ref_name }}
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      SLACK_RELEASE_CHANNEL_ID: ${{ vars.SLACK_RELEASE_CHANNEL_ID }}
+      ON_MAIN: '' # Set to 'true' when the release is already merged to main
+      TAG_TARGET: '' # Commit to publish and tag, set by "Resolve the commit to publish"
     steps:
       - name: Validate dispatch inputs
         run: |
@@ -128,6 +163,45 @@ jobs:
         run: |
           git config --global user.name "sendbird-sdk-deployment"
           git config --global user.email "sha.sdk_deployment@sendbird.com"
+      - name: Resolve the commit to publish
+        if: ${{ !github.event.inputs.npm_tag }}
+        env:
+          GH_TOKEN: ${{ secrets.SDK_GH_BOT1_TOKEN }}
+        run: |
+          # A stable publish has to produce what the automated release would have
+          # produced, and that is the release PR's merge commit -- main can gain
+          # commits after the branch is cut, and nothing requires the release PR
+          # to be up to date. Building the branch tip instead would put bytes on
+          # npm that the tagged commit does not describe.
+          #
+          # The PR is asked directly rather than derived from the graph: walking
+          # HEAD..origin/main picks by commit date, so a branch cut off this one
+          # and merged later sorts ahead of the release merge and wins.
+          #
+          # Matched on the head branch rather than searched for by title. Search
+          # is full text, so it can land on any pull request that merely mentions
+          # this version, and it answers an unreadable repository with an empty
+          # result instead of an error.
+          err=$(mktemp)
+          if ! MERGE=$(gh pr list -R "$GITHUB_REPOSITORY" \
+            --head "$BRANCH_NAME" --state merged --limit 1 \
+            --json mergeCommit --jq '.[0].mergeCommit.oid' 2>"$err"); then
+            # A lookup that failed is not the same answer as "no such PR".
+            # Reading one as the other would publish the wrong tree.
+            echo "could not query $GITHUB_REPOSITORY for the release pull request"
+            cat "$err"
+            exit 1
+          fi
+          if [ -z "$MERGE" ] || [ "$MERGE" = "null" ]; then
+            echo "no merged release pull request for v$VERSION; publishing the branch as it stands"
+            echo "TAG_TARGET=$(git rev-parse HEAD)" >> $GITHUB_ENV
+            exit 0
+          fi
+          echo "release is on main; publishing and tagging its merge commit $MERGE"
+          git checkout --detach "$MERGE"
+          echo "TAG_TARGET=$MERGE" >> $GITHUB_ENV
+          echo "ON_MAIN=true" >> $GITHUB_ENV
+
       - name: Install and Build
         run: |
           yarn install --immutable
@@ -135,44 +209,134 @@ jobs:
       - name: Publish to npm
         run: |
           cd ./dist
-          if [ -z "$NPM_TAG" ]; then
-            npm publish --access=public --provenance
-          else
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          if [ -n "$NPM_TAG" ]; then
+            # A prerelease ends at the publish, so there is nothing for it to
+            # resume and no reason to accept a version that is already up. The
+            # dispatch asked for a dist-tag; passing over an existing version
+            # would report success without moving it. Let the registry refuse.
             npm publish --tag "$NPM_TAG" --access=public --provenance
             echo "npm_tag is provided; Skipping the rest of the steps."
             echo "SKIP_REST=true" >> $GITHUB_ENV
+          elif PUBLISHED=$(npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>&1); then
+            # Recovery can start at any point after the automated run stopped,
+            # so the version may already be up. Republishing it is refused by
+            # the registry, which would take the tag and the release with it.
+            #
+            # A lookup that fails reads as "not published", and the publish
+            # below fails loudly if it was there after all. That direction is
+            # safe; the reverse would skip a publish that never happened.
+            echo "$PACKAGE_NAME@$PACKAGE_VERSION is already on npm (version $PUBLISHED); leaving it as published"
+          else
+            # Keep the registry's answer either way. "Not published" and "the
+            # read failed" both land here and both end in a publish attempt,
+            # so the log is what says which one it was.
+            echo "$PACKAGE_NAME@$PACKAGE_VERSION not readable. Registry said:"
+            echo "$PUBLISHED"
+            npm publish --access=public --provenance
+            echo "PUBLISHED_NOW=true" >> $GITHUB_ENV
           fi
           cd -
+
+      # Only when this run published. A version that was already up was read
+      # from the registry a moment ago, and a prerelease stops before anything
+      # records it. A fresh publish is the one case where `npm publish` has
+      # returned but the write may still be settling, and the steps behind
+      # this one write records saying the version is out.
       - name: Verify npm package publication
+        if: env.PUBLISHED_NOW == 'true'
         run: |
           cd ./dist
-          # Get package name and version from package.json
           PACKAGE_NAME=$(node -p "require('./package.json').name")
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          
-          echo "Verifying package publication: $PACKAGE_NAME@$PACKAGE_VERSION"
-          
-          # npm registry can be eventually consistent right after publish.
-          # Retry for up to ~2 minutes with a short backoff.
-          max_attempts=6
+          deadline=$(( $(date +%s) + 600 ))
           attempt=1
-          while [ $attempt -le $max_attempts ]; do
-            if npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version > /dev/null 2>&1; then
-              echo "✅ Package $PACKAGE_NAME@$PACKAGE_VERSION successfully published to npm"
-              break
+          while :; do
+            if RESPONSE=$(npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>&1); then
+              echo "$PACKAGE_NAME@$PACKAGE_VERSION is on npm (version $RESPONSE), attempt $attempt"
+              exit 0
             fi
-            echo "Attempt $attempt/$max_attempts: not visible yet. Waiting..."
+            echo "Attempt $attempt: not readable yet. Registry said:"
+            echo "$RESPONSE"
+            if [ "$(date +%s)" -ge "$deadline" ]; then
+              echo "$PACKAGE_NAME@$PACKAGE_VERSION did not become readable within 10 minutes"
+              echo "The package may not be published. Check the registry before re-running."
+              exit 1
+            fi
             sleep 20
             attempt=$((attempt + 1))
           done
 
-          if [ $attempt -gt $max_attempts ]; then
-            echo "❌ Package $PACKAGE_NAME@$PACKAGE_VERSION not found on npm registry after retries"
-            exit 1
-          fi
-          cd -
       - name: Tag new target and push to origin
         if: env.SKIP_REST != 'true'
         run: |
-          git tag "v$VERSION"
-          git push origin "v$VERSION"
+          # A failed remote read is not the same answer as "no such tag";
+          # reading one as the other would push over whatever is there.
+          if ! REMOTE_TAGS=$(git ls-remote --tags origin 2>&1); then
+            echo "could not read tags from origin"
+            printf '%s\n' "$REMOTE_TAGS"
+            exit 1
+          fi
+          # An annotated tag lists its own object under refs/tags/X and the
+          # commit under refs/tags/X^{}; comparing the former to a commit
+          # always disagrees.
+          ON=$(printf '%s\n' "$REMOTE_TAGS" | awk -v t="refs/tags/v$VERSION^{}" '$2==t{print $1}')
+          [ -z "$ON" ] && ON=$(printf '%s\n' "$REMOTE_TAGS" | awk -v t="refs/tags/v$VERSION" '$2==t{print $1}')
+          if [ -z "$ON" ]; then
+            git tag "v$VERSION" "$TAG_TARGET"
+            git push origin "v$VERSION"
+          elif [ "$ON" = "$TAG_TARGET" ]; then
+            echo "v$VERSION already tags $TAG_TARGET"
+          else
+            echo "v$VERSION points at $ON, expected $TAG_TARGET -- resolve by hand"
+            exit 1
+          fi
+
+      - name: Create GitHub Release
+        if: env.SKIP_REST != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.SDK_GH_BOT1_TOKEN }}
+        run: |
+          # Only once the release is on main, so the release points at the same
+          # history the automated path would have produced. Before the merge the
+          # tag exists but main does not carry it, and the release is created by
+          # hand after merging (see RELEASE_GUIDE).
+          if [ "$ON_MAIN" != "true" ]; then
+            echo "release is not on main yet; create the GitHub release after merging"
+            exit 0
+          fi
+          if gh release view "v$VERSION" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "release v$VERSION already exists"
+            exit 0
+          fi
+          gh release create "v$VERSION" \
+            --title "v$VERSION" \
+            --target main \
+            --notes-file CHANGELOG_DRAFT.md
+
+      - name: Slack notification
+        # Announced whenever the release is on main, not only when this run
+        # created it. The notification is continue-on-error, so a run that
+        # created the release and failed to post leaves a gap that only a later
+        # run can fill -- and it would find the release already there. A second
+        # post costs a duplicate message; withholding it costs the announcement.
+        if: env.ON_MAIN == 'true'
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v1.24.0
+        env:
+          SLACK_BOT_TOKEN: ${{ env.SLACK_BOT_TOKEN }}
+        with:
+          channel-id: ${{ env.SLACK_RELEASE_CHANNEL_ID }}
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":tada: <https://github.com/${{ github.repository }}/releases/tag/v${{ env.VERSION }}|@sendbird/uikit-react ${{ env.VERSION }}> has been released!"
+                  }
+                }
+              ]
+            }
