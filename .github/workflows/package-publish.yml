@@ -219,7 +219,7 @@ jobs:
             npm publish --tag "$NPM_TAG" --access=public --provenance
             echo "npm_tag is provided; Skipping the rest of the steps."
             echo "SKIP_REST=true" >> $GITHUB_ENV
-          elif npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version > /dev/null 2>&1; then
+          elif PUBLISHED=$(npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>&1); then
             # Recovery can start at any point after the automated run stopped,
             # so the version may already be up. Republishing it is refused by
             # the registry, which would take the tag and the release with it.
@@ -227,8 +227,13 @@ jobs:
             # A lookup that fails reads as "not published", and the publish
             # below fails loudly if it was there after all. That direction is
             # safe; the reverse would skip a publish that never happened.
-            echo "$PACKAGE_NAME@$PACKAGE_VERSION is already on npm; leaving it as published"
+            echo "$PACKAGE_NAME@$PACKAGE_VERSION is already on npm (version $PUBLISHED); leaving it as published"
           else
+            # Keep the registry's answer either way. "Not published" and "the
+            # read failed" both land here and both end in a publish attempt,
+            # so the log is what says which one it was.
+            echo "$PACKAGE_NAME@$PACKAGE_VERSION not readable. Registry said:"
+            echo "$PUBLISHED"
             npm publish --access=public --provenance
           fi
           cd -
