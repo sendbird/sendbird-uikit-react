@@ -235,8 +235,39 @@ jobs:
             echo "$PACKAGE_NAME@$PACKAGE_VERSION not readable. Registry said:"
             echo "$PUBLISHED"
             npm publish --access=public --provenance
+            echo "PUBLISHED_NOW=true" >> $GITHUB_ENV
           fi
           cd -
+
+      # Only when this run published. A version that was already up was read
+      # from the registry a moment ago, and a prerelease stops before anything
+      # records it. A fresh publish is the one case where `npm publish` has
+      # returned but the write may still be settling, and the steps behind
+      # this one write records saying the version is out.
+      - name: Verify npm package publication
+        if: env.PUBLISHED_NOW == 'true'
+        run: |
+          cd ./dist
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          deadline=$(( $(date +%s) + 600 ))
+          attempt=1
+          while :; do
+            if RESPONSE=$(npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>&1); then
+              echo "$PACKAGE_NAME@$PACKAGE_VERSION is on npm (version $RESPONSE), attempt $attempt"
+              exit 0
+            fi
+            echo "Attempt $attempt: not readable yet. Registry said:"
+            echo "$RESPONSE"
+            if [ "$(date +%s)" -ge "$deadline" ]; then
+              echo "$PACKAGE_NAME@$PACKAGE_VERSION did not become readable within 10 minutes"
+              echo "The package may not be published. Check the registry before re-running."
+              exit 1
+            fi
+            sleep 20
+            attempt=$((attempt + 1))
+          done
+
       - name: Tag new target and push to origin
         if: env.SKIP_REST != 'true'
         run: |
