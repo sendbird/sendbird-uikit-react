@@ -132,6 +132,44 @@ jobs:
           cd ./dist
           npm publish --access=public --provenance
 
+      # `npm publish` exiting zero means the registry accepted the tarball, not
+      # that it finished recording the version. On v3.19.1 the publish returned
+      # at 06:37:24Z and the registry's `time` entry reads 06:42:34Z -- five
+      # minutes later, with the package genuinely absent in between. Everything
+      # behind this step writes a record that says the version is out, so the
+      # step has to outlast that gap rather than assume the publish covered it.
+      #
+      # Ten minutes against a normal write that lands before the publish step
+      # even returns, and a read that follows within ~20s. The one slow write on
+      # record took 310s. A timeout past that is not a slow read to wait out --
+      # at that point the package may really not be there, so it fails the job
+      # and `package-publish.yml` picks the release up from here.
+      - name: Verify npm package publication
+        run: |
+          cd ./dist
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          deadline=$(( $(date +%s) + 600 ))
+          attempt=1
+          while :; do
+            if RESPONSE=$(npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>&1); then
+              echo "$PACKAGE_NAME@$PACKAGE_VERSION is on npm (version $RESPONSE), attempt $attempt"
+              exit 0
+            fi
+            # Keep the registry's answer. A 404 while the write settles and a
+            # 5xx or an auth failure all look the same once it is discarded,
+            # and that is what has to be read after a run like v3.19.1.
+            echo "Attempt $attempt: not readable yet. Registry said:"
+            echo "$RESPONSE"
+            if [ "$(date +%s)" -ge "$deadline" ]; then
+              echo "$PACKAGE_NAME@$PACKAGE_VERSION did not become readable within 10 minutes"
+              echo "The package may not be published. Check the registry before re-running."
+              exit 1
+            fi
+            sleep 20
+            attempt=$((attempt + 1))
+          done
+
       - name: Create git tag
         run: |
           git tag "v${{ env.RELEASE_VERSION }}"
