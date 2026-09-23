@@ -44,6 +44,25 @@ jobs:
         run: |
           yarn build
 
+      - name: Check public API surface
+        if: ${{ success() }}
+        run: |
+          if ! git ls-files --error-unmatch api/surface.d.ts > /dev/null 2>&1; then
+            echo "::error::api/surface.d.ts is not tracked. Without it this check passes silently — restore the file."
+            exit 1
+          fi
+          yarn api:snapshot
+          if ! git diff --quiet api/surface.d.ts; then
+            echo "::error::Public API surface changed. Run 'yarn build && yarn api:snapshot' and commit api/surface.d.ts."
+            git diff api/surface.d.ts
+            exit 1
+          fi
+
+      - name: Check published package shape
+        if: ${{ success() }}
+        run: |
+          yarn package:check
+
       - name: Run test
         if: ${{ success() }}
         timeout-minutes: 15
