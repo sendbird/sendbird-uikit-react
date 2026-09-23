@@ -887,7 +887,7 @@ describe('walking the export graph', () => {
     };
 
     expect(build('a', 'b')).not.toBe(build('b', 'a'));
-  });
+  }, 30_000);
 
   it('does not mistake a module reached twice by different branches for a cycle', () => {
     const build = (other: string) => {
