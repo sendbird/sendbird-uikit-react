@@ -162,6 +162,39 @@ describe('collectDeclarations', () => {
   });
 });
 
+describe('collecting what a declaration reaches', () => {
+  it('follows a triple-slash reference path', () => {
+    write('entry.d.ts', '/// <reference path="globals.d.ts" />\nexport declare const c: SomeGlobal;\n');
+    write('globals.d.ts', 'declare type SomeGlobal = string;\n');
+
+    expect(reachable('src/entry.ts')).toContain('globals.d.ts');
+  });
+
+  it('reads a reference directive the way the compiler reads it', () => {
+    write('globals.d.ts', 'declare type SomeGlobal = string;\n');
+    const walk = (directive: string) => {
+      write('entry.d.ts', `${directive}\nexport declare const c: SomeGlobal;\n`);
+      return reachable('src/entry.ts');
+    };
+
+    expect(walk('/// <reference PATH="globals.d.ts" />')).toContain('globals.d.ts');
+    expect(walk('/// <reference path="globals.d.ts">')).not.toContain('globals.d.ts');
+    expect(walk('//// <reference path="globals.d.ts" />')).not.toContain('globals.d.ts');
+    expect(walk('/// <reference types="react" />')).not.toContain('globals.d.ts');
+  });
+
+  it('reads the name a module default-exports whatever it declares', () => {
+    const build = (first: string, second: string) => {
+      write('entry.d.ts', `import A from './${first}';\nimport B from './${second}';\nexport declare const c: (a: A, b: B) => void;\n`);
+      write('a.d.ts', 'export default interface Shape {\n    id: string;\n}\n');
+      write('b.d.ts', 'export default interface Shape {\n    id: number;\n}\n');
+      return snapshot({ Entry: 'src/entry.ts' });
+    };
+
+    expect(build('a', 'b')).not.toBe(build('b', 'a'));
+  });
+});
+
 describe('splitBlocks', () => {
   it('keeps every line, so a declaration cannot go missing between the parts', () => {
     const text = [

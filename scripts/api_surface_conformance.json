@@ -78,6 +78,17 @@
       "types.ts": "export type A = string;\nexport type B = number;\n"
     }
   },
+  "default-interface-module-key": {
+    "changed": {
+      "entry.ts": "import A from './b';\nimport B from './a';\nexport type First = A;\nexport type Second = B;\n"
+    },
+    "consumer": "import type { First } from './dist/entry';\nconst p: First = { id: 'abc' };\n",
+    "files": {
+      "entry.ts": "import A from './a';\nimport B from './b';\nexport type First = A;\nexport type Second = B;\n",
+      "a.ts": "export default interface Shape { id: string; }\n",
+      "b.ts": "export default interface Shape { id: number; }\n"
+    }
+  },
   "default-type-import": {
     "changed": {
       "entry.ts": "import type { Widget } from './holder';\nexport default Widget;\n"
@@ -453,6 +464,16 @@
       "entry.ts": "export * as API from './barrel';\n",
       "barrel.ts": "export { Widget as default } from './model';\nexport * from './model';\n",
       "model.ts": "export class Widget { id = \"abc\"; }\nexport { Widget as default };\nexport type Value = string;\n"
+    }
+  },
+  "triple-slash-reference-path": {
+    "changed": {
+      "globals.d.ts": "declare type SomeGlobal = number;\n"
+    },
+    "consumer": "import { c } from './dist/entry';\nconst p: string = c;\n",
+    "files": {
+      "entry.ts": "/// <reference path=\"globals.d.ts\" />\nexport declare const c: SomeGlobal;\n",
+      "globals.d.ts": "declare type SomeGlobal = string;\n"
     }
   },
   "twenty-level-local-alias-chain": {

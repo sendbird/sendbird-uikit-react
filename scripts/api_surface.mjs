@@ -3,6 +3,8 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSy
 import { dirname, join, relative, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
+import ts from 'typescript';
+
 import moduleExports from '../rollup.module-exports.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -75,9 +77,14 @@ export function collectDeclarations(typesDir, sourcePaths) {
     if (seen.has(file)) continue;
     seen.add(file);
 
-    for (const match of readFileSync(file, 'utf-8').matchAll(SPECIFIER)) {
+    const text = readFileSync(file, 'utf-8');
+    for (const match of text.matchAll(SPECIFIER)) {
       const next = resolveSpecifier(file, match[1] ?? match[2]);
       if (next && !seen.has(next)) pending.push(next);
+    }
+    for (const reference of ts.preProcessFile(text, false, false).referencedFiles) {
+      const next = resolve(dirname(file), reference.fileName);
+      if (!seen.has(next) && existsSync(next) && statSync(next).isFile()) pending.push(next);
     }
   }
 
@@ -376,7 +383,7 @@ function locateLocal(file, name, ctx, seen = new Set(), typeOnly = false) {
 
 function defaultExportName(file) {
   const text = read(file);
-  const declared = text.match(/^export\s+default\s+(?:abstract\s+)?(?:function|class)\s+([A-Za-z0-9_$]+)/m);
+  const declared = text.match(/^export\s+default\s+(?:abstract\s+)?(?:function|class|interface)\s+([A-Za-z0-9_$]+)/m);
   if (declared) return declared[1];
   const bound = text.match(/^export\s+default\s+([A-Za-z0-9_$]+)\s*;/m);
   return bound ? bound[1] : null;
