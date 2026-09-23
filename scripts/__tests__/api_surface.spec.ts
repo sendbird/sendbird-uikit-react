@@ -5,6 +5,7 @@ import { join, relative } from 'path';
 import {
   collectDeclarations,
   declaredName,
+  declaredNames,
   entryDeclaration,
   importBindings,
   renderSnapshot,
@@ -235,6 +236,26 @@ describe('declaredName', () => {
 
   it('returns null for a statement that declares nothing', () => {
     expect(declaredName('export {};')).toBeNull();
+  });
+});
+
+describe('declaredNames', () => {
+  it('reads every name a variable statement binds', () => {
+    expect(declaredNames('export declare const foo = "a", bar = "s";')).toEqual(['foo', 'bar']);
+  });
+
+  it('is not confused by commas inside a type', () => {
+    expect(declaredNames('export declare const one: Map<string, number>, two: (a: string, b: number) => void;'))
+      .toEqual(['one', 'two']);
+  });
+
+  it('does not mistake the const in a const enum for the declaration', () => {
+    expect(declaredNames('export declare const enum E {\n    A = "x"\n}')).toEqual(['E']);
+  });
+
+  it('reads a single name from anything else', () => {
+    expect(declaredNames('export interface Widget {\n    id: string;\n}')).toEqual(['Widget']);
+    expect(declaredNames('// just a comment')).toEqual([]);
   });
 });
 
@@ -721,6 +742,52 @@ describe('what a name resolves to', () => {
     };
 
     expect(build('A')).not.toBe(build('B'));
+  });
+
+  it('counts a name that keys a property', () => {
+    const build = (first: string, second: string) => {
+      write('entry.d.ts', `export { T } from './${first}';\nexport { T as Other } from './${second}';\n`);
+      write('a.d.ts', 'export declare const KEY = "a";\nexport type T = {\n    [KEY]: string;\n};\n');
+      write('b.d.ts', 'export declare const KEY = "b";\nexport type T = {\n    [KEY]: string;\n};\n');
+      return snapshot({ Entry: 'src/entry.ts' });
+    };
+
+    expect(build('a', 'b')).not.toBe(build('b', 'a'));
+  });
+
+  it('does not count a name that only labels one', () => {
+    const build = (first: string, second: string) => {
+      write('entry.d.ts', `export { T } from './${first}';\nexport { T as Other } from './${second}';\n`);
+      write('a.d.ts', 'export declare const Label = "a";\nexport type T = {\n    Label: string;\n};\n');
+      write('b.d.ts', 'export declare const Label = "b";\nexport type T = {\n    Label: string;\n};\n');
+      return snapshot({ Entry: 'src/entry.ts' });
+    };
+
+    expect(build('a', 'b')).toBe(build('b', 'a'));
+  });
+
+  it('does not make two names written together depend on each other', () => {
+    const build = (other: string) => {
+      write('entry.d.ts', `export { foo as First } from './a';\nexport { foo as Second } from './b';\nexport { Shared } from './c';\nexport { Shared as Other } from './${other}';\n`);
+      write('a.d.ts', 'export declare const foo = "a", bar = "b";\n');
+      write('b.d.ts', 'export declare const foo = 1, bar = 2;\n');
+      write('c.d.ts', 'export interface Shared {\n    value: string;\n}\n');
+      write('d.d.ts', 'export interface Shared {\n    value: string;\n}\n');
+      return headers(snapshot({ Entry: 'src/entry.ts' })).filter((key) => key.startsWith('#foo'));
+    };
+
+    expect(build('d')).toEqual(build('c'));
+  });
+
+  it('keeps a reference to a type that shares a name with a co-declared value', () => {
+    const build = (first: string, second: string) => {
+      write('entry.d.ts', `export { A as one } from './${first}';\nexport { A as two } from './${second}';\n`);
+      write('a.d.ts', 'export type B = string;\nexport declare const A: B, B = 0;\n');
+      write('b.d.ts', 'export type B = number;\nexport declare const A: B, B = 0;\n');
+      return snapshot({ Entry: 'src/entry.ts' });
+    };
+
+    expect(build('a', 'b')).not.toBe(build('b', 'a'));
   });
 
   it('tells declarations apart by the types they name in their own file', () => {

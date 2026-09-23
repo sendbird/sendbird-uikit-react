@@ -27,6 +27,74 @@
       "vb.ts": "export { type Value } from './tb';\n"
     }
   },
+  "co-declared-names": {
+    "changed": {
+      "entry.ts": "export { bar } from './b';\nexport { bar as other } from './a';\n"
+    },
+    "consumer": "import { bar } from './dist/entry';\nconst p: string = bar;\n",
+    "files": {
+      "entry.ts": "export { bar } from './a';\nexport { bar as other } from './b';\n",
+      "a.ts": "export const foo = \"a\", bar = \"s\";\n",
+      "b.ts": "export const foo = 1, bar = 2;\n"
+    }
+  },
+  "co-declared-type-and-value": {
+    "changed": {
+      "entry.ts": "export { A as first } from './b';\nexport { A as second } from './a';\n"
+    },
+    "consumer": "import { first } from './dist/entry';\nconst value: string = first;\n",
+    "files": {
+      "entry.ts": "export { A as first } from './a';\nexport { A as second } from './b';\n",
+      "a.ts": "export type B = string;\nexport const A: B = '', B = 0;\n",
+      "b.ts": "export type B = number;\nexport const A: B = 0, B = 0;\n"
+    }
+  },
+  "co-declared-values-are-not-references": {
+    "changed": {
+      "entry.ts": "export { foo as First } from './a';\nexport { foo as Second } from './b';\nexport { Shared } from './c';\nexport { Shared as Other } from './c';\n"
+    },
+    "consumer": "import { First, Second, Shared, Other } from './dist/entry';\nconst first: 'a' = First;\nconst second: 1 = Second;\nconst shared: Shared = { value: '' };\nconst other: Other = shared;\n",
+    "files": {
+      "entry.ts": "export { foo as First } from './a';\nexport { foo as Second } from './b';\nexport { Shared } from './c';\nexport { Shared as Other } from './d';\n",
+      "a.ts": "export const foo = 'a', bar = 'b';\n",
+      "b.ts": "export const foo = 1, bar = 2;\n",
+      "c.ts": "export interface Shared { value: string; }\n",
+      "d.ts": "export interface Shared { value: string; }\n"
+    }
+  },
+  "computed-property-key": {
+    "changed": {
+      "entry.ts": "export { T } from './b';\nexport { T as Other } from './a';\n"
+    },
+    "consumer": "import type { T } from './dist/entry';\nconst p: T = { a: '' };\n",
+    "files": {
+      "entry.ts": "export { T } from './a';\nexport { T as Other } from './b';\n",
+      "a.ts": "export const KEY = 'a';\nexport type T = { [KEY]: string };\n",
+      "b.ts": "export const KEY = 'b';\nexport type T = { [KEY]: string };\n"
+    }
+  },
+  "computed-property-reference": {
+    "changed": {
+      "entry.ts": "export { Foo as First } from './b';\nexport { Foo as Second } from './a';\n"
+    },
+    "consumer": "import type { First } from './dist/entry';\nconst value: First = { a: '' };\n",
+    "files": {
+      "entry.ts": "export { Foo as First } from './a';\nexport { Foo as Second } from './b';\n",
+      "a.ts": "const key = 'a';\nexport interface Foo { [key]: string; }\n",
+      "b.ts": "const key = 'b';\nexport interface Foo { [key]: string; }\n"
+    }
+  },
+  "const-enum-name": {
+    "changed": {
+      "entry.ts": "export { E } from './b';\nexport { E as other } from './a';\n"
+    },
+    "consumer": "import { E } from './dist/entry';\nconst p: string = E.A;\n",
+    "files": {
+      "entry.ts": "export { E } from './a';\nexport { E as other } from './b';\n",
+      "a.ts": "export const enum E { A = 'x' }\n",
+      "b.ts": "export const enum E { A = 1 }\n"
+    }
+  },
   "cycle-cache-reorder": {
     "changed": {
       "entry.ts": "export { Foo } from './z';\nexport { Bar } from './two';\n"

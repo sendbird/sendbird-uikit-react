@@ -3238,7 +3238,7 @@ export type Word = {
     text: string;
     userId?: string;
 };
-// ===== #_default~c5622fec =====
+// ===== #_default~411f7715 =====
 declare const _default: {
     Colors: {
         readonly DEFAULT: "DEFAULT";

@@ -137,10 +137,25 @@ export function importBindings(line) {
   return names;
 }
 
-export function declaredName(block) {
+export function declaredNames(block) {
   const line = block.split('\n').find((candidate) => DECLARATION.test(candidate));
   const match = line && line.match(DECLARED_NAME);
-  return match ? match[1] : null;
+  if (!match) return [];
+  if (!/^(?:export\s+)?(?:declare\s+)?(?:const|let|var)\s/.test(line)) return [match[1]];
+
+  const parsed = ts.createSourceFile('block.d.ts', block, ts.ScriptTarget.Latest, false);
+  const [statement] = parsed.statements;
+  if (statement && ts.isVariableStatement(statement)) {
+    return statement.declarationList.declarations
+      .map((declaration) => declaration.name.getText(parsed))
+      .filter((name) => /^[A-Za-z0-9_$]+$/.test(name));
+  }
+  if (statement && statement.name && ts.isIdentifier(statement.name)) return [statement.name.text];
+  return [match[1]];
+}
+
+export function declaredName(block) {
+  return declaredNames(block)[0] ?? null;
 }
 
 function indexSymbols(declarations) {
@@ -149,8 +164,9 @@ function indexSymbols(declarations) {
     const own = new Map();
     for (const block of splitBlocks(read(file)).blocks) {
       if (RE_EXPORT.test(block)) continue;
-      const name = declaredName(block);
-      if (name) own.set(name, own.has(name) ? `${own.get(name)}\n${block}` : block);
+      for (const name of declaredNames(block)) {
+        own.set(name, own.has(name) ? `${own.get(name)}\n${block}` : block);
+      }
     }
     declared.set(file, own);
   }
@@ -269,8 +285,9 @@ function exportedNames(file, ctx, seen = new Set()) {
     }
 
     if (/^export\b/.test(line)) {
-      const name = declaredName(block);
-      if (name) entries.set(name, `${name}=${noteKey(ctx, ctx.keys.get(file)?.get(name) ?? `#${name}`)}`);
+      for (const name of declaredNames(block)) {
+        entries.set(name, `${name}=${noteKey(ctx, ctx.keys.get(file)?.get(name) ?? `#${name}`)}`);
+      }
     }
   }
 
@@ -498,10 +515,22 @@ function renderBody(file, block, ctx) {
   return `${[...used, foldLine(file, block, ctx)].join('\n')}\n`;
 }
 
-function identityOf(file, block, ctx) {
+function referencedIn(block) {
+  const parsed = ts.createSourceFile('block.d.ts', block, ts.ScriptTarget.Latest, false);
+  const found = new Set();
+  const walk = (node) => {
+    if (ts.isIdentifier(node)) { found.add(node.text); return; }
+    ts.forEachChild(node, (child) => {
+      if (node.name !== child || ts.isComputedPropertyName(child)) walk(child);
+    });
+  };
+  walk(parsed);
+  return found;
+}
+
+function identityOf(file, self, block, ctx) {
   const own = ctx.declared.get(file);
-  const self = declaredName(block);
-  const referenced = [...new Set(block.match(/[A-Za-z_$][A-Za-z0-9_$]*/g) ?? [])]
+  const referenced = [...referencedIn(block)]
     .filter((name) => name !== self && own.has(name))
     .sort()
     .map((name) => noteKey(ctx, ctx.keys.get(file).get(name)))
@@ -531,7 +560,7 @@ function resolveKeys(ctx) {
         const stale = dirty === null || [...(deps.get(id) ?? [])].some((key) => dirty.has(key));
         if (stale) {
           ctx.trace = new Set();
-          const body = identityOf(file, block, ctx);
+          const body = identityOf(file, name, block, ctx);
           deps.set(id, ctx.trace);
           ctx.trace = null;
           bodies.set(id, body);
