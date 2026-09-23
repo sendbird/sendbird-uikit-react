@@ -88,6 +88,16 @@
       "holder.ts": "export class Widget { value = \"abc\"; }\n"
     }
   },
+  "explicit-js-extension": {
+    "changed": {
+      "foo.ts": "export type Foo = number;\n"
+    },
+    "consumer": "import type { Foo } from './dist/entry';\nconst p: Foo = 'abc';\n",
+    "files": {
+      "entry.ts": "export { Foo } from './foo.js';\n",
+      "foo.ts": "export type Foo = string;\n"
+    }
+  },
   "explicit-reexport-shadowed-by-star": {
     "changed": {
       "barrel.ts": "export { type Widget } from './model';\nexport * from './model';\n"
@@ -351,6 +361,17 @@
     "files": {
       "entry.ts": "import { Widget } from './holder';\nexport { Widget };\n",
       "holder.ts": "export class Widget { value = \"abc\"; }\n"
+    }
+  },
+  "runtime-extension-names-another-file": {
+    "changed": {
+      "foo.cjs.ts": "export type Foo = number;\n"
+    },
+    "consumer": "import type { Foo } from './dist/entry';\nconst p: Foo = 'abc';\n",
+    "files": {
+      "entry.ts": "export { Foo } from './foo.cjs';\n",
+      "foo.ts": "export type Foo = boolean;\n",
+      "foo.cjs.ts": "export type Foo = string;\n"
     }
   },
   "same-module-different-export-is-not-a-cycle": {

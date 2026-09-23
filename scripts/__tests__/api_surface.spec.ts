@@ -62,6 +62,43 @@ describe('resolveSpecifier', () => {
     expect(resolveSpecifier(from, './nested')).toBe(target);
   });
 
+  it('resolves a specifier that spells out the runtime extension', () => {
+    const from = write('a.d.ts', '');
+    const target = write('b.d.ts', '');
+
+    expect(resolveSpecifier(from, './b.js')).toBe(target);
+    expect(resolveSpecifier(from, './b.jsx')).toBe(target);
+  });
+
+  it('prefers the declaration extension that matches the runtime one', () => {
+    const from = write('a.d.ts', '');
+    write('c.d.ts', '');
+    const target = write('c.d.mts', '');
+
+    expect(resolveSpecifier(from, './c.mjs')).toBe(target);
+  });
+
+  it('does not settle for a .d.ts the compiler would not have chosen', () => {
+    const from = write('a.d.ts', '');
+    write('d.d.ts', '');
+    write('e.d.ts', '');
+    const viaMjs = write('d.mjs.d.ts', '');
+    const viaCjs = write('e.cjs.d.ts', '');
+
+    expect(resolveSpecifier(from, './d.mjs')).toBe(viaMjs);
+    expect(resolveSpecifier(from, './e.cjs')).toBe(viaCjs);
+  });
+
+  it('takes a specifier that already names a declaration file', () => {
+    const from = write('a.d.ts', '');
+    const target = write('f.d.ts', '');
+    const viaMts = write('g.d.mts', '');
+    write('f.d.ts.d.ts', '');
+
+    expect(resolveSpecifier(from, './f.d.ts')).toBe(target);
+    expect(resolveSpecifier(from, './g.d.mts')).toBe(viaMts);
+  });
+
   it('ignores package specifiers', () => {
     const from = write('a.d.ts', '');
     expect(resolveSpecifier(from, '@sendbird/chat')).toBeNull();

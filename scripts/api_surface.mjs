@@ -21,6 +21,14 @@ const DECLARED_NAME = /^(?:export\s+)?(?:default\s+)?(?:declare\s+)?(?:abstract\
 const RE_EXPORT = /^export\s*[{*][\s\S]*?\bfrom\b/;
 const COMMENT = /^\s*(\/\*|\*|\/\/)/;
 
+const DECLARATION_FOR = {
+  '.js': ['.d.ts'],
+  '.jsx': ['.d.ts'],
+  '.mjs': ['.d.mts'],
+  '.cjs': ['.d.cts'],
+};
+const DECLARATION_EXTENSIONS = ['.d.ts', '.d.mts', '.d.cts'];
+
 const cache = new Map();
 const read = (file) => {
   if (!cache.has(file)) cache.set(file, readFileSync(file, 'utf-8'));
@@ -41,7 +49,13 @@ export function entryDeclaration(typesDir, sourcePath) {
 export function resolveSpecifier(fromFile, specifier) {
   if (!specifier.startsWith('.')) return null;
   const base = resolve(dirname(fromFile), specifier);
-  for (const candidate of [`${base}.d.ts`, join(base, 'index.d.ts')]) {
+  const runtime = Object.keys(DECLARATION_FOR).find((extension) => base.endsWith(extension));
+  const candidates = runtime
+    ? DECLARATION_FOR[runtime].map((extension) => base.slice(0, -runtime.length) + extension)
+    : [];
+  if (DECLARATION_EXTENSIONS.some((extension) => base.endsWith(extension))) candidates.push(base);
+  candidates.push(`${base}.d.ts`, join(base, 'index.d.ts'));
+  for (const candidate of candidates) {
     if (existsSync(candidate) && statSync(candidate).isFile()) return candidate;
   }
   return null;
