@@ -171,6 +171,13 @@ describe('collecting what a declaration reaches', () => {
     expect(reachable('src/entry.ts')).toContain('globals.d.ts');
   });
 
+  it('follows a bare side-effect import', () => {
+    write('entry.d.ts', "import './augment';\nexport declare const c: Marker;\n");
+    write('augment.d.ts', 'declare global {\n    type Marker = string;\n}\nexport {};\n');
+
+    expect(reachable('src/entry.ts')).toContain('augment.d.ts');
+  });
+
   it('reads a reference directive the way the compiler reads it', () => {
     write('globals.d.ts', 'declare type SomeGlobal = string;\n');
     const walk = (directive: string) => {
@@ -182,6 +189,17 @@ describe('collecting what a declaration reaches', () => {
     expect(walk('/// <reference path="globals.d.ts">')).not.toContain('globals.d.ts');
     expect(walk('//// <reference path="globals.d.ts" />')).not.toContain('globals.d.ts');
     expect(walk('/// <reference types="react" />')).not.toContain('globals.d.ts');
+  });
+
+  it('tells two anonymous default exports apart', () => {
+    const build = (first: string, second: string) => {
+      write('entry.d.ts', `export { default as A } from './${first}';\nexport { default as B } from './${second}';\n`);
+      write('a.d.ts', 'export default class {\n    id: string;\n}\n');
+      write('b.d.ts', 'export default class {\n    id: number;\n}\n');
+      return snapshot({ Entry: 'src/entry.ts' });
+    };
+
+    expect(build('a', 'b')).not.toBe(build('b', 'a'));
   });
 
   it('reads the name a module default-exports whatever it declares', () => {

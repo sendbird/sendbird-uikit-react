@@ -1,4 +1,25 @@
 {
+  "anonymous-default": {
+    "changed": {
+      "entry.ts": "export { default as First } from './b';\nexport { default as Second } from './a';\n"
+    },
+    "consumer": "import { First } from './dist/entry';\nconst p: string = new First().id;\n",
+    "files": {
+      "entry.ts": "export { default as First } from './a';\nexport { default as Second } from './b';\n",
+      "a.ts": "export default class { id = 'x'; }\n",
+      "b.ts": "export default class { id = 1; }\n"
+    }
+  },
+  "bare-side-effect-import": {
+    "changed": {
+      "augment.ts": "declare global {\n    type Marker = number;\n}\nexport {};\n"
+    },
+    "consumer": "import { c } from './dist/entry';\nconst p: string = c;\n",
+    "files": {
+      "entry.ts": "import './augment';\nexport declare const c: Marker;\n",
+      "augment.ts": "declare global {\n    type Marker = string;\n}\nexport {};\n"
+    }
+  },
   "cached-namespace-reference": {
     "changed": {
       "entry.ts": "export { Foo as First } from './two';\nexport { Foo as Second } from './one';\n"

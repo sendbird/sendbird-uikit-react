@@ -78,11 +78,16 @@ export function collectDeclarations(typesDir, sourcePaths) {
     seen.add(file);
 
     const text = readFileSync(file, 'utf-8');
+    const preprocessed = ts.preProcessFile(text, true, false);
     for (const match of text.matchAll(SPECIFIER)) {
       const next = resolveSpecifier(file, match[1] ?? match[2]);
       if (next && !seen.has(next)) pending.push(next);
     }
-    for (const reference of ts.preProcessFile(text, false, false).referencedFiles) {
+    for (const imported of preprocessed.importedFiles) {
+      const next = resolveSpecifier(file, imported.fileName);
+      if (next && !seen.has(next)) pending.push(next);
+    }
+    for (const reference of preprocessed.referencedFiles) {
       const next = resolve(dirname(file), reference.fileName);
       if (!seen.has(next) && existsSync(next) && statSync(next).isFile()) pending.push(next);
     }
@@ -267,7 +272,7 @@ function exportedNames(file, ctx, seen = new Set()) {
 
     if (/^export\s+default\b/.test(line)) {
       const name = defaultExportName(file);
-      entries.set('default', `default=${name ? localKey(name, file, ctx, new Set(seen)) : 'anonymous'}`);
+      entries.set('default', `default=${name ? localKey(name, file, ctx, new Set(seen)) : `#unnamed~${digest(block)}`}`);
       continue;
     }
 
