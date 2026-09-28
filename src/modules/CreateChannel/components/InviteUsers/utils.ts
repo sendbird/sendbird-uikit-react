@@ -27,7 +27,10 @@ type CreateDefaultUserListQueryType = {
 
 export const createDefaultUserListQuery = (
   { sdk, userFilledApplicationUserListQuery }: CreateDefaultUserListQueryType,
-): ApplicationUserListQuery => {
+): ApplicationUserListQuery | undefined => {
+  if (!sdk?.createApplicationUserListQuery) {
+    return undefined;
+  }
   const params = sdk.createApplicationUserListQuery();
   if (userFilledApplicationUserListQuery) {
     Object.keys(userFilledApplicationUserListQuery).forEach((key) => {
