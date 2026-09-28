@@ -118,7 +118,7 @@ describe('InviteUsers', () => {
     expect(screen.getByText('CREATE')).toBeInTheDocument();
   });
 
-  it('calls userListQuery and populates the user list when initialized becomes true', async () => {
+  it('holds the user-list query until the SDK is initialized, then populates the list', async () => {
     const mockNext = vi.fn().mockResolvedValue([{ userId: 'user-a' }, { userId: 'user-b' }]);
     const userListQuery = vi.fn(() => ({
       hasNext: false,
@@ -126,12 +126,30 @@ describe('InviteUsers', () => {
       next: mockNext,
     } as unknown as ApplicationUserListQuery));
 
+    (useSendbirdModule.default as Mock).mockReturnValue({
+      state: { ...mockState, stores: { sdkStore: { ...mockState.stores.sdkStore, initialized: false } } },
+    });
+
+    const { container, rerender } = renderComponent({}, {}, { userListQuery });
+
+    expect(userListQuery).not.toHaveBeenCalled();
+    expect(mockNext).not.toHaveBeenCalled();
+    expect(container.querySelectorAll('.sendbird-user-list-item')).toHaveLength(0);
+
     await act(async () => {
-      renderComponent({}, {}, { userListQuery });
+      (useSendbirdModule.default as Mock).mockReturnValue({
+        state: { ...mockState, stores: { sdkStore: { ...mockState.stores.sdkStore, initialized: true } } },
+      });
+      rerender(
+        <LocalizationContext.Provider value={mockLocalizationContext as any}>
+          <InviteUsers userListQuery={userListQuery} />
+        </LocalizationContext.Provider>,
+      );
     });
 
     expect(userListQuery).toHaveBeenCalled();
     expect(mockNext).toHaveBeenCalled();
+    expect(container.querySelectorAll('.sendbird-user-list-item')).toHaveLength(2);
   });
 
   it('uses the latest userListQuery ref when initialized becomes true, even if the prop changed before init', async () => {
