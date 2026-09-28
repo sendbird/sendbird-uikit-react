@@ -1,14 +1,14 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { openChannelSettings, openGroupChannel, openSettingsAccordion, openUserRowMenu } from '../utils/actions';
+import { openChannelSettings, openFirstGroupChannel, openSettingsAccordion, openUserRowMenu } from '../utils/actions';
 import * as platform from '../utils/platform';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('channel settings — extended', () => {
   // E4
   test('updates channel avatar after cover image upload', async ({ page, workerUser, createChannel }) => {
-    const channel = await createChannel();
-    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
     await openChannelSettings(page);
     await page.locator('.sendbird-channel-profile__edit').click();
     // EditDetailsModal renders in a portal; scoped to .channel-profile-form to avoid
@@ -32,8 +32,8 @@ test.describe('channel settings — extended', () => {
   test('increases member count and shows new member after invite', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    const channel = await createChannel();
-    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Click "Members" panel item — wait for invite button to appear
     await openSettingsAccordion(page, /^Members/);
@@ -59,8 +59,8 @@ test.describe('channel settings — extended', () => {
   test('shows new operator in operator list after adding via modal', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    const channel = await createChannel({ memberIds: [secondUser.userId] });
-    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
+    await createChannel({ memberIds: [secondUser.userId] });
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Click the "Operators" panel item — wait for "Add operator" button to appear
     await openSettingsAccordion(page, /^Operators/);
@@ -88,7 +88,7 @@ test.describe('channel settings — extended', () => {
     page, workerUser, secondUser, createChannel,
   }) => {
     const channel = await createChannel({ memberIds: [secondUser.userId] });
-    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Click "Members" panel item — wait for secondUser row to appear (replaces fixed timer)
     await openSettingsAccordion(page, /^Members/);
@@ -105,7 +105,7 @@ test.describe('channel settings — extended', () => {
     page, workerUser, secondUser, createChannel,
   }) => {
     const channel = await createChannel({ memberIds: [secondUser.userId] });
-    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Click "Members" panel item — wait for secondUser row to appear (replaces fixed timer)
     await openSettingsAccordion(page, /^Members/);
@@ -130,7 +130,7 @@ test.describe('channel settings — extended', () => {
     page, workerUser, secondUser, createChannel,
   }) => {
     const channel = await createChannel({ memberIds: [secondUser.userId] });
-    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Expand the Members accordion and wait until member list container is visible
     // Click "Members" panel item — wait for secondUser row to appear (replaces fixed timer)
@@ -156,8 +156,8 @@ test.describe('channel settings — extended', () => {
   test('renders member rows and count in members accordion', async ({
     page, workerUser, createChannel,
   }) => {
-    const channel = await createChannel();
-    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Members accordion — click by text since the class is in useMenuItems (not a fixed class)
     const membersItem = page.getByText('Members').first();
@@ -177,8 +177,8 @@ test.describe('channel settings — extended', () => {
   test('renders operator and banned accordions with rows or empty state', async ({
     page, workerUser, createChannel,
   }) => {
-    const channel = await createChannel();
-    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Operators accordion
     const opsAccordion = page.locator('[class*="operators-accordion"], .sendbird-channel-settings__operators').first();

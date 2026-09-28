@@ -177,18 +177,6 @@ export async function openSettingsAccordion(page: Page, label: RegExp) {
 }
 
 /**
- * Open the group channel this test created and wait for the conversation.
- *
- * The app picks the newest channel on load; `channelUrl` is passed for the day it honours one but
- * is ignored today. That is enough because a test's user is its own and owns only what the test
- * made — which is also why clicking whichever row happens to be first is no longer a gamble.
- */
-export async function openGroupChannel(page: Page, channelUrl: string, params: Record<string, string | undefined> = {}) {
-  await page.goto(appPath('/group_channel', { ...params, channelUrl }));
-  await expect(page.locator('.sendbird-conversation')).toBeVisible({ timeout: 30_000 });
-}
-
-/**
  * Type an @mention in the composer, pick `targetUserId` from the suggestion list, and send.
  *
  * A mention sent through the Platform API reaches the client without `mentioned_users`, and UIKit
