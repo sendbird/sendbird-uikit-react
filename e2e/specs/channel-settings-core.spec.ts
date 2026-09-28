@@ -28,8 +28,9 @@ test.describe('channel settings — core', () => {
     await freezeToggle.click();
     // GroupChannel frozen notification class is sendbird-notification--frozen
     await expect(page.locator('.sendbird-notification--frozen')).toBeVisible({ timeout: 10_000 });
-    // Toggle freeze OFF
-    await expect(freezeToggle).toBeVisible({ timeout: 5_000 });
+    // The toggle reports frozen only once the channel change comes back. Clicking before that
+    // repeats the first request rather than reversing it, and the channel stays frozen.
+    await expect(freezeToggle).toHaveClass(/sendbird-input-toggle-button--checked/, { timeout: 10_000 });
     await freezeToggle.click();
     await expect(page.locator('.sendbird-notification--frozen')).not.toBeVisible({ timeout: 10_000 });
   });
