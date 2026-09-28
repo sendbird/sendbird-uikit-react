@@ -12,14 +12,6 @@ export const SERVER_RESPONSE_TIMEOUT = 10_000;
  * as one named reason instead of silently disappearing from the run.
  */
 /**
- * A mention sent through the Platform API comes back to the client with `mentioned_message_template`
- * present but `mentioned_users` empty. UIKit renders a mention label only when the message carries
- * both, so nothing marks the mention — in the bubble or on the channel row. Seeding a mention that
- * renders would need it typed through the composer instead.
- */
-export const MENTION_NOT_HYDRATED = 'A mention seeded through the Platform API arrives with an empty mentioned_users list, so no mention label renders.';
-
-/**
  * After marking a message from another member as unread, the New Messages separator appears but the
  * unread floating button never mounts, so there is nothing to click or dismiss.
  */

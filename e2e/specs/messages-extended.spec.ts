@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { openFirstGroupChannel, sendText, messageByText } from '../utils/actions';
+import { openFirstGroupChannel, sendMentionFromComposer, sendText, messageByText } from '../utils/actions';
 import { appPath, runTag } from '../utils/env';
-import { MENTION_NOT_HYDRATED, SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 import * as platform from '../utils/platform';
 
 test.describe('group channel — messages extended', () => {
@@ -122,19 +122,17 @@ test.describe('group channel — messages extended', () => {
 
   // C13
   test('renders highlighted mention in the message bubble', async ({
-    page, workerUser, secondUser, createChannel,
+    page, workerUser, secondUser, secondPage, createChannel,
   }) => {
-    test.skip(true, MENTION_NOT_HYDRATED);
-    const channel = await createChannel({ memberIds: [secondUser.userId] });
-    // secondUser sends a structured mention message (mention_type + mentioned_user_ids required
-    // for UIKit to render a .sendbird-mention-user-label badge)
-    const mentionMsg = `@${workerUser.userId} hi ${runTag}`;
-    await platform.sendMentionMessage(channel.url, secondUser.userId, mentionMsg, [workerUser.userId]);
-
+    await createChannel({ memberIds: [secondUser.userId] });
     await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_enableMention: 'true' });
-    const mentionLabel = page.locator('.sendbird-word__mention').filter({ hasText: workerUser.userId });
+
+    await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId, groupChannel_enableMention: 'true' }));
+    await secondPage.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
+    await sendMentionFromComposer(secondPage, workerUser.userId, `hi ${runTag}`);
+
+    const mentionLabel = page.locator('.sendbird-word__mention').filter({ hasText: workerUser.nickname });
     await expect(mentionLabel.first()).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
-    await expect(mentionLabel).toBeVisible();
   });
 
   // C15

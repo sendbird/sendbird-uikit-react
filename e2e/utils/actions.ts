@@ -174,13 +174,36 @@ export async function openSettingsAccordion(page: Page, label: RegExp) {
 }
 
 /**
- * Open a specific group channel by URL.
+ * Open the group channel this test created and wait for the conversation.
  *
- * Opening "the first channel in the list" assumes the worker has exactly the channel this test
- * made. Teardown deletes channels on a best-effort basis, so under load a leftover can still be
- * at the top and the test then drives a channel it never set up.
+ * The app picks the newest channel on load; `channelUrl` is passed for the day it honours one but
+ * is ignored today. That is enough because a test's user is its own and owns only what the test
+ * made — which is also why clicking whichever row happens to be first is no longer a gamble.
  */
 export async function openGroupChannel(page: Page, channelUrl: string, params: Record<string, string | undefined> = {}) {
   await page.goto(appPath('/group_channel', { ...params, channelUrl }));
   await expect(page.locator('.sendbird-conversation')).toBeVisible({ timeout: 30_000 });
+}
+
+/**
+ * Type an @mention in the composer, pick `targetUserId` from the suggestion list, and send.
+ *
+ * A mention sent through the Platform API reaches the client without `mentioned_users`, and UIKit
+ * renders a mention only when the message carries both the template and the users — so a mention
+ * has to come from the composer to render at all.
+ */
+export async function sendMentionFromComposer(page: Page, targetUserId: string, text: string) {
+  const input = page.locator('.sendbird-message-input [role="textbox"]').first();
+  await input.click();
+  await input.pressSequentially('@');
+
+  const suggestion = page
+    .locator('.sendbird-mention-suggest-list__user-item, [class*="mention-suggest"] [class*="item"]')
+    .filter({ hasText: targetUserId })
+    .first();
+  await expect(suggestion).toBeVisible({ timeout: 10_000 });
+  await suggestion.click();
+
+  await input.pressSequentially(` ${text}`);
+  await input.press('Enter');
 }

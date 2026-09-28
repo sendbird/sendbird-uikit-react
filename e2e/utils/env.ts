@@ -30,6 +30,10 @@ type AppRoute = '/' | '/group_channel' | '/open_channel';
 export function appPath(route: AppRoute, params: Record<string, string | undefined> = {}): string {
   const query = new URLSearchParams();
   if (E2E.appId) query.set('appId', E2E.appId);
+  // The app falls back to VITE_USER_ID for the nickname when the URL omits one, and the provider
+  // writes that nickname to the user on connect. Anyone who connects would end up sharing it, and
+  // member rows render the nickname — so name the user after itself unless a test says otherwise.
+  if (params.userId && params.nickname === undefined) query.set('nickname', params.userId);
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined) query.set(key, value);
   }

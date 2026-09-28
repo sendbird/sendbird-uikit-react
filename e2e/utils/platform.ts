@@ -145,9 +145,13 @@ export async function waitForOperator(channelUrl: string, userId: string, presen
 }
 
 /** Resolve once the channel reports at least `count` messages. */
-export async function waitForMessageCount(channelUrl: string, count: number): Promise<void> {
+export async function waitForMessageCount(
+  channelUrl: string,
+  count: number,
+  channelType: 'group_channels' | 'open_channels' = 'group_channels',
+): Promise<void> {
   await waitUntil(
-    () => call('GET', `/group_channels/${encodeURIComponent(channelUrl)}/messages/total_count`),
+    () => call('GET', `/${channelType}/${encodeURIComponent(channelUrl)}/messages/total_count`),
     (data) => (data?.total ?? 0) >= count,
     { what: `${count} message(s) on ${channelUrl}` },
   );
@@ -310,6 +314,7 @@ export async function seedOpenChannelMessages(
   for (let i = 1; i <= count; i++) {
     await sendOpenChannelMessage(channelUrl, userId, `${prefix} ${i}`);
   }
+  await waitForMessageCount(channelUrl, count, 'open_channels');
 }
 
 /** Update an open channel's name. */
