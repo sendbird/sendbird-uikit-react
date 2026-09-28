@@ -31,6 +31,10 @@ export default defineConfig({
   testMatch: '**/*.spec.ts',
   globalTeardown: './e2e/global-teardown.ts',
   fullyParallel: true,
+  // Playwright's 30s default assumes a local app. A scenario here seeds through the Platform API,
+  // boots the app, connects the SDK and only then drives the UI, and workers run against one
+  // application — so the same work takes longer the more of it runs at once.
+  timeout: 60_000,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 2 : undefined,

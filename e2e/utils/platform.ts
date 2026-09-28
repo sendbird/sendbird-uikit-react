@@ -113,6 +113,37 @@ export async function waitForChannelMembers(channelUrl: string, userIds: string[
   );
 }
 
+/**
+ * Resolve once moderation state is visible server-side.
+ *
+ * The settings accordions fetch their list when they open and do not fetch it again, so opening
+ * one before the action has landed leaves the test staring at a list that will never fill in.
+ */
+async function waitForModeration(channelUrl: string, path: 'mute' | 'ban', userId: string, present: boolean): Promise<void> {
+  await waitUntil(
+    () => call('GET', `/group_channels/${encodeURIComponent(channelUrl)}/${path}`),
+    (data) => {
+      const ids: string[] = (data?.muted_list ?? data?.banned_list ?? [])
+        .map((entry: { user_id?: string; user?: { user_id: string } }) => entry.user_id ?? entry.user?.user_id);
+      return ids.includes(userId) === present;
+    },
+    { what: `${userId} ${present ? 'on' : 'off'} the ${path} list` },
+  );
+}
+
+export const waitForMuted = (channelUrl: string, userId: string, present = true): Promise<void> => waitForModeration(channelUrl, 'mute', userId, present);
+
+export const waitForBanned = (channelUrl: string, userId: string, present = true): Promise<void> => waitForModeration(channelUrl, 'ban', userId, present);
+
+/** Resolve once the user is (or is no longer) an operator of the group channel. */
+export async function waitForOperator(channelUrl: string, userId: string, present = true): Promise<void> {
+  await waitUntil(
+    () => call('GET', `/group_channels/${encodeURIComponent(channelUrl)}/operators`),
+    (data) => (data?.operators ?? []).some((o: { user_id: string }) => o.user_id === userId) === present,
+    { what: `${userId} ${present ? 'as' : 'not as'} operator` },
+  );
+}
+
 /** Resolve once the channel reports at least `count` messages. */
 export async function waitForMessageCount(channelUrl: string, count: number): Promise<void> {
   await waitUntil(
