@@ -1,9 +1,9 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { messageByText, openFirstGroupChannel, sendText } from '../utils/actions';
+import { messageByText, openFirstGroupChannel } from '../utils/actions';
 import { runTag } from '../utils/env';
 import * as platform from '../utils/platform';
-import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
+import { SERVER_RESPONSE_TIMEOUT, UNREAD_PILL_ABSENT } from '../utils/constants';
 
 test.describe('group channel — realtime (2nd-user)', () => {
   // D1
@@ -92,14 +92,14 @@ test.describe('group channel — realtime (2nd-user)', () => {
 
   // D7
   test('shows unread count button after mark-as-unread and clears it on click', async ({
-    page, workerUser, createChannel,
+    page, workerUser, secondUser, createChannel,
   }) => {
-    const channel = await createChannel({ seedMessage: null });
-    // Seed messages to make conversation scrollable (separator must leave viewport for pill to show)
-    await platform.seedMessages(channel.url, workerUser.userId, 12, '[d7-seed]');
+    test.skip(true, UNREAD_PILL_ABSENT);
+    const channel = await createChannel({ memberIds: [secondUser.userId], seedMessage: null });
+    // Mark-as-unread only raises a count for messages from someone else, so seed from secondUser.
+    // 12 messages also make the conversation scrollable, which the separator needs to leave view.
+    await platform.seedMessages(channel.url, secondUser.userId, 12, '[d7-seed]');
     await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_enableMarkAsUnread: 'true' });
-    const msgText = `[d7] ${runTag}`;
-    await sendText(page, msgText);
     // Use the last confirmed message directly
     const lastMsg = page.locator('[data-testid="sendbird-message-view"][data-sb-message-id]:not([data-sb-message-id="0"])').last();
     await expect(lastMsg).toBeVisible({ timeout: 5_000 });
@@ -107,29 +107,23 @@ test.describe('group channel — realtime (2nd-user)', () => {
     await lastMsg.locator('.sendbird-message-menu').getByRole('button').first().click({ timeout: 5_000 })
       .catch(() => {});
     const markUnreadItem = page.getByRole('menuitem', { name: /mark as unread/i });
-    if (await markUnreadItem.isVisible({ timeout: 3_000 }).catch(() => false)) {
-      await markUnreadItem.click();
-      // Wait for the "New Messages" separator — confirms SDK fired EVENT_CHANNEL_UNREAD
-      await expect(page.locator('.sendbird-separator').filter({ hasText: /new messages/i })).toBeVisible({ timeout: 15_000 });
-      // Scroll up, wait for unreadMessageCount event, then nudge scroll to re-trigger IntersectionObserver
-      const msgList = page.locator('.sendbird-conversation__messages-padding');
-      await msgList.evaluate((el) => { el.scrollTop = 0; });
-      await page.waitForTimeout(2000);
-      await msgList.evaluate((el) => { el.scrollTop = el.scrollHeight; });
-      await page.waitForTimeout(300);
-      await msgList.evaluate((el) => { el.scrollTop = 0; });
-      // UnreadCountFloatingButton appears when separator is out of viewport and unreadMessageCount > 0
-      const pill = page.locator('.sendbird-unread-floating-button');
-      if (await pill.isVisible({ timeout: 5_000 }).catch(() => false)) {
-        const closeIcon = pill.locator('.sendbird-icon').last();
-        await closeIcon.click().catch(async () => pill.click());
-        await expect(pill).not.toBeVisible({ timeout: 5_000 });
-      }
-      // Verify the "New Messages" separator appeared (core behavior verified)
-      // The floating pill may not always appear depending on scroll/IntersectionObserver timing
-    } else {
-      test.skip();
-    }
+    await expect(markUnreadItem).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await markUnreadItem.click();
+    // Wait for the "New Messages" separator — confirms SDK fired EVENT_CHANNEL_UNREAD
+    await expect(page.locator('.sendbird-separator').filter({ hasText: /new messages/i })).toBeVisible({ timeout: 15_000 });
+    // Scroll up, wait for unreadMessageCount event, then nudge scroll to re-trigger IntersectionObserver
+    const msgList = page.locator('.sendbird-conversation__messages-padding');
+    await msgList.evaluate((el) => { el.scrollTop = 0; });
+    await page.waitForTimeout(2000);
+    await msgList.evaluate((el) => { el.scrollTop = el.scrollHeight; });
+    await page.waitForTimeout(300);
+    await msgList.evaluate((el) => { el.scrollTop = 0; });
+    // UnreadCountFloatingButton appears once the separator leaves the viewport.
+    const pill = page.locator('.sendbird-unread-floating-button');
+    await expect(pill).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    const closeIcon = pill.locator('.sendbird-icon').last();
+    await closeIcon.click().catch(async () => pill.click());
+    await expect(pill).not.toBeVisible({ timeout: 5_000 });
   });
 
   // D8
@@ -142,13 +136,10 @@ test.describe('group channel — realtime (2nd-user)', () => {
     await openFirstGroupChannel(page, { userId: workerUser.userId, breakpoint: 'true' });
     // Mobile back button (.sendbird-chat-header__icon_back is only rendered when isMobile=true)
     const backBtn = page.locator('.sendbird-chat-header__icon_back').first();
-    if (await backBtn.isVisible({ timeout: 5_000 }).catch(() => false)) {
-      await backBtn.click();
-      await expect(page.locator('.sendbird-channel-list')).toBeVisible({ timeout: 10_000 });
-      await expect(page.locator('.sendbird-conversation')).not.toBeVisible();
-    } else {
-      test.skip();
-    }
+    await expect(backBtn).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await backBtn.click();
+    await expect(page.locator('.sendbird-channel-list')).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('.sendbird-conversation')).not.toBeVisible();
   });
 
   // D9

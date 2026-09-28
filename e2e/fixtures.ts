@@ -62,6 +62,9 @@ export const test = base.extend<E2EFixtures, E2EWorkerFixtures>({
         name: options.name,
       });
       created.push(channel.url);
+      // Specs open the channel and assert on its members straight away; wait for the write to be
+      // readable so a slow propagation fails the setup here instead of the assertion later.
+      await platform.waitForChannelMembers(channel.url, allMembers);
       const seedMessage = options.seedMessage === undefined ? '[e2e] channel ready' : options.seedMessage;
       if (seedMessage) await platform.sendMessage(channel.url, workerUser.userId, seedMessage);
       if (options.freeze) await platform.freezeGroupChannel(channel.url, true);
@@ -79,7 +82,8 @@ export const test = base.extend<E2EFixtures, E2EWorkerFixtures>({
     await use(pg);
     // Give the secondUser page a chance to navigate before closing
     await ctx.close().catch(() => {});
-    void secondUser; // referenced for type resolution
+    // eslint-disable-next-line no-void -- declares the secondUser dependency; the page is caller-navigated
+    void secondUser;
   },
 
   createOpenChannel: async ({ workerUser }, use) => {

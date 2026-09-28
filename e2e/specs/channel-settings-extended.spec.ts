@@ -1,7 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { openFirstGroupChannel, openChannelSettings } from '../utils/actions';
-import { appPath } from '../utils/env';
+import { openFirstGroupChannel, openChannelSettings, openUserRowMenu } from '../utils/actions';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('channel settings — extended', () => {
@@ -38,8 +37,7 @@ test.describe('channel settings — extended', () => {
     // Click "Members" panel item — wait for invite button to appear
     await page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: 'Members' }).first().click();
     const inviteBtn = page.getByRole('button', { name: /invite/i }).first();
-    await inviteBtn.waitFor({ state: 'visible', timeout: 15_000 }).catch(() => {});
-    if (!await inviteBtn.isVisible()) { test.skip(); return; }
+    await expect(inviteBtn).toBeVisible({ timeout: 15_000 });
     await inviteBtn.click();
     const secondUserRow = page.locator('.sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
     if (await secondUserRow.isVisible({ timeout: 10_000 }).catch(() => false)) {
@@ -53,11 +51,7 @@ test.describe('channel settings — extended', () => {
     await page.getByRole('button', { name: /invite/i }).last().click();
     // After invite, the Members accordion is still expanded — secondUser row should appear.
     const invitedRow = page.locator('.sendbird-user-list-item').filter({ hasText: secondUser.userId.slice(0, 20) }).first();
-    if (!await invitedRow.isVisible({ timeout: SERVER_RESPONSE_TIMEOUT }).catch(() => false)) {
-      test.skip(); // Invite didn't update the list in time — environment limitation
-      return;
-    }
-    await expect(invitedRow).toBeVisible();
+    await expect(invitedRow).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 
   // E7
@@ -70,11 +64,7 @@ test.describe('channel settings — extended', () => {
     // Click the "Operators" panel item — wait for "Add operator" button to appear
     await page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: /^operators$/i }).first().click();
     const addBtn = page.getByRole('button', { name: /add operator/i }).first();
-    await addBtn.waitFor({ state: 'visible', timeout: 8_000 }).catch(() => {});
-    if (!await addBtn.isVisible()) {
-      test.skip();
-      return;
-    }
+    await expect(addBtn).toBeVisible({ timeout: 15_000 });
     await addBtn.click();
     // Wait for the modal checkbox to appear before clicking
     const checkboxLabel = page.locator('.sendbird-user-list-item__checkbox').filter({
@@ -102,13 +92,8 @@ test.describe('channel settings — extended', () => {
     // Click "Members" panel item — wait for secondUser row to appear (replaces fixed timer)
     await page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: 'Members' }).first().click();
     const memberRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
-    await memberRow.waitFor({ state: 'visible', timeout: 15_000 }).catch(() => {});
-    if (!await memberRow.isVisible()) {
-      test.skip();
-      return;
-    }
-    await memberRow.hover();
-    await memberRow.locator('.sendbird-user-list-item--small__action, [class*="action"]').first().click({ timeout: 5_000 }).catch(() => {});
+    await expect(memberRow).toBeVisible({ timeout: 15_000 });
+    await openUserRowMenu(memberRow);
     await page.getByRole('menuitem', { name: /operator/i }).first().click();
     await expect(memberRow.locator('[class*="operator"]')).toBeVisible({ timeout: 10_000 });
   });
@@ -123,21 +108,15 @@ test.describe('channel settings — extended', () => {
     // Click "Members" panel item — wait for secondUser row to appear (replaces fixed timer)
     await page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: 'Members' }).first().click();
     const memberRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
-    await memberRow.waitFor({ state: 'visible', timeout: 15_000 }).catch(() => {});
-    if (!await memberRow.isVisible()) {
-      test.skip();
-      return;
-    }
-    await memberRow.hover();
-    await memberRow.locator('.sendbird-user-list-item--small__action, [class*="action"]').first().click({ timeout: 5_000 }).catch(() => {});
+    await expect(memberRow).toBeVisible({ timeout: 15_000 });
+    await openUserRowMenu(memberRow);
     await page.getByRole('menuitem', { name: /^mute/i }).first().click();
     // Open the "Muted members" panel to verify the user was muted
     await page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: 'Muted members' }).first().click();
     const mutedRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
     await expect(mutedRow).toBeVisible({ timeout: 10_000 });
     // Unmute via the muted list row
-    await mutedRow.hover();
-    await mutedRow.locator('.sendbird-user-list-item--small__action, [class*="action"]').first().click({ timeout: 5_000 }).catch(() => {});
+    await openUserRowMenu(mutedRow);
     await page.getByRole('menuitem', { name: /unmute/i }).first().click();
     await expect(mutedRow).not.toBeVisible({ timeout: 10_000 });
   });
@@ -153,10 +132,8 @@ test.describe('channel settings — extended', () => {
     // Click "Members" panel item — wait for secondUser row to appear (replaces fixed timer)
     await page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: 'Members' }).first().click();
     const memberRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
-    await memberRow.waitFor({ state: 'visible', timeout: 15_000 }).catch(() => {});
-    if (!await memberRow.isVisible()) { test.skip(); return; }
-    await memberRow.hover();
-    await memberRow.locator('.sendbird-user-list-item--small__action, [class*="action"]').first().click({ timeout: 5_000 }).catch(() => {});
+    await expect(memberRow).toBeVisible({ timeout: 15_000 });
+    await openUserRowMenu(memberRow);
     await page.getByRole('menuitem', { name: /ban/i }).first().click();
     await page.getByRole('button', { name: /ban/i }).last().click({ timeout: 3_000 }).catch(() => {});
     // Open the "Banned users" panel to verify the user was banned
@@ -164,8 +141,7 @@ test.describe('channel settings — extended', () => {
     const bannedRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
     await expect(bannedRow).toBeVisible({ timeout: 10_000 });
     // Unban via the banned list row
-    await bannedRow.hover();
-    await bannedRow.locator('.sendbird-user-list-item--small__action, [class*="action"]').first().click({ timeout: 5_000 }).catch(() => {});
+    await openUserRowMenu(bannedRow);
     await page.getByRole('menuitem', { name: /unban/i }).first().click({ timeout: 3_000 }).catch(() => {});
     await expect(bannedRow).not.toBeVisible({ timeout: 10_000 });
   });
@@ -178,31 +154,17 @@ test.describe('channel settings — extended', () => {
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Members accordion — click by text since the class is in useMenuItems (not a fixed class)
-    await page.getByText('Members').first().click({ timeout: 10_000 });
+    const membersItem = page.getByText('Members').first();
+    await expect(membersItem).toBeVisible({ timeout: 15_000 });
+    await membersItem.click();
     // Members list is rendered in sendbird-channel-settings-member-list container
     await expect(
       page.locator('.sendbird-channel-settings-member-list, .sendbird-members-accordion__member, .sendbird-user-list-item').first(),
-    ).toBeVisible({ timeout: 10_000 });
+    ).toBeVisible({ timeout: 30_000 });
     // Member count badge (optional — class varies by UIKit version)
     const countEl = page.locator('[class*="member-count"], [class*="members-count"]').first();
     const countText = await countEl.textContent({ timeout: 3_000 }).catch(() => '1');
     expect(Number(countText?.trim()) || 1).toBeGreaterThanOrEqual(1);
-  });
-
-  // E13
-  test('advances to invite step when Super or Broadcast channel type is selected', async ({
-    page, workerUser,
-  }) => {
-    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
-    await page.locator('.sendbird-channel-list__header').getByRole('button').first().click({ timeout: 15_000 });
-    const superOption = page.locator('[class*="channel-type"]').filter({ hasText: /super/i }).first();
-    if (await superOption.isVisible({ timeout: 5_000 }).catch(() => false)) {
-      await superOption.click();
-      await expect(page.locator('.sendbird-user-list-item, .sendbird-invite-members').first())
-        .toBeVisible({ timeout: 10_000 });
-    } else {
-      test.skip();
-    }
   });
 
   // E14

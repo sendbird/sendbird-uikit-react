@@ -24,18 +24,102 @@ export const hasPlatformToken = (): boolean => Boolean(E2E.appId && E2E.platform
 /** Minimum delay between Platform API calls to avoid rate-limiting (default: 5 req/s per user). */
 const PLATFORM_API_DELAY_MS = 200;
 
+/** Attempts for a call the server refused for a reason that passes on its own (429, 5xx, network). */
+const PLATFORM_API_ATTEMPTS = 4;
+
+const sleep = (ms: number): Promise<void> => new Promise<void>((resolve) => {
+  setTimeout(() => resolve(), ms);
+});
+
+/**
+ * Workers share one app, so a burst from several specs can cross the per-user rate limit and come
+ * back 429 — a refusal that succeeds moments later. Backing off and retrying keeps that out of the
+ * specs, which otherwise fail on setup rather than on what they assert. Jitter spreads retries so
+ * workers that collided once do not collide again in lockstep.
+ */
+const isRetryable = (status: number): boolean => status === 429 || status >= 500;
+
 async function call(method: string, path: string, body?: unknown): Promise<any> {
-  await new Promise<void>(resolve => { setTimeout(() => resolve(), PLATFORM_API_DELAY_MS); });
-  const res = await doFetch(`${BASE}${path}`, {
-    method,
-    headers: { 'Api-Token': E2E.platformApiToken, 'Content-Type': 'application/json; charset=utf-8' },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
-  if (!res.ok && res.status !== 404) {
-    const detail = await res.text().catch(() => '');
-    throw new Error(`Platform API ${method} ${path} -> ${res.status} ${detail}`);
+  let lastError: Error | null = null;
+
+  for (let attempt = 0; attempt < PLATFORM_API_ATTEMPTS; attempt++) {
+    await sleep(PLATFORM_API_DELAY_MS);
+
+    let res: FetchResponse | null = null;
+    try {
+      res = await doFetch(`${BASE}${path}`, {
+        method,
+        headers: { 'Api-Token': E2E.platformApiToken, 'Content-Type': 'application/json; charset=utf-8' },
+        body: body === undefined ? undefined : JSON.stringify(body),
+      });
+    } catch (error) {
+      lastError = new Error(`Platform API ${method} ${path} -> ${String(error)}`);
+    }
+
+    if (res) {
+      if (res.ok || res.status === 404) {
+        return res.status === 404 ? null : res.json().catch(() => null);
+      }
+      const detail = await res.text().catch(() => '');
+      lastError = new Error(`Platform API ${method} ${path} -> ${res.status} ${detail}`);
+      if (!isRetryable(res.status)) throw lastError;
+    }
+
+    await sleep(backoffMs(attempt));
   }
-  return res.status === 404 ? null : res.json().catch(() => null);
+
+  throw lastError ?? new Error(`Platform API ${method} ${path} -> exhausted ${PLATFORM_API_ATTEMPTS} attempts`);
+}
+
+/** 400ms, 800ms, 1600ms … each spread by up to half its own length. */
+function backoffMs(attempt: number): number {
+  const base = 400 * (2 ** attempt);
+  return base + Math.floor(Math.random() * (base / 2));
+}
+
+/**
+ * Poll the Platform API until `check` accepts what it reads, or give up.
+ *
+ * A write and the read that follows it are not one operation server-side, so a fixed sleep is a
+ * guess: too short and the read misses, too long and every run pays for the worst case. Polling
+ * returns as soon as the write is visible and only waits longer when it has to.
+ */
+async function waitUntil<T>(
+  read: () => Promise<T>,
+  check: (value: T) => boolean,
+  { timeoutMs = 15_000, intervalMs = 300, what = 'condition' } = {},
+): Promise<T> {
+  const deadline = Date.now() + timeoutMs;
+  let last: T = await read();
+  while (!check(last)) {
+    if (Date.now() >= deadline) {
+      throw new Error(`Platform API: timed out after ${timeoutMs}ms waiting for ${what}`);
+    }
+    await sleep(intervalMs);
+    last = await read();
+  }
+  return last;
+}
+
+/** Resolve once the group channel is readable and every listed user is a member of it. */
+export async function waitForChannelMembers(channelUrl: string, userIds: string[]): Promise<void> {
+  await waitUntil(
+    () => call('GET', `/group_channels/${encodeURIComponent(channelUrl)}?show_member=true`),
+    (data) => {
+      const members: string[] = (data?.members ?? []).map((m: { user_id: string }) => m.user_id);
+      return userIds.every((id) => members.includes(id));
+    },
+    { what: `${userIds.length} member(s) on ${channelUrl}` },
+  );
+}
+
+/** Resolve once the channel reports at least `count` messages. */
+export async function waitForMessageCount(channelUrl: string, count: number): Promise<void> {
+  await waitUntil(
+    () => call('GET', `/group_channels/${encodeURIComponent(channelUrl)}/messages/total_count`),
+    (data) => (data?.total ?? 0) >= count,
+    { what: `${count} message(s) on ${channelUrl}` },
+  );
 }
 
 export async function ensureUser(userId: string, nickname = userId): Promise<void> {
@@ -81,6 +165,25 @@ export async function sendMessage(channelUrl: string, userId: string, message: s
   return data.message_id;
 }
 
+/** Send a message carrying `suggested_replies` so UIKit renders the reply buttons. */
+export async function sendSuggestedRepliesMessage(
+  channelUrl: string,
+  senderId: string,
+  message: string,
+  replies: string[],
+): Promise<number> {
+  const data = await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/messages`, {
+    message_type: 'MESG',
+    user_id: senderId,
+    message,
+    extended_message_payload: { suggested_replies: replies },
+  });
+  if (!data?.message_id) {
+    throw new Error(`Platform API sendSuggestedRepliesMessage returned no message_id: ${JSON.stringify(data)}`);
+  }
+  return data.message_id;
+}
+
 /** Send a structured mention message so that UIKit renders mention badges. */
 export async function sendMentionMessage(
   channelUrl: string,
@@ -94,6 +197,7 @@ export async function sendMentionMessage(
     message,
     mention_type: 'USERS',
     mentioned_user_ids: mentionedUserIds,
+    mentioned_message_template: message,
   });
   if (!data?.message_id) throw new Error(`Platform API sendMentionMessage returned no message_id: ${JSON.stringify(data)}`);
   return data.message_id;
@@ -112,6 +216,7 @@ export async function seedMessages(
     const messageId = await sendMessage(channelUrl, userId, message);
     results.push({ messageId, message });
   }
+  await waitForMessageCount(channelUrl, count);
   return results;
 }
 

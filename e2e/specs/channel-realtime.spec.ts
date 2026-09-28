@@ -30,10 +30,7 @@ test.describe('group channel — realtime features', () => {
     // Open message menu on the parent → click Reply
     await openMessageMenu(page, '[D5] parent message');
     const replyItem = page.getByRole('menuitem', { name: /reply/i });
-    if (!await replyItem.isVisible({ timeout: 5_000 }).catch(() => false)) {
-      test.skip();
-      return;
-    }
+    await expect(replyItem).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await replyItem.click();
 
     // Send the quote reply via the UI input
