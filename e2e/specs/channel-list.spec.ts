@@ -34,7 +34,12 @@ test.describe('group channel list', () => {
     await createChannel({ name: '[e2e] ch-b' });
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
     await expect(page.locator('.sendbird-conversation')).toBeVisible({ timeout: 30_000 });
-    await expect(page.locator('.sendbird-channel-preview--active')).toBeVisible();
+    // Name the channel that has to be active — asserting only that something is active passes
+    // even when the app picks a channel this test never made.
+    const previews = page.locator('.sendbird-channel-preview');
+    await expect(previews.filter({ hasText: '[e2e] ch-b' })).toHaveClass(/sendbird-channel-preview--active/);
+    await expect(previews.filter({ hasText: '[e2e] ch-a' })).not.toHaveClass(/sendbird-channel-preview--active/);
+    await expect(page.locator('.sendbird-chat-header').getByText('[e2e] ch-b')).toBeVisible();
   });
 
   // B9
