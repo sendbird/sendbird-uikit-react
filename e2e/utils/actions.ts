@@ -125,6 +125,9 @@ export async function openNamedOpenChannel(page: Page, channelName: string, para
   await page.goto(appPath('/open_channel', params));
   await page.getByText(channelName).first().click({ timeout: 30_000 });
   await expect(page.locator('.sendbird-openchannel-conversation-header')).toBeVisible({ timeout: 15_000 });
+  // The header paints before the history arrives, so callers that read messages would be looking
+  // at a list that has not loaded yet.
+  await expect(page.locator('.sendbird-openchannel-conversation-scroll__container')).toBeVisible({ timeout: 15_000 });
 }
 
 /**
