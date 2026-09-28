@@ -1,9 +1,8 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { openFirstGroupChannel } from '../utils/actions';
+import { openFirstGroupChannel, sendMentionFromComposer } from '../utils/actions';
 import { appPath, runTag } from '../utils/env';
 import * as platform from '../utils/platform';
-import { MENTION_NOT_HYDRATED } from '../utils/constants';
 
 test.describe('group channel list — realtime (2nd-user)', () => {
   // B5
@@ -137,17 +136,21 @@ test.describe('group channel list — realtime (2nd-user)', () => {
 
   // B12
   test('shows mention marker on channel row when 2nd user mentions me', async ({
-    page, workerUser, secondUser, createChannel,
+    page, workerUser, secondUser, secondPage, createChannel,
   }) => {
-    test.skip(true, MENTION_NOT_HYDRATED);
-    // Give the mention channel a distinct name so we can target it in the list
-    const channel = await createChannel({ name: `[e2e] b12-mention-${runTag}`, memberIds: [secondUser.userId] });
-    // Send mention before creating the active channel so the active channel's seed message
-    // is the newest → app auto-opens active, leaving mention channel in list with badge.
-    await platform.sendMentionMessage(channel.url, secondUser.userId, `@${workerUser.userId} hello ${runTag}`, [workerUser.userId]);
+    // Two channels: the mention lands in one while the other is the one on screen, so the row for
+    // the mentioned channel keeps its marker instead of being read straight away.
+    await createChannel({ name: `[e2e] b12-mention-${runTag}`, memberIds: [secondUser.userId] });
     await createChannel({ name: `[e2e] b12-active-${runTag}`, memberIds: [secondUser.userId] });
-    // groupChannel_enableMention defaults to false — enable it so the mention badge renders
     await page.goto(appPath('/group_channel', { userId: workerUser.userId, groupChannel_enableMention: 'true' }));
+    await page.locator('.sendbird-channel-preview').filter({ hasText: `[e2e] b12-active-${runTag}` })
+      .click({ timeout: 30_000 });
+
+    await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId, groupChannel_enableMention: 'true' }));
+    await secondPage.locator('.sendbird-channel-preview').filter({ hasText: `[e2e] b12-mention-${runTag}` })
+      .click({ timeout: 30_000 });
+    await sendMentionFromComposer(secondPage, workerUser.userId, `hello ${runTag}`);
+
     await expect(
       page.locator('.sendbird-channel-preview').filter({ hasText: `[e2e] b12-mention-${runTag}` }).locator('[class*="mention"]'),
     ).toBeVisible({ timeout: 20_000 });
