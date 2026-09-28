@@ -149,3 +149,38 @@ export async function openOperatorParticipants(page: Page) {
   await expect(accordion.first()).toBeVisible({ timeout: OPERATOR_ROLE_TIMEOUT });
   await accordion.filter({ hasText: 'Participants' }).click();
 }
+
+/**
+ * Open one of the channel-settings accordions and leave it open.
+ *
+ * Only one accordion is open at a time and its panel item toggles, so clicking the one already
+ * open collapses it. The row locators are not scoped to a panel and cannot tell one accordion's
+ * rows from another's; the chevron on the item itself carries the state, so read that.
+ *
+ * `label` is anchored because the panel items match loosely — "Members" is a substring of both
+ * "Muted members" and "Banned users" is not, but the first two would otherwise collide.
+ */
+export async function openSettingsAccordion(page: Page, label: RegExp) {
+  const item = page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: label }).first();
+  await expect(item).toBeVisible({ timeout: 10_000 });
+  const openChevron = item.locator('.sendbird-accordion__panel-icon--open');
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (await openChevron.isVisible({ timeout: 1_000 }).catch(() => false)) return;
+    await item.click();
+  }
+
+  await expect(openChevron).toBeVisible({ timeout: 5_000 });
+}
+
+/**
+ * Open a specific group channel by URL.
+ *
+ * Opening "the first channel in the list" assumes the worker has exactly the channel this test
+ * made. Teardown deletes channels on a best-effort basis, so under load a leftover can still be
+ * at the top and the test then drives a channel it never set up.
+ */
+export async function openGroupChannel(page: Page, channelUrl: string, params: Record<string, string | undefined> = {}) {
+  await page.goto(appPath('/group_channel', { ...params, channelUrl }));
+  await expect(page.locator('.sendbird-conversation')).toBeVisible({ timeout: 30_000 });
+}

@@ -1,13 +1,14 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { openFirstGroupChannel, openChannelSettings, openUserRowMenu } from '../utils/actions';
+import { openChannelSettings, openGroupChannel, openSettingsAccordion, openUserRowMenu } from '../utils/actions';
+import * as platform from '../utils/platform';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('channel settings — extended', () => {
   // E4
   test('updates channel avatar after cover image upload', async ({ page, workerUser, createChannel }) => {
-    await createChannel();
-    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const channel = await createChannel();
+    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
     await openChannelSettings(page);
     await page.locator('.sendbird-channel-profile__edit').click();
     // EditDetailsModal renders in a portal; scoped to .channel-profile-form to avoid
@@ -31,11 +32,11 @@ test.describe('channel settings — extended', () => {
   test('increases member count and shows new member after invite', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    await createChannel();
-    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const channel = await createChannel();
+    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Click "Members" panel item — wait for invite button to appear
-    await page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: 'Members' }).first().click();
+    await openSettingsAccordion(page, /^Members/);
     const inviteBtn = page.getByRole('button', { name: /invite/i }).first();
     await expect(inviteBtn).toBeVisible({ timeout: 15_000 });
     await inviteBtn.click();
@@ -58,11 +59,11 @@ test.describe('channel settings — extended', () => {
   test('shows new operator in operator list after adding via modal', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    await createChannel({ memberIds: [secondUser.userId] });
-    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const channel = await createChannel({ memberIds: [secondUser.userId] });
+    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Click the "Operators" panel item — wait for "Add operator" button to appear
-    await page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: /^operators$/i }).first().click();
+    await openSettingsAccordion(page, /^Operators/);
     const addBtn = page.getByRole('button', { name: /add operator/i }).first();
     await expect(addBtn).toBeVisible({ timeout: 15_000 });
     await addBtn.click();
@@ -86,15 +87,16 @@ test.describe('channel settings — extended', () => {
   test('flips operator label via row menu toggle', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    await createChannel({ memberIds: [secondUser.userId] });
-    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const channel = await createChannel({ memberIds: [secondUser.userId] });
+    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Click "Members" panel item — wait for secondUser row to appear (replaces fixed timer)
-    await page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: 'Members' }).first().click();
+    await openSettingsAccordion(page, /^Members/);
     const memberRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
     await expect(memberRow).toBeVisible({ timeout: 15_000 });
     await openUserRowMenu(memberRow);
     await page.getByRole('menuitem', { name: /operator/i }).first().click();
+    await platform.waitForOperator(channel.url, secondUser.userId);
     await expect(memberRow.locator('[class*="operator"]')).toBeVisible({ timeout: 10_000 });
   });
 
@@ -102,22 +104,24 @@ test.describe('channel settings — extended', () => {
   test('moves member to muted list and removes on unmute', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    await createChannel({ memberIds: [secondUser.userId] });
-    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const channel = await createChannel({ memberIds: [secondUser.userId] });
+    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Click "Members" panel item — wait for secondUser row to appear (replaces fixed timer)
-    await page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: 'Members' }).first().click();
+    await openSettingsAccordion(page, /^Members/);
     const memberRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
     await expect(memberRow).toBeVisible({ timeout: 15_000 });
     await openUserRowMenu(memberRow);
     await page.getByRole('menuitem', { name: /^mute/i }).first().click();
+    await platform.waitForMuted(channel.url, secondUser.userId);
     // Open the "Muted members" panel to verify the user was muted
-    await page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: 'Muted members' }).first().click();
+    await openSettingsAccordion(page, /^Muted members/);
     const mutedRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
     await expect(mutedRow).toBeVisible({ timeout: 10_000 });
     // Unmute via the muted list row
     await openUserRowMenu(mutedRow);
     await page.getByRole('menuitem', { name: /unmute/i }).first().click();
+    await platform.waitForMuted(channel.url, secondUser.userId, false);
     await expect(mutedRow).not.toBeVisible({ timeout: 10_000 });
   });
 
@@ -125,24 +129,26 @@ test.describe('channel settings — extended', () => {
   test('moves member to banned list and removes on unban', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    await createChannel({ memberIds: [secondUser.userId] });
-    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const channel = await createChannel({ memberIds: [secondUser.userId] });
+    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Expand the Members accordion and wait until member list container is visible
     // Click "Members" panel item — wait for secondUser row to appear (replaces fixed timer)
-    await page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: 'Members' }).first().click();
+    await openSettingsAccordion(page, /^Members/);
     const memberRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
     await expect(memberRow).toBeVisible({ timeout: 15_000 });
     await openUserRowMenu(memberRow);
     await page.getByRole('menuitem', { name: /ban/i }).first().click();
     await page.getByRole('button', { name: /ban/i }).last().click({ timeout: 3_000 }).catch(() => {});
+    await platform.waitForBanned(channel.url, secondUser.userId);
     // Open the "Banned users" panel to verify the user was banned
-    await page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: 'Banned users' }).first().click();
+    await openSettingsAccordion(page, /^Banned users/);
     const bannedRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
     await expect(bannedRow).toBeVisible({ timeout: 10_000 });
     // Unban via the banned list row
     await openUserRowMenu(bannedRow);
     await page.getByRole('menuitem', { name: /unban/i }).first().click({ timeout: 3_000 }).catch(() => {});
+    await platform.waitForBanned(channel.url, secondUser.userId, false);
     await expect(bannedRow).not.toBeVisible({ timeout: 10_000 });
   });
 
@@ -150,8 +156,8 @@ test.describe('channel settings — extended', () => {
   test('renders member rows and count in members accordion', async ({
     page, workerUser, createChannel,
   }) => {
-    await createChannel();
-    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const channel = await createChannel();
+    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Members accordion — click by text since the class is in useMenuItems (not a fixed class)
     const membersItem = page.getByText('Members').first();
@@ -171,8 +177,8 @@ test.describe('channel settings — extended', () => {
   test('renders operator and banned accordions with rows or empty state', async ({
     page, workerUser, createChannel,
   }) => {
-    await createChannel();
-    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const channel = await createChannel();
+    await openGroupChannel(page, channel.url, { userId: workerUser.userId });
     await openChannelSettings(page);
     // Operators accordion
     const opsAccordion = page.locator('[class*="operators-accordion"], .sendbird-channel-settings__operators').first();
