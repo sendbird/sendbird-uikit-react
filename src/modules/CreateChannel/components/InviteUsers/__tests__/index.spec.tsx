@@ -1,10 +1,11 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import InviteUsers from '../index';
 import { ApplicationUserListQuery } from '@sendbird/chat';
 import { CHANNEL_TYPE } from '../../../types';
 import * as useCreateChannelModule from '../../../context/useCreateChannel';
+import * as useSendbirdModule from '../../../../../lib/Sendbird/context/hooks/useSendbird';
 import { LocalizationContext } from '../../../../../lib/LocalizationContext';
 import type { Mock } from 'vitest';
 
@@ -86,6 +87,7 @@ describe('InviteUsers', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    (useSendbirdModule.default as Mock).mockReturnValue({ state: mockState });
   });
 
   it('should enable the modal submit button when there is only the logged-in user is in the user list', async () => {
@@ -99,6 +101,76 @@ describe('InviteUsers', () => {
     renderComponent({}, {}, { userListQuery });
 
     expect(await screen.findByText('CREATE')).toBeEnabled();
+  });
+
+  it('disables the create button until the SDK is connected', async () => {
+    (useSendbirdModule.default as Mock).mockReturnValue({
+      state: { ...mockState, stores: { sdkStore: { ...mockState.stores.sdkStore, initialized: false } } },
+    });
+
+    renderComponent({}, {}, {});
+
+    expect(screen.getByRole('button', { name: 'CREATE' })).toBeDisabled();
+  });
+
+  it('does not crash when the SDK is not yet connected and no userListQuery is provided', () => {
+    expect(() => renderComponent({}, {}, {})).not.toThrow();
+    expect(screen.getByText('CREATE')).toBeInTheDocument();
+  });
+
+  it('calls userListQuery and populates the user list when initialized becomes true', async () => {
+    const mockNext = vi.fn().mockResolvedValue([{ userId: 'user-a' }, { userId: 'user-b' }]);
+    const userListQuery = vi.fn(() => ({
+      hasNext: false,
+      isLoading: false,
+      next: mockNext,
+    } as unknown as ApplicationUserListQuery));
+
+    await act(async () => {
+      renderComponent({}, {}, { userListQuery });
+    });
+
+    expect(userListQuery).toHaveBeenCalled();
+    expect(mockNext).toHaveBeenCalled();
+  });
+
+  it('uses the latest userListQuery ref when initialized becomes true, even if the prop changed before init', async () => {
+    const firstNext = vi.fn().mockResolvedValue([{ userId: 'user-a' }]);
+    const firstQuery = vi.fn(() => ({
+      hasNext: false, isLoading: false, next: firstNext,
+    } as unknown as ApplicationUserListQuery));
+
+    const secondNext = vi.fn().mockResolvedValue([{ userId: 'user-b' }]);
+    const secondQuery = vi.fn(() => ({
+      hasNext: false, isLoading: false, next: secondNext,
+    } as unknown as ApplicationUserListQuery));
+
+    // Start uninitialized with firstQuery
+    (useSendbirdModule.default as Mock).mockReturnValue({
+      state: { ...mockState, stores: { sdkStore: { ...mockState.stores.sdkStore, initialized: false } } },
+    });
+
+    const { rerender } = renderComponent({}, {}, { userListQuery: firstQuery });
+
+    // Neither query called yet — SDK not initialized
+    expect(firstQuery).not.toHaveBeenCalled();
+
+    // Swap to secondQuery and flip initialized to true in one update
+    await act(async () => {
+      (useSendbirdModule.default as Mock).mockReturnValue({
+        state: { ...mockState, stores: { sdkStore: { ...mockState.stores.sdkStore, initialized: true } } },
+      });
+      rerender(
+        <LocalizationContext.Provider value={mockLocalizationContext as any}>
+          <InviteUsers userListQuery={secondQuery} />
+        </LocalizationContext.Provider>,
+      );
+    });
+
+    // Should use the latest query (secondQuery) captured via ref at connect-time
+    expect(firstQuery).not.toHaveBeenCalled();
+    expect(secondQuery).toHaveBeenCalled();
+    expect(secondNext).toHaveBeenCalled();
   });
 
   // TODO: add this case too
