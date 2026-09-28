@@ -18,6 +18,10 @@ export interface CreateChannelOptions {
 }
 
 export interface E2EFixtures {
+  /** A throwaway user created for this test alone and deleted when it ends. */
+  workerUser: WorkerUser;
+  /** A second throwaway user for scenarios that need someone on the other side. */
+  secondUser: WorkerUser;
   createChannel: (options?: CreateChannelOptions) => Promise<{ url: string }>;
   createOpenChannel: (options?: { name?: string }) => Promise<{ url: string }>;
   /**
@@ -28,13 +32,18 @@ export interface E2EFixtures {
   secondPage: import('@playwright/test').Page;
 }
 
-export interface E2EWorkerFixtures {
-  workerUser: WorkerUser;
-  secondUser: WorkerUser;
-}
+let userSeq = 0;
 
+/**
+ * A user that exists only for one test.
+ *
+ * A shared user carries whatever earlier tests did to it. Editing a profile renames it for good,
+ * and member rows render a nickname — falling back to the id only when the nickname is empty — so
+ * every later test looking a user up by id stops finding it. Scope the user to the test instead.
+ */
 async function useThrowawayUser(suffix: string, workerIndex: number, use: (user: WorkerUser) => Promise<void>): Promise<void> {
-  const userId = `${E2E.userPrefix}-${runTag}-w${workerIndex}${suffix}`;
+  userSeq += 1;
+  const userId = `${E2E.userPrefix}-${runTag}-w${workerIndex}${suffix}-${userSeq}`;
   const user: WorkerUser = { userId, nickname: userId };
   if (platform.hasPlatformToken()) await platform.ensureUser(userId, userId);
   await use(user);
@@ -46,12 +55,12 @@ async function useThrowawayUser(suffix: string, workerIndex: number, use: (user:
   }
 }
 
-export const test = base.extend<E2EFixtures, E2EWorkerFixtures>({
+export const test = base.extend<E2EFixtures>({
   // eslint-disable-next-line no-empty-pattern
-  workerUser: [async ({}, use, workerInfo) => useThrowawayUser('', workerInfo.workerIndex, use), { scope: 'worker' }],
+  workerUser: async ({}, use, testInfo) => { await useThrowawayUser('', testInfo.workerIndex, use); },
 
   // eslint-disable-next-line no-empty-pattern
-  secondUser: [async ({}, use, workerInfo) => useThrowawayUser('-b', workerInfo.workerIndex, use), { scope: 'worker' }],
+  secondUser: async ({}, use, testInfo) => { await useThrowawayUser('-b', testInfo.workerIndex, use); },
 
   createChannel: async ({ workerUser }, use) => {
     const created: string[] = [];
