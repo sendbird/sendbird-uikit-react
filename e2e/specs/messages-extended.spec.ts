@@ -2,8 +2,8 @@ import { expect } from '@playwright/test';
 import { test } from '../fixtures';
 import { openFirstGroupChannel, sendText, messageByText } from '../utils/actions';
 import { appPath, runTag } from '../utils/env';
+import { MENTION_NOT_HYDRATED, SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 import * as platform from '../utils/platform';
-import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('group channel — messages extended', () => {
   // C5
@@ -70,12 +70,9 @@ test.describe('group channel — messages extended', () => {
   // C10
   test('renders voice message bubble after recording and sending', async ({ page, workerUser, createChannel }) => {
     await createChannel();
-    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_enableVoiceMessage: 'true' });
     const voiceBtn = page.locator('.sendbird-message-input--voice-message');
-    if (!await voiceBtn.isVisible({ timeout: 5_000 }).catch(() => false)) {
-      test.skip();
-      return;
-    }
+    await expect(voiceBtn).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     // --use-fake-device-for-media-stream handles device; grantPermissions covers the browser
     // permission check so navigator.permissions.query doesn't show a warning modal.
     await page.context().grantPermissions(['microphone']);
@@ -104,28 +101,30 @@ test.describe('group channel — messages extended', () => {
   });
 
   // C12
-  test('sends the suggested reply text as a message when clicked', async ({ page, workerUser, createChannel }) => {
-    // Suggested replies are sent as admin messages via Platform API with suggested_replies
-    const channel = await createChannel({ seedMessage: null });
-    // Send a message with suggested replies via Platform API
-    await platform.sendMessage(channel.url, workerUser.userId, '[c12] pick one');
-    // Check if app supports suggested_replies; if so, send via admin msg
-    // For now test that clicking a suggested reply button (if visible) sends a message
-    await openFirstGroupChannel(page, { userId: workerUser.userId });
-    const suggestedBtn = page.locator('[class*="suggested-reply"] button').first();
-    if (await suggestedBtn.isVisible({ timeout: 5_000 }).catch(() => false)) {
-      const btnText = await suggestedBtn.textContent() ?? '';
-      await suggestedBtn.click();
-      await expect(messageByText(page, btnText.trim())).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
-    } else {
-      test.skip();
-    }
+  test('sends the suggested reply text as a message when clicked', async ({
+    page, workerUser, secondUser, createChannel,
+  }) => {
+    const channel = await createChannel({ memberIds: [secondUser.userId], seedMessage: null });
+    const reply = `[c12-pick] ${runTag}`;
+    await platform.sendSuggestedRepliesMessage(channel.url, secondUser.userId, '[c12] pick one', [reply]);
+
+    await openFirstGroupChannel(page, {
+      userId: workerUser.userId,
+      groupChannel_enableSuggestedReplies: 'true',
+      groupChannel_showSuggestedRepliesFor: 'all_messages',
+    });
+
+    const suggestedBtn = page.locator('.sendbird-suggested-replies__option').filter({ hasText: reply }).first();
+    await expect(suggestedBtn).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await suggestedBtn.click();
+    await expect(messageByText(page, reply).last()).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 
   // C13
   test('renders highlighted mention in the message bubble', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
+    test.skip(true, MENTION_NOT_HYDRATED);
     const channel = await createChannel({ memberIds: [secondUser.userId] });
     // secondUser sends a structured mention message (mention_type + mentioned_user_ids required
     // for UIKit to render a .sendbird-mention-user-label badge)
@@ -133,11 +132,8 @@ test.describe('group channel — messages extended', () => {
     await platform.sendMentionMessage(channel.url, secondUser.userId, mentionMsg, [workerUser.userId]);
 
     await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_enableMention: 'true' });
-    const mentionLabel = page.locator('[class*="mention"], .sendbird-mention-user-label').filter({ hasText: workerUser.userId });
-    if (!await mentionLabel.isVisible({ timeout: 8_000 }).catch(() => false)) {
-      test.skip(); // enableMention may not be supported in this Sendbird app
-      return;
-    }
+    const mentionLabel = page.locator('.sendbird-word__mention').filter({ hasText: workerUser.userId });
+    await expect(mentionLabel.first()).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await expect(mentionLabel).toBeVisible();
   });
 
@@ -171,7 +167,7 @@ test.describe('group channel — messages extended', () => {
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     await sendText(page, `check https://sendbird.com ${runTag}`);
     await expect(
-      page.locator('[class*="og-message-item-body"], [class*="og-tag"], [class*="url-preview"]').last(),
+      page.locator('.sendbird-og-message-item-body').last(),
     ).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 });

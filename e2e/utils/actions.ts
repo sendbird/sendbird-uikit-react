@@ -1,5 +1,6 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { appPath } from './env';
+import { OPERATOR_ROLE_TIMEOUT, SERVER_RESPONSE_TIMEOUT } from './constants';
 
 /** Open /group_channel and enter the first channel; resolves once the conversation is visible. */
 export async function openFirstGroupChannel(page: Page, params: Record<string, string | undefined> = {}) {
@@ -32,7 +33,28 @@ export async function sendText(page: Page, text: string) {
   if (!isGC) {
     // Open channel message or GC message still pending — confirm via visible text
     await expect(page.getByText(text).first()).toBeVisible({ timeout: 5_000 });
+    // An open channel message keeps a pending tail until the server confirms it, and its context
+    // menu offers Edit/Delete only after that clears. Callers act on the message straight away.
+    await expect(
+      page.locator('.sendbird-openchannel-user-message').filter({ hasText: text })
+        .locator('.sendbird-openchannel-user-message__right__tail__pending'),
+    ).toHaveCount(0, { timeout: SERVER_RESPONSE_TIMEOUT });
   }
+}
+
+/**
+ * Hover a user-list row and open its action menu.
+ *
+ * The trigger only mounts on hover, so clicking straight after the hover races the render — and a
+ * swallowed miss surfaces later as a confusing failure on the menu item instead.
+ */
+export async function openUserRowMenu(row: Locator) {
+  await row.hover();
+  const trigger = row.locator(
+    '.sendbird-user-list-item--small__action, .sendbird-user-list-item__action',
+  ).first();
+  await expect(trigger).toBeVisible({ timeout: 10_000 });
+  await trigger.click();
 }
 
 /** Hover a confirmed message and open its action menu (kebab). Works for both GC and OC. */
@@ -50,7 +72,12 @@ export async function openMessageMenu(page: Page, text: string) {
   const isOC = await ocMsg.isVisible({ timeout: 8_000 }).catch(() => false);
   if (isOC) {
     await ocMsg.hover();
-    await ocMsg.locator('.sendbird-openchannel-user-message__context-menu button, .sendbird-message-menu button').first().click();
+    // The trigger only mounts on hover; clicking before it paints leaves the menu closed.
+    const trigger = ocMsg.locator(
+      '.sendbird-openchannel-user-message__context-menu--icon, .sendbird-openchannel-user-message__context-menu button, .sendbird-message-menu button',
+    ).first();
+    await expect(trigger).toBeVisible({ timeout: 10_000 });
+    await trigger.click();
     return;
   }
   // GC message still pending confirmation — hover text and find menu at page level
@@ -98,4 +125,27 @@ export async function openNamedOpenChannel(page: Page, channelName: string, para
   await page.goto(appPath('/open_channel', params));
   await page.getByText(channelName).first().click({ timeout: 30_000 });
   await expect(page.locator('.sendbird-openchannel-conversation-header')).toBeVisible({ timeout: 15_000 });
+}
+
+/**
+ * Open an open channel's settings panel as its operator and expand the Participants accordion.
+ *
+ * The operator accordion only renders once the client has the operator role, which arrives after
+ * the panel first paints. Reopening the panel forces the re-read; the final state is asserted, so
+ * a role that never arrives fails the test instead of skipping it.
+ */
+export async function openOperatorParticipants(page: Page) {
+  const settings = page.locator('.sendbird-openchannel-settings');
+  const accordion = page.locator('.sendbird-accordion__panel-header');
+
+  for (let attempt = 0; attempt < 4; attempt++) {
+    await page.locator('.sendbird-openchannel-conversation-header__right__trigger').click();
+    await expect(settings).toBeVisible({ timeout: 5_000 });
+    if (await accordion.first().isVisible({ timeout: 2_000 }).catch(() => false)) break;
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(1_500);
+  }
+
+  await expect(accordion.first()).toBeVisible({ timeout: OPERATOR_ROLE_TIMEOUT });
+  await accordion.filter({ hasText: 'Participants' }).click();
 }

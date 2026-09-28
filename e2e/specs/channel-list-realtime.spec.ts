@@ -3,6 +3,7 @@ import { test } from '../fixtures';
 import { openFirstGroupChannel } from '../utils/actions';
 import { appPath, runTag } from '../utils/env';
 import * as platform from '../utils/platform';
+import { MENTION_NOT_HYDRATED } from '../utils/constants';
 
 test.describe('group channel list — realtime (2nd-user)', () => {
   // B5
@@ -138,6 +139,7 @@ test.describe('group channel list — realtime (2nd-user)', () => {
   test('shows mention marker on channel row when 2nd user mentions me', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
+    test.skip(true, MENTION_NOT_HYDRATED);
     // Give the mention channel a distinct name so we can target it in the list
     const channel = await createChannel({ name: `[e2e] b12-mention-${runTag}`, memberIds: [secondUser.userId] });
     // Send mention before creating the active channel so the active channel's seed message

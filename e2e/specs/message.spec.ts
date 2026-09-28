@@ -22,10 +22,7 @@ test.describe('group channel — message actions', () => {
 
     await openMessageMenu(page, original);
     const editItem = page.getByRole('menuitem', { name: /edit/i }).first();
-    if (!await editItem.isVisible({ timeout: 3_000 }).catch(() => false)) {
-      test.skip();
-      return;
-    }
+    await expect(editItem).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await editItem.click();
 
     const editInput = page.locator('.sendbird-message-input__edit [role="textbox"]');
@@ -45,10 +42,7 @@ test.describe('group channel — message actions', () => {
 
     await openMessageMenu(page, text);
     const deleteItem = page.getByRole('menuitem', { name: /delete/i }).first();
-    if (!await deleteItem.isVisible({ timeout: 3_000 }).catch(() => false)) {
-      test.skip();
-      return;
-    }
+    await expect(deleteItem).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await deleteItem.click();
     // Confirm in the remove-message modal (danger button, exact text to avoid the menu item).
     await page.getByRole('button', { name: 'Delete', exact: true }).click();

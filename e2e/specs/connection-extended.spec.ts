@@ -41,9 +41,7 @@ test.describe('connection & user profile — extended', () => {
         check();
       }),
     ]);
-    if (!/sendbird\.com|blob:/.test(bgImage)) {
-      test.skip(); // File upload not supported in this test environment
-    }
+    expect(bgImage).toMatch(/sendbird\.com|blob:/);
   });
 
   // A7

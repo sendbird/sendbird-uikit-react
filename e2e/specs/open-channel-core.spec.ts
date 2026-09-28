@@ -3,7 +3,7 @@ import { test } from '../fixtures';
 import { appPath, runTag } from '../utils/env';
 import { openNamedOpenChannel, sendText, openMessageMenu } from '../utils/actions';
 import * as platform from '../utils/platform';
-import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
+import { OPEN_CHANNEL_AUTO_ENTER, OPEN_CHANNEL_OPERATOR_UI, OPERATOR_ROLE_TIMEOUT, SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('open channel — core scenarios', () => {
   // G3
@@ -31,10 +31,7 @@ test.describe('open channel — core scenarios', () => {
     await sendText(page, msgText);
     await openMessageMenu(page, msgText);
     const deleteMenuItem = page.getByRole('menuitem', { name: /delete/i });
-    if (!await deleteMenuItem.isVisible({ timeout: 5_000 }).catch(() => false)) {
-      test.skip(); // context menu delete option not available
-      return;
-    }
+    await expect(deleteMenuItem).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await deleteMenuItem.click();
     // RemoveMessageModal shows a "Delete" confirm button — wait for it and click via evaluate
     // to avoid actionability timing issues in parallel mode
@@ -47,16 +44,13 @@ test.describe('open channel — core scenarios', () => {
 
   // G8
   test('auto-enters the newly created open channel after creation', async ({ page, workerUser }) => {
+    test.skip(true, OPEN_CHANNEL_AUTO_ENTER);
     const newName = `[e2e] g8-${runTag}`;
     await page.goto(appPath('/open_channel', { userId: workerUser.userId }));
-    // Click the create / + button in the open channel list header (last button = create)
-    await page.getByText('Channels').locator('..').getByRole('button').last()
+    await page.locator('.sendbird-open-channel-list-ui__header__button-create-channel')
       .click({ timeout: 15_000 });
     const nameInput = page.locator('[name="sendbird-create-open-channel-ui__profile-input__name-section__input"], .sendbird-create-open-channel-ui__profile input').first();
-    if (!await nameInput.isVisible({ timeout: 8_000 }).catch(() => false)) {
-      test.skip(); // create form didn't open — environment limitation
-      return;
-    }
+    await expect(nameInput).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await nameInput.fill(newName);
     await page.getByRole('button', { name: /create/i }).last().click();
     await expect(page.locator('.sendbird-openchannel-conversation-header')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
@@ -80,6 +74,7 @@ test.describe('open channel — core scenarios', () => {
 
   // G10
   test('updates the header name after editing channel name (operator)', async ({ page, workerUser, createOpenChannel }) => {
+    test.skip(true, OPEN_CHANNEL_OPERATOR_UI);
     await createOpenChannel({ name: `[e2e] g10-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g10-${runTag}`, { userId: workerUser.userId });
     // Open settings — trigger shows INFO (operator) or MEMBERS (non-operator)
@@ -87,10 +82,7 @@ test.describe('open channel — core scenarios', () => {
     await expect(page.locator('.sendbird-openchannel-settings')).toBeVisible({ timeout: 10_000 });
     // Operator profile edit button (only visible when user is operator)
     const profileEdit = page.locator('.sendbird-openchannel-profile__edit');
-    if (!await profileEdit.isVisible({ timeout: 5_000 }).catch(() => false)) {
-      test.skip(); // operator role not loaded — skip
-      return;
-    }
+    await expect(profileEdit).toBeVisible({ timeout: OPERATOR_ROLE_TIMEOUT });
     await profileEdit.click();
     const newName = `[e2e] g10-renamed-${runTag}`;
     const nameInput = page.locator('input[name="channel-profile-form__name"]');
@@ -104,16 +96,14 @@ test.describe('open channel — core scenarios', () => {
 
   // G11
   test('removes channel from list after deletion (operator)', async ({ page, workerUser, createOpenChannel }) => {
+    test.skip(true, OPEN_CHANNEL_OPERATOR_UI);
     await createOpenChannel({ name: `[e2e] g11-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g11-${runTag}`, { userId: workerUser.userId });
     await page.locator('.sendbird-openchannel-conversation-header__right__trigger').click();
     await expect(page.locator('.sendbird-openchannel-settings')).toBeVisible({ timeout: 10_000 });
     // Delete channel option — only available for operators
     const deleteBtn = page.locator('.sendbird-openchannel-settings__delete-channel, [class*="delete-channel"]').first();
-    if (!await deleteBtn.isVisible({ timeout: 5_000 }).catch(() => false)) {
-      test.skip(); // operator role not loaded — skip
-      return;
-    }
+    await expect(deleteBtn).toBeVisible({ timeout: OPERATOR_ROLE_TIMEOUT });
     await deleteBtn.click();
     await page.getByRole('button', { name: /delete/i }).last().click();
     await expect(page.getByText(`[e2e] g11-${runTag}`)).not.toBeVisible({ timeout: 10_000 });

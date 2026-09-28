@@ -21,10 +21,7 @@ test.describe('group channel — quote reply', () => {
 
     await openMessageMenu(page, original);
     const replyItem = page.getByRole('menuitem', { name: /^reply$/i }).first();
-    if (!await replyItem.isVisible({ timeout: 3_000 }).catch(() => false)) {
-      test.skip();
-      return;
-    }
+    await expect(replyItem).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await replyItem.click();
 
     // The composer shows a quote preview referencing the original message.
