@@ -130,27 +130,71 @@ export async function openNamedOpenChannel(page: Page, channelName: string, para
   await expect(page.locator('.sendbird-openchannel-conversation-scroll__container')).toBeVisible({ timeout: 15_000 });
 }
 
-/**
- * Open an open channel's settings panel as its operator and expand the Participants accordion.
- *
- * The operator accordion only renders once the client has the operator role, which arrives after
- * the panel first paints. Reopening the panel forces the re-read; the final state is asserted, so
- * a role that never arrives fails the test instead of skipping it.
- */
-export async function openOperatorParticipants(page: Page) {
-  const settings = page.locator('.sendbird-openchannel-settings');
-  const accordion = page.locator('.sendbird-accordion__panel-header');
+/** Accordion panel ids rendered by the open channel settings operator view. */
+type OperatorAccordionId = 'operators' | 'participants' | 'mutedMembers' | 'bannedUsers';
 
-  for (let attempt = 0; attempt < 4; attempt++) {
-    await page.locator('.sendbird-openchannel-conversation-header__right__trigger').click();
-    await expect(settings).toBeVisible({ timeout: 5_000 });
-    if (await accordion.first().isVisible({ timeout: 2_000 }).catch(() => false)) break;
-    await page.keyboard.press('Escape');
-    await page.waitForTimeout(1_500);
+/**
+ * Drive one accordion panel header to `open`.
+ *
+ * The header toggles, so clicking one that is already open collapses it. The chevron carries the
+ * state — its `--open` class is in the DOM only while the panel is expanded — so read that first.
+ */
+async function setAccordion(header: Locator, open: boolean) {
+  const openChevron = header.locator('.sendbird-accordion__panel-icon--open');
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const isOpen = await openChevron.isVisible({ timeout: 1_000 }).catch(() => false);
+    if (isOpen === open) return;
+    await header.click();
   }
 
-  await expect(accordion.first()).toBeVisible({ timeout: OPERATOR_ROLE_TIMEOUT });
-  await accordion.filter({ hasText: 'Participants' }).first().click();
+  if (open) {
+    await expect(openChevron).toBeVisible({ timeout: 5_000 });
+  } else {
+    await expect(openChevron).toBeHidden({ timeout: 5_000 });
+  }
+}
+
+/** Close the open channel settings panel through its own close icon. Escape does not close it. */
+async function closeOpenChannelSettings(page: Page) {
+  const close = page.locator('.sendbird-openchannel-settings__close-icon');
+  if (await close.isVisible({ timeout: 1_000 }).catch(() => false)) await close.click();
+  await expect(page.locator('.sendbird-openchannel-settings')).toBeHidden({ timeout: 5_000 });
+}
+
+/**
+ * Open an open channel's settings panel as its operator and expand one of its accordions.
+ *
+ * The operator view renders only once the client has the operator role, which arrives after the
+ * panel first paints. The conversation header trigger only opens the panel — it is not a toggle —
+ * so forcing that re-read means closing the panel from its own close icon. The final state is
+ * asserted, so a role that never arrives fails the test instead of passing it quietly.
+ */
+export async function openOperatorAccordion(page: Page, id: OperatorAccordionId) {
+  const settings = page.locator('.sendbird-openchannel-settings');
+  const header = page.locator(`#${id}`);
+
+  // Closing happens at the top of the next pass, never after the last one, so the panel is open
+  // when the assertion below runs — a wait against a closed panel could only ever time out.
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) {
+      await closeOpenChannelSettings(page);
+      await page.waitForTimeout(1_500);
+    }
+    const panelOpen = await settings.isVisible({ timeout: 1_000 }).catch(() => false);
+    if (!panelOpen) {
+      await page.locator('.sendbird-openchannel-conversation-header__right__trigger').click();
+      await expect(settings).toBeVisible({ timeout: 5_000 });
+    }
+    if (await header.isVisible({ timeout: 5_000 }).catch(() => false)) break;
+  }
+
+  await expect(header).toBeVisible({ timeout: OPERATOR_ROLE_TIMEOUT });
+  await setAccordion(header, true);
+}
+
+export async function openOperatorParticipants(page: Page) {
+  await openOperatorAccordion(page, 'participants');
 }
 
 /**
@@ -230,28 +274,38 @@ export async function attachFiles(page: Page, files: AttachedFile[]) {
 /**
  * Open the participants accordion and return the row for `userId`.
  *
- * The participant list loads when the accordion opens and never loads again, so a row that was
- * not there yet — or one whose state just changed — only shows up after reopening the panel.
+ * The list is read when the accordion mounts and the settings panel does not watch for anyone
+ * entering, so somebody who joined moments ago shows up only once the list is read again.
  */
 export async function openParticipantRow(page: Page, userId: string): Promise<Locator> {
   const row = page.locator('.sendbird-participants-accordion__member').filter({ hasText: userId }).first();
+  await openOperatorParticipants(page);
 
   for (let attempt = 0; attempt < 3; attempt++) {
-    await openOperatorParticipants(page);
     if (await row.isVisible({ timeout: 5_000 }).catch(() => false)) return row;
-    await page.keyboard.press('Escape');
-    await page.waitForTimeout(1_000);
+    await refreshParticipants(page);
   }
 
   await expect(row).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   return row;
 }
 
-/** Reopen the participants accordion so its list reflects a change just made. */
+/**
+ * Read one operator accordion's list again.
+ *
+ * Collapsing an accordion unmounts its list; expanding it mounts a fresh one that runs its own
+ * query. The collapse/expand pair is what picks up a change, and it leaves the panel open, so the
+ * rows are on screen when this returns.
+ */
+export async function refreshOperatorAccordion(page: Page, id: OperatorAccordionId) {
+  await openOperatorAccordion(page, id);
+  const header = page.locator(`#${id}`);
+  await setAccordion(header, false);
+  await setAccordion(header, true);
+}
+
 export async function refreshParticipants(page: Page) {
-  await page.keyboard.press('Escape');
-  await page.waitForTimeout(1_000);
-  await openOperatorParticipants(page);
+  await refreshOperatorAccordion(page, 'participants');
 }
 
 /**
