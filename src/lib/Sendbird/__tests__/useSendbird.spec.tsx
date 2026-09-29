@@ -403,6 +403,69 @@ describe('useSendbird', () => {
       expect(mockStore.getState().stores.sdkStore.sdk).toStrictEqual({});
     });
 
+    it('applies the updateCurrentUserInfo result to the user store and onConnected', async () => {
+      const updatedUser = { userId: 'mockUserId', nickname: 'newName', profileUrl: 'https://new' };
+      const mockSdk = {
+        connect: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'oldName', profileUrl: '' }),
+        updateCurrentUserInfo: vi.fn().mockResolvedValue(updatedUser),
+      };
+      vi.mocked(initSDK).mockReturnValue(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>);
+
+      const onConnected = vi.fn();
+      const mockLogger = { error: vi.fn(), info: vi.fn(), warning: vi.fn() } as unknown as LoggerInterface;
+
+      const { result } = renderHook(() => useSendbird(), { wrapper });
+
+      await act(async () => {
+        await result.current.actions.connect({
+          logger: mockLogger,
+          userId: 'mockUserId',
+          appId: 'mockAppId',
+          accessToken: 'mockAccessToken',
+          nickname: 'newName',
+          eventHandlers: { connection: { onConnected } },
+        });
+      });
+
+      // Both the store and the callback carry the name the app asked for, not the one it replaced.
+      expect(mockStore.getState().stores.userStore.user).toStrictEqual(updatedUser);
+      expect(onConnected).toHaveBeenCalledWith(expect.objectContaining({ nickname: 'newName' }));
+    });
+
+    // connect() is one operation: everything it promises happens, or the store goes back to empty
+    // and onFailed reports why. A profile update is one of those steps, so a failure there is
+    // terminal like any other — consumers that retry from onFailed depend on that.
+    it('treats a profile update failure as terminal and does not call onConnected', async () => {
+      const updateError = new Error('profile update failed');
+      const mockSdk = {
+        connect: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'oldName' }),
+        updateCurrentUserInfo: vi.fn().mockRejectedValue(updateError),
+      };
+      vi.mocked(initSDK).mockReturnValue(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>);
+
+      const onConnected = vi.fn();
+      const onFailed = vi.fn();
+      const mockLogger = { error: vi.fn(), info: vi.fn(), warning: vi.fn() } as unknown as LoggerInterface;
+
+      const { result } = renderHook(() => useSendbird(), { wrapper });
+
+      await act(async () => {
+        await result.current.actions.connect({
+          logger: mockLogger,
+          userId: 'mockUserId',
+          appId: 'mockAppId',
+          accessToken: 'mockAccessToken',
+          nickname: 'newName',
+          eventHandlers: { connection: { onConnected, onFailed } },
+        });
+      });
+
+      expect(onFailed).toHaveBeenCalledWith(updateError);
+      expect(onConnected).not.toHaveBeenCalled();
+      expect(mockStore.getState().stores.sdkStore.sdk).toStrictEqual({});
+      expect(mockStore.getState().stores.userStore.user).toStrictEqual({});
+    });
+
     it('should handle connection failure and trigger onFailed event handler', async () => {
       const { result } = renderHook(() => useSendbird(), { wrapper });
 
@@ -442,105 +505,6 @@ describe('useSendbird', () => {
       );
 
       expect(mockOnFailed).toHaveBeenCalledWith(expect.any(Error));
-    });
-
-    it('calls onFailed but still calls onConnected when updateCurrentUserInfo throws', async () => {
-      const updateError = new Error('profile update failed');
-      const mockSdk = {
-        connect: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'oldName' }),
-        updateCurrentUserInfo: vi.fn().mockRejectedValue(updateError),
-      };
-      vi.mocked(initSDK).mockReturnValue(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>);
-      const onConnected = vi.fn();
-      const onFailed = vi.fn();
-
-      const { result } = renderHook(() => useSendbird(), { wrapper });
-
-      await act(async () => {
-        await result.current.actions.connect({
-          logger: mockLogger,
-          userId: 'mockUserId',
-          appId: 'mockAppId',
-          accessToken: 'mockAccessToken',
-          nickname: 'newName',
-          eventHandlers: { connection: { onConnected, onFailed } },
-        });
-      });
-
-      // The connection succeeds with the pre-update user
-      expect(onConnected).toHaveBeenCalledWith(expect.objectContaining({ userId: 'mockUserId', nickname: 'oldName' }));
-      // onFailed is notified of the profile update error
-      expect(onFailed).toHaveBeenCalledWith(updateError);
-      // SDK is still initialized (connection was not torn down)
-      expect(mockStore.getState().stores.sdkStore.sdk).not.toStrictEqual({});
-      // onFailed must fire before onConnected (non-terminal notification precedes success callback)
-      expect(onFailed.mock.invocationCallOrder[0]).toBeLessThan(onConnected.mock.invocationCallOrder[0]);
-    });
-
-    it('calls onFailed once (with init error) and NOT onConnected when both updateCurrentUserInfo and initializeMessageTemplatesInfo throw', async () => {
-      const updateError = new Error('profile update failed');
-      const initError = new Error('template init failed');
-      const mockSdk = {
-        connect: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'oldName' }),
-        updateCurrentUserInfo: vi.fn().mockRejectedValue(updateError),
-      };
-      vi.mocked(initSDK).mockReturnValue(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>);
-      const onConnected = vi.fn();
-      const onFailed = vi.fn();
-
-      const { result } = renderHook(() => useSendbird(), { wrapper });
-
-      await act(async () => {
-        await result.current.actions.connect({
-          logger: mockLogger,
-          userId: 'mockUserId',
-          appId: 'mockAppId',
-          accessToken: 'mockAccessToken',
-          nickname: 'newName',
-          initializeMessageTemplatesInfo: vi.fn().mockRejectedValue(initError),
-          eventHandlers: { connection: { onConnected, onFailed } },
-        });
-      });
-
-      // Terminal init failure: onFailed fired exactly once with the init error
-      expect(onFailed).toHaveBeenCalledTimes(1);
-      expect(onFailed).toHaveBeenCalledWith(initError);
-      // onConnected must NOT fire — the connection was torn down
-      expect(onConnected).not.toHaveBeenCalled();
-      // Both SDK and user stores are reset
-      expect(mockStore.getState().stores.sdkStore.sdk).toStrictEqual({});
-      expect(mockStore.getState().stores.userStore.user).toStrictEqual({});
-      // profileUpdateError is logged as a warning (not swallowed silently)
-      expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('profile update had also failed'),
-        updateError,
-      );
-    });
-
-    it('applies the updateCurrentUserInfo result to both the user store and onConnected when connecting with a nickname', async () => {
-      const mockSdk = {
-        connect: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'oldName' }),
-        updateCurrentUserInfo: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'newName' }),
-      };
-      vi.mocked(initSDK).mockReturnValue(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>);
-      const onConnected = vi.fn();
-
-      const { result } = renderHook(() => useSendbird(), { wrapper });
-
-      await act(async () => {
-        await result.current.actions.connect({
-          logger: mockLogger,
-          userId: 'mockUserId',
-          appId: 'mockAppId',
-          accessToken: 'mockAccessToken',
-          nickname: 'newName',
-          eventHandlers: { connection: { onConnected } },
-        });
-      });
-
-      const updatedUser = { userId: 'mockUserId', nickname: 'newName' };
-      expect(mockStore.getState().stores.userStore.user).toEqual(updatedUser);
-      expect(onConnected).toHaveBeenCalledWith(updatedUser);
     });
   });
 });
