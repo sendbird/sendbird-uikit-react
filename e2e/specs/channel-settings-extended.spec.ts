@@ -32,27 +32,33 @@ test.describe('channel settings — extended', () => {
   test('increases member count and shows new member after invite', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    await createChannel();
+    const channel = await createChannel();
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     await openChannelSettings(page);
-    // Click "Members" panel item — wait for invite button to appear
     await openSettingsAccordion(page, /^Members/);
     const inviteBtn = page.getByRole('button', { name: /invite/i }).first();
     await expect(inviteBtn).toBeVisible({ timeout: 15_000 });
     await inviteBtn.click();
+    // Invite this test's second user by name. Falling back to "whichever checkbox is first" would
+    // invite someone else, and the row this case then looks for would never arrive.
     const secondUserRow = page.locator('.sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
-    if (await secondUserRow.isVisible({ timeout: 10_000 }).catch(() => false)) {
-      await secondUserRow.locator('.sendbird-user-list-item__checkbox').click({ timeout: 5_000 });
-    } else {
-      // Fallback: click first enabled checkbox
-      await page.locator('.sendbird-user-list-item__checkbox').filter({
-        has: page.locator('input[type="checkbox"]:not([disabled])'),
-      }).first().click({ timeout: 5_000 });
-    }
+    await expect(secondUserRow).toBeVisible({ timeout: 15_000 });
+    await secondUserRow.locator('.sendbird-user-list-item__checkbox').click({ timeout: 10_000 });
+
     await page.getByRole('button', { name: /invite/i }).last().click();
-    // After invite, the Members accordion is still expanded — secondUser row should appear.
-    const invitedRow = page.locator('.sendbird-user-list-item').filter({ hasText: secondUser.userId.slice(0, 20) }).first();
+    await expect(page.locator('.sendbird-modal')).toBeHidden({ timeout: 15_000 });
+    await platform.waitForChannelMembers(channel.url, [secondUser.userId]);
+
+    // Changing the member list re-renders the panel, and the accordion closes with it. The member
+    // rows carry the --small variant, which is the root class instead of the plain one — matching
+    // only the plain one finds the invite modal's rows rather than the members list.
+    await openSettingsAccordion(page, /^Members/);
+    const invitedRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item')
+      .filter({ hasText: secondUser.userId }).first();
     await expect(invitedRow).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await expect(
+      page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: /^Members/ }).first(),
+    ).toContainText('2');
   });
 
   // E7
