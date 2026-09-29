@@ -9,10 +9,11 @@ export const SERVER_RESPONSE_TIMEOUT = 10_000;
 export const UNREAD_PILL_ABSENT = 'The unread floating button does not mount after mark-as-unread, though the New Messages separator does.';
 
 /**
- * The open channel participant list loads when its accordion opens and never loads again, and the
- * accordion toggles — so a case that changes a participant and then reads the list back has to
- * reopen it, and reopening flips it shut as often as open. Muting and banning both need that read,
- * and the helper this suite has does not get there reliably yet.
+ * The open channel participant list loads when its accordion opens and never loads again. A second
+ * user who joins around that moment can be missing from it, and the panel offers no way to ask for
+ * it again: Escape does not dismiss it, and both the settings trigger and the accordion header
+ * toggle, so reopening lands shut as often as open — and closing it at all costs the operator view
+ * the case came for. Registering an operator, muting and banning all read that list back.
  */
 export const OPEN_CHANNEL_PARTICIPANT_LIST_STALE = 'The open channel participant list does not reload after a change, and reopening it reliably needs a helper this suite does not have yet.';
 
