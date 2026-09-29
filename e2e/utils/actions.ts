@@ -198,3 +198,31 @@ export async function sendMentionFromComposer(page: Page, targetUserId: string, 
   await input.pressSequentially(` ${text}`);
   await input.press('Enter');
 }
+
+export interface AttachedFile {
+  name: string;
+  mimeType: string;
+  buffer: Buffer;
+}
+
+/**
+ * Attach files through the composer's attach button and send them.
+ *
+ * Writing straight to the hidden input races the handler behind it: the change handler stages
+ * files in composer mode and uploads them otherwise, and drops them without a word when neither
+ * branch is ready. Going through the attach button means the picker only opens once the composer
+ * is wired. A composer that stages shows a send button; one that uploads on pick shows none.
+ */
+export async function attachFiles(page: Page, files: AttachedFile[]) {
+  const attach = page.locator('.sendbird-message-input--attach');
+  await expect(attach).toBeVisible({ timeout: 15_000 });
+
+  const [chooser] = await Promise.all([
+    page.waitForEvent('filechooser'),
+    attach.click(),
+  ]);
+  await chooser.setFiles(files);
+
+  const send = page.locator('.sendbird-message-input--send');
+  if (await send.isVisible({ timeout: 5_000 }).catch(() => false)) await send.click();
+}
