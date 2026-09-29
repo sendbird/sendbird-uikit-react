@@ -299,48 +299,26 @@ export const useSendbird = () => {
     };
 
     const completeConnection = async (sdk: SdkStore['sdk'], user: User, isCurrent: () => boolean) => {
-      userActions.initUser(user);
-
-      // Stores a profile-update error so onFailed fires once (just before onConnected) rather than
-      // immediately in the inner catch — prevents double-firing if initializeMessageTemplatesInfo
-      // also throws and the caller reports onFailed for that terminal error.
-      let profileUpdateError: SendbirdError | null = null;
       let connectedUser = user;
+      userActions.initUser(connectedUser);
 
       if (nickname || profileUrl) {
-        try {
-          connectedUser = await sdk.updateCurrentUserInfo({
-            nickname: nickname || connectedUser.nickname || '',
-            profileUrl: profileUrl || connectedUser.profileUrl,
-          });
-          userActions.updateUserInfo(connectedUser);
-        } catch (updateError) {
-          // Profile update failure does not tear down the connection; deferred to fire after
-          // initializeMessageTemplatesInfo/initDashboardConfigs so onFailed is not called twice
-          // if a later step also fails and the caller's catch fires.
-          logger.error?.('SendbirdProvider | useSendbird/connect: updateCurrentUserInfo failed', updateError);
-          profileUpdateError = updateError as SendbirdError;
-        }
+        // updateCurrentUserInfo answers with the user it just wrote. Dropping that answer left the
+        // store — and everything reading it, from the header to the profile editor — holding the
+        // name the user had before the one the app asked for.
+        connectedUser = await sdk.updateCurrentUserInfo({
+          nickname: nickname || connectedUser.nickname || '',
+          profileUrl: profileUrl || connectedUser.profileUrl,
+        });
+        userActions.updateUserInfo(connectedUser);
       }
 
-      try {
-        await initializeMessageTemplatesInfo?.(sdk);
-        await initDashboardConfigs?.(sdk);
-      } catch (initError) {
-        if (profileUpdateError) {
-          logger.warn?.('SendbirdProvider | useSendbird/connect: profile update had also failed', profileUpdateError);
-        }
-        throw initError;
-      }
+      await initializeMessageTemplatesInfo?.(sdk);
+      await initDashboardConfigs?.(sdk);
 
       if (!isCurrent()) return;
       sdkActions.initSdk(sdk);
 
-      // Fire non-terminal profile-update failure only when all init steps have succeeded,
-      // so consumers can treat onFailed as terminal unless onConnected follows immediately.
-      if (profileUpdateError) {
-        eventHandlers?.connection?.onFailed?.(profileUpdateError);
-      }
       eventHandlers?.connection?.onConnected?.(connectedUser);
     };
 
