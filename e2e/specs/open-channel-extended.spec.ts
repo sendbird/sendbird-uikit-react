@@ -1,9 +1,9 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { attachFiles, createOpenChannelViaUI, openNamedOpenChannel, openOperatorParticipants, openParticipantRow, refreshParticipants, sendText, openMessageMenu } from '../utils/actions';
+import { attachFiles, createOpenChannelViaUI, openNamedOpenChannel, openOperatorParticipants, openParticipantRow, refreshOperatorAccordion, refreshParticipants, sendText, openMessageMenu } from '../utils/actions';
 import { appPath, runTag } from '../utils/env';
 import * as platform from '../utils/platform';
-import { OPEN_CHANNEL_PARTICIPANT_NOT_LISTED, SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('open channel — extended', () => {
   // G5
@@ -48,7 +48,6 @@ test.describe('open channel — extended', () => {
   test('registers and cancels operator in open channel participant list', async ({
     page, workerUser, secondUser, secondPage, createOpenChannel,
   }) => {
-    test.skip(true, OPEN_CHANNEL_PARTICIPANT_NOT_LISTED);
     await createOpenChannel({ name: `[e2e] g13-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g13-seed-${runTag}`, { userId: workerUser.userId });
     await createOpenChannelViaUI(page, `[e2e] g13-${runTag}`);
@@ -79,7 +78,6 @@ test.describe('open channel — extended', () => {
   test('mutes and unmutes a participant in open channel', async ({
     page, workerUser, secondUser, secondPage, createOpenChannel,
   }) => {
-    test.skip(true, OPEN_CHANNEL_PARTICIPANT_NOT_LISTED);
     await createOpenChannel({ name: `[e2e] g14-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g14-seed-${runTag}`, { userId: workerUser.userId });
     await createOpenChannelViaUI(page, `[e2e] g14-${runTag}`);
@@ -96,24 +94,33 @@ test.describe('open channel — extended', () => {
     await page.getByRole('menuitem', { name: /^mute/i }).first().click();
     await platform.waitForOpenChannelMuted(channel.url, secondUser.userId);
 
-    // Muted avatar overlay appears on the participant's avatar once the list is read again.
-    const mutedRow = await openParticipantRow(page, secondUser.userId);
-    await expect(mutedRow.locator('.sendbird-muted-avatar')).toBeVisible({ timeout: 10_000 });
-    await mutedRow.hover();
-    await expect(mutedRow.locator('.sendbird-openchannel-participant-list__menu')).toBeVisible({ timeout: 10_000 });
-    await mutedRow.locator('.sendbird-openchannel-participant-list__menu').click();
+    // The muted overlay lands on the avatar once the list is read again. The row is already on
+    // screen carrying its old state, so waiting on it alone would wait on something that never
+    // changes — each pass has to read the list afresh.
+    const memberRow = page.locator('.sendbird-participants-accordion__member')
+      .filter({ hasText: secondUser.userId }).first();
+    await expect(async () => {
+      await refreshParticipants(page);
+      await expect(memberRow.locator('.sendbird-muted-avatar')).toBeVisible({ timeout: 2_000 });
+    }).toPass({ timeout: 30_000 });
+
+    await memberRow.hover();
+    await expect(memberRow.locator('.sendbird-openchannel-participant-list__menu')).toBeVisible({ timeout: 10_000 });
+    await memberRow.locator('.sendbird-openchannel-participant-list__menu').click();
     await page.getByRole('menuitem', { name: /unmute/i }).first().click();
     await platform.waitForOpenChannelMuted(channel.url, secondUser.userId, false);
 
-    const unmutedRow = await openParticipantRow(page, secondUser.userId);
-    await expect(unmutedRow.locator('.sendbird-muted-avatar')).toHaveCount(0, { timeout: 10_000 });
+    await expect(async () => {
+      await refreshParticipants(page);
+      await expect(memberRow).toHaveCount(1, { timeout: 2_000 });
+      await expect(memberRow.locator('.sendbird-muted-avatar')).toHaveCount(0);
+    }).toPass({ timeout: 30_000 });
   });
 
   // G15
   test('bans and unbans a participant in open channel', async ({
     page, workerUser, secondUser, secondPage, createOpenChannel,
   }) => {
-    test.skip(true, OPEN_CHANNEL_PARTICIPANT_NOT_LISTED);
     await createOpenChannel({ name: `[e2e] g15-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g15-seed-${runTag}`, { userId: workerUser.userId });
     await createOpenChannelViaUI(page, `[e2e] g15-${runTag}`);
@@ -131,11 +138,24 @@ test.describe('open channel — extended', () => {
     await page.getByRole('menuitem', { name: /^ban/i }).first().click();
     await platform.waitForOpenChannelBanned(channel.url, secondUser.userId);
 
-    // The list is read again, and the banned participant is gone from it.
-    await refreshParticipants(page);
-    await expect(
-      page.locator('.sendbird-participants-accordion__member').filter({ hasText: secondUser.userId }),
-    ).toHaveCount(0, { timeout: SERVER_RESPONSE_TIMEOUT });
+    // Where the ban shows is the Banned users accordion. The participant roster is not the place
+    // to read it: the server was still listing the banned user among the participants 15s later,
+    // so an assertion on that list would be timing the backend, not the panel.
+    const bannedRow = page.locator('.sendbird-participants-accordion__member')
+      .filter({ hasText: secondUser.userId }).first();
+    await expect(async () => {
+      await refreshOperatorAccordion(page, 'bannedUsers');
+      await expect(bannedRow).toBeVisible({ timeout: 2_000 });
+    }).toPass({ timeout: 30_000 });
+
+    // Unban lives in this accordion's row menu, not in the participant row menu.
+    await bannedRow.hover();
+    const bannedMenu = bannedRow.locator('.sendbird-user-message__more__menu');
+    await expect(bannedMenu).toBeVisible({ timeout: 10_000 });
+    await bannedMenu.click();
+    await page.getByRole('menuitem', { name: /unban/i }).first().click();
+    await platform.waitForOpenChannelBanned(channel.url, secondUser.userId, false);
+    await expect(bannedRow).toHaveCount(0, { timeout: SERVER_RESPONSE_TIMEOUT });
   });
 
   // G16
