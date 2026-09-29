@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { openNamedOpenChannel, openOperatorParticipants, sendText, openMessageMenu } from '../utils/actions';
+import { attachFiles, openNamedOpenChannel, openOperatorParticipants, sendText, openMessageMenu } from '../utils/actions';
 import { appPath, runTag } from '../utils/env';
 import * as platform from '../utils/platform';
 import { OPEN_CHANNEL_OPERATOR_UI, SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
@@ -12,16 +12,14 @@ test.describe('open channel — extended', () => {
   }) => {
     await createOpenChannel({ name: `[e2e] g5-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g5-${runTag}`, { userId: workerUser.userId });
-    const fileInput = page.locator('.sendbird-message-input [type="file"]');
-    await fileInput.setInputFiles({
+    await attachFiles(page, [{
       name: 'test.png',
       mimeType: 'image/png',
       buffer: Buffer.from(
         'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
         'base64',
       ),
-    });
-    await page.locator('.sendbird-message-input--send').click({ timeout: 5_000 }).catch(() => {});
+    }]);
     await expect(
       page.locator('.sendbird-openchannel-thumbnail-message, .sendbird-openchannel-file-message').last(),
     ).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });

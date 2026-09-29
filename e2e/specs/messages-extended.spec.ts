@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { openFirstGroupChannel, sendMentionFromComposer, sendText, messageByText } from '../utils/actions';
+import { attachFiles, openFirstGroupChannel, sendMentionFromComposer, sendText, messageByText } from '../utils/actions';
 import { appPath, runTag } from '../utils/env';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 import * as platform from '../utils/platform';
@@ -36,16 +36,14 @@ test.describe('group channel — messages extended', () => {
   test('renders file/image bubble after sending an image', async ({ page, workerUser, createChannel }) => {
     await createChannel();
     await openFirstGroupChannel(page, { userId: workerUser.userId });
-    const fileInput = page.locator('.sendbird-message-input [type="file"]');
-    await fileInput.setInputFiles({
+    await attachFiles(page, [{
       name: 'test.png',
       mimeType: 'image/png',
       buffer: Buffer.from(
         'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
         'base64',
       ),
-    });
-    await page.locator('.sendbird-message-input--send').click({ timeout: 10_000 }).catch(() => {});
+    }]);
     const fileBubble = page.locator('.sendbird-thumbnail-message-item-body, .sendbird-file-message-item-body').last();
     await expect(fileBubble).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
@@ -58,12 +56,10 @@ test.describe('group channel — messages extended', () => {
       'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
       'base64',
     );
-    const fileInput = page.locator('.sendbird-message-input [type="file"]');
-    await fileInput.setInputFiles([
+    await attachFiles(page, [
       { name: 'a.png', mimeType: 'image/png', buffer: pngBuf },
       { name: 'b.png', mimeType: 'image/png', buffer: pngBuf },
     ]);
-    await page.locator('.sendbird-message-input--send').click({ timeout: 5_000 }).catch(() => {});
     await expect(page.locator('[class*="multiple-files"]').last()).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 
