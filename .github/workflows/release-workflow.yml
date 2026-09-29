@@ -97,14 +97,30 @@ jobs:
           gh pr checks "$BRANCH_NAME" --watch --required
 
       - name: Merge release branch to main
+        env:
+          GH_TOKEN: ${{ env.BOT_GH_TOKEN }}
         run: |
           python3 ~/sdk-deployment/scripts/v1.2/github_pr_merge.py \
             --github_api_token "$BOT_GH_TOKEN" \
             --repo_name "$REPO_NAME" \
             --branch_name "$BRANCH_NAME"
+          # Build and tag the commit this release produced, not whatever main
+          # holds a moment later. A pull request landing between the merge and
+          # the fetch would otherwise be built, published and tagged as this
+          # version -- and a manual publish, which resolves the same merge
+          # commit, would then tag something other than what reached npm.
+          if ! MERGE=$(gh pr list -R "$GITHUB_REPOSITORY" --head "$BRANCH_NAME" \
+            --state merged --limit 1 --json mergeCommit --jq '.[0].mergeCommit.oid'); then
+            echo "could not query $GITHUB_REPOSITORY for the release pull request"
+            exit 1
+          fi
+          if [ -z "$MERGE" ] || [ "$MERGE" = "null" ]; then
+            echo "no merged pull request found for $BRANCH_NAME"
+            exit 1
+          fi
+          # Fetched after the lookup, so what arrives contains the commit it named.
           git fetch origin main
-          git switch main
-          git pull origin main
+          git checkout --detach "$MERGE"
 
       - name: Rebuild after merge
         run: |
@@ -116,24 +132,47 @@ jobs:
           cd ./dist
           npm publish --access=public --provenance
 
+      # `npm publish` exiting zero means the registry accepted the tarball, not
+      # that it finished recording the version. On v3.19.1 the publish returned
+      # at 06:37:24Z and the registry's `time` entry reads 06:42:34Z -- five
+      # minutes later, with the package genuinely absent in between. Everything
+      # behind this step writes a record that says the version is out, so the
+      # step has to outlast that gap rather than assume the publish covered it.
+      #
+      # Ten minutes against a normal write that lands before the publish step
+      # even returns, and a read that follows within ~20s. The one slow write on
+      # record took 310s. A timeout past that is not a slow read to wait out --
+      # at that point the package may really not be there, so it fails the job.
+      #
+      # `package-publish.yml` then fills in the tag, the release and the
+      # notification. It does not move the Jira ticket, which the rollback
+      # below has already sent back to CONDITIONAL_RELEASE_APPROVED -- that
+      # transition is still done by hand.
       - name: Verify npm package publication
         run: |
           cd ./dist
           PACKAGE_NAME=$(node -p "require('./package.json').name")
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          max_attempts=6
+          deadline=$(( $(date +%s) + 600 ))
           attempt=1
-          while [ $attempt -le $max_attempts ]; do
-            if npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version > /dev/null 2>&1; then
-              echo "Package $PACKAGE_NAME@$PACKAGE_VERSION successfully published to npm"
+          while :; do
+            if RESPONSE=$(npm view --registry=https://registry.npmjs.org/ "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>&1); then
+              echo "$PACKAGE_NAME@$PACKAGE_VERSION is on npm (version $RESPONSE), attempt $attempt"
               exit 0
             fi
-            echo "Attempt $attempt/$max_attempts: Package not visible yet. Waiting 20s..."
+            # Keep the registry's answer. A 404 while the write settles and a
+            # 5xx or an auth failure all look the same once it is discarded,
+            # and that is what has to be read after a run like v3.19.1.
+            echo "Attempt $attempt: not readable yet. Registry said:"
+            echo "$RESPONSE"
+            if [ "$(date +%s)" -ge "$deadline" ]; then
+              echo "$PACKAGE_NAME@$PACKAGE_VERSION did not become readable within 10 minutes"
+              echo "The package may not be published. Check the registry before re-running."
+              exit 1
+            fi
             sleep 20
             attempt=$((attempt + 1))
           done
-          echo "Package $PACKAGE_NAME@$PACKAGE_VERSION not found on npm registry after $max_attempts attempts"
-          exit 1
 
       - name: Create git tag
         run: |
