@@ -59,12 +59,14 @@ test.describe('open channel — extended', () => {
       .filter({ hasText: secondUser.userId }).first();
     await expect(participantRow).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await participantRow.hover();
-    await participantRow.locator('.sendbird-openchannel-participant-list__menu').click({ timeout: 5_000 }).catch(() => {});
+    await expect(participantRow.locator('.sendbird-openchannel-participant-list__menu')).toBeVisible({ timeout: 10_000 });
+    await participantRow.locator('.sendbird-openchannel-participant-list__menu').click();
     await page.getByRole('menuitem', { name: /register as operator/i }).first().click();
     await expect(participantRow.locator('.sendbird-participants-accordion__member__title.operator')).toBeVisible({ timeout: 10_000 });
     // Cancel operator
     await participantRow.hover();
-    await participantRow.locator('.sendbird-openchannel-participant-list__menu').click({ timeout: 5_000 }).catch(() => {});
+    await expect(participantRow.locator('.sendbird-openchannel-participant-list__menu')).toBeVisible({ timeout: 10_000 });
+    await participantRow.locator('.sendbird-openchannel-participant-list__menu').click();
     await page.getByRole('menuitem', { name: /unregister operator/i }).first().click();
     await expect(participantRow.locator('.sendbird-participants-accordion__member__title.operator')).not.toBeVisible({ timeout: 10_000 });
   });
@@ -83,12 +85,14 @@ test.describe('open channel — extended', () => {
       .filter({ hasText: secondUser.userId }).first();
     await expect(row).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await row.hover();
-    await row.locator('.sendbird-openchannel-participant-list__menu').click({ timeout: 5_000 }).catch(() => {});
+    await expect(row.locator('.sendbird-openchannel-participant-list__menu')).toBeVisible({ timeout: 10_000 });
+    await row.locator('.sendbird-openchannel-participant-list__menu').click();
     await page.getByRole('menuitem', { name: /^mute/i }).first().click();
     // Muted avatar overlay (.sendbird-muted-avatar) appears on the participant's avatar
     await expect(row.locator('.sendbird-muted-avatar')).toBeVisible({ timeout: 10_000 });
     await row.hover();
-    await row.locator('.sendbird-openchannel-participant-list__menu').click({ timeout: 5_000 }).catch(() => {});
+    await expect(row.locator('.sendbird-openchannel-participant-list__menu')).toBeVisible({ timeout: 10_000 });
+    await row.locator('.sendbird-openchannel-participant-list__menu').click();
     await page.getByRole('menuitem', { name: /unmute/i }).first().click();
     await expect(row.locator('.sendbird-muted-avatar')).not.toBeVisible({ timeout: 10_000 });
   });
@@ -107,7 +111,8 @@ test.describe('open channel — extended', () => {
       .filter({ hasText: secondUser.userId }).first();
     await expect(row).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await row.hover();
-    await row.locator('.sendbird-openchannel-participant-list__menu').click({ timeout: 5_000 }).catch(() => {});
+    await expect(row.locator('.sendbird-openchannel-participant-list__menu')).toBeVisible({ timeout: 10_000 });
+    await row.locator('.sendbird-openchannel-participant-list__menu').click();
     await page.getByRole('menuitem', { name: /^ban/i }).first().click();
     // Ban confirmation dialog
     await page.getByRole('button', { name: /ban/i }).last().evaluate((el) => (el as HTMLButtonElement).click());
