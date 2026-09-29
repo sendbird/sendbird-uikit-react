@@ -198,6 +198,64 @@ describe('InviteUsers', () => {
     expect(container.textContent).toContain('page-3');
   });
 
+  /**
+   * Vitest's worker runs Node with unhandled rejections treated as uncaught exceptions, so a
+   * rejection with no `.catch` surfaces through `uncaughtExceptionMonitor`, not the
+   * `unhandledRejection` event — and only after a real delay, not just a drained microtask queue.
+   * 500ms covers what was measured (~250ms) with margin for slower CI machines.
+   */
+  async function rejectionsDuring(run: () => void | Promise<void>): Promise<unknown[]> {
+    const rejections: unknown[] = [];
+    const onUncaughtException = (reason: unknown) => rejections.push(reason);
+    process.on('uncaughtExceptionMonitor', onUncaughtException);
+    try {
+      await act(async () => {
+        await run();
+        await new Promise((resolve) => { setTimeout(resolve, 500); });
+      });
+    } finally {
+      process.off('uncaughtExceptionMonitor', onUncaughtException);
+    }
+    return rejections;
+  }
+
+  it('does not leave an unhandled rejection when the initial fetch fails', async () => {
+    const userListQuery = vi.fn(() => ({
+      hasNext: false,
+      isLoading: false,
+      next: vi.fn().mockRejectedValue(new Error('network error')),
+    } as unknown as ApplicationUserListQuery));
+
+    const rejections = await rejectionsDuring(() => {
+      renderComponent({}, {}, { userListQuery });
+    });
+
+    expect(rejections).toHaveLength(0);
+  });
+
+  it('does not leave an unhandled rejection when scroll pagination fails', async () => {
+    const next = vi.fn()
+      .mockResolvedValueOnce([{ userId: 'page-1' }])
+      .mockRejectedValueOnce(new Error('network error'));
+    const userListQuery = vi.fn(() => ({
+      hasNext: true,
+      isLoading: false,
+      next,
+    } as unknown as ApplicationUserListQuery));
+
+    const { container } = await act(async () => renderComponent({}, {}, { userListQuery }));
+    const scroller = container.querySelector('.sendbird-create-channel--scroll') as HTMLDivElement;
+    Object.defineProperty(scroller, 'clientHeight', { value: 100, configurable: true });
+    Object.defineProperty(scroller, 'scrollHeight', { value: 100, configurable: true });
+    Object.defineProperty(scroller, 'scrollTop', { value: 0, configurable: true });
+
+    const rejections = await rejectionsDuring(() => {
+      fireEvent.scroll(scroller);
+    });
+
+    expect(rejections).toHaveLength(0);
+  });
+
   // TODO: add this case too
   // it('should disable the modal submit button when there are users on the list but none are checked', () => {
   // })
