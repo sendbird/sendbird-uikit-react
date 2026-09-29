@@ -3,7 +3,7 @@ import { test } from '../fixtures';
 import { messageByText, openFirstGroupChannel } from '../utils/actions';
 import { runTag } from '../utils/env';
 import * as platform from '../utils/platform';
-import { SERVER_RESPONSE_TIMEOUT, UNREAD_PILL_ABSENT } from '../utils/constants';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('group channel — realtime (2nd-user)', () => {
   // D1
@@ -94,11 +94,12 @@ test.describe('group channel — realtime (2nd-user)', () => {
   test('shows unread count button after mark-as-unread and clears it on click', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    test.skip(true, UNREAD_PILL_ABSENT);
     const channel = await createChannel({ memberIds: [secondUser.userId], seedMessage: null });
     // Mark-as-unread only raises a count for messages from someone else, so seed from secondUser.
-    // 12 messages also make the conversation scrollable, which the separator needs to leave view.
-    await platform.seedMessages(channel.url, secondUser.userId, 12, '[d7-seed]');
+    // The floating button replaces the New Messages separator once that separator leaves the
+    // viewport, so the list has to hold enough above the marked message to scroll it out of sight.
+    // A dozen messages do not fill the list — they leave 14px of scroll and the separator stays put.
+    await platform.seedMessages(channel.url, secondUser.userId, 30, '[d7-seed]');
     await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_enableMarkAsUnread: 'true' });
     // Use the last confirmed message directly
     const lastMsg = page.locator('[data-testid="sendbird-message-view"][data-sb-message-id]:not([data-sb-message-id="0"])').last();
@@ -112,19 +113,19 @@ test.describe('group channel — realtime (2nd-user)', () => {
     await markUnreadItem.click();
     // Wait for the "New Messages" separator — confirms SDK fired EVENT_CHANNEL_UNREAD
     await expect(page.locator('.sendbird-separator').filter({ hasText: /new messages/i })).toBeVisible({ timeout: 15_000 });
-    // Scroll up, wait for unreadMessageCount event, then nudge scroll to re-trigger IntersectionObserver
+
+    // Scrolling up pushes the separator out of view. Reaching the top pages in older messages and
+    // moves the scroll position, so each pass scrolls again rather than waiting on one that moved.
     const msgList = page.locator('.sendbird-conversation__messages-padding');
-    await msgList.evaluate((el) => { el.scrollTop = 0; });
-    await page.waitForTimeout(2000);
-    await msgList.evaluate((el) => { el.scrollTop = el.scrollHeight; });
-    await page.waitForTimeout(300);
-    await msgList.evaluate((el) => { el.scrollTop = 0; });
-    // UnreadCountFloatingButton appears once the separator leaves the viewport.
     const pill = page.locator('.sendbird-unread-floating-button');
-    await expect(pill).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
-    const closeIcon = pill.locator('.sendbird-icon').last();
-    await closeIcon.click().catch(async () => pill.click());
-    await expect(pill).not.toBeVisible({ timeout: 5_000 });
+    await expect(async () => {
+      await msgList.evaluate((el) => { el.scrollTop = 0; });
+      await expect(pill).toBeVisible({ timeout: 2_000 });
+    }).toPass({ timeout: 30_000 });
+
+    // Dismissing it marks the channel read, and the count going to zero is what unmounts it.
+    await pill.locator('.sendbird-icon').last().click();
+    await expect(pill).toHaveCount(0, { timeout: SERVER_RESPONSE_TIMEOUT });
   });
 
   // D8
