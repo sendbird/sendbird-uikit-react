@@ -210,14 +210,20 @@ export async function openOperatorParticipants(page: Page) {
 export async function openSettingsAccordion(page: Page, label: RegExp) {
   const item = page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: label }).first();
   await expect(item).toBeVisible({ timeout: 10_000 });
-  const openChevron = item.locator('.sendbird-accordion__panel-icon--open');
+  await setAccordion(item, true);
+}
 
-  for (let attempt = 0; attempt < 3; attempt++) {
-    if (await openChevron.isVisible({ timeout: 1_000 }).catch(() => false)) return;
-    await item.click();
-  }
-
-  await expect(openChevron).toBeVisible({ timeout: 5_000 });
+/**
+ * Read one channel-settings accordion's list again.
+ *
+ * Collapsing unmounts the list and expanding mounts a fresh one that runs its own query, so the
+ * pair is what picks up a moderation change the panel has not been told about.
+ */
+export async function refreshSettingsAccordion(page: Page, label: RegExp) {
+  const item = page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: label }).first();
+  await expect(item).toBeVisible({ timeout: 10_000 });
+  await setAccordion(item, false);
+  await setAccordion(item, true);
 }
 
 /**

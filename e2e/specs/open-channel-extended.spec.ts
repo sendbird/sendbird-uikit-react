@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { attachFiles, createOpenChannelViaUI, openNamedOpenChannel, openOperatorParticipants, openParticipantRow, refreshOperatorAccordion, refreshParticipants, sendText, openMessageMenu } from '../utils/actions';
+import { attachFiles, createOpenChannelViaUI, openNamedOpenChannel, openParticipantRow, refreshOperatorAccordion, refreshParticipants, sendText, openMessageMenu } from '../utils/actions';
 import { appPath, runTag } from '../utils/env';
 import * as platform from '../utils/platform';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
@@ -57,10 +57,9 @@ test.describe('open channel — extended', () => {
     await secondPage.goto(appPath('/open_channel', { userId: secondUser.userId }));
     await secondPage.getByText(`[e2e] g13-${runTag}`).first().click({ timeout: 30_000 });
     await platform.waitForOpenChannelParticipant(channel.url, secondUser.userId);
-    await openOperatorParticipants(page);
-    const participantRow = page.locator('.sendbird-participants-accordion__member')
-      .filter({ hasText: secondUser.userId }).first();
-    await expect(participantRow).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    // The participant list's own query can still land ahead of the join the Platform API already
+    // confirmed, so this goes through the retry-aware row finder rather than a single fresh read.
+    const participantRow = await openParticipantRow(page, secondUser.userId);
     await participantRow.hover();
     await expect(participantRow.locator('.sendbird-openchannel-participant-list__menu')).toBeVisible({ timeout: 10_000 });
     await participantRow.locator('.sendbird-openchannel-participant-list__menu').click();
