@@ -64,13 +64,24 @@ test.describe('open channel — extended', () => {
     await expect(participantRow.locator('.sendbird-openchannel-participant-list__menu')).toBeVisible({ timeout: 10_000 });
     await participantRow.locator('.sendbird-openchannel-participant-list__menu').click();
     await page.getByRole('menuitem', { name: /register as operator/i }).first().click();
-    await expect(participantRow.locator('.sendbird-participants-accordion__member__title.operator')).toBeVisible({ timeout: 10_000 });
+    // The row menu's own onChange already triggers one reread of the list; that reread is a fresh
+    // query same as the others in this file, and can just as easily land ahead of the write. Force
+    // another one on top of it rather than trust that first automatic pass.
+    const operatorBadge = participantRow.locator('.sendbird-participants-accordion__member__title.operator');
+    await expect(async () => {
+      await refreshOperatorAccordion(page, 'participants');
+      await expect(operatorBadge).toBeVisible({ timeout: 2_000 });
+    }).toPass({ timeout: 30_000 });
+
     // Cancel operator
     await participantRow.hover();
     await expect(participantRow.locator('.sendbird-openchannel-participant-list__menu')).toBeVisible({ timeout: 10_000 });
     await participantRow.locator('.sendbird-openchannel-participant-list__menu').click();
     await page.getByRole('menuitem', { name: /unregister operator/i }).first().click();
-    await expect(participantRow.locator('.sendbird-participants-accordion__member__title.operator')).not.toBeVisible({ timeout: 10_000 });
+    await expect(async () => {
+      await refreshOperatorAccordion(page, 'participants');
+      await expect(operatorBadge).toHaveCount(0, { timeout: 2_000 });
+    }).toPass({ timeout: 30_000 });
   });
 
   // G14
