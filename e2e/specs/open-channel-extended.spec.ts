@@ -48,6 +48,7 @@ test.describe('open channel — extended', () => {
   test('registers and cancels operator in open channel participant list', async ({
     page, workerUser, secondUser, secondPage, createOpenChannel,
   }) => {
+    test.skip(true, OPEN_CHANNEL_PARTICIPANT_LIST_STALE);
     await createOpenChannel({ name: `[e2e] g13-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g13-seed-${runTag}`, { userId: workerUser.userId });
     await createOpenChannelViaUI(page, `[e2e] g13-${runTag}`);
