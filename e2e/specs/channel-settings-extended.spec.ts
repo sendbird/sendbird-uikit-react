@@ -73,11 +73,13 @@ test.describe('channel settings — extended', () => {
     }).first();
     await checkboxLabel.waitFor({ state: 'visible', timeout: 10_000 });
     await checkboxLabel.click();
-    const addConfirmBtn = page.getByRole('button', { name: /add/i }).last();
-    await addConfirmBtn.waitFor({ state: 'visible', timeout: 5_000 });
+    // Scope to the modal: /add/i also matches the "Add operator" button behind it, which stays
+    // on screen after the modal closes.
+    const modal = page.locator('.sendbird-modal');
+    const addConfirmBtn = modal.getByRole('button', { name: /^add$/i }).first();
+    await expect(addConfirmBtn).toBeVisible({ timeout: 10_000 });
     await addConfirmBtn.click();
-    // Wait for modal to close before checking the result
-    await addConfirmBtn.waitFor({ state: 'hidden', timeout: 15_000 }).catch(() => {});
+    await expect(modal).toBeHidden({ timeout: 15_000 });
     await expect(
       page.locator('.sendbird-channel-settings').getByText(secondUser.userId),
     ).toBeVisible({ timeout: 15_000 });
@@ -138,8 +140,8 @@ test.describe('channel settings — extended', () => {
     const memberRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
     await expect(memberRow).toBeVisible({ timeout: 15_000 });
     await openUserRowMenu(memberRow);
+    // Banning takes effect straight from the menu; there is no confirmation step to click.
     await page.getByRole('menuitem', { name: /ban/i }).first().click();
-    await page.getByRole('button', { name: /ban/i }).last().click({ timeout: 3_000 }).catch(() => {});
     await platform.waitForBanned(channel.url, secondUser.userId);
     // Open the "Banned users" panel to verify the user was banned
     await openSettingsAccordion(page, /^Banned users/);
@@ -147,54 +149,45 @@ test.describe('channel settings — extended', () => {
     await expect(bannedRow).toBeVisible({ timeout: 10_000 });
     // Unban via the banned list row
     await openUserRowMenu(bannedRow);
-    await page.getByRole('menuitem', { name: /unban/i }).first().click({ timeout: 3_000 }).catch(() => {});
+    await page.getByRole('menuitem', { name: /unban/i }).first().click({ timeout: 10_000 });
     await platform.waitForBanned(channel.url, secondUser.userId, false);
     await expect(bannedRow).not.toBeVisible({ timeout: 10_000 });
   });
 
   // E12
   test('renders member rows and count in members accordion', async ({
-    page, workerUser, createChannel,
+    page, workerUser, secondUser, createChannel,
   }) => {
-    await createChannel();
+    await createChannel({ memberIds: [secondUser.userId] });
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     await openChannelSettings(page);
-    // Members accordion — click by text since the class is in useMenuItems (not a fixed class)
-    const membersItem = page.getByText('Members').first();
-    await expect(membersItem).toBeVisible({ timeout: 15_000 });
-    await membersItem.click();
-    // Members list is rendered in sendbird-channel-settings-member-list container
+    const memberRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item')
+      .filter({ hasText: secondUser.userId }).first();
+    await openSettingsAccordion(page, /^Members/);
+    await expect(memberRow).toBeVisible({ timeout: 15_000 });
+
+    // Both members get a row, and the panel item carries the same count.
+    await expect(page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item')).toHaveCount(2);
     await expect(
-      page.locator('.sendbird-channel-settings-member-list, .sendbird-members-accordion__member, .sendbird-user-list-item').first(),
-    ).toBeVisible({ timeout: 30_000 });
-    // Member count badge (optional — class varies by UIKit version)
-    const countEl = page.locator('[class*="member-count"], [class*="members-count"]').first();
-    const countText = await countEl.textContent({ timeout: 3_000 }).catch(() => '1');
-    expect(Number(countText?.trim()) || 1).toBeGreaterThanOrEqual(1);
+      page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: /^Members/ }).first(),
+    ).toContainText('2');
   });
 
   // E14
   test('renders operator and banned accordions with rows or empty state', async ({
-    page, workerUser, createChannel,
+    page, workerUser, secondUser, createChannel,
   }) => {
-    await createChannel();
+    await createChannel({ memberIds: [secondUser.userId] });
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     await openChannelSettings(page);
-    // Operators accordion
-    const opsAccordion = page.locator('[class*="operators-accordion"], .sendbird-channel-settings__operators').first();
-    if (await opsAccordion.isVisible({ timeout: 5_000 }).catch(() => false)) {
-      await opsAccordion.click();
-      await expect(
-        page.locator('.sendbird-user-list-item, [class*="empty-state"]').first(),
-      ).toBeVisible({ timeout: 10_000 });
-    }
-    // Banned users accordion
-    const bannedAccordion = page.locator('[class*="banned-accordion"], .sendbird-channel-settings__banned').first();
-    if (await bannedAccordion.isVisible({ timeout: 5_000 }).catch(() => false)) {
-      await bannedAccordion.click();
-      await expect(
-        page.locator('.sendbird-user-list-item, [class*="empty-state"]').first(),
-      ).toBeVisible({ timeout: 10_000 });
-    }
+
+    // The creator is the channel's operator, so that accordion has exactly one row.
+    const rows = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item');
+    await openSettingsAccordion(page, /^Operators/);
+    await expect(rows.filter({ hasText: workerUser.userId })).toHaveCount(1);
+
+    // Nobody is banned, so that one has none.
+    await openSettingsAccordion(page, /^Banned users/);
+    await expect(rows).toHaveCount(0);
   });
 });

@@ -104,8 +104,9 @@ test.describe('group channel — realtime (2nd-user)', () => {
     const lastMsg = page.locator('[data-testid="sendbird-message-view"][data-sb-message-id]:not([data-sb-message-id="0"])').last();
     await expect(lastMsg).toBeVisible({ timeout: 5_000 });
     await lastMsg.hover();
-    await lastMsg.locator('.sendbird-message-menu').getByRole('button').first().click({ timeout: 5_000 })
-      .catch(() => {});
+    const menuTrigger = lastMsg.locator('.sendbird-message-menu').getByRole('button').first();
+    await expect(menuTrigger).toBeVisible({ timeout: 10_000 });
+    await menuTrigger.click();
     const markUnreadItem = page.getByRole('menuitem', { name: /mark as unread/i });
     await expect(markUnreadItem).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await markUnreadItem.click();
