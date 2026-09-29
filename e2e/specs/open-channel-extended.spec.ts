@@ -3,7 +3,7 @@ import { test } from '../fixtures';
 import { attachFiles, createOpenChannelViaUI, openNamedOpenChannel, openOperatorParticipants, openParticipantRow, refreshParticipants, sendText, openMessageMenu } from '../utils/actions';
 import { appPath, runTag } from '../utils/env';
 import * as platform from '../utils/platform';
-import { OPEN_CHANNEL_PARTICIPANT_LIST_STALE, SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
+import { OPEN_CHANNEL_PARTICIPANT_NOT_LISTED, SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 test.describe('open channel — extended', () => {
   // G5
@@ -48,7 +48,7 @@ test.describe('open channel — extended', () => {
   test('registers and cancels operator in open channel participant list', async ({
     page, workerUser, secondUser, secondPage, createOpenChannel,
   }) => {
-    test.skip(true, OPEN_CHANNEL_PARTICIPANT_LIST_STALE);
+    test.skip(true, OPEN_CHANNEL_PARTICIPANT_NOT_LISTED);
     await createOpenChannel({ name: `[e2e] g13-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g13-seed-${runTag}`, { userId: workerUser.userId });
     await createOpenChannelViaUI(page, `[e2e] g13-${runTag}`);
@@ -79,7 +79,7 @@ test.describe('open channel — extended', () => {
   test('mutes and unmutes a participant in open channel', async ({
     page, workerUser, secondUser, secondPage, createOpenChannel,
   }) => {
-    test.skip(true, OPEN_CHANNEL_PARTICIPANT_LIST_STALE);
+    test.skip(true, OPEN_CHANNEL_PARTICIPANT_NOT_LISTED);
     await createOpenChannel({ name: `[e2e] g14-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g14-seed-${runTag}`, { userId: workerUser.userId });
     await createOpenChannelViaUI(page, `[e2e] g14-${runTag}`);
@@ -113,7 +113,7 @@ test.describe('open channel — extended', () => {
   test('bans and unbans a participant in open channel', async ({
     page, workerUser, secondUser, secondPage, createOpenChannel,
   }) => {
-    test.skip(true, OPEN_CHANNEL_PARTICIPANT_LIST_STALE);
+    test.skip(true, OPEN_CHANNEL_PARTICIPANT_NOT_LISTED);
     await createOpenChannel({ name: `[e2e] g15-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g15-seed-${runTag}`, { userId: workerUser.userId });
     await createOpenChannelViaUI(page, `[e2e] g15-${runTag}`);

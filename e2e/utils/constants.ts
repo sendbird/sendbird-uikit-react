@@ -9,13 +9,16 @@ export const SERVER_RESPONSE_TIMEOUT = 10_000;
 export const UNREAD_PILL_ABSENT = 'The unread floating button does not mount after mark-as-unread, though the New Messages separator does.';
 
 /**
- * The open channel participant list loads when its accordion opens and never loads again. A second
- * user who joins around that moment can be missing from it, and the panel offers no way to ask for
- * it again: Escape does not dismiss it, and both the settings trigger and the accordion header
- * toggle, so reopening lands shut as often as open — and closing it at all costs the operator view
- * the case came for. Registering an operator, muting and banning all read that list back.
+ * The participant list is read once when the accordion opens, and the settings panel does not
+ * listen for anyone entering or leaving — its open-channel handlers cover operator, mute, ban and
+ * channel changes, but not onUserEntered. A second user who joins moments before the panel opens
+ * can therefore be absent from the list with nothing to bring them in, and every case here starts
+ * by finding that user's row. Two runs in five went that way.
+ *
+ * The panel does reload the list after an operator, mute or ban change, and reopening it keeps the
+ * operator view — both were checked. What is missing is a way to wait for a newly joined user.
  */
-export const OPEN_CHANNEL_PARTICIPANT_LIST_STALE = 'The open channel participant list does not reload after a change, and reopening it reliably needs a helper this suite does not have yet.';
+export const OPEN_CHANNEL_PARTICIPANT_NOT_LISTED = 'A user who joins just before the participant accordion opens can be missing from it, and the panel does not watch for anyone entering.';
 
 /**
  * Wait for operator-only UI. The fixtures create channels with the worker user in `operator_ids`,
