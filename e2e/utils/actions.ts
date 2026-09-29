@@ -150,7 +150,7 @@ export async function openOperatorParticipants(page: Page) {
   }
 
   await expect(accordion.first()).toBeVisible({ timeout: OPERATOR_ROLE_TIMEOUT });
-  await accordion.filter({ hasText: 'Participants' }).click();
+  await accordion.filter({ hasText: 'Participants' }).first().click();
 }
 
 /**
@@ -225,4 +225,53 @@ export async function attachFiles(page: Page, files: AttachedFile[]) {
 
   const send = page.locator('.sendbird-message-input--send');
   if (await send.isVisible({ timeout: 5_000 }).catch(() => false)) await send.click();
+}
+
+/**
+ * Open the participants accordion and return the row for `userId`.
+ *
+ * The participant list loads when the accordion opens and never loads again, so a row that was
+ * not there yet — or one whose state just changed — only shows up after reopening the panel.
+ */
+export async function openParticipantRow(page: Page, userId: string): Promise<Locator> {
+  const row = page.locator('.sendbird-participants-accordion__member').filter({ hasText: userId }).first();
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    await openOperatorParticipants(page);
+    if (await row.isVisible({ timeout: 5_000 }).catch(() => false)) return row;
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(1_000);
+  }
+
+  await expect(row).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+  return row;
+}
+
+/** Reopen the participants accordion so its list reflects a change just made. */
+export async function refreshParticipants(page: Page) {
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(1_000);
+  await openOperatorParticipants(page);
+}
+
+/**
+ * Create an open channel through the app and wait until it is the channel on screen.
+ *
+ * The open channel list API leaves operators out unless the application asks for them, and the SDK
+ * caches what it got — so a channel first seen through the list carries an empty operator list and
+ * the settings panel offers the participant view. A channel created here comes back complete, which
+ * is what an operator's own session looks like. Cases that need the operator view start from here.
+ */
+export async function createOpenChannelViaUI(page: Page, name: string) {
+  await page.locator('.sendbird-open-channel-list-ui__header__button-create-channel').click({ timeout: 15_000 });
+
+  const nameInput = page
+    .locator('[name="sendbird-create-open-channel-ui__profile-input__name-section__input"]')
+    .first();
+  await expect(nameInput).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+  await nameInput.fill(name);
+  await page.getByRole('button', { name: /^create$/i }).last().click();
+
+  await expect(page.locator('.sendbird-openchannel-conversation-header').getByText(name))
+    .toBeVisible({ timeout: 15_000 });
 }

@@ -2,28 +2,19 @@
 export const SERVER_RESPONSE_TIMEOUT = 10_000;
 
 /**
- * Open channel settings renders the participant view, not the operator view, for a channel opened
- * from the channel list. The channel the settings panel reads is served from the SDK cache, and the
- * open-channel list response carries an empty `operators` array, so `isOperator()` is false and the
- * operator panel — along with the participant actions it hosts — never mounts. Observed against a
- * channel whose operator is set at creation time and confirmed present through the Platform API.
- *
- * Scenarios that drive those actions are held here rather than probing the DOM, so they come back
- * as one named reason instead of silently disappearing from the run.
- */
-/**
  * After marking a message from another member as unread, the New Messages separator appears but the
- * unread floating button never mounts, so there is nothing to click or dismiss.
+ * unread floating button never mounts, so there is nothing to click or dismiss. The server reports
+ * the channel read again straight afterwards, so the count it would show stays at zero.
  */
 export const UNREAD_PILL_ABSENT = 'The unread floating button does not mount after mark-as-unread, though the New Messages separator does.';
 
 /**
- * Creating an open channel from the list header leaves the view on the list: the new channel is
- * created, but the conversation header for it never mounts.
+ * The open channel participant list loads when its accordion opens and never loads again, and the
+ * accordion toggles — so a case that changes a participant and then reads the list back has to
+ * reopen it, and reopening flips it shut as often as open. Muting and banning both need that read,
+ * and the helper this suite has does not get there reliably yet.
  */
-export const OPEN_CHANNEL_AUTO_ENTER = 'Creating an open channel from the list header does not move the view into the new channel.';
-
-export const OPEN_CHANNEL_OPERATOR_UI = 'Open channel settings shows the participant view for a channel opened from the list, so the operator panel does not mount.';
+export const OPEN_CHANNEL_PARTICIPANT_LIST_STALE = 'The open channel participant list does not reload after a change, and reopening it reliably needs a helper this suite does not have yet.';
 
 /**
  * Wait for operator-only UI. The fixtures create channels with the worker user in `operator_ids`,

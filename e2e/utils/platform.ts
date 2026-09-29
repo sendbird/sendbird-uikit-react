@@ -135,6 +135,42 @@ export const waitForMuted = (channelUrl: string, userId: string, present = true)
 
 export const waitForBanned = (channelUrl: string, userId: string, present = true): Promise<void> => waitForModeration(channelUrl, 'ban', userId, present);
 
+/** Resolve once open-channel moderation state is visible server-side. */
+async function waitForOpenChannelModeration(channelUrl: string, path: 'mute' | 'ban', userId: string, present: boolean): Promise<void> {
+  await waitUntil(
+    () => call('GET', `/open_channels/${encodeURIComponent(channelUrl)}/${path}`),
+    (data) => {
+      const ids: string[] = (data?.muted_list ?? data?.banned_list ?? [])
+        .map((e: { user_id?: string; user?: { user_id: string } }) => e.user_id ?? e.user?.user_id);
+      return ids.includes(userId) === present;
+    },
+    { what: `${userId} ${present ? 'on' : 'off'} the open channel ${path} list` },
+  );
+}
+
+export const waitForOpenChannelMuted = (channelUrl: string, userId: string, present = true): Promise<void> => waitForOpenChannelModeration(channelUrl, 'mute', userId, present);
+
+export const waitForOpenChannelBanned = (channelUrl: string, userId: string, present = true): Promise<void> => waitForOpenChannelModeration(channelUrl, 'ban', userId, present);
+
+/** Find an open channel this run created through the UI, by the name it was given. */
+export async function findOpenChannelUrl(name: string): Promise<string> {
+  const data = await waitUntil(
+    () => call('GET', `/open_channels?name_contains=${encodeURIComponent(name)}&limit=10`),
+    (d) => (d?.channels ?? []).length > 0,
+    { what: `an open channel named ${name}` },
+  );
+  return data.channels[0].channel_url;
+}
+
+/** Resolve once the user shows up as a participant of the open channel. */
+export async function waitForOpenChannelParticipant(channelUrl: string, userId: string): Promise<void> {
+  await waitUntil(
+    () => call('GET', `/open_channels/${encodeURIComponent(channelUrl)}/participants`),
+    (data) => (data?.participants ?? []).some((p: { user_id: string }) => p.user_id === userId),
+    { what: `${userId} among the participants of ${channelUrl}` },
+  );
+}
+
 /** Resolve once the user is (or is no longer) an operator of the group channel. */
 export async function waitForOperator(channelUrl: string, userId: string, present = true): Promise<void> {
   await waitUntil(
