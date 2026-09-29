@@ -39,6 +39,10 @@ test.describe('channel settings — core', () => {
   test('loads user rows when the invite picker is opened', async ({ page, workerUser, secondUser, createChannel }) => {
     await createChannel({ memberIds: [secondUser.userId] });
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
+    // The picker builds its query once, when it mounts. Opening it before the SDK is up leaves it
+    // with nothing to query and no second chance — so wait for the list, which means connected.
+    await expect(page.locator('.sendbird-channel-preview').first()).toBeVisible({ timeout: 30_000 });
+
     // Open create-channel flow to trigger user picker (invite step)
     // The header has user-profile button (first) and create-channel button (last)
     await page.locator('.sendbird-channel-list__header').getByRole('button').last().click({ timeout: 15_000 });

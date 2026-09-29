@@ -41,7 +41,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
     },
   } = useCreateChannel();
 
-  const { state: { config: { userId }, stores: { sdkStore: { sdk, initialized } } } } = useSendbird();
+  const { state: { config: { userId }, stores: { sdkStore: { sdk } } } } = useSendbird();
   const idsToFilter = [userId];
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<Record<string, boolean>>({});
@@ -53,33 +53,23 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const { isMobile } = useMediaQueryContext();
   const [scrollableAreaHeight, setScrollableAreaHeight] = useState<number>(window.innerHeight);
 
-  // Read via ref so the effect dep array only tracks `initialized`, not the query reference.
-  // Consumers often pass an inline arrow for userListQuery; including it in deps would cause
-  // a re-fetch on every parent render. The latest query is always picked up at connect-time.
-  const userListQueryRef = useRef(userListQuery);
-  userListQueryRef.current = userListQuery;
-
-  // Generation counter: each effect run gets its own `gen` captured in the closure. The scroll
-  // handler captures `scrollGen` at event-fire time. Any newer effect run increments genRef,
-  // making stale Promises see a mismatch and skip setUsers — safe in StrictMode and on reconnect.
+  // StrictMode runs this effect twice on mount, so two fetches can be in flight at once. Each run
+  // takes a number; a resolved fetch only writes when its number is still the current one, and the
+  // scroll handler takes the number at event time so a late page cannot land on a newer list.
   const genRef = useRef(0);
 
   useEffect(() => {
-    if (!initialized) return;
-    const applicationUserListQuery = userListQueryRef.current
-      ? userListQueryRef.current()
-      : createDefaultUserListQuery({ sdk });
+    const applicationUserListQuery = userListQuery ? userListQuery() : createDefaultUserListQuery({ sdk });
     if (!applicationUserListQuery) return;
     genRef.current += 1;
     const gen = genRef.current;
-    setUsers([]); // Reset before async fetch so stale list is not shown during re-fetch.
     setUsersDataSource(applicationUserListQuery);
     applicationUserListQuery.next().then((it) => {
       if (genRef.current === gen) setUsers(it);
     }).catch(() => {
       // Fetch failed (network error, expired token, etc.) — users stays []
     });
-  }, [initialized]);
+  }, []);
 
   // To fix navbar break in mobile we set dynamic height to the scrollable area
   useEffect(() => {
@@ -101,7 +91,7 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
       // Disable the create button if no users are selected,
       // but if there's only the logged-in user in the user list,
       // then the create button should be enabled
-      disabled={!initialized || (users.length > 1 && Object.keys(selectedUsers).length === 0)}
+      disabled={users.length > 1 && Object.keys(selectedUsers).length === 0}
       onCancel={onCancel}
       onSubmit={() => {
         const selectedUserList = Object.keys(selectedUsers).length > 0
