@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
-import { openChannelSettings, openFirstGroupChannel, openSettingsAccordion, openUserRowMenu } from '../utils/actions';
+import { openChannelSettings, openFirstGroupChannel, openSettingsAccordion, refreshSettingsAccordion, openUserRowMenu } from '../utils/actions';
 import * as platform from '../utils/platform';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
@@ -51,11 +51,15 @@ test.describe('channel settings — extended', () => {
 
     // Changing the member list re-renders the panel, and the accordion closes with it. The member
     // rows carry the --small variant, which is the root class instead of the plain one — matching
-    // only the plain one finds the invite modal's rows rather than the members list.
-    await openSettingsAccordion(page, /^Members/);
+    // only the plain one finds the invite modal's rows rather than the members list. The reopened
+    // list is a fresh read, and that first read can still land ahead of the invite on the backend
+    // the app itself queries, so each pass rereads it rather than trusting the first one.
     const invitedRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item')
       .filter({ hasText: secondUser.userId }).first();
-    await expect(invitedRow).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await expect(async () => {
+      await refreshSettingsAccordion(page, /^Members/);
+      await expect(invitedRow).toBeVisible({ timeout: 2_000 });
+    }).toPass({ timeout: SERVER_RESPONSE_TIMEOUT });
     await expect(
       page.locator('.sendbird-channel-settings__panel-item').filter({ hasText: /^Members/ }).first(),
     ).toContainText('2');
@@ -122,15 +126,24 @@ test.describe('channel settings — extended', () => {
     await openUserRowMenu(memberRow);
     await page.getByRole('menuitem', { name: /^mute/i }).first().click();
     await platform.waitForMuted(channel.url, secondUser.userId);
-    // Open the "Muted members" panel to verify the user was muted
-    await openSettingsAccordion(page, /^Muted members/);
+    // Open the "Muted members" panel to verify the user was muted. The list query the panel runs
+    // is independent of the Platform API call above, so its first read can still land ahead of the
+    // mute on whatever the app itself queries — reread rather than trust that first pass.
     const mutedRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
-    await expect(mutedRow).toBeVisible({ timeout: 10_000 });
+    await expect(async () => {
+      await refreshSettingsAccordion(page, /^Muted members/);
+      await expect(mutedRow).toBeVisible({ timeout: 2_000 });
+    }).toPass({ timeout: 30_000 });
     // Unmute via the muted list row
     await openUserRowMenu(mutedRow);
     await page.getByRole('menuitem', { name: /unmute/i }).first().click();
     await platform.waitForMuted(channel.url, secondUser.userId, false);
-    await expect(mutedRow).not.toBeVisible({ timeout: 10_000 });
+    // The list was read when the accordion mounted, so each pass reads it again rather than
+    // waiting on rows that were fetched before the unmute landed.
+    await expect(async () => {
+      await refreshSettingsAccordion(page, /^Muted members/);
+      await expect(mutedRow).toHaveCount(0, { timeout: 2_000 });
+    }).toPass({ timeout: 30_000 });
   });
 
   // E10
@@ -149,15 +162,21 @@ test.describe('channel settings — extended', () => {
     // Banning takes effect straight from the menu; there is no confirmation step to click.
     await page.getByRole('menuitem', { name: /ban/i }).first().click();
     await platform.waitForBanned(channel.url, secondUser.userId);
-    // Open the "Banned users" panel to verify the user was banned
-    await openSettingsAccordion(page, /^Banned users/);
+    // Open the "Banned users" panel to verify the user was banned. Same story as the muted list:
+    // the panel's own query can still land ahead of the ban, so reread rather than trust one pass.
     const bannedRow = page.locator('.sendbird-user-list-item--small, .sendbird-user-list-item').filter({ hasText: secondUser.userId }).first();
-    await expect(bannedRow).toBeVisible({ timeout: 10_000 });
+    await expect(async () => {
+      await refreshSettingsAccordion(page, /^Banned users/);
+      await expect(bannedRow).toBeVisible({ timeout: 2_000 });
+    }).toPass({ timeout: 30_000 });
     // Unban via the banned list row
     await openUserRowMenu(bannedRow);
     await page.getByRole('menuitem', { name: /unban/i }).first().click({ timeout: 10_000 });
     await platform.waitForBanned(channel.url, secondUser.userId, false);
-    await expect(bannedRow).not.toBeVisible({ timeout: 10_000 });
+    await expect(async () => {
+      await refreshSettingsAccordion(page, /^Banned users/);
+      await expect(bannedRow).toHaveCount(0, { timeout: 2_000 });
+    }).toPass({ timeout: 30_000 });
   });
 
   // E12
