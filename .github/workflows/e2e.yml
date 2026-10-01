@@ -54,7 +54,7 @@ jobs:
         run: corepack enable
 
       - name: Require credentials on internal PRs
-        if: ${{ github.event.pull_request.head.repo.fork != true && env.E2E_APP_ID == '' }}
+        if: ${{ github.event.pull_request.head.repo.fork != true && (env.E2E_APP_ID == '' || env.E2E_PLATFORM_API_TOKEN == '') }}
         run: |
           echo "::error::E2E secrets are missing. The suite would skip every test and report green."
           exit 1
