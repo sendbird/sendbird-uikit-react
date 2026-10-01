@@ -1,5 +1,4 @@
 import { test, expect } from '../fixtures';
-import { hasCreds } from '../utils/env';
 import { openFirstGroupChannel } from '../utils/actions';
 
 /**
@@ -7,10 +6,6 @@ import { openFirstGroupChannel } from '../utils/actions';
  * header and renames the channel. The test user is the channel operator, so editing is allowed.
  */
 test.describe('group channel — settings', () => {
-  test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
-  });
-
   test('renames the channel from settings', async ({ page, workerUser, createChannel }) => {
     await createChannel();
     await openFirstGroupChannel(page, { userId: workerUser.userId });

@@ -1,5 +1,4 @@
 import { test, expect } from '../fixtures';
-import { hasCreds } from '../utils/env';
 import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from '../utils/actions';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
@@ -8,10 +7,6 @@ import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
  * the Reply menu item quotes the original message. Sends real messages to the test App ID.
  */
 test.describe('group channel — quote reply', () => {
-  test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
-  });
-
   test('replies to a message with a quote', async ({ page, workerUser, createChannel }) => {
     await createChannel();
     await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_replyType: 'QUOTE_REPLY' });

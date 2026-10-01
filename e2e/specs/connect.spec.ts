@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures';
-import { appPath, hasCreds } from '../utils/env';
+import { appPath } from '../utils/env';
 
 /**
  * Connect: the app authenticates against the real backend AS the configured user and renders.
@@ -7,10 +7,6 @@ import { appPath, hasCreds } from '../utils/env';
  * Skips without credentials.
  */
 test.describe('connect', () => {
-  test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
-  });
-
   test('connects as the configured user and renders the app', async ({ page, workerUser }) => {
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
 

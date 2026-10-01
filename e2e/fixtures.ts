@@ -1,5 +1,5 @@
 import { test as base, expect } from '@playwright/test';
-import { E2E, runTag } from './utils/env';
+import { E2E, hasCreds, runTag } from './utils/env';
 import * as platform from './utils/platform';
 
 export interface WorkerUser {
@@ -45,17 +45,24 @@ async function useThrowawayUser(suffix: string, workerIndex: number, use: (user:
   userSeq += 1;
   const userId = `${E2E.userPrefix}-${runTag}-w${workerIndex}${suffix}-${userSeq}`;
   const user: WorkerUser = { userId, nickname: userId };
-  if (platform.hasPlatformToken()) await platform.ensureUser(userId, userId);
+  await platform.ensureUser(userId, userId);
   await use(user);
-  if (platform.hasPlatformToken()) {
-    // Delete the user's channels first — including any made through the app UI, which carry no
-    // runTag and so are missed by the global sweep — then the user itself.
-    await platform.deleteUserChannels(userId).catch(() => {});
-    await platform.deleteUser(userId).catch(() => {});
-  }
+  // Delete the user's channels first — including any made through the app UI, which carry no
+  // runTag and so are missed by the global sweep — then the user itself.
+  await platform.deleteUserChannels(userId).catch(() => {});
+  await platform.deleteUser(userId).catch(() => {});
 }
 
-export const test = base.extend<E2EFixtures>({
+export const test = base.extend<E2EFixtures & { requireCreds: void }>({
+  requireCreds: [
+    // eslint-disable-next-line no-empty-pattern
+    async ({}, use, testInfo) => {
+      testInfo.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
+      await use();
+    },
+    { auto: true },
+  ],
+
   // eslint-disable-next-line no-empty-pattern
   workerUser: async ({}, use, testInfo) => { await useThrowawayUser('', testInfo.workerIndex, use); },
 

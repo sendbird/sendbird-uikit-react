@@ -1,5 +1,4 @@
 import { test, expect } from '../fixtures';
-import { hasCreds } from '../utils/env';
 import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from '../utils/actions';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
@@ -8,10 +7,6 @@ import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
  * first, then acts on it. Sends real messages to the test App ID's backend. Skips without creds.
  */
 test.describe('group channel — message actions', () => {
-  test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
-  });
-
   test('edits an own message', async ({ page, workerUser, createChannel }) => {
     await createChannel();
     await openFirstGroupChannel(page, { userId: workerUser.userId });

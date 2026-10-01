@@ -1,15 +1,11 @@
 import { test, expect } from '../fixtures';
-import { appPath, hasCreds } from '../utils/env';
+import { appPath } from '../utils/env';
 
 /**
  * User profile — edit (Tier 0, single user). Opens "My profile" from the channel-list header and
  * changes the current user's nickname, asserting the header reflects the new value.
  */
 test.describe('user profile — edit', () => {
-  test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
-  });
-
   test('edits the current user nickname', async ({ page, workerUser, createChannel }) => {
     await createChannel();
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
