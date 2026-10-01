@@ -1,5 +1,4 @@
 import { test, expect } from '../fixtures';
-import { hasCreds } from '../utils/env';
 import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from '../utils/actions';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
@@ -9,7 +8,6 @@ import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
  */
 test.describe('group channel — copy message', () => {
   test.beforeEach(async ({ context }) => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   });
 

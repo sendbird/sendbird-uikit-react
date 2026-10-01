@@ -1,8 +1,8 @@
 /// <reference types="node" />
 /**
  * Minimal Sendbird Platform API client for E2E setup/teardown — create/delete users and group
- * channels. App-scoped: needs E2E_PLATFORM_API_TOKEN (NOT an org key). Callers guard on
- * hasPlatformToken() so token-less runs simply skip isolation/teardown.
+ * channels. App-scoped: needs E2E_PLATFORM_API_TOKEN (NOT an org key). Tests never reach it
+ * without credentials (the fixtures skip them); the global teardown guards on hasPlatformToken().
  */
 import { E2E, runTag } from './env';
 

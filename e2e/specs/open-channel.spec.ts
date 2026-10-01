@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures';
-import { appPath, hasCreds, runTag } from '../utils/env';
+import { appPath, runTag } from '../utils/env';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 /**
@@ -7,10 +7,6 @@ import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
  * channel list beside the conversation, then enters this run's own channel (found by its unique name).
  */
 test.describe('open channel — navigation', () => {
-  test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
-  });
-
   // Open channels share one global list, so each case works on THIS run's channel, found by its
   // unique name rather than by position.
   const uniqueName = (tag: string) => `[e2e] open ${tag} ${runTag} ${Date.now()}`;
