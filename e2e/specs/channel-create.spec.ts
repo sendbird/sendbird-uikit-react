@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures';
-import { appPath, hasCreds } from '../utils/env';
+import { appPath } from '../utils/env';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 /**
@@ -7,10 +7,6 @@ import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
  * (secondUser), so the invite list has a known member to select.
  */
 test.describe('group channel — create', () => {
-  test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
-  });
-
   test('creates a group channel with an invited member', async ({ page, workerUser, secondUser, createChannel }) => {
     await createChannel();
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));

@@ -1,5 +1,4 @@
 import { test, expect } from '../fixtures';
-import { hasCreds } from '../utils/env';
 import { openFirstGroupChannel, sendText, messageByText } from '../utils/actions';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
@@ -8,10 +7,6 @@ import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
  * reacts to an own message. Requires reactions to be enabled on the test App ID.
  */
 test.describe('group channel — reactions', () => {
-  test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
-  });
-
   test('adds an emoji reaction to a message', async ({ page, workerUser, createChannel }) => {
     await createChannel();
     await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_enableReactions: 'true' });

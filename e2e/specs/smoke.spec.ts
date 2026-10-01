@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures';
-import { appPath, hasCreds } from '../utils/env';
+import { appPath } from '../utils/env';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 /**
@@ -8,10 +8,6 @@ import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
  * parallel and concurrently with other developers. Skips without credentials.
  */
 test.describe('smoke: send a message', () => {
-  test.beforeEach(() => {
-    test.skip(!hasCreds, 'Set E2E_APP_ID and E2E_PLATFORM_API_TOKEN to run E2E tests.');
-  });
-
   test('opens a channel and sends a text message', async ({ page, workerUser, createChannel }) => {
     await createChannel({ name: '[e2e] smoke' });
     await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
