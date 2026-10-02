@@ -33,6 +33,8 @@ vi.mock('@sendbird/chat', () => {
     updateCurrentUserInfo: vi.fn().mockResolvedValue(null),
     addExtension: vi.fn().mockReturnThis(),
     addSendbirdExtensions: vi.fn().mockReturnThis(),
+    addConnectionHandler: vi.fn(),
+    removeConnectionHandler: vi.fn(),
     message: { getMessageTemplatesByToken: vi.fn().mockResolvedValue({ hasMore: false, token: null, templates: [] }) },
     appId: 'test-app-id',
     appInfo: {
@@ -46,6 +48,8 @@ vi.mock('@sendbird/chat', () => {
   return {
     __esModule: true,
     default: mockSdk,
+    ConnectionHandler: class {},
+    SendbirdErrorCode: { DELAYED_CONNECTING: 800221 },
     SendbirdProduct: { UIKIT_CHAT: 'UIKIT_CHAT' },
     SendbirdPlatform: { JS: 'JS' },
     DeviceOsPlatform: { WEB: 'WEB', MOBILE_WEB: 'MOBILE_WEB' },

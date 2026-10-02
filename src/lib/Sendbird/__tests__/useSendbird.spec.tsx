@@ -16,6 +16,8 @@ vi.mock('../utils', async () => {
     initSDK: vi.fn(() => ({
       connect: vi.fn().mockResolvedValue({ userId: 'mockUserId' }),
       updateCurrentUserInfo: vi.fn().mockResolvedValue({}),
+      addConnectionHandler: vi.fn(),
+      removeConnectionHandler: vi.fn(),
     })),
     setupSDK: vi.fn(),
   };
@@ -410,6 +412,8 @@ describe('useSendbird', () => {
         connect: vi.fn(() => {
           throw new Error('Mock connection error');
         }),
+        addConnectionHandler: vi.fn(),
+        removeConnectionHandler: vi.fn(),
       };
       vi.mocked(initSDK).mockReturnValue(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>);
 

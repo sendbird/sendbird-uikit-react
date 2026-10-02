@@ -16,9 +16,20 @@ import { vi } from 'vitest';
  * '@sendbird/chat/groupChannel' and '/openChannel' (separate specifiers) and stay real,
  * so `new GroupChannelModule()` in initSDK still works.
  */
+type MockConnectionHandler = Record<string, (...args: unknown[]) => void>;
+
 export function createMockSdk() {
+  const connectionHandlers = new Map<string, MockConnectionHandler>();
   const mockSdk: Record<string, any> = {
     init: vi.fn(),
+    currentUser: null,
+    connectionHandlers,
+    addConnectionHandler: vi.fn((key: string, handler: MockConnectionHandler) => {
+      connectionHandlers.set(key, handler);
+    }),
+    removeConnectionHandler: vi.fn((key: string) => {
+      connectionHandlers.delete(key);
+    }),
     connect: vi.fn().mockResolvedValue({
       userId: 'test-user-id',
       nickname: 'test-nickname',
@@ -56,6 +67,12 @@ export function createSendbirdChatMock() {
   return {
     __esModule: true,
     default: mockSdk,
+    ConnectionHandler: class {
+      constructor(params: Record<string, unknown> = {}) {
+        Object.assign(this, params);
+      }
+    },
+    SendbirdErrorCode: { DELAYED_CONNECTING: 800221 },
     SendbirdProduct: { UIKIT_CHAT: 'UIKIT_CHAT' },
     SendbirdPlatform: { JS: 'JS' },
     DeviceOsPlatform: { WEB: 'WEB', MOBILE_WEB: 'MOBILE_WEB' },
