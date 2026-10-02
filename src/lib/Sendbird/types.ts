@@ -131,6 +131,11 @@ export interface SBUEventHandlers {
   };
   connection?: {
     onConnected?(user: User): void;
+    /**
+     * Called when connecting fails.
+     * When the server delays the connection (`error.code` is `SendbirdErrorCode.DELAYED_CONNECTING`),
+     * the SDK reconnects on its own once the delay ends, and `onConnected` is called when it does, so there is no need to retry here.
+     */
     onFailed?(error: SendbirdError): void;
   };
   modal?: {
