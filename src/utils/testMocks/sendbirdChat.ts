@@ -30,6 +30,7 @@ export function createMockSdk() {
     removeConnectionHandler: vi.fn((key: string) => {
       connectionHandlers.delete(key);
     }),
+    reconnect: vi.fn().mockReturnValue(true),
     connect: vi.fn().mockResolvedValue({
       userId: 'test-user-id',
       nickname: 'test-nickname',

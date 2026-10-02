@@ -26,6 +26,7 @@ interface ConnectionSession {
   sdk: SdkStore['sdk'];
   handlerId: string;
   awaitingRecovery: boolean;
+  onDelayChange?: (retryAfter: number | null) => void;
 }
 
 const connectGenerations = new WeakMap<object, number>();
@@ -42,19 +43,24 @@ const endConnectionSession = (store: object) => {
   if (!session) return;
   connectionSessions.delete(store);
   session.sdk.removeConnectionHandler(session.handlerId);
+  session.onDelayChange?.(null);
 };
 
 const startConnectionSession = (
   store: object,
   sdk: SdkStore['sdk'],
-  userId: string,
-  onRecover: (user: User) => void,
+  { userId, onRecover, onDelayChange }: {
+    userId: string;
+    onRecover: (user: User) => void;
+    onDelayChange?: (retryAfter: number | null) => void;
+  },
 ): ConnectionSession => {
   endConnectionSession(store);
   const session: ConnectionSession = {
     sdk,
     handlerId: `sendbird-uikit-react-connection-${uuidv4()}`,
     awaitingRecovery: false,
+    onDelayChange,
   };
   const recover = () => {
     if (!session.awaitingRecovery || connectionSessions.get(store) !== session) return;
@@ -63,9 +69,14 @@ const startConnectionSession = (
     session.awaitingRecovery = false;
     onRecover(user);
   };
+  const settleDelay = () => {
+    onDelayChange?.(null);
+    recover();
+  };
   sdk.addConnectionHandler(session.handlerId, new ConnectionHandler({
-    onConnected: recover,
-    onReconnectSucceeded: recover,
+    onConnectionDelayed: (retryAfter: number) => onDelayChange?.(retryAfter),
+    onConnected: settleDelay,
+    onReconnectSucceeded: settleDelay,
   }));
   connectionSessions.set(store, session);
   return session;
@@ -268,6 +279,7 @@ export const useSendbird = () => {
       initializeMessageTemplatesInfo,
       configureSession,
       initDashboardConfigs,
+      onConnectionDelayChange,
     } = params;
 
     const generation = claimConnectGeneration(store);
@@ -331,12 +343,16 @@ export const useSendbird = () => {
       });
 
       if (connectGenerations.get(store) === generation) {
-        session = startConnectionSession(store, sdk, userId, (user) => {
-          const isCurrent = () => connectionSessions.get(store) === session;
-          sdkActions.setSdkLoading(true);
-          completeConnection(sdk, user, isCurrent).catch((error) => {
-            if (isCurrent()) failConnection(error);
-          });
+        session = startConnectionSession(store, sdk, {
+          userId,
+          onDelayChange: onConnectionDelayChange,
+          onRecover: (user) => {
+            const isCurrent = () => connectionSessions.get(store) === session;
+            sdkActions.setSdkLoading(true);
+            completeConnection(sdk, user, isCurrent).catch((error) => {
+              if (isCurrent()) failConnection(error);
+            });
+          },
         });
       }
 

@@ -1,0 +1,36 @@
+.sendbird-connection-delayed-modal {
+  z-index: 100100;
+
+  .sendbird-modal__content {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100% - 80px);
+    max-width: calc(100% - 80px);
+    overflow-wrap: anywhere;
+  }
+
+  .sendbird-modal__header {
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 0;
+  }
+
+  .sendbird-modal__body {
+    flex-shrink: 0;
+    height: auto;
+  }
+}
+
+.sendbird-connection-delayed-modal--no-waiting-time {
+  .sendbird-modal__body {
+    visibility: hidden;
+  }
+}
+
+.sendbird-connection-delayed-modal__title {
+  white-space: pre-line;
+}
+
+.sendbird-connection-delayed-modal__time {
+  font-weight: bold;
+}

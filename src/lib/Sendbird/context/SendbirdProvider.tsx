@@ -1,5 +1,5 @@
 /* External libraries */
-import React, { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useUIKitConfig } from '@sendbird/uikit-tools';
 
 /* Types */
@@ -40,6 +40,7 @@ import { EmojiReactionListRoot, MenuRoot } from '../../../ui/ContextMenu';
 
 import useSendbird from './hooks/useSendbird';
 import { createSendbirdContextStore, SendbirdContext, useSendbirdStore } from './SendbirdContext';
+import ConnectionDelayedModal from '../ConnectionDelayedModal';
 import useDeepCompareEffect from '../../../hooks/useDeepCompareEffect';
 import { deleteNullish } from '../../../utils/utils';
 import { TwoDepthPartial } from '../../../utils/typeHelpers/partialDeep';
@@ -77,6 +78,7 @@ const SendbirdContextManager = ({
   eventHandlers,
   htmlTextDirection = 'ltr',
   forceLeftToRightMessageLayout = false,
+  renderConnectionDelayedModal,
 }: SendbirdProviderProps & { logger: Logger }): ReactElement => {
   const onStartDirectMessage = _onStartDirectMessage ?? _onUserProfileMessage;
   const { userMention = {}, isREMUnitEnabled = false, pubSub: customPubSub } = config;
@@ -102,6 +104,11 @@ const SendbirdContextManager = ({
     actions,
   });
 
+  const [connectionDelay, setConnectionDelay] = useState<{ retryAfter: number; deadline: number } | null>(null);
+  const onConnectionDelayChange = useCallback((retryAfter: number | null) => {
+    setConnectionDelay(retryAfter && retryAfter > 0 ? { retryAfter, deadline: Date.now() + retryAfter * 1000 } : null);
+  }, []);
+
   // Reconnect when necessary
   useEffect(() => {
     actions.connect({
@@ -121,6 +128,7 @@ const SendbirdContextManager = ({
       initDashboardConfigs,
       eventHandlers,
       initializeMessageTemplatesInfo,
+      onConnectionDelayChange,
     });
   }, [appId, userId]);
 
@@ -362,7 +370,15 @@ const SendbirdContextManager = ({
     utilsState,
   ]);
 
-  return null;
+  if (!connectionDelay) return null;
+  if (renderConnectionDelayedModal) {
+    return (
+      <React.Fragment key={connectionDelay.deadline}>
+        {renderConnectionDelayedModal({ retryAfter: connectionDelay.retryAfter })}
+      </React.Fragment>
+    );
+  }
+  return <ConnectionDelayedModal deadline={connectionDelay.deadline} />;
 };
 
 const InternalSendbirdProvider = (props: SendbirdProviderProps & { logger: Logger }) => {

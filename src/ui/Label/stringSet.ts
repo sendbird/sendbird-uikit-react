@@ -130,6 +130,8 @@ const stringSet = {
     MODAL__LEAVE_CHANNEL__FOOTER: 'Leave',
     MODAL__VOICE_MESSAGE_INPUT_DISABLED__TITLE_MUTED: 'You\'re muted by the operator.',
     MODAL__VOICE_MESSAGE_INPUT_DISABLED__TITLE_FROZEN: 'Channel is frozen.',
+    MODAL__CONNECTION_DELAYED__TITLE: 'Something went wrong.\nYou\'ll be reconnected shortly.',
+    MODAL__CONNECTION_DELAYED__ESTIMATED_WAITING_TIME: 'Estimated waiting time:',
     // User Profile
     USER_PROFILE__MESSAGE: 'Message',
     USER_PROFILE__USER_ID: 'User ID',
