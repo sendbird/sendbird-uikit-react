@@ -42,6 +42,7 @@ export interface AppProps {
   sdkInitParams?: SendbirdProviderProps['sdkInitParams'];
   customExtensionParams?: SendbirdProviderProps['customExtensionParams'];
   eventHandlers?: SendbirdProviderProps['eventHandlers'];
+  renderConnectionDelayedModal?: SendbirdProviderProps['renderConnectionDelayedModal'];
 
   isMessageGroupingEnabled?: AppLayoutProps['isMessageGroupingEnabled'];
   disableAutoSelect?: AppLayoutProps['disableAutoSelect'];
@@ -101,6 +102,7 @@ export default function App(props: AppProps) {
     sdkInitParams,
     customExtensionParams,
     eventHandlers,
+    renderConnectionDelayedModal,
     isMultipleFilesMessageEnabled,
     autoscrollMessageOverflowToTop = false,
     isUserIdUsedForNickname = true,
@@ -153,6 +155,7 @@ export default function App(props: AppProps) {
       sdkInitParams={sdkInitParams}
       customExtensionParams={customExtensionParams}
       eventHandlers={eventHandlers}
+      renderConnectionDelayedModal={renderConnectionDelayedModal}
       isTypingIndicatorEnabledOnChannelList={isTypingIndicatorEnabledOnChannelList}
       isMessageReceiptStatusEnabledOnChannelList={isMessageReceiptStatusEnabledOnChannelList}
       replyType={replyType}

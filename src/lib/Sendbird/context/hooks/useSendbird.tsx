@@ -1,11 +1,12 @@
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { useCallback, useContext, useMemo } from 'react';
-import { SendbirdError, User } from '@sendbird/chat';
+import { ConnectionHandler, SendbirdError, SendbirdErrorCode, User } from '@sendbird/chat';
 
 import { SendbirdContext } from '../SendbirdContext';
 import { LoggerInterface } from '../../../Logger';
 import { MessageTemplatesInfo, SdkStore, SendbirdState, WaitingTemplateKeyData } from '../../types';
 import { initSDK, setupSDK, updateAppInfoStore, updateSdkStore, updateUserStore } from '../../utils';
+import { uuidv4 } from '../../../../utils/uuid';
 
 const NO_CONTEXT_ERROR = 'No sendbird state value available. Make sure you are rendering `<SendbirdProvider>` at the top of your app.';
 
@@ -20,6 +21,67 @@ const NO_CONTEXT_ERROR = 'No sendbird state value available. Make sure you are r
  * one provider.
  */
 const pendingTeardowns = new WeakMap<object, Promise<unknown>>();
+
+interface ConnectionSession {
+  sdk: SdkStore['sdk'];
+  handlerId: string;
+  awaitingRecovery: boolean;
+  onDelayChange?: (retryAfter: number | null) => void;
+}
+
+const connectGenerations = new WeakMap<object, number>();
+const connectionSessions = new WeakMap<object, ConnectionSession>();
+
+const claimConnectGeneration = (store: object): number => {
+  const generation = (connectGenerations.get(store) ?? 0) + 1;
+  connectGenerations.set(store, generation);
+  return generation;
+};
+
+const endConnectionSession = (store: object) => {
+  const session = connectionSessions.get(store);
+  if (!session) return;
+  connectionSessions.delete(store);
+  session.sdk.removeConnectionHandler(session.handlerId);
+  session.onDelayChange?.(null);
+};
+
+const startConnectionSession = (
+  store: object,
+  sdk: SdkStore['sdk'],
+  { userId, onRecover, onDelayChange }: {
+    userId: string;
+    onRecover: (user: User) => void;
+    onDelayChange?: (retryAfter: number | null) => void;
+  },
+): ConnectionSession => {
+  endConnectionSession(store);
+  const session: ConnectionSession = {
+    sdk,
+    handlerId: `sendbird-uikit-react-connection-${uuidv4()}`,
+    awaitingRecovery: false,
+    onDelayChange,
+  };
+  const recover = () => {
+    if (!session.awaitingRecovery || connectionSessions.get(store) !== session) return;
+    const user = sdk.currentUser;
+    if (!user || user.userId !== userId) return;
+    session.awaitingRecovery = false;
+    onRecover(user);
+  };
+  const settleDelay = () => {
+    onDelayChange?.(null);
+    recover();
+  };
+  sdk.addConnectionHandler(session.handlerId, new ConnectionHandler({
+    onConnectionDelayed: (retryAfter: number) => onDelayChange?.(retryAfter),
+    onConnected: settleDelay,
+    onReconnectSucceeded: settleDelay,
+  }));
+  connectionSessions.set(store, session);
+  return session;
+};
+
 export const useSendbird = () => {
   const store = useContext(SendbirdContext);
   if (!store) throw new Error(NO_CONTEXT_ERROR);
@@ -166,7 +228,8 @@ export const useSendbird = () => {
   };
 
   /* Connection */
-  const disconnect = useCallback(async ({ logger }: { logger: LoggerInterface }) => {
+  const teardownConnection = useCallback(async ({ logger }: { logger: LoggerInterface }) => {
+    endConnectionSession(store);
     sdkActions.setSdkLoading(true);
 
     const sdk = state.stores.sdkStore.sdk;
@@ -191,6 +254,14 @@ export const useSendbird = () => {
     userActions,
   ]);
 
+  const disconnect = useCallback(async ({ logger }: { logger: LoggerInterface }) => {
+    claimConnectGeneration(store);
+    await teardownConnection({ logger });
+  }, [
+    store,
+    teardownConnection,
+  ]);
+
   const connect = useCallback(async (params) => {
     const {
       logger,
@@ -208,12 +279,45 @@ export const useSendbird = () => {
       initializeMessageTemplatesInfo,
       configureSession,
       initDashboardConfigs,
+      onConnectionDelayChange,
     } = params;
 
+    const generation = claimConnectGeneration(store);
+
     // clean up previous ws connection
-    await disconnect({ logger });
+    await teardownConnection({ logger });
 
     sdkActions.setSdkLoading(true);
+
+    const failConnection = (error: unknown): SendbirdError => {
+      const sendbirdError = error as SendbirdError;
+      sdkActions.resetSdk();
+      userActions.resetUser();
+      logger.error?.('SendbirdProvider | useSendbird/connect failed', sendbirdError);
+      eventHandlers?.connection?.onFailed?.(sendbirdError);
+      return sendbirdError;
+    };
+
+    const completeConnection = async (sdk: SdkStore['sdk'], user: User, isCurrent: () => boolean) => {
+      userActions.initUser(user);
+
+      if (nickname || profileUrl) {
+        await sdk.updateCurrentUserInfo({
+          nickname: nickname || user.nickname || '',
+          profileUrl: profileUrl || user.profileUrl,
+        });
+      }
+
+      await initializeMessageTemplatesInfo?.(sdk);
+      await initDashboardConfigs?.(sdk);
+
+      if (!isCurrent()) return;
+      sdkActions.initSdk(sdk);
+
+      eventHandlers?.connection?.onConnected?.(user);
+    };
+
+    let session: ConnectionSession | undefined;
 
     // initSDK and setupSDK stay inside the try: SendbirdChat.init() rejects an empty or
     // malformed appId, which apps routinely pass while their config is still loading.
@@ -238,34 +342,37 @@ export const useSendbird = () => {
         sessionHandler: configureSession ? configureSession(sdk) : undefined,
       });
 
-      const user = await sdk.connect(userId, accessToken);
-      userActions.initUser(user);
-
-      if (nickname || profileUrl) {
-        await sdk.updateCurrentUserInfo({
-          nickname: nickname || user.nickname || '',
-          profileUrl: profileUrl || user.profileUrl,
+      if (connectGenerations.get(store) === generation) {
+        session = startConnectionSession(store, sdk, {
+          userId,
+          onDelayChange: onConnectionDelayChange,
+          onRecover: (user) => {
+            const isCurrent = () => connectionSessions.get(store) === session;
+            sdkActions.setSdkLoading(true);
+            completeConnection(sdk, user, isCurrent).catch((error) => {
+              if (isCurrent()) failConnection(error);
+            });
+          },
         });
       }
 
-      await initializeMessageTemplatesInfo?.(sdk);
-      await initDashboardConfigs?.(sdk);
-
-      sdkActions.initSdk(sdk);
-
-      eventHandlers?.connection?.onConnected?.(user);
+      const user = await sdk.connect(userId, accessToken);
+      await completeConnection(sdk, user, () => true);
     } catch (error) {
-      const sendbirdError = error as SendbirdError;
-      sdkActions.resetSdk();
-      userActions.resetUser();
-      logger.error?.('SendbirdProvider | useSendbird/connect failed', sendbirdError);
-      eventHandlers?.connection?.onFailed?.(sendbirdError);
+      const sendbirdError = failConnection(error);
+      if (
+        session
+        && connectionSessions.get(store) === session
+        && sendbirdError?.code === SendbirdErrorCode.DELAYED_CONNECTING
+      ) {
+        session.awaitingRecovery = true;
+      }
     }
   }, [
     store,
     sdkActions,
     userActions,
-    disconnect,
+    teardownConnection,
   ]);
 
   const actions = useMemo(() => ({

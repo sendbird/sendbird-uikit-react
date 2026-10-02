@@ -2157,6 +2157,14 @@ import { SendableMessageType } from '#SendableMessageType';
 export interface RemoveMessageModalViewProps extends RemoveMessageModalProps {
     deleteMessage: (message: SendableMessageType) => Promise<void>;
 }
+// ===== #RenderConnectionDelayedModalProps =====
+export interface RenderConnectionDelayedModalProps {
+    /**
+     * Seconds until the SDK retries the connection, as reported by `ConnectionHandler.onConnectionDelayed`.
+     * It changes when the SDK reports a new delay.
+     */
+    retryAfter: number;
+}
 // ===== #RenderCustomSeparatorProps =====
 import { CoreMessageType } from '#CoreMessageType';
 export interface RenderCustomSeparatorProps {
@@ -2234,6 +2242,11 @@ export interface SBUEventHandlers {
     };
     connection?: {
         onConnected?(user: User): void;
+        /**
+         * Called when connecting fails.
+         * When the server delays the connection (`error.code` is `SendbirdErrorCode.DELAYED_CONNECTING`),
+         * the SDK reconnects on its own once the delay ends, and `onConnected` is called when it does, so there is no need to retry here.
+         */
         onFailed?(error: SendbirdError): void;
     };
     modal?: {
@@ -2421,6 +2434,17 @@ export interface SendbirdProviderProps extends CommonUIKitConfigProps, React.Pro
      * @deprecated Please use `onStartDirectMessage` instead. It's renamed.
      */
     onUserProfileMessage?: (channel: GroupChannel) => void;
+    /**
+     * Renders what is shown while the server delays the connection.
+     * By default, a modal with the estimated waiting time is shown above the other UIKit overlays until the SDK reconnects.
+     * The returned element is rendered inside the provider, before its children, so position it yourself
+     * if it should cover the screen, for example with `Modal` from `@sendbird/uikit-react/ui/Modal`.
+     * A `Modal` rendered here stacks like any other UIKit modal, so an open image viewer or menu can cover it.
+     * Give it a `className` with a higher `z-index` (the default modal uses `100100`) if it must stay on top.
+     * `Modal` shows a close button unless you pass `renderHeader`; handle it with `onClose` if users may dismiss it.
+     * Return `null` to show nothing.
+     */
+    renderConnectionDelayedModal?: (props: RenderConnectionDelayedModalProps) => React.ReactElement | null;
     eventHandlers?: SBUEventHandlers;
 }
 // ===== #SendbirdProviderUtils =====
@@ -3649,6 +3673,8 @@ declare const stringSet: {
         MODAL__LEAVE_CHANNEL__FOOTER: string;
         MODAL__VOICE_MESSAGE_INPUT_DISABLED__TITLE_MUTED: string;
         MODAL__VOICE_MESSAGE_INPUT_DISABLED__TITLE_FROZEN: string;
+        MODAL__CONNECTION_DELAYED__TITLE: string;
+        MODAL__CONNECTION_DELAYED__ESTIMATED_WAITING_TIME: string;
         USER_PROFILE__MESSAGE: string;
         USER_PROFILE__USER_ID: string;
         EDIT_PROFILE__TITLE: string;
@@ -4469,6 +4495,7 @@ export interface AppProps {
     sdkInitParams?: SendbirdProviderProps['sdkInitParams'];
     customExtensionParams?: SendbirdProviderProps['customExtensionParams'];
     eventHandlers?: SendbirdProviderProps['eventHandlers'];
+    renderConnectionDelayedModal?: SendbirdProviderProps['renderConnectionDelayedModal'];
     isMessageGroupingEnabled?: AppLayoutProps['isMessageGroupingEnabled'];
     disableAutoSelect?: AppLayoutProps['disableAutoSelect'];
     onProfileEditSuccess?: AppLayoutProps['onProfileEditSuccess'];
