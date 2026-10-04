@@ -29,6 +29,8 @@ vi.mock('@sendbird/chat', () => {
     updateCurrentUserInfo: mockUpdateCurrentUserInfo,
     addExtension: mockAddExtension,
     addSendbirdExtensions: mockAddSendbirdExtensions,
+    addConnectionHandler: vi.fn(),
+    removeConnectionHandler: vi.fn(),
     GroupChannel: { createMyGroupChannelListQuery: vi.fn() },
     message: {
       getMessageTemplatesByToken: mockGetMessageTemplatesByToken,
@@ -42,6 +44,8 @@ vi.mock('@sendbird/chat', () => {
   return {
     __esModule: true,
     default: mockSdk,
+    ConnectionHandler: class {},
+    SendbirdErrorCode: { DELAYED_CONNECTING: 800221 },
     SendbirdProduct: {
       UIKIT_CHAT: 'UIKIT_CHAT',
     },

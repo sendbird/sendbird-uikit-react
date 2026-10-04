@@ -72,6 +72,26 @@ describe('App — prop passthrough to SendbirdProvider (integration)', () => {
     }));
   });
 
+  it('forwards renderConnectionDelayedModal to SendbirdProvider unchanged', () => {
+    const renderConnectionDelayedModal = vi.fn(() => null);
+
+    render(
+      <App
+        appId="test-app-id"
+        userId="user-42"
+        renderConnectionDelayedModal={renderConnectionDelayedModal}
+      />,
+    );
+
+    expect(lastSendbirdProps().renderConnectionDelayedModal).toBe(renderConnectionDelayedModal);
+  });
+
+  it('leaves renderConnectionDelayedModal unset when omitted, so the provider keeps its default modal', () => {
+    render(<App appId="test-app-id" userId="user-42" />);
+
+    expect(lastSendbirdProps().renderConnectionDelayedModal).toBeUndefined();
+  });
+
   it('applies empty-string defaults for optional connection props when omitted', () => {
     render(<App appId="test-app-id" userId="user-42" />);
 
