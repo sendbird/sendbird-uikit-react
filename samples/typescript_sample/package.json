@@ -20,6 +20,9 @@
     "customer support",
     "API"
   ],
+  "engines": {
+    "node": ">=18.12.0"
+  },
   "dependencies": {
     "@sendbird/uikit-react": "^3.12.0",
     "@testing-library/jest-dom": "^5.16.4",
@@ -37,6 +40,11 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-systemjs": "^7.29.4"
+  },
+  "overrides": {
+    "webpack-dev-server": {
+      "webpack-dev-middleware": "^7.4.6"
+    }
   },
   "scripts": {
     "start": "react-scripts start",

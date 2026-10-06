@@ -4,6 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Note
 
+* Requires Node.js 18.12 or later
 * Please copy this directory outside the main `sendbird-uikit-react` project before you run `npm install`
 * To get type definitions, add this:
 
