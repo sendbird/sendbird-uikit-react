@@ -38,6 +38,11 @@
   "devDependencies": {
     "@babel/plugin-transform-modules-systemjs": "^7.29.4"
   },
+  "overrides": {
+    "webpack-dev-server": {
+      "webpack-dev-middleware": "^7.4.6"
+    }
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
