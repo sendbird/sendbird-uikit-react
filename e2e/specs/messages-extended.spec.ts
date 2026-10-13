@@ -6,30 +6,34 @@ import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 import * as platform from '../utils/platform';
 
 test.describe('group channel — messages extended', () => {
-  // C5
-  test('delivers pending message after network is restored', async ({ page, workerUser, createChannel }) => {
-    await createChannel();
-    await openFirstGroupChannel(page, { userId: workerUser.userId });
-    const msgText = `[c5-offline] ${runTag}`;
+  test.describe(() => {
+    test.use({ allowedPageErrors: [/^uncaught: Connection is required\.$/] });
 
-    // 1. Block new connections first, then disconnect existing WS so SDK cannot reconnect
-    await page.context().setOffline(true);
-    await page.evaluate(() => (window as Record<string, any>).__SendbirdChat?.instance?.disconnectWebSocket());
+    // C5
+    test('delivers pending message after network is restored', async ({ page, workerUser, createChannel }) => {
+      await createChannel();
+      await openFirstGroupChannel(page, { userId: workerUser.userId });
+      const msgText = `[c5-offline] ${runTag}`;
 
-    // 2. Send a message — should land in pending state (message_id=0)
-    const input = page.locator('.sendbird-message-input [role="textbox"]').first();
-    await input.click();
-    await input.pressSequentially(msgText);
-    await input.press('Enter');
+      // 1. Block new connections first, then disconnect existing WS so SDK cannot reconnect
+      await page.context().setOffline(true);
+      await page.evaluate(() => (window as Record<string, any>).__SendbirdChat?.instance?.disconnectWebSocket());
 
-    // Message should land in pending state (message_id=0) while offline
-    await expect(
-      page.locator('[data-sb-message-id="0"]').filter({ hasText: msgText }),
-    ).toBeVisible({ timeout: 8_000 });
+      // 2. Send a message — should land in pending state (message_id=0)
+      const input = page.locator('.sendbird-message-input [role="textbox"]').first();
+      await input.click();
+      await input.pressSequentially(msgText);
+      await input.press('Enter');
 
-    // 3. Restore network — SDK auto-reconnects and delivers the pending message
-    await page.context().setOffline(false);
-    await expect(messageByText(page, msgText)).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+      // Message should land in pending state (message_id=0) while offline
+      await expect(
+        page.locator('[data-sb-message-id="0"]').filter({ hasText: msgText }),
+      ).toBeVisible({ timeout: 8_000 });
+
+      // 3. Restore network — SDK auto-reconnects and delivers the pending message
+      await page.context().setOffline(false);
+      await expect(messageByText(page, msgText)).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    });
   });
 
   // C8

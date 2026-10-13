@@ -1,4 +1,4 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect, type Page } from '@playwright/test';
 import { E2E, hasCreds, runTag } from './utils/env';
 import * as platform from './utils/platform';
 
@@ -30,6 +30,23 @@ export interface E2EFixtures {
    * (e.g. `secondPage.goto(appPath('/group_channel', { userId: secondUser.userId }))`).
    */
   secondPage: import('@playwright/test').Page;
+  /** Page errors this test expects. Any other uncaught error or React hook warning fails the test. */
+  allowedPageErrors: RegExp[];
+}
+
+const HOOK_RULE_WARNING = /change in the order of Hooks|Rendered (more|fewer) hooks|Invalid hook call|Do not call Hooks inside|Context can only be read while React is rendering/;
+
+interface PageErrorLog {
+  entries: string[];
+  open: boolean;
+}
+
+function collectPageErrors(pg: Page, log: PageErrorLog): void {
+  const record = (entry: string) => { if (log.open) log.entries.push(entry); };
+  pg.on('pageerror', (error) => record(`uncaught: ${error.message}`));
+  pg.on('console', (message) => {
+    if (message.type() === 'error' && HOOK_RULE_WARNING.test(message.text())) record(`react: ${message.text()}`);
+  });
 }
 
 let userSeq = 0;
@@ -41,19 +58,25 @@ let userSeq = 0;
  * and member rows render a nickname — falling back to the id only when the nickname is empty — so
  * every later test looking a user up by id stops finding it. Scope the user to the test instead.
  */
-async function useThrowawayUser(suffix: string, workerIndex: number, use: (user: WorkerUser) => Promise<void>): Promise<void> {
+async function useThrowawayUser(
+  suffix: string,
+  workerIndex: number,
+  errorLog: PageErrorLog,
+  use: (user: WorkerUser) => Promise<void>,
+): Promise<void> {
   userSeq += 1;
   const userId = `${E2E.userPrefix}-${runTag}-w${workerIndex}${suffix}-${userSeq}`;
   const user: WorkerUser = { userId, nickname: userId };
   await platform.ensureUser(userId, userId);
   await use(user);
+  errorLog.open = false;
   // Delete the user's channels first — including any made through the app UI, which carry no
   // runTag and so are missed by the global sweep — then the user itself.
   await platform.deleteUserChannels(userId).catch(() => {});
   await platform.deleteUser(userId).catch(() => {});
 }
 
-export const test = base.extend<E2EFixtures & { requireCreds: void }>({
+export const test = base.extend<E2EFixtures & { requireCreds: void; pageErrorLog: PageErrorLog }>({
   requireCreds: [
     // eslint-disable-next-line no-empty-pattern
     async ({}, use, testInfo) => {
@@ -63,13 +86,26 @@ export const test = base.extend<E2EFixtures & { requireCreds: void }>({
     { auto: true },
   ],
 
-  // eslint-disable-next-line no-empty-pattern
-  workerUser: async ({}, use, testInfo) => { await useThrowawayUser('', testInfo.workerIndex, use); },
+  allowedPageErrors: [[], { option: true }],
 
-  // eslint-disable-next-line no-empty-pattern
-  secondUser: async ({}, use, testInfo) => { await useThrowawayUser('-b', testInfo.workerIndex, use); },
+  pageErrorLog: async ({ allowedPageErrors }, use) => {
+    const log: PageErrorLog = { entries: [], open: true };
+    await use(log);
+    const unexpected = log.entries.filter((entry) => !allowedPageErrors.some((pattern) => pattern.test(entry)));
+    expect(unexpected, 'uncaught page errors and React hook warnings').toEqual([]);
+  },
 
-  createChannel: async ({ workerUser }, use) => {
+  page: async ({ page, pageErrorLog }, use) => {
+    collectPageErrors(page, pageErrorLog);
+    await use(page);
+    pageErrorLog.open = false;
+  },
+
+  workerUser: async ({ pageErrorLog }, use, testInfo) => { await useThrowawayUser('', testInfo.workerIndex, pageErrorLog, use); },
+
+  secondUser: async ({ pageErrorLog }, use, testInfo) => { await useThrowawayUser('-b', testInfo.workerIndex, pageErrorLog, use); },
+
+  createChannel: async ({ workerUser, pageErrorLog }, use) => {
     const created: string[] = [];
     const factory = async (options: CreateChannelOptions = {}) => {
       const allMembers = [workerUser.userId, ...(options.memberIds ?? [])];
@@ -87,22 +123,25 @@ export const test = base.extend<E2EFixtures & { requireCreds: void }>({
       return channel;
     };
     await use(factory);
+    pageErrorLog.open = false;
     for (const url of created) {
       await platform.deleteGroupChannel(url).catch(() => {});
     }
   },
 
-  secondPage: async ({ browser, secondUser }, use) => {
+  secondPage: async ({ browser, secondUser, pageErrorLog }, use) => {
     const ctx = await browser.newContext();
     const pg = await ctx.newPage();
+    collectPageErrors(pg, pageErrorLog);
     await use(pg);
+    pageErrorLog.open = false;
     // Give the secondUser page a chance to navigate before closing
     await ctx.close().catch(() => {});
     // eslint-disable-next-line no-void -- declares the secondUser dependency; the page is caller-navigated
     void secondUser;
   },
 
-  createOpenChannel: async ({ workerUser }, use) => {
+  createOpenChannel: async ({ workerUser, pageErrorLog }, use) => {
     const created: string[] = [];
     const factory = async (options: { name?: string } = {}) => {
       const channel = await platform.createOpenChannel({
@@ -113,6 +152,7 @@ export const test = base.extend<E2EFixtures & { requireCreds: void }>({
       return channel;
     };
     await use(factory);
+    pageErrorLog.open = false;
     for (const url of created) {
       await platform.deleteOpenChannel(url).catch(() => {});
     }
