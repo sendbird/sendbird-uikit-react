@@ -226,13 +226,24 @@ export async function createGroupChannel(opts: {
   return { url: data.channel_url };
 }
 
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
 /** The text of the newest message in a group channel, exactly as the server stored it. */
 export async function getLatestMessageText(channelUrl: string): Promise<string | undefined> {
   const data = await call(
     'GET',
-    `/group_channels/${encodeURIComponent(channelUrl)}/messages?message_ts=${Date.now()}&prev_limit=1&next_limit=0`,
+    `/group_channels/${encodeURIComponent(channelUrl)}/messages?message_ts=${Date.now() + ONE_DAY_MS}&prev_limit=1&next_limit=0`,
   );
   return data?.messages?.[0]?.message;
+}
+
+/** Server timestamp (ms) of the newest message in an open channel. */
+export async function getLatestOpenChannelMessageCreatedAt(channelUrl: string): Promise<number> {
+  const data = await call(
+    'GET',
+    `/open_channels/${encodeURIComponent(channelUrl)}/messages?message_ts=${Date.now() + ONE_DAY_MS}&prev_limit=1&next_limit=0`,
+  );
+  return data?.messages?.[0]?.created_at ?? 0;
 }
 
 export async function sendMessage(channelUrl: string, userId: string, message: string): Promise<number> {

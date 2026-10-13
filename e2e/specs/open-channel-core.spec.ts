@@ -17,6 +17,8 @@ test.describe('open channel — core scenarios', () => {
   test('opens at the newest message when the history overflows', async ({ page, workerUser, createOpenChannel }) => {
     const channel = await createOpenChannel({ name: `[e2e] g3-overflow-${runTag}` });
     await platform.seedOpenChannelMessages(channel.url, workerUser.userId, 30, '[G3o]');
+    const newestAt = await platform.getLatestOpenChannelMessageCreatedAt(channel.url);
+    await expect.poll(() => Date.now(), { timeout: 30_000 }).toBeGreaterThan(newestAt);
     await openNamedOpenChannel(page, `[e2e] g3-overflow-${runTag}`, { userId: workerUser.userId });
     await expect(page.getByText('[G3o] 30', { exact: true })).toBeInViewport({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
