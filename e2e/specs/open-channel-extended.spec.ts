@@ -46,16 +46,17 @@ test.describe('open channel — extended', () => {
 
   // G13
   test('registers and cancels operator in open channel participant list', async ({
-    page, workerUser, secondUser, secondPage, createOpenChannel,
+    page, workerUser, secondUser, secondPage, createOpenChannel, trackOpenChannel,
   }) => {
     await createOpenChannel({ name: `[e2e] g13-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g13-seed-${runTag}`, { userId: workerUser.userId });
-    await createOpenChannelViaUI(page, `[e2e] g13-${runTag}`);
-    const channel = { url: await platform.findOpenChannelUrl(`[e2e] g13-${runTag}`) };
+    const name = `[e2e] g13-${runTag}-${Date.now()}`;
+    await createOpenChannelViaUI(page, name);
+    const channel = { url: await trackOpenChannel(name) };
 
     // The second user joins so there is somebody to act on.
     await secondPage.goto(appPath('/open_channel', { userId: secondUser.userId }));
-    await secondPage.getByText(`[e2e] g13-${runTag}`).first().click({ timeout: 30_000 });
+    await secondPage.getByText(name).first().click({ timeout: 30_000 });
     await platform.waitForOpenChannelParticipant(channel.url, secondUser.userId);
     // The participant list's own query can still land ahead of the join the Platform API already
     // confirmed, so this goes through the retry-aware row finder rather than a single fresh read.
@@ -86,16 +87,17 @@ test.describe('open channel — extended', () => {
 
   // G14
   test('mutes and unmutes a participant in open channel', async ({
-    page, workerUser, secondUser, secondPage, createOpenChannel,
+    page, workerUser, secondUser, secondPage, createOpenChannel, trackOpenChannel,
   }) => {
     await createOpenChannel({ name: `[e2e] g14-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g14-seed-${runTag}`, { userId: workerUser.userId });
-    await createOpenChannelViaUI(page, `[e2e] g14-${runTag}`);
-    const channel = { url: await platform.findOpenChannelUrl(`[e2e] g14-${runTag}`) };
+    const name = `[e2e] g14-${runTag}-${Date.now()}`;
+    await createOpenChannelViaUI(page, name);
+    const channel = { url: await trackOpenChannel(name) };
 
     // The second user joins so there is somebody to act on.
     await secondPage.goto(appPath('/open_channel', { userId: secondUser.userId }));
-    await secondPage.getByText(`[e2e] g14-${runTag}`).first().click({ timeout: 30_000 });
+    await secondPage.getByText(name).first().click({ timeout: 30_000 });
     await platform.waitForOpenChannelParticipant(channel.url, secondUser.userId);
     const row = await openParticipantRow(page, secondUser.userId);
     await row.hover();
@@ -129,16 +131,17 @@ test.describe('open channel — extended', () => {
 
   // G15
   test('bans and unbans a participant in open channel', async ({
-    page, workerUser, secondUser, secondPage, createOpenChannel,
+    page, workerUser, secondUser, secondPage, createOpenChannel, trackOpenChannel,
   }) => {
     await createOpenChannel({ name: `[e2e] g15-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g15-seed-${runTag}`, { userId: workerUser.userId });
-    await createOpenChannelViaUI(page, `[e2e] g15-${runTag}`);
-    const channel = { url: await platform.findOpenChannelUrl(`[e2e] g15-${runTag}`) };
+    const name = `[e2e] g15-${runTag}-${Date.now()}`;
+    await createOpenChannelViaUI(page, name);
+    const channel = { url: await trackOpenChannel(name) };
 
     // The second user joins so there is somebody to act on.
     await secondPage.goto(appPath('/open_channel', { userId: secondUser.userId }));
-    await secondPage.getByText(`[e2e] g15-${runTag}`).first().click({ timeout: 30_000 });
+    await secondPage.getByText(name).first().click({ timeout: 30_000 });
     await platform.waitForOpenChannelParticipant(channel.url, secondUser.userId);
     const row = await openParticipantRow(page, secondUser.userId);
     await row.hover();

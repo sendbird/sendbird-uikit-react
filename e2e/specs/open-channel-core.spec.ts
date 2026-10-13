@@ -52,8 +52,8 @@ test.describe('open channel — core scenarios', () => {
   });
 
   // G8
-  test('auto-enters the newly created open channel after creation', async ({ page, workerUser, createOpenChannel }) => {
-    const newName = `[e2e] g8-${runTag}`;
+  test('auto-enters the newly created open channel after creation', async ({ page, workerUser, createOpenChannel, trackOpenChannel }) => {
+    const newName = `[e2e] g8-${runTag}-${Date.now()}`;
     // Enter an existing channel first: creating one while the SDK is still connecting is dropped
     // without a word, so the case has to know the app is up before it clicks Create.
     await createOpenChannel({ name: `[e2e] g8-seed-${runTag}` });
@@ -64,6 +64,7 @@ test.describe('open channel — core scenarios', () => {
     await expect(nameInput).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await nameInput.fill(newName);
     await page.getByRole('button', { name: /^create$/i }).last().click();
+    await trackOpenChannel(newName);
     await expect(page.locator('.sendbird-openchannel-conversation-header')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     await expect(page.locator('.sendbird-openchannel-conversation-header').getByText(newName)).toBeVisible();
   });
@@ -84,10 +85,12 @@ test.describe('open channel — core scenarios', () => {
   });
 
   // G10
-  test('updates the header name after editing channel name (operator)', async ({ page, workerUser, createOpenChannel }) => {
+  test('updates the header name after editing channel name (operator)', async ({ page, workerUser, createOpenChannel, trackOpenChannel }) => {
     await createOpenChannel({ name: `[e2e] g10-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g10-seed-${runTag}`, { userId: workerUser.userId });
-    await createOpenChannelViaUI(page, `[e2e] g10-${runTag}`);
+    const name = `[e2e] g10-${runTag}-${Date.now()}`;
+    await createOpenChannelViaUI(page, name);
+    await trackOpenChannel(name);
     // Open settings — trigger shows INFO (operator) or MEMBERS (non-operator)
     await page.locator('.sendbird-openchannel-conversation-header__right__trigger').click();
     await expect(page.locator('.sendbird-openchannel-settings')).toBeVisible({ timeout: 10_000 });
