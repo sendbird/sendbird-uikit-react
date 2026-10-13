@@ -13908,10 +13908,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tinypool@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "tinypool@npm:1.1.1"
-  checksum: 0258abe108df8be395a2cbdc8b4390c94908850250530f7bea83a129fa33d49a8c93246f76bf81cd458534abd81322f4d4cb3a40690254f8d9044ff449f328a8
+"tinypool@npm:^2.1.2":
+  version: 2.2.0
+  resolution: "tinypool@npm:2.2.0"
+  checksum: df0adec480c5d7600a71ffe3ee14af2eb2c9455ced5f7744e4662512e8b678810cf17db49094ac8baa950f6f55b089f9c9f37f9776881b4d39fb8661f7779b26
   languageName: node
   linkType: hard
 
