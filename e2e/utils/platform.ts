@@ -226,6 +226,15 @@ export async function createGroupChannel(opts: {
   return { url: data.channel_url };
 }
 
+/** The text of the newest message in a group channel, exactly as the server stored it. */
+export async function getLatestMessageText(channelUrl: string): Promise<string | undefined> {
+  const data = await call(
+    'GET',
+    `/group_channels/${encodeURIComponent(channelUrl)}/messages?message_ts=${Date.now()}&prev_limit=1&next_limit=0`,
+  );
+  return data?.messages?.[0]?.message;
+}
+
 export async function sendMessage(channelUrl: string, userId: string, message: string): Promise<number> {
   const data = await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/messages`, {
     message_type: 'MESG',
