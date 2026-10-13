@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
 import { messageByText, openFirstGroupChannel } from '../utils/actions';
-import { runTag } from '../utils/env';
+import { appPath, runTag } from '../utils/env';
 import * as platform from '../utils/platform';
 import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
@@ -10,8 +10,10 @@ test.describe('group channel — realtime (2nd-user)', () => {
   test('displays incoming message and auto-scrolls when user is at bottom', async ({
     page, workerUser, secondUser, createChannel,
   }) => {
-    const channel = await createChannel({ memberIds: [secondUser.userId] });
+    const channel = await createChannel({ seedMessage: null, memberIds: [secondUser.userId] });
+    await platform.seedMessages(channel.url, workerUser.userId, 20, '[d1]');
     await openFirstGroupChannel(page, { userId: workerUser.userId });
+    await expect(messageByText(page, '[d1] 20')).toBeInViewport({ timeout: SERVER_RESPONSE_TIMEOUT });
 
     // secondUser sends a message via Platform API
     const incomingText = `[d1] incoming ${runTag}`;
@@ -19,7 +21,25 @@ test.describe('group channel — realtime (2nd-user)', () => {
 
     // Message should appear in the conversation (messageByText uses the specific message-view locator
     // to avoid strict-mode violation from the channel list also showing the text as last message preview)
-    await expect(messageByText(page, incomingText)).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await expect(messageByText(page, incomingText)).toBeInViewport({ timeout: SERVER_RESPONSE_TIMEOUT });
+  });
+
+  test('shows the typing bubble in view at the bottom and removes it when typing stops', async ({
+    page, workerUser, secondUser, secondPage, createChannel,
+  }) => {
+    const channel = await createChannel({ seedMessage: null, memberIds: [secondUser.userId] });
+    await platform.seedMessages(channel.url, workerUser.userId, 20, '[bubble]');
+    await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_typingIndicatorTypes: 'bubble' });
+    await expect(messageByText(page, '[bubble] 20')).toBeInViewport({ timeout: SERVER_RESPONSE_TIMEOUT });
+
+    await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId }));
+    await secondPage.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
+    const input = secondPage.locator('.sendbird-message-input [role="textbox"]').first();
+    await input.click();
+    const typing = input.pressSequentially('typing in a bubble', { delay: 100 });
+    await expect(page.locator('.typing-dots-container')).toBeInViewport({ timeout: 15_000 });
+    await typing;
+    await expect(page.locator('.typing-dots-container')).toHaveCount(0, { timeout: 20_000 });
   });
 
   // D2
