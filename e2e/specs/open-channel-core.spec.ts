@@ -10,6 +10,8 @@ test.describe('open channel — core scenarios', () => {
   test('loads message history when entering an open channel', async ({ page, workerUser, createOpenChannel }) => {
     const channel = await createOpenChannel({ name: `[e2e] g3-${runTag}` });
     await platform.seedOpenChannelMessages(channel.url, workerUser.userId, 3, '[G3]');
+    const newestAt = await platform.getLatestOpenChannelMessageCreatedAt(channel.url);
+    await expect.poll(() => Date.now(), { timeout: 30_000 }).toBeGreaterThan(newestAt);
     await openNamedOpenChannel(page, `[e2e] g3-${runTag}`, { userId: workerUser.userId });
     await expect(page.getByText('[G3] 1')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
