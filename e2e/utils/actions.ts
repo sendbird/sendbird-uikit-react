@@ -9,6 +9,14 @@ export async function openFirstGroupChannel(page: Page, params: Record<string, s
   await expect(page.locator('.sendbird-conversation')).toBeVisible({ timeout: 15_000 });
 }
 
+/** Open /group_channel and start creating a group channel. The user needs a channel already, so the list has a preview to wait for. */
+export async function startGroupChannelCreation(page: Page, userId: string) {
+  await page.goto(appPath('/group_channel', { userId }));
+  await expect(page.locator('.sendbird-channel-preview').first()).toBeVisible({ timeout: 30_000 });
+  await page.locator('.sendbird-channel-list__header button:has(.sendbird-icon-create)').click();
+  await page.locator('.sendbird-add-channel__rectangle').first().click();
+}
+
 /**
  * Locate a *confirmed* message bubble by its (unique) text. Pending copies carry
  * data-sb-message-id="0" and have no edit/delete menu, so they are excluded.

@@ -162,6 +162,16 @@ export async function findOpenChannelUrl(name: string): Promise<string> {
   return data.channels[0].channel_url;
 }
 
+/** Find a group channel of the user that the given member also belongs to, empty channels included. */
+export async function findGroupChannelUrlWithMember(userId: string, memberId: string): Promise<string> {
+  const data = await waitUntil(
+    () => call('GET', `/users/${encodeURIComponent(userId)}/my_group_channels?show_empty=true&members_include_in=${encodeURIComponent(memberId)}&limit=10`),
+    (d) => (d?.channels ?? []).length > 0,
+    { what: `a group channel of ${userId} with ${memberId}` },
+  );
+  return data.channels[0].channel_url;
+}
+
 /** Resolve once the user shows up as a participant of the open channel. */
 export async function waitForOpenChannelParticipant(channelUrl: string, userId: string): Promise<void> {
   await waitUntil(

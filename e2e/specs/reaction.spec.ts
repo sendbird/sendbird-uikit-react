@@ -43,4 +43,24 @@ test.describe('group channel — reactions', () => {
     await page.locator('[data-testid^="ui_emoji_reactions_menu_"]').first().click();
     await expect(badge).toBeHidden({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
+
+  test('shows no stray text among the actions of the mobile message sheet (CLNP-7430)', async ({ page, workerUser, createChannel }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId, breakpoint: 'true', groupChannel_enableReactions: 'true' });
+    const bubble = messageByText(page, '[e2e] channel ready').locator('.sendbird-message-content__middle__body-container');
+    await expect(bubble).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+
+    await bubble.hover();
+    await page.mouse.down();
+    await page.waitForTimeout(1_000);
+    await page.mouse.up();
+    const actions = page.locator('.sendbird-message__bottomsheet--actions');
+    await expect(actions).toBeVisible();
+    const strayText = await actions.evaluate((el) => Array.from(el.childNodes)
+      .filter((node) => node.nodeType === Node.TEXT_NODE)
+      .map((node) => node.textContent?.trim())
+      .filter(Boolean));
+    expect(strayText).toEqual([]);
+  });
 });
