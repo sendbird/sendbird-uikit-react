@@ -328,7 +328,7 @@ export async function replyToMessage(
     user_id: userId,
     message,
     parent_message_id: parentMessageId,
-    is_reply_to_channel: isReplyToChannel,
+    reply_to_channel: isReplyToChannel,
   });
   if (!data?.message_id) throw new Error(`Platform API replyToMessage returned no message_id: ${JSON.stringify(data)}`);
   return data.message_id;
