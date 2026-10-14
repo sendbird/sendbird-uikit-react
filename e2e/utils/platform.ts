@@ -224,6 +224,7 @@ export async function createGroupChannel(opts: {
   operatorIds?: string[];
   name?: string;
   customType?: string;
+  isPublic?: boolean;
 }): Promise<CreatedChannel> {
   const data = await call('POST', '/group_channels', {
     user_ids: opts.userIds,
@@ -231,6 +232,7 @@ export async function createGroupChannel(opts: {
     name: opts.name ?? `[e2e] ${runTag}`,
     custom_type: opts.customType ?? runTag,
     is_distinct: false,
+    is_public: opts.isPublic ?? false,
   });
   if (!data?.channel_url) throw new Error(`Platform API group_channels returned no channel_url: ${JSON.stringify(data)}`);
   return { url: data.channel_url };

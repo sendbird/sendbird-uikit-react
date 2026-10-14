@@ -107,6 +107,19 @@ test.describe('group channel list — realtime (2nd-user)', () => {
     ).not.toBeVisible({ timeout: 15_000 });
   });
 
+  test('drops the open channel when it and its other member are deleted remotely (CLNP-7306)', async ({
+    page, workerUser, secondUser, createChannel,
+  }) => {
+    const name = `[e2e] open-del-${runTag}`;
+    const channel = await createChannel({ name, memberIds: [secondUser.userId] });
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    await expect(page.locator('.sendbird-chat-header')).toContainText(name, { timeout: 15_000 });
+
+    await platform.deleteGroupChannel(channel.url);
+    await platform.deleteUser(secondUser.userId);
+    await expect(page.locator('.sendbird-channel-preview').filter({ hasText: name })).toHaveCount(0, { timeout: 15_000 });
+  });
+
   // B11
   test('loads more channels when list is scrolled to the bottom', async ({
     page, workerUser,

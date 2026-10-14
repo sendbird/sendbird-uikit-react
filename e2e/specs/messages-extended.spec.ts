@@ -168,4 +168,34 @@ test.describe('group channel — messages extended', () => {
       page.locator('.sendbird-og-message-item-body').last(),
     ).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
+
+  test('offers .log files in the file picker of the composer (CLNP-5476)', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const accept = await page.locator('.sendbird-message-input--attach-input').first().getAttribute('accept');
+    expect(accept?.split(',')).toContain('.log');
+  });
+
+  test('renders markdown phone and email links with their tel: and mailto: targets (CLNP-6478)', async ({
+    page, workerUser, createChannel,
+  }) => {
+    const channel = await createChannel({ seedMessage: null });
+    await platform.sendMessage(channel.url, workerUser.userId, 'e2e-md Call [(555) 123-4567](tel:+15551234567) or [email us](mailto:help@example.com)');
+    await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_enableMarkdownForUserMessage: 'true' });
+
+    const message = messageByText(page, 'e2e-md Call');
+    await expect(message.locator('a[href="tel:+15551234567"]')).toHaveText('(555) 123-4567', { timeout: SERVER_RESPONSE_TIMEOUT });
+    await expect(message.locator('a[href="mailto:help@example.com"]')).toHaveText('email us');
+  });
+
+  test('shows the status icon of an own message in a public channel (CLNP-7450)', async ({
+    page, workerUser, secondUser, createChannel,
+  }) => {
+    await createChannel({ memberIds: [secondUser.userId], isPublic: true });
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const text = `[e2e-public] ${Date.now()}`;
+    await sendText(page, text);
+
+    await expect(messageByText(page, text).locator('[data-testid="sendbird-message-status-icon"]')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+  });
 });

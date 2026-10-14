@@ -15,6 +15,8 @@ export interface CreateChannelOptions {
   freeze?: boolean;
   /** Additional member user IDs to invite (beyond workerUser). */
   memberIds?: string[];
+  /** Create a public group channel, which users can join on their own. */
+  isPublic?: boolean;
 }
 
 export interface E2EFixtures {
@@ -114,6 +116,7 @@ export const test = base.extend<E2EFixtures & { requireCreds: void; pageErrorLog
       const channel = await platform.createGroupChannel({
         userIds: allMembers,
         name: options.name,
+        isPublic: options.isPublic,
       });
       created.push(channel.url);
       // Specs open the channel and assert on its members straight away; wait for the write to be

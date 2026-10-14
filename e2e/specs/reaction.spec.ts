@@ -44,6 +44,18 @@ test.describe('group channel — reactions', () => {
     await expect(badge).toBeHidden({ timeout: SERVER_RESPONSE_TIMEOUT });
   });
 
+  test('shows a notice instead of crashing when the emojis fail to load (CLNP-6577)', async ({ page, workerUser, createChannel }) => {
+    await page.route('**/v3/emoji_categories**', (route) => route.abort());
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_enableReactions: 'true' });
+    const message = messageByText(page, '[e2e] channel ready');
+    await expect(message).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+
+    await message.hover();
+    await message.locator('.sendbird-message-item-reaction-menu__trigger').click();
+    await expect(page.getByText('Emojis is not loaded yet.')).toBeVisible();
+  });
+
   test('shows no stray text among the actions of the mobile message sheet (CLNP-7430)', async ({ page, workerUser, createChannel }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await createChannel();
