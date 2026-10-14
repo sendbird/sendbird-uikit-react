@@ -60,7 +60,7 @@ test.describe('group channel — thread', () => {
   });
 
   // F4
-  test('navigates to parent message when thread header link is clicked', async ({ page, workerUser, createChannel }) => {
+  test('closes the thread panel with the header close button', async ({ page, workerUser, createChannel }) => {
     const channel = await createChannel({ seedMessage: null });
     const parentId = await platform.sendMessage(channel.url, workerUser.userId, '[F4] parent');
     await platform.replyToMessage(channel.url, parentId, workerUser.userId, '[F4] reply');
