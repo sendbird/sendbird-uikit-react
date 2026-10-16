@@ -47,7 +47,7 @@ test.describe('group channel — realtime (2nd-user)', () => {
     page, workerUser, secondUser, createChannel,
   }) => {
     const channel = await createChannel({ seedMessage: null, memberIds: [secondUser.userId] });
-    // Seed 20 messages so the conversation is scrollable (25 risks hitting the 5/s rate limit)
+    // Seed 20 messages so the conversation is scrollable
     await platform.seedMessages(channel.url, workerUser.userId, 20, '[d2]');
 
     await openFirstGroupChannel(page, { userId: workerUser.userId });
@@ -95,7 +95,7 @@ test.describe('group channel — realtime (2nd-user)', () => {
     page, workerUser, secondUser, createChannel,
   }) => {
     const channel = await createChannel({ seedMessage: null, memberIds: [secondUser.userId] });
-    // Seed background messages from secondUser (workerUser's rate limit used by D2 earlier)
+    // Seed background messages from secondUser
     await platform.seedMessages(channel.url, secondUser.userId, 15, '[d6-bg]');
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     // Scroll to the top so we're NOT at the bottom
@@ -171,7 +171,7 @@ test.describe('group channel — realtime (2nd-user)', () => {
     page, workerUser, createChannel,
   }) => {
     const channel = await createChannel({ seedMessage: null });
-    // 15 messages: enough to make the list scrollable without hitting the per-user rate limit (5/s)
+    // 15 messages: enough to make the list scrollable
     await platform.seedMessages(channel.url, workerUser.userId, 15, '[d9]');
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     // Scroll up

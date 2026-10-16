@@ -1,7 +1,7 @@
 /// <reference types="node" />
 /**
  * Backstop teardown: after the run, delete any group and open channels still tagged with this run's
- * custom_type, and open channels named with it (orphans left by crashed tests). The per-test and per-worker fixtures already clean
+ * custom_type, and open channels named with it (orphans left by crashed tests). The per-test fixtures already clean
  * their own channels/users; this only catches leftovers. No-op without a Platform API token.
  */
 import { hasPlatformToken, sweepRunChannels, sweepRunOpenChannels } from './utils/platform';

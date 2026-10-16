@@ -4,7 +4,7 @@ import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
 
 /**
  * Smoke — the essential chat journey: create an isolated channel, open it, send a text, and see it
- * appear. Uses a per-worker user + a channel created via the Platform API, so it is safe to run in
+ * appear. Uses a per-test user + a channel created via the Platform API, so it is safe to run in
  * parallel and concurrently with other developers. Skips without credentials.
  */
 test.describe('smoke: send a message', () => {

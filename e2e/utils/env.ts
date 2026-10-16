@@ -11,7 +11,7 @@ export const E2E = {
   appId: process.env.E2E_APP_ID ?? '',
   /** App-level Platform API token. Creates/deletes the per-test users + channels. */
   platformApiToken: process.env.E2E_PLATFORM_API_TOKEN ?? '',
-  /** Prefix for per-worker throwaway users (user_id max 80 chars, so keep it short). */
+  /** Prefix for per-test throwaway users (user_id max 80 chars, so keep it short). */
   userPrefix: process.env.E2E_USER_PREFIX || 'e2e',
 };
 
