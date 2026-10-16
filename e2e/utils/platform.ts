@@ -162,6 +162,13 @@ export async function findOpenChannelUrl(name: string): Promise<string> {
   return data.channels[0].channel_url;
 }
 
+export async function listOpenChannelUrls(name: string): Promise<string[]> {
+  const data = await call('GET', `/open_channels?name_contains=${encodeURIComponent(name)}&limit=100`);
+  return (data?.channels ?? [])
+    .filter((c: { name?: string }) => c.name === name)
+    .map((c: { channel_url: string }) => c.channel_url);
+}
+
 /** Find a group channel of the user that the given member also belongs to, empty channels included. */
 export async function findGroupChannelUrlWithMember(userId: string, memberId: string): Promise<string> {
   const data = await waitUntil(
@@ -443,17 +450,15 @@ export async function deleteOpenChannel(url: string): Promise<void> {
   await call('DELETE', `/open_channels/${encodeURIComponent(url)}`);
 }
 
-/** Delete every open channel tagged with this run's custom_type. */
-export async function sweepRunOpenChannels(): Promise<number> {
+async function sweepOpenChannels(
+  query: string,
+  keep: (channel: { custom_type?: string; name?: string }) => boolean,
+): Promise<number> {
   let deleted = 0;
   let token = '';
   do {
-    // Send both singular and plural forms: open-channel API may use either depending on version.
-    const query = `custom_type=${encodeURIComponent(runTag)}&custom_types=${encodeURIComponent(runTag)}&limit=100${token ? `&token=${token}` : ''}`;
-    const data = await call('GET', `/open_channels?${query}`);
-    // Client-side filter as safety net in case the server ignores the custom_type param.
-    const channels: Array<{ channel_url: string; custom_type?: string }> = (data?.channels ?? [])
-      .filter((c: { custom_type?: string }) => c.custom_type === runTag);
+    const data = await call('GET', `/open_channels?${query}&limit=100${token ? `&token=${token}` : ''}`);
+    const channels: Array<{ channel_url: string; custom_type?: string; name?: string }> = (data?.channels ?? []).filter(keep);
     for (const channel of channels) {
       await deleteOpenChannel(channel.channel_url).catch(() => {});
       deleted += 1;
@@ -461,4 +466,19 @@ export async function sweepRunOpenChannels(): Promise<number> {
     token = data?.next ?? '';
   } while (token);
   return deleted;
+}
+
+/** Delete every open channel tagged with this run's custom_type or named with this run's tag. */
+export async function sweepRunOpenChannels(): Promise<number> {
+  // Send both singular and plural forms: open-channel API may use either depending on version.
+  // Client-side filter as safety net in case the server ignores the custom_type param.
+  const tagged = await sweepOpenChannels(
+    `custom_type=${encodeURIComponent(runTag)}&custom_types=${encodeURIComponent(runTag)}`,
+    (c) => c.custom_type === runTag,
+  );
+  const named = await sweepOpenChannels(
+    `name_contains=${encodeURIComponent(runTag)}`,
+    (c) => !!c.name?.includes(runTag),
+  );
+  return tagged + named;
 }

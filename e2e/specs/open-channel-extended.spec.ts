@@ -51,8 +51,9 @@ test.describe('open channel — extended', () => {
     await createOpenChannel({ name: `[e2e] g13-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g13-seed-${runTag}`, { userId: workerUser.userId });
     const name = `[e2e] g13-${runTag}-${Date.now()}`;
+    trackOpenChannel(name);
     await createOpenChannelViaUI(page, name);
-    const channel = { url: await trackOpenChannel(name) };
+    const channel = { url: await platform.findOpenChannelUrl(name) };
 
     // The second user joins so there is somebody to act on.
     await secondPage.goto(appPath('/open_channel', { userId: secondUser.userId }));
@@ -92,8 +93,9 @@ test.describe('open channel — extended', () => {
     await createOpenChannel({ name: `[e2e] g14-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g14-seed-${runTag}`, { userId: workerUser.userId });
     const name = `[e2e] g14-${runTag}-${Date.now()}`;
+    trackOpenChannel(name);
     await createOpenChannelViaUI(page, name);
-    const channel = { url: await trackOpenChannel(name) };
+    const channel = { url: await platform.findOpenChannelUrl(name) };
 
     // The second user joins so there is somebody to act on.
     await secondPage.goto(appPath('/open_channel', { userId: secondUser.userId }));
@@ -136,8 +138,9 @@ test.describe('open channel — extended', () => {
     await createOpenChannel({ name: `[e2e] g15-seed-${runTag}` });
     await openNamedOpenChannel(page, `[e2e] g15-seed-${runTag}`, { userId: workerUser.userId });
     const name = `[e2e] g15-${runTag}-${Date.now()}`;
+    trackOpenChannel(name);
     await createOpenChannelViaUI(page, name);
-    const channel = { url: await trackOpenChannel(name) };
+    const channel = { url: await platform.findOpenChannelUrl(name) };
 
     // The second user joins so there is somebody to act on.
     await secondPage.goto(appPath('/open_channel', { userId: secondUser.userId }));

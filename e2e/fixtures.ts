@@ -26,8 +26,8 @@ export interface E2EFixtures {
   secondUser: WorkerUser;
   createChannel: (options?: CreateChannelOptions) => Promise<{ url: string }>;
   createOpenChannel: (options?: { name?: string }) => Promise<{ url: string }>;
-  /** Registers an open channel the test created through the UI, so it is deleted like those from `createOpenChannel`. Returns its URL. */
-  trackOpenChannel: (name: string) => Promise<string>;
+  /** Registers the name of an open channel the test is about to create through the UI; every channel with that name is deleted after the test. */
+  trackOpenChannel: (name: string) => void;
   /**
    * A second Playwright Page for Tier-2 realtime/2-user scenarios.
    * The context is blank — callers MUST navigate it with `userId: secondUser.userId`
@@ -164,15 +164,16 @@ export const test = base.extend<E2EFixtures & { requireCreds: void; pageErrorLog
   },
 
   trackOpenChannel: async ({ pageErrorLog }, use) => {
-    const tracked: string[] = [];
-    await use(async (name: string) => {
-      const url = await platform.findOpenChannelUrl(name);
-      tracked.push(url);
-      return url;
+    const names: string[] = [];
+    await use((name: string) => {
+      names.push(name);
     });
     pageErrorLog.open = false;
-    for (const url of tracked) {
-      await platform.deleteOpenChannel(url).catch(() => {});
+    for (const name of names) {
+      const urls = await platform.listOpenChannelUrls(name).catch(() => []);
+      for (const url of urls) {
+        await platform.deleteOpenChannel(url).catch(() => {});
+      }
     }
   },
 });
