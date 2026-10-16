@@ -143,8 +143,10 @@ test.describe('group channel — messages extended', () => {
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     const msgText = `[c15-read] ${runTag}`;
     await sendText(page, msgText);
+    const statusIcon = messageByText(page, msgText).locator('[data-testid="sendbird-message-status-icon"]');
     // Verify SENT state (not read yet)
-    await expect(messageByText(page, msgText)).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await expect(statusIcon).toHaveClass(/sendbird-icon-color--sent/, { timeout: SERVER_RESPONSE_TIMEOUT });
+    await expect(statusIcon).not.toHaveClass(/sendbird-icon-color--read/);
 
     // secondUser opens the channel to trigger a read receipt.
     // Filter to a preview with actual text content to avoid clicking a loading skeleton.
@@ -152,11 +154,7 @@ test.describe('group channel — messages extended', () => {
     await secondPage.locator('.sendbird-channel-preview').filter({ hasText: /\S/ }).first().click({ timeout: 30_000 });
     await expect(secondPage.locator('.sendbird-conversation')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
 
-    // Status should flip to READ — sendbird-message-status--sent shows when not failed;
-    // the icon uses IconColors.READ (purple) when READ state is reached
-    await expect(
-      messageByText(page, msgText).locator('[class*="message-status--sent"], [data-testid="sendbird-message-status-icon"]'),
-    ).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await expect(statusIcon).toHaveClass(/sendbird-icon-color--read/, { timeout: SERVER_RESPONSE_TIMEOUT });
   });
 
   // C16
