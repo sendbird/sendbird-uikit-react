@@ -15,5 +15,6 @@ export function GroupChannelPage() {
   // replyType URL param passes the deprecated prop directly, bypassing the uikitOptions config chain
   const replyTypeParam = urlParams.get('replyType') as 'THREAD' | 'QUOTE_REPLY' | 'NONE' | null;
   const replyTypeProps = replyTypeParam ? { replyType: replyTypeParam } : {};
-  return <GroupChannelApp {...props} {...themeProps} {...showSearchIconProps} {...replyTypeProps} breakpoint={breakpoint} config={{ logLevel: 'all' }} />;
+  const sdkInitProps = urlParams.get('localCacheEnabled') === 'false' ? { sdkInitParams: { localCacheEnabled: false } } : {};
+  return <GroupChannelApp {...props} {...themeProps} {...showSearchIconProps} {...replyTypeProps} {...sdkInitProps} breakpoint={breakpoint} config={{ logLevel: 'all' }} />;
 }

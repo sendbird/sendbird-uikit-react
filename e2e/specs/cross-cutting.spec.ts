@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures';
 import { appPath } from '../utils/env';
+import { messageByText } from '../utils/actions';
 
 test.describe('cross-cutting — config & responsive', () => {
   // H1
@@ -49,8 +50,9 @@ test.describe('cross-cutting — config & responsive', () => {
     await page.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
     await page.locator('.sendbird-conversation').waitFor({ timeout: 15_000 });
     // Hover a message — reaction trigger should NOT appear
-    const msgList = page.locator('.sendbird-conversation__messages-padding');
-    await msgList.hover();
-    await expect(page.locator('.sendbird-message-item-reaction-menu__trigger')).not.toBeVisible({ timeout: 3_000 });
+    const message = messageByText(page, '[e2e] channel ready');
+    await message.hover({ timeout: 15_000 });
+    await expect(message.locator('.sendbird-message-menu').getByRole('button').first()).toBeVisible();
+    await expect(message.locator('.sendbird-message-item-reaction-menu__trigger')).toHaveCount(0);
   });
 });

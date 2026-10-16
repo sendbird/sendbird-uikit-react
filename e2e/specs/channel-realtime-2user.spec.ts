@@ -54,24 +54,28 @@ test.describe('group channel — realtime (2nd-user)', () => {
     // Scroll to the top so we're not at the bottom
     const msgList = page.locator('.sendbird-conversation__messages-padding');
     await msgList.evaluate((el) => { el.scrollTop = 0; });
+    await expect(page.locator('.sendbird-conversation__scroll-bottom-button')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
 
     // secondUser sends a new message
     const incomingText = `[d2] new ${runTag}`;
     await platform.sendMessage(channel.url, secondUser.userId, incomingText);
 
-    // New-message pill should appear (.first() avoids strict-mode when scroll-bottom button is also visible)
-    const pill = page.locator('[class*="new-message"], [class*="scroll-bottom-button"]').first();
+    const pill = page.locator('.sendbird-new-message-floating-button');
     await expect(pill).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await expect(messageByText(page, incomingText)).not.toBeInViewport();
     await pill.click();
     // Should scroll to bottom and show the incoming message
-    await expect(messageByText(page, incomingText)).toBeVisible({ timeout: 10_000 });
+    await expect(messageByText(page, incomingText)).toBeInViewport({ timeout: 10_000 });
   });
 
   // D4
   test('removes frozen banner and enables input after unfreezing channel', async ({
-    page, workerUser, createChannel,
+    page, workerUser, secondUser, secondPage, createChannel,
   }) => {
-    await createChannel({ freeze: true });
+    await createChannel({ freeze: true, memberIds: [secondUser.userId] });
+    await openFirstGroupChannel(secondPage, { userId: secondUser.userId });
+    const memberInput = secondPage.locator('.sendbird-message-input [role="textbox"]').first();
+    await expect(memberInput).toHaveAttribute('aria-disabled', 'true', { timeout: SERVER_RESPONSE_TIMEOUT });
     await openFirstGroupChannel(page, { userId: workerUser.userId });
     // GroupChannel frozen notification class is sendbird-notification--frozen
     await expect(page.locator('.sendbird-notification--frozen')).toBeVisible({ timeout: 10_000 });
@@ -83,9 +87,7 @@ test.describe('group channel — realtime (2nd-user)', () => {
     await freezeToggle.click();
     await page.locator('.sendbird-chat-header__right__info').click(); // close settings
     await expect(page.locator('.sendbird-notification--frozen')).not.toBeVisible({ timeout: 10_000 });
-    await expect(
-      page.locator('.sendbird-message-input--disabled, .sendbird-message-input [disabled]'),
-    ).not.toBeVisible({ timeout: 5_000 });
+    await expect(memberInput).toHaveAttribute('aria-disabled', 'false', { timeout: SERVER_RESPONSE_TIMEOUT });
   });
 
   // D6
@@ -176,10 +178,11 @@ test.describe('group channel — realtime (2nd-user)', () => {
     const msgList = page.locator('.sendbird-conversation__messages-padding');
     await msgList.evaluate((el) => { el.scrollTop = 0; });
     // Chevron should appear
-    const chevron = page.locator('[class*="scroll-bottom"], [class*="scroll-down"]').first();
+    const chevron = page.locator('.sendbird-conversation__scroll-bottom-button');
     await expect(chevron).toBeVisible({ timeout: 10_000 });
+    await expect(messageByText(page, '[d9] 15')).not.toBeInViewport();
     await chevron.click();
-    // Should be at bottom — last message visible (messageByText avoids strict-mode with channel list preview)
-    await expect(messageByText(page, '[d9] 15')).toBeVisible({ timeout: 10_000 });
+    // Should be at bottom — last message in view (messageByText avoids strict-mode with channel list preview)
+    await expect(messageByText(page, '[d9] 15')).toBeInViewport({ timeout: 10_000 });
   });
 });

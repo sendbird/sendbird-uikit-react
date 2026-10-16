@@ -61,15 +61,15 @@ test.describe('connection & user profile — extended', () => {
   // A8
   test('toggles sendbird__offline class on body when going offline then online', async ({ page, workerUser, createChannel }) => {
     await createChannel();
-    await page.goto(appPath('/group_channel', { userId: workerUser.userId }));
+    await page.goto(appPath('/group_channel', { userId: workerUser.userId, localCacheEnabled: 'false' }));
     await page.locator('.sendbird-channel-preview').first().waitFor({ timeout: 30_000 });
-    // Block new connections first, then disconnect existing WS for a reliable offline state
+    const body = page.locator('body');
+    await expect(body).not.toHaveClass(/sendbird__offline/);
     await page.context().setOffline(true);
-    await page.evaluate(() => (window as Record<string, any>).__SendbirdChat?.instance?.disconnectWebSocket());
-    // Wait a moment for the offline state to propagate
-    await page.waitForTimeout(2000);
-    // App should still be functional (channel list visible — cached data)
+    await expect(body).toHaveClass(/sendbird__offline/, { timeout: 10_000 });
+    // App should still be functional (channel list visible — already loaded)
     await expect(page.locator('.sendbird-channel-list')).toBeVisible({ timeout: 5_000 });
     await page.context().setOffline(false);
+    await expect(body).not.toHaveClass(/sendbird__offline/, { timeout: 20_000 });
   });
 });
