@@ -65,7 +65,7 @@ export default defineConfig({
   webServer: process.env.E2E_BASE_URL
     ? undefined
     : {
-      command: 'yarn workspace @uikit-app/testing dev',
+      command: `yarn workspace @uikit-app/testing dev --port ${PORT} --strictPort`,
       url: BASE_URL,
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
