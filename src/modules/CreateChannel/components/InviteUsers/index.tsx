@@ -53,23 +53,29 @@ const InviteUsers: React.FC<InviteUsersProps> = ({
   const { isMobile } = useMediaQueryContext();
   const [scrollableAreaHeight, setScrollableAreaHeight] = useState<number>(window.innerHeight);
 
+  const waitingForSdk = !userListQuery && !sdk?.createApplicationUserListQuery;
+
   // StrictMode runs this effect twice on mount, so two fetches can be in flight at once. Each run
   // takes a number; a resolved fetch only writes when its number is still the current one, and the
   // scroll handler takes the number at event time so a late page cannot land on a newer list.
+  // A rerun handed the query that is still loading leaves it to finish: the SDK refuses a second
+  // next() while one is pending, so that first answer is the only one coming.
   const genRef = useRef(0);
 
   useEffect(() => {
+    if (waitingForSdk) return;
     const applicationUserListQuery = userListQuery ? userListQuery() : createDefaultUserListQuery({ sdk });
     if (!applicationUserListQuery) return;
+    setUsersDataSource(applicationUserListQuery);
+    if (applicationUserListQuery.isLoading) return;
     genRef.current += 1;
     const gen = genRef.current;
-    setUsersDataSource(applicationUserListQuery);
     applicationUserListQuery.next().then((it) => {
       if (genRef.current === gen) setUsers(it);
     }).catch(() => {
       // Fetch failed (network error, expired token, etc.) — users stays []
     });
-  }, []);
+  }, [waitingForSdk]);
 
   // To fix navbar break in mobile we set dynamic height to the scrollable area
   useEffect(() => {

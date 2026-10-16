@@ -198,6 +198,102 @@ describe('InviteUsers', () => {
     expect(container.textContent).toContain('page-3');
   });
 
+  function createSingleFlightQuery(users: unknown[]) {
+    let finish: () => void = () => {};
+    const query = {
+      hasNext: false,
+      isLoading: false,
+      next: vi.fn(() => {
+        if (query.isLoading) return Promise.reject(new Error('Query in progress.'));
+        query.isLoading = true;
+        return new Promise((resolve) => {
+          finish = () => {
+            query.isLoading = false;
+            resolve(users);
+          };
+        });
+      }),
+    };
+    return { query, finish: () => finish() };
+  }
+
+  const renderTree = (userListQuery?: () => ApplicationUserListQuery) => (
+    <LocalizationContext.Provider value={mockLocalizationContext as any}>
+      <InviteUsers {...({ ...defaultMockInvitUserState, userListQuery } as any)} />
+    </LocalizationContext.Provider>
+  );
+
+  it.each([
+    ['without StrictMode', false],
+    ['under StrictMode', true],
+  ])('shows the users of a custom query that hands back the same instance, %s', async (_, strict) => {
+    const { query, finish } = createSingleFlightQuery([{ userId: 'user-a' }]);
+    mockUseCreateChannel.mockReturnValue({
+      state: { ...defaultMockState },
+      actions: { ...defaultMockActions },
+    });
+    const tree = renderTree(() => query as unknown as ApplicationUserListQuery);
+
+    const { container } = render(strict ? <React.StrictMode>{tree}</React.StrictMode> : tree);
+    await act(async () => { await Promise.resolve(); });
+    await act(async () => {
+      finish();
+      await Promise.resolve();
+    });
+
+    expect(query.next).toHaveBeenCalledTimes(1);
+    expect(container.querySelectorAll('.sendbird-user-list-item')).toHaveLength(1);
+    expect(container.textContent).toContain('user-a');
+  });
+
+  const connectingState = { ...mockState, stores: { sdkStore: { sdk: {}, initialized: false } } };
+  const connectedState = (sdk: Record<string, unknown>) => ({
+    ...mockState,
+    stores: { sdkStore: { sdk: { ...mockState.stores.sdkStore.sdk, ...sdk }, initialized: true } },
+  });
+
+  it('queries the users once the SDK finishes connecting after the modal opened', async () => {
+    const next = vi.fn().mockResolvedValue([{ userId: 'user-a' }]);
+    const createApplicationUserListQuery = vi.fn(() => ({ hasNext: false, isLoading: false, next }));
+    mockUseCreateChannel.mockReturnValue({
+      state: { ...defaultMockState },
+      actions: { ...defaultMockActions },
+    });
+    (useSendbirdModule.default as Mock).mockReturnValue({ state: connectingState });
+
+    const { container, rerender } = await act(async () => render(renderTree()));
+    expect(container.querySelectorAll('.sendbird-user-list-item')).toHaveLength(0);
+
+    (useSendbirdModule.default as Mock).mockReturnValue({ state: connectedState({ createApplicationUserListQuery }) });
+    await act(async () => { rerender(renderTree()); });
+
+    expect(createApplicationUserListQuery).toHaveBeenCalledTimes(1);
+    expect(container.querySelectorAll('.sendbird-user-list-item')).toHaveLength(1);
+    expect(container.textContent).toContain('user-a');
+  });
+
+  it('does not page a custom query again when the SDK finishes connecting', async () => {
+    const next = vi.fn()
+      .mockResolvedValueOnce([{ userId: 'page-1' }])
+      .mockResolvedValueOnce([{ userId: 'page-2' }]);
+    const query = { hasNext: true, isLoading: false, next } as unknown as ApplicationUserListQuery;
+    mockUseCreateChannel.mockReturnValue({
+      state: { ...defaultMockState },
+      actions: { ...defaultMockActions },
+    });
+    (useSendbirdModule.default as Mock).mockReturnValue({ state: connectingState });
+
+    const { container, rerender } = await act(async () => render(renderTree(() => query)));
+    (useSendbirdModule.default as Mock).mockReturnValue({
+      state: connectedState({ createApplicationUserListQuery: vi.fn() }),
+    });
+    await act(async () => { rerender(renderTree(() => query)); });
+
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(container.textContent).toContain('page-1');
+    expect(container.textContent).not.toContain('page-2');
+  });
+
   /**
    * Vitest's worker runs Node with unhandled rejections treated as uncaught exceptions, so a
    * rejection with no `.catch` surfaces through `uncaughtExceptionMonitor`, not the
