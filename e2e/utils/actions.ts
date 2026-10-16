@@ -27,27 +27,29 @@ export function messageByText(page: Page, text: string): Locator {
     .filter({ hasText: text });
 }
 
+async function isOpenChannelView(page: Page): Promise<boolean> {
+  return (await page.locator('.sendbird-openchannel-conversation').count()) > 0;
+}
+
 /** Type text into the conversation composer, send it, and wait until the server confirms it.
- *  Works for both group channels (uses sendbird-message-view testid) and open channels (fallback).
- *  ALWAYS ensures the message is confirmed (non-pending) before returning for GC messages. */
+ *  Group channels: waits for the confirmed sendbird-message-view. Open channels: waits for the
+ *  pending tail to clear. */
 export async function sendText(page: Page, text: string) {
   const input = page.locator('.sendbird-message-input [role="textbox"]').first();
   await input.click();
   await input.pressSequentially(text);
   await input.press('Enter');
-  const gcMsg = messageByText(page, text);
-  // Check for GC confirmation (data-sb-message-id != 0); keep short to avoid test timeout
-  const isGC = await gcMsg.isVisible({ timeout: 5_000 }).catch(() => false);
-  if (!isGC) {
-    // Open channel message or GC message still pending — confirm via visible text
-    await expect(page.getByText(text).first()).toBeVisible({ timeout: 5_000 });
-    // An open channel message keeps a pending tail until the server confirms it, and its context
-    // menu offers Edit/Delete only after that clears. Callers act on the message straight away.
-    await expect(
-      page.locator('.sendbird-openchannel-user-message').filter({ hasText: text })
-        .locator('.sendbird-openchannel-user-message__right__tail__pending'),
-    ).toHaveCount(0, { timeout: SERVER_RESPONSE_TIMEOUT });
+  if (!(await isOpenChannelView(page))) {
+    await expect(messageByText(page, text).last()).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    return;
   }
+  await expect(page.getByText(text).first()).toBeVisible({ timeout: 5_000 });
+  // An open channel message keeps a pending tail until the server confirms it, and its context
+  // menu offers Edit/Delete only after that clears. Callers act on the message straight away.
+  await expect(
+    page.locator('.sendbird-openchannel-user-message').filter({ hasText: text })
+      .locator('.sendbird-openchannel-user-message__right__tail__pending'),
+  ).toHaveCount(0, { timeout: SERVER_RESPONSE_TIMEOUT });
 }
 
 /**
@@ -67,32 +69,20 @@ export async function openUserRowMenu(row: Locator) {
 
 /** Hover a confirmed message and open its action menu (kebab). Works for both GC and OC. */
 export async function openMessageMenu(page: Page, text: string) {
-  const gcMsg = messageByText(page, text);
-  // sendText guarantees GC messages are confirmed — short check should succeed immediately
-  const isGC = await gcMsg.isVisible({ timeout: 3_000 }).catch(() => false);
-  if (isGC) {
-    await gcMsg.hover();
+  if (!(await isOpenChannelView(page))) {
+    const gcMsg = messageByText(page, text).first();
+    await gcMsg.hover({ timeout: SERVER_RESPONSE_TIMEOUT });
     await gcMsg.locator('.sendbird-message-menu').getByRole('button').first().click();
     return;
   }
-  // Check open channel container (longer timeout for parallel execution)
   const ocMsg = page.locator('.sendbird-openchannel-user-message').filter({ hasText: text }).first();
-  const isOC = await ocMsg.isVisible({ timeout: 8_000 }).catch(() => false);
-  if (isOC) {
-    await ocMsg.hover();
-    // The trigger only mounts on hover; clicking before it paints leaves the menu closed.
-    const trigger = ocMsg.locator(
-      '.sendbird-openchannel-user-message__context-menu--icon, .sendbird-openchannel-user-message__context-menu button, .sendbird-message-menu button',
-    ).first();
-    await expect(trigger).toBeVisible({ timeout: 10_000 });
-    await trigger.click();
-    return;
-  }
-  // GC message still pending confirmation — hover text and find menu at page level
-  const textEl = page.getByText(text).first();
-  await expect(textEl).toBeVisible({ timeout: 10_000 });
-  await textEl.hover();
-  await page.locator('.sendbird-message-menu').getByRole('button').first().click({ timeout: 5_000 });
+  await ocMsg.hover({ timeout: SERVER_RESPONSE_TIMEOUT });
+  // The trigger only mounts on hover; clicking before it paints leaves the menu closed.
+  const trigger = ocMsg.locator(
+    '.sendbird-openchannel-user-message__context-menu--icon, .sendbird-openchannel-user-message__context-menu button, .sendbird-message-menu button',
+  ).first();
+  await expect(trigger).toBeVisible({ timeout: 10_000 });
+  await trigger.click();
 }
 
 /** Open the message search panel (click the search icon in the chat header). */
