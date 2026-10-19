@@ -18,7 +18,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: e2e-${{ github.head_ref || github.ref_name }}
+  group: e2e-${{ github.ref }}
   cancel-in-progress: true
 
 # Shard count. Change BOTH this and the `matrix.shard` list below — they must match.
