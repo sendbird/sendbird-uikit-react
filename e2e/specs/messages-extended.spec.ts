@@ -81,8 +81,9 @@ test.describe('group channel — messages extended', () => {
     await expect(page.locator('.sendbird-voice-message-input')).toBeVisible({ timeout: 5_000 });
     // First click starts recording (READY_TO_RECORD → getUserMedia → RECORDING + timer)
     await page.locator('.sendbird-voice-message-input__controler__main').click();
-    // Wait for recording to exceed minimum duration (1000 ms); includes getUserMedia init time
-    await page.waitForTimeout(2500);
+    // The recording clock starts only once getUserMedia resolves; wait for it to pass the 1 s minimum
+    await expect(page.locator('.sendbird-voice-message-input__indicator__playback-time'))
+      .toHaveText(/^00:(0[1-9]|[1-5]\d)$/, { timeout: 10_000 });
     // Second click stops recording (only works if recordingTime >= 1000 ms, else cancels)
     await page.locator('.sendbird-voice-message-input__controler__main').click();
     // After stopping, state → READY_TO_PLAY; submit loses .voice-message--disabled CSS class

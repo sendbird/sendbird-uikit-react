@@ -101,8 +101,8 @@ test.describe('group channel — realtime (2nd-user)', () => {
     // Scroll to the top so we're NOT at the bottom
     const msgList = page.locator('.sendbird-conversation__messages-padding');
     await msgList.evaluate((el) => { el.scrollTop = 0; });
-    // Wait for the scroll state to propagate (onScrollPosition callback fires asynchronously)
-    await page.waitForTimeout(500);
+    // The scroll state updates asynchronously; the scroll-to-bottom button shows once it has
+    await expect(page.locator('.sendbird-conversation__scroll-bottom-button')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
     // secondUser sends a new message while workerUser is scrolled up
     await platform.sendMessage(channel.url, secondUser.userId, `[d6] new ${runTag}`);
     // NewMessageCountFloatingButton (.sendbird-new-message-floating-button) appears when
