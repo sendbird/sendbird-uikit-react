@@ -482,3 +482,21 @@ export async function sweepRunOpenChannels(): Promise<number> {
   );
   return tagged + named;
 }
+
+/** Delete every user this run created, with the group channels they belong to — backstop for users a fixture failed to delete. */
+export async function sweepRunUsers(): Promise<number> {
+  const prefix = `${E2E.userPrefix}-${runTag}-`;
+  const leftovers: string[] = [];
+  let token = '';
+  do {
+    const data = await call('GET', `/users?limit=100${token ? `&token=${token}` : ''}`);
+    const users: Array<{ user_id: string }> = data?.users ?? [];
+    leftovers.push(...users.map((user) => user.user_id).filter((userId) => userId.startsWith(prefix)));
+    token = data?.next ?? '';
+  } while (token);
+  for (const userId of leftovers) {
+    await deleteUserChannels(userId).catch(() => {});
+    await deleteUser(userId).catch(() => {});
+  }
+  return leftovers.length;
+}
