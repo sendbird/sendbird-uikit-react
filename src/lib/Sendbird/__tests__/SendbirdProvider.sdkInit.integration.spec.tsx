@@ -1,9 +1,11 @@
 import React, { act } from 'react';
-import { waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import SendbirdChat from '@sendbird/chat';
 import { GroupChannelModule } from '@sendbird/chat/groupChannel';
 import { OpenChannelModule } from '@sendbird/chat/openChannel';
+import SendbirdProvider from '../index';
 import type { SendbirdProviderProps } from '../index';
+import useSendbird from '../context/hooks/useSendbird';
 import type { SessionHandler } from '@sendbird/chat';
 import { renderWithSendbird } from '../../../utils/testMocks/renderWithSendbird';
 
@@ -203,6 +205,39 @@ describe('SendbirdProvider — SDK init/connect consistency (integration)', () =
       nickname: 'test-nickname',
       profileUrl: 'test-profile-url',
     }));
+  });
+
+  it('drops a connect the provider switched users away from before it finished', async () => {
+    sdk.connect
+      .mockResolvedValueOnce({ userId: 'user-a', nickname: '', profileUrl: '' })
+      .mockResolvedValueOnce({ userId: 'user-b', nickname: '', profileUrl: '' });
+    let resolveProfileUpdate: (user: unknown) => void = () => undefined;
+    sdk.updateCurrentUserInfo.mockImplementationOnce(() => new Promise((resolve) => { resolveProfileUpdate = resolve; }));
+    const onConnected = vi.fn();
+    let user: unknown;
+    const Probe = () => {
+      user = useSendbird().state.stores.userStore.user;
+      return null;
+    };
+    const tree = (userId: string, nickname?: string) => (
+      <SendbirdProvider appId="test-app-id" userId={userId} nickname={nickname} eventHandlers={{ connection: { onConnected } }}>
+        <Probe />
+      </SendbirdProvider>
+    );
+
+    let view: ReturnType<typeof render>;
+    await act(async () => { view = render(tree('user-a', 'a-name')); });
+    await waitFor(() => expect(sdk.updateCurrentUserInfo).toHaveBeenCalledTimes(1));
+
+    await act(async () => { view.rerender(tree('user-b')); });
+    await waitFor(() => expect(onConnected).toHaveBeenCalledWith(expect.objectContaining({ userId: 'user-b' })));
+
+    await act(async () => { resolveProfileUpdate({ userId: 'user-a', nickname: 'a-name', profileUrl: '' }); });
+    for (let i = 0; i < 5; i += 1) {
+      await act(async () => { await new Promise((resolve) => { setTimeout(resolve, 0); }); });
+    }
+    expect(user).toEqual(expect.objectContaining({ userId: 'user-b' }));
+    expect(onConnected).toHaveBeenCalledTimes(1);
   });
 
   it('calls eventHandlers.connection.onFailed on connect failure and skips updateCurrentUserInfo', async () => {

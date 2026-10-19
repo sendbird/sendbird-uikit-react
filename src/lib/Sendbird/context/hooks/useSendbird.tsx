@@ -310,6 +310,7 @@ export const useSendbird = () => {
           nickname: nickname || connectedUser.nickname || '',
           profileUrl: profileUrl || connectedUser.profileUrl,
         });
+        if (!isCurrent()) return;
         userActions.updateUserInfo(connectedUser);
       }
 
@@ -362,7 +363,7 @@ export const useSendbird = () => {
       }
 
       const user = await sdk.connect(userId, accessToken);
-      await completeConnection(sdk, user, () => true);
+      await completeConnection(sdk, user, () => connectGenerations.get(store) === generation);
     } catch (error) {
       const sendbirdError = failConnection(error);
       if (

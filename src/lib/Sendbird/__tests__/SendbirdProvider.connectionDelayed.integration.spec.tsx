@@ -180,6 +180,33 @@ describe('SendbirdProvider — recovery from a delayed connect (CLNP-8963)', () 
     expect(state.stores.userStore.user).toEqual(expect.objectContaining({ userId: 'user-b' }));
   });
 
+  it('does not let a recovery the provider switched away from write its profile over the next user', async () => {
+    sdk.connect.mockImplementation(async (userId: string) => {
+      if (userId === 'user-a') throw delayedConnectingError();
+      return { userId, nickname: '', profileUrl: '' };
+    });
+    let resolveProfileUpdate: (user: unknown) => void = () => undefined;
+    sdk.updateCurrentUserInfo.mockImplementationOnce(() => new Promise((resolve) => { resolveProfileUpdate = resolve; }));
+    const view = render(
+      <SendbirdProvider appId="test-app-id" userId="user-a" nickname="a-name" eventHandlers={{ connection: { onConnected, onFailed } }}>
+        <Probe />
+      </SendbirdProvider>,
+    );
+    await waitFor(() => expect(onFailed).toHaveBeenCalledTimes(1));
+
+    sdk.currentUser = { userId: 'user-a', nickname: '', profileUrl: '' };
+    await fire('onReconnectSucceeded');
+    await waitFor(() => expect(sdk.updateCurrentUserInfo).toHaveBeenCalledTimes(1));
+
+    await act(async () => { view.rerender(tree('user-b')); });
+    await waitFor(() => expect(onConnected).toHaveBeenCalledWith(expect.objectContaining({ userId: 'user-b' })));
+
+    await act(async () => { resolveProfileUpdate({ userId: 'user-a', nickname: 'a-name', profileUrl: '' }); });
+    await flush();
+    expect(state.stores.userStore.user).toEqual(expect.objectContaining({ userId: 'user-b' }));
+    expect(onConnected).toHaveBeenCalledTimes(1);
+  });
+
   it('ignores a connection for a different user and keeps waiting for its own', async () => {
     sdk.connect.mockRejectedValue(delayedConnectingError());
     await mount();
