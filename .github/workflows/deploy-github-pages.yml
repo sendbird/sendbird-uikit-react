@@ -24,7 +24,7 @@ jobs:
       # Set up Node
       - uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '>=24.22.1 <25'
 
       #👇 Add Storybook build and deploy to GitHub Pages as a step in the workflow
       - uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
