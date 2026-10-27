@@ -32,6 +32,18 @@ jobs:
       REPO_NAME: ${{ github.event.repository.name }}
 
     steps:
+      - name: Set up Python for the release scripts
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install the release script dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install requests 'certifi>=2026.10.19'
+          python -m pip --version
+          python -m pip show certifi | sed -n 's/^Version: /certifi /p'
+
       - name: Validate branch is a release branch
         run: |
           if ! printf '%s' "$BRANCH_NAME" | grep -qE '^release/v[0-9]+\.[0-9]+\.[0-9]+$'; then
@@ -48,7 +60,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '24'
+          node-version: '>=24.22.1 <25'
           cache: 'yarn'
 
       - name: Install dependencies and build
