@@ -29,6 +29,8 @@ bundle-analysis.json
 .env.development.local
 .env.test.local
 .env.production.local
+.env.e2e
+.env.e2e.local
 
 npm-debug.log*
 yarn-debug.log*

@@ -1,0 +1,47 @@
+import { test, expect } from '../fixtures';
+import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from '../utils/actions';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
+
+/**
+ * Group channel — message actions (Tier 0, single user). Each test sends its own marked message
+ * first, then acts on it. Sends real messages to the test App ID's backend. Skips without creds.
+ */
+test.describe('group channel — message actions', () => {
+  test('edits an own message', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const original = `[e2e-edit] ${Date.now()}`;
+    const edited = `${original} EDITED`;
+    await sendText(page, original);
+    await expect(messageByText(page, original)).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+
+    await openMessageMenu(page, original);
+    const editItem = page.getByRole('menuitem', { name: /edit/i }).first();
+    await expect(editItem).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await editItem.click();
+
+    const editInput = page.locator('.sendbird-message-input__edit [role="textbox"]');
+    await editInput.click();
+    await editInput.fill(edited);
+    await page.locator('.sendbird-message-input--edit-action__save').click();
+
+    await expect(page.locator('.sendbird-conversation__messages').getByText(edited)).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+  });
+
+  test('deletes an own message', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const text = `[e2e-delete] ${Date.now()}`;
+    await sendText(page, text);
+    await expect(messageByText(page, text)).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+
+    await openMessageMenu(page, text);
+    const deleteItem = page.getByRole('menuitem', { name: /delete/i }).first();
+    await expect(deleteItem).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await deleteItem.click();
+    // Confirm in the remove-message modal (danger button, exact text to avoid the menu item).
+    await page.getByRole('button', { name: 'Delete', exact: true }).click();
+
+    await expect(page.locator('.sendbird-conversation__messages').getByText(text)).toHaveCount(0, { timeout: SERVER_RESPONSE_TIMEOUT });
+  });
+});

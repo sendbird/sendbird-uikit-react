@@ -15,7 +15,7 @@ vi.mock('../utils', async () => {
     ...actualUtils,
     initSDK: vi.fn(() => ({
       connect: vi.fn().mockResolvedValue({ userId: 'mockUserId' }),
-      updateCurrentUserInfo: vi.fn().mockResolvedValue({}),
+      updateCurrentUserInfo: vi.fn().mockResolvedValue({ userId: 'mockUserId' }),
       addConnectionHandler: vi.fn(),
       removeConnectionHandler: vi.fn(),
     })),
@@ -25,10 +25,13 @@ vi.mock('../utils', async () => {
 
 describe('useSendbird', () => {
   let mockStore;
-  const mockLogger = { error: vi.fn(), info: vi.fn() };
+  const mockLogger = { error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
   beforeEach(() => {
     mockStore = createSendbirdContextStore();
+    mockLogger.error.mockClear();
+    mockLogger.info.mockClear();
+    mockLogger.warn.mockClear();
   });
 
   const wrapper = ({ children }) => (
@@ -400,6 +403,73 @@ describe('useSendbird', () => {
 
       expect(mockOnFailed).toHaveBeenCalledWith(initError);
       expect(mockStore.getState().stores.sdkStore.sdk).toStrictEqual({});
+    });
+
+    it('applies the updateCurrentUserInfo result to the user store and onConnected', async () => {
+      const updatedUser = { userId: 'mockUserId', nickname: 'newName', profileUrl: 'https://new' };
+      const mockSdk = {
+        connect: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'oldName', profileUrl: '' }),
+        updateCurrentUserInfo: vi.fn().mockResolvedValue(updatedUser),
+        addConnectionHandler: vi.fn(),
+        removeConnectionHandler: vi.fn(),
+      };
+      vi.mocked(initSDK).mockReturnValue(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>);
+
+      const onConnected = vi.fn();
+      const mockLogger = { error: vi.fn(), info: vi.fn(), warning: vi.fn() } as unknown as LoggerInterface;
+
+      const { result } = renderHook(() => useSendbird(), { wrapper });
+
+      await act(async () => {
+        await result.current.actions.connect({
+          logger: mockLogger,
+          userId: 'mockUserId',
+          appId: 'mockAppId',
+          accessToken: 'mockAccessToken',
+          nickname: 'newName',
+          eventHandlers: { connection: { onConnected } },
+        });
+      });
+
+      // Both the store and the callback carry the name the app asked for, not the one it replaced.
+      expect(mockStore.getState().stores.userStore.user).toStrictEqual(updatedUser);
+      expect(onConnected).toHaveBeenCalledWith(expect.objectContaining({ nickname: 'newName' }));
+    });
+
+    // connect() is one operation: everything it promises happens, or the store goes back to empty
+    // and onFailed reports why. A profile update is one of those steps, so a failure there is
+    // terminal like any other — consumers that retry from onFailed depend on that.
+    it('treats a profile update failure as terminal and does not call onConnected', async () => {
+      const updateError = new Error('profile update failed');
+      const mockSdk = {
+        connect: vi.fn().mockResolvedValue({ userId: 'mockUserId', nickname: 'oldName' }),
+        updateCurrentUserInfo: vi.fn().mockRejectedValue(updateError),
+        addConnectionHandler: vi.fn(),
+        removeConnectionHandler: vi.fn(),
+      };
+      vi.mocked(initSDK).mockReturnValue(mockSdk as unknown as SendbirdChatWith<[GroupChannelModule, OpenChannelModule]>);
+
+      const onConnected = vi.fn();
+      const onFailed = vi.fn();
+      const mockLogger = { error: vi.fn(), info: vi.fn(), warning: vi.fn() } as unknown as LoggerInterface;
+
+      const { result } = renderHook(() => useSendbird(), { wrapper });
+
+      await act(async () => {
+        await result.current.actions.connect({
+          logger: mockLogger,
+          userId: 'mockUserId',
+          appId: 'mockAppId',
+          accessToken: 'mockAccessToken',
+          nickname: 'newName',
+          eventHandlers: { connection: { onConnected, onFailed } },
+        });
+      });
+
+      expect(onFailed).toHaveBeenCalledWith(updateError);
+      expect(onConnected).not.toHaveBeenCalled();
+      expect(mockStore.getState().stores.sdkStore.sdk).toStrictEqual({});
+      expect(mockStore.getState().stores.userStore.user).toStrictEqual({});
     });
 
     it('should handle connection failure and trigger onFailed event handler', async () => {

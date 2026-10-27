@@ -299,13 +299,19 @@ export const useSendbird = () => {
     };
 
     const completeConnection = async (sdk: SdkStore['sdk'], user: User, isCurrent: () => boolean) => {
-      userActions.initUser(user);
+      let connectedUser = user;
+      userActions.initUser(connectedUser);
 
       if (nickname || profileUrl) {
-        await sdk.updateCurrentUserInfo({
-          nickname: nickname || user.nickname || '',
-          profileUrl: profileUrl || user.profileUrl,
+        // updateCurrentUserInfo answers with the user it just wrote. Dropping that answer left the
+        // store — and everything reading it, from the header to the profile editor — holding the
+        // name the user had before the one the app asked for.
+        connectedUser = await sdk.updateCurrentUserInfo({
+          nickname: nickname || connectedUser.nickname || '',
+          profileUrl: profileUrl || connectedUser.profileUrl,
         });
+        if (!isCurrent()) return;
+        userActions.updateUserInfo(connectedUser);
       }
 
       await initializeMessageTemplatesInfo?.(sdk);
@@ -314,7 +320,7 @@ export const useSendbird = () => {
       if (!isCurrent()) return;
       sdkActions.initSdk(sdk);
 
-      eventHandlers?.connection?.onConnected?.(user);
+      eventHandlers?.connection?.onConnected?.(connectedUser);
     };
 
     let session: ConnectionSession | undefined;
@@ -357,7 +363,7 @@ export const useSendbird = () => {
       }
 
       const user = await sdk.connect(userId, accessToken);
-      await completeConnection(sdk, user, () => true);
+      await completeConnection(sdk, user, () => connectGenerations.get(store) === generation);
     } catch (error) {
       const sendbirdError = failConnection(error);
       if (

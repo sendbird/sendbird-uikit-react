@@ -1,0 +1,145 @@
+import { expect } from '@playwright/test';
+import { test } from '../fixtures';
+import { runTag } from '../utils/env';
+import { createOpenChannelViaUI, openNamedOpenChannel, sendText, openMessageMenu } from '../utils/actions';
+import * as platform from '../utils/platform';
+import { OPERATOR_ROLE_TIMEOUT, SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
+
+test.describe('open channel — core scenarios', () => {
+  // G3
+  test('loads message history when entering an open channel', async ({ page, workerUser, createOpenChannel }) => {
+    const channel = await createOpenChannel({ name: `[e2e] g3-${runTag}` });
+    await platform.seedOpenChannelMessages(channel.url, workerUser.userId, 3, '[G3]');
+    const newestAt = await platform.getLatestOpenChannelMessageCreatedAt(channel.url);
+    await expect.poll(() => Date.now(), { timeout: 30_000 }).toBeGreaterThan(newestAt);
+    await openNamedOpenChannel(page, `[e2e] g3-${runTag}`, { userId: workerUser.userId });
+    await expect(page.getByText('[G3] 1')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+  });
+
+  test('opens at the newest message when the history overflows', async ({ page, workerUser, createOpenChannel }) => {
+    const channel = await createOpenChannel({ name: `[e2e] g3-overflow-${runTag}` });
+    await platform.seedOpenChannelMessages(channel.url, workerUser.userId, 30, '[G3o]');
+    const newestAt = await platform.getLatestOpenChannelMessageCreatedAt(channel.url);
+    await expect.poll(() => Date.now(), { timeout: 30_000 }).toBeGreaterThan(newestAt);
+    await openNamedOpenChannel(page, `[e2e] g3-overflow-${runTag}`, { userId: workerUser.userId });
+    await expect(page.getByText('[G3o] 30', { exact: true })).toBeInViewport({ timeout: SERVER_RESPONSE_TIMEOUT });
+  });
+
+  // G4
+  test('displays a sent user message in the open channel', async ({ page, workerUser, createOpenChannel }) => {
+    const channel = await createOpenChannel({ name: `[e2e] g4-${runTag}` });
+    await openNamedOpenChannel(page, channel.url ? `[e2e] g4-${runTag}` : '', { userId: workerUser.userId });
+    await sendText(page, `[e2e-g4] ${runTag}`);
+    // sendText already confirmed the message; this extra check uses getByText for open channel
+    await expect(page.getByText(`[e2e-g4] ${runTag}`).first()).toBeVisible({ timeout: 5_000 });
+  });
+
+  // G6
+  test('removes own message from open channel after deletion', async ({ page, workerUser, createOpenChannel }) => {
+    await createOpenChannel({ name: `[e2e] g6-${runTag}` });
+    await openNamedOpenChannel(page, `[e2e] g6-${runTag}`, { userId: workerUser.userId });
+    const msgText = `[e2e-g6-del] ${runTag}`;
+    await sendText(page, msgText);
+    await openMessageMenu(page, msgText);
+    const deleteMenuItem = page.getByRole('menuitem', { name: /delete/i });
+    await expect(deleteMenuItem).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await deleteMenuItem.click();
+    // RemoveMessageModal shows a "Delete" confirm button — wait for it and click via evaluate
+    // to avoid actionability timing issues in parallel mode
+    const confirmBtn = page.getByRole('button', { name: /delete/i }).last();
+    await confirmBtn.waitFor({ state: 'attached', timeout: 10_000 });
+    await confirmBtn.evaluate((el) => (el as HTMLButtonElement).click());
+    // Message should be gone after confirmation
+    await expect(page.getByText(msgText).first()).not.toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+  });
+
+  // G8
+  test('auto-enters the newly created open channel after creation', async ({ page, workerUser, createOpenChannel, trackOpenChannel }) => {
+    const newName = `[e2e] g8-${runTag}-${Date.now()}`;
+    trackOpenChannel(newName);
+    // Enter an existing channel first: creating one while the SDK is still connecting is dropped
+    // without a word, so the case has to know the app is up before it clicks Create.
+    await createOpenChannel({ name: `[e2e] g8-seed-${runTag}` });
+    await openNamedOpenChannel(page, `[e2e] g8-seed-${runTag}`, { userId: workerUser.userId });
+    await page.locator('.sendbird-open-channel-list-ui__header__button-create-channel')
+      .click({ timeout: 15_000 });
+    const nameInput = page.locator('[name="sendbird-create-open-channel-ui__profile-input__name-section__input"], .sendbird-create-open-channel-ui__profile input').first();
+    await expect(nameInput).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await nameInput.fill(newName);
+    await page.getByRole('button', { name: /^create$/i }).last().click();
+    await expect(page.locator('.sendbird-openchannel-conversation-header')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await expect(page.locator('.sendbird-openchannel-conversation-header').getByText(newName)).toBeVisible();
+  });
+
+  // G9
+  test('exits previous open channel when switching to another', async ({ page, workerUser, createOpenChannel }) => {
+    await createOpenChannel({ name: `[e2e] g9a-${runTag}` });
+    await createOpenChannel({ name: `[e2e] g9b-${runTag}` });
+    await openNamedOpenChannel(page, `[e2e] g9a-${runTag}`, { userId: workerUser.userId });
+    // Switch to channel B
+    await page.getByText(`[e2e] g9b-${runTag}`).first().click();
+    await expect(page.locator('.sendbird-openchannel-conversation-header').getByText(`[e2e] g9b-${runTag}`))
+      .toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    // Ensure we're no longer viewing channel A
+    await expect(page.locator('.sendbird-openchannel-conversation-header').getByText(`[e2e] g9a-${runTag}`))
+      .not.toBeVisible();
+
+  });
+
+  // G10
+  test('updates the header name after editing channel name (operator)', async ({ page, workerUser, createOpenChannel, trackOpenChannel }) => {
+    await createOpenChannel({ name: `[e2e] g10-seed-${runTag}` });
+    await openNamedOpenChannel(page, `[e2e] g10-seed-${runTag}`, { userId: workerUser.userId });
+    const name = `[e2e] g10-${runTag}-${Date.now()}`;
+    trackOpenChannel(name);
+    await createOpenChannelViaUI(page, name);
+    // Open settings — trigger shows INFO (operator) or MEMBERS (non-operator)
+    await page.locator('.sendbird-openchannel-conversation-header__right__trigger').click();
+    await expect(page.locator('.sendbird-openchannel-settings')).toBeVisible({ timeout: 10_000 });
+    // Operator profile edit button (only visible when user is operator)
+    const profileEdit = page.locator('.sendbird-openchannel-profile__edit');
+    await expect(profileEdit).toBeVisible({ timeout: OPERATOR_ROLE_TIMEOUT });
+    await profileEdit.click();
+    const newName = `[e2e] g10-renamed-${runTag}`;
+    trackOpenChannel(newName);
+    const nameInput = page.locator('input[name="channel-profile-form__name"]');
+    await nameInput.fill(newName);
+    await page.getByRole('button', { name: /save/i }).last().click();
+    await expect(
+      page.locator('.sendbird-openchannel-conversation-header').getByText(newName),
+    ).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+
+  });
+
+  // G11
+  test('removes channel from list after deletion (operator)', async ({ page, workerUser, createOpenChannel, trackOpenChannel }) => {
+    await createOpenChannel({ name: `[e2e] g11-seed-${runTag}` });
+    await openNamedOpenChannel(page, `[e2e] g11-seed-${runTag}`, { userId: workerUser.userId });
+    trackOpenChannel(`[e2e] g11-${runTag}`);
+    await createOpenChannelViaUI(page, `[e2e] g11-${runTag}`);
+    await page.locator('.sendbird-openchannel-conversation-header__right__trigger').click();
+    await expect(page.locator('.sendbird-openchannel-settings')).toBeVisible({ timeout: 10_000 });
+    // Delete channel option — only available for operators
+    const deleteBtn = page.locator('.sendbird-openchannel-settings__delete-channel, [class*="delete-channel"]').first();
+    await expect(deleteBtn).toBeVisible({ timeout: OPERATOR_ROLE_TIMEOUT });
+    await deleteBtn.click();
+    await page.getByRole('button', { name: /delete/i }).last().click();
+    await expect(
+      page.locator('.sendbird-open-channel-list-ui__channel-list').getByText(`[e2e] g11-${runTag}`),
+    ).toHaveCount(0, { timeout: 10_000 });
+
+  });
+
+  // G12
+  test('loads participant list in open channel settings', async ({ page, workerUser, createOpenChannel }) => {
+    await createOpenChannel({ name: `[e2e] g12-${runTag}` });
+    await openNamedOpenChannel(page, `[e2e] g12-${runTag}`, { userId: workerUser.userId });
+    await page.locator('.sendbird-openchannel-conversation-header__right__trigger').click();
+    await expect(page.locator('.sendbird-openchannel-settings')).toBeVisible({ timeout: 10_000 });
+    // Open channel participants use sendbird-participants-accordion__member class
+    await expect(
+      page.locator('.sendbird-participants-accordion__member, .sendbird-openchannel-settings__participant-list').first(),
+    ).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+
+  });
+});
