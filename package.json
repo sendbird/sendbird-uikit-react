@@ -156,7 +156,7 @@
     "typedoc": "^0.25.13",
     "typescript": "^5.4.5",
     "use-sync-external-store": "^1.2.2",
-    "vite": "^6.4.3",
+    "vite": "^6.4.5",
     "vite-plugin-svgr": "^4.5.0",
     "vitest": "^3"
   },
@@ -178,7 +178,7 @@
     "rollup@^4.20.0": "^4.59.0",
     "@babel/plugin-transform-modules-systemjs": "^7.29.4",
     "handlebars@^4.4.3": "^4.7.9",
-    "vite": "^6.4.3",
+    "vite": "^6.4.5",
     "tinypool@^1.1.1": "^2.1.2"
   }
 }
