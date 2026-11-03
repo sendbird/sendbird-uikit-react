@@ -103,9 +103,9 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.4",
     "@rollup/plugin-typescript": "^11.1.5",
-    "@storybook/addon-essentials": "^8.6.17",
-    "@storybook/manager-api": "^8.6.17",
-    "@storybook/react-vite": "^8.6.17",
+    "@storybook/addon-essentials": "^8.6.19",
+    "@storybook/manager-api": "^8.6.19",
+    "@storybook/react-vite": "^8.6.19",
     "@svgr/rollup": "^8.1.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^5.16.5",
@@ -149,14 +149,14 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "rollup-plugin-visualizer": "^5.9.2",
     "sass": "^1.55.0",
-    "storybook": "^8.6.17",
+    "storybook": "^8.6.19",
     "stylelint": "^13.0.0",
     "stylelint-config-sass-guidelines": "^7.0.0",
     "ts-pattern": "^4.2.2",
     "typedoc": "^0.25.13",
     "typescript": "^5.4.5",
     "use-sync-external-store": "^1.2.2",
-    "vite": "^6.4.3",
+    "vite": "^6.4.5",
     "vite-plugin-svgr": "^4.5.0",
     "vitest": "^3"
   },
@@ -178,7 +178,7 @@
     "rollup@^4.20.0": "^4.59.0",
     "@babel/plugin-transform-modules-systemjs": "^7.29.4",
     "handlebars@^4.4.3": "^4.7.9",
-    "vite": "^6.4.3",
+    "vite": "^6.4.5",
     "tinypool@^1.1.1": "^2.1.2"
   }
 }
