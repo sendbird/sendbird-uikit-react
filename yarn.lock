@@ -3019,9 +3019,9 @@ __metadata:
     "@sendbird/chat": ^4.22.12
     "@sendbird/react-uikit-message-template-view": ^0.2.0
     "@sendbird/uikit-tools": ^0.2.0
-    "@storybook/addon-essentials": ^8.6.17
-    "@storybook/manager-api": ^8.6.17
-    "@storybook/react-vite": ^8.6.17
+    "@storybook/addon-essentials": ^8.6.19
+    "@storybook/manager-api": ^8.6.19
+    "@storybook/react-vite": ^8.6.19
     "@svgr/rollup": ^8.1.0
     "@testing-library/dom": ^10.4.0
     "@testing-library/jest-dom": ^5.16.5
@@ -3068,7 +3068,7 @@ __metadata:
     rollup-plugin-typescript2: ^0.36.0
     rollup-plugin-visualizer: ^5.9.2
     sass: ^1.55.0
-    storybook: ^8.6.17
+    storybook: ^8.6.19
     stylelint: ^13.0.0
     stylelint-config-sass-guidelines: ^7.0.0
     ts-pattern: ^4.2.2
@@ -3186,7 +3186,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/addon-essentials@npm:^8.6.17":
+"@storybook/addon-essentials@npm:^8.6.19":
   version: 8.6.19
   resolution: "@storybook/addon-essentials@npm:8.6.19"
   dependencies:
@@ -3355,7 +3355,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/manager-api@npm:8.6.19, @storybook/manager-api@npm:^8.6.17":
+"@storybook/manager-api@npm:8.6.19, @storybook/manager-api@npm:^8.6.19":
   version: 8.6.19
   resolution: "@storybook/manager-api@npm:8.6.19"
   peerDependencies:
@@ -3384,7 +3384,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@storybook/react-vite@npm:^8.6.17":
+"@storybook/react-vite@npm:^8.6.19":
   version: 8.6.19
   resolution: "@storybook/react-vite@npm:8.6.19"
   dependencies:
@@ -13353,7 +13353,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"storybook@npm:^8.6.17":
+"storybook@npm:^8.6.19":
   version: 8.6.19
   resolution: "storybook@npm:8.6.19"
   dependencies:
