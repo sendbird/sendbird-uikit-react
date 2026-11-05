@@ -38,7 +38,7 @@ And many more...
 ### Prerequisites
 
 You need to install:
-* [nodejs](https://nodejs.org/en/download/) 18>=
+* [nodejs](https://nodejs.org/en/download/) 18>= (20>= to run `yarn test:visual`, which uses Playwright)
 * npm 9>= or yarn 3>=
 
 
