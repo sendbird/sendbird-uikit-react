@@ -1,0 +1,502 @@
+/// <reference types="node" />
+/**
+ * Minimal Sendbird Platform API client for E2E setup/teardown — create/delete users and group
+ * channels. App-scoped: needs E2E_PLATFORM_API_TOKEN (NOT an org key). Tests never reach it
+ * without credentials (the fixtures skip them); the global teardown guards on hasPlatformToken().
+ */
+import { E2E, runTag } from './env';
+
+const BASE = `https://api-${E2E.appId}.sendbird.com/v3`;
+const USER_ALREADY_EXISTS = '400202';
+
+interface FetchResponse {
+  ok: boolean;
+  status: number;
+  json(): Promise<any>;
+  text(): Promise<string>;
+}
+const doFetch = (globalThis as unknown as {
+  fetch: (url: string, init?: unknown) => Promise<FetchResponse>;
+}).fetch;
+
+export const hasPlatformToken = (): boolean => Boolean(E2E.appId && E2E.platformApiToken);
+
+/** Minimum delay between Platform API calls to avoid rate-limiting (default: 5 req/s per user). */
+const PLATFORM_API_DELAY_MS = 200;
+
+/** Attempts for a call the server refused for a reason that passes on its own (429, 5xx, network). */
+const PLATFORM_API_ATTEMPTS = 4;
+
+const sleep = (ms: number): Promise<void> => new Promise<void>((resolve) => {
+  setTimeout(() => resolve(), ms);
+});
+
+/**
+ * Workers share one app, so a burst from several specs can cross the per-user rate limit and come
+ * back 429 — a refusal that succeeds moments later. Backing off and retrying keeps that out of the
+ * specs, which otherwise fail on setup rather than on what they assert. Jitter spreads retries so
+ * workers that collided once do not collide again in lockstep.
+ */
+const isRetryable = (status: number): boolean => status === 429 || status >= 500;
+
+async function call(method: string, path: string, body?: unknown): Promise<any> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 0; attempt < PLATFORM_API_ATTEMPTS; attempt++) {
+    await sleep(PLATFORM_API_DELAY_MS);
+
+    let res: FetchResponse | null = null;
+    try {
+      res = await doFetch(`${BASE}${path}`, {
+        method,
+        headers: { 'Api-Token': E2E.platformApiToken, 'Content-Type': 'application/json; charset=utf-8' },
+        body: body === undefined ? undefined : JSON.stringify(body),
+      });
+    } catch (error) {
+      lastError = new Error(`Platform API ${method} ${path} -> ${String(error)}`);
+    }
+
+    if (res) {
+      if (res.ok || res.status === 404) {
+        return res.status === 404 ? null : res.json().catch(() => null);
+      }
+      const detail = await res.text().catch(() => '');
+      lastError = new Error(`Platform API ${method} ${path} -> ${res.status} ${detail}`);
+      if (!isRetryable(res.status)) throw lastError;
+    }
+
+    await sleep(backoffMs(attempt));
+  }
+
+  throw lastError ?? new Error(`Platform API ${method} ${path} -> exhausted ${PLATFORM_API_ATTEMPTS} attempts`);
+}
+
+/** 400ms, 800ms, 1600ms … each spread by up to half its own length. */
+function backoffMs(attempt: number): number {
+  const base = 400 * (2 ** attempt);
+  return base + Math.floor(Math.random() * (base / 2));
+}
+
+/**
+ * Poll the Platform API until `check` accepts what it reads, or give up.
+ *
+ * A write and the read that follows it are not one operation server-side, so a fixed sleep is a
+ * guess: too short and the read misses, too long and every run pays for the worst case. Polling
+ * returns as soon as the write is visible and only waits longer when it has to.
+ */
+async function waitUntil<T>(
+  read: () => Promise<T>,
+  check: (value: T) => boolean,
+  { timeoutMs = 15_000, intervalMs = 300, what = 'condition' } = {},
+): Promise<T> {
+  const deadline = Date.now() + timeoutMs;
+  let last: T = await read();
+  while (!check(last)) {
+    if (Date.now() >= deadline) {
+      throw new Error(`Platform API: timed out after ${timeoutMs}ms waiting for ${what}`);
+    }
+    await sleep(intervalMs);
+    last = await read();
+  }
+  return last;
+}
+
+/** Resolve once the group channel is readable and every listed user is a member of it. */
+export async function waitForChannelMembers(channelUrl: string, userIds: string[]): Promise<void> {
+  await waitUntil(
+    () => call('GET', `/group_channels/${encodeURIComponent(channelUrl)}?show_member=true`),
+    (data) => {
+      const members: string[] = (data?.members ?? []).map((m: { user_id: string }) => m.user_id);
+      return userIds.every((id) => members.includes(id));
+    },
+    { what: `${userIds.length} member(s) on ${channelUrl}` },
+  );
+}
+
+/**
+ * Resolve once moderation state is visible server-side.
+ *
+ * The settings accordions fetch their list when they open and do not fetch it again, so opening
+ * one before the action has landed leaves the test staring at a list that will never fill in.
+ */
+async function waitForModeration(channelUrl: string, path: 'mute' | 'ban', userId: string, present: boolean): Promise<void> {
+  await waitUntil(
+    () => call('GET', `/group_channels/${encodeURIComponent(channelUrl)}/${path}`),
+    (data) => {
+      const ids: string[] = (data?.muted_list ?? data?.banned_list ?? [])
+        .map((entry: { user_id?: string; user?: { user_id: string } }) => entry.user_id ?? entry.user?.user_id);
+      return ids.includes(userId) === present;
+    },
+    { what: `${userId} ${present ? 'on' : 'off'} the ${path} list` },
+  );
+}
+
+export const waitForMuted = (channelUrl: string, userId: string, present = true): Promise<void> => waitForModeration(channelUrl, 'mute', userId, present);
+
+export const waitForBanned = (channelUrl: string, userId: string, present = true): Promise<void> => waitForModeration(channelUrl, 'ban', userId, present);
+
+/** Resolve once open-channel moderation state is visible server-side. */
+async function waitForOpenChannelModeration(channelUrl: string, path: 'mute' | 'ban', userId: string, present: boolean): Promise<void> {
+  await waitUntil(
+    () => call('GET', `/open_channels/${encodeURIComponent(channelUrl)}/${path}`),
+    (data) => {
+      const ids: string[] = (data?.muted_list ?? data?.banned_list ?? [])
+        .map((e: { user_id?: string; user?: { user_id: string } }) => e.user_id ?? e.user?.user_id);
+      return ids.includes(userId) === present;
+    },
+    { what: `${userId} ${present ? 'on' : 'off'} the open channel ${path} list` },
+  );
+}
+
+export const waitForOpenChannelMuted = (channelUrl: string, userId: string, present = true): Promise<void> => waitForOpenChannelModeration(channelUrl, 'mute', userId, present);
+
+export const waitForOpenChannelBanned = (channelUrl: string, userId: string, present = true): Promise<void> => waitForOpenChannelModeration(channelUrl, 'ban', userId, present);
+
+/** Find an open channel this run created through the UI, by the name it was given. */
+export async function findOpenChannelUrl(name: string): Promise<string> {
+  const data = await waitUntil(
+    () => call('GET', `/open_channels?name_contains=${encodeURIComponent(name)}&limit=10`),
+    (d) => (d?.channels ?? []).length > 0,
+    { what: `an open channel named ${name}` },
+  );
+  return data.channels[0].channel_url;
+}
+
+export async function listOpenChannelUrls(name: string): Promise<string[]> {
+  const data = await call('GET', `/open_channels?name_contains=${encodeURIComponent(name)}&limit=100`);
+  return (data?.channels ?? [])
+    .filter((c: { name?: string }) => c.name === name)
+    .map((c: { channel_url: string }) => c.channel_url);
+}
+
+/** Find a group channel of the user that the given member also belongs to, empty channels included. */
+export async function findGroupChannelUrlWithMember(userId: string, memberId: string): Promise<string> {
+  const data = await waitUntil(
+    () => call('GET', `/users/${encodeURIComponent(userId)}/my_group_channels?show_empty=true&members_include_in=${encodeURIComponent(memberId)}&limit=10`),
+    (d) => (d?.channels ?? []).length > 0,
+    { what: `a group channel of ${userId} with ${memberId}` },
+  );
+  return data.channels[0].channel_url;
+}
+
+/** Resolve once the user shows up as a participant of the open channel. */
+export async function waitForOpenChannelParticipant(channelUrl: string, userId: string): Promise<void> {
+  await waitUntil(
+    () => call('GET', `/open_channels/${encodeURIComponent(channelUrl)}/participants`),
+    (data) => (data?.participants ?? []).some((p: { user_id: string }) => p.user_id === userId),
+    { what: `${userId} among the participants of ${channelUrl}` },
+  );
+}
+
+/** Resolve once the user is (or is no longer) an operator of the group channel. */
+export async function waitForOperator(channelUrl: string, userId: string, present = true): Promise<void> {
+  await waitUntil(
+    () => call('GET', `/group_channels/${encodeURIComponent(channelUrl)}/operators`),
+    (data) => (data?.operators ?? []).some((o: { user_id: string }) => o.user_id === userId) === present,
+    { what: `${userId} ${present ? 'as' : 'not as'} operator` },
+  );
+}
+
+/** Resolve once the channel reports at least `count` messages. */
+export async function waitForMessageCount(
+  channelUrl: string,
+  count: number,
+  channelType: 'group_channels' | 'open_channels' = 'group_channels',
+): Promise<void> {
+  await waitUntil(
+    () => call('GET', `/${channelType}/${encodeURIComponent(channelUrl)}/messages/total_count`),
+    (data) => (data?.total ?? 0) >= count,
+    { what: `${count} message(s) on ${channelUrl}` },
+  );
+}
+
+export async function ensureUser(userId: string, nickname = userId): Promise<void> {
+  try {
+    await call('POST', '/users', { user_id: userId, nickname, profile_url: '' });
+  } catch (error) {
+    if (!String(error).includes(USER_ALREADY_EXISTS)) throw error;
+  }
+}
+
+export async function deleteUser(userId: string): Promise<void> {
+  await call('DELETE', `/users/${encodeURIComponent(userId)}`);
+}
+
+export interface CreatedChannel {
+  url: string;
+}
+
+export async function createGroupChannel(opts: {
+  userIds: string[];
+  operatorIds?: string[];
+  name?: string;
+  customType?: string;
+  isPublic?: boolean;
+}): Promise<CreatedChannel> {
+  const data = await call('POST', '/group_channels', {
+    user_ids: opts.userIds,
+    operator_ids: opts.operatorIds ?? [opts.userIds[0]],
+    name: opts.name ?? `[e2e] ${runTag}`,
+    custom_type: opts.customType ?? runTag,
+    is_distinct: false,
+    is_public: opts.isPublic ?? false,
+  });
+  if (!data?.channel_url) throw new Error(`Platform API group_channels returned no channel_url: ${JSON.stringify(data)}`);
+  return { url: data.channel_url };
+}
+
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
+/** The text of the newest message in a group channel, exactly as the server stored it. */
+export async function getLatestMessageText(channelUrl: string): Promise<string | undefined> {
+  const data = await call(
+    'GET',
+    `/group_channels/${encodeURIComponent(channelUrl)}/messages?message_ts=${Date.now() + ONE_DAY_MS}&prev_limit=1&next_limit=0`,
+  );
+  return data?.messages?.[0]?.message;
+}
+
+/** Server timestamp (ms) of the newest message in an open channel. */
+export async function getLatestOpenChannelMessageCreatedAt(channelUrl: string): Promise<number> {
+  const data = await call(
+    'GET',
+    `/open_channels/${encodeURIComponent(channelUrl)}/messages?message_ts=${Date.now() + ONE_DAY_MS}&prev_limit=1&next_limit=0`,
+  );
+  return data?.messages?.[0]?.created_at ?? 0;
+}
+
+export async function sendMessage(channelUrl: string, userId: string, message: string): Promise<number> {
+  const data = await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/messages`, {
+    message_type: 'MESG',
+    user_id: userId,
+    message,
+  });
+  if (!data?.message_id) throw new Error(`Platform API sendMessage returned no message_id: ${JSON.stringify(data)}`);
+  return data.message_id;
+}
+
+/** Send a message carrying `suggested_replies` so UIKit renders the reply buttons. */
+export async function sendSuggestedRepliesMessage(
+  channelUrl: string,
+  senderId: string,
+  message: string,
+  replies: string[],
+): Promise<number> {
+  const data = await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/messages`, {
+    message_type: 'MESG',
+    user_id: senderId,
+    message,
+    extended_message_payload: { suggested_replies: replies },
+  });
+  if (!data?.message_id) {
+    throw new Error(`Platform API sendSuggestedRepliesMessage returned no message_id: ${JSON.stringify(data)}`);
+  }
+  return data.message_id;
+}
+
+/** Send a structured mention message so that UIKit renders mention badges. */
+export async function sendMentionMessage(
+  channelUrl: string,
+  senderId: string,
+  message: string,
+  mentionedUserIds: string[],
+): Promise<number> {
+  const data = await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/messages`, {
+    message_type: 'MESG',
+    user_id: senderId,
+    message,
+    mention_type: 'USERS',
+    mentioned_user_ids: mentionedUserIds,
+    mentioned_message_template: message,
+  });
+  if (!data?.message_id) throw new Error(`Platform API sendMentionMessage returned no message_id: ${JSON.stringify(data)}`);
+  return data.message_id;
+}
+
+/** Seed multiple messages into a group channel; returns an array of { messageId, message }. */
+export async function seedMessages(
+  channelUrl: string,
+  userId: string,
+  count: number,
+  prefix = '[seed]',
+): Promise<Array<{ messageId: number; message: string }>> {
+  const results: Array<{ messageId: number; message: string }> = [];
+  for (let i = 1; i <= count; i++) {
+    const message = `${prefix} ${i}`;
+    const messageId = await sendMessage(channelUrl, userId, message);
+    results.push({ messageId, message });
+  }
+  await waitForMessageCount(channelUrl, count);
+  return results;
+}
+
+/**
+ * Send a reply to a parent message in a group channel.
+ * @param isReplyToChannel false = thread reply (hidden in main conversation);
+ *                         true  = quote reply (visible in main conversation with a quoted bubble)
+ */
+export async function replyToMessage(
+  channelUrl: string,
+  parentMessageId: number,
+  userId: string,
+  message: string,
+  isReplyToChannel = false,
+): Promise<number> {
+  const data = await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/messages`, {
+    message_type: 'MESG',
+    user_id: userId,
+    message,
+    parent_message_id: parentMessageId,
+    reply_to_channel: isReplyToChannel,
+  });
+  if (!data?.message_id) throw new Error(`Platform API replyToMessage returned no message_id: ${JSON.stringify(data)}`);
+  return data.message_id;
+}
+
+/** Freeze or unfreeze a group channel. */
+export async function freezeGroupChannel(channelUrl: string, freeze: boolean): Promise<void> {
+  await call('PUT', `/group_channels/${encodeURIComponent(channelUrl)}/freeze`, { freeze });
+}
+
+/** Remove a user from a group channel (leave). */
+export async function leaveGroupChannel(channelUrl: string, userId: string): Promise<void> {
+  await call('PUT', `/group_channels/${encodeURIComponent(channelUrl)}/leave`, { user_ids: [userId] });
+}
+
+/** Invite additional users to a group channel. */
+export async function inviteUsers(channelUrl: string, userIds: string[]): Promise<void> {
+  await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/invite`, { user_ids: userIds });
+}
+
+/** Send a message to an open channel; returns message_id. */
+export async function sendOpenChannelMessage(channelUrl: string, userId: string, message: string): Promise<number> {
+  const data = await call('POST', `/open_channels/${encodeURIComponent(channelUrl)}/messages`, {
+    message_type: 'MESG',
+    user_id: userId,
+    message,
+  });
+  if (!data?.message_id) throw new Error(`Platform API sendOpenChannelMessage returned no message_id: ${JSON.stringify(data)}`);
+  return data.message_id;
+}
+
+/** Seed multiple messages into an open channel. */
+export async function seedOpenChannelMessages(
+  channelUrl: string,
+  userId: string,
+  count: number,
+  prefix = '[seed]',
+): Promise<void> {
+  for (let i = 1; i <= count; i++) {
+    await sendOpenChannelMessage(channelUrl, userId, `${prefix} ${i}`);
+  }
+  await waitForMessageCount(channelUrl, count, 'open_channels');
+}
+
+/** Update an open channel's name. */
+export async function updateOpenChannelName(channelUrl: string, name: string): Promise<void> {
+  await call('PUT', `/open_channels/${encodeURIComponent(channelUrl)}`, { name });
+}
+
+/** Freeze or unfreeze an open channel. */
+export async function freezeOpenChannel(channelUrl: string, freeze: boolean): Promise<void> {
+  await call('PUT', `/open_channels/${encodeURIComponent(channelUrl)}/freeze`, { freeze });
+}
+
+export async function deleteGroupChannel(url: string): Promise<void> {
+  await call('DELETE', `/group_channels/${encodeURIComponent(url)}`);
+}
+
+/** Delete every group channel the user belongs to — catches channels created through the app UI. */
+export async function deleteUserChannels(userId: string): Promise<void> {
+  let token = '';
+  do {
+    const data = await call('GET', `/users/${encodeURIComponent(userId)}/my_group_channels?limit=100&show_empty=true${token ? `&token=${token}` : ''}`);
+    const channels: Array<{ channel_url: string }> = data?.channels ?? [];
+    for (const channel of channels) {
+      await deleteGroupChannel(channel.channel_url).catch(() => {});
+    }
+    token = data?.next ?? '';
+  } while (token);
+}
+
+/** Delete every group channel tagged with this run's custom_type — backstop for orphaned channels. */
+export async function sweepRunChannels(): Promise<number> {
+  let deleted = 0;
+  let token = '';
+  do {
+    const query = `custom_types=${encodeURIComponent(runTag)}&limit=100&show_empty=true${token ? `&token=${token}` : ''}`;
+    const data = await call('GET', `/group_channels?${query}`);
+    const channels: Array<{ channel_url: string }> = data?.channels ?? [];
+    for (const channel of channels) {
+      await deleteGroupChannel(channel.channel_url).catch(() => {});
+      deleted += 1;
+    }
+    token = data?.next ?? '';
+  } while (token);
+  return deleted;
+}
+
+export async function createOpenChannel(opts: { name?: string; customType?: string; operatorIds?: string[] } = {}): Promise<CreatedChannel> {
+  const data = await call('POST', '/open_channels', {
+    name: opts.name ?? `[e2e] ${runTag}`,
+    custom_type: opts.customType ?? runTag,
+    ...(opts.operatorIds && opts.operatorIds.length > 0 ? { operator_ids: opts.operatorIds } : {}),
+  });
+  if (!data?.channel_url) throw new Error(`Platform API open_channels returned no channel_url: ${JSON.stringify(data)}`);
+  return { url: data.channel_url };
+}
+
+export async function deleteOpenChannel(url: string): Promise<void> {
+  await call('DELETE', `/open_channels/${encodeURIComponent(url)}`);
+}
+
+async function sweepOpenChannels(
+  query: string,
+  keep: (channel: { custom_type?: string; name?: string }) => boolean,
+): Promise<number> {
+  let deleted = 0;
+  let token = '';
+  do {
+    const data = await call('GET', `/open_channels?${query}&limit=100${token ? `&token=${token}` : ''}`);
+    const channels: Array<{ channel_url: string; custom_type?: string; name?: string }> = (data?.channels ?? []).filter(keep);
+    for (const channel of channels) {
+      await deleteOpenChannel(channel.channel_url).catch(() => {});
+      deleted += 1;
+    }
+    token = data?.next ?? '';
+  } while (token);
+  return deleted;
+}
+
+/** Delete every open channel tagged with this run's custom_type or named with this run's tag. */
+export async function sweepRunOpenChannels(): Promise<number> {
+  // Send both singular and plural forms: open-channel API may use either depending on version.
+  // Client-side filter as safety net in case the server ignores the custom_type param.
+  const tagged = await sweepOpenChannels(
+    `custom_type=${encodeURIComponent(runTag)}&custom_types=${encodeURIComponent(runTag)}`,
+    (c) => c.custom_type === runTag,
+  );
+  const named = await sweepOpenChannels(
+    `name_contains=${encodeURIComponent(runTag)}`,
+    (c) => !!c.name?.includes(runTag),
+  );
+  return tagged + named;
+}
+
+/** Delete every user this run created, with the group channels they belong to — backstop for users a fixture failed to delete. */
+export async function sweepRunUsers(): Promise<number> {
+  const prefix = `${E2E.userPrefix}-${runTag}-`;
+  const leftovers: string[] = [];
+  let token = '';
+  do {
+    const data = await call('GET', `/users?limit=100${token ? `&token=${token}` : ''}`);
+    const users: Array<{ user_id: string }> = data?.users ?? [];
+    leftovers.push(...users.map((user) => user.user_id).filter((userId) => userId.startsWith(prefix)));
+    token = data?.next ?? '';
+  } while (token);
+  for (const userId of leftovers) {
+    await deleteUserChannels(userId).catch(() => {});
+    await deleteUser(userId).catch(() => {});
+  }
+  return leftovers.length;
+}
