@@ -31,6 +31,10 @@ Stop and ask before changing:
 
 <!-- Add repository-specific coding-agent instructions below this line. -->
 
+## Code Review Rules
+
+- For code reviews, refer to `REVIEW.md`.
+
 ## SendbirdChat Instance Model
 
 `SendbirdProvider` is designed to be mounted **once per web application**, at the app root.
