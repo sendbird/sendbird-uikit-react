@@ -240,6 +240,71 @@ describe('SendbirdProvider — SDK init/connect consistency (integration)', () =
     expect(onConnected).toHaveBeenCalledTimes(1);
   });
 
+  it('ignores a connect that resolves after the provider switched users', async () => {
+    let resolveFirstConnect: (user: unknown) => void = () => undefined;
+    sdk.connect
+      .mockImplementationOnce(() => new Promise((resolve) => { resolveFirstConnect = resolve; }))
+      .mockResolvedValueOnce({ userId: 'user-b', nickname: '', profileUrl: '' });
+    const onConnected = vi.fn();
+    let user: unknown;
+    const Probe = () => {
+      user = useSendbird().state.stores.userStore.user;
+      return null;
+    };
+    const tree = (userId: string) => (
+      <SendbirdProvider appId="test-app-id" userId={userId} eventHandlers={{ connection: { onConnected } }}>
+        <Probe />
+      </SendbirdProvider>
+    );
+
+    let view: ReturnType<typeof render>;
+    await act(async () => { view = render(tree('user-a')); });
+    await waitFor(() => expect(sdk.connect).toHaveBeenCalledTimes(1));
+
+    await act(async () => { view.rerender(tree('user-b')); });
+    await waitFor(() => expect(onConnected).toHaveBeenCalledWith(expect.objectContaining({ userId: 'user-b' })));
+
+    await act(async () => { resolveFirstConnect({ userId: 'user-a', nickname: '', profileUrl: '' }); });
+    for (let i = 0; i < 5; i += 1) {
+      await act(async () => { await new Promise((resolve) => { setTimeout(resolve, 0); }); });
+    }
+    expect(user).toEqual(expect.objectContaining({ userId: 'user-b' }));
+    expect(onConnected).toHaveBeenCalledTimes(1);
+  });
+
+  it('ignores a connect that fails after the provider switched users', async () => {
+    let rejectFirstConnect: (error: unknown) => void = () => undefined;
+    sdk.connect
+      .mockImplementationOnce(() => new Promise((_resolve, reject) => { rejectFirstConnect = reject; }))
+      .mockResolvedValueOnce({ userId: 'user-b', nickname: '', profileUrl: '' });
+    const onConnected = vi.fn();
+    const onFailed = vi.fn();
+    let user: unknown;
+    const Probe = () => {
+      user = useSendbird().state.stores.userStore.user;
+      return null;
+    };
+    const tree = (userId: string) => (
+      <SendbirdProvider appId="test-app-id" userId={userId} eventHandlers={{ connection: { onConnected, onFailed } }}>
+        <Probe />
+      </SendbirdProvider>
+    );
+
+    let view: ReturnType<typeof render>;
+    await act(async () => { view = render(tree('user-a')); });
+    await waitFor(() => expect(sdk.connect).toHaveBeenCalledTimes(1));
+
+    await act(async () => { view.rerender(tree('user-b')); });
+    await waitFor(() => expect(onConnected).toHaveBeenCalledWith(expect.objectContaining({ userId: 'user-b' })));
+
+    await act(async () => { rejectFirstConnect(new Error('connect failed')); });
+    for (let i = 0; i < 5; i += 1) {
+      await act(async () => { await new Promise((resolve) => { setTimeout(resolve, 0); }); });
+    }
+    expect(onFailed).not.toHaveBeenCalled();
+    expect(user).toEqual(expect.objectContaining({ userId: 'user-b' }));
+  });
+
   it('calls eventHandlers.connection.onFailed on connect failure and skips updateCurrentUserInfo', async () => {
     const error = new Error('connect failed');
     sdk.connect.mockRejectedValueOnce(error);

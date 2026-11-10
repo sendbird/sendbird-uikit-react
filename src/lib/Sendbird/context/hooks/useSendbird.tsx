@@ -299,6 +299,7 @@ export const useSendbird = () => {
     };
 
     const completeConnection = async (sdk: SdkStore['sdk'], user: User, isCurrent: () => boolean) => {
+      if (!isCurrent()) return;
       let connectedUser = user;
       userActions.initUser(connectedUser);
 
@@ -365,6 +366,7 @@ export const useSendbird = () => {
       const user = await sdk.connect(userId, accessToken);
       await completeConnection(sdk, user, () => connectGenerations.get(store) === generation);
     } catch (error) {
+      if (connectGenerations.get(store) !== generation) return;
       const sendbirdError = failConnection(error);
       if (
         session
