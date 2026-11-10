@@ -1,0 +1,28 @@
+import { test, expect } from '../fixtures';
+import { openFirstGroupChannel, sendText, messageByText, openMessageMenu } from '../utils/actions';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
+
+/**
+ * Group channel — copy message (Tier 1, single user). Copies an own message via the action menu
+ * and verifies the clipboard contents. Requires clipboard permissions (granted below).
+ */
+test.describe('group channel — copy message', () => {
+  test.beforeEach(async ({ context }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  });
+
+  test('copies a message to the clipboard', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const text = `[e2e-copy] ${Date.now()}`;
+    await sendText(page, text);
+    // Wait for server confirmation before opening menu to ensure GC path in openMessageMenu
+    await expect(messageByText(page, text)).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+
+    await openMessageMenu(page, text);
+    await page.getByRole('menuitem', { name: 'Copy' }).click();
+
+    const clipboard = await page.evaluate(() => navigator.clipboard.readText());
+    expect(clipboard).toContain(text);
+  });
+});

@@ -1,0 +1,200 @@
+import { expect } from '@playwright/test';
+import { test } from '../fixtures';
+import { attachFiles, openFirstGroupChannel, sendMentionFromComposer, sendText, messageByText } from '../utils/actions';
+import { appPath, runTag } from '../utils/env';
+import { SERVER_RESPONSE_TIMEOUT } from '../utils/constants';
+import * as platform from '../utils/platform';
+
+test.describe('group channel — messages extended', () => {
+  test.describe(() => {
+    test.use({ allowedPageErrors: [/^uncaught: Connection is required\.$/] });
+
+    // C5
+    test('delivers pending message after network is restored', async ({ page, workerUser, createChannel }) => {
+      await createChannel();
+      await openFirstGroupChannel(page, { userId: workerUser.userId });
+      const msgText = `[c5-offline] ${runTag}`;
+
+      // 1. Block new connections first, then disconnect existing WS so SDK cannot reconnect
+      await page.context().setOffline(true);
+      await page.evaluate(() => (window as Record<string, any>).__SendbirdChat?.instance?.disconnectWebSocket());
+
+      // 2. Send a message — should land in pending state (message_id=0)
+      const input = page.locator('.sendbird-message-input [role="textbox"]').first();
+      await input.click();
+      await input.pressSequentially(msgText);
+      await input.press('Enter');
+
+      // Message should land in pending state (message_id=0) while offline
+      await expect(
+        page.locator('[data-sb-message-id="0"]').filter({ hasText: msgText }),
+      ).toBeVisible({ timeout: 8_000 });
+
+      // 3. Restore network — SDK auto-reconnects and delivers the pending message
+      await page.context().setOffline(false);
+      await expect(messageByText(page, msgText)).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    });
+  });
+
+  // C8
+  test('renders file/image bubble after sending an image', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    await attachFiles(page, [{
+      name: 'test.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+        'base64',
+      ),
+    }]);
+    const fileBubble = page.locator('.sendbird-thumbnail-message-item-body, .sendbird-file-message-item-body').last();
+    await expect(fileBubble).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+  });
+
+  // C9
+  test('renders grouped MFM bubble after sending multiple files', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const pngBuf = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+      'base64',
+    );
+    await attachFiles(page, [
+      { name: 'a.png', mimeType: 'image/png', buffer: pngBuf },
+      { name: 'b.png', mimeType: 'image/png', buffer: pngBuf },
+    ]);
+    await expect(page.locator('[class*="multiple-files"]').last()).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+  });
+
+  // C10
+  test('renders voice message bubble after recording and sending', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_enableVoiceMessage: 'true' });
+    const voiceBtn = page.locator('.sendbird-message-input--voice-message');
+    await expect(voiceBtn).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    // --use-fake-device-for-media-stream handles device; grantPermissions covers the browser
+    // permission check so navigator.permissions.query doesn't show a warning modal.
+    await page.context().grantPermissions(['microphone']);
+    await voiceBtn.click();
+    // Recording UI opens in READY_TO_RECORD state (timer at 00:00, red circle button)
+    await expect(page.locator('.sendbird-voice-message-input')).toBeVisible({ timeout: 5_000 });
+    // First click starts recording (READY_TO_RECORD → getUserMedia → RECORDING + timer)
+    await page.locator('.sendbird-voice-message-input__controler__main').click();
+    // The recording clock starts only once getUserMedia resolves; wait for it to pass the 1 s minimum
+    await expect(page.locator('.sendbird-voice-message-input__indicator__playback-time'))
+      .toHaveText(/^00:(0[1-9]|[1-5]\d)$/, { timeout: 10_000 });
+    // Second click stops recording (only works if recordingTime >= 1000 ms, else cancels)
+    await page.locator('.sendbird-voice-message-input__controler__main').click();
+    // After stopping, state → READY_TO_PLAY; submit loses .voice-message--disabled CSS class
+    await expect(
+      page.locator('.sendbird-voice-message-input__controler__submit:not(.voice-message--disabled)'),
+    ).toBeVisible({ timeout: 8_000 });
+    // The VoiceMessageInput has a 250ms click-buffer guard shared across all buttons.
+    // After the 2nd main-button click (stop), audio conversion can be fast (<250ms) with
+    // fake audio, so the submit click would arrive within the buffer window and be ignored.
+    // Wait 300ms to guarantee the buffer has cleared before clicking submit.
+    await page.waitForTimeout(300);
+    await page.locator('.sendbird-voice-message-input__controler__submit').click();
+    // Recording UI dismisses when submit is accepted (setShowVoiceMessageInput(false))
+    await expect(page.locator('.sendbird-voice-message-input')).not.toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('[class*="voice-message-item-body"]').last()).toBeVisible({ timeout: 30_000 });
+  });
+
+  // C12
+  test('sends the suggested reply text as a message when clicked', async ({
+    page, workerUser, secondUser, createChannel,
+  }) => {
+    const channel = await createChannel({ memberIds: [secondUser.userId], seedMessage: null });
+    const reply = `[c12-pick] ${runTag}`;
+    await platform.sendSuggestedRepliesMessage(channel.url, secondUser.userId, '[c12] pick one', [reply]);
+
+    await openFirstGroupChannel(page, {
+      userId: workerUser.userId,
+      groupChannel_enableSuggestedReplies: 'true',
+      groupChannel_showSuggestedRepliesFor: 'all_messages',
+    });
+
+    const suggestedBtn = page.locator('.sendbird-suggested-replies__option').filter({ hasText: reply }).first();
+    await expect(suggestedBtn).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    await suggestedBtn.click();
+    await expect(messageByText(page, reply).last()).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+  });
+
+  // C13
+  test('renders highlighted mention in the message bubble', async ({
+    page, workerUser, secondUser, secondPage, createChannel,
+  }) => {
+    await createChannel({ memberIds: [secondUser.userId] });
+    await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_enableMention: 'true' });
+
+    await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId, groupChannel_enableMention: 'true' }));
+    await secondPage.locator('.sendbird-channel-preview').first().click({ timeout: 30_000 });
+    await sendMentionFromComposer(secondPage, workerUser.userId, `hi ${runTag}`);
+
+    const mentionLabel = page.locator('.sendbird-word__mention').filter({ hasText: workerUser.nickname });
+    await expect(mentionLabel.first()).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+  });
+
+  // C15
+  test('updates message status from SENT to READ after 2nd user reads it', async ({
+    page, workerUser, secondUser, secondPage, createChannel,
+  }) => {
+    await createChannel({ memberIds: [secondUser.userId] });
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const msgText = `[c15-read] ${runTag}`;
+    await sendText(page, msgText);
+    const statusIcon = messageByText(page, msgText).locator('[data-testid="sendbird-message-status-icon"]');
+    // Verify SENT state (not read yet)
+    await expect(statusIcon).toHaveClass(/sendbird-icon-color--sent/, { timeout: SERVER_RESPONSE_TIMEOUT });
+    await expect(statusIcon).not.toHaveClass(/sendbird-icon-color--read/);
+
+    // secondUser opens the channel to trigger a read receipt.
+    // Filter to a preview with actual text content to avoid clicking a loading skeleton.
+    await secondPage.goto(appPath('/group_channel', { userId: secondUser.userId }));
+    await secondPage.locator('.sendbird-channel-preview').filter({ hasText: /\S/ }).first().click({ timeout: 30_000 });
+    await expect(secondPage.locator('.sendbird-conversation')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+
+    await expect(statusIcon).toHaveClass(/sendbird-icon-color--read/, { timeout: SERVER_RESPONSE_TIMEOUT });
+  });
+
+  // C16
+  test('renders URL preview card for a message with a URL', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    await sendText(page, `check https://sendbird.com ${runTag}`);
+    await expect(
+      page.locator('.sendbird-og-message-item-body').last(),
+    ).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+  });
+
+  test('offers .log files in the file picker of the composer (CLNP-5476)', async ({ page, workerUser, createChannel }) => {
+    await createChannel();
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const accept = await page.locator('.sendbird-message-input--attach-input').first().getAttribute('accept');
+    expect(accept?.split(',')).toContain('.log');
+  });
+
+  test('renders markdown phone and email links with their tel: and mailto: targets (CLNP-6478)', async ({
+    page, workerUser, createChannel,
+  }) => {
+    const channel = await createChannel({ seedMessage: null });
+    await platform.sendMessage(channel.url, workerUser.userId, 'e2e-md Call [(555) 123-4567](tel:+15551234567) or [email us](mailto:help@example.com)');
+    await openFirstGroupChannel(page, { userId: workerUser.userId, groupChannel_enableMarkdownForUserMessage: 'true' });
+
+    const message = messageByText(page, 'e2e-md Call');
+    await expect(message.locator('a[href="tel:+15551234567"]')).toHaveText('(555) 123-4567', { timeout: SERVER_RESPONSE_TIMEOUT });
+    await expect(message.locator('a[href="mailto:help@example.com"]')).toHaveText('email us');
+  });
+
+  test('shows the status icon of an own message in a public channel (CLNP-7450)', async ({
+    page, workerUser, secondUser, createChannel,
+  }) => {
+    await createChannel({ memberIds: [secondUser.userId], isPublic: true });
+    await openFirstGroupChannel(page, { userId: workerUser.userId });
+    const text = `[e2e-public] ${Date.now()}`;
+    await sendText(page, text);
+
+    await expect(messageByText(page, text).locator('[data-testid="sendbird-message-status-icon"]')).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+  });
+});
