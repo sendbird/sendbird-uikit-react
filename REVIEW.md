@@ -16,9 +16,9 @@ a check because it is phrased generically — a generic check still applies to c
   without informing the user, is a defect unless the PR justifies it.
 - Public surface and compatibility — any added/changed/removed public API, changed default, or changed
   error behavior. Removing or changing a public API without a deprecation path is a defect.
-- Concurrency and lifecycle — shared mutable state without synchronization; callbacks delivered on a
-  different thread/queue than the existing surface guarantees; listeners/observers/timers registered
-  but never released.
+- Concurrency and lifecycle — shared mutable state without synchronization; microtask/event-loop
+  ordering that differs from what the existing surface guarantees; callbacks that run after unmount;
+  races when an async response arrives late; listeners/observers/timers registered but never released.
 - Design/complexity: simpler structure? dead or ineffective code paths.
 - Tests added with the change must verify real behavior (not mock echoes) and cover the edge cases
   the change creates.
@@ -42,12 +42,16 @@ a check because it is phrased generically — a generic check still applies to c
   right context (not from a hidden/inactive surface); focus management.
 - Public surface: exported context values, hook return values, provider props, and package exports are
   public API — do not add fields there only to expose package-internal state or setters.
+- Same signature, changed meaning: even when the types are unchanged, compare against the base
+  revision — return values (whether a Promise/thenable comes back, what it resolves to), the actual
+  contents of callback arguments, call timing and order, and error propagation.
 - Bundle / tree-shaking: full-library imports; module top-level side effects; default exports where the
   package relies on named `export *` re-exports.
 
 ## Reporting
-- Comment only on issues introduced or touched by this diff — unchanged and deleted code is context,
-  and issues you notice in other files are out of scope.
+- Scope findings by cause. A defect this diff causes is in scope even when it shows up in a file the
+  diff does not touch — comment on the diff line that causes it. Unchanged code is otherwise context;
+  only problems that predate this diff and are unrelated to it are out of scope.
 - Do NOT pre-filter to only "certain" issues. Behavior/UX regressions and "should the user have been
   notified?" concerns ARE defects — report them WITH a stated confidence, do not self-censor.
 - For each applicable check from Step 1, either report a finding or say it was checked and is clean.
