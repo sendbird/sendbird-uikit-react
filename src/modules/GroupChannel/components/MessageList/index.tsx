@@ -130,13 +130,10 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     }
 
     const { myLastRead } = currentChannel;
-    const candidates = (messages as CoreMessageType[]).filter((message) => !message.silent);
-    return candidates.find((message, index) => {
-      if (message.createdAt === myLastRead + 1) return true;
-      const previous = candidates[index - 1];
-      const isPreviousRead = previous ? previous.createdAt <= myLastRead : !hasPreviousMessages;
-      return isPreviousRead && myLastRead < message.createdAt;
-    });
+    const isReadPositionLoaded = !hasPreviousMessages || messages[0].createdAt <= myLastRead;
+    return (messages as CoreMessageType[]).find((message) => !message.silent && (
+      message.createdAt === myLastRead + 1 || (isReadPositionLoaded && myLastRead < message.createdAt)
+    ));
   }, [messages, currentChannel?.myLastRead, readState, hasPreviousMessages]);
 
   useEffect(() => {

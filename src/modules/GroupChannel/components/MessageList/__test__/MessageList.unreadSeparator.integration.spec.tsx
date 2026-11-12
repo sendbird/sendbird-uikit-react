@@ -225,6 +225,27 @@ describe('GroupChannel/MessageList unread separator in mark-as-unread mode (CLNP
       expect(markAsReadAll).toHaveBeenCalledWith(currentChannel);
     });
 
+    it('puts the separator on the first unread message when a read silent message opens the loaded messages', () => {
+      const firstUnread = userMessage(2, t0 + MINUTE);
+      const { separatorMessages } = renderList({
+        myLastRead: t0 + 30 * 1000,
+        messages: [adminMessage(1, t0, true), firstUnread, userMessage(3, t0 + 2 * MINUTE)],
+        hasPrevious: true,
+      });
+
+      expect(separatorMessages()).toEqual([firstUnread]);
+    });
+
+    it('shows no separator when an unread silent message opens the loaded messages', () => {
+      const { separatorMessages } = renderList({
+        myLastRead: t0 - MINUTE,
+        messages: [adminMessage(1, t0, true), userMessage(2, t0 + MINUTE)],
+        hasPrevious: true,
+      });
+
+      expect(separatorMessages()).toEqual([]);
+    });
+
     it('skips a silent admin message and puts the separator on the next message', () => {
       const firstUnread = userMessage(3, t0 + 2 * MINUTE);
       const { separatorMessages } = renderList({
