@@ -368,6 +368,44 @@ export async function inviteUsers(channelUrl: string, userIds: string[]): Promis
   await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/invite`, { user_ids: userIds });
 }
 
+export async function markAsRead(channelUrl: string, userId: string): Promise<void> {
+  await call('PUT', `/group_channels/${encodeURIComponent(channelUrl)}/messages/mark_as_read`, { user_id: userId });
+}
+
+export async function markAsReadForAllMembers(channelUrl: string): Promise<void> {
+  await call('PUT', `/group_channels/${encodeURIComponent(channelUrl)}/messages/mark_as_read`, {});
+}
+
+export async function sendAdminMessage(channelUrl: string, message: string): Promise<number> {
+  const data = await call('POST', `/group_channels/${encodeURIComponent(channelUrl)}/messages`, {
+    message_type: 'ADMM',
+    message,
+  });
+  if (!data?.message_id) throw new Error(`Platform API sendAdminMessage returned no message_id: ${JSON.stringify(data)}`);
+  return data.message_id;
+}
+
+export interface MemberReadState {
+  userLastRead: number;
+  unreadMessageCount: number;
+}
+
+export async function waitForMemberReadState(
+  channelUrl: string,
+  userId: string,
+  check: (state: MemberReadState) => boolean,
+  what: string,
+): Promise<MemberReadState> {
+  return waitUntil(
+    async () => {
+      const data = await call('GET', `/group_channels/${encodeURIComponent(channelUrl)}?user_id=${encodeURIComponent(userId)}`);
+      return { userLastRead: data?.user_last_read ?? -1, unreadMessageCount: data?.unread_message_count ?? -1 };
+    },
+    check,
+    { what: `${what} for ${userId} on ${channelUrl}` },
+  );
+}
+
 /** Send a message to an open channel; returns message_id. */
 export async function sendOpenChannelMessage(channelUrl: string, userId: string, message: string): Promise<number> {
   const data = await call('POST', `/open_channels/${encodeURIComponent(channelUrl)}/messages`, {

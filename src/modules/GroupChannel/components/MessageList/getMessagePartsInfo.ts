@@ -3,7 +3,7 @@ import isSameDay from 'date-fns/isSameDay';
 
 import { compareMessagesForGrouping } from '../../../../utils/messages';
 import { ReplyType } from '../../../../types';
-import { CoreMessageType, isAdminMessage } from '../../../../utils';
+import { CoreMessageType } from '../../../../utils';
 import { StringSet } from '../../../../ui/Label/stringSet';
 
 export interface GetMessagePartsInfoProps {
@@ -73,7 +73,7 @@ export const getMessagePartsInfo = ({
     hasSeparator = !(previousMessageCreatedAt && (isSameDay(currentCreatedAt, previousMessageCreatedAt)));
   }
 
-  const hasNewMessageSeparator = (isLocalMessage || !isUnreadMessageExistInChannel?.current) ? false : (!isAdminMessage(currentMessage) && firstUnreadMessageId === currentMessage.messageId);
+  const hasNewMessageSeparator = (isLocalMessage || !isUnreadMessageExistInChannel?.current) ? false : (!currentMessage.silent && firstUnreadMessageId === currentMessage.messageId);
 
   return {
     chainTop,
