@@ -116,6 +116,8 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   const separatorMessageRef = useRef<CoreMessageType | undefined>(undefined);
   const isUnreadMessageExistInChannel = useRef<boolean>(false);
 
+  const hasPreviousMessages = hasPrevious?.() ?? false;
+
   // Find the first unread message
   const firstUnreadMessage = useMemo(() => {
     if (!enableMarkAsUnread || !isInitializedRef.current || messages.length === 0 || readState === 'read' || !currentChannel) {
@@ -132,10 +134,10 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     return candidates.find((message, index) => {
       if (message.createdAt === myLastRead + 1) return true;
       const previous = candidates[index - 1];
-      const isPreviousRead = previous ? previous.createdAt <= myLastRead : !hasPrevious();
+      const isPreviousRead = previous ? previous.createdAt <= myLastRead : !hasPreviousMessages;
       return isPreviousRead && myLastRead < message.createdAt;
     });
-  }, [messages, currentChannel?.myLastRead, readState]);
+  }, [messages, currentChannel?.myLastRead, readState, hasPreviousMessages]);
 
   useEffect(() => {
     if (currentChannel?.url && loading) {

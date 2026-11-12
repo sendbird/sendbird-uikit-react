@@ -33,6 +33,36 @@ test.describe('group channel — unread separator in mark-as-unread mode (CLNP-9
     await expect(page.locator('.sendbird-unread-floating-button')).toHaveCount(0, { timeout: SERVER_RESPONSE_TIMEOUT });
   });
 
+  test('puts the separator on the oldest message when the channel is reopened from the local cache', async ({
+    page, workerUser, secondUser, createChannel,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 420 });
+    const channel = await createChannel({ memberIds: [secondUser.userId], seedMessage: null });
+    await platform.markAsReadForAllMembers(channel.url);
+    await platform.seedMessages(channel.url, secondUser.userId, 20, '[e2e] cached');
+    await platform.waitForMemberReadState(
+      channel.url,
+      workerUser.userId,
+      (state) => state.userLastRead === 0 && state.unreadMessageCount === 20,
+      'read position 0 with twenty unread messages',
+    );
+    const params = { userId: workerUser.userId, groupChannel_enableMarkAsUnread: 'true' };
+    const conversation = page.locator('.sendbird-conversation');
+
+    await openFirstGroupChannel(page, params);
+    await expect(conversation.getByText('[e2e] cached 20', { exact: true })).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+
+    await openFirstGroupChannel(page, params);
+    await expect(conversation.getByText('[e2e] cached 20', { exact: true })).toBeVisible({ timeout: SERVER_RESPONSE_TIMEOUT });
+    const separator = newMessagesSeparator(page);
+    await expect(separator).toHaveCount(1, { timeout: SERVER_RESPONSE_TIMEOUT });
+
+    await expect(async () => {
+      await separator.scrollIntoViewIfNeeded();
+      expect((await platform.getMemberReadState(channel.url, workerUser.userId)).unreadMessageCount).toBe(0);
+    }).toPass({ timeout: 30_000 });
+  });
+
   test('marks the channel read on open when its only unread message is an admin message', async ({
     page, workerUser, secondUser, createChannel,
   }) => {

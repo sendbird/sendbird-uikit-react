@@ -98,11 +98,17 @@ const renderList = ({ myLastRead, messages, hasPrevious }: Scenario) => {
   setState({ loading: false, messages, isScrollBottomReached: true });
   rerender(<MessageList renderPlaceholderLoader={() => null} />);
 
+  const update = (overrides: Record<string, unknown>) => {
+    setState({ loading: false, messages, isScrollBottomReached: true, ...overrides });
+    rerender(<MessageList renderPlaceholderLoader={() => null} />);
+  };
+
   const lastPropsOf = (message: unknown) => {
     return vi.mocked(Message).mock.calls.filter((call) => (call[0] as any).message === message).pop()![0] as any;
   };
 
   return {
+    update,
     markAsReadAll,
     currentChannel,
     separatorMessages: () => messages.filter((message) => lastPropsOf(message).hasNewMessageSeparator),
@@ -151,6 +157,20 @@ describe('GroupChannel/MessageList unread separator in mark-as-unread mode (CLNP
 
       expect(separatorMessages()).toEqual([]);
     });
+
+    it('puts the separator on the oldest message once there turns out to be no older history, with the same messages', () => {
+      const first = userMessage(1, t0);
+      const { separatorMessages, update } = renderList({
+        myLastRead: 0,
+        messages: [first, userMessage(2, t0 + MINUTE)],
+        hasPrevious: true,
+      });
+      expect(separatorMessages()).toEqual([]);
+
+      update({ hasPrevious: () => false });
+
+      expect(separatorMessages()).toEqual([first]);
+    });
   });
 
   describe('when the first unread message is older than the loaded messages', () => {
@@ -162,6 +182,20 @@ describe('GroupChannel/MessageList unread separator in mark-as-unread mode (CLNP
       });
 
       expect(separatorMessages()).toEqual([]);
+    });
+
+    it('puts the separator on the oldest loaded message once there turns out to be no older history, with the same messages', () => {
+      const first = userMessage(1, t0);
+      const { separatorMessages, update } = renderList({
+        myLastRead: t0 - MINUTE,
+        messages: [first, userMessage(2, t0 + MINUTE)],
+        hasPrevious: true,
+      });
+      expect(separatorMessages()).toEqual([]);
+
+      update({ hasPrevious: () => false });
+
+      expect(separatorMessages()).toEqual([first]);
     });
 
     it('puts the separator on the first unread message once the read one before it is loaded', () => {

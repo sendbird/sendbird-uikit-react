@@ -390,6 +390,11 @@ export interface MemberReadState {
   unreadMessageCount: number;
 }
 
+export async function getMemberReadState(channelUrl: string, userId: string): Promise<MemberReadState> {
+  const data = await call('GET', `/group_channels/${encodeURIComponent(channelUrl)}?user_id=${encodeURIComponent(userId)}`);
+  return { userLastRead: data?.user_last_read ?? -1, unreadMessageCount: data?.unread_message_count ?? -1 };
+}
+
 export async function waitForMemberReadState(
   channelUrl: string,
   userId: string,
@@ -397,10 +402,7 @@ export async function waitForMemberReadState(
   what: string,
 ): Promise<MemberReadState> {
   return waitUntil(
-    async () => {
-      const data = await call('GET', `/group_channels/${encodeURIComponent(channelUrl)}?user_id=${encodeURIComponent(userId)}`);
-      return { userLastRead: data?.user_last_read ?? -1, unreadMessageCount: data?.unread_message_count ?? -1 };
-    },
+    () => getMemberReadState(channelUrl, userId),
     check,
     { what: `${what} for ${userId} on ${channelUrl}` },
   );
