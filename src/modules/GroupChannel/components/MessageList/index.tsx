@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import type { Member } from '@sendbird/chat/groupChannel';
 import { useGroupChannelHandler } from '@sendbird/uikit-tools';
 
-import { CoreMessageType, isSendableMessage, getHTMLTextDirection, SendableMessageType, isAdminMessage } from '../../../../utils';
+import { CoreMessageType, isSendableMessage, getHTMLTextDirection, SendableMessageType } from '../../../../utils';
 import { EveryMessage, RenderMessageParamsType, TypingIndicatorType } from '../../../../types';
 
 import PlaceHolder, { PlaceHolderTypes } from '../../../../ui/PlaceHolder';
@@ -78,6 +78,7 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
     state: {
       channelUrl,
       hasNext,
+      hasPrevious,
       loading,
       messages,
       newMessages,
@@ -115,9 +116,11 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
   const separatorMessageRef = useRef<CoreMessageType | undefined>(undefined);
   const isUnreadMessageExistInChannel = useRef<boolean>(false);
 
+  const hasPreviousMessages = hasPrevious?.() ?? false;
+
   // Find the first unread message
   const firstUnreadMessage = useMemo(() => {
-    if (!enableMarkAsUnread || !isInitializedRef.current || messages.length === 0 || readState === 'read' || !currentChannel?.myLastRead) {
+    if (!enableMarkAsUnread || !isInitializedRef.current || messages.length === 0 || readState === 'read' || !currentChannel) {
       return undefined;
     }
 
@@ -126,19 +129,12 @@ export const MessageList = (props: GroupChannelMessageListProps) => {
       isUnreadMessageExistInChannel.current = true;
     }
 
-    const myLastRead = currentChannel.myLastRead;
-    const willFindMessageCreatedAt = myLastRead + 1;
-
-    // 조건 1: 정확히 myLastRead + 1인 메시지 찾기
-    const exactMatchMessage = messages.find((message) => message.createdAt === willFindMessageCreatedAt);
-
-    if (exactMatchMessage) {
-      return exactMatchMessage as CoreMessageType;
-    }
-
-    // 조건 2: myLastRead + 1보다 큰 첫 번째 메시지 찾기 (Admin 메시지 제외)
-    return messages.find((message) => message.createdAt > willFindMessageCreatedAt && !isAdminMessage(message as any)) as CoreMessageType | undefined;
-  }, [messages, currentChannel?.myLastRead, readState]);
+    const { myLastRead } = currentChannel;
+    const isReadPositionLoaded = !hasPreviousMessages || messages[0].createdAt <= myLastRead;
+    return (messages as CoreMessageType[]).find((message) => !message.silent && (
+      message.createdAt === myLastRead + 1 || (isReadPositionLoaded && myLastRead < message.createdAt)
+    ));
+  }, [messages, currentChannel?.myLastRead, readState, hasPreviousMessages]);
 
   useEffect(() => {
     if (currentChannel?.url && loading) {

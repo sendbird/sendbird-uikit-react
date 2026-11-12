@@ -137,6 +137,40 @@ describe('getMessagePartsInfo - unread "New Messages" separator stays gated by s
   });
 });
 
+describe('getMessagePartsInfo - unread "New Messages" separator on admin messages (CLNP-9056)', () => {
+  const adminMessage = (createdAt: number, silent: boolean): CoreMessageType => ({
+    messageId: createdAt,
+    createdAt,
+    silent,
+    messageType: 'admin',
+    isUserMessage: () => false,
+    isAdminMessage: () => true,
+    isFileMessage: () => false,
+    isMultipleFilesMessage: () => false,
+  } as unknown as CoreMessageType);
+
+  const partsFor = (message: CoreMessageType) => {
+    return getMessagePartsInfo({
+      stringSet,
+      isMessageGroupingEnabled: false,
+      currentChannel: null,
+      allMessages: [userMessage(SEP_09, 'succeeded'), message],
+      currentIndex: 1,
+      currentMessage: message,
+      isUnreadMessageExistInChannel: { current: true },
+      firstUnreadMessageId: message.messageId,
+    });
+  };
+
+  it('shows the unread separator for an admin message that matches firstUnreadMessageId', () => {
+    expect(partsFor(adminMessage(SEP_10, false)).hasNewMessageSeparator).toBe(true);
+  });
+
+  it('suppresses the unread separator for a silent admin message even if it matches firstUnreadMessageId', () => {
+    expect(partsFor(adminMessage(SEP_10, true)).hasNewMessageSeparator).toBe(false);
+  });
+});
+
 describe('getMessagePartsInfo - date separator alongside the unread separator (enableMarkAsUnread)', () => {
   const partsForList = (allMessages: CoreMessageType[], firstUnreadMessageId: number) => {
     return allMessages.map((currentMessage, currentIndex) => {
