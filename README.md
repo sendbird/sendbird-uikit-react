@@ -7,6 +7,39 @@
 
 We are introducing a new version of the Sendbird Chat UIKit. Version 3 features a new modular architecture with more granular components that give you enhanced flexibility to customize your web and mobile apps. Check out our [migration guides](MIGRATION_v2-to-v3.md).
 
+## Build with Claude Code or Codex
+
+Two Sendbird plugins for Claude Code and Codex help you add this SDK to your React app:
+
+- The [Sendbird Client Plugin](https://tools.docs.sendbird.com/plugins/client) writes setup and feature code from verified Sendbird documentation and the Sendbird SDK you have installed.
+- The [Sendbird CLI plugin](https://tools.docs.sendbird.com/plugins/cli) signs you in to Sendbird and manages your apps, users, and channels with the Sendbird CLI. The client plugin can take the App ID from the app you choose there.
+
+The CLI plugin needs Node.js 22.23.4 or a later 22.x release, or 24.22.1 or a later 24.x release. Its setup installs the Sendbird CLI with npm if it is missing.
+
+In Claude Code:
+
+```bash
+claude plugin marketplace add sendbird/sendbird-plugins
+claude plugin install sendbird-client@sendbird
+claude plugin install sendbird-cli@sendbird
+```
+
+Start a new session, run `/sendbird-cli:sendbird-setup` to sign in and choose your app, and then run `/sendbird-client:setup --product uikit` in your project.
+
+In Codex:
+
+```bash
+codex plugin marketplace add sendbird/sendbird-plugins
+codex plugin add sendbird-client@sendbird
+codex plugin add sendbird-cli@sendbird
+```
+
+Start a new session. When Codex shows "Hooks need review", choose **Review hooks** and press `t` to trust the client plugin's hooks. Then call `$sendbird-cli:sendbird-setup` to sign in and choose your app, and then call `$sendbird-client:setup --product uikit` in your project.
+
+See the [Client plugin guide](https://tools.docs.sendbird.com/plugins/client) and the [CLI plugin guide](https://tools.docs.sendbird.com/plugins/cli) for setup details and example requests.
+
+The client plugin runs local shell scripts as hooks. Review [What runs on your machine](https://github.com/sendbird/sendbird-client-plugin#what-runs-on-your-machine) before installing.
+
 ## Installation
 
 `yarn add @sendbird/uikit-react`
