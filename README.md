@@ -32,7 +32,7 @@ codex plugin add sendbird-client@sendbird
 codex plugin add sendbird-cli@sendbird
 ```
 
-Then call `$sendbird-cli:sendbird-setup` and `$sendbird-client:setup`.
+Start a new session, call `$sendbird-cli:sendbird-setup` to sign in and choose your app, and then call `$sendbird-client:setup --product uikit` in your project.
 
 See the [Client plugin guide](https://tools.docs.sendbird.com/plugins/client) and the [CLI plugin guide](https://tools.docs.sendbird.com/plugins/cli) for setup details and example requests.
 
