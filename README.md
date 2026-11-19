@@ -14,6 +14,8 @@ Two Sendbird plugins for Claude Code and Codex help you add this SDK to your Rea
 - The [Sendbird Client Plugin](https://tools.docs.sendbird.com/plugins/client) writes setup and feature code from verified Sendbird documentation and the Sendbird SDK you have installed.
 - The [Sendbird CLI plugin](https://tools.docs.sendbird.com/plugins/cli) signs you in to Sendbird and manages your apps, users, and channels with the Sendbird CLI. The client plugin can take the App ID from the app you choose there.
 
+The CLI plugin needs Node.js 22.23.4 or a later 22.x release, or 24.22.1 or a later 24.x release. Its setup installs the Sendbird CLI with npm if it is missing.
+
 In Claude Code:
 
 ```bash
@@ -32,7 +34,7 @@ codex plugin add sendbird-client@sendbird
 codex plugin add sendbird-cli@sendbird
 ```
 
-Start a new session, call `$sendbird-cli:sendbird-setup` to sign in and choose your app, and then call `$sendbird-client:setup --product uikit` in your project.
+Start a new session. When Codex shows "Hooks need review", choose **Review hooks** and press `t` to trust the client plugin's hooks. Then call `$sendbird-cli:sendbird-setup` to sign in and choose your app, and then call `$sendbird-client:setup --product uikit` in your project.
 
 See the [Client plugin guide](https://tools.docs.sendbird.com/plugins/client) and the [CLI plugin guide](https://tools.docs.sendbird.com/plugins/cli) for setup details and example requests.
 
