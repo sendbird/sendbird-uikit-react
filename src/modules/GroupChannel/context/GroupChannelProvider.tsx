@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useRef, createContext, useCallback } from 'react';
+import React, { useMemo, useEffect, useRef, createContext, useCallback, useContext } from 'react';
 import {
   ReplyType as ChatReplyType,
 } from '@sendbird/chat/message';
@@ -151,6 +151,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
 
   const { state, actions } = useGroupChannel();
   const { updateState } = useGroupChannelStore();
+  const groupChannelStore = useContext(GroupChannelContext);
   const { state: { config, stores } } = useSendbird();
   const { sdkStore } = stores;
   const { userId, markAsReadScheduler, logger, pubSub } = config;
@@ -411,8 +412,11 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     isScrollBottomReached,
   ]);
 
+  const hasPreviousMessages = messageDataSource.hasPrevious();
+  const hasPreviousMessagesRef = useRef(hasPreviousMessages);
+
   useDeepCompareEffect(() => {
-    updateState({
+    const updates = {
       // Channel state
       channelUrl,
       currentChannel: state.currentChannel,
@@ -427,7 +431,14 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
       ...messageDataSource,
       markAsUnread,
       markAsUnreadSourceRef,
-    });
+    };
+
+    if (hasPreviousMessagesRef.current !== hasPreviousMessages) {
+      hasPreviousMessagesRef.current = hasPreviousMessages;
+      groupChannelStore?.setState((prevState) => ({ ...prevState, ...updates }), true);
+    } else {
+      updateState(updates);
+    }
   }, [
     channelUrl,
     state.currentChannel?.serialize(),
@@ -437,6 +448,7 @@ const GroupChannelManager :React.FC<React.PropsWithChildren<GroupChannelProvider
     renderProps,
     messageDataSource.initialized,
     messageDataSource.loading,
+    hasPreviousMessages,
     messageDataSource.messages.map(it => it.serialize()),
   ]);
 
