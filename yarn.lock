@@ -5226,11 +5226,11 @@ __metadata:
   linkType: hard
 
 "brace-expansion@npm:^5.0.5":
-  version: 5.0.11
-  resolution: "brace-expansion@npm:5.0.11"
+  version: 5.0.12
+  resolution: "brace-expansion@npm:5.0.12"
   dependencies:
     balanced-match: ^4.0.2
-  checksum: d64c714147c9401f7ddcb90d506657a9decafb647ece3310a729bd6cd7225e3f0175dac716df95ae5e3224a5f2621c00fc377d4653d0dbeb7b074ee32f7f338a
+  checksum: eed95008709cb43e41945d4a4c0427a859ddaa798880bdd36497a719b1487fd9481afaa14f202c232a594a27c21f5c0de196a37994a6e6eed4f680913d5363d3
   languageName: node
   linkType: hard
 
