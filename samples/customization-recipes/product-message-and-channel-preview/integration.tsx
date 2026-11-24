@@ -47,7 +47,10 @@ const defaultChannelNames = ['', 'Group Channel', 'AI Chatbot Widget Channel'];
 export function ProductChannelRow(props: ComponentProps<typeof GroupChannelListItem>) {
   const { state: { config } } = useSendbird();
   const { channel, isSelected, onClick } = props;
-  const product = decodeProduct(channel.lastMessage?.customType, channel.lastMessage?.data);
+  const message = channel.lastMessage;
+  const product = message && (message.isUserMessage() || message.isFileMessage())
+    ? decodeProduct(message.customType, message.data)
+    : undefined;
   if (!product || defaultChannelNames.includes(channel.name ?? '')) {
     // The stock row already calls onClick. Stop its DOM click from reaching the list's wrapper.
     return <div onClick={event => event.stopPropagation()} onKeyDown={product ? event => {

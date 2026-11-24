@@ -48,7 +48,7 @@ interface CollectionHandler {
   onMessagesUpdated?: (context: { source: CollectionEventSource }, channel: GroupChannel, messages: FixtureMessage[]) => void;
 }
 
-type MessageSeed = { text?: string; customType?: string; data?: string; like?: boolean };
+type MessageSeed = { text?: string; customType?: string; data?: string; like?: boolean; admin?: boolean };
 type ProviderProps = React.ComponentProps<typeof SendbirdProvider>;
 
 function createChannel(screen: ScreenId, record: RecordOperation, historySize: number, seed?: MessageSeed) {
@@ -57,6 +57,11 @@ function createChannel(screen: ScreenId, record: RecordOperation, historySize: n
   first.customType = seed?.customType ?? '';
   first.data = seed?.data ?? '';
   if (seed?.like) first.reactions = [{ key: 'like', userIds: [other.userId] }];
+  if (seed?.admin) {
+    first.messageType = 'admin';
+    first.isAdminMessage = () => true;
+    first.isUserMessage = () => false;
+  }
   const loaded = [first, ...Array.from({ length: historySize - 1 }, (_, offset) =>
     makeMessage(first.messageId + offset + 1, `History ${offset + 2}`, url))];
   let active: CollectionHandler | undefined;

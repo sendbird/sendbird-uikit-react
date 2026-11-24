@@ -26,7 +26,7 @@ Choose per need. The stock reply control uses `CHANNEL__THREAD_REPLY` / `CHANNEL
 
 ## What the smoke test checks
 
-At 1280px and 390px, switching English → Korean → Russian → English keeps the same table element, updates the placeholder, keeps the English fallback, and renders the expected stock and app labels for 0, 1, 2, 5, 21, 22 and 100 replies. Both reply controls for 22 replies report message 1022.
+At 1280px and 390px, switching English → Korean → Russian → English keeps the same table element, updates the placeholder, keeps the English fallback, and renders the expected stock and app labels for 0, 1, 2, 5, 21, 22 and 100 replies. For 22 replies, the app label shows the Russian few form (`22 ответа`), and the stock reply control reports message 1022.
 
 Fixture-only: [fixture.ts](fixture.ts) provides messages with fixed reply counts. Thread loading and persistence are not verified.
 

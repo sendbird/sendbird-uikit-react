@@ -30,6 +30,6 @@ Before the browser runs, UIKit's published `isSameGroup` (`@sendbird/uikit-react
 
 At 1280px and 390px: the timestamp element and its parent are unchanged after the format switch, click/Enter/Space produce `add → delete → add → delete`, the long body does not overlap the time and button, and mixed reactions render two stock badges.
 
-Fixture-only: [fixture.tsx](fixture.tsx) supplies the message, channel and group channel store, and its `addReaction`/`deleteReaction` only update local state. The smoke exercises the content override; `ChannelWithMessageDetails` is type-checked but is not mounted with an authenticated channel. Server persistence and delivery to other users are not verified.
+Fixture-only: [fixture.tsx](fixture.tsx) supplies the message, channel and group channel store, and its `addReaction`/`deleteReaction` only update local state. The smoke mounts both the content override and `ChannelWithMessageDetails` with local data. Authentication, persistence and delivery to other users require a connected test app.
 
 [Reactions](https://sendbird.com/docs/chat/uikit/v3/react/features/reactions) · [Text localization](https://sendbird.com/docs/chat/uikit/v3/react/theme-and-style-resources/localization-resources/text) · [Group channel](https://sendbird.com/docs/chat/uikit/v3/react/modules/group-channel)

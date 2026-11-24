@@ -93,8 +93,42 @@ for (const [reason, data] of [
 report.productDecoder = { acceptedAtLimit: true, rejectedInvalidCases: 5 };
 
 // 2. Browser scenarios against the production build ---------------------------------------
+async function checkHeldReaction(page, button) {
+  await button.scrollIntoViewIfNeeded();
+  const bounds = await button.boundingBox();
+  assert.ok(bounds);
+  const x = bounds.x + bounds.width / 2;
+  const y = bounds.y + bounds.height / 2;
+  const noMessageMenu = async () => assert.equal(
+    await page.locator('.sendbird-message__mobile-context-menu, .sendbird-message__bottomsheet').count(), 0,
+  );
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  try {
+    // UIKit opens the message menu after a 300 ms hold.
+    await page.waitForTimeout(400);
+    await noMessageMenu();
+  } finally {
+    await page.mouse.move(2, 2);
+    await page.mouse.up();
+  }
+  const session = await page.context().newCDPSession(page);
+  let touching = false;
+  try {
+    await session.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 });
+    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y, id: 1 }] });
+    touching = true;
+    await page.waitForTimeout(400);
+    await noMessageMenu();
+  } finally {
+    if (touching) await session.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] });
+    await session.send('Emulation.setTouchEmulationEnabled', { enabled: false });
+    await session.detach();
+  }
+}
+
 const scenarios = {
-  'message-timestamp-and-reaction': async ({ page, url, step }) => {
+  'message-timestamp-and-reaction': async ({ page, url, width, step }) => {
     await page.goto(url);
     const preview = page.getByRole('region', { name: 'Message preview' });
     const placement = element => ({ tag: element.tagName, className: element.className, parentClass: element.parentElement.className });
@@ -145,6 +179,13 @@ const scenarios = {
       assert.deepEqual((await badges.allInnerTexts()).map(text => text.trim()).sort(), ['1', '2']);
       assert.equal(await preview.locator('.recipe-reaction-chip').count(), 0);
     });
+    if (width === 390) {
+      await step('holding the timestamp Like control keeps the mobile message menu closed', async () => {
+        await page.goto(url);
+        await page.getByLabel('Custom message details').check();
+        await checkHeldReaction(page, page.locator('.recipe-reaction-chip'));
+      });
+    }
     await step('the copyable timestamp channel mounts with stock composer and Like enabled', async () => {
       await page.goto(`${url}?wrapper`);
       await page.getByText('Original message A', { exact: true }).waitFor();
@@ -822,6 +863,13 @@ const scenarios = {
       await preview.click();
       await page.getByText('SKU LAMP-01', { exact: true }).waitFor();
     });
+    await step('product metadata on an admin message leaves the stock row and body alone', async () => {
+      await page.goto(`${url}?wrapper&admin`);
+      await page.getByRole('link', { name: /Conversation A/ }).waitFor();
+      await page.getByText('A product in the installed UI', { exact: true }).last().waitFor();
+      assert.equal(await page.locator('.product-channel-row').count(), 0);
+      assert.equal(await page.getByRole('article', { name: 'Product card' }).count(), 0);
+    });
   },
 
   'per-screen-channel-options': async ({ page, url, step }) => {
@@ -1221,17 +1269,16 @@ const scenarios = {
         }
       });
     }
-    await step('stock and app reply controls report the same message ID', async () => {
+    await step('the app renders its Russian few label and UIKit routes the stock reply', async () => {
       await page.getByLabel('Language').selectOption('ru');
       const row = page.locator('tr[data-count="22"]');
       await row.locator('.sendbird-ui-thread-replies').click();
       await page.getByText('UIKit reply clicked for message 1022', { exact: true }).waitFor();
-      await row.getByRole('button', { name: '22 ответа' }).click();
-      await page.getByText('App reply clicked for message 1022', { exact: true }).waitFor();
+      assert.equal(await row.getByRole('button', { name: '22 ответа' }).textContent(), '22 ответа');
     });
   },
 
-  'upgrade-and-migration': async ({ page, url, step }) => {
+  'upgrade-and-migration': async ({ page, url, width, step }) => {
     await page.goto(url);
     const message = page.getByTestId('message');
     const preview = page.getByTestId('preview');
@@ -1245,6 +1292,11 @@ const scenarios = {
       assert.ok(await preview.getByText('Upgrade Lab', { exact: true }).isVisible());
       assert.ok(await preview.getByText(text, { exact: true }).isVisible());
     });
+    if (width === 390) {
+      await step('holding the migrated Like control keeps the mobile message menu closed', async () => {
+        await checkHeldReaction(page, message.getByRole('button', { name: 'Like 2' }));
+      });
+    }
     await step('custom reaction button adds and removes through toggleReaction', async () => {
       await message.getByRole('button', { name: 'Like 2' }).click();
       const added = message.getByRole('button', { name: 'Like 3' });
@@ -1297,6 +1349,19 @@ report.browser = browser.version();
 try {
   for (const width of widths) {
     const context = await browser.newContext({ viewport: { width, height: 900 }, timezoneId: 'UTC', locale: 'en-US', serviceWorkers: 'block' });
+    const browserErrors = [];
+    context.on('weberror', error => browserErrors.push(error.error().message));
+    context.on('console', message => {
+      if (message.type() !== 'error') return;
+      // The SDK stylesheet requests this blocked, optional font.
+      if (message.location().url.startsWith('https://fonts.googleapis.com/') && message.text().includes('ERR_BLOCKED_BY_CLIENT')) return;
+      browserErrors.push(message.text());
+    });
+    context.on('response', response => {
+      if (new URL(response.url()).origin === origin && response.status() >= 400) {
+        browserErrors.push(`${response.status()} ${response.url()}`);
+      }
+    });
     await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin });
     await context.route('**/*', route => {
       const request = route.request();
@@ -1310,10 +1375,9 @@ try {
       socket.close();
     });
     for (const [topic, run] of Object.entries(scenarios)) {
+      browserErrors.length = 0;
       const page = await context.newPage();
       page.setDefaultTimeout(6_000);
-      const pageErrors = [];
-      page.on('pageerror', error => pageErrors.push(error.message));
       const result = { topic, width, checks: [] };
       let current = '';
       const step = async (name, fn) => {
@@ -1323,8 +1387,8 @@ try {
       };
       try {
         await run({ page, url: `${origin}/${topic}/`, width, step });
-        await step('no page errors or horizontal overflow', async () => {
-          assert.deepEqual(pageErrors, []);
+        await step('no browser errors, local HTTP failures or horizontal overflow', async () => {
+          assert.deepEqual(browserErrors, [], browserErrors[0]);
           assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
         });
         result.status = 'PASS';

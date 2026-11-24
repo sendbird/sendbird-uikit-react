@@ -29,7 +29,7 @@ If you use the all-in-one `App` and still need the legacy modules during the tra
 
 ## Public API
 
-[integration.tsx](integration.tsx) shows the migrated composition using `SendbirdProvider`, `GroupChannelList` and `GroupChannel`. It imports the companion [like.css](like.css) for its reaction button. The `renderMessageContent` callback forwards props to `MessageContent` and replaces only `renderEmojiReactions`. `ExistingAppChat` expects the `appId`, `userId` and `accessToken` your server issues for the signed-in user.
+[integration.tsx](integration.tsx) shows the migrated composition using `SendbirdProvider`, `GroupChannelList` and `GroupChannel`. It imports the companion [like.css](like.css) for the chat layout and reaction button. The `renderMessageContent` callback forwards props to `MessageContent` and replaces only `renderEmojiReactions`. `ExistingAppChat` uses your Sendbird application ID and the signed-in user's ID and access token.
 
 Register `like` in your application's emoji set or use a key you already registered. The button replaces the reaction row only when `like` is the sole reaction and UIKit supplies `toggleReaction`. It omits the stock add-reaction picker, the desktop tooltip and mobile long-press sheet for reacted members, and the filter check that can show "Add reaction failed" for an emoji outside the categories allowed by `filterEmojiCategoryIds`. Messages with no reaction, another key or mixed reactions keep UIKit's default behavior.
 
@@ -37,6 +37,6 @@ Register `like` in your application's emoji set or use a key you already registe
 
 Before the browser runs, the smoke test asserts that every `@sendbird/*` import in these recipes is in the installed package's `exports` map, that the legacy `Channel`, `ChannelList`, their `context` subpaths and `App` are still published, that `ui/MessageBody` is not, and that the installed versions match the pins. At 1280px and 390px against the production build: the stock preview, body and timestamp render, the Like button adds and removes through `toggleReaction`, mixed and heart-only reactions keep the stock row, the stock preview selects, and the stock composer sends the draft.
 
-Fixture-only: [fixture.tsx](fixture.tsx) supplies the channel, message and group channel store and records reaction, selection and send locally. The smoke exercises its preview and composer overrides. A separate synthetic SDK session supplied through `configureSession` also mounts `ExistingAppChat`, where channel selection and the stock composer are checked. Authentication and persistence still require a live test app.
+Fixture-only: [fixture.tsx](fixture.tsx) supplies the channel, message and group channel store and records reaction, selection and send locally. The smoke selects a channel in the fixture's stock preview and sends a draft through its stock composer. A separate synthetic SDK session supplied through `configureSession` also mounts `ExistingAppChat`, where the smoke switches channels and checks that the stock composer is visible. Authentication and persistence still require a live test app.
 
 [Customization](https://sendbird.com/docs/chat/uikit/v3/react/customization) · [Reactions](https://sendbird.com/docs/chat/uikit/v3/react/features/reactions)

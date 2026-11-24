@@ -19,6 +19,8 @@ function LikeButton(props: EmojiReactionsProps) {
       type="button"
       aria-label={`Like ${like.userIds.length}`}
       aria-pressed={pressed}
+      onMouseDown={event => event.stopPropagation()}
+      onTouchStart={event => event.stopPropagation()}
       onClick={() => toggleReaction(message, like.key, pressed)}
     >
       <span aria-hidden="true">♥ </span> {like.userIds.length}

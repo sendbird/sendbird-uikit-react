@@ -17,6 +17,8 @@ function LikeReaction(props: EmojiReactionsProps) {
     <div className="recipe-reaction-strip">
       <button type="button" className="recipe-reaction-chip" aria-pressed={selected}
         aria-label={`Like, ${reaction.userIds.length} reactions`}
+        onMouseDown={event => event.stopPropagation()}
+        onTouchStart={event => event.stopPropagation()}
         onClick={() => toggleReaction(message, reaction.key, selected)}>
         <span aria-hidden="true">♥</span> {reaction.userIds.length}
       </button>
