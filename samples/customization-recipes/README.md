@@ -34,6 +34,8 @@ npm run smoke
 
 `npm run smoke` serves `dist/` on loopback and blocks every other request. It runs each recipe in Chromium at 1280px and 390px and asserts the behavior described in that recipe's README. It also checks that every `@sendbird/*` import is a published entry point of the installed package and that the installed SDK versions match the pins. Set `SMOKE_REPORT=<file>` to write the full JSON result. The UIKit stylesheet requests a Google Fonts stylesheet; the smoke test blocks it and the pages fall back to system fonts.
 
+This smoke test is a local development check. The repository CI runs its existing checks but does not run `samples/customization-recipes` or this smoke command; run the commands above when changing a recipe or its pinned dependencies.
+
 ## Recipes
 
 | Recipe | What it changes | Main public API |
@@ -46,14 +48,14 @@ npm run smoke
 | [Product message and channel preview](product-message-and-channel-preview/README.md) | One typed product payload drives a message card and a channel-list row | `renderMessageBody`, `renderChannelPreview` |
 | [Per-screen channel options](per-screen-channel-options/README.md) | Different reaction, reply and emoji settings on two screens | `GroupChannelProvider` props |
 | [Copy message ID menu](copy-message-id-menu/README.md) | One extra message menu item for supported messages, on desktop and in the mobile long-press menu | `renderMessageMenu`, `MessageMenu`, `renderMobileMenuOnLongPress`, `MobileMenu` |
-| [Localized reply count](localized-reply-count/README.md) | Switch UIKit strings and format reply counts per language | `stringSet`, `useLocalization` |
+| [Localized reply count](localized-reply-count/README.md) | Switch UIKit strings and format reply counts per language | `stringSet`, `Intl.PluralRules` |
 | [Upgrade and migration](upgrade-and-migration/README.md) | Pin SDK versions, then migrate legacy channel modules separately | Published subpath imports, `GroupChannel` |
 
 ## How each recipe is organized
 
-- `integration.tsx` is the code to copy. It imports only published entry points and expects to run under your app's existing, authenticated `SendbirdProvider`. The one exception is `ExistingAppChat` in the upgrade recipe, which shows that root provider itself.
-- `fixture*.tsx` replaces the Chat SDK transport with synthetic users, channels and messages and records send and reaction calls in memory. It exists only to run the page locally; do not copy it into an app.
-- `main.tsx`, `index.html` and `style.css` build the demo page.
+- `integration.tsx` is the code to copy. It imports published `@sendbird/*` entry points and the local companion files named in that recipe's README. It expects your app's existing, authenticated `SendbirdProvider`; `ExistingAppChat` in the upgrade recipe shows that root provider itself.
+- `fixture*.ts(x)` supplies synthetic data or local SDK adapters; some fixtures record send and reaction calls in memory. These files only run the page locally; do not copy them into an app.
+- `main.tsx` and `index.html` run the demo page. Each recipe README identifies any CSS or other local file needed with its integration.
 
 Each page mounts one `SendbirdProvider`, as a real app should at its root. Because the fixtures replace the network layer, sign-in, persistence, delivery to other devices and other live service behavior are not exercised. Check those in an authorized test application before you ship a change.
 

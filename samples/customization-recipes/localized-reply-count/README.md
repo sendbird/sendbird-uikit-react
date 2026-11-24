@@ -22,7 +22,7 @@ Switch **Language** between English, Korean and Russian. The input placeholder a
 
 The demo page reads the merged dictionary with `useLocalization` from `@sendbird/uikit-react/hooks/useLocalization` to show an override and an English fallback.
 
-Choose per need. The stock reply control (`CHANNEL__THREAD_REPLY` / `CHANNEL__THREAD_REPLIES`) keeps participant avatars, the `99+` cap and thread integration, but has one singular and one plural form. The app label gets every plural category right, shows the raw count (for example `100`) and has no avatars. Set `dateLocale` separately if dates should follow the language too.
+Choose per need. The stock reply control uses `CHANNEL__THREAD_REPLY` / `CHANNEL__THREAD_REPLIES`, and the thread panel header uses `THREAD__THREAD_REPLY` / `THREAD__THREAD_REPLIES`. Both keep only one singular and one plural form; the stock control also keeps participant avatars, the `99+` cap and thread integration. The app label uses `Intl.PluralRules` for the full grammar, shows the raw count (for example `100`) and has no avatars. Set `dateLocale` separately if dates should follow the language too.
 
 ## What the smoke test checks
 

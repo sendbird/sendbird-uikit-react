@@ -23,6 +23,10 @@
 .branded-chat.target .sendbird-text-message-item-body.reactions {
   border-radius: 12px 12px 0 0;
 }
+/* Thread parent messages keep their fully rounded reaction bubble. */
+.branded-chat.target .sendbird-parent-message-info .sendbird-text-message-item-body.reactions {
+  border-radius: 12px;
+}
 .branded-chat.target .sendbird-message-input .sendbird-message-input--textarea {
   min-height: 56px;
   border-radius: 12px;

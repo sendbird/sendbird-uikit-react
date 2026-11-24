@@ -1,6 +1,7 @@
 import { GroupChannelProvider, useGroupChannel } from '@sendbird/uikit-react/GroupChannel/context';
 import GroupChannelUI from '@sendbird/uikit-react/GroupChannel/components/GroupChannelUI';
 import MessageInputWrapper from '@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper';
+import './jump.css';
 
 // Must render inside the GroupChannelProvider that owns the message list.
 export function JumpToLatest() {

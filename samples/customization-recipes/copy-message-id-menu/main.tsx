@@ -4,14 +4,24 @@ import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
 import MessageContent from '@sendbird/uikit-react/ui/MessageContent';
 import { MessageMenu, type MessageMenuProps } from '@sendbird/uikit-react/ui/MessageMenu';
 import '@sendbird/uikit-react/dist/index.css';
-import { CopyIdMessageContent, CopyMessageIdMenu, type CopyResult } from './integration';
+import { ChannelWithCopyMessageId, CopyIdMessageContent, CopyMessageIdMenu, type CopyResult } from './integration';
 import { emojiContainer, menuFixture, type Scenario } from './fixture';
+import { SendbirdFixture } from '../per-screen-channel-options/fixture';
 import '../shared/page.css';
+import './style.css';
+
+const query = new URLSearchParams(location.search);
+const providerOptions = { groupChannel: { enableMarkAsUnread: query.has('mark-as-unread') } };
 
 const scenarios: { value: Scenario; label: string }[] = [
   { value: 'own', label: 'My delivered message' },
   { value: 'other', label: 'Someone else’s delivered message' },
   { value: 'other-reply', label: 'Someone else’s reply' },
+  { value: 'other-parent-only', label: 'Reply outside a thread list' },
+  { value: 'other-thread-only', label: 'Top-level message in a thread list' },
+  { value: 'other-ephemeral', label: 'Message in an ephemeral channel' },
+  { value: 'other-broadcast', label: 'Message in a broadcast channel' },
+  { value: 'other-thread-mode', label: 'Message with THREAD reply mode' },
   { value: 'pending', label: 'My pending message' },
   { value: 'failed', label: 'My failed message' },
 ];
@@ -39,7 +49,7 @@ function App() {
           <label><input type="checkbox" checked={extended} onChange={event => { setExtended(event.target.checked); setResult(''); }} /> Add ID action</label>
           <label><input type="checkbox" checked={reactions} onChange={event => { setReactions(event.target.checked); setResult(''); }} /> Reactions</label>
         </div>
-        <SendbirdProvider appId="" userId="self" breakpoint="600px">
+        <SendbirdProvider appId="" userId="self" breakpoint="600px" uikitOptions={providerOptions}>
           <div className="message">
             <p>A sample message</p>
             <Menu key={`${scenario}-${extended}`} {...demo} />
@@ -105,4 +115,16 @@ function Content({ extended, props, report, reactions }: DemoProps & { reactions
     : <MessageContent {...contentProps} />;
 }
 
-createRoot(document.getElementById('root')!).render(<App />);
+function WrapperFixture() {
+  return <main className="copy-id-demo">
+    <SendbirdFixture record={() => {}}>
+      <section aria-label="Copy wrapper" style={{ height: 600 }}>
+        <ChannelWithCopyMessageId channelUrl="fixture-A" />
+      </section>
+    </SendbirdFixture>
+  </main>;
+}
+
+createRoot(document.getElementById('root')!).render(
+  query.has('wrapper') ? <WrapperFixture /> : <App />,
+);

@@ -364,6 +364,21 @@ const scenarios = {
       await page.getByText('Native Submit', { exact: true }).waitFor();
       assert.deepEqual(await record(), { channel: 'fixture-channel', text: 'Native Submit', mentions: [] });
     });
+    await step('copyable jump CSS hides the spoken Send label without demo styles', async () => {
+      const isolated = await page.context().newPage();
+      try {
+        await isolated.setContent('<button class="sendbird-message-input--send"><span class="send-icon" aria-hidden="true">↑</span><span class="visually-hidden">Send</span></button>');
+        await isolated.addStyleTag({ content: await readFile(join(root, 'jump-to-latest-and-send-icon/jump.css'), 'utf8') });
+        const button = isolated.getByRole('button', { name: 'Send', exact: true });
+        await button.waitFor();
+        assert.deepEqual(await button.locator('.visually-hidden').evaluate(node => {
+          const style = getComputedStyle(node);
+          return [style.width, style.height, style.clipPath];
+        }), ['1px', '1px', 'inset(50%)']);
+      } finally {
+        await isolated.close();
+      }
+    });
     await step('quote reply keeps the parent message ID', async () => {
       await open();
       await page.getByText('History 24', { exact: true }).hover();
@@ -470,6 +485,9 @@ const scenarios = {
     const log = page.getByRole('region', { name: 'Local send log' });
     await step('action leaves the draft untouched and sends nothing', async () => {
       await page.goto(url);
+      const status = page.locator('.composer-recipe [role="status"]');
+      await status.waitFor({ state: 'attached' });
+      assert.equal(await status.innerText(), '');
       await editor.fill('Existing');
       await page.getByRole('button', { name: 'Show writing tip' }).click();
       assert.equal(await page.locator('.composer-recipe [role="status"]').innerText(), 'Start with the action you want the recipient to take.');
@@ -565,6 +583,7 @@ const scenarios = {
     await step('new and edited product update row and body for one message ID', async () => {
       await productRow.getByText('Product: Desk lamp', { exact: true }).waitFor();
       assert.equal(await productRow.getAttribute('aria-current'), 'true');
+      assert.equal(await productRow.getAttribute('tabindex'), '0');
       const id = await body.getAttribute('data-message-id');
       await click('Edit product title');
       await productRow.getByText('Product: Reading lamp', { exact: true }).waitFor();
@@ -754,13 +773,24 @@ const scenarios = {
   },
 
   'copy-message-id-menu': async ({ page, url, width, step }) => {
-    await page.goto(url);
+    await step('copyable GroupChannel wrapper keeps the stock menu and adds Copy message ID', async () => {
+      await page.goto(`${url}?wrapper`);
+      const wrapper = page.getByRole('region', { name: 'Copy wrapper' });
+      await wrapper.getByText('Original message A', { exact: true }).hover();
+      await wrapper.locator('.sendbird-message-content-menu__normal-menu .sendbird-iconbutton').click();
+      const items = await page.getByRole('menuitem').allInnerTexts();
+      assert.ok(items.some(item => item.trim() === 'Copy'));
+      assert.ok(items.some(item => item.trim() === 'Reply'));
+      assert.ok(items.some(item => item.trim() === 'Copy message ID'));
+      await page.goto(url);
+    });
     const scenario = page.getByLabel('Message', { exact: true });
     const extended = page.getByRole('checkbox', { name: 'Add ID action' });
     const trigger = page.getByRole('button', { name: 'Open menu' });
     const menuItems = page.getByRole('menuitem');
     const names = (locator = menuItems) => locator.evaluateAll(nodes => nodes.map(node => node.textContent.trim()));
     const states = [['own', true], ['other', true], ['other-reply', false], ['pending', false], ['failed', false]];
+    const excluded = ['other-parent-only', 'other-thread-only', 'other-ephemeral', 'other-broadcast', 'other-thread-mode'].map(value => [value, false]);
     const compareWithStock = async (cases, readMenu) => {
       for (const [value, hasId] of cases) {
         await scenario.selectOption(value);
@@ -780,6 +810,30 @@ const scenarios = {
         await page.mouse.click(4, 4);
         return labels;
       });
+    });
+    await step('parent, thread-list, channel and reply-mode exclusions each keep the stock menu', async () => {
+      await compareWithStock(excluded, async () => {
+        await trigger.click();
+        await menuItems.first().waitFor();
+        const labels = await names();
+        await page.mouse.click(4, 4);
+        return labels;
+      });
+    });
+    await step('Mark as unread remains in the stock and extended menu when enabled', async () => {
+      await page.goto(`${url}?mark-as-unread`);
+      await scenario.selectOption('other');
+      await extended.uncheck();
+      await trigger.click();
+      await menuItems.first().waitFor();
+      const stock = await names();
+      assert.ok(stock.includes('Mark as unread'));
+      await page.mouse.click(4, 4);
+      await extended.check();
+      await trigger.click();
+      await menuItems.first().waitFor();
+      assert.deepEqual(await names(), [...stock, 'Copy message ID']);
+      await page.goto(url);
     });
     await step('stock Edit, Reply and Resend callbacks still run', async () => {
       for (const [value, label, expected] of [
@@ -812,7 +866,7 @@ const scenarios = {
     if (width >= 600) {
       await step('desktop MessageContent menu adds the ID action through the shared wiring', async () => {
         await reactions.uncheck();
-        await compareWithStock(states.filter(([value]) => value !== 'other-reply' && value !== 'pending'), async () => {
+        await compareWithStock([...states.filter(([value]) => value !== 'other-reply' && value !== 'pending'), ...excluded.filter(([value]) => value !== 'other-thread-only')], async () => {
           await body.hover();
           await content.locator('.sendbird-message-content-menu .sendbird-message-menu .sendbird-iconbutton').click();
           await page.getByRole('menuitem').first().waitFor();
@@ -841,17 +895,27 @@ const scenarios = {
     };
     const contextMenu = '.sendbird-message__mobile-context-menu';
     const bottomSheet = '.sendbird-message__bottomsheet';
-    for (const [withReactions, menu, otherMenu] of [[false, contextMenu, bottomSheet], [true, bottomSheet, contextMenu]]) {
+    for (const withReactions of [false, true]) {
       const name = withReactions ? 'bottom sheet (reactions on)' : 'context menu (reactions off)';
       await step(`long-press ${name}: ID action only on delivered top-level messages, stock items unchanged`, async () => {
         await reactions.setChecked(withReactions);
-        await compareWithStock(states, async () => {
+        const readMobile = async () => {
           await longPress();
-          assert.ok(await page.locator(menu).count() > 0 && await page.locator(otherMenu).count() === 0, `uses the ${name}`);
+          const actualMode = await page.locator(bottomSheet).count() > 0 ? 'bottom sheet' : 'context menu';
           const labels = await names(mobileItems);
           await closeMobileMenu();
-          return labels;
-        });
+          return { actualMode, labels };
+        };
+        for (const [value, hasId] of [...states, ...excluded.filter(([value]) => value !== 'other-thread-only')]) {
+          await scenario.selectOption(value);
+          await extended.uncheck();
+          const stock = await readMobile();
+          await extended.check();
+          const after = await readMobile();
+          assert.equal(after.actualMode, stock.actualMode, value);
+          assert.deepEqual(after.labels, hasId ? [...stock.labels, 'Copy message ID'] : stock.labels, value);
+          if (value === 'other') assert.equal(stock.actualMode, withReactions ? 'bottom sheet' : 'context menu');
+        }
       });
       await step(`long-press ${name}: Copy message ID writes the ID and closes; stock Edit and Reply still run`, async () => {
         await reactions.setChecked(withReactions);

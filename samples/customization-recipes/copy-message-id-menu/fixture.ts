@@ -2,7 +2,8 @@
 import type { MessageMenuProps } from '@sendbird/uikit-react/ui/MessageMenu';
 import type { MessageContentProps } from '@sendbird/uikit-react/ui/MessageContent';
 
-export type Scenario = 'own' | 'other' | 'other-reply' | 'pending' | 'failed';
+export type Scenario = 'own' | 'other' | 'other-reply' | 'other-parent-only' | 'other-thread-only'
+  | 'other-ephemeral' | 'other-broadcast' | 'other-thread-mode' | 'pending' | 'failed';
 
 const fixtureChannel = {
   url: 'recipe-action-menu',
@@ -22,8 +23,8 @@ export const emojiContainer = {
 } as unknown as MessageContentProps['emojiContainer'];
 
 export function menuFixture(scenario: Scenario): Pick<MessageMenuProps, 'channel' | 'message' | 'isByMe' | 'replyType' | 'inThreadList'> {
-  const isByMe = scenario !== 'other' && scenario !== 'other-reply';
-  const inThreadList = scenario === 'other-reply';
+  const isByMe = scenario === 'own' || scenario === 'pending' || scenario === 'failed';
+  const inThreadList = scenario === 'other-reply' || scenario === 'other-thread-only';
   const message = {
     messageId: 101,
     messageType: 'user',
@@ -35,7 +36,7 @@ export function menuFixture(scenario: Scenario): Pick<MessageMenuProps, 'channel
     extendedMessagePayload: {},
     sender: { userId: isByMe ? 'self' : 'other', nickname: isByMe ? 'Sam' : 'Alex', profileUrl: '' },
     sendingStatus: scenario === 'failed' || scenario === 'pending' ? scenario : 'succeeded',
-    parentMessageId: inThreadList ? 99 : 0,
+    parentMessageId: scenario === 'other-reply' || scenario === 'other-parent-only' ? 99 : 0,
     reactions: [],
     mentionedUsers: [],
     threadInfo: { replyCount: 0 },
@@ -46,5 +47,10 @@ export function menuFixture(scenario: Scenario): Pick<MessageMenuProps, 'channel
     isResendable: scenario === 'failed',
   } as unknown as MessageMenuProps['message'];
 
-  return { channel: fixtureChannel, message, isByMe, replyType: 'QUOTE_REPLY', inThreadList };
+  const channel = {
+    ...fixtureChannel,
+    isEphemeral: scenario === 'other-ephemeral',
+    isBroadcast: scenario === 'other-broadcast',
+  } as NonNullable<MessageMenuProps['channel']>;
+  return { channel, message, isByMe, replyType: scenario === 'other-thread-mode' ? 'THREAD' : 'QUOTE_REPLY', inThreadList };
 }

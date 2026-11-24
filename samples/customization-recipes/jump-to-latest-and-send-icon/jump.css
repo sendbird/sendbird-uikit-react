@@ -1,0 +1,12 @@
+.conversation { min-width: 0; height: min(570px, 66dvh); border: 1px solid #c8d4e0; border-radius: 8px; background: white; }
+.conversation .sendbird-conversation__messages { min-height: 0; }
+.jump-row { display: flex; justify-content: flex-end; margin-block: 8px; }
+.jump-row button { padding: 5px 8px; border: 1px solid #9baec2; border-radius: 5px; color: #1f405a; background: #fff; font: inherit; }
+.jump-row button:disabled { opacity: .55; }
+.send-icon { font-size: 20px; color: #16548c; font-weight: 700; }
+.sendbird-theme--dark .send-icon { color: var(--sendbird-dark-primary-200); }
+/* Keep the accessible label in the DOM without displaying text beside the arrow. */
+.sendbird-message-input--send .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* IconButton overrides the stock SVG fill with on-background-2 when disabled. */
+.sendbird-message-input--send:disabled .send-icon { color: var(--sendbird-light-onlight-02); }
+.sendbird-theme--dark .sendbird-message-input--send:disabled .send-icon { color: var(--sendbird-dark-ondark-02); }

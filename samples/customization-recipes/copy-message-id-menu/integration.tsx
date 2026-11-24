@@ -7,7 +7,7 @@ import { useSendbird } from '@sendbird/uikit-react';
 import {
   MenuItem, MessageMenu, useMessageMenuContext, type MessageMenuProps,
 } from '@sendbird/uikit-react/ui/MessageMenu';
-import './style.css';
+import './copy-id.css';
 
 export type CopyResult = { messageId: number; copied: boolean };
 type CopyResultProps = { onCopyResult?: (result: CopyResult) => void };

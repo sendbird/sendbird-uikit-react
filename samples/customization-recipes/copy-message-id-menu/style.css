@@ -7,22 +7,3 @@
 .copy-id-demo .message button { font: inherit; padding: .3rem .65rem; border: 1px solid #aabed6; border-radius: .35rem; background: #f4f7fb; }
 .copy-id-demo .message-content { padding: .5rem 0; border-top: 1px solid #e3eaf2; }
 .copy-id-demo .hint { margin: 0 0 .5rem; color: #4a5d72; }
-
-.copy-id-bottom-sheet-item {
-  width: 100%;
-  border: 0;
-  padding-block: 0;
-  background: transparent;
-  text-align: start;
-}
-
-.copy-id-bottom-sheet-item:focus-visible {
-  outline-offset: -2px;
-}
-
-/* The portal is fixed to the bottom. Limit only the sheet extended by this recipe. */
-.sendbird-message__bottomsheet:has(.copy-id-bottom-sheet-item) {
-  box-sizing: border-box;
-  max-height: 100dvh;
-  overflow-y: auto;
-}

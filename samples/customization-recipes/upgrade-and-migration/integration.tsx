@@ -4,6 +4,7 @@ import { GroupChannel } from '@sendbird/uikit-react/GroupChannel';
 import { GroupChannelList } from '@sendbird/uikit-react/GroupChannelList';
 import MessageContent, { type MessageContentProps } from '@sendbird/uikit-react/ui/MessageContent';
 import EmojiReactions, { type EmojiReactionsProps } from '@sendbird/uikit-react/ui/EmojiReactions';
+import './like.css';
 
 // Customizes a message whose only reaction is `like`; every other case keeps the stock row.
 function LikeButton(props: EmojiReactionsProps) {

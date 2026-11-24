@@ -11,7 +11,7 @@ export function ComposerWithWritingTip() {
         onClick={() => setShowTip((visible) => !visible)}>
         {showTip ? 'Hide writing tip' : 'Show writing tip'}
       </button>
-      {showTip && <p role="status">Start with the action you want the recipient to take.</p>}
+      <p role="status">{showTip ? 'Start with the action you want the recipient to take.' : ''}</p>
     </div>
   );
 }

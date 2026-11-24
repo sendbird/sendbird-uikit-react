@@ -67,7 +67,7 @@ export function ProductChannelRow(props: ComponentProps<typeof GroupChannelListI
   const accessibleName = [title, `Product: ${product.title}`, mentioned && 'unread mention', unread > 0 && `${unread} unread`]
     .filter(Boolean).join(', ');
   return <button type="button" className="product-channel-row"
-    aria-current={isSelected ? 'true' : undefined} aria-label={accessibleName}
+    aria-current={isSelected ? 'true' : undefined} aria-label={accessibleName} tabIndex={props.tabIndex}
     onClick={event => { event.stopPropagation(); onClick(); }}>
     <span aria-hidden="true">
       <ChannelAvatar channel={channel} userId={config.userId} theme={config.theme} width={40} height={40} />

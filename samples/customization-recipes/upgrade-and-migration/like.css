@@ -1,0 +1,2 @@
+.recipe-like { min-inline-size: 80px; min-block-size: 44px; border: 1px solid #b8c7d8; border-radius: 22px; background: #edf4fb; color: #153657; cursor: pointer; }
+.recipe-like[aria-pressed="true"] { border-color: #36658d; background: #d2e8f9; }

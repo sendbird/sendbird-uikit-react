@@ -8,11 +8,15 @@ export const stringSets = {
     MESSAGE_INPUT__PLACE_HOLDER: '메시지 보내기',
     CHANNEL__THREAD_REPLY: '개의 답글',
     CHANNEL__THREAD_REPLIES: '개의 답글',
+    THREAD__THREAD_REPLY: '개의 답글',
+    THREAD__THREAD_REPLIES: '개의 답글',
   },
   ru: {
     MESSAGE_INPUT__PLACE_HOLDER: 'Отправить сообщение',
     CHANNEL__THREAD_REPLY: 'ответ',
     CHANNEL__THREAD_REPLIES: 'ответов',
+    THREAD__THREAD_REPLY: 'ответ',
+    THREAD__THREAD_REPLIES: 'ответов',
   },
 };
 
