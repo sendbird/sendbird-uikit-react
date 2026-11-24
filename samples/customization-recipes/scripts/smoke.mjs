@@ -221,6 +221,13 @@ const scenarios = {
     };
     let baseline;
     await step('UIKit default renders three messages', async () => {
+      const fixtureSource = await readFile(join(root, 'theme-variables-and-css/fixture.tsx'), 'utf8');
+      const integrationSource = await readFile(join(root, 'theme-variables-and-css/integration.tsx'), 'utf8');
+      const mainSource = await readFile(join(root, 'theme-variables-and-css/main.tsx'), 'utf8');
+      assert.match(fixtureSource, /import\s*\{[^}]*\bBrandedConversation\b[^}]*\}\s*from\s*['"]\.\/integration['"]/);
+      assert.match(fixtureSource, /<BrandedConversation\b/);
+      assert.match(integrationSource, /import\s*['"]\.\/theme\.css['"]/);
+      assert.doesNotMatch(mainSource, /import\s*['"]\.\/theme\.css['"]/);
       await page.goto(`${url}?mode=default`);
       baseline = await read();
       assert.equal(baseline.count, 3);

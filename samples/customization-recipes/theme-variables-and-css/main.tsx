@@ -3,7 +3,6 @@ import '@sendbird/uikit-react/dist/index.css';
 import { ThemeFixture } from './fixture';
 import '../shared/page.css';
 import './style.css';
-import './theme.css';
 
 const modes = [
   ['default', 'UIKit default'],

@@ -6,6 +6,7 @@ import MessageInputWrapper from '@sendbird/uikit-react/GroupChannel/components/M
 import { GroupChannelContext } from '@sendbird/uikit-react/GroupChannel/context';
 import MessageContent from '@sendbird/uikit-react/ui/MessageContent';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import { BrandedConversation, type ThemeMode } from './integration';
 
 const conversation = [
   { id: 101, who: 'other', text: 'Could we review the launch checklist today?' },
@@ -93,7 +94,7 @@ function toSendbirdMessage(item: FixtureMessage, reactedByMe: boolean) {
   } as unknown as ComponentProps<typeof MessageContent>['message'];
 }
 
-export function ThemeFixture({ mode }: { mode: 'default' | 'tokens' | 'target' }) {
+export function ThemeFixture({ mode }: { mode: ThemeMode }) {
   const [sent, recordSend] = useState('');
   const [channelStore] = useState(() => createChannelStore(recordSend));
   const [myHearts, setMyHearts] = useState<Record<number, boolean>>({});
@@ -107,7 +108,7 @@ export function ThemeFixture({ mode }: { mode: 'default' | 'tokens' | 'target' }
       <div className="accent-comparison">
         <span data-testid="outside-accent">{accent} Outside the chat</span>
       </div>
-      <section className={`branded-chat ${mode}`} aria-label="Branded chat">
+      <BrandedConversation channelUrl={sendbirdChannel.url} mode={mode} aria-label="Branded chat">
         <div className="scene">
           <div className="chat-heading"><span data-testid="inside-accent">{accent}</span> Launch planning</div>
           <div className="messages sendbird-conversation__messages" dir="ltr">
@@ -131,7 +132,7 @@ export function ThemeFixture({ mode }: { mode: 'default' | 'tokens' | 'target' }
             <output aria-live="polite">{sent && `Fixture received: ${sent}`}</output>
           </div>
         </div>
-      </section>
+      </BrandedConversation>
     </div>
   </SendbirdProvider>;
 }
