@@ -1,6 +1,6 @@
 # Theme variables and CSS
 
-Brand the stock conversation in two steps: scoped theme variables for colors and font, then scoped CSS for the bubble and composer geometry that the stylesheet sets as fixed values.
+Brand the conversation body in two steps: scoped theme variables for colors and font, then scoped CSS for the bubble and composer geometry that the stylesheet sets as fixed values.
 
 ## Run it
 
@@ -21,7 +21,15 @@ Switch between **UIKit default**, **Theme variables** and **Variables and CSS**.
 | Bubble radius, padding and text size | A scoped `.sendbird-text-message-item-body` rule, plus `.reactions` to keep the flat bottom edge above the reaction row |
 | Composer height and placeholder | Scoped `.sendbird-message-input--textarea` and `--placeholder` rules; change both together. Skip the placeholder rule while a file is staged (`.sendbird-message-input--has-pending`), where UIKit places it below the file preview. |
 
-Variables affect every UIKit component inside their scope, so the accent icon inside the chat turns green while the one outside keeps its default. The class selectors are not a versioned API. Keep them scoped and recheck them when you upgrade UIKit.
+CSS variables inherit through DOM ancestors. The accent icon inside `.branded-chat` turns green, and the one outside keeps its default. In UIKit 3.20.1, `SendbirdProvider` renders portal roots alongside its children, outside the recipe's `.branded-chat` wrapper:
+
+| Portaled UI | Provider root |
+| --- | --- |
+| Desktop dropdown menus and `MobileContextMenu` | `#sendbird-dropdown-portal` |
+| Desktop emoji reaction picker | `#sendbird-emoji-list-portal` |
+| Modals, including delete confirmation, and mobile message and emoji bottom sheets | `#sendbird-modal-root` |
+
+With the recipe's scope, these surfaces keep the colors and font declared above the provider, which are UIKit's defaults unless your app overrides them. To brand them too, move the variable declarations to an app-owned DOM element that wraps `SendbirdProvider`, so both the conversation and the portal roots inherit them. Use `:root` if the theme is meant for the entire page. Keep the bubble and composer geometry rules scoped to `.branded-chat.target`. The class selectors and portal root IDs are implementation details of this UIKit version.
 
 ## What the smoke test checks
 

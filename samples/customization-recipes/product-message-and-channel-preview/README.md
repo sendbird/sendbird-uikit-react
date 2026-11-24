@@ -25,6 +25,8 @@ From `samples/customization-recipes`, run `npm ci` and `npm run dev`, then open 
 
 ## Public API
 
+Copy `integration.tsx`, `product.ts` and [product.css](product.css) together. The integration imports `product.css` for the card and channel row. Load UIKit's `@sendbird/uikit-react/dist/index.css` in your app for the stock components. The demo's `style.css` provides only the fixture page layout.
+
 - [product.ts](product.ts) defines the `Product` type, `encodeProduct` for the sender and `decodeProduct`, which checks the custom type, JSON shape, field types and lengths.
 - [integration.tsx](integration.tsx) provides `ProductMessageContent` (`MessageContent` with `renderMessageBody`, falling back to the `MessageBody` named export of `@sendbird/uikit-react/ui/MessageContent`) and `renderProductPreview` for `GroupChannelList` `renderChannelPreview`, which delegates non-product rows to `GroupChannelListItem`.
 - `ProductChat` mounts both under your authenticated `SendbirdProvider`. Send a text or single-file message with `encodeProduct({ sku, title })` spread into its params, and keep a readable `message` text for clients that use the stock renderer.

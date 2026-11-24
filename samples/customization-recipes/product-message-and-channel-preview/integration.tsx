@@ -8,6 +8,7 @@ import ChannelAvatar from '@sendbird/uikit-react/ui/ChannelAvatar';
 import MentionUserLabel from '@sendbird/uikit-react/ui/MentionUserLabel';
 import MessageContent, { MessageBody, type MessageContentProps } from '@sendbird/uikit-react/ui/MessageContent';
 import { decodeProduct, type Product } from './product';
+import './product.css';
 
 function ProductCard({ product }: { product: Product }) {
   return (
