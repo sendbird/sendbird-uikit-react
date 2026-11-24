@@ -22,5 +22,5 @@ export function ComposerWithWritingTip() {
 
 // Mount inside the SendbirdProvider for your signed-in test app.
 export function ComposerRecipeChannel({ channelUrl }: { channelUrl: string }) {
-  return <GroupChannel channelUrl={channelUrl} renderMessageInput={() => <ComposerWithWritingTip />} />;
+  return <GroupChannel channelUrl={channelUrl} renderMessageInput={() => <ComposerWithWritingTip key={channelUrl} />} />;
 }

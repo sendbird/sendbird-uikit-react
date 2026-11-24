@@ -440,7 +440,7 @@ const scenarios = {
     });
   },
 
-  'jump-to-latest-and-send-icon': async ({ page, url, step }) => {
+  'jump-to-latest-and-send-icon': async ({ page, url, step, width }) => {
     const editor = page.locator('.sendbird-message-input--textarea');
     const send = page.locator('.sendbird-message-input--send');
     const list = page.getByTestId('sendbird-message-list-container');
@@ -459,8 +459,10 @@ const scenarios = {
       await page.mouse.wheel(0, -400);
       await page.getByRole('button', { name: 'Jump to latest', disabled: false }).waitFor();
       assert.ok(await list.evaluate(el => el.scrollHeight - el.clientHeight - el.scrollTop) > 100);
-      await jump.click();
+      await jump.press('Enter');
       await atBottom();
+      assert.equal(await jump.isDisabled(), true);
+      assert.equal(await jump.evaluate(button => button === document.activeElement), true);
     });
     await step('branded Send icon submits text through the stock composer', async () => {
       assert.equal(await send.count(), 0);
@@ -469,6 +471,28 @@ const scenarios = {
       await page.getByRole('button', { name: 'Send', exact: true }).click();
       await page.getByText('Native Submit', { exact: true }).waitFor();
       assert.deepEqual(await record(), { channel: 'fixture-channel', text: 'Native Submit', mentions: [] });
+    });
+    await step('the branded Send arrow stays upright in RTL with text or a staged file', async () => {
+      await open();
+      await page.evaluate(() => { document.documentElement.dir = 'rtl'; });
+      const arrow = send.locator('.uikit-jump-send-icon');
+      const verticalDirection = () => arrow.evaluate(icon => {
+        const transforms = [icon, icon.closest('button')].map(node => getComputedStyle(node).transform)
+          .filter(value => value !== 'none');
+        return transforms.reduce((direction, value) => direction * new DOMMatrix(value).d, 1);
+      });
+      await editor.fill('RTL text');
+      assert.equal(await verticalDirection(), 1, 'the text Send arrow flipped');
+      await send.click();
+      await page.getByText('RTL text', { exact: true }).waitFor();
+      assert.deepEqual(await record(), { channel: 'fixture-channel', text: 'RTL text', mentions: [] });
+      await page.locator('input[type=file]').setInputFiles({ name: 'rtl.txt', mimeType: 'text/plain', buffer: Buffer.from('Local RTL file') });
+      await page.getByText('rtl.txt', { exact: true }).waitFor();
+      assert.equal(await verticalDirection(), 1, `the staged file Send arrow flipped at ${width}px`);
+      await send.click();
+      await page.getByTestId('sent-record').filter({ hasText: 'rtl.txt' }).waitFor();
+      assert.deepEqual(await record(), { channel: 'fixture-channel', text: '', file: 'rtl.txt', mentions: [] });
+      await open();
     });
     await step('copyable jump CSS hides the Send label and leaves host styles alone', async () => {
       const isolated = await page.context().newPage();
@@ -653,9 +677,17 @@ const scenarios = {
       await page.goto(`${url}?wrapper`);
       await page.getByText('Original message A', { exact: true }).waitFor();
       await page.locator('.sendbird-message-input--textarea').waitFor();
-      await page.getByRole('button', { name: 'Show writing tip' }).click();
+      const tip = page.getByRole('button', { name: 'Show writing tip' });
+      const start = async locator => (await locator.boundingBox()).x;
+      assert.ok(Math.abs(await start(tip) - await start(editor)) < 2, 'the tip aligns with the stock editor');
+      await tip.click();
       await page.getByRole('status').getByText('Start with the action you want the recipient to take.').waitFor();
       assert.ok(await page.getByTestId('sendbird-message-list-container').evaluate(node => node.clientHeight > 100));
+      await page.getByRole('button', { name: 'Switch fixture channel' }).click();
+      await page.getByText('Original message B', { exact: true }).waitFor();
+      await tip.waitFor();
+      assert.equal(await tip.getAttribute('aria-expanded'), 'false');
+      assert.equal(await page.locator('.composer-recipe [role="status"]').innerText(), '');
     });
   },
 
@@ -729,16 +761,16 @@ const scenarios = {
       assert.equal(await productRow.count(), 0);
       await bodyOnly.uncheck();
     });
-    await step('new and edited product update row and body for one message ID', async () => {
+    await step('editing a product updates the preview and shows the stock edited label in the card', async () => {
       await productRow.getByText('Product: Desk lamp', { exact: true }).waitFor();
       assert.equal(await productRow.getAttribute('aria-current'), 'true');
       assert.equal(await productRow.getAttribute('tabindex'), '0');
-      const id = await body.getAttribute('data-message-id');
+      assert.equal(await card.getByText('(edited)', { exact: true }).count(), 0);
       await click('Edit product title');
       await productRow.getByText('Product: Reading lamp', { exact: true }).waitFor();
       await card.getByText('Reading lamp', { exact: true }).waitFor();
       await card.getByText('SKU DEMO-1', { exact: true }).waitFor();
-      assert.equal(await body.getAttribute('data-message-id'), id);
+      await card.getByText('(edited)', { exact: true }).waitFor();
     });
     await step('file, unknown and malformed last messages use the stock row and body', async () => {
       for (const [variant, previewText, message] of [

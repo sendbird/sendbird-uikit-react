@@ -11,9 +11,11 @@ const params = new URLSearchParams(location.search);
 const broadcastMember = params.has('broadcast-member');
 
 function MountedRecipe() {
-  return <main aria-label="Mounted composer recipe" style={{ height: 580 }}>
+  const [channelUrl, setChannelUrl] = useState('fixture-A');
+  return <main aria-label="Mounted composer recipe">
+    <button type="button" onClick={() => setChannelUrl(channelUrl === 'fixture-A' ? 'fixture-B' : 'fixture-A')}>Switch fixture channel</button>
     <GroupChannelFixture record={() => {}}>
-      <ComposerRecipeChannel channelUrl="fixture-A" />
+      <div style={{ height: 580 }}><ComposerRecipeChannel channelUrl={channelUrl} /></div>
     </GroupChannelFixture>
   </main>;
 }

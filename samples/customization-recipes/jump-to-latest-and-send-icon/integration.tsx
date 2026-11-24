@@ -8,8 +8,9 @@ export function JumpToLatest() {
   const { state, actions } = useGroupChannel();
   // Like the stock scroll button: the bottom of a page opened at an older message is not the latest message.
   // hasNext joins the context state after the provider's first render, so call it optionally.
-  return <button type="button" disabled={state.isScrollBottomReached && !state.hasNext?.()}
-    onClick={() => void actions.scrollToBottom(false)}>Jump to latest</button>;
+  const atLatest = state.isScrollBottomReached && !state.hasNext?.();
+  return <button type="button" aria-disabled={atLatest}
+    onClick={() => { if (!atLatest) void actions.scrollToBottom(false); }}>Jump to latest</button>;
 }
 
 // The stock composer keeps its submit logic; only the icon inside its Send button changes.

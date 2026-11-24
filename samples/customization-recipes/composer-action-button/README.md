@@ -12,7 +12,7 @@ Type a draft and choose **Show writing tip**. The draft stays as typed and nothi
 
 [integration.tsx](integration.tsx) passes `renderMessageInput` to `GroupChannel` and renders `MessageInputWrapper` from `@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper` with the app button beside it. Mount `ComposerRecipeChannel` under your authenticated `SendbirdProvider`.
 
-Copy [composer-tip.css](composer-tip.css) with `integration.tsx`. The integration imports it, and its rules apply inside the recipe wrapper.
+Copy [composer-tip.css](composer-tip.css) with `integration.tsx`. The integration imports it. Its rules align the tip with the stock input inside the recipe wrapper. A new channel closes the previous channel’s tip.
 
 The button sits next to the composer, not inside its editor. The draft, Send button and attachments stay with UIKit. In a broadcast channel, the tip appears only for operators; see [Jump to latest and Send icon](../jump-to-latest-and-send-icon/README.md) for what `MessageInputWrapper` does not expose.
 

@@ -93,7 +93,7 @@ export function ChannelPreviewExample({ kind, unread, selected, selectChannel, b
           renderChannelPreview={bodyOnly ? undefined : renderProductPreview} />
       </GroupChannelListContext.Provider>
     </section>
-    <section aria-label="Message body" className="message-pane" data-message-id={channel.lastMessage?.messageId}>
+    <section aria-label="Message body" className="message-pane">
       <h3>{channelNames[selected]}</h3>
       <div className="sendbird-conversation__messages" dir="ltr">
         <ProductMessageContent channel={channel} userId="self" message={channel.lastMessage as SBMessage} />

@@ -1,5 +1,6 @@
 import { useState, type ComponentProps } from 'react';
 import { useSendbird } from '@sendbird/uikit-react';
+import { useLocalization } from '@sendbird/uikit-react/hooks/useLocalization';
 import GroupChannel from '@sendbird/uikit-react/GroupChannel';
 import GroupChannelList from '@sendbird/uikit-react/GroupChannelList';
 import { GroupChannelListItem } from '@sendbird/uikit-react/GroupChannelList/components/GroupChannelListItem';
@@ -10,23 +11,27 @@ import MessageContent, { MessageBody, type MessageContentProps } from '@sendbird
 import { decodeProduct, type Product } from './product';
 import './product.css';
 
-function ProductCard({ product }: { product: Product }) {
+function ProductCard({ product, editedLabel }: { product: Product; editedLabel?: string }) {
   return (
     <article className="product-card" aria-label="Product card">
       <strong>{product.title}</strong>
       <span>SKU {product.sku}</span>
+      {editedLabel && <span>{editedLabel}</span>}
     </article>
   );
 }
 
 /** Message body: a card for product messages; the stock body for everything else and for attachments. */
 export function ProductMessageContent(props: MessageContentProps) {
+  const { stringSet } = useLocalization();
   return (
     <MessageContent {...props} renderMessageBody={(bodyProps) => {
       const { message } = bodyProps;
       const product = decodeProduct(message.customType, message.data);
       if (!product) return <MessageBody {...bodyProps} />;
-      if (message.isUserMessage()) return <ProductCard product={product} />;
+      if (message.isUserMessage()) {
+        return <ProductCard product={product} editedLabel={message.updatedAt > 0 ? stringSet.MESSAGE_EDITED : undefined} />;
+      }
       if (message.isFileMessage()) {
         return (
           <div className="product-with-file">
