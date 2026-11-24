@@ -25,6 +25,7 @@ Sendbird UIKit for React is a development kit with an user interface that enable
    7. [Channel list query](#channel-list-query)
    8. [Channel params](#channel-params)
 5. [UIKit Configuration Samples](#uikit-configuration-samples)
+6. [Customization Recipes](#customization-recipes)
 
 ### More about Sendbird UIKit for React
 
@@ -300,3 +301,6 @@ See how you can create community channels on [CodeSandBox](https://codesandbox.i
 ## UIKit Configuration Samples
 Starting from version `@sendbird/uikit-react` + v3.6.0, we provide the ability to control certain UIKit configurations by passing `uikitOptions` prop to either the `SendbirdProvider` or `App` component.
 For more detailed information on the available configuration options, please refer to the [UIKit Configurations in React](https://sendbird.com/docs/uikit/v3/react/uikit-config-guide/uikit-config-in-dashboard#2-uikit-config-setup-3-step-3-code-configuration) section in our official documentation. Additionally, you can explore a real example on [CodeSandbox](https://codesandbox.io/s/uikit-configuration-xgh3rw) to see it in action.
+
+## Customization Recipes
+[customization-recipes](customization-recipes/README.md) is a runnable Vite and TypeScript package with ten small recipes: message timestamp and reactions, layout, theming, composer controls, product messages with channel previews, per-screen options, message menu items, localization, and upgrading with the GroupChannel migration. Each recipe renders the installed UIKit components against local synthetic data and is covered by a production-build smoke test.

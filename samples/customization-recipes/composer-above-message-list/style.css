@@ -1,0 +1,4 @@
+.recipe-channel-frame { height: min(640px, 70dvh); min-height: 330px; border: 1px solid #cddbea; border-radius: 8px; overflow: hidden; }
+.recipe-channel-frame > .sendbird-theme--light,
+.recipe-channel-frame .sendbird-conversation { height: 100%; }
+.recipe-channel-frame .sendbird-conversation { width: 100%; }

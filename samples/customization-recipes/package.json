@@ -1,0 +1,32 @@
+{
+  "name": "customization-recipes",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Runnable Sendbird UIKit for React customization recipes that use published entry points and local synthetic fixtures.",
+  "type": "module",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "browser:install": "playwright install chromium",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "@sendbird/chat": "4.22.17",
+    "@sendbird/uikit-react": "3.20.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "playwright": "1.65.1",
+    "typescript": "7.0.2",
+    "vite": "8.3.8"
+  }
+}

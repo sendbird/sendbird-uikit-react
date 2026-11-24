@@ -1,0 +1,4 @@
+.recipe-reaction-strip { display: flex; padding-top: 6px; }
+.recipe-reaction-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 4px 10px; border: 1px solid #a0b5cc; border-radius: 16px; color: #24476b; background: #eff6fc; font-weight: 600; cursor: pointer; }
+.recipe-reaction-chip[aria-pressed="true"] { color: #103e75; background: #dcecff; border-color: #47789f; }
+.recipe-reaction-chip:focus-visible { outline: 2px solid #105dac; outline-offset: 2px; }

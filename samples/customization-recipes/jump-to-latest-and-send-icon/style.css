@@ -1,0 +1,7 @@
+main { max-width: 780px; }
+.conversation { min-width: 0; height: min(570px, 66dvh); border: 1px solid #c8d4e0; border-radius: 8px; background: white; }
+.conversation .sendbird-conversation__messages { min-height: 0; }
+.jump-row { display: flex; justify-content: flex-end; margin-block: 8px; }
+.jump-row button { padding: 5px 8px; border: 1px solid #9baec2; border-radius: 5px; color: #1f405a; background: #fff; font: inherit; }
+.jump-row button:disabled { opacity: .55; }
+.send-icon { font-size: 20px; color: #16548c; font-weight: 700; }

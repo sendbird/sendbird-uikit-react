@@ -1,0 +1,5 @@
+main { max-width: 720px; }
+.composer-frame { border: 1px solid #bbcfc2; border-radius: 12px; padding: 12px; background: #fff; }
+.composer-recipe { display: grid; justify-items: start; }
+.composer-recipe p { margin: 5px 0 0; }
+.recipe-action { padding: 6px 12px; margin-top: 8px; border: 1px solid #9ab6a5; border-radius: 6px; color: #173b29; background: #eaf5ed; font: inherit; }

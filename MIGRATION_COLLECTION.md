@@ -47,6 +47,8 @@ import { UnreadCount } from '@sendbird/uikit-react/GroupChannel/components/Unrea
 import { SuggestedMentionList } from '@sendbird/uikit-react/GroupChannel/components/SuggestedMentionList';
 ```
 
+For a runnable example, see the [upgrade and migration recipe](samples/customization-recipes/upgrade-and-migration/README.md). It keeps the dependency upgrade separate from the module migration, shows a `GroupChannelList` and `GroupChannel` composition, and checks the published entry points with a production-build smoke test.
+
 ## Migrate `ChannelList` to `GroupChannelList`
 
 ### What has been changed in the props of GroupChannelList?

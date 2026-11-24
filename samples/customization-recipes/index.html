@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sendbird UIKit for React customization recipes</title>
+    <link rel="icon" href="data:,">
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; color: #172435; background: #f4f7fa; font: 16px/1.5 system-ui, sans-serif; }
+      main { max-width: 66rem; margin: 0 auto; padding: clamp(1rem, 5vw, 3rem); }
+      h1 { margin: 0 0 .6rem; font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1.15; }
+      p { margin: 0 0 1.6rem; color: #41566f; }
+      ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: .75rem; padding: 0; list-style: none; }
+      a { display: block; height: 100%; padding: 1rem; border: 1px solid #c8d5e4; border-radius: .5rem; color: #17304f; background: #fff; text-decoration: none; }
+      a:hover, a:focus-visible { border-color: #356196; background: #eff6ff; }
+      a:focus-visible { outline: 2px solid #356196; outline-offset: 2px; }
+      span { display: block; margin-top: .15rem; color: #4d6078; font-size: .875rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>UIKit for React customization recipes</h1>
+      <p>Each page renders the installed UIKit components against local synthetic data. Open a recipe, then read its README for the public API it uses.</p>
+      <nav aria-label="Recipes">
+        <ul>
+          <li><a href="./message-timestamp-and-reaction/"><strong>Message timestamp and reaction</strong><span>stringSet · renderEmojiReactions</span></a></li>
+          <li><a href="./composer-above-message-list/"><strong>Composer above the message list</strong><span>GroupChannelProvider composition</span></a></li>
+          <li><a href="./theme-variables-and-css/"><strong>Theme variables and CSS</strong><span>Color variables · scoped CSS</span></a></li>
+          <li><a href="./jump-to-latest-and-send-icon/"><strong>Jump to latest and Send icon</strong><span>useGroupChannel · renderSendMessageIcon</span></a></li>
+          <li><a href="./composer-action-button/"><strong>Composer action button</strong><span>renderMessageInput · MessageInputWrapper</span></a></li>
+          <li><a href="./product-message-and-channel-preview/"><strong>Product message and channel preview</strong><span>renderMessageBody · renderChannelPreview</span></a></li>
+          <li><a href="./per-screen-channel-options/"><strong>Per-screen channel options</strong><span>Two GroupChannelProviders</span></a></li>
+          <li><a href="./copy-message-id-menu/"><strong>Copy message ID menu</strong><span>renderMessageMenu · MessageMenu</span></a></li>
+          <li><a href="./localized-reply-count/"><strong>Localized reply count</strong><span>stringSet · Intl.PluralRules</span></a></li>
+          <li><a href="./upgrade-and-migration/"><strong>Upgrade and migration</strong><span>Pinned public imports · GroupChannel</span></a></li>
+        </ul>
+      </nav>
+    </main>
+  </body>
+</html>
