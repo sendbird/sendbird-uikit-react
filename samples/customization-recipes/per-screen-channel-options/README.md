@@ -20,6 +20,6 @@ Known limits in UIKit 3.20.1: changing `filterEmojiCategoryIds` on a mounted scr
 
 At 1280px and 390px, with mobile mode off: both screens resolve the same user with different options; A's desktop picker lists only `like` and calls `addReaction`; A's quote reply sends `parentMessageId` 101; B has no reaction trigger and no Reply but keeps Copy and send; remounting A replaces only A and its picker then lists only `celebrate`.
 
-Fixture-only: [fixture.tsx](fixture.tsx) supplies synthetic users, three registered emoji categories, messages and in-memory send/reaction callbacks through `configureSession`. The mobile long-press menu, persistence and other clients are not verified.
+Fixture-only: [The shared group-channel fixture](../shared/group-channel-fixture.tsx) supplies synthetic users, three registered emoji categories, messages and in-memory send/reaction callbacks through `configureSession`. The mobile long-press menu, persistence and other clients are not verified.
 
 [Group channel](https://sendbird.com/docs/chat/uikit/v3/react/modules/group-channel) · [Reactions](https://sendbird.com/docs/chat/uikit/v3/react/features/reactions)

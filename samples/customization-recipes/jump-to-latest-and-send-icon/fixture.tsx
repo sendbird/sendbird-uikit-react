@@ -1,9 +1,10 @@
 // Local fixture only: a synthetic group channel, message collection and Chat SDK send responses.
 import { useState, type PropsWithChildren } from 'react';
-import { SessionHandler, type User } from '@sendbird/chat';
+import { SessionHandler } from '@sendbird/chat';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 import type { FileMessageCreateParams, UserMessageCreateParams } from '@sendbird/chat/message';
 import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
+import { configureFixtureSession } from '../shared/configure-fixture-session';
 
 export type SendRecord = { channel: string; text: string; parent?: number; mentions: string[]; file?: string };
 type FixtureMessage = { messageId: number };
@@ -106,16 +107,11 @@ function createChannel(onSend: SendListener) {
 function configureBoundary(onSend: SendListener): NonNullable<React.ComponentProps<typeof SendbirdProvider>['configureSession']> {
   const channels = new Map([['fixture-channel', createChannel(onSend)]]);
   return sdk => {
-    Object.defineProperty(sdk, 'currentUser', { configurable: true, get: () => self as User });
-    sdk.connect = async () => self as User;
-    sdk.reconnect = () => false;
-    sdk.disconnectWebSocket = async () => undefined;
-    if (!('groupChannel' in sdk)) throw new Error('Group channel module is required');
-    sdk.groupChannel.getChannel = async url => {
+    configureFixtureSession(sdk, self, async url => {
       const channel = channels.get(url);
       if (!channel) throw new Error('Unknown fixture channel');
       return channel;
-    };
+    });
     return new SessionHandler();
   };
 }

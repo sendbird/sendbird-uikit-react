@@ -57,6 +57,8 @@ This smoke test is a local development check. The repository CI runs its existin
 - `fixture*.ts(x)` supplies synthetic data or local SDK adapters; some fixtures record send and reaction calls in memory. These files only run the page locally; do not copy them into an app.
 - `main.tsx` and `index.html` run the demo page. Each recipe README identifies any CSS or other local file needed with its integration.
 
+The build and smoke test find recipe folders by their `index.html` files. Vite follows the entry script referenced in the HTML.
+
 Each page mounts one `SendbirdProvider`, as a real app should at its root. Because the fixtures replace the network layer, sign-in, persistence, delivery to other devices and other live service behavior are not exercised. Check those in an authorized test application before you ship a change.
 
 [UIKit for React documentation](https://sendbird.com/docs/chat/uikit/v3/react/customization) · [SendbirdProvider](https://sendbird.com/docs/chat/uikit/v3/react/essentials/sendbirdprovider)

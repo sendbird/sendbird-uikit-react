@@ -9,7 +9,7 @@ import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import { preview } from 'vite';
+import { preview, runnerImport } from 'vite';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const require = createRequire(join(root, 'package.json'));
@@ -24,11 +24,11 @@ for (const name of ['@sendbird/uikit-react', '@sendbird/chat', 'react', 'react-d
   assert.equal(report.versions[name], pkg.dependencies[name], `${name} must match the pinned version`);
 }
 
-const topicDirs = (await readdir(root, { withFileTypes: true }))
-  .filter(entry => entry.isDirectory() && entry.name !== 'dist' && existsSync(join(root, entry.name, 'index.html')))
-  .map(entry => entry.name).sort();
+const loadRecipeSource = async path => (await runnerImport(join(root, path), { configFile: false, logLevel: 'silent' })).module;
+const { readRecipeTopics } = await loadRecipeSource('scripts/recipe-topics.ts');
+const topicDirs = readRecipeTopics(root);
 const sourceFiles = [];
-for (const dir of topicDirs) {
+for (const dir of [...topicDirs, 'shared']) {
   for (const file of await readdir(join(root, dir), { recursive: true })) {
     if (/\.tsx?$/.test(file)) sourceFiles.push(join(dir, file));
   }
@@ -61,9 +61,7 @@ assert.equal(uikitExports['./ui/MessageBody'], undefined);
 // recipe's provider-wide format splits two same-minute messages that the stock format groups.
 const { isSameGroup } = await import('@sendbird/uikit-react/Channel/utils/compareMessagesForGrouping');
 const { LabelStringSet } = await import('@sendbird/uikit-react/ui/Label');
-const timestampSource = await readFile(join(root, 'message-timestamp-and-reaction/integration.tsx'), 'utf8');
-const timeFormatMatch = /DATE_FORMAT__MESSAGE_CREATED_AT:\s*(['"\x60])([^'"\x60\r\n]+)\1/.exec(timestampSource);
-assert.ok(timeFormatMatch, 'timestamp recipe must provide a literal DATE_FORMAT__MESSAGE_CREATED_AT');
+const { secondsFormat } = await loadRecipeSource('message-timestamp-and-reaction/timestamp-format.ts');
 const groupingMessage = (second, millisecond = 0) => ({
   messageType: 'user', sendingStatus: 'succeeded', sender: { userId: 'other' },
   createdAt: new Date(2026, 10, 19, 13, 34, second, millisecond).getTime(),
@@ -71,13 +69,28 @@ const groupingMessage = (second, millisecond = 0) => ({
 const first = groupingMessage(5);
 const laterSecond = groupingMessage(40);
 const sameSecond = groupingMessage(5, 400);
-const recipeStringSet = { DATE_FORMAT__MESSAGE_CREATED_AT: timeFormatMatch[2] };
 report.messageGrouping = {
   stockFormat: isSameGroup(first, laterSecond, LabelStringSet),
-  recipeFormat: isSameGroup(first, laterSecond, recipeStringSet),
-  recipeSameSecond: isSameGroup(first, sameSecond, recipeStringSet),
+  recipeFormat: isSameGroup(first, laterSecond, secondsFormat),
+  recipeSameSecond: isSameGroup(first, sameSecond, secondsFormat),
 };
 assert.deepEqual(report.messageGrouping, { stockFormat: true, recipeFormat: false, recipeSameSecond: true });
+
+const { decodeProduct, encodeProduct, PRODUCT_TYPE } = await loadRecipeSource('product-message-and-channel-preview/product.ts');
+const maximumProduct = { sku: 'S'.repeat(64), title: 'T'.repeat(120) };
+const paddedProduct = encodeProduct({ sku: ` ${maximumProduct.sku} `, title: ` ${maximumProduct.title} ` });
+const boundaryProduct = paddedProduct.data.padEnd(2_048, ' ');
+assert.deepEqual(decodeProduct(PRODUCT_TYPE, boundaryProduct), maximumProduct);
+for (const [reason, data] of [
+  ['payload exceeds 2048 characters', `${boundaryProduct} `],
+  ['payload is an array', '[]'],
+  ['SKU contains only whitespace', encodeProduct({ ...maximumProduct, sku: '   ' }).data],
+  ['SKU exceeds 64 characters', encodeProduct({ ...maximumProduct, sku: `${maximumProduct.sku}S` }).data],
+  ['title exceeds 120 characters', encodeProduct({ ...maximumProduct, title: `${maximumProduct.title}T` }).data],
+]) {
+  assert.equal(decodeProduct(PRODUCT_TYPE, data), undefined, reason);
+}
+report.productDecoder = { acceptedAtLimit: true, rejectedInvalidCases: 5 };
 
 // 2. Browser scenarios against the production build ---------------------------------------
 const scenarios = {
@@ -495,6 +508,13 @@ const scenarios = {
       assert.equal(await editor.innerText(), 'Existing');
       assert.equal(await log.getByRole('listitem').count(), 0);
     });
+    await step('hiding the tip clears the live region and keeps the draft', async () => {
+      await page.getByRole('button', { name: 'Hide writing tip' }).click();
+      assert.equal(await page.locator('.composer-recipe [role="status"]').innerText(), '');
+      assert.equal(await page.getByRole('button', { name: 'Show writing tip' }).getAttribute('aria-expanded'), 'false');
+      assert.equal(await editor.innerText(), 'Existing');
+      assert.equal(await log.getByRole('listitem').count(), 0);
+    });
     await step('stock Send delivers the unchanged draft once', async () => {
       await send.click();
       await log.getByText('Existing', { exact: true }).waitFor();
@@ -802,23 +822,21 @@ const scenarios = {
         if (value.startsWith('other')) assert.equal(after.includes('Edit'), false, value);
       }
     };
+    const readDesktopMenu = async () => {
+      await trigger.click();
+      await menuItems.first().waitFor();
+      const labels = await names();
+      await page.mouse.click(4, 4);
+      return labels;
+    };
     await step('ID action is added only to delivered top-level messages; other items unchanged', async () => {
-      await compareWithStock(states, async () => {
-        await trigger.click();
-        await menuItems.first().waitFor();
-        const labels = await names();
-        await page.mouse.click(4, 4);
-        return labels;
-      });
+      await compareWithStock(states, readDesktopMenu);
     });
     await step('parent, thread-list, channel and reply-mode exclusions each keep the stock menu', async () => {
-      await compareWithStock(excluded, async () => {
-        await trigger.click();
-        await menuItems.first().waitFor();
-        const labels = await names();
-        await page.mouse.click(4, 4);
-        return labels;
-      });
+      await compareWithStock(excluded, readDesktopMenu);
+    });
+    await step('the jump-to-parent callback keeps only the default desktop menu', async () => {
+      await compareWithStock([['other-jump-parent', false]], readDesktopMenu);
     });
     await step('Mark as unread remains in the stock and extended menu when enabled', async () => {
       await page.goto(`${url}?mark-as-unread`);
@@ -864,14 +882,22 @@ const scenarios = {
     const body = content.getByText('A sample message', { exact: true });
     const reactions = page.getByRole('checkbox', { name: 'Reactions' });
     if (width >= 600) {
+      const readContentMenu = async () => {
+        await body.hover();
+        await content.locator('.sendbird-message-content-menu .sendbird-message-menu .sendbird-iconbutton').click();
+        await menuItems.first().waitFor();
+        const labels = await names();
+        await page.mouse.click(4, 4);
+        return labels;
+      };
       await step('desktop MessageContent menu adds the ID action through the shared wiring', async () => {
         await reactions.uncheck();
-        await compareWithStock([...states.filter(([value]) => value !== 'other-reply' && value !== 'pending'), ...excluded.filter(([value]) => value !== 'other-thread-only')], async () => {
-          await body.hover();
-          await content.locator('.sendbird-message-content-menu .sendbird-message-menu .sendbird-iconbutton').click();
-          await page.getByRole('menuitem').first().waitFor();
-          const labels = await names();
-          await page.mouse.click(4, 4);
+        await compareWithStock([...states.filter(([value]) => value !== 'other-reply' && value !== 'pending'), ...excluded], readContentMenu);
+      });
+      await step('the mobile-only Delete override keeps both desktop actions available', async () => {
+        await compareWithStock([['own-hide-delete', true]], async () => {
+          const labels = await readContentMenu();
+          assert.ok(labels.includes('Delete'));
           return labels;
         });
       });
@@ -895,17 +921,32 @@ const scenarios = {
     };
     const contextMenu = '.sendbird-message__mobile-context-menu';
     const bottomSheet = '.sendbird-message__bottomsheet';
+    const readMobile = async () => {
+      await longPress();
+      const actualMode = await page.locator(bottomSheet).count() > 0 ? 'bottom sheet' : 'context menu';
+      const labels = await names(mobileItems);
+      await closeMobileMenu();
+      return { actualMode, labels };
+    };
+    await step('mobile Delete visibility and thread-list exclusions keep stock behavior', async () => {
+      for (const withReactions of [false, true]) {
+        await reactions.setChecked(withReactions);
+        for (const [value, hasId] of [['own-hide-delete', true], ['other-thread-only', false]]) {
+          await scenario.selectOption(value);
+          await extended.uncheck();
+          const stock = await readMobile();
+          if (value === 'own-hide-delete') assert.ok(!stock.labels.includes('Delete'));
+          await extended.check();
+          const after = await readMobile();
+          assert.equal(after.actualMode, stock.actualMode, value);
+          assert.deepEqual(after.labels, hasId ? [...stock.labels, 'Copy message ID'] : stock.labels, value);
+        }
+      }
+    });
     for (const withReactions of [false, true]) {
       const name = withReactions ? 'bottom sheet (reactions on)' : 'context menu (reactions off)';
       await step(`long-press ${name}: ID action only on delivered top-level messages, stock items unchanged`, async () => {
         await reactions.setChecked(withReactions);
-        const readMobile = async () => {
-          await longPress();
-          const actualMode = await page.locator(bottomSheet).count() > 0 ? 'bottom sheet' : 'context menu';
-          const labels = await names(mobileItems);
-          await closeMobileMenu();
-          return { actualMode, labels };
-        };
         for (const [value, hasId] of [...states, ...excluded.filter(([value]) => value !== 'other-thread-only')]) {
           await scenario.selectOption(value);
           await extended.uncheck();

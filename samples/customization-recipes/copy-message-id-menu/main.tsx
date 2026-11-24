@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
 import MessageContent from '@sendbird/uikit-react/ui/MessageContent';
+import MobileMenu from '@sendbird/uikit-react/ui/MobileMenu';
 import { MessageMenu, type MessageMenuProps } from '@sendbird/uikit-react/ui/MessageMenu';
 import '@sendbird/uikit-react/dist/index.css';
-import { ChannelWithCopyMessageId, CopyIdMessageContent, CopyMessageIdMenu, type CopyResult } from './integration';
+import { ChannelWithCopyMessageId, CopyIdMessageContent, CopyMessageIdMenu, CopyMessageIdMobileMenu, type CopyResult } from './integration';
 import { emojiContainer, menuFixture, type Scenario } from './fixture';
-import { SendbirdFixture } from '../per-screen-channel-options/fixture';
+import { GroupChannelFixture } from '../shared/group-channel-fixture';
 import '../shared/page.css';
 import './style.css';
 
@@ -15,6 +16,7 @@ const providerOptions = { groupChannel: { enableMarkAsUnread: query.has('mark-as
 
 const scenarios: { value: Scenario; label: string }[] = [
   { value: 'own', label: 'My delivered message' },
+  { value: 'own-hide-delete', label: 'My message with Delete hidden on mobile' },
   { value: 'other', label: 'Someone else’s delivered message' },
   { value: 'other-reply', label: 'Someone else’s reply' },
   { value: 'other-parent-only', label: 'Reply outside a thread list' },
@@ -22,6 +24,7 @@ const scenarios: { value: Scenario; label: string }[] = [
   { value: 'other-ephemeral', label: 'Message in an ephemeral channel' },
   { value: 'other-broadcast', label: 'Message in a broadcast channel' },
   { value: 'other-thread-mode', label: 'Message with THREAD reply mode' },
+  { value: 'other-jump-parent', label: 'Message with a jump-to-parent callback' },
   { value: 'pending', label: 'My pending message' },
   { value: 'failed', label: 'My failed message' },
 ];
@@ -32,7 +35,7 @@ function App() {
   const [reactions, setReactions] = useState(false);
   const [result, setResult] = useState('');
   const props = menuFixture(scenario);
-  const demo = { extended, props, report: setResult };
+  const demo = { extended, props, report: setResult, scenario };
 
   return (
     <main className="copy-id-demo">
@@ -68,6 +71,7 @@ function App() {
 
 type DemoProps = {
   extended: boolean;
+  scenario: Scenario;
   props: ReturnType<typeof menuFixture>;
   report: (event: string) => void;
 };
@@ -86,10 +90,11 @@ function stockCallbacks(report: DemoProps['report']) {
 const copyReporter = (report: DemoProps['report']) => ({ messageId, copied }: CopyResult) =>
   report(copied ? `Copied ID ${messageId}` : 'Clipboard is unavailable');
 
-function Menu({ extended, props, report }: DemoProps) {
+function Menu({ extended, props, report, scenario }: DemoProps) {
   const menuProps: MessageMenuProps = {
     ...props,
     ...stockCallbacks(report),
+    ...(scenario === 'other-jump-parent' && { onMoveToParentMessage: () => report('UIKit jumped to parent') }),
     renderTrigger: ({ ref, onClick }) => (
       <button type="button" ref={ref} onClick={onClick} aria-haspopup="menu">Open menu</button>
     ),
@@ -99,7 +104,8 @@ function Menu({ extended, props, report }: DemoProps) {
     : <MessageMenu {...menuProps} />;
 }
 
-function Content({ extended, props, report, reactions }: DemoProps & { reactions: boolean }) {
+function Content({ extended, props, report, reactions, scenario }: DemoProps & { reactions: boolean }) {
+  const onCopyResult = copyReporter(report);
   const contentProps = {
     ...stockCallbacks(report),
     message: props.message,
@@ -110,18 +116,38 @@ function Content({ extended, props, report, reactions }: DemoProps & { reactions
     emojiContainer,
     toggleReaction: () => report('UIKit toggled a reaction'),
   };
+  if (scenario === 'own-hide-delete' || scenario === 'other-thread-only') {
+    // Thread rows supply inThreadList to both menus. Delete visibility here is a mobile-only override.
+    return <MessageContent {...contentProps}
+      renderMessageMenu={incoming => {
+        const desktopProps = { ...incoming, inThreadList: props.inThreadList };
+        return extended
+          ? <CopyMessageIdMenu {...desktopProps} onCopyResult={onCopyResult} />
+          : <MessageMenu {...desktopProps} />;
+      }}
+      renderMobileMenuOnLongPress={incoming => {
+        const mobileProps: Parameters<typeof MobileMenu>[0] = {
+          ...incoming,
+          inThreadList: props.inThreadList,
+          deleteMenuState: scenario === 'own-hide-delete' ? 'HIDE' : incoming.deleteMenuState,
+        };
+        return extended
+          ? <CopyMessageIdMobileMenu {...mobileProps} onCopyResult={onCopyResult} />
+          : <MobileMenu {...mobileProps} />;
+      }} />;
+  }
   return extended
-    ? <CopyIdMessageContent {...contentProps} onCopyResult={copyReporter(report)} />
+    ? <CopyIdMessageContent {...contentProps} onCopyResult={onCopyResult} />
     : <MessageContent {...contentProps} />;
 }
 
 function WrapperFixture() {
   return <main className="copy-id-demo">
-    <SendbirdFixture record={() => {}}>
+    <GroupChannelFixture record={() => {}} uikitOptions={{ groupChannel: { enableReactions: false } }}>
       <section aria-label="Copy wrapper" style={{ height: 600 }}>
         <ChannelWithCopyMessageId channelUrl="fixture-A" />
       </section>
-    </SendbirdFixture>
+    </GroupChannelFixture>
   </main>;
 }
 

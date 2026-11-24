@@ -1,19 +1,4 @@
-export type ScreenId = 'A' | 'B';
-export type Operation = {
-  screen: ScreenId;
-  operation: 'addReaction' | 'deleteReaction' | 'sendUserMessage';
-  messageId?: number;
-  emoji?: string;
-  text?: string;
-  replyTo?: number;
-};
-export type RecordOperation = (event: Operation) => void;
-
-export const categories = [
-  { id: 1, name: 'Gesture', key: 'like', emoji: '👍' },
-  { id: 2, name: 'Heart', key: 'love', emoji: '❤️' },
-  { id: 3, name: 'Celebrate', key: 'celebrate', emoji: '🎉' },
-] as const;
+import { categories } from '../shared/group-channel-fixture';
 
 export const [gesture, , celebrate] = categories;
 

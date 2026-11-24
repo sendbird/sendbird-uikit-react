@@ -1,9 +1,10 @@
 import { useCallback, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@sendbird/uikit-react/dist/index.css';
-import { ResolvedOptions, SendbirdFixture } from './fixture';
+import { ResolvedOptions } from './fixture';
+import { GroupChannelFixture, type Operation } from '../shared/group-channel-fixture';
 import { ChannelScreen } from './integration';
-import { celebrate, gesture, screenPolicy, type Operation } from './policy';
+import { celebrate, gesture, screenPolicy } from './policy';
 import '../shared/page.css';
 import './style.css';
 
@@ -19,7 +20,9 @@ function App() {
         Remount A with {aCategory === gesture.id ? celebrate.name : gesture.name}
       </button>
     </div>
-    <SendbirdFixture record={record}>
+    <GroupChannelFixture record={record} uikitOptions={{ groupChannel: {
+      enableMention: true, enableReactions: false, replyType: 'none',
+    } }}>
       <div className="panels">
         <section className="panel" aria-label="Screen A">
           <h2>Screen A</h2>
@@ -38,7 +41,7 @@ function App() {
           </div>
         </section>
       </div>
-    </SendbirdFixture>
+    </GroupChannelFixture>
     <output hidden data-testid="operations">{JSON.stringify(events)}</output>
   </main>;
 }

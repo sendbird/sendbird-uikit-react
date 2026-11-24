@@ -1,12 +1,13 @@
 // Local fixture only: synthetic Chat SDK responses. The UIKit providers, components and actions are the installed package.
 import { useEffect, useState } from 'react';
-import { SessionHandler, type ConnectionHandler, type User } from '@sendbird/chat';
+import { SessionHandler, type ConnectionHandler } from '@sendbird/chat';
 import type { GroupChannel, GroupChannelHandler } from '@sendbird/chat/groupChannel';
 import type { UserMessageCreateParams } from '@sendbird/chat/message';
 import { TypingIndicatorType } from '@sendbird/uikit-react';
 import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
 import { GroupChannelProvider } from '@sendbird/uikit-react/GroupChannel/context';
 import GroupChannelUI from '@sendbird/uikit-react/GroupChannel/components/GroupChannelUI';
+import { configureFixtureSession } from '../shared/configure-fixture-session';
 import { ReorderedChannelContent } from './integration';
 import { channelName, history, startTime, type RecordOperation, type Scenario } from './scenarios';
 
@@ -85,19 +86,13 @@ function createSendbirdBoundary(record: RecordOperation) {
   }
 
   const configureSession: NonNullable<React.ComponentProps<typeof SendbirdProvider>['configureSession']> = (sdk) => {
-    Object.defineProperty(sdk, 'currentUser', { configurable: true, get: () => self as User });
-    sdk.connect = async () => self as User;
-    sdk.reconnect = () => false;
-    sdk.disconnectWebSocket = async () => undefined;
-    sdk.addConnectionHandler = (id, handler) => { connectionHandlers.set(id, handler); };
-    sdk.removeConnectionHandler = (id) => { connectionHandlers.delete(id); };
-    if (!('groupChannel' in sdk)) throw new Error('Group channel module is required');
-    const module = sdk.groupChannel;
-    module.getChannel = async (url) => {
+    const module = configureFixtureSession(sdk, self, async url => {
       if (url.endsWith('-error')) throw new Error('Synthetic channel lookup failure');
       activeChannel = channelFor(url);
       return activeChannel;
-    };
+    });
+    sdk.addConnectionHandler = (id, handler) => { connectionHandlers.set(id, handler); };
+    sdk.removeConnectionHandler = (id) => { connectionHandlers.delete(id); };
     module.addGroupChannelHandler = (id, handler) => { groupHandlers.set(id, handler); };
     module.removeGroupChannelHandler = (id) => { groupHandlers.delete(id); };
     return new SessionHandler();

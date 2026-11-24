@@ -3,7 +3,8 @@ import type { MessageMenuProps } from '@sendbird/uikit-react/ui/MessageMenu';
 import type { MessageContentProps } from '@sendbird/uikit-react/ui/MessageContent';
 
 export type Scenario = 'own' | 'other' | 'other-reply' | 'other-parent-only' | 'other-thread-only'
-  | 'other-ephemeral' | 'other-broadcast' | 'other-thread-mode' | 'pending' | 'failed';
+  | 'other-ephemeral' | 'other-broadcast' | 'other-thread-mode' | 'other-jump-parent'
+  | 'own-hide-delete' | 'pending' | 'failed';
 
 const fixtureChannel = {
   url: 'recipe-action-menu',
@@ -23,7 +24,7 @@ export const emojiContainer = {
 } as unknown as MessageContentProps['emojiContainer'];
 
 export function menuFixture(scenario: Scenario): Pick<MessageMenuProps, 'channel' | 'message' | 'isByMe' | 'replyType' | 'inThreadList'> {
-  const isByMe = scenario === 'own' || scenario === 'pending' || scenario === 'failed';
+  const isByMe = scenario === 'own' || scenario === 'own-hide-delete' || scenario === 'pending' || scenario === 'failed';
   const inThreadList = scenario === 'other-reply' || scenario === 'other-thread-only';
   const message = {
     messageId: 101,
