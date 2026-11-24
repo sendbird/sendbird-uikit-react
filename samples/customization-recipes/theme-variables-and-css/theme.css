@@ -1,3 +1,6 @@
+/* Give the copied GroupChannel a definite height for its scrollable list. */
+.branded-chat { height: min(640px, 100dvh); min-width: 0; }
+
 /* Published Sendbird variables; palette changes also affect other light-theme UI. */
 .branded-chat:is(.tokens,.target) {
   --sendbird-font-family-default: Arial, sans-serif;

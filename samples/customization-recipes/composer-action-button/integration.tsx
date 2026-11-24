@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import GroupChannel from '@sendbird/uikit-react/GroupChannel';
+import { useGroupChannel } from '@sendbird/uikit-react/GroupChannel/context';
 import { MessageInputWrapper } from '@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper';
+import './composer-tip.css';
 
 export function ComposerWithWritingTip() {
   const [showTip, setShowTip] = useState(false);
+  const { state: { currentChannel } } = useGroupChannel();
+  if (currentChannel?.isBroadcast && currentChannel.myRole !== 'operator') return null;
   return (
     <div className="composer-recipe">
       <MessageInputWrapper />

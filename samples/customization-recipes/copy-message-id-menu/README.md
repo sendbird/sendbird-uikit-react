@@ -27,6 +27,8 @@ The extension applies only when all of these hold. Other messages use the stock 
 - a top-level message (no parent, not in a thread list) in a group channel that is not ephemeral or broadcast
 - `replyType` is `QUOTE_REPLY`
 
+The wrapper inherits the provider's reply mode. You can pass `replyType` to set a mode for this channel explicitly. For example, a threaded channel keeps its **Reply in thread** action.
+
 The desktop menu also uses the stock rendering when UIKit supplies `onMoveToParentMessage`.
 
 `renderMenuItems` receives stock item components. The extension keeps UIKit 3.20.1's order and visibility rules for the supported messages, including ownership for Edit and Delete and `enableMarkAsUnread` for Mark as unread. With reactions enabled, the mobile menu is a bottom sheet. Its new item is a native button that supports Enter and Space. Copy [copy-id.css](copy-id.css) with `integration.tsx`; the integration imports it to keep the extended sheet scrollable in a short viewport. Desktop and the mobile context menu use UIKit's `MenuItem`.

@@ -48,10 +48,11 @@ interface CollectionHandler {
   onMessagesUpdated?: (context: { source: CollectionEventSource }, channel: GroupChannel, messages: FixtureMessage[]) => void;
 }
 
-function createChannel(screen: ScreenId, record: RecordOperation) {
+function createChannel(screen: ScreenId, record: RecordOperation, historySize: number) {
   const url = `fixture-${screen}`;
   const first = makeMessage(screen === 'A' ? 101 : 201, `Original message ${screen}`, url);
-  const loaded = [first];
+  const loaded = [first, ...Array.from({ length: historySize - 1 }, (_, offset) =>
+    makeMessage(first.messageId + offset + 1, `History ${offset + 2}`, url))];
   let active: CollectionHandler | undefined;
   const channel = {
     url, name: `Conversation ${screen}`, channelType: 'group', coverUrl: '', createdAt: fixtureTime,
@@ -113,8 +114,8 @@ function createChannel(screen: ScreenId, record: RecordOperation) {
   return channel;
 }
 
-function configureBoundary(record: RecordOperation): NonNullable<React.ComponentProps<typeof SendbirdProvider>['configureSession']> {
-  const channels = new Map((['A', 'B'] as const).map(screen => [`fixture-${screen}`, createChannel(screen, record)]));
+function configureBoundary(record: RecordOperation, historySize: number): NonNullable<React.ComponentProps<typeof SendbirdProvider>['configureSession']> {
+  const channels = new Map((['A', 'B'] as const).map(screen => [`fixture-${screen}`, createChannel(screen, record, historySize)]));
   return sdk => {
     Object.defineProperty(sdk, 'appInfo', { configurable: true, get: () => ({
       applicationAttributes: ['reactions'], messageTemplateInfo: { token: '' }, uikitConfigInfo: { lastUpdatedAt: 0 },
@@ -137,11 +138,12 @@ function configureBoundary(record: RecordOperation): NonNullable<React.Component
   };
 }
 
-export function GroupChannelFixture({ record, children, uikitOptions }: PropsWithChildren<{
+export function GroupChannelFixture({ record, children, uikitOptions, historySize = 1 }: PropsWithChildren<{
   record: RecordOperation;
+  historySize?: number;
   uikitOptions?: React.ComponentProps<typeof SendbirdProvider>['uikitOptions'];
 }>) {
-  const [configureSession] = useState(() => configureBoundary(record));
+  const [configureSession] = useState(() => configureBoundary(record, historySize));
   return <SendbirdProvider appId={appId} userId="self" configureSession={configureSession}
     sdkInitParams={{ localCacheEnabled: false }}
     uikitOptions={uikitOptions}>

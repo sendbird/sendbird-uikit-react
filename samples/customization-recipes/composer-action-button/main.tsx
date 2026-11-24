@@ -6,15 +6,17 @@ import { ComposerFixture, type ComposerEvent } from './fixture';
 import '../shared/page.css';
 import './style.css';
 
+const broadcastMember = new URLSearchParams(location.search).has('broadcast-member');
+
 function App() {
   const [events, setEvents] = useState<ComposerEvent[]>([]);
   return (
-    <main>
+    <main className="composer-action-demo">
       <a className="recipe-back" href="../">All recipes</a>
       <h1>Composer action button</h1>
       <p>The stock Sendbird composer runs against a local fixture. The tip button sits next to it.</p>
       <div className="composer-frame">
-        <ComposerFixture record={(event) => setEvents((current) => [...current, event])}>
+        <ComposerFixture broadcastMember={broadcastMember} record={(event) => setEvents((current) => [...current, event])}>
           <ComposerWithWritingTip />
         </ComposerFixture>
       </div>

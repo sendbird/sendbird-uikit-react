@@ -15,15 +15,15 @@ export function JumpToLatest() {
 // The stock composer keeps its submit logic; only the icon inside its Send button changes.
 export function BrandedComposer() {
   return <MessageInputWrapper renderSendMessageIcon={() => <>
-    <span aria-hidden="true" className="send-icon">↑</span>
-    <span className="visually-hidden">Send</span>
+    <span aria-hidden="true" className="uikit-jump-send-icon">↑</span>
+    <span className="uikit-jump-visually-hidden">Send</span>
   </>} />;
 }
 
 // Mount inside your authenticated SendbirdProvider.
 export function StockConversation({ channelUrl, startingPoint }: { channelUrl: string; startingPoint?: number }) {
   return <GroupChannelProvider channelUrl={channelUrl} startingPoint={startingPoint} replyType="QUOTE_REPLY">
-    <div className="conversation"><GroupChannelUI renderMessageInput={() => <BrandedComposer />} /></div>
-    <div className="jump-row"><JumpToLatest /></div>
+    <div className="uikit-jump-conversation"><GroupChannelUI renderMessageInput={() => <BrandedComposer />} /></div>
+    <div className="uikit-jump-jump-row"><JumpToLatest /></div>
   </GroupChannelProvider>;
 }

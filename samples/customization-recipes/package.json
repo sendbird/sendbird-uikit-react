@@ -13,7 +13,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "browser:install": "playwright install chromium",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "npm run build && node scripts/smoke.mjs"
   },
   "dependencies": {
     "@sendbird/chat": "4.22.17",

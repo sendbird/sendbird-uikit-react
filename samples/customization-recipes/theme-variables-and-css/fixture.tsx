@@ -108,7 +108,7 @@ export function ThemeFixture({ mode }: { mode: ThemeMode }) {
       <div className="accent-comparison">
         <span data-testid="outside-accent">{accent} Outside the chat</span>
       </div>
-      <BrandedConversation channelUrl={sendbirdChannel.url} mode={mode} aria-label="Branded chat">
+      <BrandedConversation channelUrl={sendbirdChannel.url} mode={mode} className="theme-fixture" aria-label="Branded chat">
         <div className="scene">
           <div className="chat-heading"><span data-testid="inside-accent">{accent}</span> Launch planning</div>
           <div className="messages sendbird-conversation__messages" dir="ltr">

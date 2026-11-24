@@ -143,7 +143,9 @@ function Content({ extended, props, report, reactions, scenario }: DemoProps & {
 
 function WrapperFixture() {
   return <main className="copy-id-demo">
-    <GroupChannelFixture record={() => {}} uikitOptions={{ groupChannel: { enableReactions: false } }}>
+    <GroupChannelFixture record={() => {}} uikitOptions={{ groupChannel: {
+      enableReactions: false, replyType: query.has('thread') ? 'thread' : 'quote_reply',
+    } }}>
       <section aria-label="Copy wrapper" style={{ height: 600 }}>
         <ChannelWithCopyMessageId channelUrl="fixture-A" />
       </section>

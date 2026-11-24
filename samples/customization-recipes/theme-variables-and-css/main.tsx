@@ -1,6 +1,8 @@
 import { createRoot } from 'react-dom/client';
 import '@sendbird/uikit-react/dist/index.css';
 import { ThemeFixture } from './fixture';
+import { BrandedConversation } from './integration';
+import { GroupChannelFixture } from '../shared/group-channel-fixture';
 import '../shared/page.css';
 import './style.css';
 
@@ -20,6 +22,10 @@ createRoot(document.getElementById('root')!).render(
       {modes.map(([value, label]) => <a key={value} href={`?mode=${value}`}
         aria-current={value === mode ? 'page' : undefined}>{label}</a>)}
     </nav>
-    <ThemeFixture mode={mode} />
+    {query.has('wrapper')
+      ? <GroupChannelFixture record={() => {}} historySize={25}>
+          <BrandedConversation channelUrl="fixture-A" aria-label="Branded chat" />
+        </GroupChannelFixture>
+      : <ThemeFixture mode={mode} />}
   </main>,
 );

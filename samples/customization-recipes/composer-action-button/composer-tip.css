@@ -1,0 +1,3 @@
+.composer-recipe { display: grid; justify-items: start; }
+.composer-recipe > p { margin: 5px 0 0; }
+.composer-recipe > .recipe-action { padding: 6px 12px; margin-top: 8px; border: 1px solid #9ab6a5; border-radius: 6px; color: #173b29; background: #eaf5ed; font: inherit; }

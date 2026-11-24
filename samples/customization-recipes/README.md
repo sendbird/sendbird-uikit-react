@@ -27,12 +27,11 @@ Open `http://127.0.0.1:5173/` and choose a recipe. Each recipe has its own READM
 ## Verify the production build
 
 ```sh
-npm run build            # tsc --noEmit, then vite build
 npm run browser:install  # once, downloads Playwright's Chromium
-npm run smoke
+npm run smoke            # typecheck, build, then run Chromium
 ```
 
-`npm run smoke` serves `dist/` on loopback and blocks every other request. It runs each recipe in Chromium at 1280px and 390px and asserts the behavior described in that recipe's README. It also checks that every `@sendbird/*` import is a published entry point of the installed package and that the installed SDK versions match the pins. Set `SMOKE_REPORT=<file>` to write the full JSON result. The UIKit stylesheet requests a Google Fonts stylesheet; the smoke test blocks it and the pages fall back to system fonts.
+`npm run smoke` builds the current source, then serves `dist/` on loopback and blocks every other request. It runs each recipe in Chromium at 1280px and 390px and asserts the behavior described in that recipe's README. It also checks that every `@sendbird/*` import is a published entry point of the installed package and that the installed SDK versions match the pins. Set `SMOKE_REPORT=<file>` to write the full JSON result. The UIKit stylesheet requests a Google Fonts stylesheet; the smoke test blocks it and the pages fall back to system fonts.
 
 This smoke test is a local development check. The repository CI runs its existing checks but does not run `samples/customization-recipes` or this smoke command; run the commands above when changing a recipe or its pinned dependencies.
 
@@ -57,7 +56,7 @@ This smoke test is a local development check. The repository CI runs its existin
 - `fixture*.ts(x)` supplies synthetic data or local SDK adapters; some fixtures record send and reaction calls in memory. These files only run the page locally; do not copy them into an app.
 - `main.tsx` and `index.html` run the demo page. Each recipe README identifies any CSS or other local file needed with its integration.
 
-The build and smoke test find recipe folders by their `index.html` files. Vite follows the entry script referenced in the HTML.
+The build and smoke test find recipe folders by their `index.html` files. Each recipe includes a README, and Vite follows the entry script referenced in the HTML.
 
 Each page mounts one `SendbirdProvider`, as a real app should at its root. Because the fixtures replace the network layer, sign-in, persistence, delivery to other devices and other live service behavior are not exercised. Check those in an authorized test application before you ship a change.
 

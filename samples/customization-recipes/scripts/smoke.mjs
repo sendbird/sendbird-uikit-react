@@ -1,5 +1,5 @@
 // Production smoke test for every recipe page.
-// Run `npm run build` first. The script serves ./dist on loopback, blocks all other network
+// The npm smoke command builds first. This script serves ./dist on loopback, blocks all other network
 // requests, and checks each recipe at 1280px and 390px in Chromium.
 // Set SMOKE_REPORT=<file> to write the full JSON result.
 import assert from 'node:assert/strict';
@@ -345,6 +345,20 @@ const scenarios = {
       await page.getByText('Fixture received: file photo.png', { exact: true }).waitFor();
       return { thumbnail: 'decoded 1×1 PNG', stock, branded };
     });
+    await step('the copyable theme wrapper keeps a real GroupChannel scrollable', async () => {
+      await page.goto(`${url}?wrapper`);
+      const chat = page.getByRole('region', { name: 'Branded chat' });
+      await chat.getByText('History 25', { exact: true }).waitFor();
+      const list = chat.getByTestId('sendbird-message-list-container');
+      const bounds = await list.evaluate(node => ({ height: node.clientHeight, content: node.scrollHeight }));
+      const wrapper = await chat.evaluate(node => ({ height: node.clientHeight, viewport: innerHeight }));
+      assert.ok(bounds.height > 150 && bounds.height < wrapper.height, JSON.stringify({ bounds, wrapper }));
+      assert.ok(wrapper.height <= wrapper.viewport && bounds.content - bounds.height > 50, JSON.stringify({ bounds, wrapper }));
+      assert.ok(await list.evaluate(node => {
+        node.scrollTop = node.scrollHeight;
+        return node.scrollTop;
+      }) > 50);
+    });
   },
 
   'jump-to-latest-and-send-icon': async ({ page, url, step }) => {
@@ -372,19 +386,25 @@ const scenarios = {
     await step('branded Send icon submits text through the stock composer', async () => {
       assert.equal(await send.count(), 0);
       await editor.fill('Native Submit');
-      assert.equal(await send.locator('.send-icon').innerText(), '↑');
+      assert.equal(await send.locator('.uikit-jump-send-icon').innerText(), '↑');
       await page.getByRole('button', { name: 'Send', exact: true }).click();
       await page.getByText('Native Submit', { exact: true }).waitFor();
       assert.deepEqual(await record(), { channel: 'fixture-channel', text: 'Native Submit', mentions: [] });
     });
-    await step('copyable jump CSS hides the spoken Send label without demo styles', async () => {
+    await step('copyable jump CSS hides the Send label and leaves host styles alone', async () => {
       const isolated = await page.context().newPage();
       try {
-        await isolated.setContent('<button class="sendbird-message-input--send"><span class="send-icon" aria-hidden="true">↑</span><span class="visually-hidden">Send</span></button>');
+        await isolated.setContent(`
+          <div class="conversation" style="height:30px">Host conversation</div>
+          <div class="jump-row"><button>Host button</button></div>
+          <button class="sendbird-message-input--send"><span class="uikit-jump-send-icon" aria-hidden="true">↑</span><span class="uikit-jump-visually-hidden">Send</span></button>
+        `);
         await isolated.addStyleTag({ content: await readFile(join(root, 'jump-to-latest-and-send-icon/jump.css'), 'utf8') });
+        assert.equal(await isolated.locator('.conversation').evaluate(node => getComputedStyle(node).borderTopWidth), '0px');
+        assert.equal(await isolated.locator('.jump-row').evaluate(node => getComputedStyle(node).display), 'block');
         const button = isolated.getByRole('button', { name: 'Send', exact: true });
         await button.waitFor();
-        assert.deepEqual(await button.locator('.visually-hidden').evaluate(node => {
+        assert.deepEqual(await button.locator('.uikit-jump-visually-hidden').evaluate(node => {
           const style = getComputedStyle(node);
           return [style.width, style.height, style.clipPath];
         }), ['1px', '1px', 'inset(50%)']);
@@ -431,7 +451,7 @@ const scenarios = {
         await page.locator(`body.sendbird-theme--${theme}`).waitFor();
         await page.getByText('History 24', { exact: true }).waitFor();
         await editor.fill('Disabled draft');
-        const color = () => send.locator('.send-icon').evaluate(node => getComputedStyle(node).color);
+        const color = () => send.locator('.uikit-jump-send-icon').evaluate(node => getComputedStyle(node).color);
         assert.equal(await color(), activeColor, `${theme} active Send icon`);
         // Set the native button state to isolate the icon's disabled styling.
         await send.evaluate(node => { node.disabled = true; });
@@ -527,6 +547,24 @@ const scenarios = {
       await page.locator('.composer-frame').getByText('fixture.txt', { exact: true }).waitFor();
       await send.click();
       await log.getByText('fixture.txt', { exact: true }).waitFor();
+    });
+    await step('a broadcast member sees neither the composer nor the tip', async () => {
+      await page.goto(`${url}?broadcast-member`);
+      await page.locator('.composer-frame').waitFor();
+      assert.equal(await page.locator('.sendbird-message-input--textarea').count(), 0);
+      assert.equal(await page.getByRole('button', { name: 'Show writing tip' }).count(), 0);
+    });
+    await step('the copied composer stylesheet leaves the host layout alone', async () => {
+      const isolated = await page.context().newPage();
+      try {
+        await isolated.setContent('<main><button class="recipe-action">App action</button><div class="composer-recipe"><button class="recipe-action">Writing tip</button></div></main>');
+        await isolated.addStyleTag({ content: await readFile(join(root, 'composer-action-button/composer-tip.css'), 'utf8') });
+        assert.equal(await isolated.locator('main').evaluate(node => getComputedStyle(node).maxWidth), 'none');
+        assert.equal(await isolated.getByRole('button', { name: 'App action' }).evaluate(node => getComputedStyle(node).marginTop), '0px');
+        assert.equal(await isolated.getByRole('button', { name: 'Writing tip' }).evaluate(node => getComputedStyle(node).marginTop), '8px');
+      } finally {
+        await isolated.close();
+      }
     });
   },
 
@@ -802,6 +840,15 @@ const scenarios = {
       assert.ok(items.some(item => item.trim() === 'Copy'));
       assert.ok(items.some(item => item.trim() === 'Reply'));
       assert.ok(items.some(item => item.trim() === 'Copy message ID'));
+      await page.goto(url);
+    });
+    await step('the copyable wrapper preserves the provider thread reply mode', async () => {
+      await page.goto(`${url}?wrapper&thread`);
+      const wrapper = page.getByRole('region', { name: 'Copy wrapper' });
+      await wrapper.getByText('Original message A', { exact: true }).hover();
+      await wrapper.locator('.sendbird-message-content-menu__normal-menu .sendbird-iconbutton').click();
+      await page.getByRole('menuitem', { name: 'Reply in thread' }).waitFor();
+      assert.equal(await page.getByRole('menuitem', { name: 'Copy message ID' }).count(), 0);
       await page.goto(url);
     });
     const scenario = page.getByLabel('Message', { exact: true });

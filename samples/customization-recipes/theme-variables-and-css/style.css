@@ -1,5 +1,5 @@
 main { max-width: 960px; }
-.branded-chat { height: 640px; overflow: hidden; border: 1px solid #cfd6e0; background: white; }
+.theme-fixture { overflow: hidden; border: 1px solid #cfd6e0; background: white; }
 .scene { display: flex; flex-direction: column; height: 100%; min-width: 0; }
 .messages { flex: 1; min-width: 0; overflow: auto; padding: 24px; }
 .fixture-row { padding-block: 8px; }
@@ -11,7 +11,7 @@ main { max-width: 960px; }
 .chat-heading span { display: inline-flex; }
 @media (max-width: 600px) {
   /* UIKit's small-screen layout uses the viewport width. */
-  .branded-chat { width: 100vw; height: 660px; margin-left: -14px; border-inline: 0; }
+  .theme-fixture { width: 100vw; height: min(660px, 100dvh); margin-left: -14px; border-inline: 0; }
   .messages { padding: 24px 12px; }
   .composer-host { padding: 12px; }
 }
