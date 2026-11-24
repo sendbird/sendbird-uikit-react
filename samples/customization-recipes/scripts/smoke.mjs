@@ -273,7 +273,7 @@ const scenarios = {
       await unselected.waitFor();
       assert.ok(await unselected.evaluate(node => node.classList.contains('sendbird-reaction-badge')));
     });
-    await step('stock heart works with the keyboard and names the reacting member', async () => {
+    await step('fixture keyboard handling toggles the stock heart; the tooltip names the reacting member', async () => {
       const reaction = page.locator('.sendbird-message-content-reactions');
       const unselected = reaction.getByRole('button', { name: '1', exact: true });
       const selected = reaction.getByRole('button', { name: '2', exact: true });
@@ -294,6 +294,36 @@ const scenarios = {
       assert.equal(await editor.evaluate(node => node.getBoundingClientRect().height), 56);
       await page.locator('.sendbird-message-input--send').click();
       await page.getByText('Fixture received: Keep the native composer', { exact: true }).waitFor();
+    });
+    await step('a staged file keeps the stock pending composer geometry', async () => {
+      const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGMQSzUBAAFEALBsWfmKAAAAAElFTkSuQmCC', 'base64');
+      const stagePhoto = async mode => {
+        await page.goto(`${url}?mode=${mode}`);
+        await page.locator('input[type="file"]').first().setInputFiles({ name: 'photo.png', mimeType: 'image/png', buffer: png });
+        const thumbnail = page.locator('.sendbird-message-input--has-pending').getByRole('img', { name: 'photo.png', exact: true });
+        const dimensions = await thumbnail.evaluate(async image => {
+          await image.decode();
+          return [image.naturalWidth, image.naturalHeight];
+        });
+        assert.deepEqual(dimensions, [1, 1]);
+        await page.locator('.sendbird-message-input__pending-file__image-placeholder').waitFor({ state: 'detached' });
+        return page.locator('.sendbird-message-input--has-pending').evaluate(root => {
+          const base = root.querySelector('.sendbird-message-input--textarea').getBoundingClientRect();
+          const rect = selector => {
+            const box = root.querySelector(selector).getBoundingClientRect();
+            return [box.top - base.top, box.bottom - base.top, box.left - base.left, box.right - base.left].map(Math.round);
+          };
+          return { height: Math.round(base.height), preview: rect('.sendbird-message-input__pending-preview'),
+            placeholder: rect('.sendbird-message-input--placeholder'), send: rect('.sendbird-message-input--send') };
+        });
+      };
+      const stock = await stagePhoto('default');
+      const branded = await stagePhoto('target');
+      assert.deepEqual(branded, stock);
+      assert.ok(branded.placeholder[0] >= branded.preview[1], `placeholder ${branded.placeholder} under preview ${branded.preview}`);
+      await page.locator('.sendbird-message-input--send').click();
+      await page.getByText('Fixture received: file photo.png', { exact: true }).waitFor();
+      return { thumbnail: 'decoded 1×1 PNG', stock, branded };
     });
   },
 
@@ -721,22 +751,28 @@ const scenarios = {
     const scenario = page.getByLabel('Message', { exact: true });
     const extended = page.getByRole('checkbox', { name: 'Add ID action' });
     const trigger = page.getByRole('button', { name: 'Open menu' });
-    const items = () => page.getByRole('menuitem').evaluateAll(nodes => nodes.map(node => node.textContent.trim()));
-    await step('ID action is added only to delivered top-level messages; other items unchanged', async () => {
-      for (const [value, hasId] of [['own', true], ['other', true], ['other-reply', false], ['pending', false], ['failed', false]]) {
+    const menuItems = page.getByRole('menuitem');
+    const names = (locator = menuItems) => locator.evaluateAll(nodes => nodes.map(node => node.textContent.trim()));
+    const states = [['own', true], ['other', true], ['other-reply', false], ['pending', false], ['failed', false]];
+    const compareWithStock = async (cases, readMenu) => {
+      for (const [value, hasId] of cases) {
         await scenario.selectOption(value);
         await extended.uncheck();
-        await trigger.click();
-        const stock = await items();
-        await page.mouse.click(4, 4);
+        const stock = await readMenu();
         await extended.check();
-        await trigger.click();
-        const after = await items();
-        await page.mouse.click(4, 4);
-        assert.deepEqual(after.filter(name => name !== 'Copy message ID'), stock, value);
-        assert.equal(after.includes('Copy message ID'), hasId, value);
+        const after = await readMenu();
+        assert.deepEqual(after, hasId ? [...stock, 'Copy message ID'] : stock, value);
         if (value.startsWith('other')) assert.equal(after.includes('Edit'), false, value);
       }
+    };
+    await step('ID action is added only to delivered top-level messages; other items unchanged', async () => {
+      await compareWithStock(states, async () => {
+        await trigger.click();
+        await menuItems.first().waitFor();
+        const labels = await names();
+        await page.mouse.click(4, 4);
+        return labels;
+      });
     });
     await step('stock Edit, Reply and Resend callbacks still run', async () => {
       for (const [value, label, expected] of [
@@ -761,6 +797,158 @@ const scenarios = {
       await page.getByText('Copied ID 101', { exact: true }).waitFor();
       await copy.waitFor({ state: 'hidden' });
       assert.equal(await page.evaluate(() => navigator.clipboard.readText()), '101');
+    });
+    // The second demo renders MessageContent with the same wiring as ChannelWithCopyMessageId.
+    const content = page.getByTestId('message-content');
+    const body = content.getByText('A sample message', { exact: true });
+    const reactions = page.getByRole('checkbox', { name: 'Reactions' });
+    if (width >= 600) {
+      await step('desktop MessageContent menu adds the ID action through the shared wiring', async () => {
+        await reactions.uncheck();
+        await compareWithStock(states.filter(([value]) => value !== 'other-reply' && value !== 'pending'), async () => {
+          await body.hover();
+          await content.locator('.sendbird-message-content-menu .sendbird-message-menu .sendbird-iconbutton').click();
+          await page.getByRole('menuitem').first().waitFor();
+          const labels = await names();
+          await page.mouse.click(4, 4);
+          return labels;
+        });
+      });
+      return;
+    }
+    const mobileItems = page.locator('.sendbird-message__mobile-context-menu [role="menuitem"], .sendbird-message__bottomsheet--action');
+    const longPress = async () => {
+      await body.scrollIntoViewIfNeeded();
+      const box = await body.boundingBox();
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      await page.mouse.down();
+      try {
+        await mobileItems.first().waitFor();
+      } finally {
+        await page.mouse.up();
+      }
+    };
+    const closeMobileMenu = async () => {
+      await page.locator('.sendbird-bottomsheet__backdrop, .sendbird-dropdown__menu-backdrop').first().click({ position: { x: 4, y: 4 } });
+      await mobileItems.first().waitFor({ state: 'detached' });
+    };
+    const contextMenu = '.sendbird-message__mobile-context-menu';
+    const bottomSheet = '.sendbird-message__bottomsheet';
+    for (const [withReactions, menu, otherMenu] of [[false, contextMenu, bottomSheet], [true, bottomSheet, contextMenu]]) {
+      const name = withReactions ? 'bottom sheet (reactions on)' : 'context menu (reactions off)';
+      await step(`long-press ${name}: ID action only on delivered top-level messages, stock items unchanged`, async () => {
+        await reactions.setChecked(withReactions);
+        await compareWithStock(states, async () => {
+          await longPress();
+          assert.ok(await page.locator(menu).count() > 0 && await page.locator(otherMenu).count() === 0, `uses the ${name}`);
+          const labels = await names(mobileItems);
+          await closeMobileMenu();
+          return labels;
+        });
+      });
+      await step(`long-press ${name}: Copy message ID writes the ID and closes; stock Edit and Reply still run`, async () => {
+        await reactions.setChecked(withReactions);
+        await extended.check();
+        await scenario.selectOption('other');
+        await page.evaluate(() => navigator.clipboard.writeText('before'));
+        await longPress();
+        await mobileItems.filter({ hasText: 'Copy message ID' }).click();
+        await page.getByText('Copied ID 101', { exact: true }).waitFor();
+        await mobileItems.first().waitFor({ state: 'detached' });
+        assert.equal(await page.evaluate(() => navigator.clipboard.readText()), '101');
+        await scenario.selectOption('own');
+        for (const [label, expected] of [['Edit', 'UIKit opened edit'], ['Reply', 'UIKit requested quote reply']]) {
+          await longPress();
+          await mobileItems.filter({ hasText: new RegExp(`^${label}$`) }).click();
+          await page.getByText(expected, { exact: true }).waitFor();
+        }
+      });
+    }
+    const copyId = page.getByRole('menuitem', { name: 'Copy message ID', exact: true });
+    const expectCopied = async () => {
+      await page.getByText('Copied ID 101', { exact: true }).waitFor();
+      await copyId.waitFor({ state: 'detached' });
+      assert.equal(await page.evaluate(() => navigator.clipboard.readText()), '101');
+    };
+    await step('bottom-sheet ID copy responds to Enter and Space', async () => {
+      await scenario.selectOption('other');
+      for (const key of ['Enter', 'Space']) {
+        await page.evaluate(() => navigator.clipboard.writeText('before'));
+        await longPress();
+        await copyId.press(key);
+        await expectCopied();
+      }
+    });
+    await step('the extended bottom sheet keeps reactions and ID copy reachable at 390×240', async () => {
+      const viewport = page.viewportSize();
+      await scenario.selectOption('own');
+      await page.setViewportSize({ width, height: 240 });
+      const sheet = page.locator(bottomSheet);
+      const heart = page.getByTestId('ui_mobile_emoji_reactions_menu_heart');
+      try {
+        await longPress();
+        const reactionBox = await heart.boundingBox();
+        assert.ok(reactionBox.y >= 0 && reactionBox.y + reactionBox.height <= 240, 'reaction stays in the viewport');
+        const dimensions = await sheet.evaluate(node => ({ height: node.clientHeight, scrollHeight: node.scrollHeight }));
+        assert.ok(dimensions.height <= 240 && dimensions.scrollHeight > dimensions.height);
+        await copyId.scrollIntoViewIfNeeded();
+        assert.ok(await sheet.evaluate(node => node.scrollTop > 0), 'sheet scrolls to the added item');
+        await page.evaluate(() => navigator.clipboard.writeText('before'));
+        await copyId.click();
+        await expectCopied();
+        return { reactionTop: reactionBox.y, ...dimensions };
+      } finally {
+        await page.setViewportSize(viewport);
+      }
+    });
+    await step('Chromium touch opens both mobile menus and taps Copy message ID in the context menu', async () => {
+      const cdp = await page.context().newCDPSession(page);
+      const touch = (type, touchPoints = []) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints });
+      const touchStart = async locator => {
+        await locator.scrollIntoViewIfNeeded();
+        const box = await locator.boundingBox();
+        await touch('touchStart', [{ x: box.x + box.width / 2, y: box.y + box.height / 2 }]);
+      };
+      const hold = async menu => {
+        await touchStart(body);
+        try {
+          await page.locator(menu).getByRole('menuitem').first().waitFor();
+          return await names(mobileItems);
+        } finally {
+          await touch('touchEnd');
+        }
+      };
+      try {
+        await cdp.send('Emulation.setTouchEmulationEnabled', { enabled: true });
+        await scenario.selectOption('other');
+        await reactions.uncheck();
+        await page.evaluate(() => navigator.clipboard.writeText('before'));
+        assert.ok((await hold(contextMenu)).includes('Copy message ID'));
+        await touchStart(copyId);
+        await touch('touchEnd');
+        await expectCopied();
+        await reactions.check();
+        await extended.uncheck();
+        const stock = await hold(bottomSheet);
+        // In this Chromium touch path, letting go over the backdrop dismisses the stock sheet.
+        await page.locator(bottomSheet).waitFor({ state: 'detached' });
+        await extended.check();
+        assert.deepEqual(await hold(bottomSheet), [...stock, 'Copy message ID']);
+        await page.locator(bottomSheet).waitFor({ state: 'detached' });
+      } finally {
+        await cdp.send('Emulation.setTouchEmulationEnabled', { enabled: false });
+        await cdp.detach();
+      }
+    });
+    await step('clipboard rejection reports failure and keeps the bottom sheet open', async () => {
+      await page.evaluate(() => {
+        navigator.clipboard.writeText = async () => { throw new DOMException('Clipboard denied by test', 'NotAllowedError'); };
+      });
+      await longPress();
+      await copyId.press('Enter');
+      await page.getByText('Clipboard is unavailable', { exact: true }).waitFor();
+      await copyId.waitFor();
+      await closeMobileMenu();
     });
   },
 

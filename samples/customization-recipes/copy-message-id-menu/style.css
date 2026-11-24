@@ -1,7 +1,28 @@
-main { max-width: 54rem; }
-section { padding: 1rem; border: 1px solid #d3deeb; border-radius: 0.65rem; }
-.controls { align-items: end; }
-.scenario { display: grid; gap: .25rem; }
-select { max-width: 100%; }
-.message { display: flex; justify-content: space-between; align-items: center; min-height: 6rem; gap: .75rem; }
-.message button { font: inherit; padding: .3rem .65rem; border: 1px solid #aabed6; border-radius: .35rem; background: #f4f7fb; }
+.copy-id-demo { max-width: 54rem; }
+.copy-id-demo section { padding: 1rem; border: 1px solid #d3deeb; border-radius: 0.65rem; }
+.copy-id-demo .controls { align-items: end; }
+.copy-id-demo .scenario { display: grid; gap: .25rem; }
+.copy-id-demo select { max-width: 100%; }
+.copy-id-demo .message { display: flex; justify-content: space-between; align-items: center; min-height: 6rem; gap: .75rem; }
+.copy-id-demo .message button { font: inherit; padding: .3rem .65rem; border: 1px solid #aabed6; border-radius: .35rem; background: #f4f7fb; }
+.copy-id-demo .message-content { padding: .5rem 0; border-top: 1px solid #e3eaf2; }
+.copy-id-demo .hint { margin: 0 0 .5rem; color: #4a5d72; }
+
+.copy-id-bottom-sheet-item {
+  width: 100%;
+  border: 0;
+  padding-block: 0;
+  background: transparent;
+  text-align: start;
+}
+
+.copy-id-bottom-sheet-item:focus-visible {
+  outline-offset: -2px;
+}
+
+/* The portal is fixed to the bottom. Limit only the sheet extended by this recipe. */
+.sendbird-message__bottomsheet:has(.copy-id-bottom-sheet-item) {
+  box-sizing: border-box;
+  max-height: 100dvh;
+  overflow-y: auto;
+}

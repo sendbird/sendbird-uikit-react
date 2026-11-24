@@ -45,7 +45,7 @@ npm run smoke
 | [Composer action button](composer-action-button/README.md) | An app button next to the stock composer | `renderMessageInput`, `MessageInputWrapper` |
 | [Product message and channel preview](product-message-and-channel-preview/README.md) | One typed product payload drives a message card and a channel-list row | `renderMessageBody`, `renderChannelPreview` |
 | [Per-screen channel options](per-screen-channel-options/README.md) | Different reaction, reply and emoji settings on two screens | `GroupChannelProvider` props |
-| [Copy message ID menu](copy-message-id-menu/README.md) | One extra message menu item for supported messages | `renderMessageMenu`, `MessageMenu` |
+| [Copy message ID menu](copy-message-id-menu/README.md) | One extra message menu item for supported messages, on desktop and in the mobile long-press menu | `renderMessageMenu`, `MessageMenu`, `renderMobileMenuOnLongPress`, `MobileMenu` |
 | [Localized reply count](localized-reply-count/README.md) | Switch UIKit strings and format reply counts per language | `stringSet`, `useLocalization` |
 | [Upgrade and migration](upgrade-and-migration/README.md) | Pin SDK versions, then migrate legacy channel modules separately | Published subpath imports, `GroupChannel` |
 

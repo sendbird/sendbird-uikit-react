@@ -2,7 +2,8 @@
 import { useState, type ComponentProps } from 'react';
 import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
 import Icon, { IconColors, IconTypes } from '@sendbird/uikit-react/ui/Icon';
-import MessageInput from '@sendbird/uikit-react/ui/MessageInput';
+import MessageInputWrapper from '@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper';
+import { GroupChannelContext } from '@sendbird/uikit-react/GroupChannel/context';
 import MessageContent from '@sendbird/uikit-react/ui/MessageContent';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 
@@ -20,6 +21,34 @@ const emojiContainer = { emojiHash: 'fixture', emojiCategories: [{ id: 1, name: 
 const people = { self: 'Sam', other: 'Alex' } as const;
 const nicknamesMap = new Map(Object.entries(people));
 type FixtureMessage = (typeof conversation)[number];
+type ChannelStore = NonNullable<React.ContextType<typeof GroupChannelContext>>;
+const inert = () => {};
+
+// The stock MessageInputWrapper stages picked files before sending; this store only records what it sends.
+function createChannelStore(record: (sent: string) => void): ChannelStore {
+  const sent = { messageId: 201, messageType: 'user', channelUrl: sendbirdChannel.url, createdAt: created.getTime(), sender: { userId: 'self' } };
+  let state: Record<string, unknown> = {
+    currentChannel: sendbirdChannel, channelUrl: sendbirdChannel.url, loading: false, initialized: true,
+    messages: [], quoteMessage: null, replyType: 'NONE',
+    messageInputRef: { current: null }, scrollRef: { current: null },
+    scrollDistanceFromBottomRef: { current: 0 }, scrollPositionRef: { current: 0 }, scrollPubSub: { publish: inert },
+    sendUserMessage: async ({ message }: { message: string }) => { record(message); return sent; },
+    sendFileMessage: async ({ file }: { file: unknown }) => { record(`file ${file instanceof File ? file.name : ''}`); return { ...sent, messageType: 'file' }; },
+    sendMultipleFilesMessage: inert, updateUserMessage: inert, updateFileMessage: inert,
+    resendMessage: inert, deleteMessage: inert, resetNewMessages: inert, hasNext: () => false, nicknamesMap,
+  };
+  const subscribers = new Set<() => void>();
+  return {
+    getState: () => state,
+    setState: (patch: Record<string, unknown> | ((previous: Record<string, unknown>) => Record<string, unknown>)) => {
+      const next = typeof patch === 'function' ? patch(state) : patch;
+      if (Object.keys(next).every(key => Object.is(state[key], next[key]))) return;
+      state = { ...state, ...next };
+      subscribers.forEach(notify => notify());
+    },
+    subscribe: (subscriber: () => void) => { subscribers.add(subscriber); return () => subscribers.delete(subscriber); },
+  } as unknown as ChannelStore;
+}
 
 const sendbirdChannel = {
   url: 'synthetic-style',
@@ -30,6 +59,10 @@ const sendbirdChannel = {
   isOpenChannel: () => false,
   isBroadcast: false,
   isSuper: false,
+  isFrozen: false,
+  myRole: 'none',
+  startTyping: inert,
+  endTyping: inert,
 } as unknown as GroupChannel;
 
 function toSendbirdMessage(item: FixtureMessage, reactedByMe: boolean) {
@@ -62,12 +95,14 @@ function toSendbirdMessage(item: FixtureMessage, reactedByMe: boolean) {
 
 export function ThemeFixture({ mode }: { mode: 'default' | 'tokens' | 'target' }) {
   const [sent, recordSend] = useState('');
+  const [channelStore] = useState(() => createChannelStore(recordSend));
   const [myHearts, setMyHearts] = useState<Record<number, boolean>>({});
   const toggleHeart = (messageId: number) => {
     setMyHearts(current => ({ ...current, [messageId]: !current[messageId] }));
   };
   const accent = <Icon type={IconTypes.INFO} fillColor={IconColors.PRIMARY} width="20px" height="20px" />;
-  return <SendbirdProvider appId="" userId="self" theme="light" breakpoint="600px">
+  return <SendbirdProvider appId="" userId="self" theme="light" breakpoint="600px"
+    uikitOptions={{ groupChannel: { enableVoiceMessage: false, input: { enableDocument: true } } }}>
     <div className="theme-example">
       <div className="accent-comparison">
         <span data-testid="outside-accent">{accent} Outside the chat</span>
@@ -92,8 +127,7 @@ export function ThemeFixture({ mode }: { mode: 'default' | 'tokens' | 'target' }
             </div>)}
           </div>
           <div className="composer-host">
-            <MessageInput channel={sendbirdChannel} channelUrl={sendbirdChannel.url} placeholder="Write a message…"
-              isVoiceMessageEnabled={false} onSendMessage={({ message }) => recordSend(message)} />
+            <GroupChannelContext.Provider value={channelStore}><MessageInputWrapper /></GroupChannelContext.Provider>
             <output aria-live="polite">{sent && `Fixture received: ${sent}`}</output>
           </div>
         </div>

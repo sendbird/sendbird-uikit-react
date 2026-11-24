@@ -30,7 +30,8 @@
   font-size: 16px;
   line-height: 24px;
 }
-.branded-chat.target .sendbird-message-input .sendbird-message-input--placeholder {
+/* With a staged file, UIKit moves the placeholder below the file preview; keep its stock position. */
+.branded-chat.target .sendbird-message-input:not(.sendbird-message-input--has-pending) .sendbird-message-input--placeholder {
   top: 15px;
   bottom: auto;
   height: 24px;
