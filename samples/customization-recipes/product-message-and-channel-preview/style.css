@@ -20,5 +20,6 @@ h3 { margin: 0 0 7px; font-size: .9rem; }
 .product-channel-row:focus-visible { outline: 2px solid #1061a4; outline-offset: -2px; }
 .product-channel-copy { min-width: 0; flex: 1; display: grid; gap: 2px; overflow-wrap: anywhere; }
 .product-channel-copy > span { font-size: .85rem; }
+.product-channel-unread { display: inline-flex; align-items: center; gap: 4px; }
 .message-pane .sendbird-conversation__messages { padding: 0 12px; }
 @media (max-width: 620px) { .demo-panes { grid-template-columns: 1fr; } .channel-list-pane, .message-pane { min-height: 160px; } }

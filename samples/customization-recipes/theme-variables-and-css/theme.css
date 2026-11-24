@@ -7,7 +7,8 @@
   --sendbird-light-background-200: #cbd5e1;
   --sendbird-light-onlight-01: #0f172a;
   --sendbird-light-ondark-01: #ffffff;
-  --sendbird-light-onlight-03: #cbd5e1;
+  /* Also the composer placeholder and border color; keep at least 4.5:1 on white. */
+  --sendbird-light-onlight-03: #64748b;
   --sendbird-message-input-border-active: #166534;
   --sendbird-light-shadow-message-input: 0 0 0 3px #bbf7d0;
 }
@@ -17,6 +18,10 @@
   padding: 12px 16px;
   font-size: 16px;
   line-height: 24px;
+}
+/* Keep the flat bottom edge the stock stylesheet gives a bubble above its reaction row. */
+.branded-chat.target .sendbird-text-message-item-body.reactions {
+  border-radius: 12px 12px 0 0;
 }
 .branded-chat.target .sendbird-message-input .sendbird-message-input--textarea {
   min-height: 56px;

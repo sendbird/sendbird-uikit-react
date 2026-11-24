@@ -8,12 +8,14 @@ import { ProductMessageContent, renderProductPreview } from './integration';
 import { author, channelNames, fileName, fileUrl, generalText, messageData, sentAt, type MessageKind, type SelectedChannel } from './scenario';
 
 type SBMessage = MessageContentProps['message'];
+export type WorkshopOptions = { ephemeral: boolean; mentioned: boolean; defaultName: boolean };
 type FixtureProps = {
   kind: MessageKind;
   unread: number;
   selected: SelectedChannel;
   selectChannel: (id: SelectedChannel) => void;
   bodyOnly: boolean;
+  workshop: WorkshopOptions;
 };
 
 function createMessage(kind: MessageKind, general = false): SBMessage {
@@ -34,17 +36,17 @@ function createMessage(kind: MessageKind, general = false): SBMessage {
   } as unknown as SBMessage;
 }
 
-function createChannel(id: SelectedChannel, kind: MessageKind, unread: number) {
+function createChannel(id: SelectedChannel, kind: MessageKind, unread: number, options?: WorkshopOptions) {
   return {
-    channelType: 'group', url: id, name: channelNames[id],
-    unreadMessageCount: unread, unreadMentionCount: 0, memberCount: 2, coverUrl: '',
+    channelType: 'group', url: id, name: options?.defaultName ? 'Group Channel' : channelNames[id],
+    unreadMessageCount: unread, unreadMentionCount: options?.mentioned ? 1 : 0, memberCount: 2, coverUrl: '',
     members: [
       { userId: 'self', nickname: 'Current User', profileUrl: '' },
       { userId: author.id, nickname: author.name, profileUrl: '' },
     ],
     lastMessage: createMessage(id === 'general' ? 'text' : kind, id === 'general'),
     isGroupChannel: () => true, isOpenChannel: () => false, isDistinct: false, isPublic: false,
-    isEphemeral: false, isBroadcast: false, isSuper: false, isFrozen: false,
+    isEphemeral: options?.ephemeral ?? false, isBroadcast: false, isSuper: false, isFrozen: false,
     getTypingUsers: () => [], getUnreadMemberCount: () => 0, getUndeliveredMemberCount: () => 0,
   } as unknown as GroupChannel;
 }
@@ -67,12 +69,12 @@ function useFixtureStore(state: GroupChannelListState) {
   }, [state]);
 }
 
-export function ChannelPreviewExample({ kind, unread, selected, selectChannel, bodyOnly }: FixtureProps) {
+export function ChannelPreviewExample({ kind, unread, selected, selectChannel, bodyOnly, workshop }: FixtureProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const groupChannels = useMemo(() => [
-    createChannel('workshop', kind, unread),
+    createChannel('workshop', kind, unread, workshop),
     createChannel('general', 'text', 0),
-  ], [kind, unread]);
+  ], [kind, unread, workshop]);
   const state = useMemo<GroupChannelListState>(() => ({
     groupChannels, selectedChannelUrl: selected, scrollRef: scrollRef as GroupChannelListState['scrollRef'],
     initialized: true, typingChannelUrls: [], allowProfileEdit: false, disableAutoSelect: true,

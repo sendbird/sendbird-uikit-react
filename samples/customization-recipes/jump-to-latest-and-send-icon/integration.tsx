@@ -5,7 +5,9 @@ import MessageInputWrapper from '@sendbird/uikit-react/GroupChannel/components/M
 // Must render inside the GroupChannelProvider that owns the message list.
 export function JumpToLatest() {
   const { state, actions } = useGroupChannel();
-  return <button type="button" disabled={state.isScrollBottomReached}
+  // Like the stock scroll button: the bottom of a page opened at an older message is not the latest message.
+  // hasNext joins the context state after the provider's first render, so call it optionally.
+  return <button type="button" disabled={state.isScrollBottomReached && !state.hasNext?.()}
     onClick={() => void actions.scrollToBottom(false)}>Jump to latest</button>;
 }
 
@@ -18,8 +20,8 @@ export function BrandedComposer() {
 }
 
 // Mount inside your authenticated SendbirdProvider.
-export function StockConversation({ channelUrl }: { channelUrl: string }) {
-  return <GroupChannelProvider channelUrl={channelUrl} replyType="QUOTE_REPLY">
+export function StockConversation({ channelUrl, startingPoint }: { channelUrl: string; startingPoint?: number }) {
+  return <GroupChannelProvider channelUrl={channelUrl} startingPoint={startingPoint} replyType="QUOTE_REPLY">
     <div className="conversation"><GroupChannelUI renderMessageInput={() => <BrandedComposer />} /></div>
     <div className="jump-row"><JumpToLatest /></div>
   </GroupChannelProvider>;

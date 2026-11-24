@@ -12,6 +12,8 @@ const self = { userId: 'self', nickname: 'Sam', profileUrl: '', isActive: true }
 const other = { userId: 'other', nickname: 'Alex', profileUrl: '', isActive: true };
 const created = Date.parse('2026-11-19T12:00:00Z');
 const fixtureAppId = '00000000-0000-4000-8000-000000000004';
+// Opening at History 12 mimics a search or quote jump: newer messages load in pages of four.
+export const olderStartingPoint = created + 112 * 60_000;
 
 function makeMessage(id: number, text: string, url: string, sender = other, status = 'succeeded', parent?: FixtureMessage, file?: { name: string; url: string; type: string; size: number }) {
   const message = {
@@ -59,18 +61,28 @@ function createChannel(onSend: SendListener) {
     myRole: 'none', unreadMessageCount: 0, getUnreadMemberCount: () => 0, getUndeliveredMemberCount: () => 0,
     getTypingUsers: () => [], startTyping: async () => undefined, endTyping: async () => undefined,
     markAsRead: async () => undefined,
-    createMessageCollection() {
+    createMessageCollection({ startingPoint = Number.MAX_SAFE_INTEGER }: { startingPoint?: number } = {}) {
+      let end = startingPoint < loaded[loaded.length - 1].createdAt
+        ? loaded.filter(item => item.createdAt <= startingPoint).length : Infinity;
       const result = {
-        hasPrevious: false, hasNext: false, succeededMessages: loaded, pendingMessages: [], failedMessages: [],
+        hasPrevious: false, get hasNext() { return end < loaded.length; },
+        get succeededMessages() { return loaded.slice(0, end); }, pendingMessages: [], failedMessages: [],
         setMessageCollectionHandler: () => undefined,
-        loadPrevious: async () => [], loadNext: async () => [], dispose: () => undefined,
+        loadPrevious: async () => [], dispose: () => undefined,
+        loadNext: async () => {
+          const page = loaded.slice(end, end + 4);
+          end += page.length;
+          // Once caught up, locally sent messages belong to the current page.
+          if (end >= loaded.length) end = Infinity;
+          return page;
+        },
         initialize: () => result,
         onCacheResult: (callback: (error: null, messages: unknown[]) => void) => {
           queueMicrotask(() => callback(null, []));
           return result;
         },
         onApiResult: (callback: (error: null, messages: unknown[]) => void) => {
-          queueMicrotask(() => callback(null, loaded));
+          queueMicrotask(() => callback(null, result.succeededMessages));
           return result;
         },
       };
@@ -108,9 +120,9 @@ function configureBoundary(onSend: SendListener): NonNullable<React.ComponentPro
   };
 }
 
-export function FixtureProvider({ children, onSend }: PropsWithChildren<{ onSend: SendListener }>) {
+export function FixtureProvider({ children, onSend, theme }: PropsWithChildren<{ onSend: SendListener; theme: 'light' | 'dark' }>) {
   const [configureSession] = useState(() => configureBoundary(onSend));
-  return <SendbirdProvider appId={fixtureAppId} userId="self" configureSession={configureSession}
+  return <SendbirdProvider appId={fixtureAppId} userId="self" theme={theme} configureSession={configureSession}
     sdkInitParams={{ localCacheEnabled: false }}
     uikitOptions={{ groupChannel: { enableMention: true, enableVoiceMessage: false, input: { enableDocument: true } } }}>
     {children}

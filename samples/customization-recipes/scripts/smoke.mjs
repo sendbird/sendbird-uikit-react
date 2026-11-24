@@ -57,6 +57,28 @@ for (const legacy of ['./Channel', './Channel/context', './ChannelList', './Chan
 }
 assert.equal(uikitExports['./ui/MessageBody'], undefined);
 
+// UIKit groups consecutive messages by their formatted DATE_FORMAT__MESSAGE_CREATED_AT, so the timestamp
+// recipe's provider-wide format splits two same-minute messages that the stock format groups.
+const { isSameGroup } = await import('@sendbird/uikit-react/Channel/utils/compareMessagesForGrouping');
+const { LabelStringSet } = await import('@sendbird/uikit-react/ui/Label');
+const timestampSource = await readFile(join(root, 'message-timestamp-and-reaction/integration.tsx'), 'utf8');
+const timeFormatMatch = /DATE_FORMAT__MESSAGE_CREATED_AT:\s*(['"\x60])([^'"\x60\r\n]+)\1/.exec(timestampSource);
+assert.ok(timeFormatMatch, 'timestamp recipe must provide a literal DATE_FORMAT__MESSAGE_CREATED_AT');
+const groupingMessage = (second, millisecond = 0) => ({
+  messageType: 'user', sendingStatus: 'succeeded', sender: { userId: 'other' },
+  createdAt: new Date(2026, 10, 19, 13, 34, second, millisecond).getTime(),
+});
+const first = groupingMessage(5);
+const laterSecond = groupingMessage(40);
+const sameSecond = groupingMessage(5, 400);
+const recipeStringSet = { DATE_FORMAT__MESSAGE_CREATED_AT: timeFormatMatch[2] };
+report.messageGrouping = {
+  stockFormat: isSameGroup(first, laterSecond, LabelStringSet),
+  recipeFormat: isSameGroup(first, laterSecond, recipeStringSet),
+  recipeSameSecond: isSameGroup(first, sameSecond, recipeStringSet),
+};
+assert.deepEqual(report.messageGrouping, { stockFormat: true, recipeFormat: false, recipeSameSecond: true });
+
 // 2. Browser scenarios against the production build ---------------------------------------
 const scenarios = {
   'message-timestamp-and-reaction': async ({ page, url, step }) => {
@@ -178,7 +200,7 @@ const scenarios = {
     });
   },
 
-  'theme-variables-and-css': async ({ page, url, step }) => {
+  'theme-variables-and-css': async ({ page, url, step, width }) => {
     const style = locator => locator.evaluate(element => {
       const css = getComputedStyle(element);
       return { background: css.backgroundColor, font: css.fontFamily, fontSize: css.fontSize,
@@ -225,6 +247,44 @@ const scenarios = {
       assert.deepEqual([styles.incoming.radius, styles.incoming.padding, styles.incoming.fontSize, styles.incoming.lineHeight],
         ['12px', '12px 16px', '16px', '24px']);
     });
+    await step('reacted bubble keeps a flat bottom edge and the placeholder stays readable', async () => {
+      const reacted = page.locator('.sendbird-text-message-item-body.reactions');
+      assert.equal(await reacted.count(), 1);
+      assert.equal(await reacted.evaluate(node => getComputedStyle(node).borderRadius), '12px 12px 0px 0px');
+      const luminance = color => {
+        const channels = color.match(/[\d.]+/g).slice(0, 3).map(value => value / 255)
+          .map(value => value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+        return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+      };
+      const text = await page.locator('.sendbird-message-input--placeholder').evaluate(node => getComputedStyle(node).color);
+      const background = await page.locator('.sendbird-message-input--textarea').evaluate(node => getComputedStyle(node).backgroundColor);
+      assert.equal(background, 'rgb(255, 255, 255)');
+      assert.match(text, /^rgb\(/);
+      assert.ok((1.05 / (luminance(text) + 0.05)) >= 4.5, `placeholder ${text} on ${background}`);
+    });
+    await step('stock heart adds and removes the local user reaction', async () => {
+      const reaction = page.locator('.sendbird-message-content-reactions');
+      const unselected = reaction.getByRole('button', { name: '1', exact: true });
+      const selected = reaction.getByRole('button', { name: '2', exact: true });
+      await unselected.click();
+      await selected.waitFor();
+      assert.ok(await selected.evaluate(node => node.classList.contains('sendbird-reaction-badge--selected')));
+      await selected.click();
+      await unselected.waitFor();
+      assert.ok(await unselected.evaluate(node => node.classList.contains('sendbird-reaction-badge')));
+    });
+    await step('stock heart works with the keyboard and names the reacting member', async () => {
+      const reaction = page.locator('.sendbird-message-content-reactions');
+      const unselected = reaction.getByRole('button', { name: '1', exact: true });
+      const selected = reaction.getByRole('button', { name: '2', exact: true });
+      if (width === 1280) {
+        await unselected.hover();
+        await reaction.getByText('Alex', { exact: true }).waitFor();
+      }
+      await unselected.press('Enter');
+      await selected.press('Space');
+      await unselected.waitFor();
+    });
     await step('composer keeps 56px height, focus accent and native send', async () => {
       const editor = page.locator('.sendbird-message-input--textarea');
       assert.equal(await editor.evaluate(node => node.getBoundingClientRect().height), 56);
@@ -241,6 +301,7 @@ const scenarios = {
     const editor = page.locator('.sendbird-message-input--textarea');
     const send = page.locator('.sendbird-message-input--send');
     const list = page.getByTestId('sendbird-message-list-container');
+    const jump = page.getByRole('button', { name: 'Jump to latest' });
     const record = async () => JSON.parse((await page.getByTestId('sent-record').textContent()) || '{}');
     const open = async () => { await page.goto(url); await page.getByText('History 24', { exact: true }).waitFor(); };
     const atBottom = () => page.waitForFunction(() => {
@@ -250,7 +311,6 @@ const scenarios = {
     await step('Jump to latest is disabled at the bottom and scrolls back down', async () => {
       await open();
       await atBottom();
-      const jump = page.getByRole('button', { name: 'Jump to latest' });
       assert.equal(await jump.isDisabled(), true);
       await list.hover();
       await page.mouse.wheel(0, -400);
@@ -295,6 +355,75 @@ const scenarios = {
       await page.getByTestId('sent-record').filter({ hasText: 'notes.txt' }).waitFor();
       assert.deepEqual(await record(), { channel: 'fixture-channel', text: '', file: 'notes.txt', mentions: [] });
       await staged.waitFor({ state: 'hidden' });
+    });
+    await step('branded Send icon dims inside the native disabled Send button in both themes', async () => {
+      const examples = [
+        ['light', url, 'rgb(22, 84, 140)', 'rgba(0, 0, 0, 0.5)'],
+        ['dark', `${url}?theme=dark`, 'rgb(194, 169, 250)', 'rgba(255, 255, 255, 0.5)'],
+      ];
+      for (const [theme, themeUrl, activeColor, disabledColor] of examples) {
+        await page.goto(themeUrl);
+        await page.locator(`body.sendbird-theme--${theme}`).waitFor();
+        await page.getByText('History 24', { exact: true }).waitFor();
+        await editor.fill('Disabled draft');
+        const color = () => send.locator('.send-icon').evaluate(node => getComputedStyle(node).color);
+        assert.equal(await color(), activeColor, `${theme} active Send icon`);
+        // Set the native button state to isolate the icon's disabled styling.
+        await send.evaluate(node => { node.disabled = true; });
+        assert.equal(await color(), disabledColor, `${theme} disabled Send icon`);
+      }
+    });
+    await step('history links keep the dark provider theme in both directions', async () => {
+      await page.goto(`${url}?theme=dark`);
+      const dark = page.locator('body.sendbird-theme--dark');
+      await dark.waitFor();
+      const navigate = async (name, older) => {
+        const link = page.getByRole('link', { name, exact: true });
+        await link.click();
+        assert.equal(new URL(page.url()).searchParams.has('older'), older);
+        assert.equal(new URL(page.url()).searchParams.get('theme'), 'dark');
+        await dark.waitFor();
+        assert.equal(await link.getAttribute('aria-current'), 'page');
+      };
+      await navigate('At History 12', true);
+      await navigate('At the latest message', false);
+    });
+    await step('Jump to latest stays enabled at the bottom of an older page and loads the newest page', async () => {
+      await page.goto(`${url}?older`);
+      await page.getByText('History 12', { exact: true }).waitFor();
+      const loaded = () => page.locator('.sendbird-text-message-item-body').count();
+      const before = await loaded();
+      await list.evaluate(el => { el.scrollTop = el.scrollHeight; });
+      // Reaching the bottom loads one page of four below the viewport; at least one newer page stays unloaded.
+      await page.waitForFunction(count => document.querySelectorAll('.sendbird-text-message-item-body').length > count, before);
+      assert.equal(await page.getByText('History 24', { exact: true }).count(), 0);
+      await page.locator('.sendbird-conversation__scroll-bottom-button').waitFor();
+      assert.equal(await jump.isDisabled(), false);
+      await jump.click();
+      await page.getByText('History 24', { exact: true }).waitFor();
+      await atBottom();
+      await page.getByRole('button', { name: 'Jump to latest', disabled: true }).waitFor();
+      assert.equal(await loaded(), 24);
+    });
+    await step('sending after paging to the latest message leaves Jump to latest disabled', async () => {
+      await page.goto(`${url}?older`);
+      await page.getByText('History 12', { exact: true }).waitFor();
+      const messages = list.locator('.sendbird-text-message-item-body');
+      for (let pageIndex = 0; pageIndex < 3; pageIndex += 1) {
+        const before = await messages.count();
+        if (before === 24) break;
+        await list.evaluate(el => { el.scrollTop = el.scrollHeight; });
+        await messages.nth(before).waitFor();
+      }
+      await page.getByText('History 24', { exact: true }).waitFor();
+      await list.evaluate(el => { el.scrollTop = el.scrollHeight; });
+      await atBottom();
+      await page.getByRole('button', { name: 'Jump to latest', disabled: true }).waitFor();
+      await editor.fill('Sent after paging');
+      await send.click();
+      await list.getByText('Sent after paging', { exact: true }).waitFor();
+      await atBottom();
+      assert.equal(await jump.isDisabled(), true, 'the sent message is already loaded');
     });
   },
 
@@ -437,6 +566,84 @@ const scenarios = {
       await bodyOnly.focus();
       await page.keyboard.press('Tab');
       await page.keyboard.press('Space');
+      await heading('Workshop');
+    });
+    const unreadMarks = async row => ({
+      badge: (await row.locator('.sendbird-badge').allInnerTexts()).map(text => text.trim()),
+      mention: await row.locator('.sendbird-mention-user-label:visible').allInnerTexts(),
+    });
+    const plainName = 'Workshop, Product: Desk lamp';
+    const unreadName = 'Workshop, Product: Desk lamp, 1 unread';
+    const mentionedName = 'Workshop, Product: Desk lamp, unread mention, 1 unread';
+    const expectUnread = async (count, name, mention = false) => {
+      const expected = { badge: count ? [String(count)] : [], mention: mention ? ['@'] : [] };
+      await productRow.waitFor();
+      assert.deepEqual(await unreadMarks(productRow), expected);
+      await list.getByRole('button', { name, exact: true }).waitFor();
+      // The stock row is the oracle and only renders in body-only mode.
+      await bodyOnly.check();
+      await stockWorkshop.waitFor();
+      assert.deepEqual(await unreadMarks(stockWorkshop), expected);
+      await bodyOnly.uncheck();
+      await productRow.waitFor();
+    };
+    const appOptions = { enableMarkAsUnread: 'mark-as-unread', enableMention: 'mention' };
+    const reloadWith = async options => {
+      for (const [label, on] of Object.entries(options)) await page.getByLabel(label, { exact: true }).setChecked(on);
+      await click('Reload with options');
+      await page.waitForURL(link => Object.entries(options).every(([label, on]) => link.searchParams.has(appOptions[label]) === on));
+      await click('New product card');
+      await click('Unread badge');
+      await productRow.waitFor();
+    };
+    const workshopOption = label => page.getByRole('group', { name: 'Workshop channel' }).getByLabel(label, { exact: true });
+    await step('mark as unread off: selected product row hides unread like the stock row', async () => {
+      assert.equal(await productRow.getAttribute('aria-current'), 'true');
+      await expectUnread(0, plainName);
+    });
+    await step('mark as unread on: selected product row keeps the badge and unread name', async () => {
+      await reloadWith({ enableMarkAsUnread: true, enableMention: false });
+      assert.equal(await productRow.getAttribute('aria-current'), 'true');
+      await expectUnread(1, unreadName);
+    });
+    await step('mark as unread on: ephemeral channel hides unread when selected and unselected', async () => {
+      await workshopOption('Make Workshop ephemeral').check();
+      await expectUnread(0, plainName);
+      await general.click();
+      await heading('General');
+      assert.equal(await productRow.getAttribute('aria-current'), null);
+      await expectUnread(0, plainName);
+    });
+    await step('unread mention mark needs enableMention and follows the same unread rule', async () => {
+      await workshopOption('Make Workshop ephemeral').uncheck();
+      await workshopOption('Mention me in Workshop').check();
+      await expectUnread(1, unreadName);
+      await reloadWith({ enableMarkAsUnread: true, enableMention: true });
+      await workshopOption('Mention me in Workshop').check();
+      await expectUnread(1, mentionedName, true);
+      await workshopOption('Make Workshop ephemeral').check();
+      await expectUnread(0, plainName);
+      await reloadWith({ enableMarkAsUnread: false, enableMention: true });
+      await workshopOption('Mention me in Workshop').check();
+      await expectUnread(0, plainName);
+      await general.click();
+      await heading('General');
+      await expectUnread(1, mentionedName, true);
+    });
+    await step('a default channel name keeps the stock row and its member title', async () => {
+      await workshopOption('Use the default channel name').check();
+      const stockTitle = list.locator('.sendbird-channel-preview__content__upper__header__channel-name');
+      await stockTitle.filter({ hasText: 'Alex' }).waitFor();
+      assert.equal(await list.locator('.product-channel-row').count(), 0);
+      assert.equal(await list.getByText('Group Channel', { exact: true }).count(), 0);
+    });
+    await step('a default-named product channel still opens with Enter and Space', async () => {
+      const fallback = list.getByRole('link', { name: /Alex/ });
+      await fallback.press('Enter');
+      await heading('Workshop');
+      await general.click();
+      await heading('General');
+      await fallback.press('Space');
       await heading('Workshop');
     });
   },

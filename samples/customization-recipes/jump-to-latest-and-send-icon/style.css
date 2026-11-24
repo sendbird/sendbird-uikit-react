@@ -5,3 +5,7 @@ main { max-width: 780px; }
 .jump-row button { padding: 5px 8px; border: 1px solid #9baec2; border-radius: 5px; color: #1f405a; background: #fff; font: inherit; }
 .jump-row button:disabled { opacity: .55; }
 .send-icon { font-size: 20px; color: #16548c; font-weight: 700; }
+.sendbird-theme--dark .send-icon { color: var(--sendbird-dark-primary-200); }
+/* IconButton overrides the stock SVG fill with on-background-2 when disabled. */
+.sendbird-message-input--send:disabled .send-icon { color: var(--sendbird-light-onlight-02); }
+.sendbird-theme--dark .sendbird-message-input--send:disabled .send-icon { color: var(--sendbird-dark-ondark-02); }

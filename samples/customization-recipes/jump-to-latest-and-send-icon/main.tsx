@@ -1,18 +1,34 @@
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@sendbird/uikit-react/dist/index.css';
-import { FixtureProvider, type SendRecord } from './fixture';
+import { FixtureProvider, olderStartingPoint, type SendRecord } from './fixture';
 import { StockConversation } from './integration';
 import '../shared/page.css';
 import './style.css';
+
+const query = new URLSearchParams(location.search);
+const atOlder = query.has('older');
+const theme = query.get('theme') === 'dark' ? 'dark' : 'light';
+
+function historyHref(older: boolean) {
+  const params = new URLSearchParams(query);
+  if (older) params.set('older', '');
+  else params.delete('older');
+  const search = params.toString();
+  return search ? `?${search}` : './';
+}
 
 function App() {
   const [sent, setSent] = useState<SendRecord | null>(null);
   return <main>
     <a className="recipe-back" href="../">All recipes</a>
     <h1>Jump to latest and Send icon</h1>
-    <FixtureProvider onSend={setSent}>
-      <StockConversation channelUrl="fixture-channel" />
+    <nav className="controls" aria-label="Open the channel">
+      <a href={historyHref(false)} aria-current={atOlder ? undefined : 'page'}>At the latest message</a>
+      <a href={historyHref(true)} aria-current={atOlder ? 'page' : undefined}>At History 12</a>
+    </nav>
+    <FixtureProvider onSend={setSent} theme={theme}>
+      <StockConversation channelUrl="fixture-channel" startingPoint={atOlder ? olderStartingPoint : undefined} />
     </FixtureProvider>
     <h2>Last local send call</h2>
     <output className="log" data-testid="sent-record" aria-live="polite">

@@ -3,10 +3,20 @@ import { createRoot } from 'react-dom/client';
 import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
 import '@sendbird/uikit-react/dist/index.css';
 import { MessageExamples } from './fixture-messages';
-import { ChannelPreviewExample } from './fixture-channel-list';
+import { ChannelPreviewExample, type WorkshopOptions } from './fixture-channel-list';
 import type { MessageKind, SelectedChannel } from './scenario';
 import '../shared/page.css';
 import './style.css';
+
+// Fixture-only: app-level options are read once at load, so the form below reloads the page with them.
+const query = new URLSearchParams(location.search);
+const markAsUnread = query.has('mark-as-unread');
+const mention = query.has('mention');
+const workshopOptions: [keyof WorkshopOptions, string][] = [
+  ['ephemeral', 'Make Workshop ephemeral'],
+  ['mentioned', 'Mention me in Workshop'],
+  ['defaultName', 'Use the default channel name'],
+];
 
 const scenarios: { kind: MessageKind; label: string }[] = [
   { kind: 'text', label: 'Plain text' },
@@ -23,11 +33,12 @@ function App() {
   const [selected, selectChannel] = useState<SelectedChannel>('workshop');
   const [unread, setUnread] = useState(0);
   const [bodyOnly, setBodyOnly] = useState(false);
+  const [workshop, setWorkshop] = useState<WorkshopOptions>({ ephemeral: false, mentioned: false, defaultName: false });
   return <main>
     <a className="recipe-back" href="../">All recipes</a>
     <h1>Product message and channel preview</h1>
     {/* One provider for the page; both sections reuse the same product decoder and renderers. */}
-    <SendbirdProvider appId="" userId="self" breakpoint="600px">
+    <SendbirdProvider appId="" userId="self" breakpoint="600px" uikitOptions={{ groupChannel: { enableMarkAsUnread: markAsUnread, enableMention: mention } }}>
       <section aria-labelledby="message-bodies">
         <h2 id="message-bodies">1. Message bodies</h2>
         <div className="controls">
@@ -37,13 +48,22 @@ function App() {
       </section>
       <section aria-labelledby="channel-preview">
         <h2 id="channel-preview">2. Channel list preview</h2>
+        <form className="controls" aria-label="App options">
+          <label><input type="checkbox" name="mark-as-unread" defaultChecked={markAsUnread} /> enableMarkAsUnread</label>
+          <label><input type="checkbox" name="mention" defaultChecked={mention} /> enableMention</label>
+          <button type="submit">Reload with options</button>
+        </form>
+        <div className="controls" role="group" aria-label="Workshop channel">
+          {workshopOptions.map(([key, label]) => <label key={key}><input type="checkbox" checked={workshop[key]}
+            onChange={event => setWorkshop(current => ({ ...current, [key]: event.target.checked }))} /> {label}</label>)}
+        </div>
         <div className="controls" role="group" aria-label="Last message in Workshop">
           {scenarios.map(({ kind: choice, label }) =>
             <button key={choice} type="button" aria-pressed={kind === choice} onClick={() => setKind(choice)}>{label}</button>)}
           <button type="button" aria-pressed={unread > 0} onClick={() => setUnread(count => count ? 0 : 1)}>Unread badge</button>
           <label><input type="checkbox" checked={bodyOnly} onChange={event => setBodyOnly(event.target.checked)} /> Customize the body only</label>
         </div>
-        <ChannelPreviewExample kind={kind} unread={unread} selected={selected} selectChannel={selectChannel} bodyOnly={bodyOnly} />
+        <ChannelPreviewExample kind={kind} unread={unread} selected={selected} selectChannel={selectChannel} bodyOnly={bodyOnly} workshop={workshop} />
       </section>
     </SendbirdProvider>
   </main>;
