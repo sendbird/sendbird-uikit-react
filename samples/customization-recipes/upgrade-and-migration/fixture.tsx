@@ -1,5 +1,5 @@
 // Local fixture only: synthetic channel state and local reaction/send callbacks.
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
 import { GroupChannelContext, useGroupChannel } from '@sendbird/uikit-react/GroupChannel/context';
 import { GroupChannelListProvider } from '@sendbird/uikit-react/GroupChannelList/context';
@@ -9,16 +9,22 @@ import MessageInput from '@sendbird/uikit-react/ui/MessageInput';
 import { ChatMessage } from './integration';
 import { channelTitle, messageText, senderId, timestamp, userId, type Observation } from './scenario';
 
+type ReactionMode = 'like' | 'mixed' | 'heart';
 type FixtureMessage = MessageContentProps['message'];
 type FixtureChannel = NonNullable<MessageContentProps['channel']>;
 type FixtureStore = NonNullable<React.ContextType<typeof GroupChannelContext>>;
 const sender = { userId: senderId, nickname: 'Alex', profileUrl: '' };
 const emojiUrl = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text y="17" font-size="18">♥</text></svg>');
 const emojiContainer = {
-  emojiHash: 'fixture', emojiCategories: [{ id: 1, name: 'Fixture', emojis: [{ key: 'like', url: emojiUrl }] }],
+  emojiHash: 'fixture', emojiCategories: [{ id: 1, name: 'Fixture', emojis: [{ key: 'like', url: emojiUrl }, { key: 'heart', url: emojiUrl }] }],
 } as MessageContentProps['emojiContainer'];
 
-function fixtureMessage(selected: boolean): FixtureMessage {
+function fixtureMessage(selectedKeys: ReadonlySet<string>, mode: ReactionMode = 'like'): FixtureMessage {
+  const keys = mode === 'mixed' ? ['like', 'heart'] : [mode];
+  const reactions = keys.map(key => ({
+    key,
+    userIds: selectedKeys.has(key) ? [senderId, 'third', userId] : [senderId, 'third'],
+  }));
   return {
     messageId: 101,
     messageType: 'user',
@@ -31,7 +37,7 @@ function fixtureMessage(selected: boolean): FixtureMessage {
     sendingStatus: 'succeeded',
     parentMessageId: 0,
     sender,
-    reactions: [{ key: 'like', userIds: selected ? [senderId, 'third', userId] : [senderId, 'third'] }],
+    reactions,
     mentionedUsers: [],
     threadInfo: { replyCount: 0 },
     isAdminMessage: () => false,
@@ -42,7 +48,7 @@ function fixtureMessage(selected: boolean): FixtureMessage {
   } as unknown as FixtureMessage;
 }
 
-function createFixture(record: (event: Observation) => void, onSelected: (selected: boolean) => void) {
+function createFixture(record: (event: Observation) => void, setSelectedKeys: Dispatch<SetStateAction<ReadonlySet<string>>>) {
   const channel = {
     url: 'upgrade-fixture',
     name: channelTitle,
@@ -55,7 +61,7 @@ function createFixture(record: (event: Observation) => void, onSelected: (select
     memberCount: 2,
     unreadMessageCount: 1,
     unreadMentionCount: 0,
-    lastMessage: fixtureMessage(false),
+    lastMessage: fixtureMessage(new Set()),
     isDistinct: false,
     isGroupChannel: () => true,
     isOpenChannel: () => false,
@@ -63,11 +69,11 @@ function createFixture(record: (event: Observation) => void, onSelected: (select
     getUndeliveredMemberCount: () => 0,
     addReaction: async (message: FixtureMessage, key: string) => {
       record({ action: 'reaction-added', messageId: message.messageId, key });
-      onSelected(true);
+      setSelectedKeys(selected => new Set([...selected, key]));
     },
     deleteReaction: async (message: FixtureMessage, key: string) => {
       record({ action: 'reaction-removed', messageId: message.messageId, key });
-      onSelected(false);
+      setSelectedKeys(selected => new Set([...selected].filter(value => value !== key)));
     },
   } as unknown as FixtureChannel;
 
@@ -95,12 +101,14 @@ function createFixture(record: (event: Observation) => void, onSelected: (select
   return { channel, store };
 }
 
-function BoundMessage({ channel, selected }: { channel: FixtureChannel; selected: boolean }) {
+function BoundMessage({ channel, selectedKeys, mode }: {
+  channel: FixtureChannel; selectedKeys: ReadonlySet<string>; mode: ReactionMode;
+}) {
   const { actions } = useGroupChannel();
   return (
     <ChatMessage
       channel={channel}
-      message={fixtureMessage(selected)}
+      message={fixtureMessage(selectedKeys, mode)}
       userId={userId}
       isReactionEnabled
       toggleReaction={actions.toggleReaction}
@@ -109,10 +117,10 @@ function BoundMessage({ channel, selected }: { channel: FixtureChannel; selected
   );
 }
 
-export function UpgradeFixture({ record }: { record: (event: Observation) => void }) {
-  const [reactionSelected, setReactionSelected] = useState(false);
+export function UpgradeFixture({ record, mode }: { record: (event: Observation) => void; mode: ReactionMode }) {
+  const [selectedKeys, setSelectedKeys] = useState<ReadonlySet<string>>(() => new Set());
   const [channelSelected, setChannelSelected] = useState(false);
-  const { channel, store } = useMemo(() => createFixture(record, setReactionSelected), [record]);
+  const { channel, store } = useMemo(() => createFixture(record, setSelectedKeys), [record]);
   return (
     <SendbirdProvider appId="" userId={userId} breakpoint="600px">
       <GroupChannelContext.Provider value={store}>
@@ -128,7 +136,7 @@ export function UpgradeFixture({ record }: { record: (event: Observation) => voi
           </GroupChannelListProvider>
         </section>
         <section data-testid="message" className="sendbird-conversation__messages" dir="ltr">
-          <BoundMessage channel={channel} selected={reactionSelected} />
+          <BoundMessage channel={channel} selectedKeys={selectedKeys} mode={mode} />
         </section>
         <section data-testid="composer">
           <MessageInput

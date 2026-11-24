@@ -54,6 +54,22 @@ function createChannel(screen: ScreenId, record: RecordOperation, historySize: n
   const loaded = [first, ...Array.from({ length: historySize - 1 }, (_, offset) =>
     makeMessage(first.messageId + offset + 1, `History ${offset + 2}`, url))];
   let active: CollectionHandler | undefined;
+
+  function updateReaction(messageId: number, key: string, operation: 'addReaction' | 'deleteReaction') {
+    const target = loaded.find(message => message.messageId === messageId);
+    if (!target) return;
+
+    const userIds = new Set(target.reactions.find(reaction => reaction.key === key)?.userIds);
+    if (operation === 'addReaction') userIds.add(self.userId);
+    else userIds.delete(self.userId);
+
+    target.reactions = target.reactions.filter(reaction => reaction.key !== key);
+    if (userIds.size) target.reactions.push({ key, userIds: [...userIds] });
+
+    record({ screen, operation, messageId, emoji: key });
+    active?.onMessagesUpdated?.({ source: CollectionEventSource.EVENT_MESSAGE_UPDATED }, channel, [target]);
+  }
+
   const channel = {
     url, name: `Conversation ${screen}`, channelType: 'group', coverUrl: '', createdAt: fixtureTime,
     serialize: () => JSON.stringify({ url }),
@@ -82,20 +98,16 @@ function createChannel(screen: ScreenId, record: RecordOperation, historySize: n
       return result;
     },
     async addReaction(message: FixtureMessage, key: string) {
-      record({ screen, operation: 'addReaction', messageId: message.messageId, emoji: key });
-      first.reactions = [{ key, userIds: [self.userId] }];
-      active?.onMessagesUpdated?.({ source: CollectionEventSource.EVENT_MESSAGE_UPDATED }, channel, [first]);
+      updateReaction(message.messageId, key, 'addReaction');
     },
     async deleteReaction(message: FixtureMessage, key: string) {
-      record({ screen, operation: 'deleteReaction', messageId: message.messageId, emoji: key });
-      first.reactions = [];
-      active?.onMessagesUpdated?.({ source: CollectionEventSource.EVENT_MESSAGE_UPDATED }, channel, [first]);
+      updateReaction(message.messageId, key, 'deleteReaction');
     },
     sendUserMessage(params: UserMessageCreateParams) {
       record({ screen, operation: 'sendUserMessage', text: params.message,
         replyTo: params.parentMessageId });
       const id = first.messageId + loaded.length;
-      const parent = params.parentMessageId ? first : undefined;
+      const parent = loaded.find(message => message.messageId === params.parentMessageId);
       const finalMessage = makeMessage(id, params.message, url, self, 'succeeded', parent);
       const result = {
         onPending(callback: (message: unknown) => void) {
@@ -138,15 +150,16 @@ function configureBoundary(record: RecordOperation, historySize: number): NonNul
   };
 }
 
-export function GroupChannelFixture({ record, children, uikitOptions, historySize = 1 }: PropsWithChildren<{
+export function GroupChannelFixture({ record, children, uikitOptions, historySize = 1, htmlTextDirection }: PropsWithChildren<{
   record: RecordOperation;
   historySize?: number;
+  htmlTextDirection?: React.ComponentProps<typeof SendbirdProvider>['htmlTextDirection'];
   uikitOptions?: React.ComponentProps<typeof SendbirdProvider>['uikitOptions'];
 }>) {
   const [configureSession] = useState(() => configureBoundary(record, historySize));
   return <SendbirdProvider appId={appId} userId="self" configureSession={configureSession}
     sdkInitParams={{ localCacheEnabled: false }}
-    uikitOptions={uikitOptions}>
+    uikitOptions={uikitOptions} htmlTextDirection={htmlTextDirection}>
     {children}
   </SendbirdProvider>;
 }

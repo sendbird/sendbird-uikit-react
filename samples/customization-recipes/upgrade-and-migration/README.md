@@ -35,7 +35,7 @@ Register `like` in your application's emoji set or use a key you already registe
 
 ## What the smoke test checks
 
-Before the browser runs, the smoke test asserts that every `@sendbird/*` import in these recipes is in the installed package's `exports` map, that the legacy `Channel`, `ChannelList`, their `context` subpaths and `App` are still published, that `ui/MessageBody` is not, and that the installed versions match the pins. At 1280px and 390px against the production build: the stock preview, body and timestamp render, the Like button adds and removes through `toggleReaction`, the stock preview selects, and the stock composer sends the draft.
+Before the browser runs, the smoke test asserts that every `@sendbird/*` import in these recipes is in the installed package's `exports` map, that the legacy `Channel`, `ChannelList`, their `context` subpaths and `App` are still published, that `ui/MessageBody` is not, and that the installed versions match the pins. At 1280px and 390px against the production build: the stock preview, body and timestamp render, the Like button adds and removes through `toggleReaction`, mixed and heart-only reactions keep the stock row, the stock preview selects, and the stock composer sends the draft.
 
 Fixture-only: [fixture.tsx](fixture.tsx) supplies the channel, message and group channel store and records reaction, selection and send locally. The smoke exercises its preview and composer overrides, not the exported `ExistingAppChat` composition. That wrapper is type-checked but is not mounted with an authenticated session or run against a live service.
 

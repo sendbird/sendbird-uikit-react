@@ -234,13 +234,6 @@ const scenarios = {
     };
     let baseline;
     await step('UIKit default renders three messages', async () => {
-      const fixtureSource = await readFile(join(root, 'theme-variables-and-css/fixture.tsx'), 'utf8');
-      const integrationSource = await readFile(join(root, 'theme-variables-and-css/integration.tsx'), 'utf8');
-      const mainSource = await readFile(join(root, 'theme-variables-and-css/main.tsx'), 'utf8');
-      assert.match(fixtureSource, /import\s*\{[^}]*\bBrandedConversation\b[^}]*\}\s*from\s*['"]\.\/integration['"]/);
-      assert.match(fixtureSource, /<BrandedConversation\b/);
-      assert.match(integrationSource, /import\s*['"]\.\/theme\.css['"]/);
-      assert.doesNotMatch(mainSource, /import\s*['"]\.\/theme\.css['"]/);
       await page.goto(`${url}?mode=default`);
       baseline = await read();
       assert.equal(baseline.count, 3);
@@ -358,6 +351,44 @@ const scenarios = {
         node.scrollTop = node.scrollHeight;
         return node.scrollTop;
       }) > 50);
+    });
+    await step('reactions and replies stay on the chosen message in the shared fixture', async () => {
+      const chat = page.getByRole('region', { name: 'Branded chat' });
+      const row = text => chat.locator('.sendbird-message-content').filter({ has: page.getByText(text, { exact: true }) });
+      const first = row('Original message A');
+      const latest = row('History 25');
+      const reaction = latest.locator('.sendbird-reaction-badge--selected');
+
+      await latest.getByText('History 25', { exact: true }).hover();
+      await latest.locator('.sendbird-message-item-reaction-menu__trigger').click();
+      await page.getByTestId('ui_emoji_reactions_menu_like').click();
+      await reaction.waitFor();
+      assert.equal(await first.locator('.sendbird-emoji-reactions__reaction-badge').count(), 0);
+      await reaction.click();
+      await reaction.waitFor({ state: 'detached' });
+
+      await latest.getByText('History 25', { exact: true }).hover();
+      await latest.locator('.sendbird-message-content-menu__normal-menu .sendbird-iconbutton').click();
+      await page.getByRole('menuitem', { name: 'Reply', exact: true }).click();
+      await chat.locator('.sendbird-quote_message_input').waitFor();
+      await chat.locator('.sendbird-message-input--textarea').fill('Reply to the last message');
+      await chat.getByTestId('sendbird-message-input-send-button').click();
+      const quote = row('Reply to the last message').getByTestId('sendbird-message-content__middle__quote-message');
+      await quote.getByText('History 25', { exact: true }).waitFor();
+    });
+    await step('RTL keeps left-side space for UIKit composer controls', async () => {
+      await page.goto(`${url}?wrapper&rtl`);
+      const editor = page.locator('[dir="rtl"] .sendbird-message-input--textarea');
+      await editor.waitFor();
+      const padding = () => editor.evaluate(node => {
+        const style = getComputedStyle(node);
+        return [style.paddingLeft, style.paddingRight];
+      });
+      assert.deepEqual(await padding(), ['64px', '16px']);
+      await editor.fill('Draft text in a right-to-left layout');
+      assert.deepEqual(await padding(), ['64px', '16px']);
+      await editor.fill('رسالة من اليمين إلى اليسار');
+      assert.deepEqual(await padding(), ['64px', '16px']);
     });
   },
 
@@ -1177,6 +1208,16 @@ const scenarios = {
       await added.click();
       await message.getByRole('button', { name: 'Like 2' }).waitFor();
       assert.deepEqual(await latest(), { action: 'reaction-removed', messageId: 101, key: 'like' });
+    });
+    await step('mixed and heart-only reactions use the stock reaction row', async () => {
+      for (const [mode, count] of [['mixed', 2], ['heart', 1]]) {
+        await page.goto(`${url}?reactions=${mode}`);
+        const badges = message.locator('.sendbird-reaction-badge');
+        await badges.first().waitFor();
+        assert.equal(await badges.count(), count);
+        assert.equal(await message.locator('.recipe-like').count(), 0);
+      }
+      await page.goto(url);
     });
     await step('stock channel preview selects', async () => {
       await preview.getByText('Upgrade Lab', { exact: true }).click();

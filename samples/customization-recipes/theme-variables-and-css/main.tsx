@@ -23,7 +23,9 @@ createRoot(document.getElementById('root')!).render(
         aria-current={value === mode ? 'page' : undefined}>{label}</a>)}
     </nav>
     {query.has('wrapper')
-      ? <GroupChannelFixture record={() => {}} historySize={25}>
+      ? <GroupChannelFixture record={() => {}} historySize={25}
+          uikitOptions={{ groupChannel: { replyType: 'quote_reply', enableReactions: true } }}
+          htmlTextDirection={query.has('rtl') ? 'rtl' : 'ltr'}>
           <BrandedConversation channelUrl="fixture-A" aria-label="Branded chat" />
         </GroupChannelFixture>
       : <ThemeFixture mode={mode} />}
