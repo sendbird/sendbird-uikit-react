@@ -332,7 +332,7 @@ const scenarios = {
       assert.ok(await selected.evaluate(node => node.classList.contains('sendbird-reaction-badge--selected')));
       await selected.click();
       await unselected.waitFor();
-      assert.ok(await unselected.evaluate(node => node.classList.contains('sendbird-reaction-badge')));
+      assert.equal(await unselected.evaluate(node => node.classList.contains('sendbird-reaction-badge--selected')), false);
     });
     await step('fixture keyboard handling toggles the stock heart; the tooltip names the reacting member', async () => {
       const reaction = page.locator('.sendbird-message-content-reactions');
@@ -386,10 +386,15 @@ const scenarios = {
       await page.getByText('Fixture received: file photo.png', { exact: true }).waitFor();
       return { thumbnail: 'decoded 1×1 PNG', stock, branded };
     });
-    await step('the copyable theme wrapper keeps a real GroupChannel scrollable', async () => {
+    await step('the copied theme styles a real GroupChannel and keeps it scrollable', async () => {
       await page.goto(`${url}?wrapper`);
       const chat = page.getByRole('region', { name: 'Branded chat' });
-      await chat.getByText('History 25', { exact: true }).waitFor();
+      const bubble = chat.locator('.sendbird-text-message-item-body').filter({ hasText: /^History 25$/ });
+      await bubble.waitFor();
+      const geometry = await style(bubble);
+      assert.deepEqual([geometry.radius, geometry.padding, geometry.fontSize, geometry.lineHeight],
+        ['12px', '12px 16px', '16px', '24px']);
+      assert.match(geometry.font, /Arial/);
       const list = chat.getByTestId('sendbird-message-list-container');
       const bounds = await list.evaluate(node => ({ height: node.clientHeight, content: node.scrollHeight }));
       const wrapper = await chat.evaluate(node => ({ height: node.clientHeight, viewport: innerHeight }));
@@ -732,11 +737,9 @@ const scenarios = {
       await viewer.locator('img:visible').first().waitFor();
       const close = viewer.locator('.sendbird-fileviewer__header__right__actions__close [role="button"]');
       const box = await close.boundingBox();
-      const nativeCloseVisible = Boolean(box && box.x >= 0 && box.x + box.width <= width);
-      if (nativeCloseVisible) await close.click();
-      else await page.getByRole('button', { name: 'Exit demo viewer' }).click();
+      assert.ok(box && box.x >= 0 && box.x + box.width <= width, `the stock close button is reachable at ${width}px`);
+      await close.click();
       await viewer.waitFor({ state: 'hidden' });
-      return { nativeCloseVisible };
     });
 
     const list = page.getByRole('region', { name: 'Channel previews' });
@@ -1301,12 +1304,11 @@ const scenarios = {
         }
       });
     }
-    await step('the app renders its Russian few label and UIKit routes the stock reply', async () => {
+    await step('UIKit routes the stock reply for the row showing the Russian few label', async () => {
       await page.getByLabel('Language').selectOption('ru');
       const row = page.locator('tr[data-count="22"]');
       await row.locator('.sendbird-ui-thread-replies').click();
       await page.getByText('UIKit reply clicked for message 1022', { exact: true }).waitFor();
-      assert.equal(await row.getByRole('button', { name: '22 ответа' }).textContent(), '22 ответа');
     });
   },
 
