@@ -1,12 +1,22 @@
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@sendbird/uikit-react/dist/index.css';
-import { ComposerWithWritingTip } from './integration';
+import { ComposerRecipeChannel, ComposerWithWritingTip } from './integration';
+import { GroupChannelFixture } from '../shared/group-channel-fixture';
 import { ComposerFixture, type ComposerEvent } from './fixture';
 import '../shared/page.css';
 import './style.css';
 
-const broadcastMember = new URLSearchParams(location.search).has('broadcast-member');
+const params = new URLSearchParams(location.search);
+const broadcastMember = params.has('broadcast-member');
+
+function MountedRecipe() {
+  return <main aria-label="Mounted composer recipe" style={{ height: 580 }}>
+    <GroupChannelFixture record={() => {}}>
+      <ComposerRecipeChannel channelUrl="fixture-A" />
+    </GroupChannelFixture>
+  </main>;
+}
 
 function App() {
   const [events, setEvents] = useState<ComposerEvent[]>([]);
@@ -30,4 +40,4 @@ function App() {
   );
 }
 
-createRoot(document.getElementById('root')!).render(<App />);
+createRoot(document.getElementById('root')!).render(params.has('wrapper') ? <MountedRecipe /> : <App />);

@@ -2,12 +2,22 @@ import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@sendbird/uikit-react/dist/index.css';
 import { UpgradeFixture } from './fixture';
+import { ExistingAppChat } from './integration';
+import { fixtureAppId, useGroupChannelFixtureSession } from '../shared/group-channel-fixture';
 import type { Observation } from './scenario';
 import '../shared/page.css';
 import './style.css';
 
-const requestedMode = new URLSearchParams(location.search).get('reactions');
+const params = new URLSearchParams(location.search);
+const requestedMode = params.get('reactions');
 const mode = requestedMode === 'mixed' || requestedMode === 'heart' ? requestedMode : 'like';
+
+function MountedRecipe() {
+  const configureSession = useGroupChannelFixtureSession(() => {}, 1, { like: true });
+  return <main aria-label="Mounted upgrade recipe">
+    <ExistingAppChat appId={fixtureAppId} userId="self" accessToken="synthetic-fixture" configureSession={configureSession} />
+  </main>;
+}
 
 function App() {
   const [latestAction, record] = useState<Observation | null>(null);
@@ -22,4 +32,4 @@ function App() {
   </main>;
 }
 
-createRoot(document.getElementById('root')!).render(<App />);
+createRoot(document.getElementById('root')!).render(params.has('wrapper') ? <MountedRecipe /> : <App />);

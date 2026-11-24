@@ -1,2 +1,17 @@
 .recipe-like { min-inline-size: 80px; min-block-size: 44px; border: 1px solid #b8c7d8; border-radius: 22px; background: #edf4fb; color: #153657; cursor: pointer; }
 .recipe-like[aria-pressed="true"] { border-color: #36658d; background: #d2e8f9; }
+
+.migration-example {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  height: min(640px, 100dvh);
+}
+.migration-example > .sendbird-channel-list { width: auto; min-width: 0; }
+.migration-example > .sendbird-conversation { min-width: 0; }
+
+@media (max-width: 600px) {
+  .migration-example {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(120px, 30%) minmax(0, 1fr);
+  }
+}

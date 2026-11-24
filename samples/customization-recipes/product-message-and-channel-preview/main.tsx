@@ -4,6 +4,9 @@ import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
 import '@sendbird/uikit-react/dist/index.css';
 import { MessageExamples } from './fixture-messages';
 import { ChannelPreviewExample, type WorkshopOptions } from './fixture-channel-list';
+import { ProductChat } from './integration';
+import { encodeProduct } from './product';
+import { GroupChannelFixture } from '../shared/group-channel-fixture';
 import type { MessageKind, SelectedChannel } from './scenario';
 import '../shared/page.css';
 import './style.css';
@@ -26,6 +29,16 @@ const scenarios: { kind: MessageKind; label: string }[] = [
   { kind: 'unknown', label: 'Unknown type' },
   { kind: 'malformed', label: 'Malformed product' },
 ];
+
+function MountedRecipe() {
+  return <main aria-label="Mounted product recipe">
+    <GroupChannelFixture record={() => {}} seed={{
+      text: 'A product in the installed UI', ...encodeProduct({ sku: 'LAMP-01', title: 'Fixture lamp' }),
+    }}>
+      <ProductChat />
+    </GroupChannelFixture>
+  </main>;
+}
 
 function App() {
   const [useDefault, setUseDefault] = useState(false);
@@ -69,4 +82,4 @@ function App() {
   </main>;
 }
 
-createRoot(document.getElementById('root')!).render(<App />);
+createRoot(document.getElementById('root')!).render(query.has('wrapper') ? <MountedRecipe /> : <App />);

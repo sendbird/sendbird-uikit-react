@@ -6,7 +6,7 @@ Show seconds in the message time and replace a single-type reaction row with a L
 
 From `samples/customization-recipes`, run `npm ci` and `npm run dev`, then open `http://127.0.0.1:5173/message-timestamp-and-reaction/`.
 
-1. Turn on **Custom message details**. In a UTC browser the time changes from `12:34` to `12:34:56` in the same element. The fixture displays the same instant in your browser’s time zone. The page's baseline is `HH:mm`; UIKit's own default, `p`, shows a locale time such as `12:34 PM`.
+1. Turn on **Custom message details**. In a UTC browser the time changes from `12:34` to `12:34:56` in the same place in the message row. The fixture displays the same instant in your browser’s time zone. The page's baseline is `HH:mm`; UIKit's own default, `p`, shows a locale time such as `12:34 PM`.
 2. Click the heart, or focus it and press Enter or Space. The count toggles between 2 and 3 and **Local SDK calls** lists `addReaction` and `deleteReaction`.
 3. Turn on **Long message** to check the wrapped layout, and **Mixed reactions** to see the stock reaction row return.
 
@@ -23,6 +23,8 @@ From `samples/customization-recipes`, run `npm ci` and `npm run dev`, then open 
 Register `like` in your application's emoji set or use a key you already registered. The button replaces the reaction row only when `like` is the sole reaction and UIKit supplies `toggleReaction`. It omits the stock add-reaction picker, the desktop tooltip and mobile long-press sheet for reacted members, and the filter check that can show "Add reaction failed" for an emoji outside the categories allowed by `filterEmojiCategoryIds`. Messages with no reaction, another key or mixed reactions keep UIKit's default behavior.
 
 ## What the smoke test checks
+
+A synthetic SDK session also mounts `ChannelWithMessageDetails` and checks the message list, Like button and stock composer.
 
 Before the browser runs, UIKit's published `isSameGroup` (`@sendbird/uikit-react/Channel/utils/compareMessagesForGrouping`) confirms that different seconds in one minute group with the default `p` format and split with this recipe's format. The recipe format still groups timestamps within the same second.
 

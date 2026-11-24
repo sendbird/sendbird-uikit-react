@@ -8,7 +8,7 @@ import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
 import { GroupChannelProvider } from '@sendbird/uikit-react/GroupChannel/context';
 import GroupChannelUI from '@sendbird/uikit-react/GroupChannel/components/GroupChannelUI';
 import { configureFixtureSession } from '../shared/configure-fixture-session';
-import { ReorderedChannelContent } from './integration';
+import { ReorderedChannel } from './integration';
 import { channelName, history, startTime, type RecordOperation, type Scenario } from './scenarios';
 
 const self = { userId: 'self', nickname: 'Self', profileUrl: '' };
@@ -127,8 +127,10 @@ export function SendbirdFixture({ record, scenario, reordered }: {
   return <SendbirdProvider appId={appId} userId="self" configureSession={boundary.configureSession}
     sdkInitParams={{ localCacheEnabled: false }}
     uikitOptions={{ groupChannel: { enableTypingIndicator: true, typingIndicatorTypes: new Set([TypingIndicatorType.Text]) } }}>
-    <GroupChannelProvider channelUrl={channelUrl} disableMarkAsRead>
-      {reordered ? <ReorderedChannelContent /> : <GroupChannelUI />}
-    </GroupChannelProvider>
+    {reordered ? <ReorderedChannel channelUrl={channelUrl} /> : (
+      <GroupChannelProvider channelUrl={channelUrl} disableMarkAsRead>
+        <GroupChannelUI />
+      </GroupChannelProvider>
+    )}
   </SendbirdProvider>;
 }

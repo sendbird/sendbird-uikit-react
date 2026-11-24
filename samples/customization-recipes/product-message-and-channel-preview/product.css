@@ -9,3 +9,18 @@
 .product-channel-copy { min-width: 0; flex: 1; display: grid; gap: 2px; overflow-wrap: anywhere; }
 .product-channel-copy > span { font-size: .85rem; }
 .product-channel-unread { display: inline-flex; align-items: center; gap: 4px; }
+
+.product-chat {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  height: min(640px, 100dvh);
+}
+.product-chat > .sendbird-channel-list { width: auto; min-width: 0; }
+.product-chat > .sendbird-conversation { min-width: 0; }
+
+@media (max-width: 600px) {
+  .product-chat {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(120px, 30%) minmax(0, 1fr);
+  }
+}

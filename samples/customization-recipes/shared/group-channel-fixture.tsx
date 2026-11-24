@@ -27,7 +27,7 @@ export const categories = [
 const self = { userId: 'self', nickname: 'Self', profileUrl: '', isActive: true };
 const other = { userId: 'other', nickname: 'Alex', profileUrl: '', isActive: true };
 const fixtureTime = Date.parse('2026-11-18T12:00:00Z');
-const appId = '00000000-0000-4000-8000-000000000009';
+export const fixtureAppId = '00000000-0000-4000-8000-000000000009';
 
 function makeMessage(id: number, text: string, url: string, sender = other, status = 'succeeded', parentMessage?: FixtureMessage) {
   const message = {
@@ -48,9 +48,15 @@ interface CollectionHandler {
   onMessagesUpdated?: (context: { source: CollectionEventSource }, channel: GroupChannel, messages: FixtureMessage[]) => void;
 }
 
-function createChannel(screen: ScreenId, record: RecordOperation, historySize: number) {
+type MessageSeed = { text?: string; customType?: string; data?: string; like?: boolean };
+type ProviderProps = React.ComponentProps<typeof SendbirdProvider>;
+
+function createChannel(screen: ScreenId, record: RecordOperation, historySize: number, seed?: MessageSeed) {
   const url = `fixture-${screen}`;
-  const first = makeMessage(screen === 'A' ? 101 : 201, `Original message ${screen}`, url);
+  const first = makeMessage(screen === 'A' ? 101 : 201, seed?.text ?? `Original message ${screen}`, url);
+  first.customType = seed?.customType ?? '';
+  first.data = seed?.data ?? '';
+  if (seed?.like) first.reactions = [{ key: 'like', userIds: [other.userId] }];
   const loaded = [first, ...Array.from({ length: historySize - 1 }, (_, offset) =>
     makeMessage(first.messageId + offset + 1, `History ${offset + 2}`, url))];
   let active: CollectionHandler | undefined;
@@ -71,7 +77,7 @@ function createChannel(screen: ScreenId, record: RecordOperation, historySize: n
   }
 
   const channel = {
-    url, name: `Conversation ${screen}`, channelType: 'group', coverUrl: '', createdAt: fixtureTime,
+    url, name: `Conversation ${screen}`, channelType: 'group', coverUrl: '', createdAt: fixtureTime, lastMessage: first,
     serialize: () => JSON.stringify({ url }),
     isEphemeral: false, isBroadcast: false, isSuper: false, isFrozen: false,
     isGroupChannel: () => true, isOpenChannel: () => false,
@@ -126,8 +132,8 @@ function createChannel(screen: ScreenId, record: RecordOperation, historySize: n
   return channel;
 }
 
-function configureBoundary(record: RecordOperation, historySize: number): NonNullable<React.ComponentProps<typeof SendbirdProvider>['configureSession']> {
-  const channels = new Map((['A', 'B'] as const).map(screen => [`fixture-${screen}`, createChannel(screen, record, historySize)]));
+function configureBoundary(record: RecordOperation, historySize: number, seed?: MessageSeed): NonNullable<ProviderProps['configureSession']> {
+  const channels = new Map((['A', 'B'] as const).map(screen => [`fixture-${screen}`, createChannel(screen, record, historySize, screen === 'A' ? seed : undefined)]));
   return sdk => {
     Object.defineProperty(sdk, 'appInfo', { configurable: true, get: () => ({
       applicationAttributes: ['reactions'], messageTemplateInfo: { token: '' }, uikitConfigInfo: { lastUpdatedAt: 0 },
@@ -141,25 +147,46 @@ function configureBoundary(record: RecordOperation, historySize: number): NonNul
         return { id: category.id, name: category.name, url, emojis: [{ key: category.key, url }] };
       }),
     });
-    configureFixtureSession(sdk, self, async url => {
+    const groupChannel = configureFixtureSession(sdk, self, async url => {
       const channel = channels.get(url);
       if (!channel) throw new Error('Unknown synthetic channel');
       return channel;
     });
+    groupChannel.createGroupChannelCollection = () => {
+      const collection = {
+        hasMore: true,
+        channels: [] as GroupChannel[],
+        async loadMore() {
+          collection.hasMore = false;
+          collection.channels = [...channels.values()];
+          return collection.channels;
+        },
+        setGroupChannelCollectionHandler: () => undefined,
+        dispose: () => undefined,
+      };
+      return collection as unknown as ReturnType<typeof groupChannel.createGroupChannelCollection>;
+    };
     return new SessionHandler();
   };
 }
 
-export function GroupChannelFixture({ record, children, uikitOptions, historySize = 1, htmlTextDirection }: PropsWithChildren<{
+export function useGroupChannelFixtureSession(record: RecordOperation, historySize = 1, seed?: MessageSeed) {
+  const [configureSession] = useState(() => configureBoundary(record, historySize, seed));
+  return configureSession;
+}
+
+export function GroupChannelFixture({ record, children, uikitOptions, historySize, htmlTextDirection, seed, stringSet }: PropsWithChildren<{
   record: RecordOperation;
   historySize?: number;
-  htmlTextDirection?: React.ComponentProps<typeof SendbirdProvider>['htmlTextDirection'];
-  uikitOptions?: React.ComponentProps<typeof SendbirdProvider>['uikitOptions'];
+  htmlTextDirection?: ProviderProps['htmlTextDirection'];
+  uikitOptions?: ProviderProps['uikitOptions'];
+  stringSet?: ProviderProps['stringSet'];
+  seed?: MessageSeed;
 }>) {
-  const [configureSession] = useState(() => configureBoundary(record, historySize));
-  return <SendbirdProvider appId={appId} userId="self" configureSession={configureSession}
+  const configureSession = useGroupChannelFixtureSession(record, historySize, seed);
+  return <SendbirdProvider appId={fixtureAppId} userId="self" configureSession={configureSession}
     sdkInitParams={{ localCacheEnabled: false }}
-    uikitOptions={uikitOptions} htmlTextDirection={htmlTextDirection}>
+    uikitOptions={uikitOptions} htmlTextDirection={htmlTextDirection} stringSet={stringSet}>
     {children}
   </SendbirdProvider>;
 }

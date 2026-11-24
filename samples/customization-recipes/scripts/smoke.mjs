@@ -145,6 +145,13 @@ const scenarios = {
       assert.deepEqual((await badges.allInnerTexts()).map(text => text.trim()).sort(), ['1', '2']);
       assert.equal(await preview.locator('.recipe-reaction-chip').count(), 0);
     });
+    await step('the copyable timestamp channel mounts with stock composer and Like enabled', async () => {
+      await page.goto(`${url}?wrapper`);
+      await page.getByText('Original message A', { exact: true }).waitFor();
+      await page.getByRole('button', { name: 'Like, 1 reactions' }).waitFor();
+      await page.locator('.sendbird-message-input--textarea').waitFor();
+      assert.ok(await page.getByTestId('sendbird-message-list-container').evaluate(node => node.clientHeight > 100));
+    });
   },
 
   'composer-above-message-list': async ({ page, url, width, step }) => {
@@ -430,7 +437,9 @@ const scenarios = {
           <div class="jump-row"><button>Host button</button></div>
           <button class="sendbird-message-input--send"><span class="uikit-jump-send-icon" aria-hidden="true">↑</span><span class="uikit-jump-visually-hidden">Send</span></button>
         `);
-        await isolated.addStyleTag({ content: await readFile(join(root, 'jump-to-latest-and-send-icon/jump.css'), 'utf8') });
+        const sheet = await isolated.addStyleTag({ content: await readFile(join(root, 'jump-to-latest-and-send-icon/jump.css'), 'utf8') });
+        const selectors = await sheet.evaluate(node => [...node.sheet.cssRules].flatMap(rule => rule.selectorText?.split(',') ?? ['']));
+        assert.ok(selectors.length && selectors.every(selector => selector.includes('.uikit-jump-')));
         assert.equal(await isolated.locator('.conversation').evaluate(node => getComputedStyle(node).borderTopWidth), '0px');
         assert.equal(await isolated.locator('.jump-row').evaluate(node => getComputedStyle(node).display), 'block');
         const button = isolated.getByRole('button', { name: 'Send', exact: true });
@@ -589,13 +598,23 @@ const scenarios = {
       const isolated = await page.context().newPage();
       try {
         await isolated.setContent('<main><button class="recipe-action">App action</button><div class="composer-recipe"><button class="recipe-action">Writing tip</button></div></main>');
-        await isolated.addStyleTag({ content: await readFile(join(root, 'composer-action-button/composer-tip.css'), 'utf8') });
+        const sheet = await isolated.addStyleTag({ content: await readFile(join(root, 'composer-action-button/composer-tip.css'), 'utf8') });
+        const selectors = await sheet.evaluate(node => [...node.sheet.cssRules].flatMap(rule => rule.selectorText?.split(',') ?? ['']));
+        assert.ok(selectors.length && selectors.every(selector => selector.trim().startsWith('.composer-recipe')));
         assert.equal(await isolated.locator('main').evaluate(node => getComputedStyle(node).maxWidth), 'none');
         assert.equal(await isolated.getByRole('button', { name: 'App action' }).evaluate(node => getComputedStyle(node).marginTop), '0px');
         assert.equal(await isolated.getByRole('button', { name: 'Writing tip' }).evaluate(node => getComputedStyle(node).marginTop), '8px');
       } finally {
         await isolated.close();
       }
+    });
+    await step('the copyable composer channel mounts the stock list and writing tip together', async () => {
+      await page.goto(`${url}?wrapper`);
+      await page.getByText('Original message A', { exact: true }).waitFor();
+      await page.locator('.sendbird-message-input--textarea').waitFor();
+      await page.getByRole('button', { name: 'Show writing tip' }).click();
+      await page.getByRole('status').getByText('Start with the action you want the recipient to take.').waitFor();
+      assert.ok(await page.getByTestId('sendbird-message-list-container').evaluate(node => node.clientHeight > 100));
     });
   },
 
@@ -790,6 +809,18 @@ const scenarios = {
       await heading('General');
       await fallback.press('Space');
       await heading('Workshop');
+    });
+    await step('the copyable ProductChat shares the product data between real list and channel UI', async () => {
+      await page.goto(`${url}?wrapper`);
+      const preview = page.getByRole('button', { name: /Conversation A, Product: Fixture lamp/ });
+      await preview.waitFor();
+      await page.getByText('SKU LAMP-01', { exact: true }).waitFor();
+      await page.locator('.sendbird-message-input--textarea').waitFor();
+      assert.ok(await page.getByTestId('sendbird-message-list-container').evaluate(node => node.clientHeight > 100));
+      await page.getByText('Conversation B', { exact: true }).first().click();
+      await page.locator('.sendbird-conversation').getByText('Original message B', { exact: true }).waitFor();
+      await preview.click();
+      await page.getByText('SKU LAMP-01', { exact: true }).waitFor();
     });
   },
 
@@ -1054,6 +1085,20 @@ const scenarios = {
         }
       });
     }
+    await step('mobile Mark as unread keeps stock menu order in both presentations', async () => {
+      await page.goto(`${url}?mark-as-unread`);
+      for (const withReactions of [false, true]) {
+        await reactions.setChecked(withReactions);
+        await extended.uncheck();
+        const stock = await readMobile();
+        assert.ok(stock.labels.includes('Mark as unread'));
+        await extended.check();
+        const after = await readMobile();
+        assert.equal(after.actualMode, stock.actualMode);
+        assert.deepEqual(after.labels, [...stock.labels, 'Copy message ID']);
+      }
+      await page.goto(url);
+    });
     const copyId = page.getByRole('menuitem', { name: 'Copy message ID', exact: true });
     const expectCopied = async () => {
       await page.getByText('Copied ID 101', { exact: true }).waitFor();
@@ -1061,6 +1106,7 @@ const scenarios = {
       assert.equal(await page.evaluate(() => navigator.clipboard.readText()), '101');
     };
     await step('bottom-sheet ID copy responds to Enter and Space', async () => {
+      await reactions.check();
       await scenario.selectOption('other');
       for (const key of ['Enter', 'Space']) {
         await page.evaluate(() => navigator.clipboard.writeText('before'));
@@ -1229,6 +1275,14 @@ const scenarios = {
       await composer.locator('.sendbird-message-input--textarea').fill('Same draft in the existing app.');
       await send.click();
       assert.deepEqual(await latest(), { action: 'send', text: 'Same draft in the existing app.' });
+    });
+    await step('the copied migration wrapper selects a channel and renders the stock composer', async () => {
+      await page.goto(`${url}?wrapper`);
+      await page.getByRole('button', { name: 'Like 1' }).waitFor();
+      await page.locator('.sendbird-message-input--textarea').waitFor();
+      assert.ok(await page.getByTestId('sendbird-message-list-container').evaluate(node => node.clientHeight > 100));
+      await page.getByText('Conversation B', { exact: true }).first().click();
+      await page.locator('.sendbird-conversation').getByText('Original message B', { exact: true }).waitFor();
     });
   },
 };

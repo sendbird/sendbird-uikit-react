@@ -12,7 +12,7 @@ From `samples/customization-recipes`, run `npm ci` and `npm run dev`, then open 
 
 ## Public API
 
-Mount `ReorderedChannel` from [integration.tsx](integration.tsx) under your authenticated `SendbirdProvider`. The demo uses its `ReorderedChannelContent` inside a group channel provider with synthetic SDK responses:
+Mount `ReorderedChannel` from [integration.tsx](integration.tsx) under your authenticated `SendbirdProvider`. The demo mounts it with synthetic SDK responses:
 
 - One `GroupChannelProvider` from `@sendbird/uikit-react/GroupChannel/context` wraps `GroupChannelHeader`, `MessageInputWrapper` and `MessageList` from `@sendbird/uikit-react/GroupChannel/components/*`.
 - When you compose the parts yourself, you also render the surrounding states. The example reads `fetchChannelError` from `useGroupChannel` and `isOnline` and the typing options from `useSendbird`, then mounts `PlaceHolder`, `TypingIndicator` and `ConnectionStatus`.

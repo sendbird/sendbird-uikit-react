@@ -2,8 +2,19 @@ import { useCallback, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@sendbird/uikit-react/dist/index.css';
 import { MessageFixture, type Operation } from './fixture';
+import { ChannelWithMessageDetails, secondsFormat } from './integration';
+import { GroupChannelFixture } from '../shared/group-channel-fixture';
 import '../shared/page.css';
 import './style.css';
+
+function MountedRecipe() {
+  return <main aria-label="Mounted timestamp recipe" style={{ height: 580 }}>
+    <GroupChannelFixture record={() => {}} seed={{ like: true }} stringSet={secondsFormat}
+      uikitOptions={{ groupChannel: { enableReactions: true } }}>
+      <ChannelWithMessageDetails channelUrl="fixture-A" />
+    </GroupChannelFixture>
+  </main>;
+}
 
 function App() {
   const [custom, setCustom] = useState(false);
@@ -32,4 +43,4 @@ function App() {
   </main>;
 }
 
-createRoot(document.getElementById('root')!).render(<App />);
+createRoot(document.getElementById('root')!).render(new URLSearchParams(location.search).has('wrapper') ? <MountedRecipe /> : <App />);

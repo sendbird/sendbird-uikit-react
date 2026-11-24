@@ -20,6 +20,6 @@ The button sits next to the composer, not inside its editor. The draft, Send but
 
 At 1280px and 390px: the action toggles its tip and `aria-expanded` without changing the draft or sending, the stock Send delivers the unchanged draft exactly once, and a staged file is sent through the stock attachment flow. The broadcast-member case renders neither the composer nor the tip. An isolated host layout check loads the companion stylesheet to verify unrelated elements keep their styles.
 
-Fixture-only: [fixture.tsx](fixture.tsx) provides a synthetic group channel store whose `sendUserMessage` and `sendFileMessage` only record calls. The smoke renders `ComposerWithWritingTip` inside that store. `ComposerRecipeChannel` is type-checked but is not mounted with an authenticated channel; server persistence is not verified.
+Fixture-only: [fixture.tsx](fixture.tsx) provides a synthetic group channel store whose `sendUserMessage` and `sendFileMessage` only record calls. The smoke renders `ComposerWithWritingTip` inside that store. `ComposerRecipeChannel` also mounts with a synthetic SDK session in the browser check; server persistence is not verified.
 
 [Group channel and MessageInputWrapper](https://sendbird.com/docs/chat/uikit/v3/react/modules/group-channel)

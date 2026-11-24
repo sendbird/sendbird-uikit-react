@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ComponentProps } from 'react';
 import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
 import { GroupChannel } from '@sendbird/uikit-react/GroupChannel';
 import { GroupChannelList } from '@sendbird/uikit-react/GroupChannelList';
@@ -36,19 +36,22 @@ type ChatSession = {
   accessToken: string;
 };
 
-export function ExistingAppChat({ appId, userId, accessToken }: ChatSession) {
+export function ExistingAppChat({ appId, userId, accessToken, configureSession }: ChatSession &
+  Pick<ComponentProps<typeof SendbirdProvider>, 'configureSession'>) {
   const [channelUrl, setChannelUrl] = useState('');
   return (
-    <SendbirdProvider appId={appId} userId={userId} accessToken={accessToken}>
-      <GroupChannelList
-        onChannelSelect={channel => setChannelUrl(channel?.url ?? '')}
-        onChannelCreated={channel => setChannelUrl(channel.url)}
-        selectedChannelUrl={channelUrl}
-      />
-      {channelUrl && <GroupChannel
-        channelUrl={channelUrl}
-        renderMessageContent={props => <ChatMessage {...props} />}
-      />}
+    <SendbirdProvider appId={appId} userId={userId} accessToken={accessToken} configureSession={configureSession}>
+      <div className="migration-example">
+        <GroupChannelList
+          onChannelSelect={channel => setChannelUrl(channel?.url ?? '')}
+          onChannelCreated={channel => setChannelUrl(channel.url)}
+          selectedChannelUrl={channelUrl}
+        />
+        {channelUrl && <GroupChannel
+          channelUrl={channelUrl}
+          renderMessageContent={props => <ChatMessage {...props} />}
+        />}
+      </div>
     </SendbirdProvider>
   );
 }
