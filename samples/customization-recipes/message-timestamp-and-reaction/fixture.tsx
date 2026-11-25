@@ -5,7 +5,8 @@ import { useMemo, useState } from 'react';
 import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
 import MessageContent, { type MessageContentProps } from '@sendbird/uikit-react/ui/MessageContent';
 import { GroupChannelContext, useGroupChannel } from '@sendbird/uikit-react/GroupChannel/context';
-import { MessageWithLikeButton, secondsFormat } from './integration';
+import { MessageWithLikeButton } from './integration';
+import { secondsFormat } from './timestamp-format';
 
 const time = Date.parse('2026-11-18T12:34:56Z');
 export const shortText = 'See you at the demo.';

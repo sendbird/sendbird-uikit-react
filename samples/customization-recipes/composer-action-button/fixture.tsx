@@ -10,13 +10,13 @@ const channelUrl = 'synthetic-channel';
 const member = { userId: 'other', nickname: 'Alex', profileUrl: '', isActive: true };
 const inert = () => {};
 
-function createCollection(record: (event: ComposerEvent) => void, broadcastMember: boolean) {
+function createCollection(record: (event: ComposerEvent) => void, broadcastRole?: 'member' | 'operator') {
   const channel = {
     url: channelUrl,
     channelType: 'group',
     members: [member],
-    myRole: 'none',
-    isBroadcast: broadcastMember,
+    myRole: broadcastRole === 'operator' ? 'operator' : 'none',
+    isBroadcast: Boolean(broadcastRole),
     isSuper: false,
     isFrozen: false,
     isEphemeral: false,
@@ -65,11 +65,11 @@ function createCollection(record: (event: ComposerEvent) => void, broadcastMembe
 }
 
 /** Supplies local synthetic channel data to the real UIKit composer. */
-export function ComposerFixture({ record, children, broadcastMember = false }: PropsWithChildren<{
+export function ComposerFixture({ record, children, broadcastRole }: PropsWithChildren<{
   record: (event: ComposerEvent) => void;
-  broadcastMember?: boolean;
+  broadcastRole?: 'member' | 'operator';
 }>) {
-  const [collection] = useState(() => createCollection(record, broadcastMember));
+  const [collection] = useState(() => createCollection(record, broadcastRole));
   return (
     <SendbirdProvider appId="" userId="self" breakpoint="600px" uikitOptions={{
       groupChannel: { enableVoiceMessage: false, input: { enableDocument: true } },

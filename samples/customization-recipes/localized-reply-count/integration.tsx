@@ -36,5 +36,6 @@ export function AppReplyLabel({ language, count, onClick }: { language: Language
   if (count <= 0) return null;
   const category = pluralRules[language].select(count);
   const noun = nouns[language][category] ?? nouns[language].other;
-  return <button type="button" onClick={onClick}>{count} {noun}</button>;
+  const separator = language === 'ko' ? '' : ' ';
+  return <button type="button" onClick={onClick}>{count}{separator}{noun}</button>;
 }

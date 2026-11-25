@@ -3,8 +3,6 @@ import EmojiReactions, { type EmojiReactionsProps } from '@sendbird/uikit-react/
 import MessageContent, { type MessageContentProps } from '@sendbird/uikit-react/ui/MessageContent';
 import './reaction.css';
 
-export { secondsFormat } from './timestamp-format';
-
 function LikeReaction(props: EmojiReactionsProps) {
   const { message, userId, toggleReaction } = props;
   const [reaction] = message.reactions;

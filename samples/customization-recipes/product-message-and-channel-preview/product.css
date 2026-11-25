@@ -2,7 +2,10 @@
 .product-card > span { font-size: .8rem; }
 .product-with-file { display: grid; gap: 6px; }
 
-.product-channel-row { box-sizing: border-box; width: 100%; display: flex; align-items: center; gap: 10px; text-align: left; padding: 10px; border: 0; background: #fff; color: #1f4e35; font: inherit; }
+.product-channel-entry { display: flex; align-items: center; background: #fff; }
+.product-channel-actions { flex: none; padding-inline-end: 4px; }
+.sendbird--mobile-mode .product-channel-actions { display: none; }
+.product-channel-row { box-sizing: border-box; width: 100%; display: flex; align-items: center; gap: 10px; text-align: start; min-width: 0; padding: 10px; border: 0; background: #fff; color: #1f4e35; font: inherit; }
 .product-channel-row[aria-current="true"] { background: #e6f0f7; }
 .product-channel-row:hover { background: #eef4f8; }
 .product-channel-row:focus-visible { outline: 2px solid #1061a4; outline-offset: -2px; }

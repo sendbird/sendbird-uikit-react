@@ -8,7 +8,7 @@ import '../shared/page.css';
 import './style.css';
 
 const params = new URLSearchParams(location.search);
-const broadcastMember = params.has('broadcast-member');
+const broadcastRole = params.has('broadcast-operator') ? 'operator' : params.has('broadcast-member') ? 'member' : undefined;
 
 function MountedRecipe() {
   const [channelUrl, setChannelUrl] = useState('fixture-A');
@@ -28,7 +28,7 @@ function App() {
       <h1>Composer action button</h1>
       <p>The stock Sendbird composer runs against a local fixture. The tip button sits next to it.</p>
       <div className="composer-frame">
-        <ComposerFixture broadcastMember={broadcastMember} record={(event) => setEvents((current) => [...current, event])}>
+        <ComposerFixture broadcastRole={broadcastRole} record={(event) => setEvents((current) => [...current, event])}>
           <ComposerWithWritingTip />
         </ComposerFixture>
       </div>

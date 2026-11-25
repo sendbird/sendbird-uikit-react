@@ -23,7 +23,7 @@ export function BrandedComposer() {
 
 // Mount inside your authenticated SendbirdProvider.
 export function StockConversation({ channelUrl, startingPoint }: { channelUrl: string; startingPoint?: number }) {
-  return <GroupChannelProvider channelUrl={channelUrl} startingPoint={startingPoint} replyType="QUOTE_REPLY">
+  return <GroupChannelProvider channelUrl={channelUrl} startingPoint={startingPoint}>
     <div className="uikit-jump-conversation"><GroupChannelUI renderMessageInput={() => <BrandedComposer />} /></div>
     <div className="uikit-jump-jump-row"><JumpToLatest /></div>
   </GroupChannelProvider>;

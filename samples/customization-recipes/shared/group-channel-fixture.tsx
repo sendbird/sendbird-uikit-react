@@ -10,7 +10,7 @@ import { configureFixtureSession } from './configure-fixture-session';
 export type ScreenId = 'A' | 'B';
 export type Operation = {
   screen: ScreenId;
-  operation: 'addReaction' | 'deleteReaction' | 'sendUserMessage';
+  operation: 'addReaction' | 'deleteReaction' | 'sendUserMessage' | 'leaveChannel';
   messageId?: number;
   emoji?: string;
   text?: string;
@@ -90,6 +90,7 @@ function createChannel(screen: ScreenId, record: RecordOperation, historySize: n
     unreadMessageCount: 0, getUnreadMemberCount: () => 0, getUndeliveredMemberCount: () => 0,
     getTypingUsers: () => [], startTyping: async () => undefined, endTyping: async () => undefined,
     markAsRead: async () => undefined,
+    leave: async () => record({ screen, operation: 'leaveChannel' }),
     createMessageCollection() {
       const result = {
         hasPrevious: false, hasNext: false, succeededMessages: loaded, pendingMessages: [], failedMessages: [],
@@ -180,18 +181,19 @@ export function useGroupChannelFixtureSession(record: RecordOperation, historySi
   return configureSession;
 }
 
-export function GroupChannelFixture({ record, children, uikitOptions, historySize, htmlTextDirection, seed, stringSet }: PropsWithChildren<{
+export function GroupChannelFixture({ record, children, uikitOptions, historySize, htmlTextDirection, seed, stringSet, breakpoint }: PropsWithChildren<{
   record: RecordOperation;
   historySize?: number;
   htmlTextDirection?: ProviderProps['htmlTextDirection'];
   uikitOptions?: ProviderProps['uikitOptions'];
   stringSet?: ProviderProps['stringSet'];
+  breakpoint?: ProviderProps['breakpoint'];
   seed?: MessageSeed;
 }>) {
   const configureSession = useGroupChannelFixtureSession(record, historySize, seed);
   return <SendbirdProvider appId={fixtureAppId} userId="self" configureSession={configureSession}
     sdkInitParams={{ localCacheEnabled: false }}
-    uikitOptions={uikitOptions} htmlTextDirection={htmlTextDirection} stringSet={stringSet}>
+    uikitOptions={uikitOptions} htmlTextDirection={htmlTextDirection} stringSet={stringSet} breakpoint={breakpoint}>
     {children}
   </SendbirdProvider>;
 }

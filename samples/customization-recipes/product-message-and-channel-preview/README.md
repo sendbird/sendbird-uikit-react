@@ -33,11 +33,11 @@ Copy `integration.tsx`, `product.ts` and [product.css](product.css) together. Th
 
 The product row shows the unread count, and with `enableMention` the unread mention `@` (`@sendbird/uikit-react/ui/MentionUserLabel`), under the same rule as the stock row: when the channel is not selected or `uikitOptions.groupChannel.enableMarkAsUnread` is on, and never for an ephemeral channel. Channels without their own name (empty, `Group Channel` or `AI Chatbot Widget Channel`) keep the stock row, because UIKit builds their title from member nicknames and localized strings that are not a published API.
 
-Limits: the product row keeps the avatar, title, selection, unread badge and mention mark, and omits the stock timestamp, member count, typing indicator, broadcast and frozen channel icons, message status and row actions. Enter and Space open both the custom product row and its default-name fallback. Other stock rows keep UIKit's own keyboard behavior. Check the stock file viewer controls in your own layout, especially on narrow screens. Multiple-file messages are not covered.
+Limits: the product row keeps the avatar, title, selection, unread badge and mention mark, and omits the stock timestamp, member count, typing indicator, broadcast and frozen channel icons, and message status. On desktop, the supplied channel action renders beside the product button. On touch, holding the product button opens a leave confirmation without opening the conversation. Enter and Space open both the custom product row and its default-name fallback. Other stock rows keep UIKit's own keyboard behavior. Check the stock file viewer controls in your own layout, especially on narrow screens. Multiple-file messages are not covered.
 
 ## What the smoke test checks
 
-A separate synthetic SDK session mounts `ProductChat` and switches between channels. The custom list preview and product card use the same payload while the stock composer remains available.
+A separate synthetic SDK session mounts `ProductChat` and switches between channels. It checks the stock desktop menu and touch-hold leave confirmation, each recording one local leave without opening the product conversation. The custom list preview and product card use the same payload while the stock composer remains available.
 
 The decoder checks JSON shape, whitespace-only values, the 2,048-character payload limit and the SKU and title length limits before the browser runs.
 

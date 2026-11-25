@@ -31,13 +31,15 @@ const scenarios: { kind: MessageKind; label: string }[] = [
 ];
 
 function MountedRecipe() {
+  const [operations, setOperations] = useState<string[]>([]);
   return <main aria-label="Mounted product recipe">
-    <GroupChannelFixture record={() => {}} seed={{
+    <GroupChannelFixture breakpoint="600px" record={event => setOperations(current => [...current, `${event.screen}: ${event.operation}`])} seed={{
       text: 'A product in the installed UI', ...encodeProduct({ sku: 'LAMP-01', title: 'Fixture lamp' }),
       admin: query.has('admin'),
     }}>
       <ProductChat />
     </GroupChannelFixture>
+    <output data-testid="product-operations">{operations.join(', ')}</output>
   </main>;
 }
 

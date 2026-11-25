@@ -16,7 +16,7 @@ From `samples/customization-recipes`, run `npm ci` and `npm run dev`, then open 
 
 - `secondsFormat` (`DATE_FORMAT__MESSAGE_CREATED_AT: 'HH:mm:ss'`) for the `stringSet` of your root `SendbirdProvider`. Merge it into your existing string overrides.
   - The format applies across the provider. UIKit uses the formatted time to group consecutive messages from the same sender. When the other grouping conditions match, messages sent in different seconds of the same minute split into separate groups. UIKit still decides which sender names, avatars and timestamps to display for each group. Messages with the same formatted second still group together, even if their timestamps differ by milliseconds.
-  - `HH` is a 24-hour clock, so users who saw `1:05 PM` see `13:05:09`. Use `pp` instead if you want seconds in the user's locale style.
+  - `HH` is a 24-hour clock, so users who saw `1:05 PM` see `13:05:09`. Use `pp` for seconds in the `dateLocale` you pass to `SendbirdProvider`. The default date locale is en-US.
 - `GroupChannel` `renderMessageContent` → `MessageContent` from `@sendbird/uikit-react/ui/MessageContent` with `renderEmojiReactions`.
 - The custom button calls the supplied `toggleReaction(message, key, selected)`. Any other reaction combination is handed to `EmojiReactions` from `@sendbird/uikit-react/ui/EmojiReactions`. Copy [reaction.css](reaction.css) and [timestamp-format.ts](timestamp-format.ts) with the component.
 
@@ -24,7 +24,7 @@ Register `like` in your application's emoji set or use a key you already registe
 
 ## What the smoke test checks
 
-A synthetic SDK session also mounts `ChannelWithMessageDetails` and checks the message list, Like button and stock composer.
+A synthetic SDK session also mounts `ChannelWithMessageDetails` and checks the stock composer, seconds on the rendered timestamp and the Like button’s count and pressed state.
 
 Before the browser runs, UIKit's published `isSameGroup` (`@sendbird/uikit-react/Channel/utils/compareMessagesForGrouping`) confirms that different seconds in one minute group with the default `p` format and split with this recipe's format. The recipe format still groups timestamps within the same second.
 

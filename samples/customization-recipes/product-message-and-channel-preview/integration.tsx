@@ -1,4 +1,4 @@
-import { useState, type ComponentProps } from 'react';
+import { useEffect, useRef, useState, type ComponentProps } from 'react';
 import { useSendbird } from '@sendbird/uikit-react';
 import { useLocalization } from '@sendbird/uikit-react/hooks/useLocalization';
 import GroupChannel from '@sendbird/uikit-react/GroupChannel';
@@ -7,6 +7,7 @@ import { GroupChannelListItem } from '@sendbird/uikit-react/GroupChannelList/com
 import Badge from '@sendbird/uikit-react/ui/Badge';
 import ChannelAvatar from '@sendbird/uikit-react/ui/ChannelAvatar';
 import MentionUserLabel from '@sendbird/uikit-react/ui/MentionUserLabel';
+import Modal from '@sendbird/uikit-react/ui/Modal';
 import MessageContent, { MessageBody, type MessageContentProps } from '@sendbird/uikit-react/ui/MessageContent';
 import { decodeProduct, type Product } from './product';
 import './product.css';
@@ -51,7 +52,36 @@ const defaultChannelNames = ['', 'Group Channel', 'AI Chatbot Widget Channel'];
 /** Channel preview: replaces only named channels whose last message decodes as a product. */
 export function ProductChannelRow(props: ComponentProps<typeof GroupChannelListItem>) {
   const { state: { config } } = useSendbird();
-  const { channel, isSelected, onClick } = props;
+  const { stringSet } = useLocalization();
+  const { channel, isSelected, onClick, onLeaveChannel, renderChannelAction } = props;
+  const pressTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const held = useRef(false);
+  const leaving = useRef(false);
+  const [showLeave, setShowLeave] = useState(false);
+  const [leaveError, setLeaveError] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
+  function cancelHold() {
+    clearTimeout(pressTimer.current);
+    pressTimer.current = undefined;
+  }
+  useEffect(() => () => clearTimeout(pressTimer.current), []);
+
+  async function leave() {
+    if (!onLeaveChannel || leaving.current) return;
+    leaving.current = true;
+    setIsLeaving(true);
+    setLeaveError(false);
+    try {
+      await onLeaveChannel();
+      setShowLeave(false);
+    } catch {
+      setLeaveError(true);
+    } finally {
+      leaving.current = false;
+      setIsLeaving(false);
+    }
+  }
+
   const message = channel.lastMessage;
   const product = message && (message.isUserMessage() || message.isFileMessage())
     ? decodeProduct(message.customType, message.data)
@@ -74,18 +104,44 @@ export function ProductChannelRow(props: ComponentProps<typeof GroupChannelListI
   const mentioned = showUnread && config.groupChannel.enableMention && channel.unreadMentionCount > 0;
   const accessibleName = [title, `Product: ${product.title}`, mentioned && 'unread mention', unread > 0 && `${unread} unread`]
     .filter(Boolean).join(', ');
-  return <button type="button" className="product-channel-row"
-    aria-current={isSelected ? 'true' : undefined} aria-label={accessibleName} tabIndex={props.tabIndex}
-    onClick={event => { event.stopPropagation(); onClick(); }}>
-    <span aria-hidden="true">
-      <ChannelAvatar channel={channel} userId={config.userId} theme={config.theme} width={40} height={40} />
-    </span>
-    <span className="product-channel-copy"><strong>{title}</strong><span>Product: {product.title}</span></span>
-    {(mentioned || unread > 0) && <span aria-hidden="true" className="product-channel-unread">
-      {mentioned && <MentionUserLabel color="purple">@</MentionUserLabel>}
-      {unread > 0 && <Badge count={unread} />}
-    </span>}
-  </button>;
+  return <div className="product-channel-entry" onClick={event => event.stopPropagation()}>
+    <button type="button" className="product-channel-row"
+      aria-current={isSelected ? 'true' : undefined} aria-label={accessibleName} tabIndex={props.tabIndex}
+      onPointerDown={event => {
+        held.current = false;
+        if (event.pointerType !== 'touch' || !event.isPrimary || !onLeaveChannel) return;
+        cancelHold();
+        pressTimer.current = setTimeout(() => {
+          held.current = true;
+          setLeaveError(false);
+          setShowLeave(true);
+        }, 1000);
+      }}
+      onPointerMove={cancelHold} onPointerUp={cancelHold} onPointerCancel={cancelHold} onPointerLeave={cancelHold}
+      onContextMenu={event => { if (pressTimer.current !== undefined || held.current) event.preventDefault(); }}
+      onClick={event => {
+        if (event.detail === 0 || !held.current) onClick();
+        held.current = false;
+      }}>
+      <span aria-hidden="true">
+        <ChannelAvatar channel={channel} userId={config.userId} theme={config.theme} width={40} height={40} />
+      </span>
+      <span className="product-channel-copy"><strong>{title}</strong><span>Product: {product.title}</span></span>
+      {(mentioned || unread > 0) && <span aria-hidden="true" className="product-channel-unread">
+        {mentioned && <MentionUserLabel color="purple">@</MentionUserLabel>}
+        {unread > 0 && <Badge count={unread} />}
+      </span>}
+    </button>
+    <div className="product-channel-actions" role="group" aria-label={`${title} actions`}>
+      {renderChannelAction({ channel })}
+    </div>
+    {showLeave && <Modal className="product-channel-leave" titleText={stringSet.MODAL__LEAVE_CHANNEL__TITLE}
+      submitText={stringSet.MODAL__LEAVE_CHANNEL__FOOTER} disabled={isLeaving || !config.isOnline}
+      onSubmit={() => void leave()} onClose={() => setShowLeave(false)}>
+      <p>{title}</p>
+      {leaveError && <p role="alert">Unable to leave this channel. Try again.</p>}
+    </Modal>}
+  </div>;
 }
 
 export const renderProductPreview = (props: ComponentProps<typeof GroupChannelListItem>) => <ProductChannelRow {...props} />;
