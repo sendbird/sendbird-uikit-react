@@ -39,7 +39,7 @@ If you need the stock row’s full metadata, keep `GroupChannelListItem` and put
 
 ## What the smoke test checks
 
-A separate synthetic SDK session mounts `ProductChat` and switches between channels. It checks the stock desktop menu and touch-hold leave confirmation, each recording one local leave without opening the product conversation. The custom list preview and product card use the same payload while the stock composer remains available.
+A separate synthetic SDK session mounts `ProductChat` and switches between channels. It checks the stock desktop menu and touch-hold leave confirmation, each recording one local leave without opening the product conversation. The mobile case also retries a synthetic failure and verifies that a second click during the retry does not leave twice. The custom list preview and product card use the same payload while the stock composer remains available.
 
 The decoder checks JSON shape, whitespace-only values, the 2,048-character payload limit and the SKU and title length limits before the browser runs.
 

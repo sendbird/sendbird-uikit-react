@@ -6,9 +6,11 @@ import { scenarios, type Operation, type Scenario } from './scenarios';
 import '../shared/page.css';
 import './style.css';
 
+const customRenderers = new URLSearchParams(location.search).has('custom-renderers');
+
 function App() {
   const [scenario, setScenario] = useState<Scenario>('ready');
-  const [reordered, setReordered] = useState(false);
+  const [reordered, setReordered] = useState(customRenderers);
   const [operations, setOperations] = useState<Operation[]>([]);
   const record = useCallback((operation: Operation) => {
     setOperations(previous => [...previous, operation]);
@@ -24,7 +26,7 @@ function App() {
       </select></label>
     </div>
     <section className="recipe-channel-frame" aria-label="Channel preview">
-      <SendbirdFixture record={record} scenario={scenario} reordered={reordered} />
+      <SendbirdFixture record={record} scenario={scenario} reordered={reordered} customRenderers={customRenderers} />
     </section>
     <h2>Local SDK calls</h2>
     <ol className="log" data-testid="operations" aria-live="polite">

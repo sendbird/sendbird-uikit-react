@@ -48,10 +48,17 @@ interface CollectionHandler {
   onMessagesUpdated?: (context: { source: CollectionEventSource }, channel: GroupChannel, messages: FixtureMessage[]) => void;
 }
 
-type MessageSeed = { text?: string; customType?: string; data?: string; like?: boolean; admin?: boolean };
+type ChannelSeed = {
+  text?: string;
+  customType?: string;
+  data?: string;
+  like?: boolean;
+  admin?: boolean;
+  leave?: () => Promise<void>;
+};
 type ProviderProps = React.ComponentProps<typeof SendbirdProvider>;
 
-function createChannel(screen: ScreenId, record: RecordOperation, historySize: number, seed?: MessageSeed) {
+function createChannel(screen: ScreenId, record: RecordOperation, historySize: number, seed?: ChannelSeed) {
   const url = `fixture-${screen}`;
   const first = makeMessage(screen === 'A' ? 101 : 201, seed?.text ?? `Original message ${screen}`, url);
   first.customType = seed?.customType ?? '';
@@ -90,7 +97,10 @@ function createChannel(screen: ScreenId, record: RecordOperation, historySize: n
     unreadMessageCount: 0, getUnreadMemberCount: () => 0, getUndeliveredMemberCount: () => 0,
     getTypingUsers: () => [], startTyping: async () => undefined, endTyping: async () => undefined,
     markAsRead: async () => undefined,
-    leave: async () => record({ screen, operation: 'leaveChannel' }),
+    async leave() {
+      await seed?.leave?.();
+      record({ screen, operation: 'leaveChannel' });
+    },
     createMessageCollection() {
       const result = {
         hasPrevious: false, hasNext: false, succeededMessages: loaded, pendingMessages: [], failedMessages: [],
@@ -138,7 +148,7 @@ function createChannel(screen: ScreenId, record: RecordOperation, historySize: n
   return channel;
 }
 
-function configureBoundary(record: RecordOperation, historySize: number, seed?: MessageSeed): NonNullable<ProviderProps['configureSession']> {
+function configureBoundary(record: RecordOperation, historySize: number, seed?: ChannelSeed): NonNullable<ProviderProps['configureSession']> {
   const channels = new Map((['A', 'B'] as const).map(screen => [`fixture-${screen}`, createChannel(screen, record, historySize, screen === 'A' ? seed : undefined)]));
   return sdk => {
     Object.defineProperty(sdk, 'appInfo', { configurable: true, get: () => ({
@@ -176,7 +186,7 @@ function configureBoundary(record: RecordOperation, historySize: number, seed?: 
   };
 }
 
-export function useGroupChannelFixtureSession(record: RecordOperation, historySize = 1, seed?: MessageSeed) {
+export function useGroupChannelFixtureSession(record: RecordOperation, historySize = 1, seed?: ChannelSeed) {
   const [configureSession] = useState(() => configureBoundary(record, historySize, seed));
   return configureSession;
 }
@@ -188,7 +198,7 @@ export function GroupChannelFixture({ record, children, uikitOptions, historySiz
   uikitOptions?: ProviderProps['uikitOptions'];
   stringSet?: ProviderProps['stringSet'];
   breakpoint?: ProviderProps['breakpoint'];
-  seed?: MessageSeed;
+  seed?: ChannelSeed;
 }>) {
   const configureSession = useGroupChannelFixtureSession(record, historySize, seed);
   return <SendbirdProvider appId={fixtureAppId} userId="self" configureSession={configureSession}

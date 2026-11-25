@@ -264,6 +264,28 @@ const scenarios = {
       assert.equal(await history.count(), 36);
       assert.deepEqual(await page.getByTestId('operations').locator('li').allInnerTexts(), [`GroupChannel.sendUserMessage: ${text}`]);
     });
+    await step('app header and composer replace the stock components in the reordered layout', async () => {
+      await page.goto(`${url}?custom-renderers`);
+      const header = preview.getByRole('heading', { name: 'App channel header' });
+      const composer = preview.getByRole('button', { name: 'App composer' });
+      await header.waitFor();
+      await composer.waitFor();
+      await preview.getByText(/History 36/).waitFor();
+      assert.equal(await composer.count(), 1);
+      assert.equal(await preview.locator('.sendbird-conversation__channel-header').count(), 0);
+      assert.equal(await input.count(), 0);
+      const positions = await Promise.all([header.boundingBox(), composer.boundingBox(), list.boundingBox()]);
+      const [headerBox, composerBox, listBox] = positions;
+      assert.ok(headerBox && composerBox && listBox);
+      assert.ok(headerBox.y < composerBox.y && composerBox.y < listBox.y);
+      assert.equal(await preview.evaluate(node => {
+        const header = node.querySelector('h2');
+        const composer = node.querySelector('.recipe-channel-composer button');
+        const list = node.querySelector('[data-testid="sendbird-message-list-container"]');
+        return Boolean(header?.compareDocumentPosition(composer) & Node.DOCUMENT_POSITION_FOLLOWING)
+          && Boolean(composer?.compareDocumentPosition(list) & Node.DOCUMENT_POSITION_FOLLOWING);
+      }), true);
+    });
   },
 
   'theme-variables-and-css': async ({ page, url, step, width }) => {
@@ -917,16 +939,8 @@ const scenarios = {
       await preview.click();
       await page.getByText('SKU LAMP-01', { exact: true }).waitFor();
     });
-    await step('the product row opens channel actions without selecting it and leaves once', async () => {
-      await page.goto(`${url}?wrapper`);
-      const preview = page.getByRole('button', { name: /Conversation A, Product: Fixture lamp/ });
-      await preview.waitFor();
-      await page.getByText('Conversation B', { exact: true }).first().click();
-      const conversation = page.locator('.sendbird-conversation');
-      await conversation.getByText('Original message B', { exact: true }).waitFor();
-      const actions = page.getByRole('group', { name: 'Conversation A actions' });
-      assert.equal(await actions.count(), width === 1280 ? 1 : 0);
-      const confirmation = page.getByText('Leave this channel?', { exact: true });
+    const confirmation = page.getByText('Leave this channel?', { exact: true });
+    async function holdProduct(preview) {
       await preview.scrollIntoViewIfNeeded();
       const bounds = await preview.boundingBox();
       assert.ok(bounds);
@@ -949,6 +963,17 @@ const scenarios = {
         await session.send('Emulation.setTouchEmulationEnabled', { enabled: false });
         await session.detach();
       }
+    }
+    await step('the product row opens channel actions without selecting it and leaves once', async () => {
+      await page.goto(`${url}?wrapper`);
+      const preview = page.getByRole('button', { name: /Conversation A, Product: Fixture lamp/ });
+      await preview.waitFor();
+      await page.getByText('Conversation B', { exact: true }).first().click();
+      const conversation = page.locator('.sendbird-conversation');
+      await conversation.getByText('Original message B', { exact: true }).waitFor();
+      const actions = page.getByRole('group', { name: 'Conversation A actions' });
+      assert.equal(await actions.count(), width === 1280 ? 1 : 0);
+      await holdProduct(preview);
       if (width === 1280) {
         await actions.locator('button').click();
         await page.getByText('Leave channel', { exact: true }).click();
@@ -960,6 +985,23 @@ const scenarios = {
       await page.getByText('Leave this channel?', { exact: true }).waitFor({ state: 'hidden' });
       assert.equal(await page.getByTestId('product-operations').textContent(), 'A: leaveChannel');
     });
+    if (width === 390) {
+      await step('a failed mobile leave keeps its dialog open and a double click retries once', async () => {
+        await page.goto(`${url}?wrapper&leave-fails-once`);
+        const preview = page.getByRole('button', { name: /Conversation A, Product: Fixture lamp/ });
+        await preview.waitFor();
+        await holdProduct(preview);
+        const leave = page.getByRole('button', { name: 'Leave', exact: true });
+        await leave.click();
+        await page.getByRole('alert').getByText('Unable to leave this channel. Try again.', { exact: true }).waitFor();
+        assert.equal(await confirmation.isVisible(), true);
+        assert.equal(await page.getByTestId('product-operations').textContent(), '');
+        await leave.evaluate(button => { button.click(); button.click(); });
+        assert.equal(await leave.isDisabled(), true);
+        await confirmation.waitFor({ state: 'hidden' });
+        assert.equal(await page.getByTestId('product-operations').textContent(), 'A: leaveChannel');
+      });
+    }
     await step('product metadata on an admin message leaves the stock row and body alone', async () => {
       await page.goto(`${url}?wrapper&admin`);
       await page.getByRole('link', { name: /Conversation A/ }).waitFor();
@@ -1370,11 +1412,13 @@ const scenarios = {
         }
       });
     }
-    await step('UIKit routes the stock reply for the row showing the Russian few label', async () => {
+    await step('stock and app reply labels call their respective handlers', async () => {
       await page.getByLabel('Language').selectOption('ru');
       const row = page.locator('tr[data-count="22"]');
       await row.locator('.sendbird-ui-thread-replies').click();
       await page.getByText('UIKit reply clicked for message 1022', { exact: true }).waitFor();
+      await row.getByRole('button', { name: '22 ответа', exact: true }).click();
+      await page.getByText('App reply clicked for message 1022', { exact: true }).waitFor();
     });
   },
 

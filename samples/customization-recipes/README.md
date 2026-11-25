@@ -40,7 +40,7 @@ This smoke test is a local development check. The repository CI runs its existin
 | Recipe | What it changes | Main public API |
 | --- | --- | --- |
 | [Message timestamp and reaction](message-timestamp-and-reaction/README.md) | Seconds in the message time and a single Like button | `stringSet`, `MessageContent.renderEmojiReactions` |
-| [Composer above the message list](composer-above-message-list/README.md) | Header → composer → list layout | `GroupChannelProvider` with `MessageInputWrapper` and `MessageList` |
+| [Composer above the message list](composer-above-message-list/README.md) | Header → composer → list layout | `GroupChannel` with `renderChannelHeader`, `renderMessageInput` and `MessageInputWrapper` |
 | [Theme variables and CSS](theme-variables-and-css/README.md) | Brand colors and font, then bubble and composer geometry | `--sendbird-*` variables, scoped CSS |
 | [Jump to latest and Send icon](jump-to-latest-and-send-icon/README.md) | An app button that scrolls to the newest message, and a custom Send icon | `useGroupChannel`, `renderSendMessageIcon` |
 | [Composer action button](composer-action-button/README.md) | An app button next to the stock composer | `renderMessageInput`, `MessageInputWrapper` |

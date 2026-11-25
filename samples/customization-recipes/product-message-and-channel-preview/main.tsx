@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
 import '@sendbird/uikit-react/dist/index.css';
@@ -32,10 +32,17 @@ const scenarios: { kind: MessageKind; label: string }[] = [
 
 function MountedRecipe() {
   const [operations, setOperations] = useState<string[]>([]);
+  const leaveAttempts = useRef(0);
+  async function leaveWithOneFailure() {
+    const attempt = ++leaveAttempts.current;
+    await new Promise(resolve => setTimeout(resolve, 500));
+    if (attempt === 1) throw new Error('Synthetic leave failure');
+  }
   return <main aria-label="Mounted product recipe">
     <GroupChannelFixture breakpoint="600px" record={event => setOperations(current => [...current, `${event.screen}: ${event.operation}`])} seed={{
       text: 'A product in the installed UI', ...encodeProduct({ sku: 'LAMP-01', title: 'Fixture lamp' }),
       admin: query.has('admin'),
+      leave: query.has('leave-fails-once') ? leaveWithOneFailure : undefined,
     }}>
       <ProductChat />
     </GroupChannelFixture>
