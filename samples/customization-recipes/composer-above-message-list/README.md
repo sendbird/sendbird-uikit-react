@@ -14,9 +14,9 @@ From `samples/customization-recipes`, run `npm ci` and `npm run dev`, then open 
 
 Mount `ReorderedChannel` from [integration.tsx](integration.tsx) under your authenticated `SendbirdProvider`. The demo mounts it with synthetic SDK responses:
 
-- One `GroupChannelProvider` from `@sendbird/uikit-react/GroupChannel/context` wraps `GroupChannelHeader`, `MessageInputWrapper` and `MessageList` from `@sendbird/uikit-react/GroupChannel/components/*`.
-- When you compose the parts yourself, you also render the surrounding states. The example reads `fetchChannelError` from `useGroupChannel` and `isOnline` and the typing options from `useSendbird`, then mounts `PlaceHolder`, `TypingIndicator` and `ConnectionStatus`.
-- [layout.css](layout.css) gives the list the remaining height. The shell needs a defined height.
+- The `GroupChannel` header renders `GroupChannelHeader` and `MessageInputWrapper`, or the replacements you pass. The bottom composer slot is empty, so there is only one editor.
+- `GroupChannel` still renders the stock list, loading and error states, typing indicator and connection notice. Other public callbacks, including `renderMessageContent`, pass through.
+- [layout.css](layout.css) sizes the shell. Give its parent a defined height.
 
 ## What the smoke test checks
 

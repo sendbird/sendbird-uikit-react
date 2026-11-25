@@ -33,7 +33,9 @@ Copy `integration.tsx`, `product.ts` and [product.css](product.css) together. Th
 
 The product row shows the unread count, and with `enableMention` the unread mention `@` (`@sendbird/uikit-react/ui/MentionUserLabel`), under the same rule as the stock row: when the channel is not selected or `uikitOptions.groupChannel.enableMarkAsUnread` is on, and never for an ephemeral channel. Channels without their own name (empty, `Group Channel` or `AI Chatbot Widget Channel`) keep the stock row, because UIKit builds their title from member nicknames and localized strings that are not a published API.
 
-Limits: the product row keeps the avatar, title, selection, unread badge and mention mark, and omits the stock timestamp, member count, typing indicator, broadcast and frozen channel icons, and message status. On desktop, the supplied channel action renders beside the product button. On touch, holding the product button opens a leave confirmation without opening the conversation. Enter and Space open both the custom product row and its default-name fallback. Other stock rows keep UIKit's own keyboard behavior. Check the stock file viewer controls in your own layout, especially on narrow screens. Multiple-file messages are not covered.
+Limits: the product row keeps the avatar, title, selection, unread badge and mention mark, and omits the stock timestamp, member count, typing indicator, broadcast and frozen channel icons, and message status. On desktop, the supplied channel action renders beside the product button. In UIKit mobile mode, holding the product button on a touch screen opens a leave confirmation without opening the conversation. Enter and Space open both the custom product row and its default-name fallback. Other stock rows keep UIKit's own keyboard behavior. Check the stock file viewer controls in your own layout, especially on narrow screens. Multiple-file messages are outside this recipe.
+
+If you need the stock row’s full metadata, keep `GroupChannelListItem` and put a readable product summary in the sent message’s `message` field. The product card can still use `renderMessageBody`.
 
 ## What the smoke test checks
 

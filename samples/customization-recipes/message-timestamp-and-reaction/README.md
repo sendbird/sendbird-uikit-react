@@ -20,6 +20,8 @@ From `samples/customization-recipes`, run `npm ci` and `npm run dev`, then open 
 - `GroupChannel` `renderMessageContent` → `MessageContent` from `@sendbird/uikit-react/ui/MessageContent` with `renderEmojiReactions`.
 - The custom button calls the supplied `toggleReaction(message, key, selected)`. Any other reaction combination is handed to `EmojiReactions` from `@sendbird/uikit-react/ui/EmojiReactions`. Copy [reaction.css](reaction.css) and [timestamp-format.ts](timestamp-format.ts) with the component.
 
+To translate the Like button’s accessible name, set `FEEDBACK_LIKE` in the provider’s `stringSet`. The name includes the current count.
+
 Register `like` in your application's emoji set or use a key you already registered. The button replaces the reaction row only when `like` is the sole reaction and UIKit supplies `toggleReaction`. It omits the stock add-reaction picker, the desktop tooltip and mobile long-press sheet for reacted members, and the filter check that can show "Add reaction failed" for an emoji outside the categories allowed by `filterEmojiCategoryIds`. Messages with no reaction, another key or mixed reactions keep UIKit's default behavior.
 
 ## What the smoke test checks

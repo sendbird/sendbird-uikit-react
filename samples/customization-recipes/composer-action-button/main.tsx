@@ -15,7 +15,9 @@ function MountedRecipe() {
   return <main aria-label="Mounted composer recipe">
     <button type="button" onClick={() => setChannelUrl(channelUrl === 'fixture-A' ? 'fixture-B' : 'fixture-A')}>Switch fixture channel</button>
     <GroupChannelFixture record={() => {}}>
-      <div style={{ height: 580 }}><ComposerRecipeChannel channelUrl={channelUrl} /></div>
+      <div style={{ height: 580 }}>
+        <ComposerRecipeChannel channelUrl={channelUrl} renderSendMessageIcon={() => <span>App send</span>} />
+      </div>
     </GroupChannelFixture>
   </main>;
 }

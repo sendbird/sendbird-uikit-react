@@ -148,7 +148,7 @@ const scenarios = {
       assert.ok(await preview.getByText('See you at the demo.', { exact: true }).isVisible());
     });
     const like = async (count, pressed) => {
-      const button = preview.getByRole('button', { name: `Like, ${count} reactions`, exact: true });
+      const button = preview.getByRole('button', { name: `Like ${count}`, exact: true });
       await button.waitFor();
       assert.equal(await button.getAttribute('aria-pressed'), String(pressed));
       return button;
@@ -187,13 +187,13 @@ const scenarios = {
       });
     }
     await step('the copyable timestamp channel mounts with stock composer and Like enabled', async () => {
-      await page.goto(`${url}?wrapper`);
+      await page.goto(`${url}?wrapper&localized`);
       await page.getByText('Original message A', { exact: true }).waitFor();
-      const like = page.getByRole('button', { name: 'Like, 1 reactions' });
+      const like = page.getByRole('button', { name: 'J’aime 1' });
       await like.waitFor();
       await page.getByText('12:01:41', { exact: true }).waitFor();
       await like.click();
-      assert.equal(await page.getByRole('button', { name: 'Like, 2 reactions' }).getAttribute('aria-pressed'), 'true');
+      assert.equal(await page.getByRole('button', { name: 'J’aime 2' }).getAttribute('aria-pressed'), 'true');
       await page.locator('.sendbird-message-input--textarea').waitFor();
       assert.ok(await page.getByTestId('sendbird-message-list-container').evaluate(node => node.clientHeight > 100));
     });
@@ -224,7 +224,8 @@ const scenarios = {
     await step('reordered layout is header, composer, list in DOM and on screen', async () => {
       await page.getByLabel('Composer on top').check();
       await input.waitFor();
-      await preview.getByText(/History 36/).waitFor();
+      await preview.getByTestId('custom-content').getByText(/History 36/).waitFor();
+      assert.equal(await input.count(), 1);
       assert.deepEqual(await order(), { dom: ['header', 'composer', 'messages'], visual: ['header', 'composer', 'messages'] });
     });
     await step('loading, empty, error, offline and typing states render', async () => {
@@ -701,6 +702,8 @@ const scenarios = {
       const tip = page.getByRole('button', { name: 'Show writing tip' });
       const start = async locator => (await locator.boundingBox()).x;
       assert.ok(Math.abs(await start(tip) - await start(editor)) < 2, 'the tip aligns with the stock editor');
+      await editor.fill('A draft with a custom send icon');
+      await send.getByText('App send', { exact: true }).waitFor();
       await tip.click();
       await page.getByRole('status').getByText('Start with the action you want the recipient to take.').waitFor();
       assert.ok(await page.getByTestId('sendbird-message-list-container').evaluate(node => node.clientHeight > 100));
@@ -923,25 +926,32 @@ const scenarios = {
       await conversation.getByText('Original message B', { exact: true }).waitFor();
       const actions = page.getByRole('group', { name: 'Conversation A actions' });
       assert.equal(await actions.count(), width === 1280 ? 1 : 0);
+      const confirmation = page.getByText('Leave this channel?', { exact: true });
+      await preview.scrollIntoViewIfNeeded();
+      const bounds = await preview.boundingBox();
+      assert.ok(bounds);
+      const session = await page.context().newCDPSession(page);
+      try {
+        await session.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 });
+        await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{
+          x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2, id: 1,
+        }] });
+        if (width === 390) {
+          await confirmation.waitFor();
+          await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+        } else {
+          // Wait past the one-second UIKit hold threshold before cancelling the desktop touch.
+          await page.waitForTimeout(1100);
+          assert.equal(await confirmation.count(), 0);
+          await session.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] });
+        }
+      } finally {
+        await session.send('Emulation.setTouchEmulationEnabled', { enabled: false });
+        await session.detach();
+      }
       if (width === 1280) {
         await actions.locator('button').click();
         await page.getByText('Leave channel', { exact: true }).click();
-      } else {
-        await preview.scrollIntoViewIfNeeded();
-        const bounds = await preview.boundingBox();
-        assert.ok(bounds);
-        const session = await page.context().newCDPSession(page);
-        try {
-          await session.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 });
-          await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{
-            x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2, id: 1,
-          }] });
-          await page.getByText('Leave this channel?', { exact: true }).waitFor();
-          await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-        } finally {
-          await session.send('Emulation.setTouchEmulationEnabled', { enabled: false });
-          await session.detach();
-        }
       }
       await page.getByText('Leave this channel?', { exact: true }).waitFor();
       await conversation.getByText('Original message B', { exact: true }).waitFor();
@@ -1036,7 +1046,10 @@ const scenarios = {
       const items = await page.getByRole('menuitem').allInnerTexts();
       assert.ok(items.some(item => item.trim() === 'Copy'));
       assert.ok(items.some(item => item.trim() === 'Reply'));
-      assert.ok(items.some(item => item.trim() === 'Copy message ID'));
+      const copyId = page.getByRole('menuitem', { name: 'Copy message ID', exact: true });
+      await copyId.click();
+      await copyId.waitFor({ state: 'hidden' });
+      assert.equal(await page.evaluate(() => navigator.clipboard.readText()), '101');
       await page.goto(url);
     });
     await step('the copyable wrapper preserves the provider thread reply mode', async () => {
@@ -1417,7 +1430,9 @@ const scenarios = {
     });
     await step('the copied migration wrapper selects a channel and sends once from the stock composer', async () => {
       await page.goto(`${url}?wrapper`);
-      await page.getByRole('button', { name: 'Like 1' }).waitFor();
+      await page.getByRole('button', { name: 'Like 1', exact: true }).click();
+      await page.getByRole('button', { name: 'Like 2', exact: true, pressed: true }).waitFor();
+      await page.goto(`${url}?wrapper`);
       await page.locator('.sendbird-message-input--textarea').waitFor();
       assert.ok(await page.getByTestId('sendbird-message-list-container').evaluate(node => node.clientHeight > 100));
       await page.getByText('Conversation B', { exact: true }).first().click();

@@ -109,7 +109,9 @@ export function ProductChannelRow(props: ComponentProps<typeof GroupChannelListI
       aria-current={isSelected ? 'true' : undefined} aria-label={accessibleName} tabIndex={props.tabIndex}
       onPointerDown={event => {
         held.current = false;
-        if (event.pointerType !== 'touch' || !event.isPrimary || !onLeaveChannel) return;
+        // Match the pinned UIKit mobile class already used to hide the desktop action.
+        if (event.pointerType !== 'touch' || !event.isPrimary || !onLeaveChannel
+          || !event.currentTarget.closest('.sendbird--mobile-mode')) return;
         cancelHold();
         pressTimer.current = setTimeout(() => {
           held.current = true;

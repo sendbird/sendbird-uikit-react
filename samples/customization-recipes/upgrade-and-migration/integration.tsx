@@ -4,10 +4,12 @@ import { GroupChannel } from '@sendbird/uikit-react/GroupChannel';
 import { GroupChannelList } from '@sendbird/uikit-react/GroupChannelList';
 import MessageContent, { type MessageContentProps } from '@sendbird/uikit-react/ui/MessageContent';
 import EmojiReactions, { type EmojiReactionsProps } from '@sendbird/uikit-react/ui/EmojiReactions';
+import { useLocalization } from '@sendbird/uikit-react/hooks/useLocalization';
 import './like.css';
 
 // Customizes a message whose only reaction is `like`; every other case keeps the stock row.
 function LikeButton(props: EmojiReactionsProps) {
+  const { stringSet } = useLocalization();
   const { message, toggleReaction, userId } = props;
   const [like] = message.reactions;
   if (!toggleReaction || like?.key !== 'like' || message.reactions.length !== 1) return <EmojiReactions {...props} />;
@@ -17,7 +19,7 @@ function LikeButton(props: EmojiReactionsProps) {
     <button
       className="recipe-like"
       type="button"
-      aria-label={`Like ${like.userIds.length}`}
+      aria-label={`${stringSet.FEEDBACK_LIKE} ${like.userIds.length}`}
       aria-pressed={pressed}
       onMouseDown={event => event.stopPropagation()}
       onTouchStart={event => event.stopPropagation()}

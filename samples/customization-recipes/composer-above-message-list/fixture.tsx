@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { SessionHandler, type ConnectionHandler } from '@sendbird/chat';
 import type { GroupChannel, GroupChannelHandler } from '@sendbird/chat/groupChannel';
 import type { UserMessageCreateParams } from '@sendbird/chat/message';
+import MessageContent from '@sendbird/uikit-react/ui/MessageContent';
 import { TypingIndicatorType } from '@sendbird/uikit-react';
 import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
 import { GroupChannelProvider } from '@sendbird/uikit-react/GroupChannel/context';
@@ -127,7 +128,8 @@ export function SendbirdFixture({ record, scenario, reordered }: {
   return <SendbirdProvider appId={appId} userId="self" configureSession={boundary.configureSession}
     sdkInitParams={{ localCacheEnabled: false }}
     uikitOptions={{ groupChannel: { enableTypingIndicator: true, typingIndicatorTypes: new Set([TypingIndicatorType.Text]) } }}>
-    {reordered ? <ReorderedChannel channelUrl={channelUrl} /> : (
+    {reordered ? <ReorderedChannel channelUrl={channelUrl} disableMarkAsRead
+      renderMessageContent={props => <div data-testid="custom-content"><MessageContent {...props} /></div>} /> : (
       <GroupChannelProvider channelUrl={channelUrl} disableMarkAsRead>
         <GroupChannelUI />
       </GroupChannelProvider>

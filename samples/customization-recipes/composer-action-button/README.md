@@ -10,7 +10,7 @@ Type a draft and choose **Show writing tip**. The draft stays as typed and nothi
 
 ## Public API
 
-[integration.tsx](integration.tsx) passes `renderMessageInput` to `GroupChannel` and renders `MessageInputWrapper` from `@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper` with the app button beside it. Mount `ComposerRecipeChannel` under your authenticated `SendbirdProvider`.
+[integration.tsx](integration.tsx) passes `renderMessageInput` to `GroupChannel` and renders `MessageInputWrapper` from `@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper` with the app button beside it. Mount `ComposerRecipeChannel` under your authenticated `SendbirdProvider`. Public composer icon overrides such as `renderSendMessageIcon` still reach the stock input.
 
 Copy [composer-tip.css](composer-tip.css) with `integration.tsx`. The integration imports it. Its rules align the tip with the stock input inside the recipe wrapper. A new channel closes the previous channel’s tip.
 

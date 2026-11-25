@@ -1,9 +1,11 @@
 import GroupChannel from '@sendbird/uikit-react/GroupChannel';
 import EmojiReactions, { type EmojiReactionsProps } from '@sendbird/uikit-react/ui/EmojiReactions';
 import MessageContent, { type MessageContentProps } from '@sendbird/uikit-react/ui/MessageContent';
+import { useLocalization } from '@sendbird/uikit-react/hooks/useLocalization';
 import './reaction.css';
 
 function LikeReaction(props: EmojiReactionsProps) {
+  const { stringSet } = useLocalization();
   const { message, userId, toggleReaction } = props;
   const [reaction] = message.reactions;
   if (!toggleReaction || reaction?.key !== 'like' || message.reactions.length !== 1) {
@@ -14,7 +16,7 @@ function LikeReaction(props: EmojiReactionsProps) {
   return (
     <div className="recipe-reaction-strip">
       <button type="button" className="recipe-reaction-chip" aria-pressed={selected}
-        aria-label={`Like, ${reaction.userIds.length} reactions`}
+        aria-label={`${stringSet.FEEDBACK_LIKE} ${reaction.userIds.length}`}
         onMouseDown={event => event.stopPropagation()}
         onTouchStart={event => event.stopPropagation()}
         onClick={() => toggleReaction(message, reaction.key, selected)}>

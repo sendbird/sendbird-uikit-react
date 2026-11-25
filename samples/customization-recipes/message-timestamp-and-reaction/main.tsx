@@ -10,7 +10,8 @@ import './style.css';
 
 function MountedRecipe() {
   return <main aria-label="Mounted timestamp recipe" style={{ height: 580 }}>
-    <GroupChannelFixture record={() => {}} seed={{ like: true }} stringSet={secondsFormat}
+    <GroupChannelFixture record={() => {}} seed={{ like: true }} stringSet={new URLSearchParams(location.search).has('localized')
+      ? { ...secondsFormat, FEEDBACK_LIKE: 'J’aime' } : secondsFormat}
       uikitOptions={{ groupChannel: { enableReactions: true } }}>
       <ChannelWithMessageDetails channelUrl="fixture-A" />
     </GroupChannelFixture>

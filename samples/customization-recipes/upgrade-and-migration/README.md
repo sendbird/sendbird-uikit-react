@@ -31,6 +31,8 @@ If you use the all-in-one `App` and still need the legacy modules during the tra
 
 [integration.tsx](integration.tsx) shows the migrated composition using `SendbirdProvider`, `GroupChannelList` and `GroupChannel`. It imports the companion [like.css](like.css) for the chat layout and reaction button. The `renderMessageContent` callback forwards props to `MessageContent` and replaces only `renderEmojiReactions`. `ExistingAppChat` uses your Sendbird application ID and the signed-in user's ID and access token.
 
+To translate the Like button’s accessible name, set `FEEDBACK_LIKE` in the provider’s `stringSet`. The name includes the current count.
+
 Register `like` in your application's emoji set or use a key you already registered. The button replaces the reaction row only when `like` is the sole reaction and UIKit supplies `toggleReaction`. It omits the stock add-reaction picker, the desktop tooltip and mobile long-press sheet for reacted members, and the filter check that can show "Add reaction failed" for an emoji outside the categories allowed by `filterEmojiCategoryIds`. Messages with no reaction, another key or mixed reactions keep UIKit's default behavior.
 
 ## What the smoke test checks
