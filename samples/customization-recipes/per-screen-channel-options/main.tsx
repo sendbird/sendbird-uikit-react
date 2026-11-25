@@ -8,6 +8,8 @@ import { celebrate, gesture, screenPolicy } from './policy';
 import '../shared/page.css';
 import './style.css';
 
+const providerEnabled = new URLSearchParams(location.search).has('provider-enabled');
+
 function App() {
   const [aCategory, setACategory] = useState<number>(screenPolicy.A.categoryId);
   const [events, setEvents] = useState<Operation[]>([]);
@@ -21,7 +23,7 @@ function App() {
       </button>
     </div>
     <GroupChannelFixture record={record} uikitOptions={{ groupChannel: {
-      enableMention: true, enableReactions: false, replyType: 'none',
+      enableMention: true, enableReactions: providerEnabled, replyType: providerEnabled ? 'quote_reply' : 'none',
     } }}>
       <div className="panels">
         <section className="panel" aria-label="Screen A">

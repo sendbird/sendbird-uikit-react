@@ -51,6 +51,27 @@ const defaultChannelNames = ['', 'Group Channel', 'AI Chatbot Widget Channel'];
 
 /** Channel preview: replaces only named channels whose last message decodes as a product. */
 export function ProductChannelRow(props: ComponentProps<typeof GroupChannelListItem>) {
+  const { channel, onClick } = props;
+  const message = channel.lastMessage;
+  const product = message && (message.isUserMessage() || message.isFileMessage())
+    ? decodeProduct(message.customType, message.data)
+    : undefined;
+  if (!product || defaultChannelNames.includes(channel.name ?? '')) {
+    // The stock row already calls onClick. Stop its DOM click from reaching the list's wrapper.
+    return <div onClick={event => event.stopPropagation()} onKeyDown={product ? event => {
+      // The stock preview is a div with role="link", so the browser does not activate it on its own.
+      const { key, target } = event;
+      if (!(target instanceof HTMLElement) || target.getAttribute('role') !== 'link' || (key !== 'Enter' && key !== ' ')) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (!event.repeat) onClick();
+    } : undefined}><GroupChannelListItem {...props} /></div>;
+  }
+  return <ProductPreview {...props} product={product} />;
+}
+
+// This component unmounts when the stock row replaces it, including any active touch hold.
+function ProductPreview({ product, ...props }: ComponentProps<typeof GroupChannelListItem> & { product: Product }) {
   const { state: { config } } = useSendbird();
   const { stringSet } = useLocalization();
   const { channel, isSelected, onClick, onLeaveChannel, renderChannelAction } = props;
@@ -82,21 +103,6 @@ export function ProductChannelRow(props: ComponentProps<typeof GroupChannelListI
     }
   }
 
-  const message = channel.lastMessage;
-  const product = message && (message.isUserMessage() || message.isFileMessage())
-    ? decodeProduct(message.customType, message.data)
-    : undefined;
-  if (!product || defaultChannelNames.includes(channel.name ?? '')) {
-    // The stock row already calls onClick. Stop its DOM click from reaching the list's wrapper.
-    return <div onClick={event => event.stopPropagation()} onKeyDown={product ? event => {
-      // The stock preview is a div with role="link", so the browser does not activate it on its own.
-      const { key, target } = event;
-      if (!(target instanceof HTMLElement) || target.getAttribute('role') !== 'link' || (key !== 'Enter' && key !== ' ')) return;
-      event.preventDefault();
-      event.stopPropagation();
-      if (!event.repeat) onClick();
-    } : undefined}><GroupChannelListItem {...props} /></div>;
-  }
   const title = channel.name;
   // Match the stock row: a selected channel keeps its count when mark-as-unread is enabled.
   const showUnread = (!isSelected || config.groupChannel.enableMarkAsUnread) && !channel.isEphemeral;

@@ -15,7 +15,7 @@ Click the **Upgrade Lab** channel preview, toggle the heart twice, then type a d
 3. Import only the package's published subpaths, as in [integration.tsx](integration.tsx). For example, `MessageBody` is a named export of `@sendbird/uikit-react/ui/MessageContent`; there is no `ui/MessageBody` entry point.
 4. Commit the dependency and lockfile change alone, then re-run your chat checks: channel preview selection, stock message rendering, reactions and send.
 
-To compare two pins with this package, install the other pair with `--save-exact`, then run `npm run build` and `npm run smoke`. The smoke test fails if the installed versions differ from `package.json`.
+To compare two pins with this package, install the other pair with `--save-exact`, then run `npm run build` and `npm run smoke`. The smoke test fails if the installed versions differ from `package.json` or UIKit resolves a different Chat SDK version. Choose a Chat SDK pin within UIKit’s supported range to avoid a separate nested version.
 
 ## 2. Migrate legacy channel modules
 

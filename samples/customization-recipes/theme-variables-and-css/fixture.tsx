@@ -5,11 +5,12 @@ import Icon, { IconColors, IconTypes } from '@sendbird/uikit-react/ui/Icon';
 import MessageInputWrapper from '@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper';
 import { GroupChannelContext } from '@sendbird/uikit-react/GroupChannel/context';
 import MessageContent from '@sendbird/uikit-react/ui/MessageContent';
+import TextMessageItemBody from '@sendbird/uikit-react/ui/TextMessageItemBody';
 import type { GroupChannel } from '@sendbird/chat/groupChannel';
 type ThemeMode = 'default' | 'tokens' | 'target';
 
 const conversation = [
-  { id: 101, who: 'other', text: 'Could we review the launch checklist today?' },
+  { id: 101, who: 'other', text: '@Sam, can we review https://example.com/checklist today?' },
   { id: 102, who: 'self', text: 'Yes. Typography, colors, spacing, and the composer are ready.' },
   { id: 103, who: 'other', text: 'Great, please check the narrow screen too. This longer message should wrap without clipping, and both the beginning and the end should stay readable.' },
 ] as const;
@@ -76,7 +77,7 @@ function toSendbirdMessage(item: FixtureMessage, reactedByMe: boolean) {
     messageType: 'user',
     message: item.text,
     createdAt: created.getTime(),
-    updatedAt: 0,
+    updatedAt: item.id === 101 ? created.getTime() + 1 : 0,
     customType: '',
     data: '',
     extendedMessagePayload: {},
@@ -84,14 +85,15 @@ function toSendbirdMessage(item: FixtureMessage, reactedByMe: boolean) {
     parentMessageId: 0,
     sender: { userId: item.who, nickname: people[item.who], profileUrl: '' },
     reactions: heartUsers.length ? [{ key: 'heart', userIds: heartUsers }] : [],
-    mentionedUsers: [],
+    mentionedUsers: item.id === 101 ? [{ userId: 'self', nickname: people.self }] : [],
+    mentionedMessageTemplate: item.id === 101 ? '@{self}, can we review https://example.com/checklist today?' : undefined,
     threadInfo: { replyCount: 0 },
     isAdminMessage: () => false,
     isUserMessage: () => true,
     isFileMessage: () => false,
     isMultipleFilesMessage: () => false,
     isResendable: () => false,
-  } as unknown as ComponentProps<typeof MessageContent>['message'];
+  } as unknown as ComponentProps<typeof TextMessageItemBody>['message'];
 }
 
 export function ThemeFixture({ mode }: { mode: ThemeMode }) {
@@ -112,20 +114,26 @@ export function ThemeFixture({ mode }: { mode: ThemeMode }) {
         <div className="scene">
           <div className="chat-heading"><span data-testid="inside-accent">{accent}</span> Launch planning</div>
           <div className="messages sendbird-conversation__messages" dir="ltr">
-            {conversation.map(item => <div key={item.id} className="fixture-row" data-who={item.who}
-              onKeyDown={event => {
-                // The stock reaction badge uses a div with role="button".
-                if (!(event.target instanceof HTMLElement)
-                  || !event.target.matches('.sendbird-emoji-reactions__reaction-badge [role="button"]')
-                  || (event.key !== 'Enter' && event.key !== ' ')) return;
-                event.preventDefault();
-                event.stopPropagation();
-                if (!event.repeat) toggleHeart(item.id);
-              }}>
-              <MessageContent message={toSendbirdMessage(item, myHearts[item.id] ?? false)} channel={sendbirdChannel} userId="self"
-                isReactionEnabled emojiContainer={emojiContainer} nicknamesMap={nicknamesMap}
-                toggleReaction={message => toggleHeart(message.messageId)} />
-            </div>)}
+            {conversation.map(item => {
+              const message = toSendbirdMessage(item, myHearts[item.id] ?? false);
+              return <div key={item.id} className="fixture-row" data-who={item.who}
+                onKeyDown={event => {
+                  // The stock reaction badge uses a div with role="button".
+                  if (!(event.target instanceof HTMLElement)
+                    || !event.target.matches('.sendbird-emoji-reactions__reaction-badge [role="button"]')
+                    || (event.key !== 'Enter' && event.key !== ' ')) return;
+                  event.preventDefault();
+                  event.stopPropagation();
+                  if (!event.repeat) toggleHeart(item.id);
+                }}>
+                <MessageContent message={message} channel={sendbirdChannel} userId="self"
+                  isReactionEnabled emojiContainer={emojiContainer} nicknamesMap={nicknamesMap}
+                  renderMessageBody={item.id === 101
+                    ? () => <TextMessageItemBody message={message} isMentionEnabled />
+                    : undefined}
+                  toggleReaction={message => toggleHeart(message.messageId)} />
+              </div>;
+            })}
           </div>
           <div className="composer-host">
             <GroupChannelContext.Provider value={channelStore}><MessageInputWrapper /></GroupChannelContext.Provider>

@@ -24,6 +24,11 @@ for (const name of ['@sendbird/uikit-react', '@sendbird/chat', 'react', 'react-d
   assert.equal(report.versions[name], pkg.dependencies[name], `${name} must match the pinned version`);
 }
 
+const requireFromUIKit = createRequire(require.resolve('@sendbird/uikit-react/package.json'));
+report.versions['@sendbird/chat from UIKit'] = requireFromUIKit('@sendbird/chat/package.json').version;
+assert.equal(report.versions['@sendbird/chat from UIKit'], pkg.dependencies['@sendbird/chat'],
+  'UIKit must resolve the same pinned Chat SDK');
+
 const loadRecipeSource = async path => (await runnerImport(join(root, path), { configFile: false, logLevel: 'silent' })).module;
 const { readRecipeTopics } = await loadRecipeSource('scripts/recipe-topics.ts');
 const topicDirs = readRecipeTopics(root);
@@ -286,6 +291,12 @@ const scenarios = {
           && Boolean(composer?.compareDocumentPosition(list) & Node.DOCUMENT_POSITION_FOLLOWING);
       }), true);
     });
+    await step('empty app renderers leave the header and composer hidden', async () => {
+      await page.goto(`${url}?hide-renderers`);
+      await preview.getByText(/History 36/).waitFor();
+      assert.equal(await preview.locator('.sendbird-conversation__channel-header').count(), 0);
+      assert.equal(await input.count(), 0);
+    });
   },
 
   'theme-variables-and-css': async ({ page, url, step, width }) => {
@@ -334,6 +345,18 @@ const scenarios = {
       assertPalette(styles);
       assert.deepEqual([styles.incoming.radius, styles.incoming.padding, styles.incoming.fontSize, styles.incoming.lineHeight],
         ['12px', '12px 16px', '16px', '24px']);
+    });
+    await step('links, mentions and the edited label inherit the bubble typography', async () => {
+      const first = page.locator('.sendbird-text-message-item-body').first();
+      for (const fragment of [
+        first.getByRole('link', { name: 'https://example.com/checklist' }).getByTestId('sendbird-link-label__label'),
+        first.getByText('@Sam', { exact: true }),
+        first.getByText('(edited)', { exact: true }),
+      ]) {
+        await fragment.waitFor();
+        const { fontSize, lineHeight } = await style(fragment);
+        assert.deepEqual([fontSize, lineHeight], ['16px', '24px']);
+      }
     });
     await step('reacted bubble keeps a flat bottom edge and the placeholder stays readable', async () => {
       const reacted = page.locator('.sendbird-text-message-item-body.reactions');
@@ -940,7 +963,7 @@ const scenarios = {
       await page.getByText('SKU LAMP-01', { exact: true }).waitFor();
     });
     const confirmation = page.getByText('Leave this channel?', { exact: true });
-    async function holdProduct(preview) {
+    async function holdProduct(preview, duringHold) {
       await preview.scrollIntoViewIfNeeded();
       const bounds = await preview.boundingBox();
       assert.ok(bounds);
@@ -950,7 +973,10 @@ const scenarios = {
         await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{
           x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2, id: 1,
         }] });
-        if (width === 390) {
+        if (duringHold) {
+          await duringHold();
+          await session.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] });
+        } else if (width === 390) {
           await confirmation.waitFor();
           await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
         } else {
@@ -986,6 +1012,28 @@ const scenarios = {
       assert.equal(await page.getByTestId('product-operations').textContent(), 'A: leaveChannel');
     });
     if (width === 390) {
+      await step('a new stock preview cancels the open leave dialog and any pending hold', async () => {
+        await page.goto(url);
+        const newProduct = page.getByRole('button', { name: 'New product card', exact: true });
+        const plainText = page.getByRole('button', { name: 'Plain text', exact: true });
+        await newProduct.click();
+        await holdProduct(productRow);
+        await plainText.evaluate(button => button.click());
+        await stockWorkshop.waitFor();
+        await confirmation.waitFor({ state: 'hidden' });
+        await newProduct.click();
+        await productRow.waitFor();
+        assert.equal(await confirmation.count(), 0, 'the prior dialog must stay closed when the product row returns');
+        await holdProduct(productRow, async () => {
+          await plainText.evaluate(button => button.click());
+          await stockWorkshop.waitFor();
+          // Wait beyond the hold threshold before the next product message restores the row.
+          await page.waitForTimeout(1100);
+          await newProduct.click();
+          await productRow.waitFor();
+          assert.equal(await confirmation.count(), 0, 'the prior hold must stay cancelled when the product row returns');
+        });
+      });
       await step('a failed mobile leave keeps its dialog open and a double click retries once', async () => {
         await page.goto(`${url}?wrapper&leave-fails-once`);
         const preview = page.getByRole('button', { name: /Conversation A, Product: Fixture lamp/ });
@@ -1077,9 +1125,18 @@ const scenarios = {
       await dismiss();
       await panel('B').getByText('Message in B', { exact: true }).waitFor();
     });
+    await step('B disables reaction and reply even when the app enables both', async () => {
+      await page.goto(`${url}?provider-enabled`);
+      await message('B').hover();
+      assert.equal(await reaction('B').count(), 0);
+      await menu('B').click();
+      await page.getByText('Copy', { exact: true }).waitFor();
+      assert.equal(await page.getByText('Reply', { exact: true }).count(), 0);
+    });
   },
 
   'copy-message-id-menu': async ({ page, url, width, step }) => {
+    const resetClipboard = () => page.evaluate(() => navigator.clipboard.writeText('before'));
     await step('copyable GroupChannel wrapper keeps the stock menu and adds Copy message ID', async () => {
       await page.goto(`${url}?wrapper`);
       const wrapper = page.getByRole('region', { name: 'Copy wrapper' });
@@ -1089,6 +1146,7 @@ const scenarios = {
       assert.ok(items.some(item => item.trim() === 'Copy'));
       assert.ok(items.some(item => item.trim() === 'Reply'));
       const copyId = page.getByRole('menuitem', { name: 'Copy message ID', exact: true });
+      await resetClipboard();
       await copyId.click();
       await copyId.waitFor({ state: 'hidden' });
       assert.equal(await page.evaluate(() => navigator.clipboard.readText()), '101');
@@ -1171,6 +1229,7 @@ const scenarios = {
       await copy.waitFor();
       const box = await copy.boundingBox();
       assert.ok(box.x >= 0 && box.x + box.width <= width);
+      await resetClipboard();
       await copy.press('Enter');
       await page.getByText('Copied ID 101', { exact: true }).waitFor();
       await copy.waitFor({ state: 'hidden' });
@@ -1261,7 +1320,7 @@ const scenarios = {
         await reactions.setChecked(withReactions);
         await extended.check();
         await scenario.selectOption('other');
-        await page.evaluate(() => navigator.clipboard.writeText('before'));
+        await resetClipboard();
         await longPress();
         await mobileItems.filter({ hasText: 'Copy message ID' }).click();
         await page.getByText('Copied ID 101', { exact: true }).waitFor();
@@ -1299,7 +1358,7 @@ const scenarios = {
       await reactions.check();
       await scenario.selectOption('other');
       for (const key of ['Enter', 'Space']) {
-        await page.evaluate(() => navigator.clipboard.writeText('before'));
+        await resetClipboard();
         await longPress();
         await copyId.press(key);
         await expectCopied();
@@ -1319,7 +1378,7 @@ const scenarios = {
         assert.ok(dimensions.height <= 240 && dimensions.scrollHeight > dimensions.height);
         await copyId.scrollIntoViewIfNeeded();
         assert.ok(await sheet.evaluate(node => node.scrollTop > 0), 'sheet scrolls to the added item');
-        await page.evaluate(() => navigator.clipboard.writeText('before'));
+        await resetClipboard();
         await copyId.click();
         await expectCopied();
         return { reactionTop: reactionBox.y, ...dimensions };
@@ -1348,7 +1407,7 @@ const scenarios = {
         await cdp.send('Emulation.setTouchEmulationEnabled', { enabled: true });
         await scenario.selectOption('other');
         await reactions.uncheck();
-        await page.evaluate(() => navigator.clipboard.writeText('before'));
+        await resetClipboard();
         assert.ok((await hold(contextMenu)).includes('Copy message ID'));
         await touchStart(copyId);
         await touch('touchEnd');
@@ -1500,34 +1559,33 @@ const browser = await chromium.launch();
 report.browser = browser.version();
 try {
   for (const width of widths) {
-    const context = await browser.newContext({ viewport: { width, height: 900 }, timezoneId: 'UTC', locale: 'en-US', serviceWorkers: 'block' });
-    const browserErrors = [];
-    context.on('weberror', error => browserErrors.push(error.error().message));
-    context.on('console', message => {
-      if (message.type() !== 'error') return;
-      // The SDK stylesheet requests this blocked, optional font.
-      if (message.location().url.startsWith('https://fonts.googleapis.com/') && message.text().includes('ERR_BLOCKED_BY_CLIENT')) return;
-      browserErrors.push(message.text());
-    });
-    context.on('response', response => {
-      if (new URL(response.url()).origin === origin && response.status() >= 400) {
-        browserErrors.push(`${response.status()} ${response.url()}`);
-      }
-    });
-    await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin });
-    await context.route('**/*', route => {
-      const request = route.request();
-      const target = new URL(request.url());
-      if (target.origin === origin || target.protocol === 'data:' || target.protocol === 'blob:') return route.continue();
-      report.blocked.push({ origin: target.origin, type: request.resourceType() });
-      return route.abort('blockedbyclient');
-    });
-    await context.routeWebSocket(/.*/, socket => {
-      report.blocked.push({ origin: new URL(socket.url()).origin, type: 'websocket' });
-      socket.close();
-    });
     for (const [topic, run] of Object.entries(scenarios)) {
-      browserErrors.length = 0;
+      const context = await browser.newContext({ viewport: { width, height: 900 }, timezoneId: 'UTC', locale: 'en-US', serviceWorkers: 'block' });
+      const browserErrors = [];
+      context.on('weberror', error => browserErrors.push(error.error().message));
+      context.on('console', message => {
+        if (message.type() !== 'error') return;
+        // The SDK stylesheet requests this blocked, optional font.
+        if (message.location().url.startsWith('https://fonts.googleapis.com/') && message.text().includes('ERR_BLOCKED_BY_CLIENT')) return;
+        browserErrors.push(message.text());
+      });
+      context.on('response', response => {
+        if (new URL(response.url()).origin === origin && response.status() >= 400) {
+          browserErrors.push(`${response.status()} ${response.url()}`);
+        }
+      });
+      await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin });
+      await context.route('**/*', route => {
+        const request = route.request();
+        const target = new URL(request.url());
+        if (target.origin === origin || target.protocol === 'data:' || target.protocol === 'blob:') return route.continue();
+        report.blocked.push({ origin: target.origin, type: request.resourceType() });
+        return route.abort('blockedbyclient');
+      });
+      await context.routeWebSocket(/.*/, socket => {
+        report.blocked.push({ origin: new URL(socket.url()).origin, type: 'websocket' });
+        socket.close();
+      });
       const page = await context.newPage();
       page.setDefaultTimeout(6_000);
       const result = { topic, width, checks: [] };
@@ -1538,7 +1596,13 @@ try {
         result.checks.push(evidence === undefined ? name : { name, ...evidence });
       };
       try {
-        await run({ page, url: `${origin}/${topic}/`, width, step });
+        const url = `${origin}/${topic}/`;
+        await step('recipe entry renders without horizontal overflow', async () => {
+          await page.goto(url);
+          await page.getByRole('heading', { level: 1 }).waitFor();
+          assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+        });
+        await run({ page, url, width, step });
         await step('no browser errors, local HTTP failures or horizontal overflow', async () => {
           assert.deepEqual(browserErrors, [], browserErrors[0]);
           assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
@@ -1547,12 +1611,11 @@ try {
       } catch (error) {
         Object.assign(result, { status: 'FAIL', failedStep: current, error: error.message.split('\n')[0] });
       } finally {
-        await page.close();
+        await context.close();
       }
       report.scenarios.push(result);
       console.log(`${result.status} ${width}px ${topic} (${result.checks.length} checks)${result.error ? ` — ${result.failedStep}: ${result.error}` : ''}`);
     }
-    await context.close();
   }
 } finally {
   await browser.close();

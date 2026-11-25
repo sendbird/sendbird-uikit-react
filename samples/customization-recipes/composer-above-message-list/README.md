@@ -20,7 +20,7 @@ Mount `ReorderedChannel` from [integration.tsx](integration.tsx) under your auth
 
 ## What the smoke test checks
 
-At 1280px and 390px: stock order is header → list → composer and the reordered view is header → composer → list in DOM and on screen. The custom header and composer render once in the same order and replace their stock counterparts. The five states render, the list scrolls both ways, and one send adds exactly one message while all 36 history messages remain.
+At 1280px and 390px: stock order is header → list → composer and the reordered view is header → composer → list in DOM and on screen. The custom header and composer render once in the same order and replace their stock counterparts. A callback that returns `null` hides its section. The five states render, the list scrolls both ways, and one send adds exactly one message while all 36 history messages remain.
 
 Fixture-only: [fixture.tsx](fixture.tsx) replaces the Chat SDK connection, channel lookup, message collection and send response through `configureSession`. Reconnection, persistence and delivery to other devices are not verified. Toggling **Composer on top** remounts the layout, so scroll position is not kept across the toggle.
 

@@ -22,6 +22,11 @@
   font-size: 16px;
   line-height: 24px;
 }
+/* Inline UIKit labels have their own type size, including links, mentions and the edited marker. */
+.branded-chat.target .sendbird-text-message-item-body .sendbird-label {
+  font-size: inherit;
+  line-height: inherit;
+}
 /* Keep the flat bottom edge the stock stylesheet gives a bubble above its reaction row. */
 .branded-chat.target .sendbird-text-message-item-body.reactions {
   border-radius: 12px 12px 0 0;

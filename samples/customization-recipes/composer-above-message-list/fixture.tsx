@@ -117,11 +117,11 @@ function createSendbirdBoundary(record: RecordOperation) {
   };
 }
 
-export function SendbirdFixture({ record, scenario, reordered, customRenderers }: {
+export function SendbirdFixture({ record, scenario, reordered, rendererMode }: {
   record: RecordOperation;
   scenario: Scenario;
   reordered: boolean;
-  customRenderers: boolean;
+  rendererMode: 'default' | 'custom' | 'hidden';
 }) {
   const [boundary] = useState(() => createSendbirdBoundary(record));
   useEffect(() => boundary.setScenario(scenario), [boundary, scenario]);
@@ -130,8 +130,8 @@ export function SendbirdFixture({ record, scenario, reordered, customRenderers }
     sdkInitParams={{ localCacheEnabled: false }}
     uikitOptions={{ groupChannel: { enableTypingIndicator: true, typingIndicatorTypes: new Set([TypingIndicatorType.Text]) } }}>
     {reordered ? <ReorderedChannel channelUrl={channelUrl} disableMarkAsRead
-      renderChannelHeader={customRenderers ? () => <h2>App channel header</h2> : undefined}
-      renderMessageInput={customRenderers ? () => <button type="button">App composer</button> : undefined}
+      renderChannelHeader={rendererMode === 'hidden' ? () => null : rendererMode === 'custom' ? () => <h2>App channel header</h2> : undefined}
+      renderMessageInput={rendererMode === 'hidden' ? () => null : rendererMode === 'custom' ? () => <button type="button">App composer</button> : undefined}
       renderMessageContent={props => <div data-testid="custom-content"><MessageContent {...props} /></div>} /> : (
       <GroupChannelProvider channelUrl={channelUrl} disableMarkAsRead>
         <GroupChannelUI />
