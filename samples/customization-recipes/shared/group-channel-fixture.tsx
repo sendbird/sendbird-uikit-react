@@ -29,12 +29,15 @@ const other = { userId: 'other', nickname: 'Alex', profileUrl: '', isActive: tru
 const fixtureTime = Date.parse('2026-11-18T12:00:00Z');
 export const fixtureAppId = '00000000-0000-4000-8000-000000000009';
 
+type FixtureReaction = { key: string; userIds: string[]; count: number; hasCurrentUserReacted: boolean };
+type ReactionSummary = Pick<FixtureReaction, 'count' | 'hasCurrentUserReacted'>;
+
 function makeMessage(id: number, text: string, url: string, sender = other, status = 'succeeded', parentMessage?: FixtureMessage) {
   const message = {
     messageId: id, reqId: `req-${id}`, channelUrl: url, channelType: 'group', messageType: 'user',
     message: text, createdAt: fixtureTime + id * 1000, updatedAt: 0, customType: '', data: '',
     extendedMessagePayload: {}, sendingStatus: status, parentMessageId: parentMessage?.messageId ?? 0, parentMessage,
-    sender, reactions: [] as { key: string; userIds: string[] }[], mentionedUsers: [], mentionType: 'users',
+    sender, reactions: [] as FixtureReaction[], mentionedUsers: [], mentionType: 'users',
     threadInfo: { replyCount: 0 }, metaArrays: [],
     isAdminMessage: () => false, isUserMessage: () => true, isFileMessage: () => false,
     isMultipleFilesMessage: () => false, isResendable: () => false, getMetaArraysByKeys: () => [],
@@ -52,7 +55,7 @@ type ChannelSeed = {
   text?: string;
   customType?: string;
   data?: string;
-  like?: boolean;
+  like?: boolean | ReactionSummary;
   admin?: boolean;
   leave?: () => Promise<void>;
 };
@@ -63,7 +66,10 @@ function createChannel(screen: ScreenId, record: RecordOperation, historySize: n
   const first = makeMessage(screen === 'A' ? 101 : 201, seed?.text ?? `Original message ${screen}`, url);
   first.customType = seed?.customType ?? '';
   first.data = seed?.data ?? '';
-  if (seed?.like) first.reactions = [{ key: 'like', userIds: [other.userId] }];
+  if (seed?.like) {
+    const summary = seed.like === true ? { count: 1, hasCurrentUserReacted: false } : seed.like;
+    first.reactions = [{ key: 'like', userIds: [other.userId], ...summary }];
+  }
   if (seed?.admin) {
     first.messageType = 'admin';
     first.isAdminMessage = () => true;
@@ -77,12 +83,14 @@ function createChannel(screen: ScreenId, record: RecordOperation, historySize: n
     const target = loaded.find(message => message.messageId === messageId);
     if (!target) return;
 
-    const userIds = new Set(target.reactions.find(reaction => reaction.key === key)?.userIds);
-    if (operation === 'addReaction') userIds.add(self.userId);
-    else userIds.delete(self.userId);
+    const prior = target.reactions.find(reaction => reaction.key === key);
+    const hasCurrentUserReacted = operation === 'addReaction';
+    const count = (prior?.count ?? 0) + Number(hasCurrentUserReacted) - Number(prior?.hasCurrentUserReacted ?? false);
+    const userIds = (prior?.userIds ?? []).filter(userId => userId !== self.userId);
+    if (hasCurrentUserReacted) userIds.push(self.userId);
 
     target.reactions = target.reactions.filter(reaction => reaction.key !== key);
-    if (userIds.size) target.reactions.push({ key, userIds: [...userIds] });
+    if (count > 0) target.reactions.push({ key, userIds, count, hasCurrentUserReacted });
 
     record({ screen, operation, messageId, emoji: key });
     active?.onMessagesUpdated?.({ source: CollectionEventSource.EVENT_MESSAGE_UPDATED }, channel, [target]);

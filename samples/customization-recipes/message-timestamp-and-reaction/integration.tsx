@@ -6,21 +6,21 @@ import './reaction.css';
 
 function LikeReaction(props: EmojiReactionsProps) {
   const { stringSet } = useLocalization();
-  const { message, userId, toggleReaction } = props;
+  const { message, toggleReaction } = props;
   const [reaction] = message.reactions;
   if (!toggleReaction || reaction?.key !== 'like' || message.reactions.length !== 1) {
     return <EmojiReactions {...props} />;
   }
 
-  const selected = reaction.userIds.includes(userId);
+  const selected = reaction.hasCurrentUserReacted;
   return (
     <div className="recipe-reaction-strip">
       <button type="button" className="recipe-reaction-chip" aria-pressed={selected}
-        aria-label={`${stringSet.FEEDBACK_LIKE} ${reaction.userIds.length}`}
+        aria-label={`${stringSet.FEEDBACK_LIKE} ${reaction.count}`}
         onMouseDown={event => event.stopPropagation()}
         onTouchStart={event => event.stopPropagation()}
         onClick={() => toggleReaction(message, reaction.key, selected)}>
-        <span aria-hidden="true">♥</span> {reaction.userIds.length}
+        <span aria-hidden="true">♥</span> {reaction.count}
       </button>
     </div>
   );

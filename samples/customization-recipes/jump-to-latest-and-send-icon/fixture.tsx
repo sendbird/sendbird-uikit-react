@@ -116,11 +116,11 @@ function configureBoundary(onSend: SendListener): NonNullable<React.ComponentPro
   };
 }
 
-export function FixtureProvider({ children, onSend, theme, allowReplies }: PropsWithChildren<{
-  onSend: SendListener; theme: 'light' | 'dark'; allowReplies: boolean;
+export function FixtureProvider({ children, onSend, theme, allowReplies, mobile }: PropsWithChildren<{
+  onSend: SendListener; theme: 'light' | 'dark'; allowReplies: boolean; mobile: boolean;
 }>) {
   const [configureSession] = useState(() => configureBoundary(onSend));
-  return <SendbirdProvider appId={fixtureAppId} userId="self" theme={theme} configureSession={configureSession}
+  return <SendbirdProvider appId={fixtureAppId} userId="self" theme={theme} breakpoint={mobile ? "600px" : undefined} configureSession={configureSession}
     sdkInitParams={{ localCacheEnabled: false }}
     uikitOptions={{ groupChannel: { replyType: allowReplies ? 'quote_reply' : 'none', enableMention: true, enableVoiceMessage: false, input: { enableDocument: true } } }}>
     {children}

@@ -8,13 +8,19 @@ import { GroupChannelFixture } from '../shared/group-channel-fixture';
 import '../shared/page.css';
 import './style.css';
 
+const query = new URLSearchParams(location.search);
+
 function MountedRecipe() {
+  const [operations, setOperations] = useState<string[]>([]);
+  const like = query.has('sampled') ? { count: 20, hasCurrentUserReacted: true } : true;
   return <main aria-label="Mounted timestamp recipe" style={{ height: 580 }}>
-    <GroupChannelFixture record={() => {}} seed={{ like: true }} stringSet={new URLSearchParams(location.search).has('localized')
+    <GroupChannelFixture record={event => setOperations(items => [...items, event.operation])}
+      seed={{ like }} stringSet={query.has('localized')
       ? { ...secondsFormat, FEEDBACK_LIKE: 'J’aime' } : secondsFormat}
       uikitOptions={{ groupChannel: { enableReactions: true } }}>
       <ChannelWithMessageDetails channelUrl="fixture-A" />
     </GroupChannelFixture>
+    <output data-testid="mounted-reactions">{operations.join(', ')}</output>
   </main>;
 }
 
@@ -45,4 +51,4 @@ function App() {
   </main>;
 }
 
-createRoot(document.getElementById('root')!).render(new URLSearchParams(location.search).has('wrapper') ? <MountedRecipe /> : <App />);
+createRoot(document.getElementById('root')!).render(query.has('wrapper') ? <MountedRecipe /> : <App />);

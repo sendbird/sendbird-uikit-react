@@ -32,11 +32,17 @@ const scenarios: { kind: MessageKind; label: string }[] = [
 
 function MountedRecipe() {
   const [operations, setOperations] = useState<string[]>([]);
-  const leaveAttempts = useRef(0);
+  const retry = useRef<(() => void) | null>(null);
+  const [retryPending, setRetryPending] = useState(false);
+  const failed = useRef(false);
   async function leaveWithOneFailure() {
-    const attempt = ++leaveAttempts.current;
-    await new Promise(resolve => setTimeout(resolve, 500));
-    if (attempt === 1) throw new Error('Synthetic leave failure');
+    if (!failed.current) {
+      failed.current = true;
+      throw new Error('Synthetic leave failure');
+    }
+    setRetryPending(true);
+    await new Promise<void>(resolve => { retry.current = resolve; });
+    setRetryPending(false);
   }
   return <main aria-label="Mounted product recipe">
     <GroupChannelFixture breakpoint="600px" record={event => setOperations(current => [...current, `${event.screen}: ${event.operation}`])} seed={{
@@ -46,6 +52,7 @@ function MountedRecipe() {
     }}>
       <ProductChat />
     </GroupChannelFixture>
+    {retryPending && <button type="button" hidden onClick={() => retry.current?.()}>Complete synthetic leave</button>}
     <output data-testid="product-operations">{operations.join(', ')}</output>
   </main>;
 }

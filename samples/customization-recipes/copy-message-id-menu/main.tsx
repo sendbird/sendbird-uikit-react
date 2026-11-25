@@ -18,6 +18,7 @@ const scenarios: { value: Scenario; label: string }[] = [
   { value: 'own', label: 'My delivered message' },
   { value: 'own-hide-delete', label: 'My message with Delete hidden on mobile' },
   { value: 'other', label: 'Someone else’s delivered message' },
+  { value: 'mismatched-owner', label: 'Someone else’s message marked as mine' },
   { value: 'other-reply', label: 'Someone else’s reply' },
   { value: 'other-parent-only', label: 'Reply outside a thread list' },
   { value: 'other-thread-only', label: 'Top-level message in a thread list' },
@@ -142,14 +143,18 @@ function Content({ extended, props, report, reactions, scenario }: DemoProps & {
 }
 
 function WrapperFixture() {
+  const [threadMessage, setThreadMessage] = useState<number>();
+  const threaded = query.has('thread');
   return <main className="copy-id-demo">
-    <GroupChannelFixture record={() => {}} uikitOptions={{ groupChannel: {
-      enableReactions: false, replyType: query.has('thread') ? 'thread' : 'quote_reply',
+    <GroupChannelFixture record={() => {}} breakpoint={threaded ? '600px' : undefined} uikitOptions={{ groupChannel: {
+      enableReactions: false, replyType: threaded ? 'thread' : 'quote_reply',
     } }}>
       <section aria-label="Copy wrapper" style={{ height: 600 }}>
-        <ChannelWithCopyMessageId channelUrl="fixture-A" />
+        <ChannelWithCopyMessageId channelUrl="fixture-A"
+          onReplyInThreadClick={threaded ? ({ message }) => setThreadMessage(message.messageId) : undefined} />
       </section>
     </GroupChannelFixture>
+    {threadMessage !== undefined && <output role="status">Opened thread for message {threadMessage}</output>}
   </main>;
 }
 

@@ -202,6 +202,13 @@ const scenarios = {
       await page.locator('.sendbird-message-input--textarea').waitFor();
       assert.ok(await page.getByTestId('sendbird-message-list-container').evaluate(node => node.clientHeight > 100));
     });
+    await step('sampled reaction members do not change the total or the current user’s state', async () => {
+      await page.goto(`${url}?wrapper&sampled`);
+      const liked = page.getByRole('button', { name: 'Like 20', exact: true, pressed: true });
+      await liked.click();
+      await page.getByRole('button', { name: 'Like 19', exact: true, pressed: false }).waitFor();
+      assert.equal(await page.getByTestId('mounted-reactions').textContent(), 'deleteReaction');
+    });
   },
 
   'composer-above-message-list': async ({ page, url, width, step }) => {
@@ -501,6 +508,12 @@ const scenarios = {
     const list = page.getByTestId('sendbird-message-list-container');
     const jump = page.getByRole('button', { name: 'Jump to latest' });
     const record = async () => JSON.parse((await page.getByTestId('sent-record').textContent()) || '{}');
+    const arrow = send.locator('.uikit-jump-send-icon');
+    const verticalDirection = () => arrow.evaluate(icon => {
+      const transforms = [icon, icon.closest('button')].map(node => getComputedStyle(node).transform)
+        .filter(value => value !== 'none');
+      return transforms.reduce((direction, value) => direction * new DOMMatrix(value).d, 1);
+    });
     const open = async () => { await page.goto(url); await page.getByText('History 24', { exact: true }).waitFor(); };
     const atBottom = () => page.waitForFunction(() => {
       const el = document.querySelector('[data-testid="sendbird-message-list-container"]');
@@ -530,12 +543,6 @@ const scenarios = {
     await step('the branded Send arrow stays upright in RTL with text or a staged file', async () => {
       await open();
       await page.evaluate(() => { document.documentElement.dir = 'rtl'; });
-      const arrow = send.locator('.uikit-jump-send-icon');
-      const verticalDirection = () => arrow.evaluate(icon => {
-        const transforms = [icon, icon.closest('button')].map(node => getComputedStyle(node).transform)
-          .filter(value => value !== 'none');
-        return transforms.reduce((direction, value) => direction * new DOMMatrix(value).d, 1);
-      });
       await editor.fill('RTL text');
       assert.equal(await verticalDirection(), 1, 'the text Send arrow flipped');
       await send.click();
@@ -549,6 +556,22 @@ const scenarios = {
       assert.deepEqual(await record(), { channel: 'fixture-channel', text: '', file: 'rtl.txt', mentions: [] });
       await open();
     });
+    if (width === 390) {
+      await step('the Send arrow stays upright in the installed mobile RTL file composer', async () => {
+        await page.goto(`${url}?mobile`);
+        await page.locator('.sendbird--mobile-mode').first().waitFor();
+        await page.evaluate(() => { document.documentElement.dir = 'rtl'; });
+        await page.locator('input[type=file]').setInputFiles({ name: 'mobile.txt', mimeType: 'text/plain', buffer: Buffer.from('Local RTL file') });
+        await page.getByText('mobile.txt', { exact: true }).waitFor();
+        await arrow.waitFor();
+        assert.equal(await arrow.evaluate(node => getComputedStyle(node).transform), 'none');
+        assert.equal(await verticalDirection(), 1);
+        await send.click();
+        await page.getByTestId('sent-record').filter({ hasText: 'mobile.txt' }).waitFor();
+        assert.deepEqual(await record(), { channel: 'fixture-channel', text: '', file: 'mobile.txt', mentions: [] });
+        await open();
+      });
+    }
     await step('copyable jump CSS hides the Send label and leaves host styles alone', async () => {
       const isolated = await page.context().newPage();
       try {
@@ -1046,6 +1069,8 @@ const scenarios = {
         assert.equal(await page.getByTestId('product-operations').textContent(), '');
         await leave.evaluate(button => { button.click(); button.click(); });
         assert.equal(await leave.isDisabled(), true);
+        assert.equal(await page.getByTestId('product-operations').textContent(), '');
+        await page.locator('button[hidden]').filter({ hasText: 'Complete synthetic leave' }).evaluate(button => button.click());
         await confirmation.waitFor({ state: 'hidden' });
         assert.equal(await page.getByTestId('product-operations').textContent(), 'A: leaveChannel');
       });
@@ -1137,6 +1162,21 @@ const scenarios = {
 
   'copy-message-id-menu': async ({ page, url, width, step }) => {
     const resetClipboard = () => page.evaluate(() => navigator.clipboard.writeText('before'));
+    const denyClipboard = () => page.evaluate(() => {
+      navigator.clipboard.writeText = async () => { throw new DOMException('Clipboard denied by test', 'NotAllowedError'); };
+    });
+    const openLongPress = async (body, menuItem) => {
+      await body.scrollIntoViewIfNeeded();
+      const box = await body.boundingBox();
+      assert.ok(box);
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      await page.mouse.down();
+      try {
+        await menuItem.waitFor();
+      } finally {
+        await page.mouse.up();
+      }
+    };
     await step('copyable GroupChannel wrapper keeps the stock menu and adds Copy message ID', async () => {
       await page.goto(`${url}?wrapper`);
       const wrapper = page.getByRole('region', { name: 'Copy wrapper' });
@@ -1152,13 +1192,22 @@ const scenarios = {
       assert.equal(await page.evaluate(() => navigator.clipboard.readText()), '101');
       await page.goto(url);
     });
-    await step('the copyable wrapper preserves the provider thread reply mode', async () => {
+    await step('thread mode forwards Reply in thread to the app callback', async () => {
       await page.goto(`${url}?wrapper&thread`);
       const wrapper = page.getByRole('region', { name: 'Copy wrapper' });
-      await wrapper.getByText('Original message A', { exact: true }).hover();
-      await wrapper.locator('.sendbird-message-content-menu__normal-menu .sendbird-iconbutton').click();
-      await page.getByRole('menuitem', { name: 'Reply in thread' }).waitFor();
+      const message = wrapper.getByText('Original message A', { exact: true });
+      const thread = page.getByRole('menuitem', { name: 'Reply in thread' });
+      if (width === 390) {
+        await page.locator('.sendbird--mobile-mode').first().waitFor();
+        await openLongPress(message, thread);
+      } else {
+        await message.hover();
+        await wrapper.locator('.sendbird-message-content-menu__normal-menu .sendbird-iconbutton').click();
+      }
+      await thread.waitFor();
       assert.equal(await page.getByRole('menuitem', { name: 'Copy message ID' }).count(), 0);
+      await thread.click();
+      await page.getByRole('status').filter({ hasText: 'Opened thread for message 101' }).waitFor();
       await page.goto(url);
     });
     const scenario = page.getByLabel('Message', { exact: true });
@@ -1188,6 +1237,12 @@ const scenarios = {
     };
     await step('ID action is added only to delivered top-level messages; other items unchanged', async () => {
       await compareWithStock(states, readDesktopMenu);
+    });
+    await step('a sender mismatch keeps Edit and Delete hidden', async () => {
+      await scenario.selectOption('mismatched-owner');
+      const labels = await readDesktopMenu();
+      assert.ok(labels.includes('Copy message ID'));
+      assert.ok(!labels.includes('Edit') && !labels.includes('Delete'));
     });
     await step('parent, thread-list, channel and reply-mode exclusions each keep the stock menu', async () => {
       await compareWithStock(excluded, readDesktopMenu);
@@ -1259,20 +1314,21 @@ const scenarios = {
           return labels;
         });
       });
+      await step('desktop clipboard rejection reports failure and keeps the menu open', async () => {
+        await scenario.selectOption('other');
+        await extended.check();
+        await denyClipboard();
+        await body.hover();
+        await content.locator('.sendbird-message-content-menu .sendbird-message-menu .sendbird-iconbutton').click();
+        const item = page.getByRole('menuitem', { name: 'Copy message ID' });
+        await item.click();
+        await page.getByText('Clipboard is unavailable', { exact: true }).waitFor();
+        assert.ok(await item.isVisible());
+      });
       return;
     }
     const mobileItems = page.locator('.sendbird-message__mobile-context-menu [role="menuitem"], .sendbird-message__bottomsheet--action');
-    const longPress = async () => {
-      await body.scrollIntoViewIfNeeded();
-      const box = await body.boundingBox();
-      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-      await page.mouse.down();
-      try {
-        await mobileItems.first().waitFor();
-      } finally {
-        await page.mouse.up();
-      }
-    };
+    const longPress = () => openLongPress(body, mobileItems.first());
     const closeMobileMenu = async () => {
       await page.locator('.sendbird-bottomsheet__backdrop, .sendbird-dropdown__menu-backdrop').first().click({ position: { x: 4, y: 4 } });
       await mobileItems.first().waitFor({ state: 'detached' });
@@ -1426,9 +1482,7 @@ const scenarios = {
       }
     });
     await step('clipboard rejection reports failure and keeps the bottom sheet open', async () => {
-      await page.evaluate(() => {
-        navigator.clipboard.writeText = async () => { throw new DOMException('Clipboard denied by test', 'NotAllowedError'); };
-      });
+      await denyClipboard();
       await longPress();
       await copyId.press('Enter');
       await page.getByText('Clipboard is unavailable', { exact: true }).waitFor();

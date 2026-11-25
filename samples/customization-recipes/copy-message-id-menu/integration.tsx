@@ -105,8 +105,8 @@ export function CopyIdMessageContent({ onCopyResult, ...props }: MessageContentP
 }
 
 // Mount inside your authenticated SendbirdProvider.
-export function ChannelWithCopyMessageId({ channelUrl, replyType, onCopyResult }:
-  Pick<ComponentProps<typeof GroupChannel>, 'channelUrl' | 'replyType'> & CopyResultProps) {
-  return <GroupChannel channelUrl={channelUrl} replyType={replyType}
+export function ChannelWithCopyMessageId({ onCopyResult, ...props }:
+  Omit<ComponentProps<typeof GroupChannel>, 'renderMessageContent'> & CopyResultProps) {
+  return <GroupChannel {...props}
     renderMessageContent={props => <CopyIdMessageContent {...props} onCopyResult={onCopyResult} />} />;
 }

@@ -24,6 +24,8 @@ function fixtureMessage(selectedKeys: ReadonlySet<string>, mode: ReactionMode = 
   const reactions = keys.map(key => ({
     key,
     userIds: selectedKeys.has(key) ? [senderId, 'third', userId] : [senderId, 'third'],
+    count: selectedKeys.has(key) ? 3 : 2,
+    hasCurrentUserReacted: selectedKeys.has(key),
   }));
   return {
     messageId: 101,

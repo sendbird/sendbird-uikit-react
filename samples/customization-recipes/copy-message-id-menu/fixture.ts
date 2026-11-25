@@ -4,7 +4,7 @@ import type { MessageContentProps } from '@sendbird/uikit-react/ui/MessageConten
 
 export type Scenario = 'own' | 'other' | 'other-reply' | 'other-parent-only' | 'other-thread-only'
   | 'other-ephemeral' | 'other-broadcast' | 'other-thread-mode' | 'other-jump-parent'
-  | 'own-hide-delete' | 'pending' | 'failed';
+  | 'own-hide-delete' | 'mismatched-owner' | 'pending' | 'failed';
 
 const fixtureChannel = {
   url: 'recipe-action-menu',
@@ -53,5 +53,5 @@ export function menuFixture(scenario: Scenario): Pick<MessageMenuProps, 'channel
     isEphemeral: scenario === 'other-ephemeral',
     isBroadcast: scenario === 'other-broadcast',
   } as NonNullable<MessageMenuProps['channel']>;
-  return { channel, message, isByMe, replyType: scenario === 'other-thread-mode' ? 'THREAD' : 'QUOTE_REPLY', inThreadList };
+  return { channel, message, isByMe: isByMe || scenario === 'mismatched-owner', replyType: scenario === 'other-thread-mode' ? 'THREAD' : 'QUOTE_REPLY', inThreadList };
 }

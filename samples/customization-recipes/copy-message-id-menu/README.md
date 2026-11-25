@@ -27,7 +27,7 @@ The extension applies only when all of these hold. Other messages use the stock 
 - a top-level message (no parent, not in a thread list) in a group channel that is not ephemeral or broadcast
 - `replyType` is `QUOTE_REPLY`
 
-The wrapper inherits the provider's reply mode. You can pass `replyType` to set a mode for this channel explicitly. For example, a threaded channel keeps its **Reply in thread** action.
+The wrapper inherits the provider's reply mode. You can pass `replyType` to set a mode for this channel explicitly. Pass your app’s `onReplyInThreadClick` callback to keep **Reply in thread** wired to its thread view. The wrapper forwards channel props and supplies `renderMessageContent` itself.
 
 The desktop menu also uses the stock rendering when UIKit supplies `onMoveToParentMessage`.
 

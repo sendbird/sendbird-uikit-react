@@ -70,7 +70,8 @@ export function MessageFixture({ custom, long, mixed, onOperation }: Props) {
     sendingStatus: 'succeeded', parentMessageId: 0,
     sender: { userId: 'other', nickname: 'Alex', profileUrl: '' },
     reactions: [
-      { key: 'like', userIds: selected ? ['other', 'third', 'self'] : ['other', 'third'] },
+      { key: 'like', userIds: selected ? ['other', 'third', 'self'] : ['other', 'third'],
+        count: selected ? 3 : 2, hasCurrentUserReacted: selected },
       ...(mixed ? [{ key: 'curious', userIds: ['other'] }] : []),
     ],
     mentionedUsers: [], threadInfo: { replyCount: 0 },

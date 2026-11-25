@@ -27,7 +27,7 @@ function App() {
       <a href={historyHref(false)} aria-current={atOlder ? undefined : 'page'}>At the latest message</a>
       <a href={historyHref(true)} aria-current={atOlder ? 'page' : undefined}>At History 12</a>
     </nav>
-    <FixtureProvider onSend={setSent} theme={theme} allowReplies={!query.has('no-replies')}>
+    <FixtureProvider onSend={setSent} theme={theme} allowReplies={!query.has('no-replies')} mobile={query.has('mobile')}>
       <StockConversation channelUrl="fixture-channel" startingPoint={atOlder ? olderStartingPoint : undefined} />
     </FixtureProvider>
     <h2>Last local send call</h2>

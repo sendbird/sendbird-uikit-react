@@ -15,7 +15,7 @@ Click the **Upgrade Lab** channel preview, toggle the heart twice, then type a d
 3. Import only the package's published subpaths, as in [integration.tsx](integration.tsx). For example, `MessageBody` is a named export of `@sendbird/uikit-react/ui/MessageContent`; there is no `ui/MessageBody` entry point.
 4. Commit the dependency and lockfile change alone, then re-run your chat checks: channel preview selection, stock message rendering, reactions and send.
 
-To compare two pins with this package, install the other pair with `--save-exact`, then run `npm run build` and `npm run smoke`. The smoke test fails if the installed versions differ from `package.json` or UIKit resolves a different Chat SDK version. Choose a Chat SDK pin within UIKit’s supported range to avoid a separate nested version.
+To compare two pins with this package, install the other pair with `--save-exact`, then run `npm run smoke`, which builds the sample first. The smoke test fails if the installed versions differ from `package.json` or UIKit resolves a different Chat SDK version. Choose a Chat SDK pin within UIKit’s supported range to avoid a separate nested version.
 
 ## 2. Migrate legacy channel modules
 
@@ -25,7 +25,7 @@ To compare two pins with this package, install the other pair with `--save-exact
 | `@sendbird/uikit-react/ChannelList`, `ChannelList/context` | `@sendbird/uikit-react/GroupChannelList`, `GroupChannelList/context` | Selection, preview, unread count, ordering and filters |
 | A custom message view through `renderMessage` | `GroupChannel` still supports `renderMessage`, but it now renders the whole message item: wrap custom children in `GroupChannel/components/Message`. For content-only changes, use `renderMessageContent` with `MessageContent`. | Sender, body, timestamp, reactions, menu, quotes and attachments |
 
-If you use the all-in-one `App` and still need the legacy modules during the transition, `enableLegacyChannelModules` keeps them. When you move custom send code, use the params-based `sendUserMessage` and `updateUserMessage` actions, which return promises. [Repository migration notes](../../../MIGRATION_COLLECTION.md#migrate-channel-to-groupchannel) · [GroupChannel migration guide](https://sendbird.com/docs/chat/uikit/v3/react/miscellaneous/group-channel-migration-guide)
+If you use the all-in-one `App` and still need the legacy modules during the transition, `enableLegacyChannelModules` keeps them. When you move custom send code, use `sendUserMessage(params)` and `updateUserMessage(messageId, params)`. Both actions return promises. [Repository migration notes](../../../MIGRATION_COLLECTION.md#migrate-channel-to-groupchannel) · [GroupChannel migration guide](https://sendbird.com/docs/chat/uikit/v3/react/miscellaneous/group-channel-migration-guide)
 
 ## Public API
 
