@@ -46,6 +46,10 @@ The client plugin runs local shell scripts as hooks. Review [What runs on your m
 or if you're using npm
 `npm i @sendbird/uikit-react`
 
+## Next.js
+
+For a Next.js App Router app, see [sendbird-uikit-nextjs-sample](https://github.com/sendbird/sendbird-uikit-nextjs-sample). A Route Handler issues a Sendbird session token for the signed-in user, so the API token stays on the server, and UIKit loads in the browser only through `next/dynamic` with `ssr: false`.
+
 ## Getting Started
 
 With Sendbird UI Kit React, we export these components:
