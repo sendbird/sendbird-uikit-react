@@ -26,4 +26,5 @@
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: minmax(120px, 30%) minmax(0, 1fr);
   }
+  .product-chat > .sendbird-channel-list:only-child { grid-row: 1 / -1; }
 }

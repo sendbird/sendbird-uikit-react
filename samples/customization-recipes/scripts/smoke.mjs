@@ -1035,6 +1035,19 @@ const scenarios = {
       assert.equal(await page.getByTestId('product-operations').textContent(), 'A: leaveChannel');
     });
     if (width === 390) {
+      await step('the UIKit mobile back arrow returns to the list and another channel opens', async () => {
+        await page.goto(`${url}?wrapper`);
+        const conversation = page.locator('.sendbird-conversation');
+        await conversation.getByText('SKU LAMP-01', { exact: true }).waitFor();
+        await conversation.locator('.sendbird-chat-header__icon_back').click();
+        await conversation.waitFor({ state: 'detached' });
+        assert.ok(await page.locator('.product-chat > .sendbird-channel-list').evaluate(list =>
+          list.getBoundingClientRect().height >= list.parentElement.getBoundingClientRect().height * .95),
+        'the list should fill the chat after returning');
+        const next = page.getByRole('link', { name: /Conversation B/ });
+        await next.click();
+        await conversation.getByText('Original message B', { exact: true }).waitFor();
+      });
       await step('a new stock preview cancels the open leave dialog and any pending hold', async () => {
         await page.goto(url);
         const newProduct = page.getByRole('button', { name: 'New product card', exact: true });
@@ -1067,8 +1080,11 @@ const scenarios = {
         await page.getByRole('alert').getByText('Unable to leave this channel. Try again.', { exact: true }).waitFor();
         assert.equal(await confirmation.isVisible(), true);
         assert.equal(await page.getByTestId('product-operations').textContent(), '');
+        const attempts = page.getByTestId('leave-attempts');
+        assert.equal(await attempts.textContent(), '1', 'the initial attempt reached the SDK boundary');
         await leave.evaluate(button => { button.click(); button.click(); });
         assert.equal(await leave.isDisabled(), true);
+        assert.equal(await attempts.textContent(), '2', 'only one retry may reach the SDK boundary');
         assert.equal(await page.getByTestId('product-operations').textContent(), '');
         await page.locator('button[hidden]').filter({ hasText: 'Complete synthetic leave' }).evaluate(button => button.click());
         await confirmation.waitFor({ state: 'hidden' });

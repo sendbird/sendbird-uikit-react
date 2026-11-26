@@ -34,8 +34,10 @@ function MountedRecipe() {
   const [operations, setOperations] = useState<string[]>([]);
   const retry = useRef<(() => void) | null>(null);
   const [retryPending, setRetryPending] = useState(false);
+  const [leaveAttempts, setLeaveAttempts] = useState(0);
   const failed = useRef(false);
   async function leaveWithOneFailure() {
+    setLeaveAttempts(attempts => attempts + 1);
     if (!failed.current) {
       failed.current = true;
       throw new Error('Synthetic leave failure');
@@ -53,6 +55,7 @@ function MountedRecipe() {
       <ProductChat />
     </GroupChannelFixture>
     {retryPending && <button type="button" hidden onClick={() => retry.current?.()}>Complete synthetic leave</button>}
+    {query.has('leave-fails-once') && <output data-testid="leave-attempts">{leaveAttempts}</output>}
     <output data-testid="product-operations">{operations.join(', ')}</output>
   </main>;
 }
