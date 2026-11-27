@@ -1,0 +1,15 @@
+h2 { margin: 24px 0 10px; }
+h3 { margin: 0 0 7px; font-size: .9rem; }
+.examples { border: 1px solid #bbcfc2; border-radius: 12px; }
+.message-example { padding: 10px 12px 14px; border-bottom: 1px solid #e1eae3; }
+.message-example:last-child { border-bottom: 0; }
+.fixture-viewer-exit { position: fixed; left: 12px; bottom: 12px; z-index: 100001; padding: 8px 10px; border: 1px solid #173b29; border-radius: 6px; color: #173b29; background: #fff; font: inherit; }
+.demo-panes { display: grid; grid-template-columns: minmax(0, 270px) minmax(0, 1fr); gap: 12px; }
+.channel-list-pane, .message-pane { min-width: 0; min-height: 226px; background: white; border: 1px solid #c5d5e1; border-radius: 8px; }
+.channel-list-pane h3, .message-pane h3 { margin: 0; padding: 12px; font-size: 16px; }
+.channel-list-pane.sendbird-channel-list { width: auto; overflow: visible; }
+.channel-list-pane .sendbird-channel-list__body { overflow: visible; height: auto; }
+.channel-list-pane .sendbird-channel-preview { min-width: 0; }
+.channel-list-pane .sendbird-channel-preview:focus-visible { outline: 2px solid #1061a4; outline-offset: -2px; }
+.message-pane .sendbird-conversation__messages { padding: 0 12px; }
+@media (max-width: 620px) { .demo-panes { grid-template-columns: 1fr; } .channel-list-pane, .message-pane { min-height: 160px; } }

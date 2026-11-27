@@ -1,0 +1,17 @@
+/* Page shell shared by every recipe. Recipe-specific styles live next to each recipe. */
+* { box-sizing: border-box; }
+body { margin: 0; color: #182536; background: #f4f7fa; font: 16px/1.45 system-ui, sans-serif; }
+main { max-width: 900px; margin: 24px auto; padding: 20px; border-radius: 12px; background: #fff; }
+.recipe-back { display: inline-block; margin-bottom: 8px; color: #245786; font-size: 14px; }
+h1 { margin: 0 0 16px; font-size: clamp(22px, 4vw, 28px); line-height: 1.2; }
+h2 { font-size: 16px; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-bottom: 14px; }
+.controls label { display: inline-flex; align-items: center; gap: 6px; }
+.controls button, .controls select { font: inherit; }
+.controls button { padding: 5px 9px; border: 1px solid #9baec2; border-radius: 5px; color: #1f405a; background: #fff; }
+.controls button[aria-pressed="true"] { color: #fff; background: #16548c; border-color: #16548c; }
+.controls a { color: #16548c; padding: 4px 6px; }
+.controls a[aria-current="page"] { font-weight: 650; background: #deedf8; border-radius: 4px; }
+.log { overflow-wrap: anywhere; font: 13px/1.4 ui-monospace, monospace; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 600px) { main { margin: 0; padding: 14px; border-radius: 0; } }

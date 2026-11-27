@@ -1,0 +1,57 @@
+/* Give the copied GroupChannel a definite height for its scrollable list. */
+.branded-chat.target { height: min(640px, 100dvh); min-width: 0; }
+
+/* Published Sendbird variables; palette changes also affect other light-theme UI. */
+.branded-chat:is(.tokens,.target) {
+  --sendbird-font-family-default: Arial, sans-serif;
+  --sendbird-light-primary-300: #166534;
+  --sendbird-light-primary-400: #14532d;
+  --sendbird-light-background-100: #e2e8f0;
+  --sendbird-light-background-200: #cbd5e1;
+  --sendbird-light-onlight-01: #0f172a;
+  --sendbird-light-ondark-01: #ffffff;
+  /* Also the composer placeholder and border color; keep at least 4.5:1 on white. */
+  --sendbird-light-onlight-03: #64748b;
+  --sendbird-message-input-border-active: #166534;
+  --sendbird-light-shadow-message-input: 0 0 0 3px #bbf7d0;
+}
+/* Geometry and type size have literal values in the installed default CSS. */
+.branded-chat.target .sendbird-text-message-item-body {
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 16px;
+  line-height: 24px;
+}
+/* Inline UIKit labels have their own type size, including links, mentions and the edited marker. */
+.branded-chat.target .sendbird-text-message-item-body .sendbird-label {
+  font-size: inherit;
+  line-height: inherit;
+}
+/* Keep the flat bottom edge the stock stylesheet gives a bubble above its reaction row. */
+.branded-chat.target .sendbird-text-message-item-body.reactions {
+  border-radius: 12px 12px 0 0;
+}
+/* Thread parent messages keep their fully rounded reaction bubble. */
+.branded-chat.target .sendbird-parent-message-info .sendbird-text-message-item-body.reactions {
+  border-radius: 12px;
+}
+.branded-chat.target .sendbird-message-input .sendbird-message-input--textarea {
+  min-height: 56px;
+  border-radius: 12px;
+  padding: 15px 64px 15px 16px;
+  font-size: 16px;
+  line-height: 24px;
+}
+/* Match UIKit's layout direction; the editor's dir=auto controls draft text independently. */
+[dir="rtl"] .branded-chat.target .sendbird-message-input .sendbird-message-input--textarea {
+  padding-right: 16px;
+  padding-left: 64px;
+}
+/* With a staged file, UIKit moves the placeholder below the file preview; keep its stock position. */
+.branded-chat.target .sendbird-message-input:not(.sendbird-message-input--has-pending) .sendbird-message-input--placeholder {
+  top: 15px;
+  bottom: auto;
+  height: 24px;
+  font-size: 16px;
+  line-height: 24px;
+}

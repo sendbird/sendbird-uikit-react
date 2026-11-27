@@ -1,0 +1,7 @@
+main { max-width: 1150px; }
+.panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 12px; }
+.panel { min-width: 0; border: 1px solid #c5d5e1; border-radius: 8px; }
+.panel h2 { margin: 8px 12px 2px; }
+.panel p { margin: 0 12px 8px; font-size: .9rem; }
+.conversation { height: 330px; min-width: 0; border-top: 1px solid #cad5dc; }
+.conversation .sendbird-conversation { height: 100%; border-radius: 0 0 8px 8px; }

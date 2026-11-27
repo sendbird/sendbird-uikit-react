@@ -1,0 +1,24 @@
+.uikit-jump-conversation { min-width: 0; height: min(570px, 66dvh); border: 1px solid #c8d4e0; border-radius: 8px; background: white; }
+.uikit-jump-conversation .sendbird-conversation__messages { min-height: 0; }
+.uikit-jump-jump-row { display: flex; justify-content: flex-end; margin-block: 8px; }
+.uikit-jump-jump-row button { padding: 5px 8px; border: 1px solid #9baec2; border-radius: 5px; color: #1f405a; background: #fff; font: inherit; }
+.uikit-jump-jump-row button[aria-disabled="true"] { opacity: .55; }
+.sendbird-theme--dark .uikit-jump-conversation,
+.sendbird-theme--dark .uikit-jump-jump-row button {
+  border-color: var(--sendbird-dark-ondark-04);
+  color: var(--sendbird-dark-ondark-01);
+  background: var(--sendbird-dark-background-600);
+}
+.uikit-jump-send-icon { font-size: 20px; color: #16548c; font-weight: 700; display: inline-block; }
+/* UIKit rotates the entire RTL Send button. In the mobile file composer it uses a translation instead. */
+[dir="rtl"] .sendbird-message-input--send .uikit-jump-send-icon { transform: rotate(180deg); }
+[dir="rtl"] .sendbird--mobile-mode .sendbird-message-input--has-pending .sendbird-message-input--send .uikit-jump-send-icon,
+.sendbird--mobile-mode [dir="rtl"] .sendbird-message-input--has-pending .sendbird-message-input--send .uikit-jump-send-icon {
+  transform: none;
+}
+.sendbird-theme--dark .uikit-jump-send-icon { color: var(--sendbird-dark-primary-200); }
+/* Keep the accessible label in the DOM without displaying text beside the arrow. */
+.sendbird-message-input--send .uikit-jump-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* IconButton overrides the stock SVG fill with on-background-2 when disabled. */
+.sendbird-message-input--send:disabled .uikit-jump-send-icon { color: var(--sendbird-light-onlight-02); }
+.sendbird-theme--dark .sendbird-message-input--send:disabled .uikit-jump-send-icon { color: var(--sendbird-dark-ondark-02); }

@@ -1,0 +1,9 @@
+.copy-id-demo { max-width: 54rem; }
+.copy-id-demo section { padding: 1rem; border: 1px solid #d3deeb; border-radius: 0.65rem; }
+.copy-id-demo .controls { align-items: end; }
+.copy-id-demo .scenario { display: grid; gap: .25rem; }
+.copy-id-demo select { max-width: 100%; }
+.copy-id-demo .message { display: flex; justify-content: space-between; align-items: center; min-height: 6rem; gap: .75rem; }
+.copy-id-demo .message button { font: inherit; padding: .3rem .65rem; border: 1px solid #aabed6; border-radius: .35rem; background: #f4f7fb; }
+.copy-id-demo .message-content { padding: .5rem 0; border-top: 1px solid #e3eaf2; }
+.copy-id-demo .hint { margin: 0 0 .5rem; color: #4a5d72; }

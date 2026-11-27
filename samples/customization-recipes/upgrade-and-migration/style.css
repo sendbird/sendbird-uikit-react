@@ -1,0 +1,3 @@
+main { max-width: 640px; }
+main section { min-width: 0; margin-block-end: 16px; }
+main [data-testid="message"] { padding-block: 12px; overflow-x: hidden; }

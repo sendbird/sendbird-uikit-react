@@ -1,0 +1,39 @@
+.product-card { box-sizing: border-box; display: grid; gap: 4px; width: max-content; max-width: 100%; padding: 10px 14px; overflow-wrap: anywhere; border: 1px solid #abc5b5; border-radius: 8px; color: #1f4e35; background: #e7f3e9; }
+.product-card > span { font-size: .8rem; }
+.product-with-file { display: grid; gap: 6px; }
+
+.product-channel-entry { display: flex; align-items: center; background: #fff; }
+.product-channel-actions { flex: none; padding-inline-end: 4px; }
+.sendbird--mobile-mode .product-channel-actions { display: none; }
+.product-channel-row { box-sizing: border-box; width: 100%; display: flex; align-items: center; gap: 10px; text-align: start; min-width: 0; padding: 10px; border: 0; background: #fff; color: #1f4e35; font: inherit; }
+.product-channel-row[aria-current="true"] { background: #e6f0f7; }
+.product-channel-row:hover { background: #eef4f8; }
+.product-channel-row:focus-visible { outline: 2px solid #1061a4; outline-offset: -2px; }
+.product-channel-copy { min-width: 0; flex: 1; display: grid; gap: 2px; overflow-wrap: anywhere; }
+.product-channel-copy > span { font-size: .85rem; }
+.product-channel-unread { display: inline-flex; align-items: center; gap: 4px; }
+
+.sendbird-theme--dark .product-card,
+.sendbird-theme--dark .product-channel-entry,
+.sendbird-theme--dark .product-channel-row {
+  color: var(--sendbird-dark-ondark-01);
+  background: var(--sendbird-dark-background-600);
+}
+.sendbird-theme--dark .product-card { border-color: var(--sendbird-dark-ondark-04); }
+.sendbird-theme--dark .product-channel-row[aria-current="true"],
+.sendbird-theme--dark .product-channel-row:hover { background: var(--sendbird-dark-background-500); }
+.sendbird-theme--dark .product-channel-row:focus-visible { outline-color: var(--sendbird-dark-primary-200); }
+
+.product-chat {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  height: min(640px, 100dvh);
+}
+.product-chat > .sendbird-channel-list { width: auto; min-width: 0; }
+.product-chat > .sendbird-conversation { min-width: 0; }
+
+.sendbird--mobile-mode .product-chat {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(120px, 30%) minmax(0, 1fr);
+}
+.sendbird--mobile-mode .product-chat > .sendbird-channel-list:only-child { grid-row: 1 / -1; }

@@ -1,0 +1,17 @@
+main { max-width: 53rem; }
+.language, dl { display: flex; flex-wrap: wrap; column-gap: 1rem; }
+select, button { font: inherit; }
+dl { row-gap: .75rem; }
+dt { font-size: .85rem; }
+dd { margin: 0; }
+table { width: 100%; border-collapse: collapse; background: #fff; }
+td, th { border: 1px solid #d3deeb; padding: .4rem; text-align: left; }
+td button { border: 1px solid #aabed6; border-radius: .35rem; background: #f4f7fb; }
+.native-reply { width: 45%; }
+/* Show just the stock reply control in the comparison, leaving its UI and callback intact. */
+.native-reply .sendbird-message-content.incoming { display: block; min-width: 0; width: 100%; padding: 0; }
+.native-reply .sendbird-message-content.incoming > :not(.sendbird-message-content__middle),
+.native-reply .sendbird-message-content__middle > :not(.sendbird-ui-thread-replies) { display: none; }
+.native-reply .sendbird-message-content.incoming .sendbird-message-content__middle { width: 100%; min-width: 0; max-width: 100%; margin: 0; }
+.native-reply .sendbird-ui-thread-replies { height: auto; min-height: 26px; flex-wrap: wrap; gap: .2rem; margin: 0; }
+output { display: block; margin-top: .5rem; }

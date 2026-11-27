@@ -1,0 +1,18 @@
+.copy-id-bottom-sheet-item {
+  width: 100%;
+  border: 0;
+  padding-block: 0;
+  background: transparent;
+  text-align: start;
+}
+
+.copy-id-bottom-sheet-item:focus-visible {
+  outline-offset: -2px;
+}
+
+/* The portal is fixed to the bottom. Limit only the sheet extended by this recipe. */
+.sendbird-message__bottomsheet:has(.copy-id-bottom-sheet-item) {
+  box-sizing: border-box;
+  max-height: 100dvh;
+  overflow-y: auto;
+}

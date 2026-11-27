@@ -1,0 +1,17 @@
+main { max-width: 960px; }
+.theme-fixture { overflow: hidden; border: 1px solid #cfd6e0; background: white; }
+.scene { display: flex; flex-direction: column; height: 100%; min-width: 0; }
+.messages { flex: 1; min-width: 0; overflow: auto; padding: 24px; }
+.fixture-row { padding-block: 8px; }
+.composer-host { flex-shrink: 0; padding: 16px; }
+.composer-host output { display: block; min-height: 1.25rem; margin-top: 4px; font-size: .85rem; }
+.accent-comparison { margin-bottom: 8px; }
+.accent-comparison span, .chat-heading { display: flex; gap: 8px; align-items: center; }
+.chat-heading { padding: 12px 22px; border-bottom: 1px solid #e0e5eb; font-weight: 600; }
+.chat-heading span { display: inline-flex; }
+@media (max-width: 600px) {
+  /* UIKit's small-screen layout uses the viewport width. */
+  .theme-fixture { width: 100vw; height: min(660px, 100dvh); margin-left: -14px; border-inline: 0; }
+  .messages { padding: 24px 12px; }
+  .composer-host { padding: 12px; }
+}
