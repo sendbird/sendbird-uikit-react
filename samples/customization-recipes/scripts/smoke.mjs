@@ -15,6 +15,11 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const require = createRequire(join(root, 'package.json'));
 const widths = [1280, 390];
 const report = { versions: {}, publicImports: [], scenarios: [], blocked: [] };
+const recipesWithAppHeader = [
+  'message-timestamp-and-reaction',
+  'theme-variables-and-css',
+  'jump-to-latest-and-send-icon',
+];
 
 // 1. Published entry points and pinned versions -------------------------------------------
 const pkg = require('./package.json');
@@ -1006,8 +1011,14 @@ const scenarios = {
     await step('the copied product card and channel preview use dark UIKit backgrounds', async () => {
       await page.goto(`${url}?wrapper&theme=dark`);
       await expectDarkBackground(page.locator('.product-channel-entry'));
-      await expectDarkBackground(page.locator('.product-channel-row[aria-current="true"]'), 'rgb(44, 44, 44)');
-      await expectDarkBackground(page.locator('.product-card'));
+      const row = page.locator('.product-channel-row[aria-current="true"]');
+      const card = page.locator('.product-card');
+      await expectDarkBackground(row, 'rgb(44, 44, 44)');
+      await expectDarkBackground(card);
+      for (const element of [card, row]) {
+        assert.equal(await element.evaluate(node => getComputedStyle(node).color), 'rgba(255, 255, 255, 0.88)');
+      }
+      assert.equal(await card.evaluate(node => getComputedStyle(node).borderTopColor), 'rgba(255, 255, 255, 0.12)');
     });
     const confirmation = page.getByText('Leave this channel?', { exact: true });
     async function holdProduct(preview, duringHold) {
@@ -1250,6 +1261,22 @@ const scenarios = {
       await page.getByRole('status').filter({ hasText: 'Opened thread for message 101' }).waitFor();
       await page.goto(url);
     });
+    if (width === 390) {
+      await step('the mounted mobile channel copies the ID of a delivered message sent with the stock composer', async () => {
+        await page.goto(`${url}?wrapper&mobile-menu`);
+        const wrapper = page.getByRole('region', { name: 'Copy wrapper' });
+        await wrapper.locator('.sendbird-message-input--textarea').fill('Copy this delivered message');
+        await wrapper.locator('.sendbird-message-input--send').click();
+        const copyId = page.getByRole('menuitem', { name: 'Copy message ID', exact: true });
+        await resetClipboard();
+        await openLongPress(wrapper.getByText('Copy this delivered message', { exact: true }), copyId);
+        await page.getByRole('menuitem', { name: 'Edit', exact: true }).waitFor();
+        await copyId.click();
+        await copyId.waitFor({ state: 'hidden' });
+        assert.equal(await page.evaluate(() => navigator.clipboard.readText()), '102');
+        await page.goto(url);
+      });
+    }
     const scenario = page.getByLabel('Message', { exact: true });
     const extended = page.getByRole('checkbox', { name: 'Add ID action' });
     const trigger = page.getByRole('button', { name: 'Open menu' });
@@ -1704,6 +1731,12 @@ try {
           assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
         });
         await run({ page, url, width, step });
+        if (recipesWithAppHeader.includes(topic)) {
+          await step('the mounted channel renders the app-provided header', async () => {
+            await page.goto(`${url}?wrapper&app-header`);
+            await page.getByRole('heading', { name: 'App channel header', exact: true }).waitFor();
+          });
+        }
         await step('no browser errors, local HTTP failures or horizontal overflow', async () => {
           assert.deepEqual(browserErrors, [], browserErrors[0]);
           assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);

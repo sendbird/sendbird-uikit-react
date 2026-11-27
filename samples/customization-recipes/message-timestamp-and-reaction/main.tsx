@@ -10,6 +10,7 @@ import './style.css';
 
 const query = new URLSearchParams(location.search);
 const theme = query.get('theme') === 'dark' ? 'dark' : 'light';
+const renderAppHeader = query.has('app-header') ? () => <h2>App channel header</h2> : undefined;
 
 function MountedRecipe() {
   const [operations, setOperations] = useState<string[]>([]);
@@ -19,7 +20,7 @@ function MountedRecipe() {
       seed={{ like }} stringSet={query.has('localized')
       ? { ...secondsFormat, FEEDBACK_LIKE: 'J’aime' } : secondsFormat}
       uikitOptions={{ groupChannel: { enableReactions: true } }}>
-      <ChannelWithMessageDetails channelUrl="fixture-A" />
+      <ChannelWithMessageDetails channelUrl="fixture-A" renderChannelHeader={renderAppHeader} />
     </GroupChannelFixture>
     <output data-testid="mounted-reactions">{operations.join(', ')}</output>
   </main>;

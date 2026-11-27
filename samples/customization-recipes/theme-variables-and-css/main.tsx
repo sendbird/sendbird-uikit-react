@@ -13,6 +13,7 @@ const modes = [
 ] as const;
 const query = new URLSearchParams(location.search);
 const mode = modes.find(([value]) => value === query.get('mode'))?.[0] ?? 'target';
+const renderAppHeader = query.has('app-header') ? () => <h2>App channel header</h2> : undefined;
 
 createRoot(document.getElementById('root')!).render(
   <main>
@@ -26,7 +27,8 @@ createRoot(document.getElementById('root')!).render(
       ? <GroupChannelFixture record={() => {}} historySize={25}
           uikitOptions={{ groupChannel: { replyType: 'quote_reply', enableReactions: true } }}
           htmlTextDirection={query.has('rtl') ? 'rtl' : 'ltr'}>
-          <BrandedConversation channelUrl="fixture-A" aria-label="Branded chat" />
+          <BrandedConversation channelUrl="fixture-A" aria-label="Branded chat"
+            channelProps={{ renderChannelHeader: renderAppHeader }} />
         </GroupChannelFixture>
       : <ThemeFixture mode={mode} />}
   </main>,

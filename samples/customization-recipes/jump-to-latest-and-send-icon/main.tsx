@@ -9,6 +9,7 @@ import './style.css';
 const query = new URLSearchParams(location.search);
 const atOlder = query.has('older');
 const theme = query.get('theme') === 'dark' ? 'dark' : 'light';
+const renderAppHeader = query.has('app-header') ? () => <h2>App channel header</h2> : undefined;
 
 function historyHref(older: boolean) {
   const params = new URLSearchParams(query);
@@ -28,7 +29,8 @@ function App() {
       <a href={historyHref(true)} aria-current={atOlder ? 'page' : undefined}>At History 12</a>
     </nav>
     <FixtureProvider onSend={setSent} theme={theme} allowReplies={!query.has('no-replies')} mobile={query.has('mobile')}>
-      <StockConversation channelUrl="fixture-channel" startingPoint={atOlder ? olderStartingPoint : undefined} />
+      <StockConversation channelUrl="fixture-channel" startingPoint={atOlder ? olderStartingPoint : undefined}
+        renderChannelHeader={renderAppHeader} />
     </FixtureProvider>
     <h2>Last local send call</h2>
     <output className="log" data-testid="sent-record" aria-live="polite">

@@ -146,7 +146,7 @@ function WrapperFixture() {
   const [threadMessage, setThreadMessage] = useState<number>();
   const threaded = query.has('thread');
   return <main className="copy-id-demo">
-    <GroupChannelFixture record={() => {}} breakpoint={threaded ? '600px' : undefined} uikitOptions={{ groupChannel: {
+    <GroupChannelFixture record={() => {}} breakpoint={threaded || query.has('mobile-menu') ? '600px' : undefined} uikitOptions={{ groupChannel: {
       enableReactions: false, replyType: threaded ? 'thread' : 'quote_reply',
     } }}>
       <section aria-label="Copy wrapper" style={{ height: 600 }}>
