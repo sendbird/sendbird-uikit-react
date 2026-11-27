@@ -32,10 +32,8 @@
 .product-chat > .sendbird-channel-list { width: auto; min-width: 0; }
 .product-chat > .sendbird-conversation { min-width: 0; }
 
-@media (max-width: 600px) {
-  .product-chat {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(120px, 30%) minmax(0, 1fr);
-  }
-  .product-chat > .sendbird-channel-list:only-child { grid-row: 1 / -1; }
+.sendbird--mobile-mode .product-chat {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(120px, 30%) minmax(0, 1fr);
 }
+.sendbird--mobile-mode .product-chat > .sendbird-channel-list:only-child { grid-row: 1 / -1; }

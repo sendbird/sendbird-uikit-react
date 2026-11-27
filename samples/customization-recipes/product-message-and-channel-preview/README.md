@@ -29,7 +29,7 @@ Copy `integration.tsx`, `product.ts` and [product.css](product.css) together. Th
 
 - [product.ts](product.ts) defines the `Product` type, `encodeProduct` for the sender and `decodeProduct`, which checks the custom type, JSON shape, field types and lengths.
 - [integration.tsx](integration.tsx) provides `ProductMessageContent` (`MessageContent` with `renderMessageBody`, falling back to the `MessageBody` named export of `@sendbird/uikit-react/ui/MessageContent`) and `renderProductPreview` for `GroupChannelList` `renderChannelPreview`, which delegates non-product rows to `GroupChannelListItem`.
-- `ProductChat` mounts both under your authenticated `SendbirdProvider`. In mobile mode the UIKit back arrow clears the selection and returns to the list. Send a text or single-file message with `encodeProduct({ sku, title })` spread into its params, and keep a readable `message` text for clients that use the stock renderer.
+- `ProductChat` mounts both under your authenticated `SendbirdProvider`. The panels stack when the provider enables UIKit mobile mode, and the UIKit back arrow clears the selection and returns to the list. Send a text or single-file message with `encodeProduct({ sku, title })` spread into its params, and keep a readable `message` text for clients that use the stock renderer.
 
 The product row shows the unread count, and with `enableMention` the unread mention `@` (`@sendbird/uikit-react/ui/MentionUserLabel`), under the same rule as the stock row: when the channel is not selected or `uikitOptions.groupChannel.enableMarkAsUnread` is on, and never for an ephemeral channel. Channels without their own name (empty, `Group Channel` or `AI Chatbot Widget Channel`) keep the stock row, because UIKit builds their title from member nicknames and localized strings that are not a published API.
 
@@ -39,7 +39,7 @@ If you need the stock row’s full metadata, keep `GroupChannelListItem` and put
 
 ## What the smoke test checks
 
-A separate synthetic SDK session mounts `ProductChat` and switches between channels. It checks the stock desktop menu and touch-hold leave confirmation, each recording one local leave without opening the product conversation. The mobile case returns to the list with the UIKit back arrow, then opens another conversation. It also retries a synthetic leave failure and checks that two confirmation clicks send only one retry to the SDK boundary. When a plain last message replaces the product preview, any open leave confirmation or in-progress touch hold is cancelled. The custom list preview and product card use the same payload while the stock composer remains available.
+A separate synthetic SDK session mounts `ProductChat` and switches between channels. It checks the stock desktop menu and touch-hold leave confirmation, each recording one local leave without opening the product conversation. The mobile case returns to the list with the UIKit back arrow, then opens another conversation. The layout also follows a custom mobile breakpoint at 700px and disabled mobile mode at 390px. The test retries a synthetic leave failure and checks that two confirmation clicks send only one retry to the SDK boundary. When a plain last message replaces the product preview, any open leave confirmation or in-progress touch hold is cancelled. The custom list preview and product card use the same payload while the stock composer remains available.
 
 The decoder checks JSON shape, whitespace-only values, the 2,048-character payload limit and the SKU and title length limits before the browser runs.
 

@@ -1070,6 +1070,35 @@ const scenarios = {
       assert.equal(await page.getByTestId('product-operations').textContent(), 'A: leaveChannel');
     });
     if (width === 390) {
+      await step('the product layout follows the host UIKit mobile mode', async () => {
+        const list = page.locator('.product-chat > .sendbird-channel-list');
+        const conversation = page.locator('.product-chat > .sendbird-conversation');
+        const actions = page.getByRole('group', { name: 'Conversation A actions' });
+        const back = conversation.locator('.sendbird-chat-header__icon_back');
+        const viewport = page.viewportSize();
+        try {
+          await page.setViewportSize({ ...viewport, width: 700 });
+          await page.goto(`${url}?wrapper&breakpoint=768px`);
+          await back.waitFor();
+          assert.equal(await actions.count(), 0);
+          const mobileList = await list.boundingBox();
+          const mobileConversation = await conversation.boundingBox();
+          assert.equal(mobileList.x, mobileConversation.x, 'a custom mobile breakpoint should stack both panels');
+          assert.ok(mobileConversation.y >= mobileList.y + mobileList.height);
+
+          await page.setViewportSize(viewport);
+          await page.goto(`${url}?wrapper&desktop-mode`);
+          await actions.waitFor();
+          await conversation.waitFor();
+          assert.equal(await back.count(), 0);
+          const desktopList = await list.boundingBox();
+          const desktopConversation = await conversation.boundingBox();
+          assert.equal(desktopList.y, desktopConversation.y, 'disabling UIKit mobile mode should keep both columns');
+          assert.ok(desktopConversation.x >= desktopList.x + desktopList.width);
+        } finally {
+          await page.setViewportSize(viewport);
+        }
+      });
       await step('the UIKit mobile back arrow returns to the list and another channel opens', async () => {
         await page.goto(`${url}?wrapper`);
         const conversation = page.locator('.sendbird-conversation');

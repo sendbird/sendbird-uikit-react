@@ -32,6 +32,7 @@ const scenarios: { kind: MessageKind; label: string }[] = [
 ];
 
 function MountedRecipe() {
+  const breakpoint = query.has('desktop-mode') ? false : query.get('breakpoint') ?? '600px';
   const [operations, setOperations] = useState<string[]>([]);
   const retry = useRef<(() => void) | null>(null);
   const [retryPending, setRetryPending] = useState(false);
@@ -48,7 +49,7 @@ function MountedRecipe() {
     setRetryPending(false);
   }
   return <main aria-label="Mounted product recipe">
-    <GroupChannelFixture breakpoint="600px" theme={theme} record={event => setOperations(current => [...current, `${event.screen}: ${event.operation}`])} seed={{
+    <GroupChannelFixture breakpoint={breakpoint} theme={theme} record={event => setOperations(current => [...current, `${event.screen}: ${event.operation}`])} seed={{
       text: 'A product in the installed UI', ...encodeProduct({ sku: 'LAMP-01', title: 'Fixture lamp' }),
       admin: query.has('admin'),
       leave: query.has('leave-fails-once') ? leaveWithOneFailure : undefined,
