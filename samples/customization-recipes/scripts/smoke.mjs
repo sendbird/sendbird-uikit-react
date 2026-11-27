@@ -1112,6 +1112,21 @@ const scenarios = {
         await next.click();
         await conversation.getByText('Original message B', { exact: true }).waitFor();
       });
+      await step('leaving the selected product channel returns to the full list', async () => {
+        await page.goto(`${url}?wrapper`);
+        const conversation = page.locator('.sendbird-conversation');
+        await conversation.getByText('SKU LAMP-01', { exact: true }).waitFor();
+        const selected = page.getByRole('button', { name: /Conversation A, Product: Fixture lamp/ });
+        await holdProduct(selected);
+        await page.getByRole('button', { name: 'Leave', exact: true }).click();
+        await selected.waitFor({ state: 'detached' });
+        const other = page.getByRole('link', { name: /Conversation B/ });
+        await other.waitFor();
+        await conversation.waitFor({ state: 'detached' });
+        assert.equal(await page.getByTestId('product-operations').textContent(), 'A: leaveChannel');
+        await other.click();
+        await conversation.getByText('Original message B', { exact: true }).waitFor();
+      });
       await step('a new stock preview cancels the open leave dialog and any pending hold', async () => {
         await page.goto(url);
         const newProduct = page.getByRole('button', { name: 'New product card', exact: true });

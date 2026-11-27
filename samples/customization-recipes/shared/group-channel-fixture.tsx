@@ -2,7 +2,7 @@
 // The SendbirdProvider, group-channel stores and UI are the installed package.
 import { useState, type PropsWithChildren } from 'react';
 import { CollectionEventSource, SessionHandler } from '@sendbird/chat';
-import type { GroupChannel } from '@sendbird/chat/groupChannel';
+import type { BaseChannelCollectionEventHandler, GroupChannel } from '@sendbird/chat/groupChannel';
 import { type UserMessageCreateParams } from '@sendbird/chat/message';
 import SendbirdProvider from '@sendbird/uikit-react/SendbirdProvider';
 import { configureFixtureSession } from './configure-fixture-session';
@@ -61,7 +61,7 @@ type ChannelSeed = {
 };
 type ProviderProps = React.ComponentProps<typeof SendbirdProvider>;
 
-function createChannel(screen: ScreenId, record: RecordOperation, historySize: number, seed?: ChannelSeed) {
+function createChannel(screen: ScreenId, record: RecordOperation, historySize: number, onLeave: (url: string) => void, seed?: ChannelSeed) {
   const url = `fixture-${screen}`;
   const first = makeMessage(screen === 'A' ? 101 : 201, seed?.text ?? `Original message ${screen}`, url);
   first.customType = seed?.customType ?? '';
@@ -108,6 +108,7 @@ function createChannel(screen: ScreenId, record: RecordOperation, historySize: n
     async leave() {
       await seed?.leave?.();
       record({ screen, operation: 'leaveChannel' });
+      onLeave(url);
     },
     createMessageCollection() {
       const result = {
@@ -157,7 +158,13 @@ function createChannel(screen: ScreenId, record: RecordOperation, historySize: n
 }
 
 function configureBoundary(record: RecordOperation, historySize: number, seed?: ChannelSeed): NonNullable<ProviderProps['configureSession']> {
-  const channels = new Map((['A', 'B'] as const).map(screen => [`fixture-${screen}`, createChannel(screen, record, historySize, screen === 'A' ? seed : undefined)]));
+  const collectionRemovers = new Set<(url: string) => void>();
+  const onLeave = (url: string) => {
+    channels.delete(url);
+    for (const remove of collectionRemovers) remove(url);
+  };
+  const channels = new Map((['A', 'B'] as const).map(screen =>
+    [`fixture-${screen}`, createChannel(screen, record, historySize, onLeave, screen === 'A' ? seed : undefined)]));
   return sdk => {
     Object.defineProperty(sdk, 'appInfo', { configurable: true, get: () => ({
       applicationAttributes: ['reactions'], messageTemplateInfo: { token: '' }, uikitConfigInfo: { lastUpdatedAt: 0 },
@@ -177,6 +184,11 @@ function configureBoundary(record: RecordOperation, historySize: number, seed?: 
       return channel;
     });
     groupChannel.createGroupChannelCollection = () => {
+      let collectionHandler: BaseChannelCollectionEventHandler | undefined;
+      const remove = (url: string) => {
+        collection.channels = collection.channels.filter(channel => channel.url !== url);
+        collectionHandler?.onChannelsDeleted?.({ source: CollectionEventSource.EVENT_CHANNEL_DELETED }, [url]);
+      };
       const collection = {
         hasMore: true,
         channels: [] as GroupChannel[],
@@ -185,9 +197,10 @@ function configureBoundary(record: RecordOperation, historySize: number, seed?: 
           collection.channels = [...channels.values()];
           return collection.channels;
         },
-        setGroupChannelCollectionHandler: () => undefined,
-        dispose: () => undefined,
+        setGroupChannelCollectionHandler: (handler: BaseChannelCollectionEventHandler) => { collectionHandler = handler; },
+        dispose: () => { collectionRemovers.delete(remove); },
       };
+      collectionRemovers.add(remove);
       return collection as unknown as ReturnType<typeof groupChannel.createGroupChannelCollection>;
     };
     return new SessionHandler();

@@ -156,14 +156,14 @@ export const renderProductPreview = (props: ComponentProps<typeof GroupChannelLi
 
 // Mount inside your authenticated SendbirdProvider. The local page uses the same renderers with fixtures.
 export function ProductChat() {
-  // An explicit return to the list disables the initial automatic selection.
+  // Returning to the list or leaving the selected channel disables automatic selection.
   const [channelUrl, setChannelUrl] = useState<string | null>();
   return (
     <div className="product-chat">
       <GroupChannelList
         selectedChannelUrl={channelUrl ?? ''}
         disableAutoSelect={channelUrl === null}
-        onChannelSelect={channel => setChannelUrl(channel?.url)}
+        onChannelSelect={channel => setChannelUrl(channel?.url ?? null)}
         onChannelCreated={channel => setChannelUrl(channel.url)}
         renderChannelPreview={renderProductPreview}
       />
