@@ -40,11 +40,11 @@ type ChatSession = {
   accessToken: string;
 };
 
-export function ExistingAppChat({ appId, userId, accessToken, configureSession }: ChatSession &
-  Pick<ComponentProps<typeof SendbirdProvider>, 'configureSession'>) {
+export function ExistingAppChat({ appId, userId, accessToken, configureSession, theme }: ChatSession &
+  Pick<ComponentProps<typeof SendbirdProvider>, 'configureSession' | 'theme'>) {
   const [channelUrl, setChannelUrl] = useState('');
   return (
-    <SendbirdProvider appId={appId} userId={userId} accessToken={accessToken} configureSession={configureSession}>
+    <SendbirdProvider appId={appId} userId={userId} accessToken={accessToken} configureSession={configureSession} theme={theme}>
       <div className="migration-example">
         <GroupChannelList
           onChannelSelect={channel => setChannelUrl(channel?.url ?? '')}

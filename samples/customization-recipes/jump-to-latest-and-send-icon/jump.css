@@ -3,6 +3,12 @@
 .uikit-jump-jump-row { display: flex; justify-content: flex-end; margin-block: 8px; }
 .uikit-jump-jump-row button { padding: 5px 8px; border: 1px solid #9baec2; border-radius: 5px; color: #1f405a; background: #fff; font: inherit; }
 .uikit-jump-jump-row button[aria-disabled="true"] { opacity: .55; }
+.sendbird-theme--dark .uikit-jump-conversation,
+.sendbird-theme--dark .uikit-jump-jump-row button {
+  border-color: var(--sendbird-dark-ondark-04);
+  color: var(--sendbird-dark-ondark-01);
+  background: var(--sendbird-dark-background-600);
+}
 .uikit-jump-send-icon { font-size: 20px; color: #16548c; font-weight: 700; display: inline-block; }
 /* UIKit rotates the entire RTL Send button. In the mobile file composer it uses a translation instead. */
 [dir="rtl"] .sendbird-message-input--send .uikit-jump-send-icon { transform: rotate(180deg); }

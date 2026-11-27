@@ -4,3 +4,8 @@
 .composer-recipe:where(.sendbird--mobile-mode *) > p { margin-inline: 16px; }
 .composer-recipe > p { margin-block: 5px 0; }
 .composer-recipe > .recipe-action { padding: 6px 12px; margin-top: 8px; border: 1px solid #9ab6a5; border-radius: 6px; color: #173b29; background: #eaf5ed; font: inherit; }
+.composer-recipe:where(.sendbird-theme--dark *) > .recipe-action {
+  border-color: var(--sendbird-dark-ondark-04);
+  color: var(--sendbird-dark-ondark-01);
+  background: var(--sendbird-dark-background-600);
+}

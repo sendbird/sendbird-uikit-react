@@ -13,6 +13,7 @@ import './style.css';
 
 // Fixture-only: app-level options are read once at load, so the form below reloads the page with them.
 const query = new URLSearchParams(location.search);
+const theme = query.get('theme') === 'dark' ? 'dark' : 'light';
 const markAsUnread = query.has('mark-as-unread');
 const mention = query.has('mention');
 const workshopOptions: [keyof WorkshopOptions, string][] = [
@@ -47,7 +48,7 @@ function MountedRecipe() {
     setRetryPending(false);
   }
   return <main aria-label="Mounted product recipe">
-    <GroupChannelFixture breakpoint="600px" record={event => setOperations(current => [...current, `${event.screen}: ${event.operation}`])} seed={{
+    <GroupChannelFixture breakpoint="600px" theme={theme} record={event => setOperations(current => [...current, `${event.screen}: ${event.operation}`])} seed={{
       text: 'A product in the installed UI', ...encodeProduct({ sku: 'LAMP-01', title: 'Fixture lamp' }),
       admin: query.has('admin'),
       leave: query.has('leave-fails-once') ? leaveWithOneFailure : undefined,

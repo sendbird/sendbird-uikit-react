@@ -132,6 +132,11 @@ async function checkHeldReaction(page, button) {
   }
 }
 
+async function expectDarkBackground(locator, color = 'rgb(22, 22, 22)') {
+  await locator.waitFor();
+  assert.equal(await locator.evaluate(node => getComputedStyle(node).backgroundColor), color);
+}
+
 const scenarios = {
   'message-timestamp-and-reaction': async ({ page, url, width, step }) => {
     await page.goto(url);
@@ -208,6 +213,13 @@ const scenarios = {
       await liked.click();
       await page.getByRole('button', { name: 'Like 19', exact: true, pressed: false }).waitFor();
       assert.equal(await page.getByTestId('mounted-reactions').textContent(), 'deleteReaction');
+    });
+    await step('the copied reaction uses dark UIKit tokens before and after a Like', async () => {
+      await page.goto(`${url}?wrapper&theme=dark`);
+      const unliked = page.getByRole('button', { name: 'Like 1', pressed: false, exact: true });
+      await expectDarkBackground(unliked);
+      await unliked.click();
+      await expectDarkBackground(page.getByRole('button', { name: 'Like 2', pressed: true, exact: true }), 'rgb(44, 44, 44)');
     });
   },
 
@@ -652,6 +664,8 @@ const scenarios = {
       await page.goto(`${url}?theme=dark`);
       const dark = page.locator('body.sendbird-theme--dark');
       await dark.waitFor();
+      await expectDarkBackground(page.locator('.uikit-jump-conversation'));
+      await expectDarkBackground(page.getByRole('button', { name: 'Jump to latest' }));
       const navigate = async (name, older) => {
         const link = page.getByRole('link', { name, exact: true });
         await link.click();
@@ -780,6 +794,10 @@ const scenarios = {
       await tip.waitFor();
       assert.equal(await tip.getAttribute('aria-expanded'), 'false');
       assert.equal(await page.locator('.composer-recipe [role="status"]').innerText(), '');
+    });
+    await step('the copied composer button uses the dark UIKit background', async () => {
+      await page.goto(`${url}?wrapper&theme=dark`);
+      await expectDarkBackground(page.getByRole('button', { name: 'Show writing tip' }));
     });
   },
 
@@ -984,6 +1002,12 @@ const scenarios = {
       await page.locator('.sendbird-conversation').getByText('Original message B', { exact: true }).waitFor();
       await preview.click();
       await page.getByText('SKU LAMP-01', { exact: true }).waitFor();
+    });
+    await step('the copied product card and channel preview use dark UIKit backgrounds', async () => {
+      await page.goto(`${url}?wrapper&theme=dark`);
+      await expectDarkBackground(page.locator('.product-channel-entry'));
+      await expectDarkBackground(page.locator('.product-channel-row[aria-current="true"]'), 'rgb(44, 44, 44)');
+      await expectDarkBackground(page.locator('.product-card'));
     });
     const confirmation = page.getByText('Leave this channel?', { exact: true });
     async function holdProduct(preview, duringHold) {
@@ -1616,6 +1640,13 @@ const scenarios = {
       await conversation.getByText('Send after switching channels', { exact: true }).waitFor();
       assert.deepEqual(JSON.parse(await page.getByTestId('mounted-operations').textContent()),
         [{ screen: 'B', operation: 'sendUserMessage', text: 'Send after switching channels' }]);
+    });
+    await step('the copied migration reaction uses dark UIKit tokens before and after a Like', async () => {
+      await page.goto(`${url}?wrapper&theme=dark`);
+      const unliked = page.getByRole('button', { name: 'Like 1', pressed: false, exact: true });
+      await expectDarkBackground(unliked);
+      await unliked.click();
+      await expectDarkBackground(page.getByRole('button', { name: 'Like 2', pressed: true, exact: true }), 'rgb(44, 44, 44)');
     });
   },
 };

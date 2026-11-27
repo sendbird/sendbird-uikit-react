@@ -9,12 +9,13 @@ import './style.css';
 
 const params = new URLSearchParams(location.search);
 const broadcastRole = params.has('broadcast-operator') ? 'operator' : params.has('broadcast-member') ? 'member' : undefined;
+const theme = params.get('theme') === 'dark' ? 'dark' : 'light';
 
 function MountedRecipe() {
   const [channelUrl, setChannelUrl] = useState('fixture-A');
   return <main aria-label="Mounted composer recipe">
     <button type="button" onClick={() => setChannelUrl(channelUrl === 'fixture-A' ? 'fixture-B' : 'fixture-A')}>Switch fixture channel</button>
-    <GroupChannelFixture record={() => {}}>
+    <GroupChannelFixture record={() => {}} theme={theme}>
       <div style={{ height: 580 }}>
         <ComposerRecipeChannel channelUrl={channelUrl} renderSendMessageIcon={() => <span>App send</span>} />
       </div>

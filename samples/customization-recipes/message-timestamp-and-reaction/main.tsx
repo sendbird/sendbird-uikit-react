@@ -9,12 +9,13 @@ import '../shared/page.css';
 import './style.css';
 
 const query = new URLSearchParams(location.search);
+const theme = query.get('theme') === 'dark' ? 'dark' : 'light';
 
 function MountedRecipe() {
   const [operations, setOperations] = useState<string[]>([]);
   const like = query.has('sampled') ? { count: 20, hasCurrentUserReacted: true } : true;
   return <main aria-label="Mounted timestamp recipe" style={{ height: 580 }}>
-    <GroupChannelFixture record={event => setOperations(items => [...items, event.operation])}
+    <GroupChannelFixture record={event => setOperations(items => [...items, event.operation])} theme={theme}
       seed={{ like }} stringSet={query.has('localized')
       ? { ...secondsFormat, FEEDBACK_LIKE: 'J’aime' } : secondsFormat}
       uikitOptions={{ groupChannel: { enableReactions: true } }}>

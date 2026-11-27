@@ -1,4 +1,4 @@
-import GroupChannel from '@sendbird/uikit-react/GroupChannel';
+import GroupChannel, { type GroupChannelProps } from '@sendbird/uikit-react/GroupChannel';
 import EmojiReactions, { type EmojiReactionsProps } from '@sendbird/uikit-react/ui/EmojiReactions';
 import MessageContent, { type MessageContentProps } from '@sendbird/uikit-react/ui/MessageContent';
 import { useLocalization } from '@sendbird/uikit-react/hooks/useLocalization';
@@ -30,7 +30,7 @@ export function MessageWithLikeButton(props: MessageContentProps) {
   return <MessageContent {...props} renderEmojiReactions={reactionProps => <LikeReaction {...reactionProps} />} />;
 }
 
-export function ChannelWithMessageDetails({ channelUrl }: { channelUrl: string }) {
-  return <GroupChannel channelUrl={channelUrl}
+export function ChannelWithMessageDetails(props: Omit<GroupChannelProps, 'renderMessageContent'>) {
+  return <GroupChannel {...props}
     renderMessageContent={props => <MessageWithLikeButton {...props} />} />;
 }

@@ -1,3 +1,5 @@
+import type { ComponentProps } from 'react';
+import type { GroupChannelProps } from '@sendbird/uikit-react/GroupChannel';
 import { GroupChannelProvider, useGroupChannel } from '@sendbird/uikit-react/GroupChannel/context';
 import GroupChannelUI from '@sendbird/uikit-react/GroupChannel/components/GroupChannelUI';
 import MessageInputWrapper from '@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper';
@@ -14,17 +16,19 @@ export function JumpToLatest() {
 }
 
 // The stock composer keeps its submit logic; only the icon inside its Send button changes.
-export function BrandedComposer() {
-  return <MessageInputWrapper renderSendMessageIcon={() => <>
+export function BrandedComposer(props: Omit<ComponentProps<typeof MessageInputWrapper>, 'renderSendMessageIcon'>) {
+  return <MessageInputWrapper {...props} renderSendMessageIcon={() => <>
     <span aria-hidden="true" className="uikit-jump-send-icon">↑</span>
     <span className="uikit-jump-visually-hidden">Send</span>
   </>} />;
 }
 
 // Mount inside your authenticated SendbirdProvider.
-export function StockConversation({ channelUrl, startingPoint }: { channelUrl: string; startingPoint?: number }) {
-  return <GroupChannelProvider channelUrl={channelUrl} startingPoint={startingPoint}>
-    <div className="uikit-jump-conversation"><GroupChannelUI renderMessageInput={() => <BrandedComposer />} /></div>
+export function StockConversation(props: Omit<GroupChannelProps, 'children' | 'renderMessageInput' | 'renderSendMessageIcon'>) {
+  return <GroupChannelProvider {...props}>
+    <div className="uikit-jump-conversation">
+      <GroupChannelUI {...props} renderMessageInput={() => <BrandedComposer {...props} />} />
+    </div>
     <div className="uikit-jump-jump-row"><JumpToLatest /></div>
   </GroupChannelProvider>;
 }

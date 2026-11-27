@@ -199,19 +199,20 @@ export function useGroupChannelFixtureSession(record: RecordOperation, historySi
   return configureSession;
 }
 
-export function GroupChannelFixture({ record, children, uikitOptions, historySize, htmlTextDirection, seed, stringSet, breakpoint }: PropsWithChildren<{
+export function GroupChannelFixture({ record, children, uikitOptions, historySize, htmlTextDirection, seed, stringSet, breakpoint, theme }: PropsWithChildren<{
   record: RecordOperation;
   historySize?: number;
   htmlTextDirection?: ProviderProps['htmlTextDirection'];
   uikitOptions?: ProviderProps['uikitOptions'];
   stringSet?: ProviderProps['stringSet'];
   breakpoint?: ProviderProps['breakpoint'];
+  theme?: ProviderProps['theme'];
   seed?: ChannelSeed;
 }>) {
   const configureSession = useGroupChannelFixtureSession(record, historySize, seed);
   return <SendbirdProvider appId={fixtureAppId} userId="self" configureSession={configureSession}
     sdkInitParams={{ localCacheEnabled: false }}
-    uikitOptions={uikitOptions} htmlTextDirection={htmlTextDirection} stringSet={stringSet} breakpoint={breakpoint}>
+    uikitOptions={uikitOptions} htmlTextDirection={htmlTextDirection} stringSet={stringSet} breakpoint={breakpoint} theme={theme}>
     {children}
   </SendbirdProvider>;
 }

@@ -13,6 +13,17 @@
 .product-channel-copy > span { font-size: .85rem; }
 .product-channel-unread { display: inline-flex; align-items: center; gap: 4px; }
 
+.sendbird-theme--dark .product-card,
+.sendbird-theme--dark .product-channel-entry,
+.sendbird-theme--dark .product-channel-row {
+  color: var(--sendbird-dark-ondark-01);
+  background: var(--sendbird-dark-background-600);
+}
+.sendbird-theme--dark .product-card { border-color: var(--sendbird-dark-ondark-04); }
+.sendbird-theme--dark .product-channel-row[aria-current="true"],
+.sendbird-theme--dark .product-channel-row:hover { background: var(--sendbird-dark-background-500); }
+.sendbird-theme--dark .product-channel-row:focus-visible { outline-color: var(--sendbird-dark-primary-200); }
+
 .product-chat {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);

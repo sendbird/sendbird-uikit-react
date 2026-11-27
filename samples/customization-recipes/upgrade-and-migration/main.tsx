@@ -9,6 +9,7 @@ import '../shared/page.css';
 import './style.css';
 
 const params = new URLSearchParams(location.search);
+const theme = params.get('theme') === 'dark' ? 'dark' : 'light';
 const requestedMode = params.get('reactions');
 const mode = requestedMode === 'mixed' || requestedMode === 'heart' ? requestedMode : 'like';
 
@@ -16,7 +17,7 @@ function MountedRecipe() {
   const [operations, setOperations] = useState<Operation[]>([]);
   const configureSession = useGroupChannelFixtureSession(operation => setOperations(current => [...current, operation]), 1, { like: true });
   return <main aria-label="Mounted upgrade recipe">
-    <ExistingAppChat appId={fixtureAppId} userId="self" accessToken="synthetic-fixture" configureSession={configureSession} />
+    <ExistingAppChat appId={fixtureAppId} userId="self" accessToken="synthetic-fixture" configureSession={configureSession} theme={theme} />
     <output className="log" data-testid="mounted-operations">{JSON.stringify(operations)}</output>
   </main>;
 }
